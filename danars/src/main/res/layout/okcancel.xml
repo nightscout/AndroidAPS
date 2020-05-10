@@ -30,7 +30,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
         style="@style/mdtp_ActionButton.Text"
-        android:text="@string/mdtp_cancel" />
+        android:text="@string/cancel" />
 
     <Button
         android:id="@+id/ok"
@@ -39,6 +39,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         style="@style/mdtp_ActionButton.Text"
-        android:text="@string/mdtp_ok" />
+        android:text="@string/ok" />
 </LinearLayout>
     <!-- From: file:/Users/wdullaer/Documents/Programming%20Projects/MaterialDateTimePicker/library/src/main/res/layout/mdtp_done_button.xml -->

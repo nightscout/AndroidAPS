@@ -103,5 +103,31 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
+    <string name="danar_bluetooth_status">Bluetooth status</string>
+    <string name="danar_iob_label">Pump IOB</string>
+    <string name="basal_step">Basal Step</string>
+    <string name="bolus_step">Bolus Step</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="danar_pump_settings">Dana pump settings</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="option_on">On</string>
+    <string name="option_off">Off</string>
+    <string name="danar_bt_name_title">DanaR Bluetooth device</string>
+    <string name="danars_password_title">Pump password (v1 only)</string>
+    <string name="danar_password_title">Pump password</string>
+    <string name="danar_useextended_title">Use extended boluses for >200%%</string>
+    <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %%</string>
+    <string name="bolusspeed">Bolus speed</string>
+    <string name="selectedpump">Selected pump</string>
+    <string name="rs_loginsulinchange_title">Log reservoir change</string>
+    <string name="rs_loginsulinchange_summary">Add \"Insulin Change\" event to careportal when detected in history</string>
+    <string name="rs_logcanulachange_title">Log canula change</string>
+    <string name="rs_logcanulachange_summary">Add \"Site Change\" event to careportal when detected in history</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+    <string name="press_ok_on_the_pump">Press OK on the pump\nand enter 2 displayed numbers\nKeep display on pump ON by pressing minus button until you finish entering code.</string>
+    <string name="num1pin">1: (12 digits)</string>
+    <string name="num2pin">2: (8 digits)</string>
 
 </resources>

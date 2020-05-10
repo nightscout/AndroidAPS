@@ -5,7 +5,7 @@
     android:fillViewport="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".plugins.pump.danaR.activities.DanaRUserOptionsActivity">
+    tools:context="info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity">
 
 
     <LinearLayout

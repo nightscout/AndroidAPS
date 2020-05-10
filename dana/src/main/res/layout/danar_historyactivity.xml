@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".plugins.pump.danaR.activities.DanaRHistoryActivity">
+    tools:context="info.nightscout.androidaps.dana.activities.DanaRHistoryActivity">
 
 
     <RelativeLayout

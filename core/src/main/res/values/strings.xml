@@ -20,6 +20,9 @@
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
+    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
+    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="pairing">Pairing</string>
 
     <!--    General-->
     <string name="error">Error</string>
@@ -64,6 +67,25 @@
     <string name="nsprofileview_isf_label">ISF</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_target_label">Target</string>
+    <string name="initializing">Initializing ...</string>
+    <string name="serialnumber">Serial number</string>
+    <string name="pump_battery_label">Battery</string>
+    <string name="pump_lastconnection_label">Last connection</string>
+    <string name="pump_lastbolus_label">Last bolus</string>
+    <string name="danar_dailyunits">Daily units</string>
+    <string name="pump_basebasalrate_label">Base basal rate</string>
+    <string name="pump_tempbasal_label">Temp basal</string>
+    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
+    <string name="pump_reservoir_label">Reservoir</string>
+    <string name="danar_history">Pump history</string>
+    <string name="danar_viewprofile">View profile</string>
+    <string name="careportal_newnstreatment_eventtype">Event type</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

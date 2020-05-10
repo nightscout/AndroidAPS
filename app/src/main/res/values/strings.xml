@@ -34,8 +34,6 @@
     <string name="nav_resetdb">Reset Databases</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
-    <string name="danar_useextended_title">Use extended boluses for >200%%</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth device</string>
     <string name="ns_sync_use_absolute_title">Always use basal absolute values</string>
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
@@ -91,11 +89,6 @@
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
-    <string name="pump_basebasalrate_label">Base basal rate</string>
-    <string name="pump_tempbasal_label">Temp basal</string>
-    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="pump_battery_label">Battery</string>
-    <string name="pump_reservoir_label">Reservoir</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="openapsma_lastrun_label">Last run</string>
     <string name="openapsma_inputparameters_label">Input parameters</string>
@@ -178,7 +171,6 @@
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
 
-    <string name="careportal_newnstreatment_eventtype">Event type</string>
     <string name="careportal_newnstreatment_other">Other</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -267,16 +259,11 @@
     <string name="exported_less_than_hour_ago">exported less than hour ago</string>
     <string name="in_directory" comment="placeholder is for exported file path">in directory: %1$s</string>
 
-    <string name="danar_pump_settings">Dana pump settings</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
     <string name="save">Save</string>
-    <string name="danar_iob_label">Pump IOB</string>
-    <string name="danar_dailyunits">Daily units</string>
-    <string name="pump_lastbolus_label">Last bolus</string>
     <string name="reloadprofile">Reload profile</string>
-    <string name="danar_viewprofile">View profile</string>
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
@@ -304,19 +291,6 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="uploading">Uploading</string>
-    <string name="danar_ebolus">E bolus</string>
-    <string name="danar_dsbolus">DS bolus</string>
-    <string name="danar_debolus">DE bolus</string>
-    <string name="danar_error">error</string>
-    <string name="danar_refill">refill</string>
-    <string name="danar_basalhour">basal hour</string>
-    <string name="danar_glucose">glucose</string>
-    <string name="danar_carbohydrate">carbohydrate</string>
-    <string name="danar_alarm">alarm</string>
-    <string name="danar_totaluploaded">Total %1$d records uploaded</string>
-    <string name="danar_sbolus">S bolus</string>
-    <string name="danars_password_title">Pump password (v1 only)</string>
-    <string name="danar_password_title">Pump password</string>
     <string name="bolusstopped">Bolus stopped</string>
     <string name="bolusstopping">Stopping bolus</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -371,8 +345,6 @@
     <string name="button3">Button 3</string>
     <string name="units_colon">Units:</string>
     <string name="units">Units</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="dia">DIA</string>
     <string name="target_range">Target range:</string>
     <string name="prefs_range_title">Range for Visualization</string>
@@ -405,7 +377,6 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record</string>
-    <string name="initializing">Initializing ...</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -422,7 +393,6 @@
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
-    <string name="advancedsettings_title">Advanced Settings</string>
     <string name="key_advancedsettings" translatable="false">key_advancedsettings</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
@@ -559,9 +529,6 @@
     <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="pump_lastconnection_label">Last connection</string>
-    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
@@ -574,8 +541,6 @@
     <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
     <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
-    <string name="basal_step">Basal Step</string>
-    <string name="bolus_step">Bolus Step</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="careportal_sensorage_label">Sensor age</string>
     <string name="careportal_canulaage_label">Canula age</string>
@@ -617,7 +582,6 @@
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %%</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -659,10 +623,6 @@
     <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
     <string name="activate_profile">Activate profile</string>
     <string name="invalid">INVALID</string>
-    <string name="pairing">Pairing</string>
-    <string name="selectedpump">Selected pump</string>
-    <string name="bolusspeed">Bolus speed</string>
-    <string name="serialnumber">Serial number</string>
     <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
     <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
@@ -700,11 +660,6 @@
     <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>
-    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
-    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
-    <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="eversense">Eversense App (patched)</string>
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
@@ -762,7 +717,6 @@
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last two minutes. To prevent accidental double boluses and to guard against bugs this is disallowed.</string>
     <string name="combo_pump_connected_now">Now</string>
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
-    <string name="danar_history">Pump history</string>
     <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
@@ -983,8 +937,6 @@
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
     <string name="exit">Exit</string>
-    <string name="option_on">On</string>
-    <string name="option_off">Off</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="nav_plugin_preferences">Plugin preferences</string>
@@ -1518,8 +1470,6 @@
     <string name="randombg_short">BG</string>
     <string name="tools">Tools</string>
     <string name="show_calculation">Show calcuation</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
     <string name="automation_event">Automation event</string>
     <string name="alreadyset">Already set</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
@@ -1572,20 +1522,11 @@
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_provisioning_warning">DO NOT SHARE this code online!\nUse it only to setup Authenticator App on follower phones.</string>
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
-    <string name="press_ok_on_the_pump">Press OK on the pump\nand enter 2 displayed numbers\nKeep display on pump ON by pressing minus button until you finish entering code.</string>
-    <string name="num1pin">1: (12 digits)</string>
-    <string name="num2pin">2: (8 digits)</string>
     <string name="onconnect">On connect</string>
     <string name="ondisconnect">On disconnect</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
-    <string name="rs_loginsulinchange_title">Log reservoir change</string>
-    <string name="rs_loginsulinchange_summary">Add \"Insulin Change\" event to careportal when detected in history</string>
-    <string name="rs_logcanulachange_title">Log canula change</string>
-    <string name="rs_logcanulachange_summary">Add \"Site Change\" event to careportal when detected in history</string>
     <string name="authorizationfailed">Authorization failed</string>
     <string name="overview_show_absinsulin">Absolute insulin</string>
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
