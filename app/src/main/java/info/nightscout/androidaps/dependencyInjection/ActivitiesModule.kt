@@ -25,9 +25,8 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 @Suppress("unused")
 abstract class ActivitiesModule {
 
-    @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
-    @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): info.nightscout.androidaps.dana.activities.DanaRHistoryActivity
-    @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity
+    @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): DanaRHistoryActivity
+    @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): DanaRUserOptionsActivity
     @ContributesAndroidInjector abstract fun contributeEnterPinActivity(): EnterPinActivity
     @ContributesAndroidInjector abstract fun contributeErrorHelperActivity(): ErrorHelperActivity
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity

@@ -26,9 +26,7 @@ import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
 
 @Module(includes = [
-    AppModule.AppBindings::class,
-    PluginsModule::class,
-    SkinsModule::class
+    AppModule.AppBindings::class
 ])
 open class AppModule {
 
@@ -64,12 +62,12 @@ open class AppModule {
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
         @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
-        @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
-        @Binds fun configInterfaceProvider(config: Config): ConfigInterface
-        @Binds fun configBuilderInterfaceProvider(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilderInterface
-        @Binds fun treatmentInterfaceProvider(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
-        @Binds fun provideDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
-        @Binds fun provideUploadQueueInterface(uploadQueue: UploadQueue): UploadQueueInterface
-        @Binds fun provideNotificationHolderInterface(notificationHolder: NotificationHolder): NotificationHolderInterface
+        @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
+        @Binds fun bindConfigInterface(config: Config): ConfigInterface
+        @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilderInterface
+        @Binds fun bindTreatmentInterface(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
+        @Binds fun bindDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
+        @Binds fun bindUploadQueueInterface(uploadQueue: UploadQueue): UploadQueueInterface
+        @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolder): NotificationHolderInterface
     }
 }
