@@ -58,7 +58,7 @@ class FoodFragment : DaggerFragment() {
             filterData()
         }
         food_category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 fillSubcategories()
                 filterData()
             }
@@ -69,7 +69,7 @@ class FoodFragment : DaggerFragment() {
             }
         }
         food_subcategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 filterData()
             }
 
