@@ -140,7 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_cp_bolus_carbs" />
+            android:id="@+id/overview_carbs_icon"
+            android:background="@drawable/anim_carbs" />
 
         <TextView
             android:id="@+id/overview_cob"
