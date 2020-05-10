@@ -184,7 +184,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     protected void onStart() {
-        super.onStart();
 
         //OmnipodUtil.setDriverState();
 
@@ -269,6 +268,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 }, fabricPrivacy::logException)
         );
 
+        super.onStart();
 
 
         //rileyLinkOmnipodService.verifyConfiguration();

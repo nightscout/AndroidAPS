@@ -165,8 +165,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     protected void onStart() {
-        super.onStart();
-
         aapsLogger.debug(LTag.PUMP, this.deviceID() + " started.");
 
         serviceConnection = new ServiceConnection() {
@@ -195,6 +193,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             }
         };
 
+        super.onStart();
     }
 
     @Override
