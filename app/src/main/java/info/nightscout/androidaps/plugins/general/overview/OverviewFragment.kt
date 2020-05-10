@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -155,6 +156,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private val secondaryGraphs = ArrayList<GraphView>()
     private val secondaryGraphsLabel = ArrayList<TextView>()
 
+    private lateinit var carbAnimation: AnimationDrawable
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -183,6 +186,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
+
+        val carbicon = overview_carbs_icon;
+        carbAnimation = carbicon.background as AnimationDrawable
+        carbAnimation.setEnterFadeDuration(1200);
+        carbAnimation.setExitFadeDuration(1200);
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -733,17 +741,18 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob.toInt())
             if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
         }
-        overview_cob?.text = cobText
 
         val lastRun = loopPlugin.lastRun
-
-        // if (config.APS && lastRun?.constraintsProcessed != null && lastRun?.constraintsProcessed.carbsReq > 0) {
-        //     overview_cob_required.visibility = View.VISIBLE
-        //     var carbsRequiredString: String = String.format(resourceHelper.gs(R.string.overview_carbs_required), lastRun?.constraintsProcessed?.carbsReq, lastRun?.constraintsProcessed?.carbsReqWithin)
-        //     overview_cob_required.text = carbsRequiredString
-        // } else {
-        //     overview_cob_required.visibility = View.GONE
-        // }
+        if (config.APS && lastRun?.constraintsProcessed != null && lastRun?.constraintsProcessed.carbsReq > 0) {
+            overview_cob?.text = cobText + " ("+lastRun?.constraintsProcessed.carbsReq + " req)"
+            if(!carbAnimation.isRunning)
+                carbAnimation.start()
+        }else{
+            overview_cob?.text = cobText
+            if(carbAnimation.isRunning)
+                carbAnimation.stop()
+                carbAnimation.selectDrawable(0);
+        }
 
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
