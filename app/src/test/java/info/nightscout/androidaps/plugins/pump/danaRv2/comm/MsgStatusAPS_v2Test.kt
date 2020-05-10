@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
+import info.nightscout.androidaps.danar.comm.MessageBase
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,7 +12,7 @@ class MsgStatusAPS_v2Test : DanaRTestBase() {
 
     @Test
     fun runTest() {
-        val packet = MsgStatusAPS_v2(aapsLogger, danaRPump)
+        val packet = info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2(aapsLogger, danaRPump)
         // test iob
         //TODO Find a way to mock treatments plugin
         val testArray = createArray(34, 7.toByte())

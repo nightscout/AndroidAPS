@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import info.nightscout.androidaps.danar.comm.MsgInitConnStatusBolus
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert

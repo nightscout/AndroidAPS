@@ -11,7 +11,7 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__TEMPORARY_BASAL_STATE

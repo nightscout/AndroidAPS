@@ -11,7 +11,7 @@ class DanaRS_Packet_General_Get_More_Information(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_MORE_INFORMATION

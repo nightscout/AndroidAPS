@@ -12,7 +12,7 @@ open class DanaRS_Packet_Basal_Get_Profile_Basal_Rate(
     private val profileNumber: Int = 0
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_BASAL_RATE

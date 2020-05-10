@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danar.comm.MessageBase
+import info.nightscout.androidaps.danar.comm.MsgSettingBasal
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,7 +13,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DanaRPlugin::class)
+@PrepareForTest(info.nightscout.androidaps.danar.DanaRPlugin::class)
 class MsgSettingBasalTest : DanaRTestBase() {
 
     @Mock lateinit var danaRPlugin: DanaRPlugin

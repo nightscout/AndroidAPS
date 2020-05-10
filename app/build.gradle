@@ -244,6 +244,7 @@ dependencies {
     implementation project(':core')
     implementation project(':dana')
     implementation project(':danars')
+    implementation project(':danar')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'

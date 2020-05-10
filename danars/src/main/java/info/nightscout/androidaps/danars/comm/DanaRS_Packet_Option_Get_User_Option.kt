@@ -10,7 +10,7 @@ class DanaRS_Packet_Option_Get_User_Option(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION

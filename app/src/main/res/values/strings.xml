@@ -59,9 +59,6 @@
     <string name="description_profile_nightscout">Provides the profile you have defined in Nightscout</string>
     <string name="description_profile_simple">Define a profile with only one time block.</string>
     <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed</string>
-    <string name="description_pump_dana_r">Pump integration for DANA Diabecare R pumps</string>
-    <string name="description_pump_dana_r_korean">Pump integration for domestic DANA Diabecare R pumps</string>
-    <string name="description_pump_dana_r_v2">Pump integration for DANA Diabecare R pumps with upgraded firmware</string>
     <string name="description_pump_mdi">Pump integration for people who do multiple daily injections for their diabetes therapy</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
@@ -279,14 +276,11 @@
     <string name="exported_less_than_hour_ago">exported less than hour ago</string>
     <string name="in_directory" comment="placeholder is for exported file path">in directory: %1$s</string>
 
-    <string name="danarpump">DanaR</string>
     <string name="danar_pump_settings">Dana pump settings</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
     <string name="save">Save</string>
-    <string name="nobtadapter">No bluetooth adapter found</string>
-    <string name="devicenotfound">Selected device not found</string>
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
     <string name="pump_lastbolus_label">Last bolus</string>
@@ -400,11 +394,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="danarkoreanpump">DanaR Korean</string>
     <string name="basal_rate">Basal rate:</string>
-    <string name="profile_set_failed">Setting of basal profile failed</string>
-    <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
-    <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
@@ -434,7 +424,6 @@
     <string name="simpleprofile_shortname">SP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="danarpump_shortname">DANA</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="profileviewer_shortname">NSPROFILE</string>
@@ -494,7 +483,6 @@
     <string name="paused">Paused</string>
     <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
     <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
-    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
@@ -548,7 +536,6 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
-    <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -714,7 +701,6 @@
     <string name="shortfat">Fat</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Command is executed right now</string>
-    <string name="pumpdrivercorrected">Pump driver corrected</string>
     <string name="pump_unreachable">Pump unreachable</string>
     <string name="missed_bg_readings">Missed BG readings</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>

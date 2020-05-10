@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.virtual
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo

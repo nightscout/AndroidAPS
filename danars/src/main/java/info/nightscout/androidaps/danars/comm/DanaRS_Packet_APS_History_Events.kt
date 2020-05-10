@@ -29,7 +29,7 @@ open class DanaRS_Packet_APS_History_Events(
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var sp: SP
     @Inject lateinit var nsUpload: NSUpload

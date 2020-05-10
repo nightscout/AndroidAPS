@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.danar.comm.MessageOriginalNames
 import org.junit.Assert
 import org.junit.Test
 

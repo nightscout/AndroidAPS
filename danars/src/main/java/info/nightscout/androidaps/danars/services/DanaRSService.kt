@@ -59,7 +59,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var context: Context
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var danaRSMessageHashTable: DanaRSMessageHashTable
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var constraintChecker: ConstraintChecker

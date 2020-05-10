@@ -17,7 +17,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_Display(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY

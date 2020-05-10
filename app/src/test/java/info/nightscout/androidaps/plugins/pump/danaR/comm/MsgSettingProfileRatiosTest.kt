@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.danar.comm.MessageBase
+import info.nightscout.androidaps.danar.comm.MsgSettingProfileRatios
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test

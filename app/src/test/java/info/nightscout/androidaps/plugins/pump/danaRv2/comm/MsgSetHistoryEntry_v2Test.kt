@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSetHistoryEntry_v2Test : DanaRTestBase() {
 
     @Test fun runTest() {
-        var packet = MsgSetHistoryEntry_v2(aapsLogger, 1, System.currentTimeMillis(), 1, 0)
+        var packet = info.nightscout.androidaps.danaRv2.comm.MsgSetHistoryEntry_v2(aapsLogger, 1, System.currentTimeMillis(), 1, 0)
         // test message decoding
         // != 1 fails
         packet.handleMessage(createArray(34, 2.toByte()))

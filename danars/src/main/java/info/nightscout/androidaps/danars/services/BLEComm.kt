@@ -43,7 +43,7 @@ class BLEComm @Inject internal constructor(
     private val rxBus: RxBusWrapper,
     private val sp: SP,
     private val danaRSMessageHashTable: DanaRSMessageHashTable,
-    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
+    private val danaRPump: DanaRPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
     private val nsUpload: NSUpload

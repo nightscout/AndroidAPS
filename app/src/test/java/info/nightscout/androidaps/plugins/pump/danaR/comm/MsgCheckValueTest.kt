@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danar.comm.MsgCheckValue
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

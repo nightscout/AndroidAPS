@@ -10,7 +10,7 @@ class DanaRS_Packet_Bolus_Get_Dual_Bolus(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_DUAL_BOLUS

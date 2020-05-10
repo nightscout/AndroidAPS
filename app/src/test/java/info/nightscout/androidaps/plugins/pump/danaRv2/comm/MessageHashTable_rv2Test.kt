@@ -1,6 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
 import android.content.Context
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danaRv2.comm.MessageHashTableRv2
+import info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -9,11 +15,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -46,7 +48,7 @@ class MessageHashTable_rv2Test : DanaRTestBase() {
     @Test
     fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin, nsUpload, injector, DateUtil(context, resourceHelper))
+        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, nsUpload, injector, DateUtil(context, resourceHelper), databaseHelper)
         val forTesting: MessageBase = MsgStatusAPS_v2(aapsLogger, danaRPump)
         val testPacket: MessageBase = messageHashTableRv2.findMessage(forTesting.command)
         Assert.assertEquals(0xE001, testPacket.command.toLong())

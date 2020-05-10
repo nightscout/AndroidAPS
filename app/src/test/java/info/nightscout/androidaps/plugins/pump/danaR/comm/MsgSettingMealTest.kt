@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danar.comm.MessageBase
+import info.nightscout.androidaps.danar.comm.MsgSettingMeal
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
@@ -12,7 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DanaRPlugin::class, DanaRKoreanPlugin::class)
+@PrepareForTest(info.nightscout.androidaps.danar.DanaRPlugin::class, info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin::class)
 class MsgSettingMealTest : DanaRTestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper

@@ -24,7 +24,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
         }
     }
 
-    lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    lateinit var danaRPump: DanaRPump
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
         val ret = ByteArray(length)

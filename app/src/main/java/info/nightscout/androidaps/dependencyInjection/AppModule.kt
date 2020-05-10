@@ -11,6 +11,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -67,6 +68,7 @@ open class AppModule {
         @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
         @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
         @Binds fun configInterfaceProvider(config: Config): ConfigInterface
+        @Binds fun configBuilderInterfaceProvider(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilderInterface
         @Binds fun treatmentInterfaceProvider(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
         @Binds fun provideDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
         @Binds fun provideUploadQueueInterface(uploadQueue: UploadQueue): UploadQueueInterface

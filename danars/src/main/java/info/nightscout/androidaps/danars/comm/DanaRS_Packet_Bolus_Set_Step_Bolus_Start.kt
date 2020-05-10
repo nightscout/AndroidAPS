@@ -14,7 +14,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
     private var speed: Int = 0
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
+    @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var constraintChecker: ConstraintChecker
 
     init {
