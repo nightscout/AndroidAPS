@@ -41,7 +41,6 @@
     <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
 
     <string name="description_actions">Some buttons to quickly access common features</string>
-    <string name="description_careportal">Enter advanced log book entries.</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
     <string name="description_food">Displays the food presets defined in Nightscout</string>
@@ -428,7 +427,6 @@
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="profileviewer_shortname">NSPROFILE</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="careportal_shortname">CP</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>

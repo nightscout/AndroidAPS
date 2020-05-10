@@ -18,8 +18,6 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTrigg
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTriggerDialog
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
@@ -55,13 +53,12 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
-    @ContributesAndroidInjector abstract fun contributesCareportalFragment(): CareportalFragment
     @ContributesAndroidInjector abstract fun contributesComboFragment(): ComboFragment
 
     @ContributesAndroidInjector
     abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
-    @ContributesAndroidInjector abstract fun contributesDanaRFragment(): info.nightscout.androidaps.dana.DanaRFragment
+    @ContributesAndroidInjector abstract fun contributesDanaRFragment(): DanaRFragment
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
     @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
@@ -108,7 +105,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
     @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
-    @ContributesAndroidInjector abstract fun contributesNewNSTreatmentDialog(): NewNSTreatmentDialog
     @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
     @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog

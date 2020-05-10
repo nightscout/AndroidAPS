@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -17,7 +18,6 @@ import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintP
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
@@ -34,10 +34,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
-import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -161,12 +157,6 @@ abstract class PluginsModule {
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
     @Binds
-    @NSClient
-    @IntoMap
-    @IntKey(180)
-    abstract fun bindCareportalPlugin(plugin: CareportalPlugin): PluginBase
-
-    @Binds
     @APS
     @IntoMap
     @IntKey(190)
@@ -225,7 +215,6 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(280)
     abstract fun bindSmsCommunicatorPlugin(plugin: SmsCommunicatorPlugin): PluginBase
-
 
     @Binds
     @APS
@@ -355,9 +344,6 @@ abstract class PluginsModule {
 
     @Qualifier
     annotation class NotNSClient
-
-    @Qualifier
-    annotation class NSClient
 
     @Qualifier
     annotation class APS

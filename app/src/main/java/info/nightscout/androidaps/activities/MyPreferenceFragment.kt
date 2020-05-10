@@ -25,7 +25,6 @@ import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
@@ -73,7 +72,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var careportalPlugin: CareportalPlugin
     @Inject lateinit var comboPlugin: ComboPlugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
@@ -161,7 +159,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(careportalPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, config.APS)

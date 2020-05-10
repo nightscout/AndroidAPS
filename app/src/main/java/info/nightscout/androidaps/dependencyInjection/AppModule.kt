@@ -43,14 +43,12 @@ open class AppModule {
                         @PluginsModule.AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
                         @PluginsModule.PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
                         @PluginsModule.NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
-                        @PluginsModule.NSClient nsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
                         @PluginsModule.APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>)
         : List<@JvmSuppressWildcards PluginBase> {
         val plugins = allConfigs.toMutableMap()
         if (configInterface.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (configInterface.APS) plugins += aps.get()
         if (!configInterface.NSCLIENT) plugins += notNsClient.get()
-        if (configInterface.NSCLIENT) plugins += nsClient.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }
 
