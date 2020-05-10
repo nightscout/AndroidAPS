@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -42,6 +42,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject AutotunePlugin autotunePlugin;
     @Inject SP sp;
+    @Inject DateUtil dateUtil;
 
     public AutotuneFragment() {super();}
 
@@ -73,7 +74,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             tune_days.setText(sp.getString(R.string.key_autotune_default_tune_days,"5"));
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
             resultView.setText(AutotunePlugin.result);
-            String latRunTxt = AutotunePlugin.lastRun != null ? DateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
+            String latRunTxt = AutotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
             updateGUI();
             return view;
@@ -119,7 +120,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            String latRunTxt = AutotunePlugin.lastRun != null ? "" + DateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
+            String latRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
             String name = MainApp.gs(R.string.autotune_tunedprofile_name);

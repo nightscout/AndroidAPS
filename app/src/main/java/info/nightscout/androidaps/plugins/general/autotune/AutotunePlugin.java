@@ -14,9 +14,11 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.AutotunePrep;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
@@ -24,8 +26,6 @@ import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
 import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -1321,9 +1321,10 @@ public class AutotunePlugin extends PluginBase {
             FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2));
         } catch (JSONException e) {}
 
-        if(sp.getString(R.string.key_units, "mg/dl").equals("mmol"))
+        //todo remove once check if(sp.getString(R.string.key_units, "mg/dl").equals("mmol"))
+        if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
-        log.debug("AAPS units: " + sp.getString(R.string.key_units, "mg/dl") +" so divisor is "+toMgDl);
+        log.debug("AAPS units: " + profileFunction.getUnits() +" so divisor is "+toMgDl);
 
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
@@ -1435,7 +1436,7 @@ public class AutotunePlugin extends PluginBase {
                 convertedProfile.put("basal", basals);
                 convertedProfile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetLowMgdl())));
                 convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
-                convertedProfile.put("units", profile.getUnits());
+                convertedProfile.put("units", profileFunction.getUnits());
 
                 FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4).replace("\\/","/"));
 
@@ -1484,7 +1485,7 @@ public class AutotunePlugin extends PluginBase {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("utcOffset",utcOffset);
-            jsonSettings.put("units",sp.getString(R.string.key_units, "mg/dl"));
+            jsonSettings.put("units",profileFunction.getUnits());
             jsonSettings.put("timezone",TimeZone.getDefault().getID());
             jsonSettings.put("url_nightscout", sp.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);

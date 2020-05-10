@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune.AutotunePrep;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.IobInputs;
@@ -25,10 +27,9 @@ import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
 import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
 import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.Round;
@@ -43,6 +44,7 @@ public class AutotunePrep {
     @Inject AutotunePlugin autotunePlugin;
     @Inject SP sp;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    @Inject TreatmentsPlugin treatmentsPlugin;
     private final HasAndroidInjector injector;
 
     @Inject
@@ -197,7 +199,7 @@ public class AutotunePrep {
 
             //sens = ISF
             double sens = profileData.getIsfMgdl(BGTime);
-            log.debug("ISF data = " + sens);
+            //log.debug("ISF data = " + sens);
             iobInputs.clock=BGTime;
             // trim down IOBInputs.history to just the data for 6h prior to BGDate
             //log.debug(IOBInputs.history[0].created_at);
@@ -224,7 +226,7 @@ public class AutotunePrep {
             // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
             // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
             double currentPumpBasal = opts.pumpprofile.getBasal(BGTime);
-            log.debug("Basal Rate = " + currentPumpBasal);
+            //log.debug("Basal Rate = " + currentPumpBasal);
             double basal1hAgo = opts.pumpprofile.getBasal(BGTime-1*60*60*1000);
             double basal2hAgo = opts.pumpprofile.getBasal(BGTime-2*60*60*1000);
             double basal3hAgo = opts.pumpprofile.getBasal(BGTime-3*60*60*1000);
@@ -238,6 +240,7 @@ public class AutotunePrep {
 
             //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
             // basalBGI is BGI of basal insulin activity.
+
             double basalBGI = Round.roundTo((currentBasal * sens / 60 * 5),0.01); // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
@@ -247,13 +250,17 @@ public class AutotunePrep {
             //var iob = getIOB(IOBInputs)[0];
             //IobTotal iob = autotunePlugin.calculateFromTreatmentsAndTemps(BGTime);
             IobTotal iob;
-            iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(BGTime, profileData);
+            //iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(BGTime, profileData);
             //log.debug(JSON.stringify(iob));
-            log.debug("IobTotal calculateFromTreatmentsAndTemps Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob);
+            //log.debug("IobTotal calculateFromTreatmentsAndTemps Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob);
 
             iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(BGTime, profileData );
-
-            log.debug("IobTotal calculateAbsInsulinFromTreatmentsAndTemps Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob);
+            //log.debug("calculateAbsInsulinFromTreatmentsAndTempsSynchronized Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
+            //IobTotal bolusIob = treatmentsPlugin.getCalculationToTimeTreatments(BGTime).round();
+            //IobTotal basalIob = treatmentsPlugin.getAbsoluteIOBTempBasals(BGTime).round();
+            //iob = IobTotal.combine(bolusIob, basalIob).round();
+            //iob = treatmentsPlugin.getAbsoluteIOBTempBasals(BGTime).round();
+            //log.debug("treatmentsPlugin Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
             // activity times ISF times 5 minutes is BGI
             double BGI = Round.roundTo((-iob.activity * sens * 5) , 0.01);
@@ -268,7 +275,7 @@ public class AutotunePrep {
             }
 
             // rounding and storing deviation
-            deviation = AutotunePlugin.round(deviation, 2);
+            deviation = Round.roundTo(deviation, 0.01);
             glucoseDatum.deviation = deviation;
 
 
@@ -422,16 +429,17 @@ public class AutotunePrep {
 //            BGTime = BGDateArray[4];
             log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
-
+        log.debug("end of loop bucket");
 
         iobInputs.profile = new TunedProfile(opts.profile);
         iobInputs.history = opts.pumpHistory;
         iobInputs.treatments = opts.treatments;
         // todo: var find_insulin = require('../iob/history');
-        Iob iob = new Iob();
-        treatments = iob.find_insulin(iobInputs);
-//****************************************************************************************************************************************
+        AutotuneIob autotuneIob = new AutotuneIob();
 
+        //treatments = autotuneIob.find_insulin(iobInputs);
+//****************************************************************************************************************************************
+        log.debug("end find_insulin");
         /* Code template for IOB calculation trom tempBasal Object
         IobTotal iob = new IobTotal(now);
         Profile profile = ProfileFunctions.getInstance().getProfile(now);
@@ -442,7 +450,7 @@ public class AutotunePrep {
 
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
-            Opts dosedOpts = new Opts(injector);
+            Opts dosedOpts = new Opts();
             dosedOpts.nsTreatments = treatments;
             dosedOpts.start = crDatum.CRInitialCarbTime;
             dosedOpts.end = crDatum.CREndTime;
@@ -504,7 +512,16 @@ public class AutotunePrep {
             ISFGlucoseData.addAll(CSFGlucoseData);
             CSFGlucoseData = new ArrayList<>();
         }
-
+        long now = System.currentTimeMillis();
+        long hour = 1000 * 60 * 60;
+        IobTotal iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(now, profileData );
+        log.debug("Now IobTotal etAbsoluteIOBTempBasals Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
+        iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(now - 21 * hour, profileData );
+        log.debug("20 hour ago IobTotal etAbsoluteIOBTempBasals Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
+        iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(now - 43 * hour, profileData );
+        log.debug("43 hours ago IobTotal etAbsoluteIOBTempBasals Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
+        iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(now - 67 * 24 * hour, profileData );
+        log.debug("67 hours ago IobTotal etAbsoluteIOBTempBasals Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 // categorize.js Lines 437-444
         log.debug("CRData: "+CRData.size());
         log.debug("CSFGlucoseData: "+CSFGlucoseData.size());

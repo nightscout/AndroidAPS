@@ -2,12 +2,13 @@ package info.nightscout.androidaps.plugins.general.autotune.data;
 
 import info.nightscout.androidaps.data.Profile;
 
-public class TunedProfile extends Profile {
+public class TunedProfile  {
     private Profile profile;
     public String profilename;
-    private ProfileValue pv;
+    private Profile.ProfileValue pv;
     public double currentBasal;
     public Double AvgISF;
+
 
     public TunedProfile (Profile currentProfile) {
         profile=currentProfile;
