@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.aps.loop;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -54,6 +53,9 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotifi
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -90,6 +92,7 @@ public class LoopPlugin extends PluginBase {
     private final ReceiverStatusStore receiverStatusStore;
     private final FabricPrivacy fabricPrivacy;
     private final HardLimits hardLimits;
+    private Notification notification;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -439,46 +442,55 @@ public class LoopPlugin extends PluginBase {
                             && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
                             && carbsSuggestionsSuspendedUntil < System.currentTimeMillis()) {
 
-                        Intent intentAction5m = new Intent(context, CarbSuggestionReceiver.class);
-                        intentAction5m.putExtra("ignoreDuration",5);
-                        PendingIntent pendingIntent5m = PendingIntent.getBroadcast(context,1, intentAction5m,PendingIntent.FLAG_UPDATE_CURRENT);
-                        NotificationCompat.Action actionIgnore5m = new
-                                NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 5m", pendingIntent5m);
+                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local,true)) {
+                            Notification carbreqlocal = new Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.getCarbsRequiredText(), Notification.NORMAL);
+                            rxBus.send(new EventNewNotification(carbreqlocal));
+                        }
+                        if (sp.getBoolean(R.string.key_ns_create_announcements_from_carbs_req, false)) {
+                            NSUpload.uploadError(resultAfterConstraints.getCarbsRequiredText());
+                        }
+                        if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)){
+                            Intent intentAction5m = new Intent(context, CarbSuggestionReceiver.class);
+                            intentAction5m.putExtra("ignoreDuration", 5);
+                            PendingIntent pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT);
+                            NotificationCompat.Action actionIgnore5m = new
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 5m", pendingIntent5m);
 
-                        Intent intentAction15m = new Intent(context, CarbSuggestionReceiver.class);
-                        intentAction15m.putExtra("ignoreDuration",15);
-                        PendingIntent pendingIntent15m = PendingIntent.getBroadcast(context,1, intentAction15m,PendingIntent.FLAG_UPDATE_CURRENT);
-                        NotificationCompat.Action actionIgnore15m = new
-                                NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 15m", pendingIntent15m);
+                            Intent intentAction15m = new Intent(context, CarbSuggestionReceiver.class);
+                            intentAction15m.putExtra("ignoreDuration", 15);
+                            PendingIntent pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT);
+                            NotificationCompat.Action actionIgnore15m = new
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 15m", pendingIntent15m);
 
-                        Intent intentAction30m = new Intent(context, CarbSuggestionReceiver.class);
-                        intentAction30m.putExtra("ignoreDuration",30);
-                        PendingIntent pendingIntent30m = PendingIntent.getBroadcast(context,1, intentAction30m,PendingIntent.FLAG_UPDATE_CURRENT);
-                        NotificationCompat.Action actionIgnore30m = new
-                                NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 30m", pendingIntent30m);
+                            Intent intentAction30m = new Intent(context, CarbSuggestionReceiver.class);
+                            intentAction30m.putExtra("ignoreDuration", 30);
+                            PendingIntent pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT);
+                            NotificationCompat.Action actionIgnore30m = new
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 30m", pendingIntent30m);
 
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                        builder.setSmallIcon(R.drawable.notif_icon)
-                                .setContentTitle(resourceHelper.gs(R.string.carbssuggestion))
-                                .setContentText(resultAfterConstraints.getCarbsRequiredText())
-                                .setAutoCancel(true)
-                                .setPriority(Notification.PRIORITY_MAX)
-                                .setCategory(Notification.CATEGORY_ALARM)
-                                .addAction(actionIgnore5m)
-                                .addAction(actionIgnore15m)
-                                .addAction(actionIgnore30m)
-                                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+                            builder.setSmallIcon(R.drawable.notif_icon)
+                                    .setContentTitle(resourceHelper.gs(R.string.carbssuggestion))
+                                    .setContentText(resultAfterConstraints.getCarbsRequiredText())
+                                    .setAutoCancel(true)
+                                    .setPriority(Notification.IMPORTANCE_HIGH)
+                                    .setCategory(Notification.CATEGORY_ALARM)
+                                    .addAction(actionIgnore5m)
+                                    .addAction(actionIgnore15m)
+                                    .addAction(actionIgnore30m)
+                                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
 
-                        NotificationManager mNotificationManager =
-                                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                            NotificationManager mNotificationManager =
+                                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                        // mId allows you to update the notification later on.
-                        mNotificationManager.notify(Constants.notificationID, builder.build());
-                        rxBus.send(new EventNewOpenLoopNotification());
+                            // mId allows you to update the notification later on.
+                            mNotificationManager.notify(Constants.notificationID, builder.build());
+                            rxBus.send(new EventNewOpenLoopNotification());
 
-                        // Send to Wear
-                        actionStringHandler.get().handleInitiate("changeRequest");
+                            // Send to Wear
+                            actionStringHandler.get().handleInitiate("changeRequest");
+                        }
 
                     } else {
                         dismissSuggestion();
@@ -537,7 +549,7 @@ public class LoopPlugin extends PluginBase {
                             .setContentTitle(resourceHelper.gs(R.string.openloop_newsuggestion))
                             .setContentText(resultAfterConstraints.toString())
                             .setAutoCancel(true)
-                            .setPriority(Notification.PRIORITY_HIGH)
+                            .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
                     if (sp.getBoolean("wearcontrol", false)) {
