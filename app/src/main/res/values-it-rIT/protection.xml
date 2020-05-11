@@ -14,7 +14,7 @@
     <string name="custom_password">Password personalizzata</string>
     <string name="noprotection">Nessuna protezione</string>
     <string name="protection">Protezione</string>
-    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password Master in Preferenze (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s &#8594; %2$s)</string>
     <string name="password_set">Password impostata!</string>
     <string name="password_not_set">Password non impostata</string>
     <string name="password_not_changed">Password non modificata</string>

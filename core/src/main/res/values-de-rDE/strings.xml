@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <string name="confirmation">Bestätigung</string>
+    <string name="message">Nachricht</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="dismiss">VERWERFEN</string>
+    <!--    BlePreCheck-->
+    <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
+    <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
+    <!--    DateUtil-->
+    <string name="minago">vor %1$d Min.</string>
+    <string name="hoursago">vor %1$.1f Stunde</string>
+    <string name="shorthour">Std</string>
+    <string name="days">Tage</string>
+    <string name="hours">Stunden</string>
+    <string name="unit_second">Sekunde</string>
+    <string name="unit_minute">Minute</string>
+    <string name="unit_hour">Stunde</string>
+    <string name="unit_day">Tag</string>
+    <string name="unit_week">Woche</string>
+    <string name="unit_seconds">Sekunden</string>
+    <string name="unit_minutes">Minuten</string>
+    <string name="unit_hours">Stunden</string>
+    <string name="unit_days">Tage</string>
+    <string name="unit_weeks">Wochen</string>
+    <string name="shortminute">min</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
+    <string name="profile_per_unit">/IE</string>
+    <string name="profile_ins_units_per_hour">IE/h</string>
+    <string name="profile_carbs_per_unit">g/IE</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Kein Profil ausgewählt</string>
+    <!--    PumpType-->
+    <!--    APSResult-->
+    <string name="canceltemp">TBR abbrechen</string>
+    <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
+    <string name="rate">Rate</string>
+    <string name="duration">Dauer</string>
+    <string name="reason">Begründung</string>
+    <string name="nochangerequested">Keine Anpassung benötigt</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d Min.</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">BZ Test</string>
+    <string name="careportal_announcement">Ankündigung</string>
+    <string name="careportal_note">Notiz</string>
+    <string name="careportal_question">Frage</string>
+    <string name="careportal_exercise">Bewegung</string>
+    <string name="careportal_pumpsitechange">Pumpenkatheter Wechsel</string>
+    <string name="careportal_cgmsensorinsert">CGM-Sensor gesetzt</string>
+    <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
+    <string name="careportal_insulincartridgechange">Insulinreservoir Wechsel</string>
+    <string name="careportal_profileswitch">Profilwechsel</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
+    <string name="careportal_mealbolus">Mahlzeiten Bolus</string>
+    <string name="careportal_correctionbolus">Korrektur Bolus</string>
+    <string name="careportal_combobolus">Combo Bolus</string>
+    <string name="careportal_tempbasalstart">TBR Start</string>
+    <string name="careportal_tempbasalend">TBR Ende</string>
+    <string name="careportal_carbscorrection">Kohlenhydrat Korrektur</string>
+    <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="careportal_pumpbatterychange">Pumpenbatterie Wechsel</string>
+    <string name="careportal_temporarytarget">Temporäres Ziel</string>
+    <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manuell</string>
+    <string name="unknown">unbekannt</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Zeitüberschreitung bei Verbindung</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Ausgeführt</string>
+    <string name="comment">Kommentar</string>
+    <string name="success">Erfolgreich</string>
+    <string name="percent">Prozent</string>
+    <string name="absolute">Absolut</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">IE</string>
+    <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+</resources>

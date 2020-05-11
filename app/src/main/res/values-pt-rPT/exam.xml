@@ -109,7 +109,7 @@
     <string name="wrongcarbs_addfakeinsulin">Como adicionar insulina falsa utilizando a função Recarregar</string>
     <string name="extendedcarbs_label">Tópico: Alimentos com Gordura e Proteína</string>
     <string name="extendedcarbs_handling">O que fazer se a comida contém uma grande quantidade de gordura e/ou proteínas?</string>
-    <string name="extendedcarbs_useextendedcarbs">Recalcular gordura e proteínas em hidratos e usar recurso de \"Hidratos Estendidos\".</string>
+    <string name="extendedcarbs_useextendedcarbs">Recalcular gordura e proteínas em hidratos e usar recurso de \"Hidratos Prolongados\".</string>
     <string name="extendedcarbs_add">Recalcular gordura e proteínas em hidratos e adicionar ao cálculo de bólus.</string>
     <string name="extendedcarbs_useextendedbolus">Use o bólus estendido para cobrir gordura e proteínas.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
