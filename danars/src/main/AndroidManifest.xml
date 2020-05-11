@@ -17,5 +17,10 @@
         <activity
             android:name="info.nightscout.androidaps.danars.activities.EnterPinActivity"
             android:launchMode="singleTask" />
+
+        <service
+            android:name="info.nightscout.androidaps.danars.services.DanaRSService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 </manifest>

@@ -133,22 +133,6 @@
             android:name=".services.LocationService"
             android:exported="false" />
         <service
-            android:name=".danar.services.DanaRExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".danaRKorean.services.DanaRKoreanExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".danaRv2.services.DanaRv2ExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="info.nightscout.androidaps.danars.services.DanaRSService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
             <intent-filter>
