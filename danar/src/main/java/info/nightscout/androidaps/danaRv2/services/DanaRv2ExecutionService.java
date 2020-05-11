@@ -349,7 +349,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (BolusProgressDialog.stopPressed) return false;
 
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)));
-        mBolusingTreatment = t;
+        danaPump.setBolusingTreatment(t);
+        danaPump.setBolusDone(false);
         final int preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0);
         MessageBase start;
         if (preferencesSpeed == 0)
@@ -392,7 +393,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         bolusingEvent.setT(t);
         bolusingEvent.setPercent(99);
 
-        mBolusingTreatment = null;
+        danaPump.setBolusingTreatment(null);
         int speed = 12;
         switch (preferencesSpeed) {
             case 0:

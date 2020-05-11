@@ -10,7 +10,10 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
+import info.nightscout.androidaps.danars.comm.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Treatment
@@ -31,9 +34,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danars.comm.*
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
@@ -69,7 +69,6 @@ class DanaRSService : DaggerService() {
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
-    private var bolusingTreatment: Treatment? = null
     private var lastHistoryFetched: Long = 0
     private var lastApproachingDailyLimit: Long = 0
 
@@ -236,8 +235,8 @@ class DanaRSService : DaggerService() {
         if (!isConnected) return false
         if (BolusProgressDialog.stopPressed) return false
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)))
-        bolusingTreatment = t
         val preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0)
+        danaPump.bolusDone = false
         danaPump.bolusingTreatment = t
         danaPump.bolusAmountToBeDelivered = insulin
         danaPump.bolusStopped = false
@@ -247,7 +246,7 @@ class DanaRSService : DaggerService() {
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbTime, carbs); ####
 //            sendMessage(msg);
-            val msgSetHistoryEntryV2 = DanaRS_Packet_APS_Set_Event_History(injector, info.nightscout.androidaps.dana.DanaPump.CARBS, carbTime, carbs, 0)
+            val msgSetHistoryEntryV2 = DanaRS_Packet_APS_Set_Event_History(injector, DanaPump.CARBS, carbTime, carbs, 0)
             sendMessage(msgSetHistoryEntryV2)
             lastHistoryFetched = min(lastHistoryFetched, carbTime - T.mins(1).msecs())
         }
@@ -271,7 +270,7 @@ class DanaRSService : DaggerService() {
         val bolusingEvent = EventOverviewBolusProgress
         bolusingEvent.t = t
         bolusingEvent.percent = 99
-        bolusingTreatment = null
+        danaPump.bolusingTreatment = null
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -300,7 +299,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun bolusStop() {
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ " + if (bolusingTreatment == null) "" else bolusingTreatment?.insulin)
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ " + if (danaPump.bolusingTreatment == null) "" else danaPump.bolusingTreatment?.insulin)
         val stop = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(injector)
         danaPump.bolusStopForced = true
         if (isConnected) {

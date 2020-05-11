@@ -74,8 +74,6 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     protected BluetoothSocket mRfcommSocket;
     protected BluetoothDevice mBTDevice;
 
-    protected Treatment mBolusingTreatment = null;
-
     protected boolean mConnectionInProgress = false;
     protected boolean mHandshakeInProgress = false;
 
@@ -212,7 +210,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public void bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (mBolusingTreatment == null ? "" : mBolusingTreatment.insulin));
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (danaPump.getBolusingTreatment() == null ? "" : danaPump.getBolusingTreatment().insulin));
         MsgBolusStop stop = new MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaPump);
         danaPump.setBolusStopForced(true);
         if (isConnected()) {

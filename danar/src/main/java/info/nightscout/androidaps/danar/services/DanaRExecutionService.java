@@ -270,7 +270,8 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         if (BolusProgressDialog.stopPressed) return false;
 
-        mBolusingTreatment = t;
+        danaPump.setBolusingTreatment(t);
+        danaPump.setBolusDone(false);
         int preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0);
         MessageBase start;
         if (preferencesSpeed == 0)
@@ -309,7 +310,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             bolusingEvent.setT(t);
             bolusingEvent.setPercent(99);
 
-            mBolusingTreatment = null;
+            danaPump.setBolusingTreatment(null);
 
             int speed = 12;
             switch (preferencesSpeed) {

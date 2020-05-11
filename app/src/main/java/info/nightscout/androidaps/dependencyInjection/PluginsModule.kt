@@ -4,6 +4,9 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -106,19 +109,19 @@ abstract class PluginsModule {
     @PumpDriver
     @IntoMap
     @IntKey(90)
-    abstract fun bindDanaRPlugin(plugin: info.nightscout.androidaps.danar.DanaRPlugin): PluginBase
+    abstract fun bindDanaRPlugin(plugin: DanaRPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
     @IntKey(100)
-    abstract fun bindDanaRKoreanPlugin(plugin: info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin): PluginBase
+    abstract fun bindDanaRKoreanPlugin(plugin: DanaRKoreanPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
     @IntKey(110)
-    abstract fun bindDanaRv2Plugin(plugin: info.nightscout.androidaps.danaRv2.DanaRv2Plugin): PluginBase
+    abstract fun bindDanaRv2Plugin(plugin: DanaRv2Plugin): PluginBase
 
     @Binds
     @PumpDriver

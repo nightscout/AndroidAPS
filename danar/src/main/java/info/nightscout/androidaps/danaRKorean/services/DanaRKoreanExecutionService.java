@@ -259,7 +259,8 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         if (BolusProgressDialog.stopPressed) return false;
 
-        mBolusingTreatment = t;
+        danaPump.setBolusingTreatment(t);
+        danaPump.setBolusDone(false);
         MsgBolusStart start = new MsgBolusStart(aapsLogger, constraintChecker, danaPump, amount);
         danaPump.setBolusStopped(false);
         danaPump.setBolusStopForced(false);
@@ -288,7 +289,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             }
             SystemClock.sleep(300);
 
-            mBolusingTreatment = null;
+            danaPump.setBolusingTreatment(null);
             commandQueue.readStatus("bolusOK", null);
         }
 
