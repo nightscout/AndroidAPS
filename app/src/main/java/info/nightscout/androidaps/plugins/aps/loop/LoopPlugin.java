@@ -454,19 +454,19 @@ public class LoopPlugin extends PluginBase {
                             intentAction5m.putExtra("ignoreDuration", 5);
                             PendingIntent pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Action actionIgnore5m = new
-                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 5m", pendingIntent5m);
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, sp.getString(R.string.ignore5m,"Ignore 5m"), pendingIntent5m);
 
                             Intent intentAction15m = new Intent(context, CarbSuggestionReceiver.class);
                             intentAction15m.putExtra("ignoreDuration", 15);
                             PendingIntent pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Action actionIgnore15m = new
-                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 15m", pendingIntent15m);
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, sp.getString(R.string.ignore15m,"Ignore 15m"), pendingIntent15m);
 
                             Intent intentAction30m = new Intent(context, CarbSuggestionReceiver.class);
                             intentAction30m.putExtra("ignoreDuration", 30);
                             PendingIntent pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Action actionIgnore30m = new
-                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 30m", pendingIntent30m);
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, sp.getString(R.string.ignore30m,"Ignore 30m"), pendingIntent30m);
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
                             builder.setSmallIcon(R.drawable.notif_icon)
