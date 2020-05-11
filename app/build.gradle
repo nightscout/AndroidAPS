@@ -124,7 +124,7 @@ android {
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
