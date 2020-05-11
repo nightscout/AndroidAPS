@@ -3,7 +3,7 @@
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="key_danar_password" translatable="false">danar_password</string>
-    <string name="key_danars_password">danars_password</string>
+    <string name="key_danars_password" translatable="false">danars_password</string>
     <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
     <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_v3_randompairingkey" translatable="false">danars_v3_randompairing_key_</string>
