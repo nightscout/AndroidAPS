@@ -57,6 +57,7 @@ public class Opts {
 //    @Inject public info.nightscout.androidaps.utils.sharedPreferences.SP sp;
 
     private final HasAndroidInjector injector;
+    public boolean ascending;
 
     public Opts() {
         injector = MainApp.instance();
@@ -77,6 +78,7 @@ public class Opts {
 
 
     public void setTreaments(long from, long to, boolean ascending) {
+        this.ascending=ascending;
         pumpHistory = new ArrayList<NsTreatment>();
         setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from,to,ascending));
         setExtBolusHistory(MainApp.getDbHelper().getExtendedBolusDataFromTime(from,to,ascending));
@@ -88,7 +90,7 @@ public class Opts {
             Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
-    private void setTempBasalHistory( List<TemporaryBasal> lt) {
+    public void setTempBasalHistory( List<TemporaryBasal> lt) {
         if (pumpHistory==null)
             pumpHistory = new ArrayList<NsTreatment>();
         pumpTempBasalHistory=lt;
@@ -99,18 +101,26 @@ public class Opts {
                 tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
             pumpHistory.add(new NsTreatment(tp));
         }
+        if (ascending)
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+        else
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
-    private void setExtBolusHistory(List<ExtendedBolus> lt) {
+    public void setExtBolusHistory(List<ExtendedBolus> lt) {
         if (pumpHistory==null)
             pumpHistory = new ArrayList<NsTreatment>();
         pumpExtBolusHistory=lt;
         for (ExtendedBolus t:pumpExtBolusHistory) {
             pumpHistory.add(new NsTreatment(t));
         }
+        if (ascending)
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+        else
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
-    private void setTreatments(List<Treatment> lt) {
+    public void setTreatments(List<Treatment> lt) {
         if (pumpHistory==null)
             pumpHistory = new ArrayList<NsTreatment>();
         treatments=lt;
@@ -119,16 +129,24 @@ public class Opts {
             pumpHistory.add(new NsTreatment(t));
             nsTreatments.add(new NsTreatment(t));
         }
+        if (ascending)
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+        else
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
 
     }
 
-    private void setCareportalEvents(List<CareportalEvent> lt) {
+    public void setCareportalEvents(List<CareportalEvent> lt) {
         if (pumpHistory==null)
             pumpHistory = new ArrayList<NsTreatment>();
         careportalEvents=lt;
         for (CareportalEvent t:careportalEvents) {
             pumpHistory.add(new NsTreatment(t));
         }
+        if (ascending)
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+        else
+            Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
     // on each loop glucose containts only one day BG Value

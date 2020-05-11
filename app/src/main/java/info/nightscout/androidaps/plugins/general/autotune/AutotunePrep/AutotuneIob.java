@@ -1,5 +1,19 @@
 package info.nightscout.androidaps.plugins.general.autotune.AutotunePrep;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.GsonBuilder;
+
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,166 +22,513 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Intervals;
+import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.NonOverlappingIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileStore;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin;
 import info.nightscout.androidaps.plugins.general.autotune.data.IobInputs;
 import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
 import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSTreatment;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class AutotuneIob {
-    @Inject ProfileFunction profileFunction;
+public class AutotuneIob<from> {
     private final HasAndroidInjector injector;
+    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
+    @Inject ProfileFunction profileFunction;
+    @Inject SP sp;
+    @Inject ResourceHelper resourceHelper;
+    @Inject ActivePluginProvider activePlugin;
+    @Inject DateUtil dateUtil;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
-    public AutotuneIob(){
-        injector = MainApp.instance();
+    private CompositeDisposable disposable = new CompositeDisposable();
+
+    private ArrayList<Treatment> treatments = new ArrayList<>();
+    private Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
+    private Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
+    private Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
+    private ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
+
+    public AutotuneIob(
+            HasAndroidInjector injector,
+            long from,
+            long to
+    ) {
+        this.injector=injector;
         injector.androidInjector().inject(this);
+        initializeData(from,to);
+
     }
 
-    public IobTotal getIOB(IobInputs iobInputs) {
-        IobTotal iobTotal = new IobTotal(iobInputs.clock);
-
-
-        return iobTotal;
+    private long range() {
+        double dia = Constants.defaultDIA;
+        if (profileFunction.getProfile() != null)
+            dia = profileFunction.getProfile().getDia();
+        //Todo: Philoul Oref0 Autotune works with 6 hours, I prefer leave 6 hours mini for testing, maybe dia is a better setting
+        return (long) (60 * 60 * 1000L * Math.max(6 , dia));
     }
 
-    public List<NsTreatment> find_insulin (IobInputs inputs) {
-        List<NsTreatment> pumpHistory = inputs.history;
-        List<CareportalEvent> careportalEvents = inputs.careportalEvents;
-        TunedProfile profile_data = inputs.profile;
-        List<NsTreatment> tempHistory = new ArrayList<NsTreatment>();
-        List<NsTreatment> tempBoluses = new ArrayList<NsTreatment>();
-        List<NsTreatment> pumpSuspends = new ArrayList<NsTreatment>();
-        List<NsTreatment> pumpResumes = new ArrayList<NsTreatment>();
-        boolean suspendedPrior = false;
-        long firstResumeTime, lastSuspendTime;
-        boolean currentlySuspended = false;
-        boolean suspendError = false;
+    //todo Philoul check consistency for treatments (treaments before oldest BG value are removed in categorize.js file
+    private void initializeData(long from, long to) {
+        initializeTreatmentData(from, to);
+        initializeTempBasalData(from-range(), to);
+        initializeExtendedBolusData(from-range(), to);
+        initializeTempTargetData(from, to);
+        initializeProfileSwitchData(from-range(), to);
+    }
 
+    private void initializeTreatmentData(long from, long to) {
+        synchronized (treatments) {
+            treatments.clear();
+            treatments.addAll(treatmentsPlugin.getService().getTreatmentDataFromTime(from, to, false));
+        }
+    }
+
+    private void initializeTempBasalData(long from, long to) {
+        synchronized (tempBasals) {
+            tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from, to, false));
+        }
+
+    }
+
+    private void initializeExtendedBolusData(long from, long to) {
+        synchronized (extendedBoluses) {
+            extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(from, to, false));
+        }
+
+    }
+
+    private void initializeTempTargetData(long from, long to) {
+        synchronized (tempTargets) {
+            tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(from, to, false));
+        }
+    }
+
+    private void initializeProfileSwitchData(long from, long to) {
+        synchronized (profiles) {
+            profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(from, false));
+        }
+    }
+
+    public IobTotal getCalculationToTimeTreatments(long time) {
+        return getCalculationToTimeTreatments(time, null);
+    }
+
+    //Todo philoul check consistency with oref0-autotune detailled results
+    public IobTotal getCalculationToTimeTreatments(long time, Profile profile) {
+        IobTotal total = new IobTotal(time);
+
+        if (profile == null)
+            profile = profileFunction.getProfile();
+        if (profile == null)
+            return total;
+
+        PumpInterface pumpInterface = activePlugin.getActivePump();
+
+        double dia = profile.getDia();
+
+        synchronized (treatments) {
+            for (int pos = 0; pos < treatments.size(); pos++) {
+                Treatment t = treatments.get(pos);
+                if (!t.isValid) continue;
+                if (t.date > time) continue;
+                Iob tIOB = t.iobCalc(time, dia);
+                total.iob += tIOB.iobContrib;
+                total.activity += tIOB.activityContrib;
+                if (t.insulin > 0 && t.date > total.lastBolusTime)
+                    total.lastBolusTime = t.date;
+                if (!t.isSMB) {
+                    // instead of dividing the DIA that only worked on the bilinear curves,
+                    // multiply the time the treatment is seen active.
+                    long timeSinceTreatment = time - t.date;
+                    long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
+                    Iob bIOB = t.iobCalc(snoozeTime, dia);
+                    total.bolussnooze += bIOB.iobContrib;
+                }
+            }
+        }
+
+        if (!pumpInterface.isFakingTempsByExtendedBoluses())
+            synchronized (extendedBoluses) {
+                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
+                    ExtendedBolus e = extendedBoluses.get(pos);
+                    if (e.date > time) continue;
+                    IobTotal calc = e.iobCalc(time);
+                    total.plus(calc);
+                }
+            }
+        return total;
+    }
+
+    public List<Treatment> getTreatmentsFromHistory() {
+        synchronized (treatments) {
+            return new ArrayList<>(treatments);
+        }
+    }
+
+
+    /**
+     * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
+     * map "Fill Canulla" entries to history (and not to add double bolus for it)
+     *
+     * @param fromTimestamp
+     * @return
+     */
+    public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
+        List<Treatment> in5minback = new ArrayList<>();
+
+        long time = System.currentTimeMillis();
+        synchronized (treatments) {
+
+            for (Treatment t : treatments) {
+                if (t.date <= time && t.date >= fromTimestamp)
+                    in5minback.add(t);
+            }
+            return in5minback;
+        }
+    }
+
+
+    public List<Treatment> getCarbTreatments5MinBackFromHistory(long time) {
+        List<Treatment> in5minback = new ArrayList<>();
+        synchronized (treatments) {
+            for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
+                if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
+                    in5minback.add(t);
+            }
+            return in5minback;
+        }
+    }
+
+    public long getLastBolusTime() {
         long now = System.currentTimeMillis();
-
-        long lastRecordTime = now;
-
-        // Gather the times the pump was suspended and resumed
-        // pump Suspend and resume disabled for AndroidAPS
-
-
-        int i;
-        int j;
-
-        // Pick relevant events for processing and clean the data
-        //Philoul: Note we already have clean data, just need to remove Carbs data and update duration
-        for (i=0; i < pumpHistory.size(); i++) {
-            NsTreatment current = pumpHistory.get(i);
-
-            if (current.eventType != CareportalEvent.CARBCORRECTION)
-            tempHistory.add(current);
-        }
-
-        // Check for overlapping events and adjust event lengths in case of overlap
-        Collections.sort(tempHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
-
-        for (i=0; i+1 < tempHistory.size(); i++) {
-            if (tempHistory.get(i).date + tempHistory.get(i).duration*60*1000 > tempHistory.get(i+1).date) {
-                tempHistory.get(i).duration = (int) (tempHistory.get(i+1).date - tempHistory.get(i).date)/60/1000;
-                // Delete AndroidAPS "Cancel TBR records" in which duration is not populated
-                if (tempHistory.get(i+1).isEndingEvent) {
-                    tempHistory.remove(i+1);
-                }
+        long last = 0;
+        synchronized (treatments) {
+            for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
+                if (t.date > last && t.insulin > 0 && t.date <= now)
+                    last = t.date;
             }
         }
+        return last;
+    }
 
-        // Create an array of moments to slit the temps by
-        // currently supports basal changes
-        //Philoul I prefer split data each hour (24 hour per day)
-
-        // iterate through the events and split at basal break points if needed
-
-        for (i=0; i+1 < tempHistory.size(); i++) {
-            NsTreatment currentItem = tempHistory.get(i);
-            // split each object according to
-            if(currentItem.eventType==CareportalEvent.TEMPBASAL && currentItem.duration>0){
-                long minStartEvent = currentItem.date/60/1000; //(in minutes)
-                long minEndEvent = minStartEvent + currentItem.duration;
-                if(minStartEvent/60 != minEndEvent/60) {    //not the same hour so split event
-                    NsTreatment temp = currentItem;
-                    temp.date = DateUtil.toTimeMinutesFromMidnight(currentItem.date, (int) minEndEvent / 60);
-                    temp.duration = currentItem.duration - (int) (temp.date-currentItem.date)/60/1000;
-                    currentItem.duration = (int) (temp.date-currentItem.date)/60/1000;
-                    tempHistory.add(temp);
-                }
+    public long getLastBolusTime(boolean isSMB) {
+        long now = System.currentTimeMillis();
+        long last = 0;
+        synchronized (treatments) {
+            for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
+                if (t.date > last && t.insulin > 0 && t.date <= now && isSMB == t.isSMB)
+                    last = t.date;
             }
         }
-        Collections.sort(tempHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+        return last;
+    }
 
-        //Bloc to split event according to Pump Suspend event removed
+    public boolean isInHistoryRealTempBasalInProgress() {
+        return getRealTempBasalFromHistory(System.currentTimeMillis()) != null;
+    }
 
-        // iterate through the temp basals and create bolus events from temps that affect IOB
+    public TemporaryBasal getRealTempBasalFromHistory(long time) {
+        synchronized (tempBasals) {
+            return tempBasals.getValueByInterval(time);
+        }
+    }
 
-        Double tempBolusSize;
+    public boolean isTempBasalInProgress() {
+        return getTempBasalFromHistory(System.currentTimeMillis()) != null;
+    }
 
-        for (i=0; i < tempHistory.size(); i++) {
+    public boolean isInHistoryExtendedBoluslInProgress() {
+        return getExtendedBolusFromHistory(System.currentTimeMillis()) != null; //TODO:  crosscheck here
+    }
 
-            NsTreatment currentItem = tempHistory.get(i);
+    public IobTotal getCalculationToTimeTempBasals(long time) {
+        return getCalculationToTimeTempBasals(time, false, 0);
+    }
 
-            if (currentItem.duration > 0) {
-                //todo Check here use of average basal of Categorize
-                //Double currentRate = profile_data.current_basal;
+    public IobTotal getCalculationToTimeTempBasals(long time, boolean truncate, long truncateTime) {
+        IobTotal total = new IobTotal(time);
 
-                Profile currentItemProfile = profileFunction.getProfile(currentItem.date);
-                Double currentRate = currentItemProfile.getBasal(currentItem.date);
+        PumpInterface pumpInterface = activePlugin.getActivePump();
 
-                //Todo get profile_data.getSingleTargetsMgdl() or profile_data.getTargets() to improve calculation
-                //if (profile_data.min_bg != 'undefined' && typeof profile_data.max_bg != 'undefined') {
-                //    target_bg = (profile_data.min_bg + profile_data.max_bg) / 2;
-                //}
-                //if (profile_data.temptargetSet && target_bg > 110) {
-                    //sensitivityRatio = 2/(2+(target_bg-100)/40);
-                    //currentRate = profile_data.current_basal * sensitivityRatio;
-                //}
-                Double sensitivityRatio = 0d;
-                TunedProfile profile = profile_data;
-                int normalTarget = 100; // evaluate high/low temptarget against 100, not scheduled basal (which might change)
-                //if ( profile.half_basal_exercise_target ) {
-                //    var halfBasalTarget = profile.half_basal_exercise_target;
-                //} else {
-                    int halfBasalTarget = 160; // when temptarget is 160 mg/dL, run 50% basal (120 = 75%; 140 = 60%)
-                //}
-
-                //if ( profile.exercise_mode && profile.temptargetSet && target_bg >= normalTarget + 5 ) {
-                    // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
-                    // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
-                //    int c = halfBasalTarget - normalTarget;
-                //    sensitivityRatio = c/(c+target_bg-normalTarget);
-                //}
-                if ( sensitivityRatio > 0 ) {
-                    currentRate = currentRate * sensitivityRatio;
+        synchronized (tempBasals) {
+            for (Integer pos = 0; pos < tempBasals.size(); pos++) {
+                TemporaryBasal t = tempBasals.get(pos);
+                if (t.date > time) continue;
+                IobTotal calc;
+                Profile profile = profileFunction.getProfile(t.date);
+                if (profile == null) continue;
+                if (truncate && t.end() > truncateTime) {
+                    TemporaryBasal dummyTemp = new TemporaryBasal(injector);
+                    dummyTemp.copyFrom(t);
+                    dummyTemp.cutEndTo(truncateTime);
+                    calc = dummyTemp.iobCalc(time, profile);
+                } else {
+                    calc = t.iobCalc(time, profile);
                 }
-
-                Double netBasalRate = currentItem.absoluteRate - currentRate;
-                if (netBasalRate < 0) { tempBolusSize = -0.05d; }
-                else { tempBolusSize = 0.05d; }
-                Double netBasalAmount = Round.roundTo(netBasalRate*currentItem.duration*60,0.01);
-                int tempBolusCount = (int) Math.round(netBasalAmount/tempBolusSize);
-                int tempBolusSpacing = currentItem.duration / tempBolusCount;
-                for (j=0; j < tempBolusCount; j++) {
-                    Treatment tempBolus = new Treatment();
-                    tempBolus.insulin = tempBolusSize;
-                    tempBolus.date = currentItem.date + j * tempBolusSpacing*60*1000;
-                    tempBoluses.add(new NsTreatment(tempBolus));
-                }
+                //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+                total.plus(calc);
             }
         }
-        tempHistory.addAll(tempBoluses);
+        if (pumpInterface.isFakingTempsByExtendedBoluses()) {
+            IobTotal totalExt = new IobTotal(time);
+            synchronized (extendedBoluses) {
+                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
+                    ExtendedBolus e = extendedBoluses.get(pos);
+                    if (e.date > time) continue;
+                    IobTotal calc;
+                    Profile profile = profileFunction.getProfile(e.date);
+                    if (profile == null) continue;
+                    if (truncate && e.end() > truncateTime) {
+                        ExtendedBolus dummyExt = new ExtendedBolus(injector);
+                        dummyExt.copyFrom(e);
+                        dummyExt.cutEndTo(truncateTime);
+                        calc = dummyExt.iobCalc(time);
+                    } else {
+                        calc = e.iobCalc(time);
+                    }
+                    totalExt.plus(calc);
+                }
+            }
+            // Convert to basal iob
+            totalExt.basaliob = totalExt.iob;
+            totalExt.iob = 0d;
+            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
+            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
+            total.plus(totalExt);
+        }
+        return total;
+    }
 
-        Collections.sort(tempHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+    public IobTotal getAbsoluteIOBTempBasals(long time) {
+        return getAbsoluteIOBTempBasals( time, null);
+    }
 
-        return tempHistory;
+    //Todo philoul check consistency with oref0-autotune detailled results
+    public IobTotal getAbsoluteIOBTempBasals(long time, Profile profile) {
+        IobTotal total = new IobTotal(time);
+
+        for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
+            if (profile == null)
+                profile = profileFunction.getProfile(i);
+
+            double basal = profile.getBasal(i);
+            TemporaryBasal runningTBR = getTempBasalFromHistory(i);
+            double running = basal;
+            if (runningTBR != null) {
+                running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
+            }
+            Treatment treatment = new Treatment(injector);
+            treatment.date = i;
+            treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
+            Iob iob = treatment.iobCalc(i, profile.getDia());
+            total.iob += iob.iobContrib;
+            total.activity += iob.activityContrib;
+        }
+        return total;
+    }
+
+    public IobTotal getCalculationToTimeTempBasals(long time, long truncateTime, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
+        IobTotal total = new IobTotal(time);
+
+        PumpInterface pumpInterface = activePlugin.getActivePump();
+
+        synchronized (tempBasals) {
+            for (int pos = 0; pos < tempBasals.size(); pos++) {
+                TemporaryBasal t = tempBasals.get(pos);
+                if (t.date > time) continue;
+                IobTotal calc;
+                Profile profile = profileFunction.getProfile(t.date);
+                if (profile == null) continue;
+                if (t.end() > truncateTime) {
+                    TemporaryBasal dummyTemp = new TemporaryBasal(injector);
+                    dummyTemp.copyFrom(t);
+                    dummyTemp.cutEndTo(truncateTime);
+                    calc = dummyTemp.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
+                } else {
+                    calc = t.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
+                }
+                //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+                total.plus(calc);
+            }
+        }
+        if (pumpInterface.isFakingTempsByExtendedBoluses()) {
+            IobTotal totalExt = new IobTotal(time);
+            synchronized (extendedBoluses) {
+                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
+                    ExtendedBolus e = extendedBoluses.get(pos);
+                    if (e.date > time) continue;
+                    IobTotal calc;
+                    Profile profile = profileFunction.getProfile(e.date);
+                    if (profile == null) continue;
+                    if (e.end() > truncateTime) {
+                        ExtendedBolus dummyExt = new ExtendedBolus(injector);
+                        dummyExt.copyFrom(e);
+                        dummyExt.cutEndTo(truncateTime);
+                        calc = dummyExt.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
+                    } else {
+                        calc = e.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
+                    }
+                    totalExt.plus(calc);
+                }
+            }
+            // Convert to basal iob
+            totalExt.basaliob = totalExt.iob;
+            totalExt.iob = 0d;
+            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
+            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
+            total.plus(totalExt);
+        }
+        return total;
+    }
+
+    @Nullable
+    public TemporaryBasal getTempBasalFromHistory(long time) {
+        TemporaryBasal tb = getRealTempBasalFromHistory(time);
+        if (tb != null)
+            return tb;
+        ExtendedBolus eb = getExtendedBolusFromHistory(time);
+        if (eb != null && activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
+            return new TemporaryBasal(eb);
+        return null;
+    }
+
+    public ExtendedBolus getExtendedBolusFromHistory(long time) {
+        synchronized (extendedBoluses) {
+            return extendedBoluses.getValueByInterval(time);
+        }
+    }
+
+    @NonNull
+    public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
+        synchronized (extendedBoluses) {
+            return new NonOverlappingIntervals<>(extendedBoluses);
+        }
+    }
+
+    @NonNull
+    public NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
+        synchronized (tempBasals) {
+            return new NonOverlappingIntervals<>(tempBasals);
+        }
+    }
+
+    public long oldestDataAvailable() {
+        long oldestTime = System.currentTimeMillis();
+        synchronized (tempBasals) {
+            if (tempBasals.size() > 0)
+                oldestTime = Math.min(oldestTime, tempBasals.get(0).date);
+        }
+        synchronized (extendedBoluses) {
+            if (extendedBoluses.size() > 0)
+                oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
+        }
+        synchronized (treatments) {
+            if (treatments.size() > 0)
+                oldestTime = Math.min(oldestTime, treatments.get(treatments.size() - 1).date);
+        }
+        oldestTime -= 15 * 60 * 1000L; // allow 15 min before
+        return oldestTime;
+    }
+
+    @Nullable
+    public TempTarget getTempTargetFromHistory(long time) {
+        synchronized (tempTargets) {
+            return tempTargets.getValueByInterval(time);
+        }
+    }
+
+    public Intervals<TempTarget> getTempTargetsFromHistory() {
+        synchronized (tempTargets) {
+            return new OverlappingIntervals<>(tempTargets);
+        }
+    }
+
+    @Nullable
+    public ProfileSwitch getProfileSwitchFromHistory(long time) {
+        synchronized (profiles) {
+            return (ProfileSwitch) profiles.getValueToTime(time);
+        }
+    }
+
+    public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
+        synchronized (profiles) {
+            return new ProfileIntervals<>(profiles);
+        }
+    }
+
+    public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
+        //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
+        //rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
+        MainApp.getDbHelper().createOrUpdate(profileSwitch);
+        NSUpload.uploadProfileSwitch(profileSwitch);
+    }
+
+    public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
+        ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
+        addToHistoryProfileSwitch(profileSwitch);
+        if (percentage == 90 && duration == 10)
+            sp.putBoolean(R.string.key_objectiveuseprofileswitch, true);
+    }
+
+    public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
+        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(System.currentTimeMillis());
+        if (profileSwitch != null) {
+            profileSwitch = new ProfileSwitch(injector);
+            profileSwitch.date = System.currentTimeMillis();
+            profileSwitch.source = Source.USER;
+            profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
+            profileSwitch.profileJson = profileFunction.getProfile().getData().toString();
+            profileSwitch.profilePlugin = activePlugin.getActiveProfileInterface().getClass().getName();
+            profileSwitch.durationInMinutes = duration;
+            profileSwitch.isCPP = percentage != 100 || timeShift != 0;
+            profileSwitch.timeshift = timeShift;
+            profileSwitch.percentage = percentage;
+            addToHistoryProfileSwitch(profileSwitch);
+        } else {
+            //log.error(LTag.PROFILE, "No profile switch exists");
+        }
     }
 }

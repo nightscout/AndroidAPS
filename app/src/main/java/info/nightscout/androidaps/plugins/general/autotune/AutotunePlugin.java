@@ -1353,7 +1353,7 @@ public class AutotunePlugin extends PluginBase {
                     categorizeBGDatums(glucoseStart, glucoseEnd);
                     AutotunePrep autotunePrep = new AutotunePrep(injector);
                     //AutotunePrep autotunePrep = new AutotunePrep();
-                    autotunePrep.categorizeBGDatums(opts); // line added for log and test
+                    autotunePrep.categorizeBGDatums(glucoseStart,glucoseEnd,opts); // line added for log and test
                     //PrepOutput prepOutput = autotunePrep.generate(opts);
                     FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(2));
 

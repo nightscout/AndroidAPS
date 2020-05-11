@@ -16,9 +16,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
@@ -46,6 +48,7 @@ public class AutotunePrep {
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     private final HasAndroidInjector injector;
+    private AutotuneIob autotuneIob;
 
     @Inject
     public AutotunePrep(
@@ -55,19 +58,24 @@ public class AutotunePrep {
         this.injector.androidInjector().inject(this);
     }
 
-    public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
+    public PrepOutput categorizeBGDatums(long from, long to, Opts opts) throws JSONException, ParseException, IOException {
+        long from_iob = from - 6 * 60 * 60 * 1000L;
+        autotuneIob = new AutotuneIob(injector, - 6 * 60 * 60 * 1000L,to);
 
-        List<NsTreatment> treatments = opts.nsTreatments;
+        List<Treatment> treatments = autotuneIob.getTreatmentsFromHistory();
         // this sorts the treatments collection in order.
-        Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
+        //Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
+
 
         Profile profileData = opts.profile;
 
+        List<BgReading> glucose=MainApp.getDbHelper().getBgreadingsDataFromTime(from,to, false);
+
         List<BgReading> glucoseData = new ArrayList<BgReading>();
 
-        for (int i = 0; i < opts.glucose.size(); i++) {
-            if (opts.glucose.get(i).value > 39) {
-                glucoseData.add(opts.glucose.get(i));
+        for (int i = 0; i < glucose.size(); i++) {
+            if (glucose.get(i).value > 39) {
+                glucoseData.add(glucose.get(i));
             }
         }
         Collections.sort(glucoseData, (o1, o2) -> (int) (o2.date - o1.date));
@@ -75,12 +83,12 @@ public class AutotunePrep {
         int boluses = 0;
         int maxCarbs = 0;
 
-        IobInputs iobInputs = new IobInputs();
-        iobInputs.profile = new TunedProfile(opts.profile);
+ //       IobInputs iobInputs = new IobInputs();
+ //       iobInputs.profile = new TunedProfile(opts.profile);
         // pumpHistory of oref0 are splitted in pumpHistory (for temp basals or extended bolus) and treatments (for bolus, meal bolus or correction carbs)
-        iobInputs.history = opts.pumpHistory;
-        iobInputs.treatments = opts.treatments;
-        iobInputs.careportalEvents = opts.careportalEvents;
+ //       iobInputs.history = opts.pumpHistory;
+ //       iobInputs.treatments = opts.treatments;
+ //       iobInputs.careportalEvents = opts.careportalEvents;
         List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
@@ -108,7 +116,7 @@ public class AutotunePrep {
                 bucketedData.add(new BGDatum(average));
             }
         }
-
+/*
         //console.error(bucketedData);
         //console.error(bucketedData[bucketedData.length-1]);
         // go through the treatments and remove any that are older than the oldest glucose value
@@ -127,7 +135,7 @@ public class AutotunePrep {
             }
         }
         log.debug("Treatments size: " + treatments.size());
-
+*/
         if (treatments.size() < 1) {
             log.debug("No treatments");
             return null;
@@ -147,7 +155,7 @@ public class AutotunePrep {
 
         //categorize.js#123
         // main for loop
-        List<NsTreatment> fullHistory = iobInputs.history ;//IOBInputs.history;
+//        List<NsTreatment> fullHistory = iobInputs.history ;//IOBInputs.history;
 
 
         for (int i = bucketedData.size() - 5; i > 0; --i) {
@@ -158,7 +166,7 @@ public class AutotunePrep {
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
 
-            NsTreatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
+            Treatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
             double myCarbs = 0;
             if (treatment != null) {
 
@@ -200,11 +208,11 @@ public class AutotunePrep {
             //sens = ISF
             double sens = profileData.getIsfMgdl(BGTime);
             //log.debug("ISF data = " + sens);
-            iobInputs.clock=BGTime;
+//            iobInputs.clock=BGTime;
             // trim down IOBInputs.history to just the data for 6h prior to BGDate
             //log.debug(IOBInputs.history[0].created_at);
-            List<NsTreatment> newHistory = new ArrayList<NsTreatment>();
-
+//            List<NsTreatment> newHistory = new ArrayList<NsTreatment>();
+/*
             for (int h = 0; h < fullHistory.size(); h++) {
                 long hDate = fullHistory.get(h).date;
                 //log.debug(fullHistory[i].created_at, hDate, BGDate, BGDate-hDate);
@@ -218,7 +226,7 @@ public class AutotunePrep {
                 }
             }
             iobInputs.history = newHistory;
-
+*/
             // process.stderr.write("" + newHistory.length + " ");
             //log.debug(newHistory[0].created_at,newHistory[newHistory.length-1].created_at,newHistory.length);
 
@@ -232,7 +240,7 @@ public class AutotunePrep {
             double basal3hAgo = opts.pumpprofile.getBasal(BGTime-3*60*60*1000);
 
             double sum = currentPumpBasal + basal1hAgo + basal2hAgo + basal3hAgo;
-            iobInputs.profile.currentBasal = Round.roundTo(sum/4 , 0.001);
+//            iobInputs.profile.currentBasal = Round.roundTo(sum/4 , 0.001);
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
             //double currentBasal = AutotunePlugin.getBasal(hourOfDay);
@@ -248,18 +256,12 @@ public class AutotunePrep {
             //todo Calculate iob or check initial proposition below
             //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
-            //IobTotal iob = autotunePlugin.calculateFromTreatmentsAndTemps(BGTime);
             IobTotal iob;
-            //iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(BGTime, profileData);
             //log.debug(JSON.stringify(iob));
-            //log.debug("IobTotal calculateFromTreatmentsAndTemps Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob);
 
-            iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(BGTime, profileData );
-            //log.debug("calculateAbsInsulinFromTreatmentsAndTempsSynchronized Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
-            //IobTotal bolusIob = treatmentsPlugin.getCalculationToTimeTreatments(BGTime).round();
-            //IobTotal basalIob = treatmentsPlugin.getAbsoluteIOBTempBasals(BGTime).round();
-            //iob = IobTotal.combine(bolusIob, basalIob).round();
-            //iob = treatmentsPlugin.getAbsoluteIOBTempBasals(BGTime).round();
+            IobTotal bolusIob = autotuneIob.getCalculationToTimeTreatments(BGTime, profileData).round();
+            IobTotal basalIob = autotuneIob.getAbsoluteIOBTempBasals(BGTime, profileData).round();
+            iob = IobTotal.combine(bolusIob, basalIob).round();
             //log.debug("treatmentsPlugin Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
             // activity times ISF times 5 minutes is BGI
@@ -431,11 +433,11 @@ public class AutotunePrep {
         }
         log.debug("end of loop bucket");
 
-        iobInputs.profile = new TunedProfile(opts.profile);
-        iobInputs.history = opts.pumpHistory;
-        iobInputs.treatments = opts.treatments;
+//        iobInputs.profile = new TunedProfile(opts.profile);
+//        iobInputs.history = opts.pumpHistory;
+//        iobInputs.treatments = opts.treatments;
         // todo: var find_insulin = require('../iob/history');
-        AutotuneIob autotuneIob = new AutotuneIob();
+
 
         //treatments = autotuneIob.find_insulin(iobInputs);
 //****************************************************************************************************************************************
@@ -450,11 +452,7 @@ public class AutotunePrep {
 
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
-            Opts dosedOpts = new Opts();
-            dosedOpts.nsTreatments = treatments;
-            dosedOpts.start = crDatum.CRInitialCarbTime;
-            dosedOpts.end = crDatum.CREndTime;
-            crDatum.CRInsulin = dosed(dosedOpts);
+            crDatum.CRInsulin = dosed(crDatum.CRInitialCarbTime,crDatum.CRInitialCarbTime,treatments);
         }
 // categorize.js Lines 384-436
         int CSFLength = CSFGlucoseData.size();
@@ -532,18 +530,14 @@ public class AutotunePrep {
     }
 
     //dosed.js full
-    private static double dosed(Opts opts) {
-        long start = opts.start;
-        long end = opts.end;
-        List<NsTreatment> treatments = opts.nsTreatments;
-        Profile profile_data = opts.profile;
+    private static double dosed(long start, long end, List<Treatment> treatments) {
         double insulinDosed = 0;
         if (treatments.size()==0) {
             log.debug("No treatments to process.");
             return 0;
         }
 
-        for (NsTreatment treatment:treatments ) {
+        for (Treatment treatment:treatments ) {
             if(treatment.insulin != 0 && treatment.date > start && treatment.date <= end) {
                 insulinDosed += treatment.insulin;
             }
@@ -553,166 +547,6 @@ public class AutotunePrep {
         return Round.roundTo(insulinDosed,0.001);
     }
 
-
-    // index.js // opts = inputs
-    public PrepOutput generate (Opts opts) throws JSONException, ParseException, IOException {
-
-        PrepOutput autotune_prep_output = categorizeBGDatums(opts);
-
-        if (opts.tune_insulin_curve) {
-/* Todo if necessary if tune insulin curve is set
-
-            if (opts.profile.curve === 'bilinear') {
-                console.error('--tune-insulin-curve is set but only valid for exponential curves');
-            } else {
-                var minDeviations = 1000000;
-                var newDIA = 0;
-                var diaDeviations = [];
-                var peakDeviations = [];
-                var currentDIA = opts.profile.dia;
-                var currentPeak = opts.profile.insulinPeakTime;
-
-                var consoleError = console.error;
-                console.error = function() {};
-
-                var startDIA=currentDIA - 2;
-                var endDIA=currentDIA + 2;
-                for (var dia=startDIA; dia <= endDIA; ++dia) {
-                    var sqrtDeviations = 0;
-                    var deviations = 0;
-                    var deviationsSq = 0;
-
-                    opts.profile.dia = dia;
-
-                    var curve_output = categorize(opts);
-                    var basalGlucose = curve_output.basalGlucoseData;
-
-                    for (var hour=0; hour < 24; ++hour) {
-                        for (var i=0; i < basalGlucose.length; ++i) {
-                            var BGTime;
-
-                            if (basalGlucose[i].date) {
-                                BGTime = new Date(basalGlucose[i].date);
-                            } else if (basalGlucose[i].displayTime) {
-                                BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
-                            } else if (basalGlucose[i].dateString) {
-                                BGTime = new Date(basalGlucose[i].dateString);
-                            } else {
-                                consoleError("Could not determine last BG time");
-                            }
-
-                            var myHour = BGTime.getHours();
-                            if (hour === myHour) {
-                                //console.error(basalGlucose[i].deviation);
-                                sqrtDeviations += Math.pow(parseFloat(Math.abs(basalGlucose[i].deviation)), 0.5);
-                                deviations += Math.abs(parseFloat(basalGlucose[i].deviation));
-                                deviationsSq += Math.pow(parseFloat(basalGlucose[i].deviation), 2);
-                            }
-                        }
-                    }
-
-                    var meanDeviation = Math.round(Math.abs(deviations/basalGlucose.length)*1000)/1000;
-                    var SMRDeviation = Math.round(Math.pow(sqrtDeviations/basalGlucose.length,2)*1000)/1000;
-                    var RMSDeviation = Math.round(Math.pow(deviationsSq/basalGlucose.length,0.5)*1000)/1000;
-                    consoleError('insulinEndTime', dia, 'meanDeviation:', meanDeviation, 'SMRDeviation:', SMRDeviation, 'RMSDeviation:',RMSDeviation, '(mg/dL)');
-                    diaDeviations.push({
-                            dia: dia,
-                            meanDeviation: meanDeviation,
-                            SMRDeviation: SMRDeviation,
-                            RMSDeviation: RMSDeviation,
-        });
-                    autotune_prep_output.diaDeviations = diaDeviations;
-
-                    deviations = Math.round(deviations*1000)/1000;
-                    if (deviations < minDeviations) {
-                        minDeviations = Math.round(deviations*1000)/1000;
-                        newDIA = dia;
-                    }
-                }
-
-                // consoleError('Optimum insulinEndTime', newDIA, 'mean deviation:', Math.round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
-                //consoleError(diaDeviations);
-
-                minDeviations = 1000000;
-
-                var newPeak = 0;
-                opts.profile.dia = currentDIA;
-                //consoleError(opts.profile.useCustomPeakTime, opts.profile.insulinPeakTime);
-                if ( ! opts.profile.useCustomPeakTime === true && opts.profile.curve === "ultra-rapid" ) {
-                    opts.profile.insulinPeakTime = 55;
-                } else if ( ! opts.profile.useCustomPeakTime === true ) {
-                    opts.profile.insulinPeakTime = 75;
-                }
-                opts.profile.useCustomPeakTime = true;
-
-                var startPeak=opts.profile.insulinPeakTime - 10;
-                var endPeak=opts.profile.insulinPeakTime + 10;
-                for (var peak=startPeak; peak <= endPeak; peak=(peak+5)) {
-                    sqrtDeviations = 0;
-                    deviations = 0;
-                    deviationsSq = 0;
-
-                    opts.profile.insulinPeakTime = peak;
-
-
-                    curve_output = categorize(opts);
-                    basalGlucose = curve_output.basalGlucoseData;
-
-                    for (hour=0; hour < 24; ++hour) {
-                        for (i=0; i < basalGlucose.length; ++i) {
-                            if (basalGlucose[i].date) {
-                                BGTime = new Date(basalGlucose[i].date);
-                            } else if (basalGlucose[i].displayTime) {
-                                BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
-                            } else if (basalGlucose[i].dateString) {
-                                BGTime = new Date(basalGlucose[i].dateString);
-                            } else {
-                                consoleError("Could not determine last BG time");
-                            }
-
-                            myHour = BGTime.getHours();
-                            if (hour === myHour) {
-                                //console.error(basalGlucose[i].deviation);
-                                sqrtDeviations += Math.pow(parseFloat(Math.abs(basalGlucose[i].deviation)), 0.5);
-                                deviations += Math.abs(parseFloat(basalGlucose[i].deviation));
-                                deviationsSq += Math.pow(parseFloat(basalGlucose[i].deviation), 2);
-                            }
-                        }
-                    }
-                    console.error(deviationsSq);
-
-                    meanDeviation = Math.round(deviations/basalGlucose.length*1000)/1000;
-                    SMRDeviation = Math.round(Math.pow(sqrtDeviations/basalGlucose.length,2)*1000)/1000;
-                    RMSDeviation = Math.round(Math.pow(deviationsSq/basalGlucose.length,0.5)*1000)/1000;
-                    consoleError('insulinPeakTime', peak, 'meanDeviation:', meanDeviation, 'SMRDeviation:', SMRDeviation, 'RMSDeviation:',RMSDeviation, '(mg/dL)');
-                    peakDeviations.push({
-                            peak: peak,
-                            meanDeviation: meanDeviation,
-                            SMRDeviation: SMRDeviation,
-                            RMSDeviation: RMSDeviation,
-        });
-                    autotune_prep_output.diaDeviations = diaDeviations;
-
-                    deviations = Math.round(deviations*1000)/1000;
-                    if (deviations < minDeviations) {
-                        minDeviations = Math.round(deviations*1000)/1000;
-                        newPeak = peak;
-                    }
-                }
-
-                //consoleError('Optimum insulinPeakTime', newPeak, 'mean deviation:', Math.round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
-                //consoleError(peakDeviations);
-                autotune_prep_output.peakDeviations = peakDeviations;
-
-                console.error = consoleError;
-            }
-
- */
-        }
-
-
-        return autotune_prep_output;
-    }
 
 }
 
