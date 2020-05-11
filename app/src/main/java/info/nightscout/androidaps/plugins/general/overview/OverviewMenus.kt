@@ -206,7 +206,7 @@ class OverviewMenus @Inject constructor(
 
             R.id.overview_activeprofile -> {
                 menu.setHeaderTitle(resourceHelper.gs(R.string.profile))
-                menu.add(resourceHelper.gs(R.string.danar_viewprofile))
+                menu.add(resourceHelper.gs(R.string.viewprofile))
                 if (activePlugin.activeProfileInterface.profile != null) {
                     menu.add(resourceHelper.gs(R.string.careportal_profileswitch))
                 }
@@ -341,18 +341,18 @@ class OverviewMenus @Inject constructor(
                 return true
             }
 
-            resourceHelper.gs(R.string.disconnectpumpfor3h)                           -> {
+            resourceHelper.gs(R.string.disconnectpumpfor3h)      -> {
                 aapsLogger.debug("USER ENTRY: DISCONNECT 3h")
                 loopPlugin.disconnectPump(180, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            resourceHelper.gs(R.string.careportal_profileswitch)                      -> {
+            resourceHelper.gs(R.string.careportal_profileswitch) -> {
                 ProfileSwitchDialog().show(manager, "Overview")
             }
 
-            resourceHelper.gs(R.string.danar_viewprofile)                             -> {
+            resourceHelper.gs(R.string.viewprofile)              -> {
                 val args = Bundle()
                 args.putLong("time", DateUtil.now())
                 args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
@@ -361,7 +361,7 @@ class OverviewMenus @Inject constructor(
                 pvd.show(manager, "ProfileViewDialog")
             }
 
-            resourceHelper.gs(R.string.eatingsoon)                                    -> {
+            resourceHelper.gs(R.string.eatingsoon)               -> {
                 aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON")
                 val target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), profileFunction.getUnits())
                 val tempTarget = TempTarget()

@@ -201,7 +201,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (pref.getKey().equals(getResourceHelper().gs(R.string.key_rileylink_mac_address))) {
             String value = sp.getStringOrNull(R.string.key_rileylink_mac_address, null);
-            pref.setSummary(value == null ? getResourceHelper().gs(R.string.rileylink_error_address_not_set_short) : value);
+            pref.setSummary(value == null ? getResourceHelper().gs(R.string.not_set_short) : value);
         }
     }
 

@@ -16,7 +16,6 @@ import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -123,7 +122,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val duration = overview_temptarget_duration.value.toInt()
         if (target != 0.0 && duration != 0) {
             actions.add(resourceHelper.gs(R.string.reason) + ": " + reason)
-            actions.add(resourceHelper.gs(R.string.nsprofileview_target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + resourceHelper.gs(unitResId))
+            actions.add(resourceHelper.gs(R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + resourceHelper.gs(unitResId))
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
         } else {
             actions.add(resourceHelper.gs(R.string.stoptemptarget))

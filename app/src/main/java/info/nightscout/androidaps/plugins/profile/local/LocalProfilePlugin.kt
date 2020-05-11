@@ -37,7 +37,8 @@ class LocalProfilePlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
     private val sp: SP,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
@@ -140,7 +141,7 @@ class LocalProfilePlugin @Inject constructor(
             if (name.contains(".")) namesOK = false
         }
         if (namesOK)
-            rawProfile?.let { NSUpload.uploadProfileStore(it.data) }
+            rawProfile?.let { nsUpload.uploadProfileStore(it.data) }
         else
             activity?.let {
                 OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot))

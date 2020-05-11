@@ -20,8 +20,8 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.Translator
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_care.*
 import kotlinx.android.synthetic.main.notes.*
@@ -36,6 +36,7 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
 
     enum class EventType {
@@ -43,10 +44,13 @@ class CareDialog : DialogFragmentWithDate() {
         SENSOR_INSERT,
         BATTERY_CHANGE,
         NOTE,
-        EXERCISE
+        EXERCISE,
+        QUESTION,
+        ANNOUNCEMENT
     }
 
     private var options: EventType = EventType.BGCHECK
+
     @StringRes
     private var event: Int = R.string.none
 
@@ -84,6 +88,8 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BATTERY_CHANGE -> R.drawable.icon_cp_pump_battery
             EventType.NOTE           -> R.drawable.icon_cp_note
             EventType.EXERCISE       -> R.drawable.icon_cp_exercise
+            EventType.QUESTION       -> R.drawable.icon_cp_question
+            EventType.ANNOUNCEMENT   -> R.drawable.icon_cp_announcement
         })
         actions_care_title.text = resourceHelper.gs(when (options) {
             EventType.BGCHECK        -> R.string.careportal_bgcheck
@@ -91,9 +97,13 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BATTERY_CHANGE -> R.string.careportal_pumpbatterychange
             EventType.NOTE           -> R.string.careportal_note
             EventType.EXERCISE       -> R.string.careportal_exercise
+            EventType.QUESTION       -> R.string.careportal_question
+            EventType.ANNOUNCEMENT   -> R.string.careportal_announcement
         })
 
         when (options) {
+            EventType.QUESTION,
+            EventType.ANNOUNCEMENT,
             EventType.BGCHECK        -> {
                 action_care_duration_layout.visibility = View.GONE
             }
@@ -133,7 +143,7 @@ class CareDialog : DialogFragmentWithDate() {
         }
         actions_care_duration.setParams(savedInstanceState?.getDouble("actions_care_duration")
             ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
-        if (options == EventType.NOTE)
+        if (options == EventType.NOTE || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT)
             notes_layout?.visibility = View.VISIBLE // independent to preferences
     }
 
@@ -143,7 +153,7 @@ class CareDialog : DialogFragmentWithDate() {
 
         val json = JSONObject()
         val actions: LinkedList<String> = LinkedList()
-        if (options == EventType.BGCHECK) {
+        if (options == EventType.BGCHECK || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT) {
             val type =
                 when {
                     actions_care_meter.isChecked  -> "Finger"
@@ -177,6 +187,8 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
             EventType.NOTE           -> CareportalEvent.NOTE
             EventType.EXERCISE       -> CareportalEvent.EXERCISE
+            EventType.QUESTION       -> CareportalEvent.QUESTION
+            EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
         })
         json.put("units", profileFunction.getUnits())
         if (enteredBy.isNotEmpty())
@@ -193,11 +205,13 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
                     EventType.NOTE           -> CareportalEvent.NOTE
                     EventType.EXERCISE       -> CareportalEvent.EXERCISE
+                    EventType.QUESTION       -> CareportalEvent.QUESTION
+                    EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
                 }
                 careportalEvent.json = json.toString()
                 aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                NSUpload.uploadCareportalEntryToNS(json)
+                nsUpload.uploadCareportalEntryToNS(json)
             }, null)
         }
         return true

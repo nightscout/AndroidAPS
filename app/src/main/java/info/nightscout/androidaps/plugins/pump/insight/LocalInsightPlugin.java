@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -39,6 +38,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -46,6 +46,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
@@ -53,7 +54,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -132,7 +132,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -149,7 +148,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final SP sp;
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
+    private final NSUpload nsUpload;
     private final Context context;
+    private final UploadQueue uploadQueue;
     private final DateUtil dateUtil;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
@@ -209,7 +210,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
+            NSUpload nsUpload,
             Context context,
+            UploadQueue uploadQueue,
             Config config,
             DateUtil dateUtil
     ) {
@@ -230,7 +233,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.profileFunction = profileFunction;
+        this.nsUpload = nsUpload;
         this.context = context;
+        this.uploadQueue = uploadQueue;
         this.dateUtil = dateUtil;
 
         pumpDescription = new PumpDescription();
@@ -929,8 +934,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                             if (extendedBolus.durationInMinutes <= 0) {
                                 final String _id = extendedBolus._id;
                                 if (NSUpload.isIdValid(_id))
-                                    NSUpload.removeCareportalEntryFromNS(_id);
-                                else UploadQueue.removeID("dbAdd", _id);
+                                    nsUpload.removeCareportalEntryFromNS(_id);
+                                else uploadQueue.removeID("dbAdd", _id);
                                 MainApp.getDbHelper().delete(extendedBolus);
                             } else
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
@@ -978,7 +983,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName) {
+    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
         long now = System.currentTimeMillis();
         if (connectionService == null) return null;
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
@@ -991,7 +996,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         final JSONObject extended = new JSONObject();
         try {
             status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
@@ -1451,8 +1456,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 ExtendedBolus extendedBolus = MainApp.getDbHelper().getExtendedBolusByPumpId(bolusID.id);
                 if (extendedBolus != null) {
                     final String _id = extendedBolus._id;
-                    if (NSUpload.isIdValid(_id)) NSUpload.removeCareportalEntryFromNS(_id);
-                    else UploadQueue.removeID("dbAdd", _id);
+                    if (NSUpload.isIdValid(_id)) nsUpload.removeCareportalEntryFromNS(_id);
+                    else uploadQueue.removeID("dbAdd", _id);
                     MainApp.getDbHelper().delete(extendedBolus);
                 }
             } else {
@@ -1583,7 +1588,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.eventType = CareportalEvent.NOTE;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1617,7 +1622,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

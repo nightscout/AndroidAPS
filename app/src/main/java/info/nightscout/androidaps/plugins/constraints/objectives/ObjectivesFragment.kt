@@ -22,8 +22,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
-import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtpStatus
+import info.nightscout.androidaps.dialogs.NtpProgressDialog
+import info.nightscout.androidaps.events.EventNtpStatus
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.receivers.ReceiverStatusStore

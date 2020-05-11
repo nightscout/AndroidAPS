@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.virtual
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -337,7 +336,7 @@ class VirtualPumpPlugin @Inject constructor(
         return result
     }
 
-    override fun getJSONStatus(profile: Profile, profileName: String): JSONObject {
+    override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
         val now = System.currentTimeMillis()
         if (!sp.getBoolean("virtualpump_uploadstatus", false)) {
             return JSONObject()
@@ -349,7 +348,7 @@ class VirtualPumpPlugin @Inject constructor(
         try {
             battery.put("percent", batteryPercent)
             status.put("status", "normal")
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
+            extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
             } catch (ignored: Exception) {

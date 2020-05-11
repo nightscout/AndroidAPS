@@ -19,17 +19,7 @@ import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 @Suppress("unused")
 abstract class DataClassesModule {
 
-    @ContributesAndroidInjector abstract fun profileInjector(): Profile
     @ContributesAndroidInjector abstract fun glucoseStatusInjector(): GlucoseStatus
-    @ContributesAndroidInjector abstract fun profileStoreInjector(): ProfileStore
-
-    // TODO move to Core
-    @ContributesAndroidInjector abstract fun bgReadingInjector(): BgReading
-    @ContributesAndroidInjector abstract fun treatmentInjector(): Treatment
-    @ContributesAndroidInjector abstract fun profileSwitchInjector(): ProfileSwitch
-    @ContributesAndroidInjector abstract fun temporaryBasalInjector(): TemporaryBasal
-    @ContributesAndroidInjector abstract fun careportalEventInjector(): CareportalEvent
-    @ContributesAndroidInjector abstract fun extendedBolusInjector(): ExtendedBolus
 
     @ContributesAndroidInjector abstract fun treatmentServiceInjector(): TreatmentService
 

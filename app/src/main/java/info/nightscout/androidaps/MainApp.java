@@ -7,14 +7,11 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
-import androidx.annotation.StringRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,11 +19,9 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -45,7 +40,7 @@ import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-public class MainApp extends DaggerApplication implements DatabaseHelperInterface {
+public class MainApp extends DaggerApplication {
 
     static MainApp sInstance;
     private static Resources sResources;
@@ -57,12 +52,13 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
     @Inject ActivityMonitor activityMonitor;
     @Inject VersionCheckerUtils versionCheckersUtils;
     @Inject SP sp;
+    @Inject NSUpload nsUpload;
 
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
     @Inject List<PluginBase> plugins;
 
-    @Inject StaticInjector staticInjector; // TODO remove , fake only to initialize
+    @Inject StaticInjector staticInjector; // TODO avoid , here fake only to initialize
 
     @Override
     public void onCreate() {
@@ -99,7 +95,7 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
         pluginStore.setPlugins(plugins);
         configBuilderPlugin.initialize();
 
-        NSUpload.uploadAppStart();
+        nsUpload.uploadAppStart();
 
         new Thread(() -> keepAliveManager.setAlarm(this)).start();
         doMigrations();
@@ -107,7 +103,6 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
 
 
     private void doMigrations() {
-
     }
 
     @Override
@@ -152,16 +147,6 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
         registerReceiver(new BTReceiver(), filter);
     }
 
-    @Deprecated
-    public static String gs(@StringRes int id) {
-        return sResources.getString(id);
-    }
-
-    @Deprecated
-    public static MainApp instance() {
-        return sInstance;
-    }
-
     public static DatabaseHelper getDbHelper() {
         return sDatabaseHelper;
     }
@@ -172,9 +157,5 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
         unregisterActivityLifecycleCallbacks(activityMonitor);
         keepAliveManager.cancelAlarm(this);
         super.onTerminate();
-    }
-
-    @NotNull @Override public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
-        return getDbHelper().getAllBgreadingsDataFromTime(mills, ascending);
     }
 }

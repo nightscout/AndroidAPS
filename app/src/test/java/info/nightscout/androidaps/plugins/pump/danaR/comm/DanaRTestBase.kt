@@ -6,11 +6,14 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 
 open class DanaRTestBase : TestBase() {
 
@@ -18,6 +21,13 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePluginProvider: ActivePluginProvider
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var databaseHelper: DatabaseHelperInterface
+    @Mock lateinit var treatmentsInterface: TreatmentsInterface
+
+    @Before
+    fun prepareMock() {
+        `when`(activePluginProvider.activeTreatments).thenReturn(treatmentsInterface)
+    }
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -30,7 +40,7 @@ open class DanaRTestBase : TestBase() {
         }
     }
 
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaPump: DanaPump
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
         val ret = ByteArray(length)
@@ -61,6 +71,6 @@ open class DanaRTestBase : TestBase() {
 
     @Before
     fun setup() {
-        danaRPump = DanaRPump(aapsLogger, sp, injector)
+        danaPump = info.nightscout.androidaps.dana.DanaPump(aapsLogger, sp, injector)
     }
 }

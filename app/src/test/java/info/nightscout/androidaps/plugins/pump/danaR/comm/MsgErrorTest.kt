@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import info.nightscout.androidaps.danar.comm.MsgError
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -16,11 +17,12 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgErrorTest : DanaRTestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var nsUpload: NSUpload
     val rxBus = RxBusWrapper()
 
     @Test fun runTest() {
         PowerMockito.mockStatic(NSUpload::class.java)
-        val packet = MsgError(aapsLogger, rxBus, resourceHelper, danaRPump)
+        val packet = MsgError(aapsLogger, rxBus, resourceHelper, danaPump, nsUpload)
 
         // test message decoding
         val array = ByteArray(100)

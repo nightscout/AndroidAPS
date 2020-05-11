@@ -9,14 +9,12 @@
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
-    <color name="listdelimiter">#505050</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
     <color name="basebasal">#C83F51B5</color>
     <color name="graphgrid">#757575</color>
-    <color name="colorLightGray">#d8d8d8</color>
     <color name="warning">#ff1a1a</color>
     <color name="error_background">#66FC0000</color>
     <color name="ok_background">#323232</color>
@@ -30,9 +28,7 @@
 
 
     <color name="mdtp_accent_color">#40bbaa</color>
-    <color name="colorInitializingBorder">#00695c</color>
 
-    <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
@@ -71,13 +67,6 @@
     <color name="ribbonTextCritical">#FFFFFF</color>
 
     <color name="splashBackground">#2E2E2E</color>
-
-    <color name="toastBorder">#666666</color>
-    <color name="toastBase">#ffffff</color>
-    <color name="toastOk">#77dd77</color>
-    <color name="toastError">#ff0400</color>
-    <color name="toastWarn">#FF8C00</color>
-    <color name="toastInfo">#03A9F4</color>
 
     <color name="metadataOk">#77dd77</color>
     <color name="metadataTextWarning">#FF8C00</color>

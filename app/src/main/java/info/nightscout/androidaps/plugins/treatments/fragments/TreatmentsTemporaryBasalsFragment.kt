@@ -44,6 +44,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -160,13 +162,13 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                     context?.let {
                         showConfirmation(it, resourceHelper.gs(R.string.removerecord),
                             """
-                ${resourceHelper.gs(R.string.pump_tempbasal_label)}: ${tempBasal.toStringFull()}
+                ${resourceHelper.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull()}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.date)}
                 """.trimIndent(),
                             DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
                                 val id = tempBasal._id
-                                if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)
-                                else UploadQueue.removeID("dbAdd", id)
+                                if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
+                                else uploadQueue.removeID("dbAdd", id)
                                 MainApp.getDbHelper().delete(tempBasal)
                             }, null)
                     }

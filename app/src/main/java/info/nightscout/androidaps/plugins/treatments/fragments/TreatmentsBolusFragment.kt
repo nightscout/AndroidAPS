@@ -42,6 +42,8 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -68,9 +70,9 @@ class TreatmentsBolusFragment : DaggerFragment() {
                     val futureTreatments = treatmentsPlugin.service.getTreatmentDataFromTime(DateUtil.now() + 1000, true)
                     for (treatment in futureTreatments) {
                         if (NSUpload.isIdValid(treatment._id))
-                            NSUpload.removeCareportalEntryFromNS(treatment._id)
+                            nsUpload.removeCareportalEntryFromNS(treatment._id)
                         else
-                            UploadQueue.removeID("dbAdd", treatment._id)
+                            uploadQueue.removeID("dbAdd", treatment._id)
                         treatmentsPlugin.service.delete(treatment)
                     }
                     updateGui()
@@ -166,9 +168,9 @@ class TreatmentsBolusFragment : DaggerFragment() {
                                 treatmentsPlugin.service.update(treatment)
                             } else {
                                 if (NSUpload.isIdValid(treatment._id))
-                                    NSUpload.removeCareportalEntryFromNS(treatment._id)
+                                    nsUpload.removeCareportalEntryFromNS(treatment._id)
                                 else
-                                    UploadQueue.removeID("dbAdd", treatment._id)
+                                    uploadQueue.removeID("dbAdd", treatment._id)
                                 treatmentsPlugin.service.delete(treatment)
                             }
                             updateGui()

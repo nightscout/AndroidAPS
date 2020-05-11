@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.danar.comm.MsgBolusStop
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -21,11 +22,11 @@ class MsgBolusStopTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(resourceHelper.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered")
-        danaRPump.bolusingTreatment = Treatment(HasAndroidInjector { AndroidInjector { } })
-        val packet = MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaRPump)
+        danaPump.bolusingTreatment = Treatment(HasAndroidInjector { AndroidInjector { } })
+        val packet = MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaPump)
 
         // test message decoding
         packet.handleMessage(ByteArray(100))
-        Assert.assertEquals(true, danaRPump.bolusStopped)
+        Assert.assertEquals(true, danaPump.bolusStopped)
     }
 }

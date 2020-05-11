@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
+import info.nightscout.androidaps.danar.comm.MessageBase
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,9 +12,9 @@ class MsgStatusBolusExtended_v2Test : DanaRTestBase() {
 
     @Test
     fun runTest() {
-        val packet = MsgStatusBolusExtended_v2(aapsLogger, danaRPump)
+        val packet = info.nightscout.androidaps.danaRv2.comm.MsgStatusBolusExtended_v2(aapsLogger, danaPump)
         // test message decoding
         packet.handleMessage(createArray(34, 7.toByte()))
-        Assert.assertEquals(MessageBase.intFromBuff(createArray(10, 7.toByte()), 2, 2).toDouble() / 100.0, danaRPump.extendedBolusAmount, 0.0)
+        Assert.assertEquals(MessageBase.intFromBuff(createArray(10, 7.toByte()), 2, 2).toDouble() / 100.0, danaPump.extendedBolusAmount, 0.0)
     }
 }

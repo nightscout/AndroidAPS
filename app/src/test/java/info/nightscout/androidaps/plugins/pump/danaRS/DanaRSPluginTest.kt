@@ -3,15 +3,17 @@ package info.nightscout.androidaps.plugins.pump.danaRS
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.danars.comm.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -37,7 +39,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun basalRateShouldBeLimited() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBasal = 0.8
+        danaPump.maxBasal = 0.8
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         danaRSPlugin.applyBasalConstraints(c, validProfile)
         Assert.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
@@ -49,7 +51,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun percentBasalRateShouldBeLimited() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBasal = 0.8
+        danaPump.maxBasal = 0.8
         val c = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         danaRSPlugin.applyBasalPercentConstraints(c, validProfile)
         Assert.assertEquals(200, c.value())
@@ -63,6 +65,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 
-        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, dateUtil)
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
     }
 }

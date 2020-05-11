@@ -31,9 +31,9 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -46,13 +46,13 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
@@ -61,7 +61,6 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.PercentageSplitter;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling
@@ -483,7 +482,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<TDD, String> dao = getDaoTDD();
             dao.createOrUpdate(tdd);
         } catch (SQLException e) {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "createOrUpdate-Exception");
             log.error("Unhandled exception", e);
         }
     }
@@ -1008,7 +1006,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
             if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
-                ExtendedBolus extendedBolus = new ExtendedBolus(MainApp.instance())
+                ExtendedBolus extendedBolus = new ExtendedBolus(StaticInjector.Companion.getInstance())
                         .source(Source.NIGHTSCOUT)
                         .date(trJson.getLong("mills"))
                         .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0)
@@ -1023,7 +1021,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 createOrUpdate(extendedBolus);
             } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
-                ExtendedBolus extendedBolus = new ExtendedBolus(MainApp.instance());
+                ExtendedBolus extendedBolus = new ExtendedBolus(StaticInjector.Companion.getInstance());
                 extendedBolus.source = Source.NIGHTSCOUT;
                 extendedBolus.date = trJson.getLong("mills");
                 extendedBolus.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
@@ -1038,7 +1036,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 createOrUpdate(extendedBolus);
             } else {
-                TemporaryBasal tempBasal = new TemporaryBasal( MainApp.instance())
+                TemporaryBasal tempBasal = new TemporaryBasal(StaticInjector.Companion.getInstance())
                         .date(trJson.getLong("mills"))
                         .source(Source.NIGHTSCOUT)
                         .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0);
@@ -1313,7 +1311,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      */
 
     public void createExtendedBolusFromJsonIfNotExists(JSONObject json) {
-        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(MainApp.instance(), json);
+        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(StaticInjector.Companion.getInstance(), json);
         if (extendedBolus != null)
             createOrUpdate(extendedBolus);
     }
@@ -1505,7 +1503,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<CareportalEvent> list = getDaoCareportalEvents().query(preparedQuery);
             CareportalEvent careportalEvent;
             if (list.size() == 0) {
-                careportalEvent = new CareportalEvent(MainApp.instance());
+                careportalEvent = new CareportalEvent(StaticInjector.Companion.getInstance());
                 careportalEvent.source = Source.NIGHTSCOUT;
                 if (L.isEnabled(LTag.DATABASE))
                     log.debug("Adding CareportalEvent record to database: " + trJson.toString());
@@ -1733,9 +1731,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
   */
 
-    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, JSONObject trJson) {
+    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, NSUpload nsUpload, JSONObject trJson) {
         try {
-            ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance());
+            ProfileSwitch profileSwitch = new ProfileSwitch(StaticInjector.Companion.getInstance());
             profileSwitch.date = trJson.getLong("mills");
             if (trJson.has("duration"))
                 profileSwitch.durationInMinutes = trJson.getInt("duration");
@@ -1759,7 +1757,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         if (L.isEnabled(LTag.DATABASE))
                             log.debug("Profile switch prefilled with JSON from local store");
                         // Update data in NS
-                        NSUpload.updateProfileSwitch(profileSwitch);
+                        nsUpload.updateProfileSwitch(profileSwitch);
                     } else {
                         if (L.isEnabled(LTag.DATABASE))
                             log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());

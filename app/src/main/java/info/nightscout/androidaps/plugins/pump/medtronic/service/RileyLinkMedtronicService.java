@@ -61,6 +61,11 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
+    @Override public void onCreate() {
+        super.onCreate();
+        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly created");
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         aapsLogger.warn(LTag.PUMPCOMM, "onConfigurationChanged");
@@ -314,7 +319,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                 return false;
             }
 
-            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr);
+            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr, resourceHelper);
 
             if (encodingType == null) {
                 encodingType = newEncodingType;

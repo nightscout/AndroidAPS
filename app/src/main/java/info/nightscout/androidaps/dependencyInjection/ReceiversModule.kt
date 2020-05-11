@@ -14,7 +14,6 @@ abstract class ReceiversModule {
     @ContributesAndroidInjector abstract fun contributesChargingStateReceiver(): ChargingStateReceiver
     @ContributesAndroidInjector abstract fun contributesDataReceiver(): DataReceiver
     @ContributesAndroidInjector abstract fun contributesKeepAliveReceiver(): KeepAliveReceiver
-    @ContributesAndroidInjector abstract fun contributesNetworkChangeReceiver(): NetworkChangeReceiver
     @ContributesAndroidInjector abstract fun contributesRileyLinkBluetoothStateReceiver(): RileyLinkBluetoothStateReceiver
     @ContributesAndroidInjector abstract fun contributesSmsReceiver(): SmsReceiver
     @ContributesAndroidInjector abstract fun contributesTimeDateOrTZChangeReceiver(): TimeDateOrTZChangeReceiver
