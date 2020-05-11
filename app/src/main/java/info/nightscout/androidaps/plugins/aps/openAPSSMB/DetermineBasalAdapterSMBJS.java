@@ -26,18 +26,16 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
+import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -240,7 +238,6 @@ public class DetermineBasalAdapterSMBJS {
 
         String units = profile.getUnits();
         PumpInterface pump = activePluginProvider.getActivePump();
-        ManufacturerType manufacturer = pump.manufacturer();
         Double pumpbolusstep = pump.getPumpDescription().bolusStep;
         mProfile = new JSONObject();
 
@@ -269,11 +266,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
-        if (!manufacturer.name().equals("Medtronic")) {
-            mProfile.put("skip_neutral_temps",SMBDefaults.skip_neutral_temps);
-        } else {
-            mProfile.put("skip_neutral_temps", sp.getBoolean(R.string.key_skip_neutral_temps, SMBDefaults.skip_neutral_temps_medtronic));
-        }
+        mProfile.put("skip_neutral_temps", !pump.setNeutralTempAtFullHour());
         // min_5m_carbimpact is not used within SMB determinebasal
         //if (mealData.usedMinCarbsImpact > 0) {
         //    mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);

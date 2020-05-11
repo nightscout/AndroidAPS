@@ -99,10 +99,10 @@
         </Preference>
 
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_skip_neutral_temps"
-            android:summary="@string/skip_neutral_temps_summary"
-            android:title="@string/skip_neutral_temps_title" />
+            android:defaultValue="true"
+            android:key="@string/key_set_neutral_temps"
+            android:summary="@string/set_neutral_temps_summary"
+            android:title="@string/set_neutral_temps_title" />
 
     </PreferenceCategory>
 
