@@ -14,7 +14,7 @@ class DanaRS_Packet_General_Get_Shipping_VerisonTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_General_Get_Shipping_Version) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -25,7 +25,7 @@ class DanaRS_Packet_General_Get_Shipping_VerisonTest : DanaRSTestBase() {
         val ver = byteArrayOf((-78).toByte(), (-127).toByte(), (66).toByte(), (80).toByte(), (78).toByte(), (45).toByte(), (51).toByte(), (46).toByte(), (48).toByte(), (46).toByte(), (48).toByte())
         packet.handleMessage(ver)
         Assert.assertFalse(packet.failed)
-        Assert.assertEquals("BPN-3.0.0", danaRPump.bleModel)
+        Assert.assertEquals("BPN-3.0.0", danaPump.bleModel)
         Assert.assertEquals("GENERAL__GET_SHIPPING_VERSION", packet.friendlyName)
     }
 }

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ class DanaRS_Packet_Option_Set_User_Option(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_USER_OPTION
@@ -19,28 +19,28 @@ class DanaRS_Packet_Option_Set_User_Option(
 
     override fun getRequestParams(): ByteArray {
         aapsLogger.debug(LTag.PUMPCOMM,
-            "UserOptions:" + (System.currentTimeMillis() - danaRPump.lastConnection) / 1000 + " s ago"
-                + "\ntimeDisplayType:" + danaRPump.timeDisplayType
-                + "\nbuttonScroll:" + danaRPump.buttonScrollOnOff
-                + "\ntimeDisplayType:" + danaRPump.timeDisplayType
-                + "\nlcdOnTimeSec:" + danaRPump.lcdOnTimeSec
-                + "\nbacklight:" + danaRPump.backlightOnTimeSec
-                + "\ndanaRPumpUnits:" + danaRPump.units
-                + "\nlowReservoir:" + danaRPump.lowReservoirRate)
+            "UserOptions:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
+                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
+                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
+                + "\nbacklight:" + danaPump.backlightOnTimeSec
+                + "\ndanaRPumpUnits:" + danaPump.units
+                + "\nlowReservoir:" + danaPump.lowReservoirRate)
         val request = ByteArray(13)
-        request[0] = (danaRPump.timeDisplayType and 0xff).toByte()
-        request[1] = (danaRPump.buttonScrollOnOff and 0xff).toByte()
-        request[2] = (danaRPump.beepAndAlarm and 0xff).toByte()
-        request[3] = (danaRPump.lcdOnTimeSec and 0xff).toByte()
-        request[4] = (danaRPump.backlightOnTimeSec and 0xff).toByte()
-        request[5] = (danaRPump.selectedLanguage and 0xff).toByte()
-        request[6] = (danaRPump.units and 0xff).toByte()
-        request[7] = (danaRPump.shutdownHour and 0xff).toByte()
-        request[8] = (danaRPump.lowReservoirRate and 0xff).toByte()
-        request[9] = (danaRPump.cannulaVolume and 0xff).toByte()
-        request[10] = (danaRPump.cannulaVolume ushr 8 and 0xff).toByte()
-        request[11] = (danaRPump.refillAmount and 0xff).toByte()
-        request[12] = (danaRPump.refillAmount ushr 8 and 0xff).toByte()
+        request[0] = (danaPump.timeDisplayType and 0xff).toByte()
+        request[1] = (danaPump.buttonScrollOnOff and 0xff).toByte()
+        request[2] = (danaPump.beepAndAlarm and 0xff).toByte()
+        request[3] = (danaPump.lcdOnTimeSec and 0xff).toByte()
+        request[4] = (danaPump.backlightOnTimeSec and 0xff).toByte()
+        request[5] = (danaPump.selectedLanguage and 0xff).toByte()
+        request[6] = (danaPump.units and 0xff).toByte()
+        request[7] = (danaPump.shutdownHour and 0xff).toByte()
+        request[8] = (danaPump.lowReservoirRate and 0xff).toByte()
+        request[9] = (danaPump.cannulaVolume and 0xff).toByte()
+        request[10] = (danaPump.cannulaVolume ushr 8 and 0xff).toByte()
+        request[11] = (danaPump.refillAmount and 0xff).toByte()
+        request[12] = (danaPump.refillAmount ushr 8 and 0xff).toByte()
         return request
     }
 

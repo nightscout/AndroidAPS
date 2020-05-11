@@ -31,9 +31,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.dana.DanaRPump
-import info.nightscout.androidaps.dana.comm.RecordTypes
-import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.comm.*
 import info.nightscout.androidaps.queue.Callback
@@ -59,7 +57,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var context: Context
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var danaRSMessageHashTable: DanaRSMessageHashTable
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var constraintChecker: ConstraintChecker
@@ -121,10 +119,10 @@ class DanaRSService : DaggerService() {
             sendMessage(DanaRS_Packet_Bolus_Get_Step_Bolus_Information(injector)) // last bolus, bolusStep, maxBolus
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingtempbasalstatus)))
             sendMessage(DanaRS_Packet_Basal_Get_Temporary_Basal_State(injector))
-            danaRPump.lastConnection = System.currentTimeMillis()
+            danaPump.lastConnection = System.currentTimeMillis()
             val profile = profileFunction.getProfile()
             val pump = activePlugin.activePump
-            if (profile != null && abs(danaRPump.currentBasal - profile.basal) >= pump.pumpDescription.basalStep) {
+            if (profile != null && abs(danaPump.currentBasal - profile.basal) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
                 sendMessage(DanaRS_Packet_Basal_Get_Basal_Rate(injector)) // basal profile, basalStep, maxBasal
                 if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
@@ -133,17 +131,17 @@ class DanaRSService : DaggerService() {
             }
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)))
             sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
-            var timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L
-            if (danaRPump.pumpTime == 0L) {
+            var timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
+            if (danaPump.pumpTime == 0L) {
                 // initial handshake was not successful
                 // de-initialize pump
-                danaRPump.reset()
+                danaPump.reset()
                 rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
                 rxBus.send(EventInitializationChanged())
                 return
             }
             val now = System.currentTimeMillis()
-            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized) {
+            if (danaPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized) {
                 rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
                 sendMessage(DanaRS_Packet_General_Get_Shipping_Information(injector)) // serial no
                 sendMessage(DanaRS_Packet_General_Get_Pump_Check(injector)) // firmware
@@ -153,7 +151,7 @@ class DanaRSService : DaggerService() {
                 sendMessage(DanaRS_Packet_Bolus_Get_Calculation_Information(injector)) // target
                 sendMessage(DanaRS_Packet_Bolus_Get_CIR_CF_Array(injector))
                 sendMessage(DanaRS_Packet_Option_Get_User_Option(injector)) // Getting user options
-                danaRPump.lastSettingsRead = now
+                danaPump.lastSettingsRead = now
             }
             aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
             if (abs(timeDiff) > 3) {
@@ -168,12 +166,12 @@ class DanaRSService : DaggerService() {
                     context.startActivity(i)
 
                     //de-initialize pump
-                    danaRPump.reset()
+                    danaPump.reset()
                     rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
                     rxBus.send(EventInitializationChanged())
                     return
                 } else {
-                    if (danaRPump.protocol >= 6) {
+                    if (danaPump.protocol >= 6) {
                         sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
                     } else {
                         waitForWholeMinute() // Dana can set only whole minute
@@ -181,7 +179,7 @@ class DanaRSService : DaggerService() {
                         sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now() + T.secs(10).msecs()))
                     }
                     sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
-                    timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L
+                    timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
                 }
             }
@@ -189,12 +187,12 @@ class DanaRSService : DaggerService() {
             rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
             //NSUpload.uploadDeviceStatus();
-            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
-                aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits)
+            if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     val reportFail = Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT)
                     rxBus.send(EventNewNotification(reportFail))
-                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U")
+                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U")
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -220,12 +218,12 @@ class DanaRSService : DaggerService() {
             aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(lastHistoryFetched))
         }
         sendMessage(msg)
-        while (!danaRPump.historyDoneReceived && bleComm.isConnected) {
+        while (!danaPump.historyDoneReceived && bleComm.isConnected) {
             SystemClock.sleep(100)
         }
-        lastHistoryFetched = if (danaRPump.lastEventTimeLoaded != 0L) danaRPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
+        lastHistoryFetched = if (danaPump.lastEventTimeLoaded != 0L) danaPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
         aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
-        danaRPump.lastConnection = System.currentTimeMillis()
+        danaPump.lastConnection = System.currentTimeMillis()
         return PumpEnactResult(injector).success(true)
     }
 
@@ -240,32 +238,32 @@ class DanaRSService : DaggerService() {
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)))
         bolusingTreatment = t
         val preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0)
-        danaRPump.bolusingTreatment = t
-        danaRPump.bolusAmountToBeDelivered = insulin
-        danaRPump.bolusStopped = false
-        danaRPump.bolusStopForced = false
-        danaRPump.bolusProgressLastTimeStamp = DateUtil.now()
+        danaPump.bolusingTreatment = t
+        danaPump.bolusAmountToBeDelivered = insulin
+        danaPump.bolusStopped = false
+        danaPump.bolusStopForced = false
+        danaPump.bolusProgressLastTimeStamp = DateUtil.now()
         val start = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(injector, insulin, preferencesSpeed)
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbTime, carbs); ####
 //            sendMessage(msg);
-            val msgSetHistoryEntryV2 = DanaRS_Packet_APS_Set_Event_History(injector, info.nightscout.androidaps.dana.DanaRPump.CARBS, carbTime, carbs, 0)
+            val msgSetHistoryEntryV2 = DanaRS_Packet_APS_Set_Event_History(injector, info.nightscout.androidaps.dana.DanaPump.CARBS, carbTime, carbs, 0)
             sendMessage(msgSetHistoryEntryV2)
             lastHistoryFetched = min(lastHistoryFetched, carbTime - T.mins(1).msecs())
         }
         val bolusStart = System.currentTimeMillis()
         if (insulin > 0) {
-            if (!danaRPump.bolusStopped) {
+            if (!danaPump.bolusStopped) {
                 sendMessage(start)
             } else {
                 t.insulin = 0.0
                 return false
             }
-            while (!danaRPump.bolusStopped && !start.failed && !danaRPump.bolusDone) {
+            while (!danaPump.bolusStopped && !start.failed && !danaPump.bolusDone) {
                 SystemClock.sleep(100)
-                if (System.currentTimeMillis() - danaRPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if i didn't receive status for more than 20 sec expecting broken comm
-                    danaRPump.bolusStopped = true
-                    danaRPump.bolusStopForced = true
+                if (System.currentTimeMillis() - danaPump.bolusProgressLastTimeStamp > 15 * 1000L) { // if i didn't receive status for more than 20 sec expecting broken comm
+                    danaPump.bolusStopped = true
+                    danaPump.bolusStopForced = true
                     aapsLogger.debug(LTag.PUMPCOMM, "Communication stopped")
                 }
             }
@@ -304,21 +302,21 @@ class DanaRSService : DaggerService() {
     fun bolusStop() {
         aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ " + if (bolusingTreatment == null) "" else bolusingTreatment?.insulin)
         val stop = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(injector)
-        danaRPump.bolusStopForced = true
+        danaPump.bolusStopForced = true
         if (isConnected) {
             sendMessage(stop)
-            while (!danaRPump.bolusStopped) {
+            while (!danaPump.bolusStopped) {
                 sendMessage(stop)
                 SystemClock.sleep(200)
             }
         } else {
-            danaRPump.bolusStopped = true
+            danaPump.bolusStopped = true
         }
     }
 
     fun tempBasal(percent: Int, durationInHours: Int): Boolean {
         if (!isConnected) return false
-        if (danaRPump.isTempBasalInProgress) {
+        if (danaPump.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
             sendMessage(DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(injector))
             SystemClock.sleep(500)
@@ -333,7 +331,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun highTempBasal(percent: Int): Boolean {
-        if (danaRPump.isTempBasalInProgress) {
+        if (danaPump.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
             sendMessage(DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(injector))
             SystemClock.sleep(500)
@@ -351,7 +349,7 @@ class DanaRSService : DaggerService() {
             aapsLogger.error(LTag.PUMPCOMM, "Wrong duration param")
             return false
         }
-        if (danaRPump.isTempBasalInProgress) {
+        if (danaPump.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
             sendMessage(DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(injector))
             SystemClock.sleep(500)
@@ -398,12 +396,12 @@ class DanaRSService : DaggerService() {
     fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.updatingbasalrates)))
-        val basal = danaRPump.buildDanaRProfileRecord(profile)
+        val basal = danaPump.buildDanaRProfileRecord(profile)
         val msgSet = DanaRS_Packet_Basal_Set_Profile_Basal_Rate(injector, 0, basal)
         sendMessage(msgSet)
         val msgActivate = DanaRS_Packet_Basal_Set_Profile_Number(injector, 0)
         sendMessage(msgActivate)
-        danaRPump.lastSettingsRead = 0 // force read full settings
+        danaPump.lastSettingsRead = 0 // force read full settings
         readPumpStatus()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true

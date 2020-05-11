@@ -9,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSettingBasalProfileAllTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSettingBasalProfileAll(aapsLogger, danaRPump)
+        val packet = MsgSettingBasalProfileAll(aapsLogger, danaPump)
 
         // test message decoding
         packet.handleMessage(createArray(400, 1.toByte()))

@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.*
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
@@ -12,9 +11,6 @@ import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizar
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEScanActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
-import info.nightscout.androidaps.dana.activities.DanaRHistoryActivity
-import info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity
-import info.nightscout.androidaps.danars.activities.EnterPinActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingInformationActivity
@@ -25,10 +21,6 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 @Suppress("unused")
 abstract class ActivitiesModule {
 
-    @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): DanaRHistoryActivity
-    @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): DanaRUserOptionsActivity
-    @ContributesAndroidInjector abstract fun contributeEnterPinActivity(): EnterPinActivity
-    @ContributesAndroidInjector abstract fun contributeErrorHelperActivity(): ErrorHelperActivity
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity
     @ContributesAndroidInjector abstract fun contributesInsightAlertActivity(): InsightAlertActivity
     @ContributesAndroidInjector abstract fun contributesInsightPairingActivity(): InsightPairingActivity

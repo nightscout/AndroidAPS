@@ -16,7 +16,7 @@ class DanaRS_Packet_Bolus_Get_Extended_BolusTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Bolus_Get_Extended_Bolus) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -32,7 +32,7 @@ class DanaRS_Packet_Bolus_Get_Extended_BolusTest : DanaRSTestBase() {
         testValue = 1.0
         packet.handleMessage(createArray(10, testValue.toByte()))
         // is pump.bolustep set to 1
-        Assert.assertEquals(testValue / 100.0, danaRPump.bolusStep, 0.0)
+        Assert.assertEquals(testValue / 100.0, danaPump.bolusStep, 0.0)
         Assert.assertEquals(testValue != 0.0, packet.failed)
         Assert.assertEquals("BOLUS__GET_EXTENDED_BOLUS", packet.friendlyName)
     }

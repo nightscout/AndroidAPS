@@ -2,11 +2,11 @@ package info.nightscout.androidaps.danar.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 
 class MsgSettingActiveProfile(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -15,8 +15,8 @@ class MsgSettingActiveProfile(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        danaRPump.activeProfile = intFromBuff(bytes, 0, 1)
-        aapsLogger.debug(LTag.PUMPCOMM, "Active profile number: " + danaRPump.activeProfile)
+        danaPump.activeProfile = intFromBuff(bytes, 0, 1)
+        aapsLogger.debug(LTag.PUMPCOMM, "Active profile number: " + danaPump.activeProfile)
     }
 
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.comm.MessageBase;
 import info.nightscout.androidaps.danar.comm.MessageHashTableBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -29,12 +29,12 @@ public class SerialIOThread extends Thread {
 
     private MessageBase processedMessage;
     private MessageHashTableBase hashTable;
-    private DanaRPump danaRPump;
+    private DanaPump danaPump;
 
-    public SerialIOThread(AAPSLogger aapsLogger, BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaRPump danaRPump) {
+    public SerialIOThread(AAPSLogger aapsLogger, BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaPump danaPump) {
         super();
         this.hashTable = hashTable;
-        this.danaRPump = danaRPump;
+        this.danaPump = danaPump;
         this.aapsLogger = aapsLogger;
 
         mRfCommSocket = rfcommSocket;
@@ -169,7 +169,7 @@ public class SerialIOThread extends Thread {
             message.handleMessageNotReceived();
             aapsLogger.error(LTag.PUMPBTCOMM, "Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
-                danaRPump.setNewPump(false);
+                danaPump.setNewPump(false);
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Old firmware detected");
             }
         }

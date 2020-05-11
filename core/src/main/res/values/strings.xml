@@ -55,31 +55,31 @@
     <string name="please_wait">Please wait…</string>
     <string name="mute">Mute</string>
     <string name="reload">Reload</string>
-    <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
-    <string name="overview_bolusprogress_stop">Stop</string>
+    <string name="stoppressed">STOP PRESSED</string>
+    <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
     <string name="invalidprofile">Invalid profile !!!</string>
     <string name="noprofileset">NO PROFILE SET</string>
     <string name="date">Date</string>
-    <string name="nsprofileview_units_label">Units</string>
-    <string name="nsprofileview_dia_label">DIA</string>
-    <string name="nsprofileview_ic_label">IC</string>
-    <string name="nsprofileview_isf_label">ISF</string>
-    <string name="nsprofileview_basal_label">Basal</string>
-    <string name="nsprofileview_target_label">Target</string>
+    <string name="units_label">Units</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Target</string>
     <string name="initializing">Initializing ...</string>
     <string name="serialnumber">Serial number</string>
-    <string name="pump_battery_label">Battery</string>
-    <string name="pump_lastconnection_label">Last connection</string>
-    <string name="pump_lastbolus_label">Last bolus</string>
-    <string name="danar_dailyunits">Daily units</string>
-    <string name="pump_basebasalrate_label">Base basal rate</string>
-    <string name="pump_tempbasal_label">Temp basal</string>
+    <string name="battery_label">Battery</string>
+    <string name="lastconnection_label">Last connection</string>
+    <string name="lastbolus_label">Last bolus</string>
+    <string name="dailyunits">Daily units</string>
+    <string name="basebasalrate_label">Base basal rate</string>
+    <string name="tempbasal_label">Temp basal</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="pump_reservoir_label">Reservoir</string>
-    <string name="danar_history">Pump history</string>
-    <string name="danar_viewprofile">View profile</string>
-    <string name="careportal_newnstreatment_eventtype">Event type</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="pumphistory">Pump history</string>
+    <string name="viewprofile">View profile</string>
+    <string name="eventtype">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="advancedsettings_title">Advanced Settings</string>
@@ -103,8 +103,8 @@
     <string name="dismiss">DISMISS</string>
 
     <!--    BlePreCheck-->
-    <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy not supported.</string>
-    <string name="rileylink_scanner_ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="ble_not_enabled">Bluetooth not enabled.</string>
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
 
@@ -139,7 +139,7 @@
     <string name="noprofileselected">No profile selected</string>
 
     <!--    PumpType-->
-    <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
+    <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
 
     <!--    APSResult-->
     <string name="canceltemp">Cancel temp basal</string>
@@ -200,20 +200,19 @@
     <string name="smb_shortname">SMB</string>
 
     <!--    TDDStatsActivity-->
-    <string name="danar_stats">DanaR Stats</string>
-    <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
-    <string name="danar_stats_expweight">Exponentially Weighted TDD</string>
-    <string name="danar_stats_basalrate">Basal</string>
-    <string name="danar_stats_bolus">Bolus</string>
-    <string name="danar_stats_tdd">TDD</string>
-    <string name="danar_stats_date">Date</string>
-    <string name="danar_stats_ratio">Ratio</string>
-    <string name="danar_stats_amount_days"># Days</string>
-    <string name="danar_stats_weight">Weight</string>
-    <string name="danar_stats_warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
-    <string name="danar_stats_olddata_Message">Old Data Please Press "RELOAD"</string>
-    <string name="danar_stats_tbb">Total Base Basal</string>
-    <string name="danar_stats_tbb2">TBB * 2</string>
+    <string name="stats">Stats</string>
+    <string name="cumulative_tdd">Cumulative TDD</string>
+    <string name="expweight">Exponentially Weighted TDD</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Ratio</string>
+    <string name="amount_days"># Days</string>
+    <string name="weight">Weight</string>
+    <string name="warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
+    <string name="olddata_Message">Old Data Please Press "RELOAD"</string>
+    <string name="tbb">Total Base Basal</string>
+    <string name="tbb2">TBB * 2</string>
 
     <!--    Ntp-->
     <string name="timedetection">Time detection</string>

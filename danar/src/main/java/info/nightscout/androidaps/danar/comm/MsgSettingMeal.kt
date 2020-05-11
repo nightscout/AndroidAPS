@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.interfaces.PluginType
@@ -16,7 +16,7 @@ class MsgSettingMeal(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val danaRKoreanPlugin: DanaRKoreanPlugin
 ) : MessageBase() {
 
@@ -26,29 +26,29 @@ class MsgSettingMeal(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        danaRPump.basalStep = intFromBuff(bytes, 0, 1) / 100.0
-        danaRPump.bolusStep = intFromBuff(bytes, 1, 1) / 100.0
+        danaPump.basalStep = intFromBuff(bytes, 0, 1) / 100.0
+        danaPump.bolusStep = intFromBuff(bytes, 1, 1) / 100.0
         val bolusEnabled = intFromBuff(bytes, 2, 1) == 1
         val melodyTime = intFromBuff(bytes, 3, 1)
         val blockTime = intFromBuff(bytes, 4, 1)
-        danaRPump.isConfigUD = intFromBuff(bytes, 5, 1) == 1
-        aapsLogger.debug(LTag.PUMPCOMM, "Basal step: " + danaRPump.basalStep)
-        aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaRPump.bolusStep)
+        danaPump.isConfigUD = intFromBuff(bytes, 5, 1) == 1
+        aapsLogger.debug(LTag.PUMPCOMM, "Basal step: " + danaPump.basalStep)
+        aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaPump.bolusStep)
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus enabled: $bolusEnabled")
         aapsLogger.debug(LTag.PUMPCOMM, "Melody time: $melodyTime")
         aapsLogger.debug(LTag.PUMPCOMM, "Block time: $blockTime")
-        aapsLogger.debug(LTag.PUMPCOMM, "Is Config U/d: " + danaRPump.isConfigUD)
+        aapsLogger.debug(LTag.PUMPCOMM, "Is Config U/d: " + danaPump.isConfigUD)
         // DanaRKorean is not possible to set to 0.01 but it works when controlled from AAPS
         if (danaRKoreanPlugin.isEnabled(PluginType.PUMP)) {
-            danaRPump.basalStep = 0.01
+            danaPump.basalStep = 0.01
         }
-        if (danaRPump.basalStep != 0.01) {
+        if (danaPump.basalStep != 0.01) {
             val notification = Notification(Notification.WRONGBASALSTEP, resourceHelper.gs(R.string.danar_setbasalstep001), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONGBASALSTEP))
         }
-        if (danaRPump.isConfigUD) {
+        if (danaPump.isConfigUD) {
             val notification = Notification(Notification.UD_MODE_ENABLED, resourceHelper.gs(R.string.danar_switchtouhmode), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {

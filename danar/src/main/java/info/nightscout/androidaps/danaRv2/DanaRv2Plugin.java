@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
@@ -60,7 +60,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             Context context,
-            DanaRPump danaRPump,
+            DanaPump danaPump,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             ActivePluginProvider activePlugin,
@@ -70,7 +70,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             DateUtil dateUtil,
             FabricPrivacy fabricPrivacy
     ) {
-        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, activePlugin, sp, dateUtil);
+        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, activePlugin, sp, dateUtil);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;
@@ -137,7 +137,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Override
     public boolean isInitialized() {
-        return danaRPump.getLastConnection() > 0 && danaRPump.getMaxBasal() > 0 && danaRPump.isPasswordOK();
+        return danaPump.getLastConnection() > 0 && danaPump.getMaxBasal() > 0 && danaPump.isPasswordOK();
     }
 
     @Override
@@ -191,7 +191,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
-                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, danaRPump.getBolusStartErrorCode());
+                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode());
             else
                 result.comment = resourceHelper.gs(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
@@ -296,7 +296,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        DanaRPump pump = danaRPump;
+        DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
@@ -348,7 +348,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     private PumpEnactResult setHighTempBasalPercent(Integer percent, int durationInMinutes) {
-        DanaRPump pump = danaRPump;
+        DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         boolean connectionOK = sExecutionService.highTempBasal(percent, durationInMinutes);
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
@@ -378,7 +378,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.enacted = true;
             result.isTempCancel = true;
         }
-        if (!danaRPump.isTempBasalInProgress()) {
+        if (!danaPump.isTempBasalInProgress()) {
             result.success = true;
             result.isTempCancel = true;
             result.comment = resourceHelper.gs(R.string.ok);

@@ -22,10 +22,10 @@ class MsgSettingMealTest : DanaRTestBase() {
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
 
     @Test fun runTest() {
-        val packet = MsgSettingMeal(aapsLogger, RxBusWrapper(), resourceHelper, danaRPump, danaRKoreanPlugin)
+        val packet = MsgSettingMeal(aapsLogger, RxBusWrapper(), resourceHelper, danaPump, danaRKoreanPlugin)
 
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(MessageBase.intFromBuff(createArray(10, 1.toByte()), 0, 1).toDouble() / 100.0, danaRPump.bolusStep, 0.0)
+        Assert.assertEquals(MessageBase.intFromBuff(createArray(10, 1.toByte()), 0, 1).toDouble() / 100.0, danaPump.bolusStep, 0.0)
     }
 }

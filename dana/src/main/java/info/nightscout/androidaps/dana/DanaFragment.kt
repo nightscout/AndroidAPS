@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
-import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -35,13 +34,13 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.danar_fragment.*
 import javax.inject.Inject
 
-class DanaRFragment : DaggerFragment() {
+class DanaFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var warnColors: WarnColors
@@ -69,11 +68,11 @@ class DanaRFragment : DaggerFragment() {
 
         dana_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
-        danar_history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaRHistoryActivity::class.java)) }
+        danar_history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
         danar_viewprofile.setOnClickListener {
-            val profile = danaRPump.createConvertedProfile()?.getDefaultProfile()
+            val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
                 ?: return@setOnClickListener
-            val profileName = danaRPump.createConvertedProfile()?.getDefaultProfileName()
+            val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
             val args = Bundle()
             args.putLong("time", DateUtil.now())
@@ -86,10 +85,10 @@ class DanaRFragment : DaggerFragment() {
             pvd.show(childFragmentManager, "ProfileViewDialog")
         }
         danar_stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
-        danar_user_options.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity::class.java)) }
+        danar_user_options.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
         danar_btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
-            danaRPump.lastConnection = 0
+            danaPump.lastConnection = 0
             commandQueue.readStatus("Clicked connect to pump", null)
         }
         if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS)
@@ -163,7 +162,7 @@ class DanaRFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (danar_dailyunits == null) return
-        val pump = danaRPump
+        val pump = danaPump
         val plugin: PumpInterface = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection

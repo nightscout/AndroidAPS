@@ -19,11 +19,11 @@ class MsgStatusBolusExtendedTest : DanaRTestBase() {
     @Test
     fun runTest() {
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
-        val packet = MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil)
+        val packet = MsgStatusBolusExtended(injector, aapsLogger, danaPump, activePlugin, dateUtil)
         // test message decoding
         val array = ByteArray(100)
         putByteToArray(array, 0, 1)
         packet.handleMessage(array)
-        Assert.assertEquals(true, danaRPump.isExtendedInProgress)
+        Assert.assertEquals(true, danaPump.isExtendedInProgress)
     }
 }

@@ -81,7 +81,7 @@
                 android:layout_gravity="center_vertical"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/nsprofileview_target_label"
+                android:text="@string/target_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 

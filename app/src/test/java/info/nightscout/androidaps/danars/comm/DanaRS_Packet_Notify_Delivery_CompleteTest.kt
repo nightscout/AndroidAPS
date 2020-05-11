@@ -29,7 +29,7 @@ class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
@@ -43,13 +43,13 @@ class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
-        danaRPump.bolusingTreatment = Treatment(packetInjector)
+        danaPump.bolusingTreatment = Treatment(packetInjector)
         val packet = DanaRS_Packet_Notify_Delivery_Complete(packetInjector)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(17, 0.toByte()))
-        Assert.assertEquals(true, danaRPump.bolusDone)
+        Assert.assertEquals(true, danaPump.bolusDone)
         Assert.assertEquals("NOTIFY__DELIVERY_COMPLETE", packet.friendlyName)
     }
 }

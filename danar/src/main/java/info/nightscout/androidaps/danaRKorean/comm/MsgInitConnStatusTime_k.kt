@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.R
@@ -21,7 +21,7 @@ class MsgInitConnStatusTime_k(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val configBuilderPlugin: ConfigBuilderInterface,
@@ -44,7 +44,7 @@ class MsgInitConnStatusTime_k(
             danaRKoreanPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
             danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
-            danaRPump.reset() // mark not initialized
+            danaPump.reset() // mark not initialized
             //If profile coming from pump, switch it as well
             configBuilderPlugin.storeSettings("ChangingKoreanDanaDriver")
             rxBus.send(EventRebuildTabs())

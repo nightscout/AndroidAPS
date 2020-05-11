@@ -20,11 +20,11 @@ class MsgSettingBasalTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(danaRPlugin.getPumpDescription()).thenReturn(PumpDescription())
-        val packet = MsgSettingBasal(aapsLogger, danaRPump, danaRPlugin)
+        val packet = MsgSettingBasal(aapsLogger, danaPump, danaRPlugin)
 
         // test message decoding
         packet.handleMessage(createArray(100, 1.toByte()))
         val expected = MessageBase.intFromBuff(createArray(100, 1.toByte()), 2 * 1, 2)
-        Assert.assertEquals(expected.toDouble() / 100.0, danaRPump.pumpProfiles!![danaRPump.activeProfile][1], 0.0)
+        Assert.assertEquals(expected.toDouble() / 100.0, danaPump.pumpProfiles!![danaPump.activeProfile][1], 0.0)
     }
 }

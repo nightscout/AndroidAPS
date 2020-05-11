@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
@@ -24,7 +24,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
         }
     }
 
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaPump: DanaPump
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
         val ret = ByteArray(length)
@@ -55,6 +55,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Before
     fun setup() {
-        danaRPump = info.nightscout.androidaps.dana.DanaRPump(aapsLogger, sp, injector)
+        danaPump = info.nightscout.androidaps.dana.DanaPump(aapsLogger, sp, injector)
     }
 }

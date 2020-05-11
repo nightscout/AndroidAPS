@@ -10,13 +10,13 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgInitConnStatusBasicTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgInitConnStatusBasic(aapsLogger, danaRPump)
+        val packet = MsgInitConnStatusBasic(aapsLogger, danaPump)
 
         // test message decoding
         val array = ByteArray(100)
 
         putByteToArray(array, 0, 1)
         packet.handleMessage(array)
-        Assert.assertEquals(true, danaRPump.pumpSuspended)
+        Assert.assertEquals(true, danaPump.pumpSuspended)
     }
 }

@@ -6,14 +6,14 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.utils.DateUtil
 import kotlin.math.ceil
 
 class MsgStatusBolusExtended(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val activePlugin: ActivePluginProvider,
     private val dateUtil: DateUtil
 ) : MessageBase() {
@@ -36,13 +36,13 @@ class MsgStatusBolusExtended(
         val extendedBolusAbsoluteRate = if (isExtendedInProgress) extendedBolusAmount / extendedBolusMinutes * 60 else 0.0
         val extendedBolusStart = if (isExtendedInProgress) getDateFromSecAgo(extendedBolusSoFarInSecs) else 0
         val extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes
-        danaRPump.isExtendedInProgress = isExtendedInProgress
-        danaRPump.extendedBolusMinutes = extendedBolusMinutes
-        danaRPump.extendedBolusAmount = extendedBolusAmount
-        danaRPump.extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes
-        danaRPump.extendedBolusAbsoluteRate = extendedBolusAbsoluteRate
-        danaRPump.extendedBolusStart = extendedBolusStart
-        danaRPump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes
+        danaPump.isExtendedInProgress = isExtendedInProgress
+        danaPump.extendedBolusMinutes = extendedBolusMinutes
+        danaPump.extendedBolusAmount = extendedBolusAmount
+        danaPump.extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes
+        danaPump.extendedBolusAbsoluteRate = extendedBolusAbsoluteRate
+        danaPump.extendedBolusStart = extendedBolusStart
+        danaPump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes
         updateExtendedBolusInDB()
         aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus min: $extendedBolusMinutes")
@@ -61,16 +61,16 @@ class MsgStatusBolusExtended(
         val now = System.currentTimeMillis()
         val extendedBolus = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())
         if (extendedBolus != null) {
-            if (danaRPump.isExtendedInProgress) {
-                if (extendedBolus.absoluteRate() != danaRPump.extendedBolusAbsoluteRate) { // Close current extended
-                    val exStop = ExtendedBolus(injector, danaRPump.extendedBolusStart - 1000)
+            if (danaPump.isExtendedInProgress) {
+                if (extendedBolus.absoluteRate() != danaPump.extendedBolusAbsoluteRate) { // Close current extended
+                    val exStop = ExtendedBolus(injector, danaPump.extendedBolusStart - 1000)
                     exStop.source = Source.USER
                     activePlugin.activeTreatments.addToHistoryExtendedBolus(exStop)
                     // Create new
                     val newExtended = ExtendedBolus(injector)
-                        .date(danaRPump.extendedBolusStart)
-                        .insulin(danaRPump.extendedBolusAmount)
-                        .durationInMinutes(danaRPump.extendedBolusMinutes)
+                        .date(danaPump.extendedBolusStart)
+                        .insulin(danaPump.extendedBolusAmount)
+                        .durationInMinutes(danaPump.extendedBolusMinutes)
                         .source(Source.USER)
                     activePlugin.activeTreatments.addToHistoryExtendedBolus(newExtended)
                 }
@@ -81,11 +81,11 @@ class MsgStatusBolusExtended(
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(exStop)
             }
         } else {
-            if (danaRPump.isExtendedInProgress) { // Create new
+            if (danaPump.isExtendedInProgress) { // Create new
                 val newExtended = ExtendedBolus(injector)
-                    .date(danaRPump.extendedBolusStart)
-                    .insulin(danaRPump.extendedBolusAmount)
-                    .durationInMinutes(danaRPump.extendedBolusMinutes)
+                    .date(danaPump.extendedBolusStart)
+                    .insulin(danaPump.extendedBolusAmount)
+                    .durationInMinutes(danaPump.extendedBolusMinutes)
                     .source(Source.USER)
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(newExtended)
             }

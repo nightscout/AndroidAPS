@@ -7,7 +7,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
@@ -65,7 +65,7 @@ class ActionStringHandler @Inject constructor(
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val hardLimits: HardLimits,
     private val carbsGenerator: CarbsGenerator,
     private val dateUtil: DateUtil,
@@ -326,7 +326,7 @@ class ActionStringHandler @Inject constructor(
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
         } else if (pump is DanaRPlugin) {
-            val tdd = danaRPump.dailyTotalUnits
+            val tdd = danaPump.dailyTotalUnits
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
         }

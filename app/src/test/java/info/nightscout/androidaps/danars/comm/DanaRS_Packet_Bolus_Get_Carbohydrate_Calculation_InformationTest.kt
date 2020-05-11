@@ -16,7 +16,7 @@ class DanaRS_Packet_Bolus_Get_Carbohydrate_Calculation_InformationTest : DanaRST
         AndroidInjector {
             if (it is DanaRS_Packet_Bolus_Get_Carbohydrate_Calculation_Information) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }

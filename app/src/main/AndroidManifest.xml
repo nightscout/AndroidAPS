@@ -64,8 +64,8 @@
         <activity
             android:name=".activities.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name="info.nightscout.androidaps.dana.activities.DanaRHistoryActivity" />
-        <activity android:name="info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity" />
+        <activity android:name="info.nightscout.androidaps.dana.activities.DanaHistoryActivity" />
+        <activity android:name="info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity" />
         <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>

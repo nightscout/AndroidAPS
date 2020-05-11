@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 
 class MsgStatusBasic_k(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -21,11 +21,11 @@ class MsgStatusBasic_k(
         val reservoirRemainingUnits = intFromBuff(bytes, 3, 3) / 750.0
         val dailyTotalUnits = intFromBuff(bytes, 6, 3) / 750.0
         val maxDailyTotalUnits = intFromBuff(bytes, 9, 2) / 100
-        danaRPump.dailyTotalUnits = dailyTotalUnits
-        danaRPump.maxDailyTotalUnits = maxDailyTotalUnits
-        danaRPump.reservoirRemainingUnits = reservoirRemainingUnits
-        danaRPump.currentBasal = currentBasal
-        danaRPump.batteryRemaining = batteryRemaining
+        danaPump.dailyTotalUnits = dailyTotalUnits
+        danaPump.maxDailyTotalUnits = maxDailyTotalUnits
+        danaPump.reservoirRemainingUnits = reservoirRemainingUnits
+        danaPump.currentBasal = currentBasal
+        danaPump.batteryRemaining = batteryRemaining
         aapsLogger.debug(LTag.PUMPCOMM, "Daily total units: $dailyTotalUnits")
         aapsLogger.debug(LTag.PUMPCOMM, "Max daily total units: $maxDailyTotalUnits")
         aapsLogger.debug(LTag.PUMPCOMM, "Reservoir remaining units: $reservoirRemainingUnits")

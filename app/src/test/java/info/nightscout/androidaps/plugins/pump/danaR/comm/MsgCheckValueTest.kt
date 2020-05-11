@@ -14,12 +14,12 @@ class MsgCheckValueTest : DanaRTestBase() {
     @Mock lateinit var danaRPlugin: DanaRPlugin
 
     @Test fun runTest() {
-        val packet = MsgCheckValue(aapsLogger, danaRPump, danaRPlugin)
+        val packet = MsgCheckValue(aapsLogger, danaPump, danaRPlugin)
 
         // test message decoding
         val array = ByteArray(100)
-        putByteToArray(array, 0, info.nightscout.androidaps.dana.DanaRPump.EXPORT_MODEL.toByte())
+        putByteToArray(array, 0, info.nightscout.androidaps.dana.DanaPump.EXPORT_MODEL.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(info.nightscout.androidaps.dana.DanaRPump.EXPORT_MODEL, danaRPump.hwModel)
+        Assert.assertEquals(info.nightscout.androidaps.dana.DanaPump.EXPORT_MODEL, danaPump.hwModel)
     }
 }

@@ -22,11 +22,11 @@ class MsgBolusStopTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(resourceHelper.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered")
-        danaRPump.bolusingTreatment = Treatment(HasAndroidInjector { AndroidInjector { } })
-        val packet = MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaRPump)
+        danaPump.bolusingTreatment = Treatment(HasAndroidInjector { AndroidInjector { } })
+        val packet = MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaPump)
 
         // test message decoding
         packet.handleMessage(ByteArray(100))
-        Assert.assertEquals(true, danaRPump.bolusStopped)
+        Assert.assertEquals(true, danaPump.bolusStopped)
     }
 }

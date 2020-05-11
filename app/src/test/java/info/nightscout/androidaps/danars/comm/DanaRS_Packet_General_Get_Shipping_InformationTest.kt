@@ -17,7 +17,7 @@ class DanaRS_Packet_General_Get_Shipping_InformationTest : DanaRSTestBase() {
                 it.dateUtil = dateUtil
             }
             if (it is DanaRS_Packet_General_Get_Shipping_Information) {
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }

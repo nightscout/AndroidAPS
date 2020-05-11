@@ -27,7 +27,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
@@ -41,7 +41,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(Mockito.anyInt())).thenReturn("SomeString")
 
-        danaRPump.bolusingTreatment = Treatment(packetInjector)
+        danaPump.bolusingTreatment = Treatment(packetInjector)
         val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(packetInjector)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))

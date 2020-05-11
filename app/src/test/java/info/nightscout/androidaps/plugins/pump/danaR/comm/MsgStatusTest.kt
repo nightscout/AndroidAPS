@@ -11,9 +11,9 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgStatusTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgStatus(aapsLogger, danaRPump)
+        val packet = MsgStatus(aapsLogger, danaPump)
         // test message decoding
         packet.handleMessage(createArray(34, 7.toByte()))
-        Assert.assertEquals(MessageBase.intFromBuff(createArray(34, 7.toByte()), 0, 3).toDouble() / 750.0, danaRPump.dailyTotalUnits, 0.0)
+        Assert.assertEquals(MessageBase.intFromBuff(createArray(34, 7.toByte()), 0, 3).toDouble() / 750.0, danaPump.dailyTotalUnits, 0.0)
     }
 }

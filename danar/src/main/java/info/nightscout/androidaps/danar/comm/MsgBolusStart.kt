@@ -4,12 +4,12 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 
 class MsgBolusStart(
     private val aapsLogger: AAPSLogger,
     constraintChecker: ConstraintChecker,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private var amount: Double
 ) : MessageBase() {
 
@@ -30,6 +30,6 @@ class MsgBolusStart(
             failed = false
             aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode OK")
         }
-        danaRPump.bolusStartErrorCode = errorCode
+        danaPump.bolusStartErrorCode = errorCode
     }
 }

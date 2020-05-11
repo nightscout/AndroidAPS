@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.activities.EnterPinActivity
 import info.nightscout.androidaps.danars.activities.PairingHelperActivity
@@ -43,7 +43,7 @@ class BLEComm @Inject internal constructor(
     private val rxBus: RxBusWrapper,
     private val sp: SP,
     private val danaRSMessageHashTable: DanaRSMessageHashTable,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
     private val nsUpload: NSUpload
@@ -70,7 +70,7 @@ class BLEComm @Inject internal constructor(
         set(newValue) {
             bleEncryption.setEnhancedEncryption(newValue)
             field = newValue
-            danaRPump.v3RSPump = newValue
+            danaPump.v3RSPump = newValue
         }
     private var isEasyMode: Boolean = false
     private var isUnitUD: Boolean = false
@@ -557,9 +557,9 @@ class BLEComm @Inject internal constructor(
             val size = decryptedBuffer.size
             var pass: Int = (decryptedBuffer[size - 1].toInt() and 0x000000FF shl 8) + (decryptedBuffer[size - 2].toInt() and 0x000000FF)
             pass = pass xor 3463
-            danaRPump.rsPassword = Integer.toHexString(pass)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaRPump.rsPassword)
-            if (!danaRPump.isRSPasswordOK) {
+            danaPump.rsPassword = Integer.toHexString(pass)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
+            if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
                 rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)))
                 disconnect("WrongPassword")

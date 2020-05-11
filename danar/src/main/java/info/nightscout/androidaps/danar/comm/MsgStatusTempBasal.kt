@@ -6,12 +6,12 @@ import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import kotlin.math.ceil
 
 class MsgStatusTempBasal(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val activePlugin: ActivePluginProvider,
     private val injector: HasAndroidInjector
 ) : MessageBase() {
@@ -30,11 +30,11 @@ class MsgStatusTempBasal(
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60
         val tempBasalStart = if (isTempBasalInProgress) getDateFromTempBasalSecAgo(tempBasalRunningSeconds) else 0
-        danaRPump.isTempBasalInProgress = isTempBasalInProgress
-        danaRPump.tempBasalPercent = tempBasalPercent
-        danaRPump.tempBasalRemainingMin = tempBasalRemainingMin
-        danaRPump.tempBasalTotalSec = tempBasalTotalSec
-        danaRPump.tempBasalStart = tempBasalStart
+        danaPump.isTempBasalInProgress = isTempBasalInProgress
+        danaPump.tempBasalPercent = tempBasalPercent
+        danaPump.tempBasalRemainingMin = tempBasalRemainingMin
+        danaPump.tempBasalTotalSec = tempBasalTotalSec
+        danaPump.tempBasalStart = tempBasalStart
         updateTempBasalInDB()
         aapsLogger.debug(LTag.PUMPCOMM, "Is temp basal running: $isTempBasalInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Is APS temp basal running: $isAPSTempBasalInProgress")
@@ -52,15 +52,15 @@ class MsgStatusTempBasal(
         val now = System.currentTimeMillis()
         if (activePlugin.activeTreatments.isInHistoryRealTempBasalInProgress) {
             val tempBasal = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())
-            if (danaRPump.isTempBasalInProgress) {
-                if (tempBasal.percentRate != danaRPump.tempBasalPercent) { // Close current temp basal
-                    val tempStop = TemporaryBasal(injector).date(danaRPump.tempBasalStart - 1000).source(Source.USER)
+            if (danaPump.isTempBasalInProgress) {
+                if (tempBasal.percentRate != danaPump.tempBasalPercent) { // Close current temp basal
+                    val tempStop = TemporaryBasal(injector).date(danaPump.tempBasalStart - 1000).source(Source.USER)
                     activePlugin.activeTreatments.addToHistoryTempBasal(tempStop)
                     // Create new
                     val newTempBasal = TemporaryBasal(injector)
-                        .date(danaRPump.tempBasalStart)
-                        .percent(danaRPump.tempBasalPercent)
-                        .duration(danaRPump.tempBasalTotalSec / 60)
+                        .date(danaPump.tempBasalStart)
+                        .percent(danaPump.tempBasalPercent)
+                        .duration(danaPump.tempBasalTotalSec / 60)
                         .source(Source.USER)
                     activePlugin.activeTreatments.addToHistoryTempBasal(newTempBasal)
                 }
@@ -69,11 +69,11 @@ class MsgStatusTempBasal(
                 activePlugin.activeTreatments.addToHistoryTempBasal(tempStop)
             }
         } else {
-            if (danaRPump.isTempBasalInProgress) { // Create new
+            if (danaPump.isTempBasalInProgress) { // Create new
                 val newTempBasal = TemporaryBasal(injector)
-                    .date(danaRPump.tempBasalStart)
-                    .percent(danaRPump.tempBasalPercent)
-                    .duration(danaRPump.tempBasalTotalSec / 60)
+                    .date(danaPump.tempBasalStart)
+                    .percent(danaPump.tempBasalPercent)
+                    .duration(danaPump.tempBasalTotalSec / 60)
                     .source(Source.USER)
                 activePlugin.activeTreatments.addToHistoryTempBasal(newTempBasal)
             }

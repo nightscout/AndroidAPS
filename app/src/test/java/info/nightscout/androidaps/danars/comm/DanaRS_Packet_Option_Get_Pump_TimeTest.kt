@@ -18,7 +18,7 @@ class DanaRS_Packet_Option_Get_Pump_TimeTest : DanaRSTestBase() {
                 it.dateUtil = dateUtil
             }
             if (it is DanaRS_Packet_Option_Get_Pump_Time) {
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -34,7 +34,7 @@ class DanaRS_Packet_Option_Get_Pump_TimeTest : DanaRSTestBase() {
         putByteToArray(array, 5, 35) // second 35
 
         packet.handleMessage(array)
-        Assert.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaRPump.pumpTime)
+        Assert.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaPump.pumpTime)
         Assert.assertEquals("OPTION__GET_PUMP_TIME", packet.friendlyName)
     }
 }

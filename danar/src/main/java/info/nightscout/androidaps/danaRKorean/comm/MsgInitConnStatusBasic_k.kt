@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -15,7 +15,7 @@ class MsgInitConnStatusBasic_k(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -27,23 +27,23 @@ class MsgInitConnStatusBasic_k(
         if (bytes.size - 10 > 6) {
             return
         }
-        danaRPump.pumpSuspended = intFromBuff(bytes, 0, 1) == 1
+        danaPump.pumpSuspended = intFromBuff(bytes, 0, 1) == 1
         val isUtilityEnable = intFromBuff(bytes, 1, 1)
-        danaRPump.isEasyModeEnabled = intFromBuff(bytes, 2, 1) == 1
+        danaPump.isEasyModeEnabled = intFromBuff(bytes, 2, 1) == 1
         val easyUIMode = intFromBuff(bytes, 3, 1)
-        danaRPump.password = intFromBuff(bytes, 4, 2) xor 0x3463
-        aapsLogger.debug(LTag.PUMPCOMM, "isStatusSuspendOn: " + danaRPump.pumpSuspended)
+        danaPump.password = intFromBuff(bytes, 4, 2) xor 0x3463
+        aapsLogger.debug(LTag.PUMPCOMM, "isStatusSuspendOn: " + danaPump.pumpSuspended)
         aapsLogger.debug(LTag.PUMPCOMM, "isUtilityEnable: $isUtilityEnable")
-        aapsLogger.debug(LTag.PUMPCOMM, "Is EasyUI Enabled: " + danaRPump.isEasyModeEnabled)
+        aapsLogger.debug(LTag.PUMPCOMM, "Is EasyUI Enabled: " + danaPump.isEasyModeEnabled)
         aapsLogger.debug(LTag.PUMPCOMM, "easyUIMode: $easyUIMode")
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaRPump.password)
-        if (danaRPump.isEasyModeEnabled) {
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaPump.password)
+        if (danaPump.isEasyModeEnabled) {
             val notification = Notification(Notification.EASYMODE_ENABLED, resourceHelper.gs(R.string.danar_disableeasymode), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.EASYMODE_ENABLED))
         }
-        if (!danaRPump.isPasswordOK) {
+        if (!danaPump.isPasswordOK) {
             val notification = Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {

@@ -2,11 +2,11 @@ package info.nightscout.androidaps.danar.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 
 class MsgSettingShippingInfo(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -15,11 +15,11 @@ class MsgSettingShippingInfo(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        danaRPump.serialNumber = stringFromBuff(bytes, 0, 10)
-        danaRPump.shippingDate = dateFromBuff(bytes, 10)
-        danaRPump.shippingCountry = asciiStringFromBuff(bytes, 13, 3)
-        aapsLogger.debug(LTag.PUMPCOMM, "Serial number: " + danaRPump.serialNumber)
-        aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + danaRPump.shippingDate)
-        aapsLogger.debug(LTag.PUMPCOMM, "Shipping country: " + danaRPump.shippingCountry)
+        danaPump.serialNumber = stringFromBuff(bytes, 0, 10)
+        danaPump.shippingDate = dateFromBuff(bytes, 10)
+        danaPump.shippingCountry = asciiStringFromBuff(bytes, 13, 3)
+        aapsLogger.debug(LTag.PUMPCOMM, "Serial number: " + danaPump.serialNumber)
+        aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + danaPump.shippingDate)
+        aapsLogger.debug(LTag.PUMPCOMM, "Shipping country: " + danaPump.shippingCountry)
     }
 }

@@ -48,8 +48,8 @@ class MessageHashTable_rv2Test : DanaRTestBase() {
     @Test
     fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, nsUpload, injector, DateUtil(context, resourceHelper), databaseHelper)
-        val forTesting: MessageBase = MsgStatusAPS_v2(aapsLogger, danaRPump)
+        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, nsUpload, injector, DateUtil(context, resourceHelper), databaseHelper)
+        val forTesting: MessageBase = MsgStatusAPS_v2(aapsLogger, danaPump)
         val testPacket: MessageBase = messageHashTableRv2.findMessage(forTesting.command)
         Assert.assertEquals(0xE001, testPacket.command.toLong())
         // try putting another command

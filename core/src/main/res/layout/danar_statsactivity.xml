@@ -23,7 +23,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/mdtp_white"
                 android:background="@drawable/pillborder"
-                android:text="@string/danar_stats_tdd" />
+                android:text="@string/tdd" />
 
             <TableLayout
                 android:stretchColumns="0,1,2,3,4"
@@ -54,7 +54,7 @@
                         android:textColor="@color/mdtp_white"
                         android:background="@drawable/pillborder"
                         android:gravity="center_horizontal"
-                        android:text="@string/danar_stats_cumulative_tdd" />
+                        android:text="@string/cumulative_tdd" />
 
                     <TableLayout
                         android:stretchColumns="0,1,2"
@@ -83,7 +83,7 @@
                         android:gravity="center_horizontal"
                         android:textColor="@color/mdtp_white"
                         android:background="@drawable/pillborder"
-                        android:text="@string/danar_stats_expweight" />
+                        android:text="@string/expweight" />
 
                     <TableLayout
                         android:stretchColumns="0,1,2"
@@ -103,7 +103,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:text="@string/danar_stats_tbb"
+                            android:text="@string/tbb"
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:text="@string/danar_stats_tbb2"
+                            android:text="@string/tbb2"
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                 android:background="@drawable/pillborder"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="@string/danar_stats_warning_Message" />
+                android:text="@string/warning_Message" />
 
             <Space
                 android:layout_width="match_parent"

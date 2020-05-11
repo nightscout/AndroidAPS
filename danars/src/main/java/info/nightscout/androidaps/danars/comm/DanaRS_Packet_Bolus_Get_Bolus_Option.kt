@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class DanaRS_Packet_Bolus_Get_Bolus_Option(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_BOLUS_OPTION
@@ -28,13 +28,13 @@ class DanaRS_Packet_Bolus_Get_Bolus_Option(
     override fun handleMessage(data: ByteArray) {
         var dataIndex = DATA_START
         var dataSize = 1
-        danaRPump.isExtendedBolusEnabled = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 1
+        danaPump.isExtendedBolusEnabled = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 1
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.bolusCalculationOption = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.bolusCalculationOption = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.missedBolusConfig = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.missedBolusConfig = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
         val missedBolus01StartHour = byteArrayToInt(getBytes(data, dataIndex, dataSize))
@@ -83,15 +83,15 @@ class DanaRS_Packet_Bolus_Get_Bolus_Option(
         dataIndex += dataSize
         dataSize = 1
         val missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        if (!danaRPump.isExtendedBolusEnabled) {
+        if (!danaPump.isExtendedBolusEnabled) {
             val notification = Notification(Notification.EXTENDED_BOLUS_DISABLED, resourceHelper.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             failed = true
         } else {
             rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus enabled: " + danaRPump.isExtendedBolusEnabled)
-        aapsLogger.debug(LTag.PUMPCOMM, "Missed bolus config: " + danaRPump.missedBolusConfig)
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus enabled: " + danaPump.isExtendedBolusEnabled)
+        aapsLogger.debug(LTag.PUMPCOMM, "Missed bolus config: " + danaPump.missedBolusConfig)
         aapsLogger.debug(LTag.PUMPCOMM, "missedBolus01StartHour: $missedBolus01StartHour")
         aapsLogger.debug(LTag.PUMPCOMM, "missedBolus01StartMin: $missedBolus01StartMin")
         aapsLogger.debug(LTag.PUMPCOMM, "missedBolus01EndHour: $missedBolus01EndHour")

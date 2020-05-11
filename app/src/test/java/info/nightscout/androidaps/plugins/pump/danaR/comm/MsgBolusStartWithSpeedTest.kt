@@ -19,7 +19,7 @@ class MsgBolusStartWithSpeedTest : DanaRTestBase() {
 
     @Test fun runTest() {
         Mockito.`when`(constraintChecker.applyBolusConstraints(Constraint(anyObject()))).thenReturn(Constraint(0.0))
-        val packet = MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaRPump, 0.0, 0)
+        val packet = MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaPump, 0.0, 0)
 
         // test message decoding
         val array = ByteArray(100)

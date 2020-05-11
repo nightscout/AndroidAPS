@@ -39,7 +39,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
@@ -68,7 +68,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
-        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
-        danaRPump.bolusingTreatment = Treatment(packetInjector)
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
+        danaPump.bolusingTreatment = Treatment(packetInjector)
     }
 }

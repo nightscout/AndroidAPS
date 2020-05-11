@@ -2,14 +2,14 @@ package info.nightscout.androidaps.danaRv2.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.utils.DateUtil
 import kotlin.math.ceil
 
 class MsgStatusTempBasal_v2(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val dateUtil: DateUtil
 ) : MessageBase() {
 
@@ -27,11 +27,11 @@ class MsgStatusTempBasal_v2(
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60
         val tempBasalStart = if (isTempBasalInProgress) getDateFromTempBasalSecAgo(tempBasalRunningSeconds) else 0
-        danaRPump.isTempBasalInProgress = isTempBasalInProgress
-        danaRPump.tempBasalPercent = tempBasalPercent
-        danaRPump.tempBasalRemainingMin = tempBasalRemainingMin
-        danaRPump.tempBasalTotalSec = tempBasalTotalSec
-        danaRPump.tempBasalStart = tempBasalStart
+        danaPump.isTempBasalInProgress = isTempBasalInProgress
+        danaPump.tempBasalPercent = tempBasalPercent
+        danaPump.tempBasalRemainingMin = tempBasalRemainingMin
+        danaPump.tempBasalTotalSec = tempBasalTotalSec
+        danaPump.tempBasalStart = tempBasalStart
         aapsLogger.debug(LTag.PUMPCOMM, "Is temp basal running: $isTempBasalInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Is APS temp basal running: $isAPSTempBasalInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: $tempBasalPercent")

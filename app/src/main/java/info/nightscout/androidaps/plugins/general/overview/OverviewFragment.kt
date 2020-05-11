@@ -346,7 +346,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         val lastRun = loopPlugin.lastRun
                         loopPlugin.invoke("Accept temp button", false)
                         if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.pump_tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                 ?: "".toSpanned(), Runnable {
                                 aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
                                 overview_accepttempbutton?.visibility = View.GONE
@@ -664,9 +664,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_basebasal?.text = activeTemp?.let { if (resourceHelper.shortTextMode()) "T:" + activeTemp.toStringVeryShort() else activeTemp.toStringFull() }
             ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)
         overview_basal_llayout?.setOnClickListener {
-            var fullText = "${resourceHelper.gs(R.string.pump_basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
+            var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
             if (activeTemp != null)
-                fullText += "\n" + resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull()
+                fullText += "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + activeTemp.toStringFull()
             activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.basal), fullText)
             }

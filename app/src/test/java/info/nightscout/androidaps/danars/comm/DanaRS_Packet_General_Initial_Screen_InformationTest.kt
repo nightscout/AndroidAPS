@@ -14,7 +14,7 @@ class DanaRS_Packet_General_Initial_Screen_InformationTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_General_Initial_Screen_Information) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -29,7 +29,7 @@ class DanaRS_Packet_General_Initial_Screen_InformationTest : DanaRSTestBase() {
         packet = DanaRS_Packet_General_Initial_Screen_Information(packetInjector)
         packet.handleMessage(createArray(17, 1.toByte()))
         Assert.assertEquals(false, packet.failed)
-        Assert.assertEquals(true, danaRPump.pumpSuspended)
+        Assert.assertEquals(true, danaPump.pumpSuspended)
         Assert.assertEquals("REVIEW__INITIAL_SCREEN_INFORMATION", packet.friendlyName)
     }
 }

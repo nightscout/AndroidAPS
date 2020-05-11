@@ -39,7 +39,7 @@ class MessageHashTableRTest : DanaRTestBase() {
 
     @Test fun runTest() {
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTable = MessageHashTableR(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, activePlugin, nsUpload, injector, databaseHelper, dateUtil)
+        val messageHashTable = MessageHashTableR(aapsLogger, rxBus, resourceHelper, constraintChecker, danaPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, activePlugin, nsUpload, injector, databaseHelper, dateUtil)
         val testMessage = messageHashTable.findMessage(0x41f2)
         Assert.assertEquals("CMD_HISTORY_ALL", testMessage.messageName)
     }

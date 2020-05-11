@@ -33,7 +33,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StartTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Bolus_Set_Step_Bolus_Start) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
                 it.constraintChecker = constraintChecker
             }
         }
@@ -55,7 +55,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StartTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
-        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
     }
 }

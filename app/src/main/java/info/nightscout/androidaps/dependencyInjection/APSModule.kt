@@ -17,12 +17,10 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 abstract class APSModule {
 
     @ContributesAndroidInjector abstract fun loggerCallbackInjector(): LoggerCallback
-    @ContributesAndroidInjector abstract fun apsResultInjector(): APSResult
     @ContributesAndroidInjector abstract fun determineBasalResultSMBInjector(): DetermineBasalResultSMB
     @ContributesAndroidInjector abstract fun determineBasalResultAMAInjector(): DetermineBasalResultAMA
     @ContributesAndroidInjector abstract fun determineBasalAdapterAMAJSInjector(): DetermineBasalAdapterAMAJS
     @ContributesAndroidInjector abstract fun determineBasalAdapterSMBJSInjector(): DetermineBasalAdapterSMBJS
-    @ContributesAndroidInjector abstract fun autosensDataInjector(): AutosensData
     @ContributesAndroidInjector abstract fun iobCobThreadInjector(): IobCobThread
     @ContributesAndroidInjector abstract fun iobCobOref1ThreadInjector(): IobCobOref1Thread
 }

@@ -290,7 +290,7 @@
                 android:drawableTop="@drawable/icon_danarstats"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="@string/danar_stats_tdd"
+                android:text="@string/tdd"
 
                 app:layout_column="1"
                 app:layout_columnWeight="1"

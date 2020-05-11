@@ -6,7 +6,7 @@ import android.os.Bundle
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -27,13 +27,13 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
+class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var context: Context
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
 
@@ -66,20 +66,20 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
         save_user_options.setOnClickListener { onSaveClick() }
 
         aapsLogger.debug(LTag.PUMP,
-            "UserOptionsLoaded:" + (System.currentTimeMillis() - danaRPump.lastConnection) / 1000 + " s ago"
-                + "\ntimeDisplayType:" + danaRPump.timeDisplayType
-                + "\nbuttonScroll:" + danaRPump.buttonScrollOnOff
-                + "\ntimeDisplayType:" + danaRPump.timeDisplayType
-                + "\nlcdOnTimeSec:" + danaRPump.lcdOnTimeSec
-                + "\nbackLight:" + danaRPump.backlightOnTimeSec
-                + "\npumpUnits:" + danaRPump.units
-                + "\nlowReservoir:" + danaRPump.lowReservoirRate)
+            "UserOptionsLoaded:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
+                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
+                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
+                + "\nbackLight:" + danaPump.backlightOnTimeSec
+                + "\npumpUnits:" + danaPump.units
+                + "\nlowReservoir:" + danaPump.lowReservoirRate)
 
-        danar_screentimeout.setParams(danaRPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, save_user_options)
-        danar_backlight.setParams(danaRPump.backlightOnTimeSec.toDouble(), 1.0, 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
-        danar_shutdown.setParams(danaRPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, save_user_options)
-        danar_lowreservoir.setParams(danaRPump.lowReservoirRate.toDouble(), 10.0, 60.0, 10.0, DecimalFormat("10"), false, save_user_options)
-        when (danaRPump.beepAndAlarm) {
+        danar_screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, save_user_options)
+        danar_backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), 1.0, 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
+        danar_shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, save_user_options)
+        danar_lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 60.0, 10.0, DecimalFormat("10"), false, save_user_options)
+        when (danaPump.beepAndAlarm) {
             0x01  -> danar_pumpalarm_sound.isChecked = true
             0x02  -> danar_pumpalarm_vibrate.isChecked = true
             0x11  -> danar_pumpalarm_both.isChecked = true
@@ -99,20 +99,20 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
                 danar_beep.isChecked = true
             }
         }
-        if (danaRPump.lastSettingsRead == 0L)
+        if (danaPump.lastSettingsRead == 0L)
             aapsLogger.error(LTag.PUMP, "No settings loaded from pump!") else setData()
     }
 
     fun setData() {
         // in DanaRS timeDisplay values are reversed
-        danar_timeformat.isChecked = !isRS() && danaRPump.timeDisplayType != 0 || isRS() && danaRPump.timeDisplayType == 0
-        danar_buttonscroll.isChecked = danaRPump.buttonScrollOnOff != 0
-        danar_beep.isChecked = danaRPump.beepAndAlarm > 4
-        danar_screentimeout.value = danaRPump.lcdOnTimeSec.toDouble()
-        danar_backlight.value = danaRPump.backlightOnTimeSec.toDouble()
-        danar_units.isChecked = danaRPump.getUnits() == Constants.MMOL
-        danar_shutdown.value = danaRPump.shutdownHour.toDouble()
-        danar_lowreservoir.value = danaRPump.lowReservoirRate.toDouble()
+        danar_timeformat.isChecked = !isRS() && danaPump.timeDisplayType != 0 || isRS() && danaPump.timeDisplayType == 0
+        danar_buttonscroll.isChecked = danaPump.buttonScrollOnOff != 0
+        danar_beep.isChecked = danaPump.beepAndAlarm > 4
+        danar_screentimeout.value = danaPump.lcdOnTimeSec.toDouble()
+        danar_backlight.value = danaPump.backlightOnTimeSec.toDouble()
+        danar_units.isChecked = danaPump.getUnits() == Constants.MMOL
+        danar_shutdown.value = danaPump.shutdownHour.toDouble()
+        danar_lowreservoir.value = danaPump.lowReservoirRate.toDouble()
     }
 
     private fun onSaveClick() {
@@ -120,30 +120,30 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
         if (!isRS() && !isDanaR() && !isDanaRv2()) return
 
         if (isRS()) // displayTime on RS is reversed
-            danaRPump.timeDisplayType = if (danar_timeformat.isChecked) 0 else 1
+            danaPump.timeDisplayType = if (danar_timeformat.isChecked) 0 else 1
         else
-            danaRPump.timeDisplayType = if (danar_timeformat.isChecked) 1 else 0
+            danaPump.timeDisplayType = if (danar_timeformat.isChecked) 1 else 0
 
-        danaRPump.buttonScrollOnOff = if (danar_buttonscroll.isChecked) 1 else 0
-        danaRPump.beepAndAlarm = when {
+        danaPump.buttonScrollOnOff = if (danar_buttonscroll.isChecked) 1 else 0
+        danaPump.beepAndAlarm = when {
             danar_pumpalarm_sound.isChecked   -> 1
             danar_pumpalarm_vibrate.isChecked -> 2
             danar_pumpalarm_both.isChecked    -> 3
             else                              -> 1
         }
-        if (danar_beep.isChecked) danaRPump.beepAndAlarm += 4
+        if (danar_beep.isChecked) danaPump.beepAndAlarm += 4
 
         // step is 5 seconds, 5 to 240
-        danaRPump.lcdOnTimeSec = min(max(danar_screentimeout.value.toInt() / 5 * 5, 5), 240)
+        danaPump.lcdOnTimeSec = min(max(danar_screentimeout.value.toInt() / 5 * 5, 5), 240)
         // 1 to 60
-        danaRPump.backlightOnTimeSec = min(max(danar_backlight.value.toInt(), 1), 60)
+        danaPump.backlightOnTimeSec = min(max(danar_backlight.value.toInt(), 1), 60)
 
-        danaRPump.units = if (danar_units.isChecked) 1 else 0
+        danaPump.units = if (danar_units.isChecked) 1 else 0
 
-        danaRPump.shutdownHour = min(danar_shutdown.value.toInt(), 24)
+        danaPump.shutdownHour = min(danar_shutdown.value.toInt(), 24)
 
         // 10 to 50
-        danaRPump.lowReservoirRate = min(max(danar_lowreservoir.value.toInt() * 10 / 10, 10), 50)
+        danaPump.lowReservoirRate = min(max(danar_lowreservoir.value.toInt() * 10 / 10, 10), 50)
 
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {

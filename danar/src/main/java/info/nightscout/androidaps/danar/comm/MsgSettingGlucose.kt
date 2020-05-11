@@ -2,14 +2,14 @@ package info.nightscout.androidaps.danar.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 
 /**
  * Created by mike on 05.07.2016.
  */
 class MsgSettingGlucose(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -18,9 +18,9 @@ class MsgSettingGlucose(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        danaRPump.units = intFromBuff(bytes, 0, 1)
-        danaRPump.easyBasalMode = intFromBuff(bytes, 1, 1)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
-        aapsLogger.debug(LTag.PUMPCOMM, "Easy basal mode: " + danaRPump.easyBasalMode)
+        danaPump.units = intFromBuff(bytes, 0, 1)
+        danaPump.easyBasalMode = intFromBuff(bytes, 1, 1)
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Easy basal mode: " + danaPump.easyBasalMode)
     }
 }

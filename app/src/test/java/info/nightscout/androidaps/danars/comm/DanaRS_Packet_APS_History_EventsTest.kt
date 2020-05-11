@@ -34,7 +34,7 @@ class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
                 it.activePlugin = activePlugin
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.sp = sp
             }

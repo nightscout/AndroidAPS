@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.danar.SerialIOThread;
@@ -62,7 +62,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject SP sp;
     @Inject Context context;
     @Inject ResourceHelper resourceHelper;
-    @Inject DanaRPump danaRPump;
+    @Inject DanaPump danaPump;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
     @Inject DatabaseHelperInterface databaseHelper;
@@ -213,16 +213,16 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     public void bolusStop() {
         aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (mBolusingTreatment == null ? "" : mBolusingTreatment.insulin));
-        MsgBolusStop stop = new MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaRPump);
-        danaRPump.setBolusStopForced(true);
+        MsgBolusStop stop = new MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaPump);
+        danaPump.setBolusStopForced(true);
         if (isConnected()) {
             mSerialIOThread.sendMessage(stop);
-            while (!danaRPump.getBolusStopped()) {
+            while (!danaPump.getBolusStopped()) {
                 mSerialIOThread.sendMessage(stop);
                 SystemClock.sleep(200);
             }
         } else {
-            danaRPump.setBolusStopped(true);
+            danaPump.setBolusStopped(true);
         }
     }
 
@@ -259,11 +259,11 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 msg = new MsgHistorySuspend(aapsLogger, rxBus, dateUtil, databaseHelper);
                 break;
         }
-        danaRPump.setHistoryDoneReceived(false);
+        danaPump.setHistoryDoneReceived(false);
         mSerialIOThread.sendMessage(new MsgPCCommStart(aapsLogger));
         SystemClock.sleep(400);
         mSerialIOThread.sendMessage(msg);
-        while (!danaRPump.getHistoryDoneReceived() && mRfcommSocket.isConnected()) {
+        while (!danaPump.getHistoryDoneReceived() && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);
         }
         SystemClock.sleep(200);

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -63,7 +63,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var uploadQueue: UploadQueue
 
     private var buildHelper = BuildHelper(Config())
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaPump: DanaPump
 
     lateinit var constraintChecker: ConstraintChecker
     private lateinit var safetyPlugin: SafetyPlugin
@@ -113,12 +113,12 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         constraintChecker = ConstraintChecker(activePlugin)
 
-        danaRPump = DanaRPump(aapsLogger, sp, injector)
+        danaPump = DanaPump(aapsLogger, sp, injector)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
-        danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaRPump, dateUtil, fabricPrivacy)
-        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
+        danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
+        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
@@ -221,7 +221,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         // DanaR, RS
         danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBasal = 0.8
+        danaPump.maxBasal = 0.8
 
         // Insight
 //        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
@@ -248,7 +248,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         // DanaR, RS
         danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBasal = 0.8
+        danaPump.maxBasal = 0.8
 
         // Insight
 //        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
@@ -277,7 +277,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         // DanaR, RS
         danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBolus = 6.0
+        danaPump.maxBolus = 6.0
 
         // Insight
 //        insightPlugin.setPluginEnabled(PluginType.PUMP, true);

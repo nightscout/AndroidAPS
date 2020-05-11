@@ -2,13 +2,13 @@ package info.nightscout.androidaps.danaRv2.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.comm.MessageBase
 import kotlin.math.ceil
 
 class MsgStatusBolusExtended_v2(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -29,13 +29,13 @@ class MsgStatusBolusExtended_v2(
         val extendedBolusAbsoluteRate = if (isExtendedInProgress) extendedBolusAmount / extendedBolusMinutes * 60 else 0.0
         val extendedBolusStart = if (isExtendedInProgress) getDateFromSecAgo(extendedBolusSoFarInSecs) else 0
         val extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes
-        danaRPump.isExtendedInProgress = isExtendedInProgress
-        danaRPump.extendedBolusMinutes = extendedBolusMinutes
-        danaRPump.extendedBolusAmount = extendedBolusAmount
-        danaRPump.extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes
-        danaRPump.extendedBolusAbsoluteRate = extendedBolusAbsoluteRate
-        danaRPump.extendedBolusStart = extendedBolusStart
-        danaRPump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes
+        danaPump.isExtendedInProgress = isExtendedInProgress
+        danaPump.extendedBolusMinutes = extendedBolusMinutes
+        danaPump.extendedBolusAmount = extendedBolusAmount
+        danaPump.extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes
+        danaPump.extendedBolusAbsoluteRate = extendedBolusAbsoluteRate
+        danaPump.extendedBolusStart = extendedBolusStart
+        danaPump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes
         aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus min: $extendedBolusMinutes")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus amount: $extendedBolusAmount")

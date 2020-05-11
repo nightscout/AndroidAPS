@@ -10,8 +10,8 @@ import java.util.List;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaPumpInterface;
-import info.nightscout.androidaps.dana.DanaRFragment;
-import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.DanaFragment;
+import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.Profile;
@@ -61,7 +61,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected boolean useExtendedBoluses = false;
 
     protected PumpDescription pumpDescription = new PumpDescription();
-    protected DanaRPump danaRPump;
+    protected DanaPump danaPump;
     protected ConstraintChecker constraintChecker;
     protected RxBusWrapper rxBus;
     protected ActivePluginProvider activePlugin;
@@ -70,7 +70,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
-            DanaRPump danaRPump,
+            DanaPump danaPump,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             AAPSLogger aapsLogger,
@@ -82,14 +82,14 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
-                        .fragmentClass(DanaRFragment.class.getName())
+                        .fragmentClass(DanaFragment.class.getName())
                         .pluginName(R.string.danarspump)
                         .shortName(R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
                         .description(R.string.description_pump_dana_r),
                 injector, aapsLogger, resourceHelper, commandQueue
         );
-        this.danaRPump = danaRPump;
+        this.danaPump = danaPump;
         this.constraintChecker = constraintChecker;
         this.rxBus = rxBus;
         this.activePlugin = activePlugin;
@@ -102,14 +102,14 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         disposable.add(rxBus
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> danaRPump.reset())
+                .subscribe(event -> danaPump.reset())
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     if (event.isChanged(getResourceHelper(), R.string.key_danar_bt_name)) {
-                        danaRPump.reset();
+                        danaPump.reset();
                         getCommandQueue().readStatus("DeviceChanged", null);
                     }
                 })
@@ -123,7 +123,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @Override
     public boolean isSuspended() {
-        return danaRPump.getPumpSuspended();
+        return danaPump.getPumpSuspended();
     }
 
     @Override
@@ -172,12 +172,12 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public boolean isThisProfileSet(Profile profile) {
         if (!isInitialized())
             return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (danaRPump.getPumpProfiles() == null)
+        if (danaPump.getPumpProfiles() == null)
             return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        int basalValues = danaRPump.getBasal48Enable() ? 48 : 24;
-        int basalIncrement = danaRPump.getBasal48Enable() ? 30 * 60 : 60 * 60;
+        int basalValues = danaPump.getBasal48Enable() ? 48 : 24;
+        int basalIncrement = danaPump.getBasal48Enable() ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {
-            Double pumpValue = danaRPump.getPumpProfiles()[danaRPump.getActiveProfile()][h];
+            Double pumpValue = danaPump.getPumpProfiles()[danaPump.getActiveProfile()][h];
             Double profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement);
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 getAapsLogger().debug(LTag.PUMP, "Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
@@ -189,22 +189,22 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @Override
     public long lastDataTime() {
-        return danaRPump.getLastConnection();
+        return danaPump.getLastConnection();
     }
 
     @Override
     public double getBaseBasalRate() {
-        return danaRPump.getCurrentBasal();
+        return danaPump.getCurrentBasal();
     }
 
     @Override
     public double getReservoirLevel() {
-        return danaRPump.getReservoirRemainingUnits();
+        return danaPump.getReservoirRemainingUnits();
     }
 
     @Override
     public int getBatteryLevel() {
-        return danaRPump.getBatteryRemaining();
+        return danaPump.getBatteryRemaining();
     }
 
     @Override
@@ -218,7 +218,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        DanaRPump pump = danaRPump;
+        DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
@@ -266,7 +266,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        DanaRPump pump = danaRPump;
+        DanaPump pump = danaPump;
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
@@ -315,7 +315,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             result.enacted = true;
             result.isTempCancel = true;
         }
-        if (!danaRPump.isExtendedInProgress()) {
+        if (!danaPump.isExtendedInProgress()) {
             result.success = true;
             result.comment = getResourceHelper().gs(R.string.ok);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
@@ -332,8 +332,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public void connect(String from) {
         if (sExecutionService != null) {
             sExecutionService.connect();
-            pumpDescription.basalStep = danaRPump.getBasalStep();
-            pumpDescription.bolusStep = danaRPump.getBolusStep();
+            pumpDescription.basalStep = danaPump.getBasalStep();
+            pumpDescription.bolusStep = danaPump.getBolusStep();
         }
     }
 
@@ -361,14 +361,14 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public void getPumpStatus() {
         if (sExecutionService != null) {
             sExecutionService.getPumpStatus();
-            pumpDescription.basalStep = danaRPump.getBasalStep();
-            pumpDescription.bolusStep = danaRPump.getBolusStep();
+            pumpDescription.basalStep = danaPump.getBasalStep();
+            pumpDescription.bolusStep = danaPump.getBolusStep();
         }
     }
 
     @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profilename, String version) {
-        DanaRPump pump = danaRPump;
+        DanaPump pump = danaPump;
         long now = System.currentTimeMillis();
         if (pump.getLastConnection() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return new JSONObject();
@@ -422,7 +422,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public String serialNumber() {
-        return danaRPump.getSerialNumber();
+        return danaPump.getSerialNumber();
     }
 
     @NonNull @Override
@@ -445,7 +445,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
-        absoluteRate.setIfSmaller(getAapsLogger(), danaRPump.getMaxBasal(), String.format(getResourceHelper().gs(R.string.limitingbasalratio), danaRPump.getMaxBasal(), getResourceHelper().gs(R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(getAapsLogger(), danaPump.getMaxBasal(), String.format(getResourceHelper().gs(R.string.limitingbasalratio), danaPump.getMaxBasal(), getResourceHelper().gs(R.string.pumplimit)), this);
         return absoluteRate;
     }
 
@@ -459,7 +459,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(getAapsLogger(), danaRPump.getMaxBolus(), String.format(getResourceHelper().gs(R.string.limitingbolus), danaRPump.getMaxBolus(), getResourceHelper().gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), danaPump.getMaxBolus(), String.format(getResourceHelper().gs(R.string.limitingbolus), danaPump.getMaxBolus(), getResourceHelper().gs(R.string.pumplimit)), this);
         return insulin;
     }
 
@@ -475,7 +475,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     // Reply for sms communicator
     @NonNull public String shortStatus(boolean veryShort) {
-        DanaRPump pump = danaRPump;
+        DanaPump pump = danaPump;
         String ret = "";
         if (pump.getLastConnection() != 0) {
             long agoMsec = System.currentTimeMillis() - pump.getLastConnection();

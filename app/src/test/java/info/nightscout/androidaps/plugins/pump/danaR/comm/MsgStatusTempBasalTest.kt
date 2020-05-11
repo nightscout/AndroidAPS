@@ -21,13 +21,13 @@ class MsgStatusTempBasalTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
-        val packet = MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector)
+        val packet = MsgStatusTempBasal(aapsLogger, danaPump, activePlugin, injector)
         // test message decoding
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(true, danaPump.isTempBasalInProgress)
         // passing an bigger number
         packet.handleMessage(createArray(34, 2.toByte()))
-        Assert.assertEquals(false, danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(false, danaPump.isTempBasalInProgress)
     }
 }

@@ -39,7 +39,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun basalRateShouldBeLimited() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBasal = 0.8
+        danaPump.maxBasal = 0.8
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         danaRSPlugin.applyBasalConstraints(c, validProfile)
         Assert.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
@@ -51,7 +51,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
     fun percentBasalRateShouldBeLimited() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
-        danaRPump.maxBasal = 0.8
+        danaPump.maxBasal = 0.8
         val c = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         danaRSPlugin.applyBasalPercentConstraints(c, validProfile)
         Assert.assertEquals(200, c.value())
@@ -65,6 +65,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 
-        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
     }
 }

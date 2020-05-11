@@ -2,14 +2,14 @@ package info.nightscout.androidaps.danar.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
 import java.util.*
 
 class MsgSettingPumpTime(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val dateUtil: DateUtil
 ) : MessageBase() {
 
@@ -28,10 +28,10 @@ class MsgSettingPumpTime(
             intFromBuff(bytes, 0, 1)
         ).millis
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + dateUtil.dateAndTimeString(time) + " Phone time: " + Date())
-        danaRPump.pumpTime = time
+        danaPump.pumpTime = time
     }
 
     override fun handleMessageNotReceived() {
-        danaRPump.pumpTime = 0
+        danaPump.pumpTime = 0
     }
 }

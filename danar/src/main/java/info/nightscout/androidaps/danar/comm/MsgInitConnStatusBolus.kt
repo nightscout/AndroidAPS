@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -14,7 +14,7 @@ class MsgInitConnStatusBolus(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -29,14 +29,14 @@ class MsgInitConnStatusBolus(
         }
         failed = false
         val bolusConfig = intFromBuff(bytes, 0, 1)
-        danaRPump.isExtendedBolusEnabled = bolusConfig and 0x01 != 0
-        danaRPump.bolusStep = intFromBuff(bytes, 1, 1) / 100.0
-        danaRPump.maxBolus = intFromBuff(bytes, 2, 2) / 100.0
+        danaPump.isExtendedBolusEnabled = bolusConfig and 0x01 != 0
+        danaPump.bolusStep = intFromBuff(bytes, 1, 1) / 100.0
+        danaPump.maxBolus = intFromBuff(bytes, 2, 2) / 100.0
         //int bolusRate = intFromBuff(bytes, 4, 8);
-        aapsLogger.debug(LTag.PUMPCOMM, "Is Extended bolus enabled: " + danaRPump.isExtendedBolusEnabled)
-        aapsLogger.debug(LTag.PUMPCOMM, "Bolus increment: " + danaRPump.bolusStep)
-        aapsLogger.debug(LTag.PUMPCOMM, "Bolus max: " + danaRPump.maxBolus)
-        if (!danaRPump.isExtendedBolusEnabled) {
+        aapsLogger.debug(LTag.PUMPCOMM, "Is Extended bolus enabled: " + danaPump.isExtendedBolusEnabled)
+        aapsLogger.debug(LTag.PUMPCOMM, "Bolus increment: " + danaPump.bolusStep)
+        aapsLogger.debug(LTag.PUMPCOMM, "Bolus max: " + danaPump.maxBolus)
+        if (!danaPump.isExtendedBolusEnabled) {
             val notification = Notification(Notification.EXTENDED_BOLUS_DISABLED, resourceHelper.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {

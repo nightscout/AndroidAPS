@@ -10,17 +10,12 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
@@ -29,12 +24,6 @@ import javax.inject.Singleton
     AppModule.AppBindings::class
 ])
 open class AppModule {
-
-    @Provides
-    @Singleton
-    fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider, fabricPrivacy: FabricPrivacy): ProfileFunction {
-        return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin, fabricPrivacy)
-    }
 
     @Provides
     fun providesPlugins(configInterface: ConfigInterface,

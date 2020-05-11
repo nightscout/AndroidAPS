@@ -18,7 +18,7 @@ class DanaRS_Packet_General_Get_More_InformationTest : DanaRSTestBase() {
                 it.dateUtil = dateUtil
             }
             if (it is DanaRS_Packet_General_Get_More_Information) {
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -41,14 +41,14 @@ class DanaRS_Packet_General_Get_More_InformationTest : DanaRSTestBase() {
 
         packet.handleMessage(array)
         Assert.assertFalse(packet.failed)
-        Assert.assertEquals(6.0, danaRPump.iob, 0.01)
-        Assert.assertEquals(12.5, danaRPump.dailyTotalUnits, 0.01)
-        Assert.assertTrue(danaRPump.isExtendedInProgress)
-        Assert.assertEquals(150, danaRPump.extendedBolusRemainingMinutes)
-        val lastBolus = Date(danaRPump.lastBolusTime)
+        Assert.assertEquals(6.0, danaPump.iob, 0.01)
+        Assert.assertEquals(12.5, danaPump.dailyTotalUnits, 0.01)
+        Assert.assertTrue(danaPump.isExtendedInProgress)
+        Assert.assertEquals(150, danaPump.extendedBolusRemainingMinutes)
+        val lastBolus = Date(danaPump.lastBolusTime)
         Assert.assertEquals(15, lastBolus.hours)
         Assert.assertEquals(25, lastBolus.minutes)
-        Assert.assertEquals(1.7, danaRPump.lastBolusAmount, 0.01)
+        Assert.assertEquals(1.7, danaPump.lastBolusAmount, 0.01)
 
         Assert.assertEquals("REVIEW__GET_MORE_INFORMATION", packet.friendlyName)
     }

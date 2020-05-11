@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ class DanaRS_Packet_Option_Get_User_Option(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION
@@ -20,37 +20,37 @@ class DanaRS_Packet_Option_Get_User_Option(
     override fun handleMessage(data: ByteArray) {
         var dataIndex = DATA_START
         var dataSize = 1
-        danaRPump.timeDisplayType = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.timeDisplayType = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.buttonScrollOnOff = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.buttonScrollOnOff = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.beepAndAlarm = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.beepAndAlarm = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.lcdOnTimeSec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.lcdOnTimeSec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.backlightOnTimeSec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.backlightOnTimeSec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.selectedLanguage = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.selectedLanguage = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.units = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.units = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.shutdownHour = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.shutdownHour = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.lowReservoirRate = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.lowReservoirRate = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaRPump.cannulaVolume = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.cannulaVolume = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaRPump.refillAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.refillAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
         val selectableLanguage1 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
@@ -67,17 +67,17 @@ class DanaRS_Packet_Option_Get_User_Option(
         dataSize = 1
         val selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         // Pump's screen on time can't be less than 5
-        failed = if (danaRPump.lcdOnTimeSec < 5) true else false
-        aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType: " + danaRPump.timeDisplayType)
-        aapsLogger.debug(LTag.PUMPCOMM, "buttonScrollOnOff: " + danaRPump.buttonScrollOnOff)
-        aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm: " + danaRPump.beepAndAlarm)
-        aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec: " + danaRPump.lcdOnTimeSec)
-        aapsLogger.debug(LTag.PUMPCOMM, "backlightOnTimeSec: " + danaRPump.backlightOnTimeSec)
-        aapsLogger.debug(LTag.PUMPCOMM, "selectedLanguage: " + danaRPump.selectedLanguage)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
-        aapsLogger.debug(LTag.PUMPCOMM, "shutdownHour: " + danaRPump.shutdownHour)
-        aapsLogger.debug(LTag.PUMPCOMM, "lowReservoirRate: " + danaRPump.lowReservoirRate)
-        aapsLogger.debug(LTag.PUMPCOMM, "refillAmount: " + danaRPump.refillAmount)
+        failed = if (danaPump.lcdOnTimeSec < 5) true else false
+        aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType: " + danaPump.timeDisplayType)
+        aapsLogger.debug(LTag.PUMPCOMM, "buttonScrollOnOff: " + danaPump.buttonScrollOnOff)
+        aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm: " + danaPump.beepAndAlarm)
+        aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec: " + danaPump.lcdOnTimeSec)
+        aapsLogger.debug(LTag.PUMPCOMM, "backlightOnTimeSec: " + danaPump.backlightOnTimeSec)
+        aapsLogger.debug(LTag.PUMPCOMM, "selectedLanguage: " + danaPump.selectedLanguage)
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "shutdownHour: " + danaPump.shutdownHour)
+        aapsLogger.debug(LTag.PUMPCOMM, "lowReservoirRate: " + danaPump.lowReservoirRate)
+        aapsLogger.debug(LTag.PUMPCOMM, "refillAmount: " + danaPump.refillAmount)
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage1: $selectableLanguage1")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage2: $selectableLanguage2")
         aapsLogger.debug(LTag.PUMPCOMM, "selectableLanguage3: $selectableLanguage3")

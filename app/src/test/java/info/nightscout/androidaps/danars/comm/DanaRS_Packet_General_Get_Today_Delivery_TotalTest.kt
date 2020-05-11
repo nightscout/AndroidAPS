@@ -14,7 +14,7 @@ class DanaRS_Packet_General_Get_Today_Delivery_TotalTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_General_Get_Today_Delivery_Total) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -30,7 +30,7 @@ class DanaRS_Packet_General_Get_Today_Delivery_TotalTest : DanaRSTestBase() {
         packet.handleMessage(createArray(18, 0.toByte()))
         Assert.assertEquals(false, packet.failed)
         packet.handleMessage(createArray(15, 1.toByte()))
-        Assert.assertEquals(((1 and 0x000000FF shl 8) + (1 and 0x000000FF)) / 100.0, danaRPump.dailyTotalUnits, 0.0)
+        Assert.assertEquals(((1 and 0x000000FF shl 8) + (1 and 0x000000FF)) / 100.0, danaPump.dailyTotalUnits, 0.0)
         Assert.assertEquals("REVIEW__GET_TODAY_DELIVERY_TOTAL", packet.friendlyName)
     }
 }

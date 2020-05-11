@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ class DanaRS_Packet_Review_Get_Pump_Dec_Ratio(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_DEC_RATIO
@@ -18,9 +18,9 @@ class DanaRS_Packet_Review_Get_Pump_Dec_Ratio(
     }
 
     override fun handleMessage(data: ByteArray) {
-        danaRPump.decRatio = intFromBuff(data, 0, 1) * 5
+        danaPump.decRatio = intFromBuff(data, 0, 1) * 5
         failed = false
-        aapsLogger.debug(LTag.PUMPCOMM, "Dec ratio: ${danaRPump.decRatio}%")
+        aapsLogger.debug(LTag.PUMPCOMM, "Dec ratio: ${danaPump.decRatio}%")
     }
 
     override fun getFriendlyName(): String {

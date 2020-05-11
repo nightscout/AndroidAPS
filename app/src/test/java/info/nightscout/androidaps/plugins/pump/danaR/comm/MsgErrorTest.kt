@@ -22,7 +22,7 @@ class MsgErrorTest : DanaRTestBase() {
 
     @Test fun runTest() {
         PowerMockito.mockStatic(NSUpload::class.java)
-        val packet = MsgError(aapsLogger, rxBus, resourceHelper, danaRPump, nsUpload)
+        val packet = MsgError(aapsLogger, rxBus, resourceHelper, danaPump, nsUpload)
 
         // test message decoding
         val array = ByteArray(100)

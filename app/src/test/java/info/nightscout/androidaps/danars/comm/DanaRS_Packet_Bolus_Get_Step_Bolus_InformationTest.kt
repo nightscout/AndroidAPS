@@ -20,7 +20,7 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_InformationTest : DanaRSTestBase() {
                 it.dateUtil = dateUtil
             }
             if (it is DanaRS_Packet_Bolus_Get_Step_Bolus_Information) {
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -40,13 +40,13 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_InformationTest : DanaRSTestBase() {
 
         packet.handleMessage(array)
         Assert.assertTrue(packet.failed)
-        Assert.assertEquals(6.0, danaRPump.initialBolusAmount, 0.01)
-        val lastBolus = Date(danaRPump.lastBolusTime)
+        Assert.assertEquals(6.0, danaPump.initialBolusAmount, 0.01)
+        val lastBolus = Date(danaPump.lastBolusTime)
         Assert.assertEquals(13, lastBolus.hours)
         Assert.assertEquals(20, lastBolus.minutes)
-        Assert.assertEquals(12.5, danaRPump.lastBolusAmount, 0.01)
-        Assert.assertEquals(25.0, danaRPump.maxBolus, 0.01)
-        Assert.assertEquals(1.0, danaRPump.bolusStep, 0.01)
+        Assert.assertEquals(12.5, danaPump.lastBolusAmount, 0.01)
+        Assert.assertEquals(25.0, danaPump.maxBolus, 0.01)
+        Assert.assertEquals(1.0, danaPump.bolusStep, 0.01)
         Assert.assertEquals("BOLUS__GET_STEP_BOLUS_INFORMATION", packet.friendlyName)
     }
 }

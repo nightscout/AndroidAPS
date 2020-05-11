@@ -19,7 +19,7 @@ import javax.inject.Singleton
  * Created by mike on 04.07.2016.
  */
 @Singleton
-class DanaRPump @Inject constructor(
+class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val injector: HasAndroidInjector

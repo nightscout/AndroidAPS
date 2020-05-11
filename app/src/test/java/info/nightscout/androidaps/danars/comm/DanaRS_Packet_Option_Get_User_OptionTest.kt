@@ -14,7 +14,7 @@ class DanaRS_Packet_Option_Get_User_OptionTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Option_Get_User_Option) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -28,7 +28,7 @@ class DanaRS_Packet_Option_Get_User_OptionTest : DanaRSTestBase() {
         Assert.assertEquals(true, packet.failed)
         // everything ok :)
         packet.handleMessage(createArray(20, 5.toByte()))
-        Assert.assertEquals(5, danaRPump.lcdOnTimeSec)
+        Assert.assertEquals(5, danaPump.lcdOnTimeSec)
         Assert.assertEquals(false, packet.failed)
         Assert.assertEquals("OPTION__GET_USER_OPTION", packet.friendlyName)
     }

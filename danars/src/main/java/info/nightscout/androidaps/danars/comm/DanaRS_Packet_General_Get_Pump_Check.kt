@@ -6,7 +6,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class DanaRS_Packet_General_Get_Pump_Check(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK
@@ -32,17 +32,17 @@ class DanaRS_Packet_General_Get_Pump_Check(
             failed = false
         var dataIndex = DATA_START
         var dataSize = 1
-        danaRPump.hwModel = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.hwModel = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.protocol = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.protocol = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.productCode = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.hwModel))
-        aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaRPump.protocol))
-        aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaRPump.productCode))
-        if (danaRPump.productCode < 2) {
+        danaPump.productCode = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaPump.hwModel))
+        aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaPump.protocol))
+        aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaPump.productCode))
+        if (danaPump.productCode < 2) {
             rxBus.send(EventNewNotification(Notification(Notification.UNSUPPORTED_FIRMWARE, resourceHelper.gs(R.string.unsupportedfirmware), Notification.URGENT)))
         }
     }

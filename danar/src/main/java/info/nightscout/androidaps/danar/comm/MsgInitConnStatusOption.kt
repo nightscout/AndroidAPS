@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -15,7 +15,7 @@ class MsgInitConnStatusOption(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val activePlugin: ActivePluginProvider
 ) : MessageBase() {
 
@@ -36,12 +36,12 @@ class MsgInitConnStatusOption(
         //int none = intFromBuff(bytes, 8, 1);
         if (bytes.size >= 21) {
             failed = false
-            danaRPump.password = intFromBuff(bytes, 9, 2) xor 0x3463
-            aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaRPump.password)
+            danaPump.password = intFromBuff(bytes, 9, 2) xor 0x3463
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaPump.password)
         } else {
             failed = true
         }
-        if (!danaRPump.isPasswordOK) {
+        if (!danaPump.isPasswordOK) {
             val notification = Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {

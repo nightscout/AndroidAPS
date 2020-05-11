@@ -161,27 +161,27 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_date = new TextView(this);
-        label_date.setText(resourceHelper.gs(R.string.danar_stats_date));
+        label_date.setText(resourceHelper.gs(R.string.date));
         label_date.setTextColor(Color.WHITE);
         tr_head.addView(label_date);
 
         TextView label_basalrate = new TextView(this);
-        label_basalrate.setText(resourceHelper.gs(R.string.danar_stats_basalrate));
+        label_basalrate.setText(resourceHelper.gs(R.string.basalrate));
         label_basalrate.setTextColor(Color.WHITE);
         tr_head.addView(label_basalrate);
 
         TextView label_bolus = new TextView(this);
-        label_bolus.setText(resourceHelper.gs(R.string.danar_stats_bolus));
+        label_bolus.setText(resourceHelper.gs(R.string.bolus));
         label_bolus.setTextColor(Color.WHITE);
         tr_head.addView(label_bolus);
 
         TextView label_tdd = new TextView(this);
-        label_tdd.setText(resourceHelper.gs(R.string.danar_stats_tdd));
+        label_tdd.setText(resourceHelper.gs(R.string.tdd));
         label_tdd.setTextColor(Color.WHITE);
         tr_head.addView(label_tdd);
 
         TextView label_ratio = new TextView(this);
-        label_ratio.setText(resourceHelper.gs(R.string.danar_stats_ratio));
+        label_ratio.setText(resourceHelper.gs(R.string.ratio));
         label_ratio.setTextColor(Color.WHITE);
         tr_head.addView(label_ratio);
 
@@ -199,17 +199,17 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_cum_amount_days = new TextView(this);
-        label_cum_amount_days.setText(resourceHelper.gs(R.string.danar_stats_amount_days));
+        label_cum_amount_days.setText(resourceHelper.gs(R.string.amount_days));
         label_cum_amount_days.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_amount_days);
 
         TextView label_cum_tdd = new TextView(this);
-        label_cum_tdd.setText(resourceHelper.gs(R.string.danar_stats_tdd));
+        label_cum_tdd.setText(resourceHelper.gs(R.string.tdd));
         label_cum_tdd.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_tdd);
 
         TextView label_cum_ratio = new TextView(this);
-        label_cum_ratio.setText(resourceHelper.gs(R.string.danar_stats_ratio));
+        label_cum_ratio.setText(resourceHelper.gs(R.string.ratio));
         label_cum_ratio.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_ratio);
 
@@ -227,17 +227,17 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_exp_weight = new TextView(this);
-        label_exp_weight.setText(resourceHelper.gs(R.string.danar_stats_weight));
+        label_exp_weight.setText(resourceHelper.gs(R.string.weight));
         label_exp_weight.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_weight);
 
         TextView label_exp_tdd = new TextView(this);
-        label_exp_tdd.setText(resourceHelper.gs(R.string.danar_stats_tdd));
+        label_exp_tdd.setText(resourceHelper.gs(R.string.tdd));
         label_exp_tdd.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_tdd);
 
         TextView label_exp_ratio = new TextView(this);
-        label_exp_ratio.setText(resourceHelper.gs(R.string.danar_stats_ratio));
+        label_exp_ratio.setText(resourceHelper.gs(R.string.ratio));
         label_exp_ratio.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_ratio);
 
@@ -251,7 +251,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 reloadButton.setVisibility(View.GONE);
                 statusView.setVisibility(View.VISIBLE);
                 statsMessage.setVisibility(View.VISIBLE);
-                statsMessage.setText(resourceHelper.gs(R.string.danar_stats_warning_Message));
+                statsMessage.setText(resourceHelper.gs(R.string.warning_Message));
             });
             commandQueue.loadTDDs(new Callback() {
                 @Override
@@ -439,7 +439,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
             if (isOldData(historyList) && activePlugin.getActivePump().getPumpDescription().needsManualTDDLoad) {
                 statsMessage.setVisibility(View.VISIBLE);
-                statsMessage.setText(resourceHelper.gs(R.string.danar_stats_olddata_Message));
+                statsMessage.setText(resourceHelper.gs(R.string.olddata_Message));
 
             } else {
                 tl.setBackgroundColor(Color.TRANSPARENT);

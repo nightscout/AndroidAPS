@@ -369,7 +369,7 @@ public enum PumpType {
         DoseSettings eb = getExtendedBolusSettings();
         DoseSettings tbr = getTbrSettings();
 
-        String extendedNote = hasExtendedBasals ? resourceHelper.gs(R.string.virtualpump_pump_def_extended_note) : "";
+        String extendedNote = hasExtendedBasals ? resourceHelper.gs(R.string.def_extended_note) : "";
 
         return String.format(i18nTemplate, //
                 getStep("" + getBolusSize(), getSpecialBolusSize()), //

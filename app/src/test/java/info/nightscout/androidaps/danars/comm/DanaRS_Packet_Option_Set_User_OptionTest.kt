@@ -14,7 +14,7 @@ class DanaRS_Packet_Option_Set_User_OptionTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Option_Set_User_Option) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -23,7 +23,7 @@ class DanaRS_Packet_Option_Set_User_OptionTest : DanaRSTestBase() {
         val packet = DanaRS_Packet_Option_Set_User_Option(packetInjector)
         // test params
         val params = packet.requestParams
-        Assert.assertEquals((danaRPump.lcdOnTimeSec and 0xff).toByte(), params[3])
+        Assert.assertEquals((danaPump.lcdOnTimeSec and 0xff).toByte(), params[3])
         // test message decoding
         packet.handleMessage(createArray(3, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

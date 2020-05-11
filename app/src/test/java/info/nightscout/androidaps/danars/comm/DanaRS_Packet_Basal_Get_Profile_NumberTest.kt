@@ -16,7 +16,7 @@ class DanaRS_Packet_Basal_Get_Profile_NumberTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Basal_Get_Profile_Number) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -27,7 +27,7 @@ class DanaRS_Packet_Basal_Get_Profile_NumberTest : DanaRSTestBase() {
         val array = ByteArray(100)
         putByteToArray(array, 0, 1.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(1, danaRPump.activeProfile)
+        Assert.assertEquals(1, danaPump.activeProfile)
         Assert.assertEquals("BASAL__GET_PROFILE_NUMBER", packet.friendlyName)
     }
 }

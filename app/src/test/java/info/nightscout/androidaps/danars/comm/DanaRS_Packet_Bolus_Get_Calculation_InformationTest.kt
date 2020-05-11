@@ -16,7 +16,7 @@ class DanaRS_Packet_Bolus_Get_Calculation_InformationTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Bolus_Get_Calculation_Information) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }

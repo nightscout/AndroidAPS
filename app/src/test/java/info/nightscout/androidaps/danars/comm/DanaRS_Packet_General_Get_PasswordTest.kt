@@ -14,7 +14,7 @@ class DanaRS_Packet_General_Get_PasswordTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_General_Get_Password) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }

@@ -25,7 +25,7 @@ class MsgInitConnStatusTimeTest : DanaRTestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
 
     @Test fun runTest() {
-        val packet = MsgInitConnStatusTime(aapsLogger, RxBusWrapper(), resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, dateUtil)
+        val packet = MsgInitConnStatusTime(aapsLogger, RxBusWrapper(), resourceHelper, danaPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, dateUtil)
 
         // test message decoding
         packet.handleMessage(createArray(20, 1.toByte()))

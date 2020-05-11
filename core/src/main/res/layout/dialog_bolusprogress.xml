@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="@string/overview_bolusprogress_stoppressed"
+        android:text="@string/stoppressed"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#fd0101"
         android:textStyle="bold"
@@ -78,6 +78,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
-        android:text="@string/overview_bolusprogress_stop" />
+        android:text="@string/stop" />
 
 </LinearLayout>

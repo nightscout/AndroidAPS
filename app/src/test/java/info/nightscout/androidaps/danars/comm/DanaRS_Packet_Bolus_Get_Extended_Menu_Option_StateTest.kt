@@ -14,7 +14,7 @@ class DanaRS_Packet_Bolus_Get_Extended_Menu_Option_StateTest : DanaRSTestBase() 
         AndroidInjector {
             if (it is DanaRS_Packet_Bolus_Get_Extended_Menu_Option_State) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -25,10 +25,10 @@ class DanaRS_Packet_Bolus_Get_Extended_Menu_Option_StateTest : DanaRSTestBase() 
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
         // isExtendedinprogres should be false
-        Assert.assertEquals(false, danaRPump.isExtendedInProgress)
+        Assert.assertEquals(false, danaPump.isExtendedInProgress)
         //        assertEquals(false, packet.failed);
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, danaRPump.isExtendedInProgress)
+        Assert.assertEquals(true, danaPump.isExtendedInProgress)
         Assert.assertEquals("BOLUS__GET_EXTENDED_MENU_OPTION_STATE", packet.friendlyName)
     }
 }

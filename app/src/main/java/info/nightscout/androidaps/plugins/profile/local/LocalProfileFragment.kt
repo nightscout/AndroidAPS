@@ -45,7 +45,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private val save = Runnable {
         doEdit()
-        basalView?.updateLabel(resourceHelper.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel())
+        basalView?.updateLabel(resourceHelper.gs(R.string.basal_label) + ": " + sumLabel())
     }
 
     private val textWatch = object : TextWatcher {
@@ -106,14 +106,14 @@ class LocalProfileFragment : DaggerFragment() {
         localprofile_name.addTextChangedListener(textWatch)
         localprofile_dia.setParams(localProfilePlugin.currentProfile().dia, hardLimits.MINDIA, hardLimits.MAXDIA, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
         localprofile_dia.tag = "LP_DIA"
-        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.nsprofileview_ic_label), localProfilePlugin.currentProfile().ic, null, hardLimits.MINIC, hardLimits.MAXIC, 0.1, DecimalFormat("0.0"), save)
-        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_basal, "BASAL", resourceHelper.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), localProfilePlugin.currentProfile().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
+        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.ic_label), localProfilePlugin.currentProfile().ic, null, hardLimits.MINIC, hardLimits.MAXIC, 0.1, DecimalFormat("0.0"), save)
+        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_basal, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), localProfilePlugin.currentProfile().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.nsprofileview_isf_label), localProfilePlugin.currentProfile().isf, null, hardLimits.MINISF, hardLimits.MAXISF, 1.0, DecimalFormat("0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.nsprofileview_target_label), localProfilePlugin.currentProfile().targetLow, localProfilePlugin.currentProfile().targetHigh, hardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), hardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.isf_label), localProfilePlugin.currentProfile().isf, null, hardLimits.MINISF, hardLimits.MAXISF, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.target_label), localProfilePlugin.currentProfile().targetLow, localProfilePlugin.currentProfile().targetHigh, hardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), hardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), 1.0, DecimalFormat("0"), save)
         } else {
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.nsprofileview_isf_label), localProfilePlugin.currentProfile().isf, null, Profile.fromMgdlToUnits(hardLimits.MINISF, Constants.MMOL), Profile.fromMgdlToUnits(hardLimits.MAXISF, Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.nsprofileview_target_label), localProfilePlugin.currentProfile().targetLow, localProfilePlugin.currentProfile().targetHigh, Profile.fromMgdlToUnits(hardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), Constants.MMOL), Profile.fromMgdlToUnits(hardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.isf_label), localProfilePlugin.currentProfile().isf, null, Profile.fromMgdlToUnits(hardLimits.MINISF, Constants.MMOL), Profile.fromMgdlToUnits(hardLimits.MAXISF, Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.target_label), localProfilePlugin.currentProfile().targetLow, localProfilePlugin.currentProfile().targetHigh, Profile.fromMgdlToUnits(hardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), Constants.MMOL), Profile.fromMgdlToUnits(hardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
         }
 
         // Spinner
@@ -190,10 +190,10 @@ class LocalProfileFragment : DaggerFragment() {
             localprofile_units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (localProfilePlugin.currentProfile().mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
             localprofile_dia.setParams(localProfilePlugin.currentProfile().dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
             localprofile_dia.tag = "LP_DIA"
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.nsprofileview_ic_label) + ":", localProfilePlugin.currentProfile().ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.nsprofileview_isf_label) + ":", localProfilePlugin.currentProfile().isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
-            basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_basal, "BASAL", resourceHelper.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), localProfilePlugin.currentProfile().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.nsprofileview_target_label) + ":", localProfilePlugin.currentProfile().targetLow, localProfilePlugin.currentProfile().targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.ic_label) + ":", localProfilePlugin.currentProfile().ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.isf_label) + ":", localProfilePlugin.currentProfile().isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
+            basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_basal, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), localProfilePlugin.currentProfile().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.target_label) + ":", localProfilePlugin.currentProfile().targetLow, localProfilePlugin.currentProfile().targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
             updateGUI()
         }
 

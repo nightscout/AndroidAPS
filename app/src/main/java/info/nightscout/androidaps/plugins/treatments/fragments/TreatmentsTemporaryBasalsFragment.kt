@@ -162,7 +162,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                     context?.let {
                         showConfirmation(it, resourceHelper.gs(R.string.removerecord),
                             """
-                ${resourceHelper.gs(R.string.pump_tempbasal_label)}: ${tempBasal.toStringFull()}
+                ${resourceHelper.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull()}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.date)}
                 """.trimIndent(),
                             DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->

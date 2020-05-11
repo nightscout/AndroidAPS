@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ class DanaRS_Packet_Bolus_Get_CIR_CF_Array(
     injector: HasAndroidInjector
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__GET_CIR_CF_ARRAY
@@ -23,87 +23,87 @@ class DanaRS_Packet_Bolus_Get_CIR_CF_Array(
         val language = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaRPump.units = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.units = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaRPump.morningCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.morningCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
         val cir02 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaRPump.afternoonCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.afternoonCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
         val cir04 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaRPump.eveningCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.eveningCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
         val cir06 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaRPump.nightCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.nightCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         val cf02: Double
         val cf04: Double
         val cf06: Double
-        if (danaRPump.units == info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL) {
+        if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) {
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.morningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
+            danaPump.morningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
             dataIndex += dataSize
             dataSize = 2
             cf02 = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.afternoonCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
+            danaPump.afternoonCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
             dataIndex += dataSize
             dataSize = 2
             cf04 = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.eveningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
+            danaPump.eveningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
             dataIndex += dataSize
             dataSize = 2
             cf06 = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.nightCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
+            danaPump.nightCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
         } else {
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.morningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+            danaPump.morningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
             dataIndex += dataSize
             dataSize = 2
             cf02 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.afternoonCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+            danaPump.afternoonCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
             dataIndex += dataSize
             dataSize = 2
             cf04 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.eveningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+            danaPump.eveningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
             dataIndex += dataSize
             dataSize = 2
             cf06 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
             dataIndex += dataSize
             dataSize = 2
-            danaRPump.nightCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+            danaPump.nightCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         }
-        if (danaRPump.units < 0 || danaRPump.units > 1) failed = true
+        if (danaPump.units < 0 || danaPump.units > 1) failed = true
         aapsLogger.debug(LTag.PUMPCOMM, "Language: $language")
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CIR: " + danaRPump.morningCIR)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CF: " + danaRPump.morningCF)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CIR: " + danaRPump.afternoonCIR)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CF: " + danaRPump.afternoonCF)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CIR: " + danaRPump.eveningCIR)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CF: " + danaRPump.eveningCF)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CIR: " + danaRPump.nightCIR)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CF: " + danaRPump.nightCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CIR: " + danaPump.morningCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CF: " + danaPump.morningCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CIR: " + danaPump.afternoonCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CF: " + danaPump.afternoonCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CIR: " + danaPump.eveningCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CF: " + danaPump.eveningCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CIR: " + danaPump.nightCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CF: " + danaPump.nightCF)
         aapsLogger.debug(LTag.PUMPCOMM, "cir02: $cir02")
         aapsLogger.debug(LTag.PUMPCOMM, "cir04: $cir04")
         aapsLogger.debug(LTag.PUMPCOMM, "cir06: $cir06")

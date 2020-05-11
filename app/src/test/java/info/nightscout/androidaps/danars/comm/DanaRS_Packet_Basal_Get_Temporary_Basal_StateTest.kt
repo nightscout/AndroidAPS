@@ -19,7 +19,7 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_StateTest : DanaRSTestBase() {
                 it.dateUtil = dateUtil
             }
             if (it is DanaRS_Packet_Basal_Get_Temporary_Basal_State) {
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -35,9 +35,9 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_StateTest : DanaRSTestBase() {
         putIntToArray(array, 4, 1)
         packet.handleMessage(array)
         Assert.assertTrue(packet.failed)
-        Assert.assertTrue(danaRPump.isTempBasalInProgress)
-        Assert.assertEquals(300, danaRPump.tempBasalPercent)
-        Assert.assertEquals(15 * 60, danaRPump.tempBasalTotalSec)
+        Assert.assertTrue(danaPump.isTempBasalInProgress)
+        Assert.assertEquals(300, danaPump.tempBasalPercent)
+        Assert.assertEquals(15 * 60, danaPump.tempBasalTotalSec)
         Assert.assertEquals("BASAL__TEMPORARY_BASAL_STATE", packet.friendlyName)
     }
 }

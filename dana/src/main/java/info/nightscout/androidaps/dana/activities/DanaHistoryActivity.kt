@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.danar_historyactivity.*
 import java.util.*
 import javax.inject.Inject
 
-class DanaRHistoryActivity : NoSplashAppCompatActivity() {
+class DanaHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -12,7 +12,7 @@ class MsgBolusStop(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump
+    private val danaPump: DanaPump
 ) : MessageBase() {
 
     init {
@@ -23,9 +23,9 @@ class MsgBolusStop(
     override fun handleMessage(bytes: ByteArray) {
         aapsLogger.debug(LTag.PUMPCOMM, "Messsage received")
         val bolusingEvent = EventOverviewBolusProgress
-        danaRPump.bolusStopped = true
-        if (!danaRPump.bolusStopForced) {
-            danaRPump.bolusingTreatment?.insulin = danaRPump.bolusAmountToBeDelivered
+        danaPump.bolusStopped = true
+        if (!danaPump.bolusStopForced) {
+            danaPump.bolusingTreatment?.insulin = danaPump.bolusAmountToBeDelivered
             bolusingEvent.status = resourceHelper.gs(R.string.overview_bolusprogress_delivered)
             bolusingEvent.percent = 100
         } else {

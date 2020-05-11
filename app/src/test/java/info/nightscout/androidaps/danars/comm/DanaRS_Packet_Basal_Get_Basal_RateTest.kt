@@ -19,7 +19,7 @@ class DanaRS_Packet_Basal_Get_Basal_RateTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -32,8 +32,8 @@ class DanaRS_Packet_Basal_Get_Basal_RateTest : DanaRSTestBase() {
         putIntToArray(array, 0, (1.0 * 100).toInt())
         putByteToArray(array, 2, (0.05 * 100).toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(1.0, danaRPump.maxBasal, 0.0)
-        Assert.assertEquals(0.05, danaRPump.basalStep, 0.0)
+        Assert.assertEquals(1.0, danaPump.maxBasal, 0.0)
+        Assert.assertEquals(0.05, danaPump.basalStep, 0.0)
         Assert.assertTrue(packet.failed)
         Assert.assertEquals("BASAL__GET_BASAL_RATE", packet.friendlyName)
     }

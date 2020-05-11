@@ -14,7 +14,7 @@ class DanaRS_Packet_Review_Get_Pump_Dec_RatioTest : DanaRSTestBase() {
         AndroidInjector {
             if (it is DanaRS_Packet_Review_Get_Pump_Dec_Ratio) {
                 it.aapsLogger = aapsLogger
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -25,7 +25,7 @@ class DanaRS_Packet_Review_Get_Pump_Dec_RatioTest : DanaRSTestBase() {
         val array = ByteArray(100)
         putByteToArray(array, 0, 4.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(20, danaRPump.decRatio)
+        Assert.assertEquals(20, danaPump.decRatio)
         Assert.assertEquals("REVIEW__GET_PUMP_DEC_RATIO", packet.friendlyName)
     }
 }

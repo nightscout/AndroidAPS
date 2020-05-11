@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -13,7 +13,7 @@ class MsgError(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaPump: DanaPump,
     private val nsUpload: NSUpload
 ) : MessageBase() {
 
@@ -34,7 +34,7 @@ class MsgError(
         }
         if (errorCode < 8) { // bolus delivering stopped
             val bolusingEvent = EventOverviewBolusProgress
-            danaRPump.bolusStopped = true
+            danaPump.bolusStopped = true
             bolusingEvent.status = errorString
             rxBus.send(bolusingEvent)
             failed = true

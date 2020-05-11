@@ -19,7 +19,7 @@ class DanaRS_Packet_Bolus_Get_Bolus_OptionTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
@@ -31,13 +31,13 @@ class DanaRS_Packet_Bolus_Get_Bolus_OptionTest : DanaRSTestBase() {
         packet.handleMessage(createArray(21, 1.toByte()))
         Assert.assertEquals(false, packet.failed)
         //Are options saved to pump
-        Assert.assertEquals(false, !danaRPump.isExtendedBolusEnabled)
-        Assert.assertEquals(1, danaRPump.bolusCalculationOption)
-        Assert.assertEquals(1, danaRPump.missedBolusConfig)
+        Assert.assertEquals(false, !danaPump.isExtendedBolusEnabled)
+        Assert.assertEquals(1, danaPump.bolusCalculationOption)
+        Assert.assertEquals(1, danaPump.missedBolusConfig)
         packet.handleMessage(createArray(21, 0.toByte()))
         Assert.assertEquals(true, packet.failed)
         //Are options saved to pump
-        Assert.assertEquals(true, !danaRPump.isExtendedBolusEnabled)
+        Assert.assertEquals(true, !danaPump.isExtendedBolusEnabled)
         Assert.assertEquals("BOLUS__GET_BOLUS_OPTION", packet.friendlyName)
     }
 }

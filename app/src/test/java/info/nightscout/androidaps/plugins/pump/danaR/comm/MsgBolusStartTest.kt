@@ -19,7 +19,7 @@ class MsgBolusStartTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(Constraint(anyObject()))).thenReturn(Constraint(0.0))
-        val packet = MsgBolusStart(aapsLogger, constraintChecker, danaRPump, 1.0)
+        val packet = MsgBolusStart(aapsLogger, constraintChecker, danaPump, 1.0)
 
         // test message decoding
         val array = ByteArray(100)

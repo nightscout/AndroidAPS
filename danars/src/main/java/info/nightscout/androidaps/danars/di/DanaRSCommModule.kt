@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.danars.dependencyInjection
+package info.nightscout.androidaps.danars.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

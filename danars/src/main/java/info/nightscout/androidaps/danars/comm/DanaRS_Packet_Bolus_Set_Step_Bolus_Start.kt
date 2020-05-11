@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
     private var speed: Int = 0
 ) : DanaRS_Packet(injector) {
 
-    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var constraintChecker: ConstraintChecker
 
     init {
@@ -35,12 +35,12 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
     }
 
     override fun handleMessage(data: ByteArray) {
-        danaRPump.bolusStartErrorCode = intFromBuff(data, 0, 1)
-        if (danaRPump.bolusStartErrorCode == 0) {
+        danaPump.bolusStartErrorCode = intFromBuff(data, 0, 1)
+        if (danaPump.bolusStartErrorCode == 0) {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Result OK")
         } else {
-            aapsLogger.error("Result Error: ${danaRPump.bolusStartErrorCode}")
+            aapsLogger.error("Result Error: ${danaPump.bolusStartErrorCode}")
             failed = true
         }
     }

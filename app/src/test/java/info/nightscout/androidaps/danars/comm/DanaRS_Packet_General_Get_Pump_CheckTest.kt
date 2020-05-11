@@ -19,7 +19,7 @@ class DanaRS_Packet_General_Get_Pump_CheckTest : DanaRSTestBase() {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.danaRPump = danaRPump
+                it.danaPump = danaPump
             }
         }
     }
