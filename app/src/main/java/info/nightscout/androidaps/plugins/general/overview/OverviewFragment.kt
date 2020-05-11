@@ -187,10 +187,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        val carbicon = overview_carbs_icon;
-        carbAnimation = carbicon.background as AnimationDrawable
-        carbAnimation.setEnterFadeDuration(1200);
-        carbAnimation.setExitFadeDuration(1200);
+        carbAnimation = overview_carbs_icon.background as AnimationDrawable
+        carbAnimation.setEnterFadeDuration(1200)
+        carbAnimation.setExitFadeDuration(1200)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -683,7 +682,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (activeTemp != null)
             overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.icon_cp_basal_tbr_high else R.drawable.icon_cp_basal_tbr_low)
         else
-            overview_basebasal_icon.setImageResource( R.drawable.icon_cp_basal_no_tbr )
+            overview_basebasal_icon.setImageResource(R.drawable.icon_cp_basal_no_tbr)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -748,14 +747,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         val lastRun = loopPlugin.lastRun
         if (config.APS && lastRun?.constraintsProcessed != null && lastRun?.constraintsProcessed.carbsReq > 0) {
-            overview_cob?.text = cobText + " ("+lastRun?.constraintsProcessed.carbsReq + " req)"
-            if(!carbAnimation.isRunning)
+            overview_cob?.text = cobText + " *" + lastRun?.constraintsProcessed.carbsReq + " "+R.string.required+"*"
+            if (!carbAnimation.isRunning)
                 carbAnimation.start()
-        }else{
+        } else {
             overview_cob?.text = cobText
-            if(carbAnimation.isRunning)
+            if (carbAnimation.isRunning)
                 carbAnimation.stop()
-                carbAnimation.selectDrawable(0);
+            carbAnimation.selectDrawable(0);
         }
 
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
