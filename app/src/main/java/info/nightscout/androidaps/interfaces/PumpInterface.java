@@ -122,4 +122,8 @@ public interface PumpInterface {
     default boolean isUnreachableAlertTimeoutExceeded(long alertTimeoutMilliseconds) {
         return false;
     }
+
+    default boolean setNeutralTempAtFullHour() {
+        return false;
+    }
 }
