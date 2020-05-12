@@ -363,10 +363,6 @@ public class BasalProfile {
     }
 
 
-    private boolean isLogEnabled() {
-        return L.isEnabled(LTag.PUMPCOMM);
-    }
-
     public boolean verify(PumpType pumpType) {
 
         try {

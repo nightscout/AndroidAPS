@@ -42,8 +42,7 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     public TempBasalPair(AAPSLogger aapsLogger, byte[] response) {
         super();
 
-        if (L.isEnabled(LTag.PUMPCOMM))
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response));
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response));
 
         isPercent = response[0] == 1;
 

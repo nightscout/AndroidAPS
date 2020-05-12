@@ -113,6 +113,7 @@ public class MainApp extends DaggerApplication {
                 .build();
     }
 
+    @SuppressWarnings("deprecation")
     private void registerLocalBroadcastReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_TREATMENT);
