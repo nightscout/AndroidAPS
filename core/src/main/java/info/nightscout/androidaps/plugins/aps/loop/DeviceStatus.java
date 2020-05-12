@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
@@ -365,7 +366,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 */
 
 public class DeviceStatus {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
+    private final AAPSLogger aapsLogger;
 
     public String device = null;
     public JSONObject pump = null;
@@ -374,6 +375,10 @@ public class DeviceStatus {
     public JSONObject iob = null;
     public int uploaderBattery = 0;
     public String created_at = null;
+
+    public DeviceStatus(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
+    }
 
     public JSONObject mongoRecord() {
         JSONObject record = new JSONObject();
@@ -389,7 +394,7 @@ public class DeviceStatus {
             if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
             if (created_at != null) record.put("created_at", created_at);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return record;
     }

@@ -28,6 +28,6 @@ class FoodPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        service = FoodService()
+        service = FoodService(injector)
     }
 }

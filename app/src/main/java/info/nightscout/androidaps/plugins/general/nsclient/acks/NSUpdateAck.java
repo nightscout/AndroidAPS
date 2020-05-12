@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import io.socket.client.Ack;
 
 /**
@@ -14,6 +14,8 @@ import io.socket.client.Ack;
  */
 public class NSUpdateAck extends Event implements Ack {
     private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+
     public boolean result = false;
     public String _id;
     public String action;
@@ -28,16 +30,17 @@ public class NSUpdateAck extends Event implements Ack {
                     result = true;
                     aapsLogger.debug(LTag.NSCLIENT, "Internal error: Missing _id returned on dbUpdate ack");
                 }
-                RxBus.Companion.getINSTANCE().send(this);
+                rxBus.send(this);
             } catch (JSONException e) {
                 aapsLogger.error("Unhandled exception", e);
             }
     }
 
-    public NSUpdateAck(String action, String _id, AAPSLogger aapsLogger) {
+    public NSUpdateAck(String action, String _id, AAPSLogger aapsLogger, RxBusWrapper rxBus) {
         super();
         this.action = action;
         this._id = _id;
         this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
     }
 }

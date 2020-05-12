@@ -66,16 +66,6 @@ class VirtualPumpPlugin @Inject constructor(
 ), PumpInterface {
 
 
-    companion object {
-        private lateinit var virtualPumpPlugin: VirtualPumpPlugin
-
-        @Deprecated("Use dagger to get an instance")
-        fun getPlugin(): VirtualPumpPlugin {
-            checkNotNull(virtualPumpPlugin) { "Accessing VirtualPumpPlugin before first instantiation" }
-            return virtualPumpPlugin
-        }
-    }
-
     private val disposable = CompositeDisposable()
     var batteryPercent = 50
     var reservoirInUnits = 50
@@ -86,7 +76,6 @@ class VirtualPumpPlugin @Inject constructor(
     private val pumpDescription = PumpDescription()
 
     init {
-        virtualPumpPlugin = this
         pumpDescription.isBolusCapable = true
         pumpDescription.bolusStep = 0.1
         pumpDescription.isExtendedBolusCapable = true

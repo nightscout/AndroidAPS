@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
+import info.nightscout.androidaps.utils.HtmlHelper;
 
 public class InsightAlertActivity extends DaggerAppCompatActivity {
 
@@ -91,7 +92,7 @@ public class InsightAlertActivity extends DaggerAppCompatActivity {
         if (description == null) this.errorDescription.setVisibility(View.GONE);
         else {
             this.errorDescription.setVisibility(View.VISIBLE);
-            this.errorDescription.setText(Html.fromHtml(description));
+            this.errorDescription.setText(HtmlHelper.INSTANCE.fromHtml(description));
         }
     }
 

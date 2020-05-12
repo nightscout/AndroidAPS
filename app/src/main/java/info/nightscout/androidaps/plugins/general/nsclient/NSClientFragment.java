@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientN
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -155,7 +156,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
             logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
         }
         urlTextView.setText(nsClientPlugin.url());
-        Spanned queuetext = Html.fromHtml(resourceHelper.gs(R.string.queue) + " <b>" + uploadQueue.size() + "</b>");
+        Spanned queuetext = HtmlHelper.INSTANCE.fromHtml(resourceHelper.gs(R.string.queue) + " <b>" + uploadQueue.size() + "</b>");
         queueTextView.setText(queuetext);
         statusTextView.setText(nsClientPlugin.status);
     }

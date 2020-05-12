@@ -15,9 +15,10 @@ interface DatabaseHelperInterface {
     fun create(record: DbRequest)
     fun getDanaRHistoryRecordsByType(type: Byte): List<DanaRHistoryRecord>
     fun getTDDs(): List<TDD>
-    fun size(table: String) : Long
+    fun size(table: String): Long
     fun deleteAllDbRequests()
-    fun deleteDbRequest(id: String) : Int
+    fun deleteDbRequest(id: String): Int
     fun deleteDbRequestbyMongoId(action: String, _id: String)
-    fun getDbRequestInterator() : CloseableIterator<DbRequest>
+    fun getDbRequestInterator(): CloseableIterator<DbRequest>
+    fun roundDateToSec(date: Long): Long
 }

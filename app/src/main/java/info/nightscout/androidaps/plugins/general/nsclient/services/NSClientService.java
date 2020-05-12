@@ -329,7 +329,7 @@ public class NSClientService extends DaggerService {
             String socketId = mSocket != null ? mSocket.id() : "NULL";
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + socketId));
             if (mSocket != null)
-                sendAuthMessage(new NSAuthAck());
+                sendAuthMessage(new NSAuthAck(rxBus));
             watchdog();
         }
     };
@@ -814,13 +814,13 @@ public class NSClientService extends DaggerService {
                             NSAddAck addAck = new NSAddAck(aapsLogger, rxBus);
                             dbAdd(dbr, addAck);
                         } else if (dbr.action.equals("dbRemove")) {
-                            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger);
+                            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
                             dbRemove(dbr, removeAck);
                         } else if (dbr.action.equals("dbUpdate")) {
-                            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger);
+                            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
                             dbUpdate(dbr, updateAck);
                         } else if (dbr.action.equals("dbUpdateUnset")) {
-                            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger);
+                            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
                             dbUpdateUnset(dbr, updateUnsetAck);
                         }
                         maxcount--;

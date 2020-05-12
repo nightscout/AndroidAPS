@@ -38,6 +38,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -60,6 +61,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject FabricPrivacy fabricPrivacy;
     @Inject RxBusWrapper rxBus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject DatabaseHelperInterface databaseHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -289,7 +291,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
         try {
             Treatment old;
-            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            treatment.date = databaseHelper.roundDateToSec(treatment.date);
 
             if (treatment.source == Source.PUMP) {
                 // check for changed from pump change in NS
@@ -412,7 +414,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
 
         try {
-            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            treatment.date = databaseHelper.roundDateToSec(treatment.date);
 
             Treatment existingTreatment = getRecord(treatment.pumpId, treatment.date);
 

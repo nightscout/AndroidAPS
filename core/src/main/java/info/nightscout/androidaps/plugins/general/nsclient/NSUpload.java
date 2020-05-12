@@ -199,7 +199,7 @@ public class NSUpload {
             return;
         }
 
-        DeviceStatus deviceStatus = new DeviceStatus();
+        DeviceStatus deviceStatus = new DeviceStatus(aapsLogger);
         try {
             LoopInterface.LastRun lastRun = loopPlugin.getLastRun();
             if (lastRun != null && lastRun.getLastAPSRun() > System.currentTimeMillis() - 300 * 1000L) {

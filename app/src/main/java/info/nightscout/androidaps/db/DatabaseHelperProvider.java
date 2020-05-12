@@ -65,4 +65,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @NotNull @Override public CloseableIterator<DbRequest> getDbRequestInterator() {
         return MainApp.getDbHelper().getDbRequestInterator();
     }
+
+    @Override public long roundDateToSec(long date) {
+        return MainApp.getDbHelper().roundDateToSec(date);
+    }
 }
