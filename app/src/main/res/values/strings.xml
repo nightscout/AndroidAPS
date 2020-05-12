@@ -789,6 +789,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Create announcements from carbs required alerts</string>
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Create Nightscout announcements for carbs required alerts</string>
+    <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
     <string name="eversense_shortname" translatable="false">EVR</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>

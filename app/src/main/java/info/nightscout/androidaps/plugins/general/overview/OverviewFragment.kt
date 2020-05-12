@@ -748,15 +748,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         val lastRun = loopPlugin.lastRun
-        if (config.APS && lastRun?.constraintsProcessed != null && lastRun?.constraintsProcessed.carbsReq > 0) {
-            overview_cob?.text = cobText + " *" + lastRun?.constraintsProcessed.carbsReq + " "+R.string.required+"*"
-            if (!carbAnimation.isRunning)
-                carbAnimation.start()
-        } else {
-            overview_cob?.text = cobText
-            if (carbAnimation.isRunning)
-                carbAnimation.stop()
-            carbAnimation.selectDrawable(0);
+        if (config.APS && lastRun?.constraintsProcessed != null) {
+            if (lastRun.constraintsProcessed!!.carbsReq > 0) {
+                overview_cob?.text = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
+                if (!carbAnimation.isRunning)
+                    carbAnimation.start()
+            } else {
+                overview_cob?.text = cobText
+                if (carbAnimation.isRunning)
+                    carbAnimation.stop()
+                carbAnimation.selectDrawable(0);
+            }
         }
 
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
