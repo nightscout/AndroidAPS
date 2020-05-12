@@ -3,8 +3,9 @@ package info.nightscout.androidaps.danars.comm;
 import android.annotation.TargetApi;
 import android.os.Build;
 
+import org.joda.time.DateTime;
+
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -117,14 +118,14 @@ public class DanaRS_Packet {
 
     public static synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
         return
-                new Date(
-                        100 + intFromBuff(buff, offset, 1),
-                        intFromBuff(buff, offset + 1, 1) - 1,
+                new DateTime(
+                        2000 + intFromBuff(buff, offset, 1),
+                        intFromBuff(buff, offset + 1, 1),
                         intFromBuff(buff, offset + 2, 1),
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         intFromBuff(buff, offset + 5, 1)
-                ).getTime();
+                ).getMillis();
     }
 
     protected static int intFromBuff(byte[] b, int srcStart, int srcLength) {
@@ -159,11 +160,13 @@ public class DanaRS_Packet {
 
     public long dateFromBuff(byte[] buff, int offset) {
         return
-                new Date(
-                        100 + byteArrayToInt(getBytes(buff, offset, 1)),
-                        byteArrayToInt(getBytes(buff, offset + 1, 1)) - 1,
-                        byteArrayToInt(getBytes(buff, offset + 2, 1))
-                ).getTime();
+                new DateTime(
+                        2000 + byteArrayToInt(getBytes(buff, offset, 1)),
+                        byteArrayToInt(getBytes(buff, offset + 1, 1)),
+                        byteArrayToInt(getBytes(buff, offset + 2, 1)),
+                        0,
+                        0
+                ).getMillis();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -180,7 +183,7 @@ public class DanaRS_Packet {
         if (buff == null)
             return "";
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         int count = 0;
         for (byte element : buff) {

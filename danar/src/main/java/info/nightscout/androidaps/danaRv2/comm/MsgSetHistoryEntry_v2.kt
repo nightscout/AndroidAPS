@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.danaRv2.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
+import info.nightscout.androidaps.logging.LTag
 import java.util.*
 
 class MsgSetHistoryEntry_v2(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     type: Int, time: Long, param1: Int, param2: Int
-) : MessageBase() {
+) : MessageBase(injector) {
 
     init {
         SetCommand(0xE004)

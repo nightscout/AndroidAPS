@@ -1,16 +1,12 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danar.DanaRPlugin
 import java.util.*
 
 class MsgSettingBasal(
-    private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump,
-    private val danaRPlugin: DanaRPlugin
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x3202)
@@ -18,7 +14,7 @@ class MsgSettingBasal(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        danaPump.pumpProfiles =  Array(4) {Array(48) {0.0} }
+        danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }
         for (index in 0..23) {
             var basal = intFromBuff(bytes, 2 * index, 2)
             if (basal < danaRPlugin.pumpDescription.basalMinimumRate) basal = 0

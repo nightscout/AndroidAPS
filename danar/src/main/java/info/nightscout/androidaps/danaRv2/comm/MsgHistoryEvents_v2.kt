@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danaRv2.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -9,26 +8,14 @@ import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 
 class MsgHistoryEvents_v2 constructor(
-    val aapsLogger: AAPSLogger,
-    val resourceHelper: ResourceHelper,
-    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
-    val danaRv2Plugin: DanaRv2Plugin,
-    val rxBus: RxBusWrapper,
-    val activePlugin: ActivePluginProvider,
     private val injector: HasAndroidInjector,
-    private val dateUtil: DateUtil,
     var from: Long = 0
-) : MessageBase() {
+) : MessageBase(injector) {
 
     init {
         SetCommand(0xE003)
@@ -175,7 +162,7 @@ class MsgHistoryEvents_v2 constructor(
                 status = "CARBS " + dateUtil.timeString(datetime)
             }
 
-            else                                                        -> {
+            else                                                       -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Event: " + recordCode + " " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Param1: " + param1 + " Param2: " + param2)
                 status = "UNKNOWN " + dateUtil.timeString(datetime)
             }

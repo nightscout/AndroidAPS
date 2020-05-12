@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 
 class MsgSetTempBasalStart(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     private var percent: Int,
     private var durationInHours: Int
-) : MessageBase() {
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0401)

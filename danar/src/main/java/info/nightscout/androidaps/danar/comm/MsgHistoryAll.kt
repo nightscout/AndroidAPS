@@ -1,19 +1,13 @@
 package info.nightscout.androidaps.danar.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.utils.DateUtil
 
 open class MsgHistoryAll(
-    val aapsLogger: AAPSLogger,
-    val rxBus: RxBusWrapper,
-    private val dateUtil: DateUtil,
-    private val databaseHelper: DatabaseHelperInterface
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x41F2)

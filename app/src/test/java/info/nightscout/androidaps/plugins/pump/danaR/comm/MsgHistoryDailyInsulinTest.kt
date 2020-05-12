@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.comm.MsgHistoryDailyInsulin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.modules.junit4.PowerMockRunner
@@ -10,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgHistoryDailyInsulinTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgHistoryDailyInsulin(aapsLogger, RxBusWrapper(), dateUtil, databaseHelper)
+        val packet = MsgHistoryDailyInsulin(injector)
         // nothing left to test
     }
 }

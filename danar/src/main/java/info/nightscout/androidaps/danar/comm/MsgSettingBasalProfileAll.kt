@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaPump
 import java.util.*
 
 /**
@@ -14,9 +13,8 @@ import java.util.*
  * THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
  */
 class MsgSettingBasalProfileAll(
-    private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     override fun handleMessage(bytes: ByteArray) {
         danaPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }

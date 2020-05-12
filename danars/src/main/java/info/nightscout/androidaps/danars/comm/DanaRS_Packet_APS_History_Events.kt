@@ -85,7 +85,7 @@ open class DanaRS_Packet_APS_History_Events(
         val extendedBolus = ExtendedBolus(injector).date(datetime).source(Source.PUMP).pumpId(datetime)
         val status: String
         when (recordCode.toInt()) {
-            info.nightscout.androidaps.dana.DanaPump.TEMPSTART         -> {
+            DanaPump.TEMPSTART         -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 temporaryBasal.percentRate = param1
                 temporaryBasal.durationInMinutes = param2
@@ -93,13 +93,13 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "TEMPSTART " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.TEMPSTOP          -> {
+            DanaPump.TEMPSTOP          -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime))
                 activePlugin.activeTreatments.addToHistoryTempBasal(temporaryBasal)
                 status = "TEMPSTOP " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.EXTENDEDSTART     -> {
+            DanaPump.EXTENDEDSTART     -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
@@ -107,13 +107,13 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.EXTENDEDSTOP      -> {
+            DanaPump.EXTENDEDSTOP      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
                 status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.BOLUS             -> {
+            DanaPump.BOLUS             -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
                 detailedBolusInfo.date = datetime
@@ -125,7 +125,7 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.DUALBOLUS         -> {
+            DanaPump.DUALBOLUS         -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
                 detailedBolusInfo.date = datetime
@@ -137,7 +137,7 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "DUALBOLUS " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.DUALEXTENDEDSTART -> {
+            DanaPump.DUALEXTENDEDSTART -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
@@ -145,42 +145,42 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.DUALEXTENDEDSTOP  -> {
+            DanaPump.DUALEXTENDEDSTOP  -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
                 status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.SUSPENDON         -> {
+            DanaPump.SUSPENDON         -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT SUSPENDON (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
                 status = "SUSPENDON " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.SUSPENDOFF        -> {
+            DanaPump.SUSPENDOFF        -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT SUSPENDOFF (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
                 status = "SUSPENDOFF " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.REFILL            -> {
+            DanaPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
                     nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, datetime, resourceHelper.gs(R.string.danarspump))
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.PRIME             -> {
+            DanaPump.PRIME             -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIME (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
                     nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump))
                 status = "PRIME " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.PROFILECHANGE     -> {
+            DanaPump.PROFILECHANGE     -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT PROFILECHANGE (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " No: " + param1 + " CurrentRate: " + param2 / 100.0 + "U/h")
                 status = "PROFILECHANGE " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.CARBS             -> {
+            DanaPump.CARBS             -> {
                 val emptyCarbsInfo = DetailedBolusInfo()
                 emptyCarbsInfo.carbs = param1.toDouble()
                 emptyCarbsInfo.date = datetime
@@ -191,7 +191,7 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "CARBS " + dateUtil.timeString(datetime)
             }
 
-            info.nightscout.androidaps.dana.DanaPump.PRIMECANNULA      -> {
+            DanaPump.PRIMECANNULA      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }

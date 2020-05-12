@@ -60,9 +60,6 @@ class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
         Assert.assertEquals(expectedValues[4], returnedValues[4])
         // second
         Assert.assertEquals(expectedValues[5], returnedValues[5])
-        // test message decoding
-        testPacket.handleMessage(createArray(50, 0.toByte()))
-        Assert.assertEquals(false, testPacket.failed)
         Assert.assertEquals("APS_HISTORY_EVENTS", testPacket.friendlyName)
     }
 

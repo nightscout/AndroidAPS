@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -15,11 +14,9 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class)
 class MsgBolusStartWithSpeedTest : DanaRTestBase() {
 
-    @Mock lateinit var constraintChecker: ConstraintChecker
-
     @Test fun runTest() {
         Mockito.`when`(constraintChecker.applyBolusConstraints(Constraint(anyObject()))).thenReturn(Constraint(0.0))
-        val packet = MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaPump, 0.0, 0)
+        val packet = MsgBolusStartWithSpeed(injector, 0.0, 0)
 
         // test message decoding
         val array = ByteArray(100)

@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.danaRv2.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
+import info.nightscout.androidaps.logging.LTag
 
 @Suppress("UNUSED_PARAMETER")
 class MsgSetAPSTempBasalStart_v2(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     private var percent: Int,
     fifteenMinutes: Boolean,
     thirtyMinutes: Boolean
-) : MessageBase() {
+) : MessageBase(injector) {
 
     val PARAM30MIN = 160
     val PARAM15MIN = 150

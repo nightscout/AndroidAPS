@@ -42,14 +42,14 @@ class DanaRS_Packet_Bolus_Get_Calculation_Information(
         dataIndex += dataSize
         dataSize = 1
         danaPump.units = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MMOL) {
+        if (danaPump.units == DanaPump.UNITS_MMOL) {
             danaPump.currentCF = danaPump.currentCF / 100.0
             danaPump.currentTarget = danaPump.currentTarget / 100.0
             currentBG = currentBG / 100.0
         }
         if (error != 0) failed = true
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
         aapsLogger.debug(LTag.PUMPCOMM, "Current BG: $currentBG")
         aapsLogger.debug(LTag.PUMPCOMM, "Carbs: $carbohydrate")
         aapsLogger.debug(LTag.PUMPCOMM, "Current target: " + danaPump.currentTarget)

@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaPump
 import java.util.*
 
 class MsgSettingUserOptions(
-    private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
 
     init {

@@ -9,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgHistoryNewDoneTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgHistoryNewDone(aapsLogger, danaPump)
+        val packet = MsgHistoryNewDone(injector)
         // nothing left to test
     }
 }

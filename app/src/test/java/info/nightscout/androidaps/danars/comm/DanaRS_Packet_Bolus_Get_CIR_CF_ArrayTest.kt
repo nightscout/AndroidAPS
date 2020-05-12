@@ -2,6 +2,7 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaPump
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +27,7 @@ class DanaRS_Packet_Bolus_Get_CIR_CF_ArrayTest : DanaRSTestBase() {
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
         // are pump units MG/DL ???
-        Assert.assertEquals(info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL, danaPump.units)
+        Assert.assertEquals(DanaPump.UNITS_MGDL, danaPump.units)
         Assert.assertEquals(false, packet.failed)
         packet.handleMessage(createArray(34, 3.toByte()))
         Assert.assertEquals(true, packet.failed)

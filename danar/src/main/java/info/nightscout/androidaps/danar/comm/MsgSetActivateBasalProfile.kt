@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 
 class MsgSetActivateBasalProfile(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     index: Byte
-) : MessageBase() {
+) : MessageBase(injector) {
 
     // index 0-3
     init {
