@@ -20,7 +20,6 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 // When no interval match the lastest record without duration is used
 
 public class ProfileIntervals<T extends Interval> {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(ProfileIntervals.class);
 
     private LongSparseArray<T> rawData; // oldest at index 0
 

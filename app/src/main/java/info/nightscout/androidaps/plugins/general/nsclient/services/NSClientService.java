@@ -19,7 +19,6 @@ import com.j256.ormlite.dao.CloseableIterator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -41,9 +40,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
@@ -87,13 +84,13 @@ public class NSClientService extends DaggerService {
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject SP sp;
+    @Inject FabricPrivacy fabricPrivacy;
     @Inject NSClientPlugin nsClientPlugin;
     @Inject BuildHelper buildHelper;
     @Inject Config config;
     @Inject DateUtil dateUtil;
     @Inject UploadQueue uploadQueue;
 
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;
@@ -157,7 +154,7 @@ public class NSClientService extends DaggerService {
                         destroy();
                         initialize();
                     }
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
@@ -171,17 +168,16 @@ public class NSClientService extends DaggerService {
                         destroy();
                         initialize();
                     }
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (L.isEnabled(LTag.NSCLIENT))
-                        log.debug("EventAppExit received");
+                    aapsLogger.debug(LTag.NSCLIENT, "EventAppExit received");
                     destroy();
                     stopSelf();
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientRestart.class)
@@ -189,22 +185,22 @@ public class NSClientService extends DaggerService {
                 .subscribe(event -> {
                     latestDateInReceivedData = 0;
                     restart();
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(NSAuthAck.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::processAuthAck, exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(this::processAuthAck, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(NSUpdateAck.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::processUpdateAck, exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(this::processUpdateAck, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(NSAddAck.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::processAddAck, exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(this::processAddAck, fabricPrivacy::logException)
         );
     }
 
@@ -274,6 +270,7 @@ public class NSClientService extends DaggerService {
         return START_STICKY;
     }
 
+    @SuppressWarnings("deprecation")
     public void initialize() {
         dataCounter = 0;
 
@@ -366,8 +363,7 @@ public class NSClientService extends DaggerService {
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (L.isEnabled(LTag.NSCLIENT))
-                log.debug("disconnect reason: {}", args);
+            aapsLogger.debug(LTag.NSCLIENT, "disconnect reason: {}", args);
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
     };
@@ -401,7 +397,7 @@ public class NSClientService extends DaggerService {
             authMessage.put("from", latestDateInReceivedData); // send data newer than
             authMessage.put("secret", nsAPIhashCode);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             return;
         }
         rxBus.send(new EventNSClientNewLog("AUTH", "requesting auth"));
@@ -455,8 +451,7 @@ public class NSClientService extends DaggerService {
                 data = (JSONObject) args[0];
                 handleAnnouncement(data);
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
-                return;
+                aapsLogger.error("Unhandled exception", e);
             }
         }
     };
@@ -482,8 +477,7 @@ public class NSClientService extends DaggerService {
                 data = (JSONObject) args[0];
                 handleAlarm(data);
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
-                return;
+                aapsLogger.error("Unhandled exception", e);
             }
         }
     };
@@ -494,7 +488,7 @@ public class NSClientService extends DaggerService {
             data = (JSONObject) args[0];
             handleUrgentAlarm(data);
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     };
 
@@ -517,8 +511,7 @@ public class NSClientService extends DaggerService {
                 rxBus.send(new EventDismissNotification(Notification.NSURGENTALARM));
                 aapsLogger.debug(LTag.NSCLIENT, data.toString());
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
-                return;
+                aapsLogger.error("Unhandled exception", e);
             }
         }
     };
@@ -723,7 +716,7 @@ public class NSClientService extends DaggerService {
                         }
                         rxBus.send(new EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)));
                     } catch (JSONException e) {
-                        log.error("Unhandled exception", e);
+                        aapsLogger.error("Unhandled exception", e);
                     }
                     //rxBus.send(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
                 } finally {
@@ -743,7 +736,7 @@ public class NSClientService extends DaggerService {
             mSocket.emit("dbUpdate", message, ack);
             rxBus.send(new EventNSClientNewLog("DBUPDATE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -757,7 +750,7 @@ public class NSClientService extends DaggerService {
             mSocket.emit("dbUpdateUnset", message, ack);
             rxBus.send(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -770,7 +763,7 @@ public class NSClientService extends DaggerService {
             mSocket.emit("dbRemove", message, ack);
             rxBus.send(new EventNSClientNewLog("DBREMOVE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -783,7 +776,7 @@ public class NSClientService extends DaggerService {
             mSocket.emit("dbAdd", message, ack);
             rxBus.send(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -818,16 +811,16 @@ public class NSClientService extends DaggerService {
                     while (iterator.hasNext() && maxcount > 0) {
                         DbRequest dbr = iterator.next();
                         if (dbr.action.equals("dbAdd")) {
-                            NSAddAck addAck = new NSAddAck();
+                            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus);
                             dbAdd(dbr, addAck);
                         } else if (dbr.action.equals("dbRemove")) {
-                            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id);
+                            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger);
                             dbRemove(dbr, removeAck);
                         } else if (dbr.action.equals("dbUpdate")) {
-                            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id);
+                            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger);
                             dbUpdate(dbr, updateAck);
                         } else if (dbr.action.equals("dbUpdateUnset")) {
-                            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
+                            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger);
                             dbUpdateUnset(dbr, updateUnsetAck);
                         }
                         maxcount--;
@@ -836,7 +829,7 @@ public class NSClientService extends DaggerService {
                     iterator.close();
                 }
             } catch (SQLException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
 
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
@@ -1038,7 +1031,7 @@ public class NSClientService extends DaggerService {
                 ret.add(newarr);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             ret = new ArrayList<>();
             ret.add(array);
         }

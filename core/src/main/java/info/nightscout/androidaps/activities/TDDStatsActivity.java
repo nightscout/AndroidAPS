@@ -296,7 +296,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         historyList = historyList.subList(0, Math.min(10, historyList.size()));
 
         //fill single gaps
-        dummies = new LinkedList();
+        dummies = new LinkedList<>();
         DateFormat df = new SimpleDateFormat("dd.MM.", Locale.getDefault());
         for (int i = 0; i < historyList.size() - 1; i++) {
             TDD elem1 = historyList.get(i);
