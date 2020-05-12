@@ -897,8 +897,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     // if not in LGS mode, cancel temps before the top of the hour to reduce beeping/vibration
     // console.error(profile.skip_neutral_temps, rT.deliverAt.getMinutes());
-    //patch determine basal so skip_neutral_temps works as expected
-    if ( !profile.skip_neutral_temps && rT.deliverAt.getMinutes() >= 55 ) {
+    if ( profile.skip_neutral_temps && rT.deliverAt.getMinutes() >= 55 ) {
         rT.reason += "; Canceling temp at " + rT.deliverAt.getMinutes() + "m past the hour. ";
         return tempBasalFunctions.setTempBasal(0, 0, profile, rT, currenttemp);
     }
