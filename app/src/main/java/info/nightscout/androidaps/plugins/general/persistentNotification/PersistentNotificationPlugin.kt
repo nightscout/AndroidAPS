@@ -15,19 +15,16 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
+import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -45,7 +42,9 @@ class PersistentNotificationPlugin @Inject constructor(
     private var iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private var rxBus: RxBusWrapper,
     private var context: Context,
-    private var notificationHolder: NotificationHolder
+    private var notificationHolder: NotificationHolder,
+    private val iconsProvider: IconsProvider,
+    private val databaseHelper: DatabaseHelperInterface
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
@@ -145,7 +144,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                         + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units))
-                    line1_aa += "  " + lastBG.directionToSymbol()
+                    line1_aa += "  " + lastBG.directionToSymbol(databaseHelper)
                 } else {
                     line1 += " " +
                         resourceHelper.gs(R.string.old_data) +
@@ -209,8 +208,8 @@ class PersistentNotificationPlugin @Inject constructor(
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
-        builder.setSmallIcon(resourceHelper.getNotificationIcon())
-        builder.setLargeIcon(resourceHelper.decodeResource(resourceHelper.getIcon()))
+        builder.setSmallIcon(iconsProvider.getNotificationIcon())
+        builder.setLargeIcon(resourceHelper.decodeResource(iconsProvider.getIcon()))
         if (line1 != null) builder.setContentTitle(line1)
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)

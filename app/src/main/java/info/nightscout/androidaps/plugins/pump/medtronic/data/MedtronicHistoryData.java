@@ -35,7 +35,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
@@ -52,10 +51,11 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
@@ -78,6 +78,7 @@ public class MedtronicHistoryData {
     private final AAPSLogger aapsLogger;
     private final SP sp;
     private final ActivePluginProvider activePlugin;
+    private final NSUpload nsUpload;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
 
@@ -106,6 +107,7 @@ public class MedtronicHistoryData {
             AAPSLogger aapsLogger,
             SP sp,
             ActivePluginProvider activePlugin,
+            NSUpload nsUpload,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder
     ) {
@@ -115,6 +117,7 @@ public class MedtronicHistoryData {
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
+        this.nsUpload = nsUpload;
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
     }
@@ -543,7 +546,7 @@ public class MedtronicHistoryData {
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -659,7 +662,7 @@ public class MedtronicHistoryData {
 
             Treatment treatment = (Treatment) dbObjectBase;
 
-            if (RileyLinkUtil.isSame(treatment.insulin, 0d)) {
+            if (Round.isSame(treatment.insulin, 0d)) {
                 removeList.add(dbObjectBase);
             }
         }

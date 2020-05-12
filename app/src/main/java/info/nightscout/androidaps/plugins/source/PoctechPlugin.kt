@@ -26,7 +26,8 @@ class PoctechPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP
+    private val sp: SP,
+    private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -58,10 +59,10 @@ class PoctechPlugin @Inject constructor(
                 if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL
                 val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech")
                 if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading, "AndroidAPS-Poctech")
+                    nsUpload.uploadBg(bgReading, "AndroidAPS-Poctech")
                 }
                 if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    NSUpload.sendToXdrip(bgReading)
+                    nsUpload.sendToXdrip(bgReading)
                 }
             }
         } catch (e: JSONException) {

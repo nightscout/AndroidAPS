@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithE
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationUserMessage
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
@@ -23,6 +22,7 @@ import javax.inject.Inject
 class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var nsUpload: NSUpload
 
     var text = InputString(injector)
 
@@ -33,7 +33,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         val notification = NotificationUserMessage(text.value)
         rxBus.send(EventNewNotification(notification))
-        NSUpload.uploadError(text.value)
+        nsUpload.uploadError(text.value)
         rxBus.send(EventRefreshOverview("ActionNotification"))
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }

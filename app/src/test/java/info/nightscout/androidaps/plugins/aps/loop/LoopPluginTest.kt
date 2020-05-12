@@ -9,10 +9,11 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -49,6 +50,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock lateinit var nsUpload: NSUpload
 
     private lateinit var hardLimits: HardLimits
 
@@ -56,9 +58,9 @@ class LoopPluginTest : TestBase() {
 
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context)
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, hardLimits)
+        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
         `when`(activePlugin.getActivePump()).thenReturn(virtualPumpPlugin)
     }
 

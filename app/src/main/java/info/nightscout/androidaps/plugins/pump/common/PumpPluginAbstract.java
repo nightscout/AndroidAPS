@@ -37,9 +37,8 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -57,12 +56,16 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    protected HasAndroidInjector injector;
     protected AAPSLogger aapsLogger;
     protected RxBusWrapper rxBus;
     protected ActivePluginProvider activePlugin;
     protected Context context;
     protected FabricPrivacy fabricPrivacy;
+    protected ResourceHelper resourceHelper;
+    protected CommandQueueProvider commandQueue;
     protected SP sp;
+    protected DateUtil dateUtil;
 
     /*
         protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
@@ -90,7 +93,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ActivePluginProvider activePlugin,
             SP sp,
             Context context,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            DateUtil dateUtil
     ) {
 
         super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
@@ -99,21 +103,17 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         this.activePlugin = activePlugin;
         this.context = context;
         this.fabricPrivacy = fabricPrivacy;
+        this.resourceHelper = resourceHelper;
         this.sp = sp;
+        this.commandQueue = commandQueue;
 
         pumpDescription.setPumpDescription(pumpType);
         this.pumpType = pumpType;
-
+        this.dateUtil = dateUtil;
     }
 
 
     public abstract void initPumpStatusData();
-
-    public abstract void resetRileyLinkConfiguration();
-
-    public abstract void doTuneUpDevice();
-
-    public abstract RileyLinkService getRileyLinkService();
 
     @Override
     protected void onStart() {
@@ -324,7 +324,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName) {
+    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
 
         if ((getPumpStatusData().lastConnection + 5 * 60 * 1000L) < System.currentTimeMillis()) {
             return new JSONObject();
@@ -337,7 +337,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         try {
             battery.put("percent", getPumpStatusData().batteryRemaining);
             status.put("status", getPumpStatusData().pumpStatusType != null ? getPumpStatusData().pumpStatusType.getStatus() : "normal");
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileName);
             } catch (Exception ignored) {
@@ -347,14 +347,14 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate",
                         tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
 
             ExtendedBolus eb = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
 
@@ -413,7 +413,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(getResourceHelper().gs(R.string.danar_invalidinput));
+                        .comment(getResourceHelper().gs(R.string.invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -464,6 +464,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     public void setPumpType(PumpType pumpType) {
         this.pumpType = pumpType;
+        this.pumpDescription.setPumpDescription(pumpType);
     }
 
 

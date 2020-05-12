@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import java.util.*
 
 class BasalElement(tbr: TemporaryBasal, private val profileFunction: ProfileFunction)

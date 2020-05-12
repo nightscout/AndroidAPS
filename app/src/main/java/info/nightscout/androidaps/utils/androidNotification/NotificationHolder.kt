@@ -10,6 +10,8 @@ import androidx.core.app.TaskStackBuilder
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,12 +19,13 @@ import javax.inject.Singleton
 @Singleton
 class NotificationHolder @Inject constructor(
     private val resourceHelper: ResourceHelper,
-    private val context: Context
-) {
+    private val context: Context,
+    private val iconsProvider: IconsProvider
+) : NotificationHolderInterface {
 
-    val channelID = "AndroidAPS-Ongoing"
-    val notificationID = 4711
-    var notification: Notification
+    override val channelID = "AndroidAPS-Ongoing"
+    override val notificationID = 4711
+    override lateinit var notification: Notification
 
     init {
         val stackBuilder = TaskStackBuilder.create(context)
@@ -32,8 +35,8 @@ class NotificationHolder @Inject constructor(
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
-            .setSmallIcon(resourceHelper.getNotificationIcon())
-            .setLargeIcon(resourceHelper.decodeResource(resourceHelper.getIcon()))
+            .setSmallIcon(iconsProvider.getNotificationIcon())
+            .setLargeIcon(resourceHelper.decodeResource(iconsProvider.getIcon()))
             .setContentTitle(resourceHelper.gs(R.string.loading))
             .setContentIntent(stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT))
         notification = builder.build()

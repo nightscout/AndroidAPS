@@ -6,7 +6,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
@@ -18,7 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class TirCalculator @Inject constructor(
     private val resourceHelper: ResourceHelper,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val dateUtil: DateUtil
 ){
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
@@ -89,7 +90,7 @@ class TirCalculator @Inject constructor(
     fun toText(resourceHelper: ResourceHelper, tirs: LongSparseArray<TIR>): String {
         var t = ""
         for (i in 0 until tirs.size()) {
-            t += "${tirs.valueAt(i).toText(resourceHelper)}<br>"
+            t += "${tirs.valueAt(i).toText(resourceHelper, dateUtil)}<br>"
         }
         return t
     }

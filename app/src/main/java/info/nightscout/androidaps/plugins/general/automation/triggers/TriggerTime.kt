@@ -12,8 +12,11 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
+import javax.inject.Inject
 
 class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
+    @Inject lateinit var dateUtil: DateUtil
+
     var time = InputDateTime(injector)
 
     constructor(injector: HasAndroidInjector, runAt: Long) : this(injector) {
@@ -57,7 +60,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.time
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.atspecifiedtime, DateUtil.dateAndTimeString(time.value))
+        resourceHelper.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
 

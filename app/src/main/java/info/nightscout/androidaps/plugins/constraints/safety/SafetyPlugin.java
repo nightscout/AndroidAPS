@@ -47,6 +47,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     private HardLimits hardLimits;
     private BuildHelper buildHelper;
     private TreatmentsPlugin treatmentsPlugin;
+    private Config config;
 
     @Inject
     public SafetyPlugin(
@@ -62,7 +63,8 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             ActivePluginProvider activePlugin,
             HardLimits hardLimits,
             BuildHelper buildHelper,
-            TreatmentsPlugin treatmentsPlugin
+            TreatmentsPlugin treatmentsPlugin,
+            Config config
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.CONSTRAINTS)
@@ -83,6 +85,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         this.hardLimits = hardLimits;
         this.buildHelper = buildHelper;
         this.treatmentsPlugin = treatmentsPlugin;
+        this.config = config;
     }
 
     /**
@@ -159,7 +162,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         absoluteRate.setIfGreater(getAapsLogger(), 0d, String.format(getResourceHelper().gs(R.string.limitingbasalratio), 0d, getResourceHelper().gs(R.string.itmustbepositivevalue)), this);
 
-        if (Config.APS) {
+        if (config.getAPS()) {
             double maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1d);
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal();

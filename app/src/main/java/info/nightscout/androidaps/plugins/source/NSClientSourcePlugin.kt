@@ -70,7 +70,7 @@ class NSClientSourcePlugin @Inject constructor(
 
     private fun storeSgv(sgvJson: JSONObject) {
         val nsSgv = NSSgv(sgvJson)
-        val bgReading = BgReading(nsSgv)
+        val bgReading = BgReading(injector, nsSgv)
         MainApp.getDbHelper().createIfNotExists(bgReading, "NS")
         detectSource(safeGetString(sgvJson, "device", "none"), safeGetLong(sgvJson, "mills"))
     }

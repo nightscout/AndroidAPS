@@ -33,10 +33,12 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -59,6 +61,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject FabricPrivacy fabricPrivacy;
     @Inject RxBusWrapper rxBus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject DatabaseHelperInterface databaseHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -288,7 +291,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
         try {
             Treatment old;
-            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            treatment.date = databaseHelper.roundDateToSec(treatment.date);
 
             if (treatment.source == Source.PUMP) {
                 // check for changed from pump change in NS
@@ -411,7 +414,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
 
         try {
-            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            treatment.date = databaseHelper.roundDateToSec(treatment.date);
 
             Treatment existingTreatment = getRecord(treatment.pumpId, treatment.date);
 
@@ -537,37 +540,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         return (Math.abs(diff) <= 0.00001);
     }
-
-    @Deprecated
-    private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
-
-        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
-
-
-        if (fromNightScout) {
-            long pumpId_old = oldTreatment.pumpId;
-            boolean isSMB = (oldTreatment.isSMB || newTreatment.isSMB);
-
-            oldTreatment.copyFrom(newTreatment);
-
-            if (pumpId_old != 0) {
-                oldTreatment.pumpId = pumpId_old;
-            }
-
-            if (oldTreatment.pumpId != 0 && oldTreatment.source != Source.PUMP) {
-                oldTreatment.source = Source.PUMP;
-            }
-
-            oldTreatment.isSMB = isSMB;
-
-        } else {
-            oldTreatment.copyFrom(newTreatment);
-        }
-
-        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [newAfterChange={}]", oldTreatment.toString());
-
-    }
-
 
     public Treatment getRecord(long pumpId, long date) {
 

@@ -9,7 +9,7 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -98,7 +98,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {

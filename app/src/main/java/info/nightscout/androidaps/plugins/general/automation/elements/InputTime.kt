@@ -12,7 +12,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -20,17 +19,18 @@ import javax.inject.Inject
 class InputTime(injector: HasAndroidInjector) : Element(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var context: Context
+    @Inject lateinit var dateUtil: DateUtil
 
     var value: Int = getMinSinceMidnight(DateUtil.now())
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)
         val startButton = TextView(root.context)
-        startButton.text = DateUtil.timeString(toMills(value))
+        startButton.text = dateUtil.timeString(toMills(value))
 
         val startTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             value = 60 * hour + minute
-            startButton.text = DateUtil.timeString(toMills(value))
+            startButton.text = dateUtil.timeString(toMills(value))
         }
 
         startButton.setOnClickListener {

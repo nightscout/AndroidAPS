@@ -57,6 +57,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
@@ -83,6 +84,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButt
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -95,7 +97,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
+public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface, RileyLinkPumpDevice {
 
     private final SP sp;
     private final RileyLinkUtil rileyLinkUtil;
@@ -135,7 +137,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             MedtronicPumpStatus medtronicPumpStatus,
             MedtronicHistoryData medtronicHistoryData,
             RileyLinkServiceData rileyLinkServiceData,
-            ServiceTaskExecutor serviceTaskExecutor
+            ServiceTaskExecutor serviceTaskExecutor,
+            DateUtil dateUtil
     ) {
 
         super(new PluginDescription() //
@@ -146,7 +149,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .preferencesId(R.xml.pref_medtronic)
                         .description(R.string.description_pump_medtronic), //
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil
         );
 
         this.rileyLinkUtil = rileyLinkUtil;
@@ -198,7 +201,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (pref.getKey().equals(getResourceHelper().gs(R.string.key_rileylink_mac_address))) {
             String value = sp.getStringOrNull(R.string.key_rileylink_mac_address, null);
-            pref.setSummary(value == null ? getResourceHelper().gs(R.string.rileylink_error_address_not_set_short) : value);
+            pref.setSummary(value == null ? getResourceHelper().gs(R.string.not_set_short) : value);
         }
     }
 
@@ -232,6 +235,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public void resetRileyLinkConfiguration() {
         rileyLinkMedtronicService.resetRileyLinkConfiguration();
+    }
+
+    @Override
+    public boolean hasTuneUp() {
+        return true;
     }
 
     @Override public void doTuneUpDevice() {
@@ -328,6 +336,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return isServiceSet() && isInitialized;
     }
 
+
+    @Override
+    public void setIsBusy(boolean isBusy_) {
+        isBusy = isBusy_;
+    }
 
     @Override
     public boolean isBusy() {

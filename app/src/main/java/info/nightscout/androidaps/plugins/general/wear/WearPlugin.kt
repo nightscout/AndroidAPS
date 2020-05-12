@@ -104,7 +104,7 @@ class WearPlugin @Inject constructor(
             .observeOn(Schedulers.io())
             .subscribe({ event: EventDismissBolusProgressIfRunning ->
                 if (event.result == null) return@subscribe
-                val status: String = if (event.result.success) {
+                val status: String = if (event.result!!.success) {
                     resourceHelper.gs(R.string.success)
                 } else {
                     resourceHelper.gs(R.string.nosuccess)

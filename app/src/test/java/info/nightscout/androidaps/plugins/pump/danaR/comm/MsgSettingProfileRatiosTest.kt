@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danar.comm.MsgSettingProfileRatios
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,10 +11,10 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSettingProfileRatiosTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSettingProfileRatios(aapsLogger, danaRPump)
-        danaRPump.units = DanaRPump.UNITS_MGDL
+        val packet = MsgSettingProfileRatios(injector)
+        danaPump.units = DanaPump.UNITS_MGDL
         // test message decoding
         packet.handleMessage(createArray(34, 7.toByte()))
-        Assert.assertEquals(MessageBase.intFromBuff(createArray(10, 7.toByte()), 0, 2), danaRPump.currentCIR)
+        Assert.assertEquals(packet.intFromBuff(createArray(10, 7.toByte()), 0, 2), danaPump.currentCIR)
     }
 }

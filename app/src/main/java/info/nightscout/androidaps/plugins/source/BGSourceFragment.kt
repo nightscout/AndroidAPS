@@ -12,15 +12,16 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.source.BGSourceFragment.RecyclerViewAdapter.BgReadingsViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -32,6 +33,8 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     private val disposable = CompositeDisposable()
     private val MILLS_TO_THE_PAST = T.hours(12).msecs()
@@ -81,9 +84,9 @@ class BGSourceFragment : DaggerFragment() {
             val bgReading = bgReadings[position]
             holder.ns.visibility = if (NSUpload.isIdValid(bgReading._id)) View.VISIBLE else View.GONE
             holder.invalid.visibility = if (!bgReading.isValid) View.VISIBLE else View.GONE
-            holder.date.text = DateUtil.dateAndTimeString(bgReading.date)
+            holder.date.text = dateUtil.dateAndTimeString(bgReading.date)
             holder.value.text = bgReading.valueToUnitsToString(profileFunction.getUnits())
-            holder.direction.text = bgReading.directionToSymbol()
+            holder.direction.text = bgReading.directionToSymbol(databaseHelper)
             holder.remove.tag = bgReading
         }
 
@@ -103,7 +106,7 @@ class BGSourceFragment : DaggerFragment() {
                 remove.setOnClickListener { v: View ->
                     val bgReading = v.tag as BgReading
                     activity?.let { activity ->
-                        val text = DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(profileFunction.getUnits())
+                        val text = dateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(profileFunction.getUnits())
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             bgReading.isValid = false
                             MainApp.getDbHelper().update(bgReading)

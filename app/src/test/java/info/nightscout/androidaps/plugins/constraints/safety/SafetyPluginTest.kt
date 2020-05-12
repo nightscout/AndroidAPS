@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.safety
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
@@ -12,6 +13,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
@@ -41,6 +43,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var context: Context
+    @Mock lateinit var nsUpload: NSUpload
 
     private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
@@ -72,8 +75,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin)
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin, Config())
     }
 
     @Test fun pumpDescriptionShouldLimitLoopInvocation() {

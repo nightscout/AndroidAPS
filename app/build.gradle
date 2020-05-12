@@ -25,12 +25,10 @@ jacoco {
 }
 
 ext {
-    ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
     retrofit2Version = '2.8.1'
-    okhttp3Version = '4.5.0'
-    coroutinesVersion = '1.3.5'
+    okhttp3Version = '4.6.0'
 }
 
 
@@ -126,11 +124,11 @@ android {
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.6.5-dev"
+        version "2.6.6-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -160,6 +158,7 @@ android {
         }
         firebaseDisable {
             System.setProperty("disableFirebase", "true")
+            ext.enableCrashlytics = false
         }
     }
     productFlavors {
@@ -242,12 +241,17 @@ allprojects {
 dependencies {
     wearApp project(':wear')
 
+    implementation project(':core')
+    implementation project(':dana')
+    implementation project(':danars')
+    implementation project(':danar')
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation "com.google.android.gms:play-services-location:17.0.0"
-    implementation 'com.google.firebase:firebase-core:17.3.0'
-    implementation 'com.google.firebase:firebase-auth:19.3.0'
-    implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation 'com.google.firebase:firebase-core:17.4.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
+    implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true;
     }
@@ -260,9 +264,11 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.preference:preference-ktx:1.1.0"
+    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.activity:activity:${activityVersion}"
+    implementation "androidx.activity:activity-ktx:${activityVersion}"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.1.0'
-    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
@@ -271,13 +277,13 @@ dependencies {
     implementation("com.github.tony19:logback-android-classic:1.1.1-6") {
         exclude group: "com.google.android", module: "android"
     }
-    implementation "org.apache.commons:commons-lang3:3.9"
+    implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'org.slf4j:slf4j-api:1.7.30'
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
+    implementation(name: "com.atech-software.android.library.wizardpager-1.1.1", ext: "aar")
 
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
@@ -287,28 +293,28 @@ dependencies {
         exclude group: "org.json", module: "json"
     }
     implementation "com.google.code.gson:gson:2.8.6"
-    implementation ("com.google.guava:guava:24.1-jre") {
+    implementation('com.google.guava:guava:29.0-jre') {
         exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-    implementation "net.danlew:android.joda:2.10.3"
+    implementation 'net.danlew:android.joda:2.10.6'
 
-    implementation 'org.mozilla:rhino:1.7.11'
+    implementation 'org.mozilla:rhino:1.7.12'
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
     implementation 'com.github.kenglxn.QRGen:android:2.6.0'
     implementation 'com.eatthepath:java-otp:0.2.0'
 
-    testImplementation "junit:junit:4.12"
+    testImplementation "junit:junit:4.13"
     testImplementation "org.json:json:20190722"
     testImplementation "org.mockito:mockito-core:2.8.47"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation "joda-time:joda-time:2.10.5"
+    testImplementation 'joda-time:joda-time:2.10.6'
     testImplementation('com.google.truth:truth:1.0.1') {
         exclude group: "com.google.guava", module: "guava"
         exclude group: "com.google.code.findbugs", module: "jsr305"
@@ -329,52 +335,28 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
 
     // Phone checker
-    implementation 'com.scottyab:rootbeer-lib:0.0.7'
+    implementation 'com.scottyab:rootbeer-lib:0.0.8'
     
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
+    androidTestImplementation 'androidx.test:rules:1.3.0-beta01'
     androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     /* Dagger2 - We are going to use dagger.android which includes
     * support for Activity and fragment injection so we need to include
     * the following dependencies */
-    implementation 'com.google.dagger:dagger-android:2.25.2'
-    implementation 'com.google.dagger:dagger-android-support:2.25.2'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.25.2'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.25.2'
-    kapt 'com.google.dagger:dagger-android-processor:2.25.2'
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     /* Dagger2 - default dependency */
-    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
-
-task downloadZipFile(type: Download) {
-    src 'https://github.com/MilosKozak/danars-support-lib/archive/master.zip'
-    dest new File(buildDir, 'danars.zip')
-}
-
-task downloadAndUnzipFile(dependsOn: downloadZipFile, type: Copy) {
-    from zipTree(downloadZipFile.dest)
-    def outputDir = file("${buildDir}/unpacked/dist")
-    into outputDir
-}
-
-
-task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
-    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
-    def target = file("src/main/jniLibs/")
-
-    from src
-    into target
-}
-
-task full_clean(type: Delete) {
-    delete file("src/main/jniLibs")
-}
 /*
 // Run 'adb' shell command to clear application data of main app for 'debug' variant
 task clearMainAppData(type: Exec) {
@@ -406,8 +388,6 @@ tasks.whenTaskAdded { task ->
     }
 }
 */
-clean.dependsOn full_clean
-preBuild.dependsOn copyLibs
 
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())

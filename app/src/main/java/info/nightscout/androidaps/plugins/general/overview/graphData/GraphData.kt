@@ -16,12 +16,12 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin.LastRun
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -197,7 +197,7 @@ class GraphData(injector: HasAndroidInjector, private val graph: GraphView, priv
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound)
     }
 
-    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LastRun?) {
+    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LoopInterface.LastRun?) {
         var toTime = toTimeParam
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
         var lastTarget = -1.0

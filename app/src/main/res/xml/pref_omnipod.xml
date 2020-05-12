@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/omnipod_name"
+        app:initialExpandedChildrenCount="0">
+
+        <Preference
+            android:enabled="true"
+            android:key="@string/key_rileylink_mac_address"
+            android:summary=""
+            android:title="RileyLink Configuration">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+        </Preference>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_bolus_enabled"
+            android:title="@string/omnipod_config_beep_bolus_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_basal_enabled"
+            android:title="@string/omnipod_config_beep_basal_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_smb_enabled"
+            android:title="@string/omnipod_config_beep_smb_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_tbr_enabled"
+            android:title="@string/omnipod_config_beep_tbr_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_pod_debugging_options_enabled"
+            android:title="@string/omnipod_config_pod_debugging_options_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_timechange_enabled"
+            android:title="@string/omnipod_config_timechange_enabled" />
+
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

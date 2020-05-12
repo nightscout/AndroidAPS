@@ -22,7 +22,7 @@ public class DeliverBolusMessage extends AppLayerMessage {
     @Override
     protected ByteBuf getData() {
         ByteBuf byteBuf = new ByteBuf(22);
-        byteBuf.putUInt16LE(805);
+        byteBuf.putUInt16LE(252);
         byteBuf.putUInt16LE(BolusTypeIDs.IDS.getID(bolusType));
         byteBuf.putUInt16LE(31);
         byteBuf.putUInt16LE(0);

@@ -1,11 +1,6 @@
 package info.nightscout.androidaps
 
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLoggerTest
-import org.json.JSONObject
 import org.junit.Before
 import org.junit.Rule
 import org.mockito.Mockito

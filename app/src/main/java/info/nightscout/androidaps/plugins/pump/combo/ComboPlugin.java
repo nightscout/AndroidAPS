@@ -44,7 +44,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -65,7 +65,7 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpH
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
@@ -485,7 +485,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 getAapsLogger().error("deliverTreatment: Invalid input");
                 return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(getResourceHelper().gs(R.string.danar_invalidinput));
+                        .comment(getResourceHelper().gs(R.string.invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -1259,7 +1259,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName) {
+    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
         if (!pump.initialized) {
             return null;
         }
@@ -1281,7 +1281,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             pumpJson.put("status", statusJson);
 
             JSONObject extendedJson = new JSONObject();
-            extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            extendedJson.put("Version", version);
             extendedJson.put("ActiveProfile", profileFunction.getProfileName());
             PumpState ps = pump.state;
             if (ps.tbrActive) {

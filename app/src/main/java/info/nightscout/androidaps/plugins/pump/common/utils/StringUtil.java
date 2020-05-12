@@ -84,8 +84,8 @@ public class StringUtil {
     }
 
 
-    public static String toDateTimeString(LocalDateTime localDateTime) {
-        return DateUtil.dateAndTimeAndSecondsString(localDateTime.toDateTime().getMillis());
+    public static String toDateTimeString(DateUtil dateUtil, LocalDateTime localDateTime) {
+        return dateUtil.dateAndTimeAndSecondsString(localDateTime.toDateTime().getMillis());
         //return localDateTime.toString("dd.MM.yyyy HH:mm:ss");
     }
 

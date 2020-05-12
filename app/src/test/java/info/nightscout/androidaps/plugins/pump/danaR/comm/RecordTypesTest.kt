@@ -6,6 +6,6 @@ import org.junit.Test
 class RecordTypesTest {
 
     @Test fun runTest() {
-        Assert.assertEquals(1.toByte(), RecordTypes.RECORD_TYPE_BOLUS)
+        Assert.assertEquals(1.toByte(), info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BOLUS)
     }
 }

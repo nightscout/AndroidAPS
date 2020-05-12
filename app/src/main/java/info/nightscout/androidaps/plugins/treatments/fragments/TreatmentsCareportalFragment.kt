@@ -38,6 +38,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -65,9 +68,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                         val careportalEvent = events[i]
                         if (careportalEvent.json.contains(resourceHelper.gs(R.string.androidaps_start))) {
                             if (NSUpload.isIdValid(careportalEvent._id))
-                                NSUpload.removeCareportalEntryFromNS(careportalEvent._id)
+                                nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else
-                                UploadQueue.removeID("dbAdd", careportalEvent._id)
+                                uploadQueue.removeID("dbAdd", careportalEvent._id)
                             MainApp.getDbHelper().delete(careportalEvent)
                         }
                     }
@@ -106,7 +109,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: CareportalEventsViewHolder, position: Int) {
             val careportalEvent = careportalEventList[position]
             holder.ns.visibility = if (NSUpload.isIdValid(careportalEvent._id)) View.VISIBLE else View.GONE
-            holder.date.text = DateUtil.dateAndTimeString(careportalEvent.date)
+            holder.date.text = dateUtil.dateAndTimeString(careportalEvent.date)
             holder.duration.text = if (careportalEvent.durationInMsec() == 0L) "" else DateUtil.niceTimeScalar(careportalEvent.durationInMsec(), resourceHelper)
             holder.note.text = careportalEvent.notes
             holder.type.text = translator.translate(careportalEvent.eventType)
@@ -130,14 +133,14 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 remove.setOnClickListener { v: View ->
                     val careportalEvent = v.tag as CareportalEvent
                     activity?.let { activity ->
-                        val text = resourceHelper.gs(R.string.careportal_newnstreatment_eventtype) + ": " + translator.translate(careportalEvent.eventType) + "\n" +
+                        val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(careportalEvent.eventType) + "\n" +
                             resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + careportalEvent.notes + "\n" +
-                            resourceHelper.gs(R.string.date) + ": " + DateUtil.dateAndTimeString(careportalEvent.date)
+                            resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(careportalEvent.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             if (NSUpload.isIdValid(careportalEvent._id))
-                                NSUpload.removeCareportalEntryFromNS(careportalEvent._id)
+                                nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else
-                                UploadQueue.removeID("dbAdd", careportalEvent._id)
+                                uploadQueue.removeID("dbAdd", careportalEvent._id)
                             MainApp.getDbHelper().delete(careportalEvent)
                         }, null)
                     }

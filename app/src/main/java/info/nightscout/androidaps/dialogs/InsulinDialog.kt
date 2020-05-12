@@ -21,7 +21,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -145,7 +145,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val timeOffset = overview_insulin_time.value.toInt()
         val time = DateUtil.now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 
         val notes = notes.text.toString()
         if (notes.isNotEmpty())

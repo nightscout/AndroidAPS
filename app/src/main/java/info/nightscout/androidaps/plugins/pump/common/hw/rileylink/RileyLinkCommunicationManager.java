@@ -21,7 +21,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -33,16 +33,14 @@ public abstract class RileyLinkCommunicationManager {
 
     @Inject protected AAPSLogger aapsLogger;
     @Inject protected SP sp;
-
-    @Inject MedtronicPumpStatus medtronicPumpStatus;
-    @Inject RileyLinkServiceData rileyLinkServiceData;
-    @Inject ServiceTaskExecutor serviceTaskExecutor;
+    @Inject protected RileyLinkServiceData rileyLinkServiceData;
+    @Inject protected ServiceTaskExecutor serviceTaskExecutor;
 
 
     private final int SCAN_TIMEOUT = 1500;
     private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
 
-    protected final HasAndroidInjector injector;
+    public final HasAndroidInjector injector;
     protected final RFSpy rfspy;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
@@ -61,23 +59,23 @@ public abstract class RileyLinkCommunicationManager {
 
 
     // All pump communications go through this function.
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
+    protected RLMessage sendAndListen(RLMessage msg, int timeout_ms)
             throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, null, clazz);
+        return sendAndListen(msg, timeout_ms, null);
     }
 
-    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
+    private RLMessage sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms, clazz);
+        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms);
     }
 
     // For backward compatibility
-    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
+    private RLMessage sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
+        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms);
     }
 
-    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
+    protected RLMessage sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
 
         // internal flag
@@ -90,7 +88,7 @@ public abstract class RileyLinkCommunicationManager {
                 (byte) 0, (byte) repeatCount, (byte) 0, (byte) 0, timeout_ms, (byte) retryCount, extendPreamble_ms);
 
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse(injector);
-        E response = createResponseMessage(radioResponse.getPayload(), clazz);
+        RLMessage response = createResponseMessage(radioResponse.getPayload());
 
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
@@ -126,7 +124,10 @@ public abstract class RileyLinkCommunicationManager {
     }
 
 
-    public abstract <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz);
+    public abstract RLMessage createResponseMessage(byte[] payload);
+
+
+    public abstract void setPumpDeviceState(PumpDeviceState pumpDeviceState);
 
 
     public void wakeUp(boolean force) {
@@ -150,7 +151,7 @@ public abstract class RileyLinkCommunicationManager {
         // **** FIXME: this wakeup doesn't seem to work well... must revisit
         // receiverDeviceAwakeForMinutes = duration_minutes;
 
-        medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.WakingUp);
+        setPumpDeviceState(PumpDeviceState.WakingUp);
 
         if (force)
             nextWakeUpRequired = 0L;
@@ -208,7 +209,7 @@ public abstract class RileyLinkCommunicationManager {
         double[] scanFrequencies = rileyLinkServiceData.rileyLinkTargetFrequency.getScanFrequencies();
 
         if (scanFrequencies.length == 1) {
-            return RileyLinkUtil.isSame(scanFrequencies[0], frequency);
+            return Round.isSame(scanFrequencies[0], frequency);
         } else {
             return (scanFrequencies[0] <= frequency && scanFrequencies[scanFrequencies.length - 1] >= frequency);
         }

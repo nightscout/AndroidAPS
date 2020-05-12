@@ -66,15 +66,15 @@ class EditEventDialog : DialogFragmentWithDate() {
             args.putString("trigger", event.trigger.toJSON())
             val dialog = EditTriggerDialog()
             dialog.arguments = args
-            fragmentManager?.let { dialog.show(it, "EditTriggerDialog") }
+            dialog.show(childFragmentManager, "EditTriggerDialog")
         }
 
         // setup action list view
-        fragmentManager?.let { actionListAdapter = ActionListAdapter() }
+        actionListAdapter = ActionListAdapter()
         automation_actionListView.layoutManager = LinearLayoutManager(context)
         automation_actionListView.adapter = actionListAdapter
 
-        automation_addAction.setOnClickListener { fragmentManager?.let { ChooseActionDialog().show(it, "ChooseActionDialog") } }
+        automation_addAction.setOnClickListener { ChooseActionDialog().show(childFragmentManager, "ChooseActionDialog") }
 
         showPreconditions()
 
@@ -187,9 +187,7 @@ class EditEventDialog : DialogFragmentWithDate() {
                         args.putString("action", action.toJSON())
                         val dialog = EditActionDialog()
                         dialog.arguments = args
-                        fragmentManager?.let {
-                            dialog.show(it, "EditActionDialog")
-                        }
+                        dialog.show(childFragmentManager, "EditActionDialog")
                     }
                 }
                 view.findViewById<ImageView>(R.id.automation_iconTrash).setOnClickListener {

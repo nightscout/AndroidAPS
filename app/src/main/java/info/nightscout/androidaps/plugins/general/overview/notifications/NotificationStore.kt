@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -36,7 +37,9 @@ class NotificationStore @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val context: Context
+    private val context: Context,
+    private val iconsProvider: IconsProvider,
+    private val dateUtil: DateUtil
 ) {
 
     var store: MutableList<Notification> = ArrayList()
@@ -109,8 +112,8 @@ class NotificationStore @Inject constructor(
 
     private fun raiseSystemNotification(n: Notification) {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val largeIcon = resourceHelper.decodeResource(resourceHelper.getIcon())
-        val smallIcon = resourceHelper.getNotificationIcon()
+        val largeIcon = resourceHelper.decodeResource(iconsProvider.getIcon())
+        val smallIcon = iconsProvider.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(smallIcon)
@@ -190,7 +193,7 @@ class NotificationStore @Inject constructor(
             if (notification.buttonText != 0) holder.dismiss.setText(notification.buttonText)
             else holder.dismiss.setText(R.string.snooze)
             @Suppress("SetTextI18n")
-            holder.text.text = DateUtil.timeString(notification.date) + " " + notification.text
+            holder.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
                 Notification.URGENT       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
                 Notification.NORMAL       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))

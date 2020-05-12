@@ -4,7 +4,7 @@ import org.mozilla.javascript.ScriptableObject;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 
@@ -26,7 +26,7 @@ public class LoggerCallback extends ScriptableObject {
         //empty constructor needed for Rhino
         errorBuffer = new StringBuffer();
         logBuffer = new StringBuffer();
-        MainApp.instance().androidInjector().inject(this);
+        StaticInjector.Companion.getInstance().androidInjector().inject(this);
     }
 
     @Override

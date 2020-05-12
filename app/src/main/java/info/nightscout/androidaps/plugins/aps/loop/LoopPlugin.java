@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 
 import dagger.Lazy;
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -41,9 +42,11 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.LoopInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -53,7 +56,6 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -65,15 +67,15 @@ import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import info.nightscout.androidaps.utils.HardLimits;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
-public class LoopPlugin extends PluginBase {
+public class LoopPlugin extends PluginBase implements LoopInterface {
     private final HasAndroidInjector injector;
     private final SP sp;
     private final RxBusWrapper rxBus;
@@ -89,6 +91,7 @@ public class LoopPlugin extends PluginBase {
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private final ReceiverStatusStore receiverStatusStore;
     private final FabricPrivacy fabricPrivacy;
+    private final NSUpload nsUpload;
     private final HardLimits hardLimits;
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -101,21 +104,15 @@ public class LoopPlugin extends PluginBase {
     private boolean isSuperBolus;
     private boolean isDisconnected;
 
-    public class LastRun {
-        public APSResult request = null;
-        public APSResult constraintsProcessed = null;
-        public PumpEnactResult tbrSetByPump = null;
-        public PumpEnactResult smbSetByPump = null;
-        public String source = null;
-        public long lastAPSRun = DateUtil.now();
-        public long lastTBREnact = 0;
-        public long lastSMBEnact = 0;
-        public long lastTBRRequest = 0;
-        public long lastSMBRequest = 0;
-        public long lastOpenModeAccept;
+    @Nullable private LastRun lastRun = null;
+
+    @Nullable @Override public LastRun getLastRun() {
+        return lastRun;
     }
 
-    @Nullable public LastRun lastRun = null;
+    @Override public void setLastRun(@Nullable LastRun lastRun) {
+        this.lastRun = lastRun;
+    }
 
     @Inject
     public LoopPlugin(
@@ -135,6 +132,7 @@ public class LoopPlugin extends PluginBase {
             IobCobCalculatorPlugin iobCobCalculatorPlugin,
             ReceiverStatusStore receiverStatusStore,
             FabricPrivacy fabricPrivacy,
+            NSUpload nsUpload,
             HardLimits hardLimits
     ) {
         super(new PluginDescription()
@@ -161,6 +159,7 @@ public class LoopPlugin extends PluginBase {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.receiverStatusStore = receiverStatusStore;
         this.fabricPrivacy = fabricPrivacy;
+        this.nsUpload = nsUpload;
         this.hardLimits = hardLimits;
 
         loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
@@ -292,7 +291,7 @@ public class LoopPlugin extends PluginBase {
         return true;
     }
 
-    public boolean isLGS(){
+    public boolean isLGS() {
         Constraint<Boolean> closedLoopEnabled = constraintChecker.isClosedLoopAllowed();
         Double MaxIOBallowed = constraintChecker.getMaxIOBAllowed().value();
         String APSmode = sp.getString(R.string.key_aps_mode, "open");
@@ -403,18 +402,18 @@ public class LoopPlugin extends PluginBase {
             }
 
             if (lastRun == null) lastRun = new LastRun();
-            lastRun.request = result;
-            lastRun.constraintsProcessed = resultAfterConstraints;
-            lastRun.lastAPSRun = DateUtil.now();
-            lastRun.source = ((PluginBase) usedAPS).getName();
-            lastRun.tbrSetByPump = null;
-            lastRun.smbSetByPump = null;
-            lastRun.lastTBREnact = 0;
-            lastRun.lastTBRRequest = 0;
-            lastRun.lastSMBEnact = 0;
-            lastRun.lastSMBRequest = 0;
+            lastRun.setRequest(result);
+            lastRun.setConstraintsProcessed(resultAfterConstraints);
+            lastRun.setLastAPSRun(DateUtil.now());
+            lastRun.setSource(((PluginBase) usedAPS).getName());
+            lastRun.setTbrSetByPump(null);
+            lastRun.setSmbSetByPump(null);
+            lastRun.setLastTBREnact(0);
+            lastRun.setLastTBRRequest(0);
+            lastRun.setLastSMBEnact(0);
+            lastRun.setLastSMBRequest(0);
 
-            NSUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore);
+            nsUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
 
             if (isSuspended()) {
                 getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
@@ -437,27 +436,27 @@ public class LoopPlugin extends PluginBase {
                     final PumpEnactResult waiting = new PumpEnactResult(getInjector());
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)
-                        lastRun.tbrSetByPump = waiting;
+                        lastRun.setTbrSetByPump(waiting);
                     if (resultAfterConstraints.bolusRequested)
-                        lastRun.smbSetByPump = waiting;
+                        lastRun.setSmbSetByPump(waiting);
                     rxBus.send(new EventLoopUpdateGui());
                     fabricPrivacy.logCustom("APSRequest");
                     applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
                         public void run() {
                             if (result.enacted || result.success) {
-                                lastRun.tbrSetByPump = result;
-                                lastRun.lastTBRRequest = lastRun.lastAPSRun;
-                                lastRun.lastTBREnact = DateUtil.now();
+                                lastRun.setTbrSetByPump(result);
+                                lastRun.setLastTBRRequest(lastRun.getLastAPSRun());
+                                lastRun.setLastTBREnact(DateUtil.now());
                                 rxBus.send(new EventLoopUpdateGui());
                                 applySMBRequest(resultAfterConstraints, new Callback() {
                                     @Override
                                     public void run() {
                                         //Callback is only called if a bolus was acutally requested
                                         if (result.enacted || result.success) {
-                                            lastRun.smbSetByPump = result;
-                                            lastRun.lastSMBRequest = lastRun.lastAPSRun;
-                                            lastRun.lastSMBEnact = DateUtil.now();
+                                            lastRun.setTbrSetByPump(result);
+                                            lastRun.setLastTBRRequest(lastRun.getLastAPSRun());
+                                            lastRun.setLastTBREnact(DateUtil.now());
                                         } else {
                                             new Thread(() -> {
                                                 SystemClock.sleep(1000);
@@ -472,8 +471,8 @@ public class LoopPlugin extends PluginBase {
                         }
                     });
                 } else {
-                    lastRun.tbrSetByPump = null;
-                    lastRun.smbSetByPump = null;
+                    lastRun.setTbrSetByPump(null);
+                    lastRun.setSmbSetByPump(null);
                 }
             } else {
                 if (resultAfterConstraints.isChangeRequested() && allowNotification) {
@@ -531,15 +530,15 @@ public class LoopPlugin extends PluginBase {
     public void acceptChangeRequest() {
         Profile profile = profileFunction.getProfile();
         final LoopPlugin lp = this;
-        applyTBRRequest(lastRun.constraintsProcessed, profile, new Callback() {
+        applyTBRRequest(lastRun.getConstraintsProcessed(), profile, new Callback() {
             @Override
             public void run() {
                 if (result.enacted) {
-                    lastRun.tbrSetByPump = result;
-                    lastRun.lastTBRRequest = lastRun.lastAPSRun;
-                    lastRun.lastTBREnact = DateUtil.now();
-                    lastRun.lastOpenModeAccept = DateUtil.now();
-                    NSUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore);
+                    lastRun.setTbrSetByPump(result);
+                    lastRun.setLastTBRRequest(lastRun.getLastAPSRun());
+                    lastRun.setLastTBREnact(DateUtil.now());
+                    lastRun.setLastOpenModeAccept(DateUtil.now());
+                    nsUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
                 rxBus.send(new EventAcceptOpenLoopChange());
@@ -773,6 +772,7 @@ public class LoopPlugin extends PluginBase {
         event.eventType = CareportalEvent.OPENAPSOFFLINE;
         event.json = data.toString();
         MainApp.getDbHelper().createOrUpdate(event);
-        NSUpload.uploadOpenAPSOffline(event);
+        nsUpload.uploadOpenAPSOffline(event);
     }
+
 }
