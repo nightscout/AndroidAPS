@@ -3,19 +3,33 @@ package info.nightscout.androidaps.danar.comm;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.DateTime;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.dana.DanaPump;
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.danar.DanaRPlugin;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.ConfigBuilderInterface;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.utils.CRC;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /*
  *  00  01   02  03   04   05  06
@@ -24,20 +38,37 @@ import info.nightscout.androidaps.utils.CRC;
  */
 
 public class MessageBase {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.PUMPCOMM);
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public DateUtil dateUtil;
+    @Inject public DanaPump danaPump;
+    @Inject public DanaRPlugin danaRPlugin;
+    @Inject public DanaRKoreanPlugin danaRKoreanPlugin;
+    @Inject public DanaRv2Plugin danaRv2Plugin;
+    @Inject public RxBusWrapper rxBus;
+    @Inject public ResourceHelper resourceHelper;
+    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ConfigBuilderInterface configBuilder;
+    @Inject public CommandQueueProvider commandQueue;
+    @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
+    @Inject public ConstraintChecker constraintChecker;
+    @Inject public NSUpload nsUpload;
+    @Inject public DatabaseHelperInterface databaseHelper;
+    HasAndroidInjector injector;
+
     public byte[] buffer = new byte[512];
     private int position = 6;
 
     public boolean received = false;
     public boolean failed = false;
 
+    public MessageBase(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+        this. injector = injector;
+    }
+
     public void SetCommand(int cmd) {
         this.buffer[4] = (byte) (cmd >> 8 & 0xFF);
         this.buffer[5] = (byte) (cmd & 0xFF);
-    }
-
-    public void resetBuffer() {
-        position = 6;
     }
 
     public void AddParamByte(byte data) {
@@ -66,13 +97,15 @@ public class MessageBase {
         AddParamByte((byte) (date.get(Calendar.SECOND)));
     }
 
-    public void AddParamDateTime(Date date) {
-        AddParamByte((byte) (date.getSeconds()));
-        AddParamByte((byte) (date.getMinutes()));
-        AddParamByte((byte) (date.getHours()));
-        AddParamByte((byte) (date.getDate()));
-        AddParamByte((byte) (date.getMonth() + 1));
-        AddParamByte((byte) (date.getYear() - 100));
+    public void AddParamDateTimeReversed(long timestamp) {
+        GregorianCalendar date = new GregorianCalendar();
+        date.setTimeInMillis(timestamp);
+        AddParamByte((byte) (date.get(Calendar.SECOND)));
+        AddParamByte((byte) (date.get(Calendar.MINUTE)));
+        AddParamByte((byte) (date.get(Calendar.HOUR_OF_DAY)));
+        AddParamByte((byte) (date.get(Calendar.DAY_OF_MONTH)));
+        AddParamByte((byte) (date.get(Calendar.MONTH) + 1));
+        AddParamByte((byte) (date.get(Calendar.YEAR) - 1900 - 100));
     }
 
     public byte[] getRawMessageBytes() {
@@ -97,13 +130,11 @@ public class MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        if (L.isEnabled(LTag.PUMPCOMM)) {
-            if (bytes.length > 6) {
-                int command = (bytes[5] & 0xFF) | ((bytes[4] << 8) & 0xFF00);
-                log.debug("UNPROCESSED MSG: " + getMessageName() + " Command: " + String.format("%04X", command) + " Data: " + toHexString(bytes));
-            } else {
-                log.debug("MISFORMATTED MSG: " + toHexString(bytes));
-            }
+        if (bytes.length > 6) {
+            int command = (bytes[5] & 0xFF) | ((bytes[4] << 8) & 0xFF00);
+            aapsLogger.debug(LTag.PUMPCOMM, "UNPROCESSED MSG: " + getMessageName() + " Command: " + String.format("%04X", command) + " Data: " + toHexString(bytes));
+        } else {
+            aapsLogger.debug(LTag.PUMPCOMM, "MISFORMATTED MSG: " + toHexString(bytes));
         }
     }
 
@@ -115,11 +146,11 @@ public class MessageBase {
         return command;
     }
 
-    public static int byteFromRawBuff(byte[] buff, int offset) {
+    public int byteFromRawBuff(byte[] buff, int offset) {
         return buff[offset] & 0xFF;
     }
 
-    public static int intFromBuff(byte[] buff, int offset, int length) {
+    public int intFromBuff(byte[] buff, int offset, int length) {
         offset += 6;
         switch (length) {
             case 1:
@@ -134,37 +165,39 @@ public class MessageBase {
         return 0;
     }
 
-    public static long dateTimeFromBuff(byte[] buff, int offset) {
+    public long dateTimeFromBuff(byte[] buff, int offset) {
         return
-                new Date(
-                        100 + intFromBuff(buff, offset, 1),
-                        intFromBuff(buff, offset + 1, 1) - 1,
+                new DateTime(
+                        2000 + intFromBuff(buff, offset, 1),
+                        intFromBuff(buff, offset + 1, 1),
                         intFromBuff(buff, offset + 2, 1),
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         0
-                ).getTime();
+                ).getMillis();
     }
 
-    public static synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
+    public synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
         return
-                new Date(
-                        100 + intFromBuff(buff, offset, 1),
-                        intFromBuff(buff, offset + 1, 1) - 1,
+                new DateTime(
+                        2000 + intFromBuff(buff, offset, 1),
+                        intFromBuff(buff, offset + 1, 1),
                         intFromBuff(buff, offset + 2, 1),
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         intFromBuff(buff, offset + 5, 1)
-                ).getTime();
+                ).getMillis();
     }
 
-    public static long dateFromBuff(byte[] buff, int offset) {
+    public long dateFromBuff(byte[] buff, int offset) {
         return
-                new Date(
-                        100 + intFromBuff(buff, offset, 1),
-                        intFromBuff(buff, offset + 1, 1) - 1,
-                        intFromBuff(buff, offset + 2, 1)
-                ).getTime();
+                new DateTime(
+                        2000 + intFromBuff(buff, offset, 1),
+                        intFromBuff(buff, offset + 1, 1),
+                        intFromBuff(buff, offset + 2, 1),
+                        0,
+                        0
+                ).getMillis();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -184,7 +217,7 @@ public class MessageBase {
     }
 
     public static String toHexString(byte[] buff) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         int count = 0;
         for (byte element : buff) {

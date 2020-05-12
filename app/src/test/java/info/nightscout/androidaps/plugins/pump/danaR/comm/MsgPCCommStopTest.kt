@@ -9,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgPCCommStopTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgPCCommStop(aapsLogger)
+        val packet = MsgPCCommStop(injector)
 
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))

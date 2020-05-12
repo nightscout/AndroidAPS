@@ -1,24 +1,16 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class MsgSettingMeal(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
-    private val danaPump: DanaPump,
-    private val danaRKoreanPlugin: DanaRKoreanPlugin
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x3203)

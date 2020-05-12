@@ -48,7 +48,7 @@ class DanaRS_Packet_Bolus_Get_CIR_CF_Array(
         val cf02: Double
         val cf04: Double
         val cf06: Double
-        if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) {
+        if (danaPump.units == DanaPump.UNITS_MGDL) {
             dataIndex += dataSize
             dataSize = 2
             danaPump.morningCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
@@ -95,7 +95,7 @@ class DanaRS_Packet_Bolus_Get_CIR_CF_Array(
         }
         if (danaPump.units < 0 || danaPump.units > 1) failed = true
         aapsLogger.debug(LTag.PUMPCOMM, "Language: $language")
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
         aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CIR: " + danaPump.morningCIR)
         aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CF: " + danaPump.morningCF)
         aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CIR: " + danaPump.afternoonCIR)

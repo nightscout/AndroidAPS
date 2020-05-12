@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSettingUserOptionsTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSettingUserOptions(aapsLogger, danaPump)
+        val packet = MsgSettingUserOptions(injector)
         danaPump.units = DanaPump.UNITS_MGDL
         // test message decoding
         packet.handleMessage(createArray(48, 7.toByte()))

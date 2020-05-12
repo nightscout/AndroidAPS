@@ -74,7 +74,7 @@ class DanaRS_Packet_Option_Get_User_Option(
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec: " + danaPump.lcdOnTimeSec)
         aapsLogger.debug(LTag.PUMPCOMM, "backlightOnTimeSec: " + danaPump.backlightOnTimeSec)
         aapsLogger.debug(LTag.PUMPCOMM, "selectedLanguage: " + danaPump.selectedLanguage)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == info.nightscout.androidaps.dana.DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaPump.units == DanaPump.UNITS_MGDL) "MGDL" else "MMOL")
         aapsLogger.debug(LTag.PUMPCOMM, "shutdownHour: " + danaPump.shutdownHour)
         aapsLogger.debug(LTag.PUMPCOMM, "lowReservoirRate: " + danaPump.lowReservoirRate)
         aapsLogger.debug(LTag.PUMPCOMM, "refillAmount: " + danaPump.refillAmount)

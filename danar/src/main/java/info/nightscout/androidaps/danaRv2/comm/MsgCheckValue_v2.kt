@@ -1,33 +1,18 @@
 package info.nightscout.androidaps.danaRv2.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
-import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class MsgCheckValue_v2(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
-    private val danaPump: DanaPump,
-    private val danaRPlugin: DanaRPlugin,
-    private val danaRKoreanPlugin: DanaRKoreanPlugin,
-    private val danaRv2Plugin: DanaRv2Plugin,
-    private val configBuilderPlugin: ConfigBuilderInterface,
-    private val commandQueue: CommandQueueProvider
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
 
     init {
@@ -41,7 +26,7 @@ class MsgCheckValue_v2(
         danaPump.hwModel = intFromBuff(bytes, 0, 1)
         danaPump.protocol = intFromBuff(bytes, 1, 1)
         danaPump.productCode = intFromBuff(bytes, 2, 1)
-        if (danaPump.hwModel != info.nightscout.androidaps.dana.DanaPump.EXPORT_MODEL) {
+        if (danaPump.hwModel != DanaPump.EXPORT_MODEL) {
             danaPump.reset()
             val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
@@ -53,7 +38,7 @@ class MsgCheckValue_v2(
             danaRPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaPump.reset() // mark not initialized
             //If profile coming from pump, switch it as well
-            configBuilderPlugin.storeSettings("ChangingDanaRv2Driver")
+            configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
             commandQueue.readStatus("PumpDriverChange", null) // force new connection
             return
@@ -69,7 +54,7 @@ class MsgCheckValue_v2(
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
             danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             //If profile coming from pump, switch it as well
-            configBuilderPlugin.storeSettings("ChangingDanaRv2Driver")
+            configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
             commandQueue.readStatus("PumpDriverChange", null) // force new connection
             return

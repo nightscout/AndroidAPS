@@ -1,17 +1,13 @@
 package info.nightscout.androidaps.danar.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.dana.DanaPump
 
 class MsgBolusStart(
-    private val aapsLogger: AAPSLogger,
-    constraintChecker: ConstraintChecker,
-    private val danaPump: DanaPump,
+    injector: HasAndroidInjector,
     private var amount: Double
-) : MessageBase() {
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0102)

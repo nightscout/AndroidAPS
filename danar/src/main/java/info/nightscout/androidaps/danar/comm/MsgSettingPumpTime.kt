@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.dana.DanaPump
@@ -8,10 +9,8 @@ import org.joda.time.DateTime
 import java.util.*
 
 class MsgSettingPumpTime(
-    private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump,
-    private val dateUtil: DateUtil
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x320A)

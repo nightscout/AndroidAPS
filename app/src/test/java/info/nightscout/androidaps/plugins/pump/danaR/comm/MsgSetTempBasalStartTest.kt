@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSetTempBasalStartTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSetTempBasalStart(aapsLogger, 250, 1)
+        val packet = MsgSetTempBasalStart(injector, 250, 1)
 
         // test message decoding
         packet.handleMessage(createArray(34, 7.toByte()))

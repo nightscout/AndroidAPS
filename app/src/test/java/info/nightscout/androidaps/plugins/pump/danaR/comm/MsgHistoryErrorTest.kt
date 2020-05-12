@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.comm.MsgHistoryError
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.modules.junit4.PowerMockRunner
@@ -10,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgHistoryErrorTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgHistoryError(aapsLogger, RxBusWrapper(), dateUtil, databaseHelper)
+        val packet = MsgHistoryError(injector)
         // nothing left to test
     }
 }

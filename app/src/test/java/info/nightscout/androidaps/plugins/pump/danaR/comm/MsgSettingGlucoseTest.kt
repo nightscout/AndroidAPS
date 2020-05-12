@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSettingGlucoseTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSettingGlucose(aapsLogger, danaPump)
+        val packet = MsgSettingGlucose(injector)
 
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))

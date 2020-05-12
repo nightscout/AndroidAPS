@@ -1,15 +1,12 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.logging.LTag
 
 class MsgCheckValue(
-    private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump,
-    private val danaRPlugin: DanaRPlugin
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0xF0F1)

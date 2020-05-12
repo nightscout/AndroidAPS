@@ -3,18 +3,12 @@ package info.nightscout.androidaps.danar.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.dana.DanaPump
 import kotlin.math.ceil
 
 class MsgStatusTempBasal(
-    private val aapsLogger: AAPSLogger,
-    private val danaPump: DanaPump,
-    private val activePlugin: ActivePluginProvider,
-    private val injector: HasAndroidInjector
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0205)

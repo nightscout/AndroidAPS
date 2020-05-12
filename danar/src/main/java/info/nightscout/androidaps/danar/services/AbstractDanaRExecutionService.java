@@ -211,7 +211,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     public void bolusStop() {
         aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (danaPump.getBolusingTreatment() == null ? "" : danaPump.getBolusingTreatment().insulin));
-        MsgBolusStop stop = new MsgBolusStop(aapsLogger, rxBus, resourceHelper, danaPump);
+        MsgBolusStop stop = new MsgBolusStop(injector);
         danaPump.setBolusStopForced(true);
         if (isConnected()) {
             mSerialIOThread.sendMessage(stop);
@@ -230,42 +230,42 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
         MessageBase msg = null;
         switch (type) {
             case RecordTypes.RECORD_TYPE_ALARM:
-                msg = new MsgHistoryAlarm(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryAlarm(injector);
                 break;
             case RecordTypes.RECORD_TYPE_BASALHOUR:
-                msg = new MsgHistoryBasalHour(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryBasalHour(injector);
                 break;
             case RecordTypes.RECORD_TYPE_BOLUS:
-                msg = new MsgHistoryBolus(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryBolus(injector);
                 break;
             case RecordTypes.RECORD_TYPE_CARBO:
-                msg = new MsgHistoryCarbo(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryCarbo(injector);
                 break;
             case RecordTypes.RECORD_TYPE_DAILY:
-                msg = new MsgHistoryDailyInsulin(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryDailyInsulin(injector);
                 break;
             case RecordTypes.RECORD_TYPE_ERROR:
-                msg = new MsgHistoryError(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryError(injector);
                 break;
             case RecordTypes.RECORD_TYPE_GLUCOSE:
-                msg = new MsgHistoryGlucose(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryGlucose(injector);
                 break;
             case RecordTypes.RECORD_TYPE_REFILL:
-                msg = new MsgHistoryRefill(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistoryRefill(injector);
                 break;
             case RecordTypes.RECORD_TYPE_SUSPEND:
-                msg = new MsgHistorySuspend(aapsLogger, rxBus, dateUtil, databaseHelper);
+                msg = new MsgHistorySuspend(injector);
                 break;
         }
         danaPump.setHistoryDoneReceived(false);
-        mSerialIOThread.sendMessage(new MsgPCCommStart(aapsLogger));
+        mSerialIOThread.sendMessage(new MsgPCCommStart(injector));
         SystemClock.sleep(400);
         mSerialIOThread.sendMessage(msg);
         while (!danaPump.getHistoryDoneReceived() && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);
         }
         SystemClock.sleep(200);
-        mSerialIOThread.sendMessage(new MsgPCCommStop(aapsLogger));
+        mSerialIOThread.sendMessage(new MsgPCCommStop(injector));
         result.success = true;
         result.comment = "OK";
         return result;

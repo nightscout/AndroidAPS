@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import java.util.*
 
 class MsgSetCarbsEntry(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     val time: Long,
     val amount: Int
-) : MessageBase() {
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0402)

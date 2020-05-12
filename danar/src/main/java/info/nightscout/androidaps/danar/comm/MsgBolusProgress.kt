@@ -1,20 +1,14 @@
 package info.nightscout.androidaps.danar.comm
 
-import info.nightscout.androidaps.dana.DanaPump
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlin.math.min
 
 class MsgBolusProgress(
-    private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
-    private val rxBus: RxBusWrapper,
-    private val danaPump: DanaPump
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0202)

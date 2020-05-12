@@ -31,8 +31,6 @@ class DanaRS_Packet_General_Get_Shipping_InformationTest : DanaRSTestBase() {
         Assert.assertEquals(true, packet.failed)
         // everything ok :)
         packet = DanaRS_Packet_General_Get_Shipping_Information(packetInjector)
-        packet.handleMessage(createArray(18, 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
         Assert.assertEquals("REVIEW__GET_SHIPPING_INFORMATION", packet.friendlyName)
     }
 }

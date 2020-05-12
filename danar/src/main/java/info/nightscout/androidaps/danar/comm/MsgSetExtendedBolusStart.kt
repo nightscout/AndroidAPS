@@ -1,17 +1,15 @@
 package info.nightscout.androidaps.danar.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 
 class MsgSetExtendedBolusStart(
-    private val aapsLogger: AAPSLogger,
-    constraintChecker: ConstraintChecker,
+    injector: HasAndroidInjector,
     private var amount: Double,
     private var halfhours: Byte
 
-) : MessageBase() {
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0407)

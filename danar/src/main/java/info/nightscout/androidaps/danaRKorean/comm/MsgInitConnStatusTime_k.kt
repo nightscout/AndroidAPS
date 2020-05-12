@@ -1,33 +1,17 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danar.DanaRPlugin
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class MsgInitConnStatusTime_k(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
-    private val danaPump: DanaPump,
-    private val danaRPlugin: DanaRPlugin,
-    private val danaRKoreanPlugin: DanaRKoreanPlugin,
-    private val configBuilderPlugin: ConfigBuilderInterface,
-    private val commandQueue: CommandQueueProvider,
-    private val dateUtil: DateUtil
-) : MessageBase() {
+    injector: HasAndroidInjector
+) : MessageBase(injector) {
 
     init {
         SetCommand(0x0301)
@@ -46,7 +30,7 @@ class MsgInitConnStatusTime_k(
             danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaPump.reset() // mark not initialized
             //If profile coming from pump, switch it as well
-            configBuilderPlugin.storeSettings("ChangingKoreanDanaDriver")
+            configBuilder.storeSettings("ChangingKoreanDanaDriver")
             rxBus.send(EventRebuildTabs())
             commandQueue.readStatus("PumpDriverChange", null) // force new connection
             return
