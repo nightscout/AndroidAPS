@@ -50,7 +50,6 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     // TODO Dagger
     //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
-    protected static OmnipodDashPumpPlugin plugin = null;
     //private RileyLinkOmnipodService omnipodService;
     //private OmnipodPumpStatus pumpStatusLocal = null;
 
@@ -135,14 +134,6 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 //            }
 //        };
     }
-
-    @Deprecated
-    public static OmnipodDashPumpPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Plugin not injected jet");
-        return plugin;
-    }
-
 
     private String getLogPrefix() {
         return "OmnipodPlugin::";

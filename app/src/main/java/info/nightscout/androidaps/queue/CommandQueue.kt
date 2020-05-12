@@ -375,12 +375,14 @@ class CommandQueue @Inject constructor(
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false
         }
+        /* this is breaking setting of profile at all if not engineering mode
         if (!buildHelper.isEngineeringModeOrRelease()) {
             val notification = Notification(Notification.NOT_ENG_MODE_OR_RELEASE, resourceHelper.gs(R.string.not_eng_mode_or_release), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
             return false
         }
+        */
         // Compare with pump limits
         val basalValues = profile.basalValues
         for (basalValue in basalValues) {

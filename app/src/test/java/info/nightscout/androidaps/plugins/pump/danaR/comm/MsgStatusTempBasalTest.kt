@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -20,13 +21,13 @@ class MsgStatusTempBasalTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
-        val packet = MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector)
+        val packet = MsgStatusTempBasal(aapsLogger, danaPump, activePlugin, injector)
         // test message decoding
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(true, danaPump.isTempBasalInProgress)
         // passing an bigger number
         packet.handleMessage(createArray(34, 2.toByte()))
-        Assert.assertEquals(false, danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(false, danaPump.isTempBasalInProgress)
     }
 }

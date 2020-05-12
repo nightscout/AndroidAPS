@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.danar.comm.MsgHistoryAll
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import org.junit.Assert
@@ -18,7 +19,7 @@ class MsgHistoryAllTest : DanaRTestBase() {
     @Test fun runTest() {
         PowerMockito.mockStatic(MainApp::class.java)
         `when`(MainApp.getDbHelper()).thenReturn(PowerMockito.mock(DatabaseHelper::class.java))
-        val packet = MsgHistoryAll(aapsLogger, RxBusWrapper(), dateUtil)
+        val packet = MsgHistoryAll(aapsLogger, RxBusWrapper(), dateUtil, databaseHelper)
 
         // test message decoding
         val array = ByteArray(100)

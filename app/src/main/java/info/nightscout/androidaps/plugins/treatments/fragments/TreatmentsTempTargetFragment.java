@@ -47,6 +47,8 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
     @Inject RxBusWrapper rxBus;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
+    @Inject NSUpload nsUpload;
+    @Inject UploadQueue uploadQueue;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
 
@@ -146,9 +148,9 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
                             (dialog, id) -> {
                                 final String _id = tempTarget._id;
                                 if (NSUpload.isIdValid(_id)) {
-                                    NSUpload.removeCareportalEntryFromNS(_id);
+                                    nsUpload.removeCareportalEntryFromNS(_id);
                                 } else {
-                                    UploadQueue.removeID("dbAdd", _id);
+                                    uploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(tempTarget);
                             }, null);

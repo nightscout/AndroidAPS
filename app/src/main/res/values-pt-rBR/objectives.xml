@@ -22,6 +22,7 @@
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_auto_objective">A activar a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>
+    <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure primeiro regras simples. Em vez de acção deixe AAPS apresentar apenas a notificação. Quando tem certeza de automação é accionada no momento certo substitua a notificação por acção real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glic disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>

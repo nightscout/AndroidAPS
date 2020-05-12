@@ -17,7 +17,6 @@ import com.j256.ormlite.table.TableUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,11 +28,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -46,13 +47,12 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.interfaces.ProfileStore;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
@@ -61,7 +61,6 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.PercentageSplitter;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling
@@ -72,7 +71,9 @@ import info.nightscout.androidaps.utils.ToastUtils;
  * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.DATABASE);
+    @Inject AAPSLogger aapsLogger;
+    @Inject RxBusWrapper rxBus;
+    @Inject VirtualPumpPlugin virtualPumpPlugin;
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_BGREADINGS = "BgReadings";
@@ -115,6 +116,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        StaticInjector.Companion.getInstance().androidInjector().inject(this);
         onCreate(getWritableDatabase(), getConnectionSource());
         //onUpgrade(getWritableDatabase(), getConnectionSource(), 1,1);
     }
@@ -122,8 +124,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            if (L.isEnabled(LTag.DATABASE))
-                log.info("onCreate");
+            aapsLogger.info(LTag.DATABASE, "onCreate");
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
@@ -142,7 +143,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_PUMP_IDS + "\", " + System.currentTimeMillis() + " " +
                     "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_PUMP_IDS + "\")");
         } catch (SQLException e) {
-            log.error("Can't create database", e);
+            aapsLogger.error("Can't create database", e);
             throw new RuntimeException(e);
         }
     }
@@ -154,7 +155,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             this.newVersion = newVersion;
 
             if (oldVersion < 7) {
-                log.info(DatabaseHelper.class.getName(), "onUpgrade");
+                aapsLogger.info(LTag.DATABASE, "onUpgrade");
                 TableUtils.dropTable(connectionSource, TempTarget.class, true);
                 TableUtils.dropTable(connectionSource, BgReading.class, true);
                 TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
@@ -177,15 +178,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("UPDATE sqlite_sequence SET seq = " + System.currentTimeMillis() + " WHERE name = \"" + DATABASE_INSIGHT_PUMP_IDS + "\"");
             }
         } catch (SQLException e) {
-            log.error("Can't drop databases", e);
+            aapsLogger.error("Can't drop databases", e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        log.info("Do nothing for downgrading...");
-        log.debug("oldVersion: {}, newVersion: {}", oldVersion, newVersion);
+        aapsLogger.info(LTag.DATABASE, "Do nothing for downgrading...");
+        aapsLogger.info(LTag.DATABASE, "oldVersion: {}, newVersion: {}", oldVersion, newVersion);
     }
 
     public int getOldVersion() {
@@ -226,9 +227,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, PodHistory.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(true);
+        virtualPumpPlugin.setFakingStatus(true);
         scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleExtendedBolusChange();
@@ -239,7 +240,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("resetDatabases", false));
+                        rxBus.send(new EventRefreshOverview("resetDatabases", false));
                     }
                 },
                 3000
@@ -251,7 +252,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleTemporaryTargetChange();
     }
@@ -262,9 +263,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(false);
+        virtualPumpPlugin.setFakingStatus(false);
         scheduleTemporaryBasalChange();
     }
 
@@ -274,7 +275,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleExtendedBolusChange();
     }
@@ -284,7 +285,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleCareportalEventChange();
     }
@@ -294,7 +295,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleProfileSwitchChange();
     }
@@ -304,7 +305,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TDD.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -362,11 +363,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(PodHistory.class);
     }
 
-    public static long roundDateToSec(long date) {
+    public long roundDateToSec(long date) {
         long rounded = date - date % 1000;
         if (rounded != date)
-            if (L.isEnabled(LTag.DATABASE))
-                log.debug("Rounding " + date + " to " + rounded);
+            aapsLogger.debug(LTag.DATABASE, "Rounding " + date + " to " + rounded);
         return rounded;
     }
     // -------------------  BgReading handling -----------------------
@@ -377,23 +377,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             BgReading old = getDaoBgReadings().queryForId(bgReading.date);
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("BG: New record from: " + from + " " + bgReading.toString());
+                aapsLogger.debug(LTag.DATABASE, "BG: New record from: " + from + " " + bgReading.toString());
                 scheduleBgChange(bgReading);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("BG: Similiar found: " + old.toString());
+                aapsLogger.debug(LTag.DATABASE, "BG: Similiar found: " + old.toString());
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
+                aapsLogger.debug(LTag.DATABASE, "BG: Updating record from: " + from + " New data: " + old.toString());
                 scheduleBgChange(bgReading);
                 return false;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return false;
     }
@@ -403,16 +400,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoBgReadings().update(bgReading);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    private static void scheduleBgChange(@Nullable final BgReading bgReading) {
+    private void scheduleBgChange(@Nullable final BgReading bgReading) {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Firing EventNewBg");
-                RxBus.Companion.getINSTANCE().send(new EventNewBG(bgReading));
+                aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg");
+                rxBus.send(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }
@@ -438,7 +434,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -455,7 +451,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -472,7 +468,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<BgReading>();
     }
@@ -483,8 +479,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<TDD, String> dao = getDaoTDD();
             dao.createOrUpdate(tdd);
         } catch (SQLException e) {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "createOrUpdate-Exception");
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -497,7 +492,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
             tddList = getDaoTDD().query(preparedQuery);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             tddList = new ArrayList<>();
         }
         return tddList;
@@ -516,7 +511,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
             tddList = getDaoTDD().query(preparedQuery);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             tddList = new ArrayList<>();
         }
         return tddList;
@@ -532,7 +527,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getDaoDbRequest().delete(dbr);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return 0;
     }
@@ -541,7 +536,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getDaoDbRequest().deleteById(nsClientId);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return 0;
     }
@@ -558,7 +553,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 delete(r);
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -566,7 +561,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.clearTable(connectionSource, DbRequest.class);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -574,7 +569,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getDaoDbRequest().closeableIterator();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             return null;
         }
     }
@@ -605,7 +600,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             tempTargets = daoTempTargets.query(preparedQuery);
             return tempTargets;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<TempTarget>();
     }
@@ -622,7 +617,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             tempTargets = daoTempTargets.query(preparedQuery);
             return tempTargets;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<TempTarget>();
     }
@@ -639,8 +634,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         getDaoTempTargets().delete(old); // need to delete/create because date may change too
                         old.copyFrom(tempTarget);
                         getDaoTempTargets().create(old);
-                        if (L.isEnabled(LTag.DATABASE))
-                            log.debug("TEMPTARGET: Updating record by date from: " + Source.getString(tempTarget.source) + " " + old.toString());
+                        aapsLogger.debug(LTag.DATABASE, "TEMPTARGET: Updating record by date from: " + Source.getString(tempTarget.source) + " " + old.toString());
                         scheduleTemporaryTargetChange();
                         return true;
                     }
@@ -659,28 +653,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoTempTargets().delete(old); // need to delete/create because date may change too
                             old.copyFrom(tempTarget);
                             getDaoTempTargets().create(old);
-                            if (L.isEnabled(LTag.DATABASE))
-                                log.debug("TEMPTARGET: Updating record by _id from: " + Source.getString(tempTarget.source) + " " + old.toString());
+                            aapsLogger.debug(LTag.DATABASE, "TEMPTARGET: Updating record by _id from: " + Source.getString(tempTarget.source) + " " + old.toString());
                             scheduleTemporaryTargetChange();
                             return true;
                         }
                     }
                 }
                 getDaoTempTargets().create(tempTarget);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
+                aapsLogger.debug(LTag.DATABASE, "TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
                 scheduleTemporaryTargetChange();
                 return true;
             }
             if (tempTarget.source == Source.USER) {
                 getDaoTempTargets().create(tempTarget);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
+                aapsLogger.debug(LTag.DATABASE, "TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
                 scheduleTemporaryTargetChange();
                 return true;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return false;
     }
@@ -690,16 +681,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             getDaoTempTargets().delete(tempTarget);
             scheduleTemporaryTargetChange();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    private static void scheduleTemporaryTargetChange() {
+    private void scheduleTemporaryTargetChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Firing EventTempTargetChange");
-                RxBus.Companion.getINSTANCE().send(new EventTempTargetChange());
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTempTargetChange");
+                rxBus.send(new EventTempTargetChange());
                 scheduledTemTargetPost = null;
             }
         }
@@ -741,14 +731,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     .source(Source.NIGHTSCOUT);
             createOrUpdate(tempTarget);
         } catch (JSONException e) {
-            log.error("Unhandled exception: " + trJson.toString(), e);
+            aapsLogger.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
     public void deleteTempTargetById(String _id) {
         TempTarget stored = findTempTargetById(_id);
         if (stored != null) {
-            log.debug("TEMPTARGET: Removing TempTarget record from database: " + stored.toString());
+            aapsLogger.debug(LTag.DATABASE, "TEMPTARGET: Removing TempTarget record from database: " + stored.toString());
             delete(stored);
             scheduleTemporaryTargetChange();
         }
@@ -768,7 +758,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return null;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -785,7 +775,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
 
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -800,7 +790,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             PreparedQuery<DanaRHistoryRecord> preparedQuery = queryBuilder.prepare();
             historyList = getDaoDanaRHistory().query(preparedQuery);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             historyList = new ArrayList<>();
         }
         return historyList;
@@ -823,8 +813,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 List<TemporaryBasal> trList = getDaoTemporaryBasal().query(preparedQuery);
                 if (trList.size() > 0) {
                     // do nothing, pump history record cannot be changed
-                    if (L.isEnabled(LTag.DATABASE))
-                        log.debug("TEMPBASAL: Already exists from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+                    aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: Already exists from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                     return false;
                 }
 
@@ -841,8 +830,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     old.copyFromPump(tempBasal);
                     old.source = Source.PUMP;
 
-                    if (L.isEnabled(LTag.DATABASE))
-                        log.debug("TEMPBASAL: Updated record with Pump Data : " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+                    aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: Updated record with Pump Data : " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
 
                     getDaoTemporaryBasal().update(old);
 
@@ -853,8 +841,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
 
                 getDaoTemporaryBasal().create(tempBasal);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+                aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                 updateEarliestDataChange(tempBasal.date);
                 scheduleTemporaryBasalChange();
                 return true;
@@ -871,8 +858,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         getDaoTemporaryBasal().delete(old); // need to delete/create because date may change too
                         old.copyFrom(tempBasal);
                         getDaoTemporaryBasal().create(old);
-                        if (L.isEnabled(LTag.DATABASE))
-                            log.debug("TEMPBASAL: Updating record by date from: " + Source.getString(tempBasal.source) + " " + old.toString());
+                        aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: Updating record by date from: " + Source.getString(tempBasal.source) + " " + old.toString());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
                         scheduleTemporaryBasalChange();
@@ -894,8 +880,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoTemporaryBasal().delete(old); // need to delete/create because date may change too
                             old.copyFrom(tempBasal);
                             getDaoTemporaryBasal().create(old);
-                            if (L.isEnabled(LTag.DATABASE))
-                                log.debug("TEMPBASAL: Updating record by _id from: " + Source.getString(tempBasal.source) + " " + old.toString());
+                            aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: Updating record by _id from: " + Source.getString(tempBasal.source) + " " + old.toString());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
                             scheduleTemporaryBasalChange();
@@ -904,22 +889,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 getDaoTemporaryBasal().create(tempBasal);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+                aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                 updateEarliestDataChange(tempBasal.date);
                 scheduleTemporaryBasalChange();
                 return true;
             }
             if (tempBasal.source == Source.USER) {
                 getDaoTemporaryBasal().create(tempBasal);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+                aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                 updateEarliestDataChange(tempBasal.date);
                 scheduleTemporaryBasalChange();
                 return true;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return false;
     }
@@ -929,7 +912,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             getDaoTemporaryBasal().delete(tempBasal);
             updateEarliestDataChange(tempBasal.date);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleTemporaryBasalChange();
     }
@@ -945,7 +928,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             tempbasals = getDaoTemporaryBasal().query(preparedQuery);
             return tempbasals;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<TemporaryBasal>();
     }
@@ -961,20 +944,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             tempbasals = getDaoTemporaryBasal().query(preparedQuery);
             return tempbasals;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<TemporaryBasal>();
     }
 
-    private static void scheduleTemporaryBasalChange() {
+    private void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Firing EventTempBasalChange");
-                RxBus.Companion.getINSTANCE().send(new EventReloadTempBasalData());
-                RxBus.Companion.getINSTANCE().send(new EventTempBasalChange());
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTempBasalChange");
+                rxBus.send(new EventReloadTempBasalData());
+                rxBus.send(new EventTempBasalChange());
                 if (earliestDataChange != null)
-                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(earliestDataChange));
+                    rxBus.send(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
                 scheduledTemBasalsPost = null;
             }
@@ -1008,7 +990,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
             if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
-                ExtendedBolus extendedBolus = new ExtendedBolus(MainApp.instance())
+                ExtendedBolus extendedBolus = new ExtendedBolus(StaticInjector.Companion.getInstance())
                         .source(Source.NIGHTSCOUT)
                         .date(trJson.getLong("mills"))
                         .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0)
@@ -1016,14 +998,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         .insulin(trJson.getDouble("originalExtendedAmount"))
                         ._id(trJson.getString("_id"));
                 // if faking found in NS, adapt AAPS to use it too
-                if (!VirtualPumpPlugin.Companion.getPlugin().getFakingStatus()) {
-                    VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(true);
+                if (!virtualPumpPlugin.getFakingStatus()) {
+                    virtualPumpPlugin.setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
                 createOrUpdate(extendedBolus);
             } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
-                ExtendedBolus extendedBolus = new ExtendedBolus(MainApp.instance());
+                ExtendedBolus extendedBolus = new ExtendedBolus(StaticInjector.Companion.getInstance());
                 extendedBolus.source = Source.NIGHTSCOUT;
                 extendedBolus.date = trJson.getLong("mills");
                 extendedBolus.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
@@ -1031,14 +1013,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
                 // if faking found in NS, adapt AAPS to use it too
-                if (!VirtualPumpPlugin.Companion.getPlugin().getFakingStatus()) {
-                    VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(true);
+                if (!virtualPumpPlugin.getFakingStatus()) {
+                    virtualPumpPlugin.setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
                 createOrUpdate(extendedBolus);
             } else {
-                TemporaryBasal tempBasal = new TemporaryBasal( MainApp.instance())
+                TemporaryBasal tempBasal = new TemporaryBasal(StaticInjector.Companion.getInstance())
                         .date(trJson.getLong("mills"))
                         .source(Source.NIGHTSCOUT)
                         .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0);
@@ -1057,15 +1039,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 createOrUpdate(tempBasal);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception: " + trJson.toString(), e);
+            aapsLogger.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
     public void deleteTempBasalById(String _id) {
         TemporaryBasal stored = findTempBasalById(_id);
         if (stored != null) {
-            if (L.isEnabled(LTag.DATABASE))
-                log.debug("TEMPBASAL: Removing TempBasal record from database: " + stored.toString());
+            aapsLogger.debug(LTag.DATABASE, "TEMPBASAL: Removing TempBasal record from database: " + stored.toString());
             delete(stored);
             updateEarliestDataChange(stored.date);
             scheduleTemporaryBasalChange();
@@ -1087,7 +1068,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return list.get(0);
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1109,7 +1090,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return null;
 
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1119,8 +1100,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public boolean createOrUpdate(ExtendedBolus extendedBolus) {
         try {
-            if (L.isEnabled(LTag.DATABASE))
-                log.debug("EXTENDEDBOLUS: createOrUpdate: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+            aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: createOrUpdate: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
 
             ExtendedBolus old;
             extendedBolus.date = roundDateToSec(extendedBolus.date);
@@ -1139,13 +1119,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
                     List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
                     if (trList.size() > 1) {
-                        log.error("EXTENDEDBOLUS: Multiple records found for pumpId: " + extendedBolus.pumpId);
+                        aapsLogger.error("EXTENDEDBOLUS: Multiple records found for pumpId: " + extendedBolus.pumpId);
                         return false;
                     }
                     getDaoExtendedBolus().createOrUpdate(extendedBolus);
                 }
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+                aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1158,8 +1137,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         getDaoExtendedBolus().delete(old); // need to delete/create because date may change too
                         old.copyFrom(extendedBolus);
                         getDaoExtendedBolus().create(old);
-                        if (L.isEnabled(LTag.DATABASE))
-                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.log());
+                        aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.log());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
                         scheduleExtendedBolusChange();
@@ -1181,8 +1159,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoExtendedBolus().delete(old); // need to delete/create because date may change too
                             old.copyFrom(extendedBolus);
                             getDaoExtendedBolus().create(old);
-                            if (L.isEnabled(LTag.DATABASE))
-                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.log());
+                            aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.log());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
                             scheduleExtendedBolusChange();
@@ -1191,22 +1168,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 getDaoExtendedBolus().create(extendedBolus);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+                aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
             }
             if (extendedBolus.source == Source.USER) {
                 getDaoExtendedBolus().create(extendedBolus);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+                aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return false;
     }
@@ -1217,7 +1192,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     .where().eq("pumpId", pumpId)
                     .queryForFirst();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1227,7 +1202,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             getDaoExtendedBolus().delete(extendedBolus);
             updateEarliestDataChange(extendedBolus.date);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleExtendedBolusChange();
     }
@@ -1243,7 +1218,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             extendedBoluses = getDaoExtendedBolus().query(preparedQuery);
             return extendedBoluses;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<ExtendedBolus>();
     }
@@ -1259,7 +1234,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             extendedBoluses = getDaoExtendedBolus().query(preparedQuery);
             return extendedBoluses;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<ExtendedBolus>();
     }
@@ -1267,8 +1242,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void deleteExtendedBolusById(String _id) {
         ExtendedBolus stored = findExtendedBolusById(_id);
         if (stored != null) {
-            if (L.isEnabled(LTag.DATABASE))
-                log.debug("EXTENDEDBOLUS: Removing ExtendedBolus record from database: " + stored.toString());
+            aapsLogger.debug(LTag.DATABASE, "EXTENDEDBOLUS: Removing ExtendedBolus record from database: " + stored.toString());
             delete(stored);
             updateEarliestDataChange(stored.date);
             scheduleExtendedBolusChange();
@@ -1290,7 +1264,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return null;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1313,19 +1287,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      */
 
     public void createExtendedBolusFromJsonIfNotExists(JSONObject json) {
-        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(MainApp.instance(), json);
+        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(StaticInjector.Companion.getInstance(), json);
         if (extendedBolus != null)
             createOrUpdate(extendedBolus);
     }
 
-    private static void scheduleExtendedBolusChange() {
+    private void scheduleExtendedBolusChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Firing EventExtendedBolusChange");
-                RxBus.Companion.getINSTANCE().send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
+                aapsLogger.debug(LTag.DATABASE, "Firing EventExtendedBolusChange");
+                rxBus.send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
-                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(earliestDataChange));
+                    rxBus.send(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
                 scheduledExtendedBolusPost = null;
             }
@@ -1348,7 +1321,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoCareportalEvents().createOrUpdate(careportalEvent);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleCareportalEventChange();
     }
@@ -1357,7 +1330,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoCareportalEvents().delete(careportalEvent);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleCareportalEventChange();
     }
@@ -1366,7 +1339,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getDaoCareportalEvents().queryForId(timestamp);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1387,7 +1360,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             else
                 return null;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1404,7 +1377,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1421,7 +1394,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1450,7 +1423,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1467,7 +1440,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1483,15 +1456,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (list.size() == 1) {
                 CareportalEvent record = list.get(0);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Removing CareportalEvent record from database: " + record.toString());
+                aapsLogger.debug(LTag.DATABASE, "Removing CareportalEvent record from database: " + record.toString());
                 delete(record);
             } else {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("CareportalEvent not found database: " + _id);
+                aapsLogger.debug(LTag.DATABASE, "CareportalEvent not found database: " + _id);
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -1505,17 +1476,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<CareportalEvent> list = getDaoCareportalEvents().query(preparedQuery);
             CareportalEvent careportalEvent;
             if (list.size() == 0) {
-                careportalEvent = new CareportalEvent(MainApp.instance());
+                careportalEvent = new CareportalEvent(StaticInjector.Companion.getInstance());
                 careportalEvent.source = Source.NIGHTSCOUT;
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Adding CareportalEvent record to database: " + trJson.toString());
+                aapsLogger.debug(LTag.DATABASE, "Adding CareportalEvent record to database: " + trJson.toString());
                 // Record does not exists. add
             } else if (list.size() == 1) {
                 careportalEvent = list.get(0);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Updating CareportalEvent record in database: " + trJson.toString());
+                aapsLogger.debug(LTag.DATABASE, "Updating CareportalEvent record in database: " + trJson.toString());
             } else {
-                log.error("Something went wrong");
+                aapsLogger.error("Something went wrong");
                 return;
             }
             careportalEvent.date = trJson.getLong("mills");
@@ -1524,16 +1493,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvent._id = trJson.getString("_id");
             createOrUpdate(careportalEvent);
         } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception: " + trJson.toString(), e);
+            aapsLogger.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
-    private static void scheduleCareportalEventChange() {
+    private void scheduleCareportalEventChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Firing scheduleCareportalEventChange");
-                RxBus.Companion.getINSTANCE().send(new EventCareportalEventChange());
+                aapsLogger.debug(LTag.DATABASE, "Firing scheduleCareportalEventChange");
+                rxBus.send(new EventCareportalEventChange());
                 scheduledCareportalEventPost = null;
             }
         }
@@ -1568,7 +1536,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             return profileSwitches;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1590,7 +1558,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             else
                 return null;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1608,7 +1576,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1626,7 +1594,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -1644,8 +1612,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         profileSwitch.profileName = old.profileName; // preserver profileName to prevent multiple CPP extension
                         getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
                         getDaoProfileSwitch().create(profileSwitch);
-                        if (L.isEnabled(LTag.DATABASE))
-                            log.debug("PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
+                        aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
                         scheduleProfileSwitchChange();
                         return true;
                     }
@@ -1664,8 +1631,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
                             old.copyFrom(profileSwitch);
                             getDaoProfileSwitch().create(old);
-                            if (L.isEnabled(LTag.DATABASE))
-                                log.debug("PROFILESWITCH: Updating record by _id from: " + Source.getString(profileSwitch.source) + " " + old.toString());
+                            aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: Updating record by _id from: " + Source.getString(profileSwitch.source) + " " + old.toString());
                             scheduleProfileSwitchChange();
                             return true;
                         }
@@ -1674,20 +1640,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 // look for already added percentage from NS
                 profileSwitch.profileName = PercentageSplitter.pureName(profileSwitch.profileName);
                 getDaoProfileSwitch().create(profileSwitch);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
+                aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 scheduleProfileSwitchChange();
                 return true;
             }
             if (profileSwitch.source == Source.USER) {
                 getDaoProfileSwitch().create(profileSwitch);
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
+                aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 scheduleProfileSwitchChange();
                 return true;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return false;
     }
@@ -1697,17 +1661,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             getDaoProfileSwitch().delete(profileSwitch);
             scheduleProfileSwitchChange();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    private static void scheduleProfileSwitchChange() {
+    private void scheduleProfileSwitchChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(LTag.DATABASE))
-                    log.debug("Firing EventProfileNeedsUpdate");
-                RxBus.Companion.getINSTANCE().send(new EventReloadProfileSwitchData());
-                RxBus.Companion.getINSTANCE().send(new EventProfileNeedsUpdate());
+                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileNeedsUpdate");
+                rxBus.send(new EventReloadProfileSwitchData());
+                rxBus.send(new EventProfileNeedsUpdate());
                 scheduledProfileSwitchEventPost = null;
             }
         }
@@ -1733,9 +1696,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
   */
 
-    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, JSONObject trJson) {
+    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, NSUpload nsUpload, JSONObject trJson) {
         try {
-            ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance());
+            ProfileSwitch profileSwitch = new ProfileSwitch(StaticInjector.Companion.getInstance());
             profileSwitch.date = trJson.getLong("mills");
             if (trJson.has("duration"))
                 profileSwitch.durationInMinutes = trJson.getInt("duration");
@@ -1756,18 +1719,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                     if (profile != null) {
                         profileSwitch.profileJson = profile.getData().toString();
-                        if (L.isEnabled(LTag.DATABASE))
-                            log.debug("Profile switch prefilled with JSON from local store");
+                        aapsLogger.debug(LTag.DATABASE, "Profile switch prefilled with JSON from local store");
                         // Update data in NS
-                        NSUpload.updateProfileSwitch(profileSwitch);
+                        nsUpload.updateProfileSwitch(profileSwitch);
                     } else {
-                        if (L.isEnabled(LTag.DATABASE))
-                            log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                        aapsLogger.debug(LTag.DATABASE, "JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;
                     }
                 } else {
-                    if (L.isEnabled(LTag.DATABASE))
-                        log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                    aapsLogger.debug(LTag.DATABASE, "Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
             }
@@ -1775,15 +1735,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 profileSwitch.profilePlugin = trJson.getString("profilePlugin");
             createOrUpdate(profileSwitch);
         } catch (JSONException e) {
-            log.error("Unhandled exception: " + trJson.toString(), e);
+            aapsLogger.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
     public void deleteProfileSwitchById(String _id) {
         ProfileSwitch stored = findProfileSwitchById(_id);
         if (stored != null) {
-            if (L.isEnabled(LTag.DATABASE))
-                log.debug("PROFILESWITCH: Removing ProfileSwitch record from database: " + stored.toString());
+            aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: Removing ProfileSwitch record from database: " + stored.toString());
             delete(stored);
             scheduleTemporaryTargetChange();
         }
@@ -1803,7 +1762,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return null;
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1814,7 +1773,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoInsightHistoryOffset().createOrUpdate(offset);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -1822,7 +1781,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getDaoInsightHistoryOffset().queryForId(pumpSerial);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1831,7 +1790,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoInsightBolusID().createOrUpdate(bolusID);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -1843,7 +1802,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     .and().between("timestamp", timestamp - 259200000, timestamp + 259200000)
                     .queryForFirst();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1852,7 +1811,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoInsightPumpID().createOrUpdate(pumpID);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -1865,7 +1824,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     .and().lt("timestamp", before)
                     .queryForFirst();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -1878,7 +1837,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoPodHistory().createOrUpdate(podHistory);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -1896,7 +1855,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             podHistories = daoPodHistory.query(preparedQuery);
             return podHistories;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }

@@ -36,7 +36,7 @@ class ConfigBuilderPlugin @Inject constructor(
     .shortName(R.string.configbuilder_shortname)
     .description(R.string.description_config_builder),
     aapsLogger, resourceHelper, injector
-) {
+), ConfigBuilderInterface {
 
     fun initialize() {
         (activePlugin as PluginStore).loadDefaults()
@@ -52,7 +52,7 @@ class ConfigBuilderPlugin @Inject constructor(
         storeSettings("setAlwaysEnabledPluginsEnabled")
     }
 
-    fun storeSettings(from: String) {
+    override fun storeSettings(from: String) {
         activePlugin.pluginsList
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: $from")
         activePlugin.verifySelectionInCategories()

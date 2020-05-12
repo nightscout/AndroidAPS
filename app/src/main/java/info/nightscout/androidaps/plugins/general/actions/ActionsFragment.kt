@@ -144,6 +144,12 @@ class ActionsFragment : DaggerFragment() {
         actions_exercise.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(childFragmentManager, "Actions")
         }
+        actions_question.setOnClickListener {
+            CareDialog().setOptions(CareDialog.EventType.QUESTION, R.string.careportal_question).show(childFragmentManager, "Actions")
+        }
+        actions_announcement.setOnClickListener {
+            CareDialog().setOptions(CareDialog.EventType.ANNOUNCEMENT, R.string.careportal_announcement).show(childFragmentManager, "Actions")
+        }
 
         sp.putBoolean(R.string.key_objectiveuseactions, true)
     }
@@ -192,13 +198,7 @@ class ActionsFragment : DaggerFragment() {
         val pump = activePlugin.activePump
 
         actions_temptarget?.visibility = (profile != null).toVisibility()
-        actions_canceltempbasal.visibility = (profile == null).toVisibility()
-        actions_settempbasal.visibility = (profile == null).toVisibility()
-        actions_fill.visibility = (profile == null).toVisibility()
-        actions_extendedbolus.visibility = (profile == null).toVisibility()
-        actions_extendedbolus_cancel.visibility = (profile == null).toVisibility()
-        actions_historybrowser.visibility = (profile == null).toVisibility()
-        actions_tddstats.visibility = (profile == null).toVisibility()
+        actions_historybrowser.visibility = (profile != null).toVisibility()
 
         val basalProfileEnabled = buildHelper.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
 

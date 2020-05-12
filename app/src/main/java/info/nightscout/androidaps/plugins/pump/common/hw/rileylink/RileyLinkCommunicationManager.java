@@ -59,23 +59,23 @@ public abstract class RileyLinkCommunicationManager {
 
 
     // All pump communications go through this function.
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
+    protected RLMessage sendAndListen(RLMessage msg, int timeout_ms)
             throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, null, clazz);
+        return sendAndListen(msg, timeout_ms, null);
     }
 
-    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
+    private RLMessage sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms, clazz);
+        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms);
     }
 
     // For backward compatibility
-    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
+    private RLMessage sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
+        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms);
     }
 
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
+    protected RLMessage sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
 
         // internal flag
@@ -88,7 +88,7 @@ public abstract class RileyLinkCommunicationManager {
                 (byte) 0, (byte) repeatCount, (byte) 0, (byte) 0, timeout_ms, (byte) retryCount, extendPreamble_ms);
 
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse(injector);
-        E response = createResponseMessage(radioResponse.getPayload(), clazz);
+        RLMessage response = createResponseMessage(radioResponse.getPayload());
 
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
@@ -124,7 +124,7 @@ public abstract class RileyLinkCommunicationManager {
     }
 
 
-    public abstract <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz);
+    public abstract RLMessage createResponseMessage(byte[] payload);
 
 
     public abstract void setPumpDeviceState(PumpDeviceState pumpDeviceState);

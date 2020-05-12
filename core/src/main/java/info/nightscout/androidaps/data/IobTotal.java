@@ -2,19 +2,15 @@ package info.nightscout.androidaps.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
 
 public class IobTotal implements DataPointWithLabelInterface {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(IobTotal.class);
 
     public double iob;
     public double activity;
@@ -108,8 +104,7 @@ public class IobTotal implements DataPointWithLabelInterface {
             json.put("basaliob", basaliob);
             json.put("activity", activity);
             json.put("time", DateUtil.toISOString(new Date()));
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+        } catch (JSONException ignored) {
         }
         return json;
     }
@@ -139,8 +134,7 @@ public class IobTotal implements DataPointWithLabelInterface {
                 JSONObject iwzt = iobWithZeroTemp.determineBasalJson();
                 json.put("iobWithZeroTemp", iwzt);
             }
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+        } catch (JSONException ignored) {
         }
         return json;
     }

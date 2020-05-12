@@ -43,6 +43,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -135,8 +137,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                                 resourceHelper.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
                                     "\n" + resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                                 val id = profileSwitch._id
-                                if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)
-                                else UploadQueue.removeID("dbAdd", id)
+                                if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
+                                else uploadQueue.removeID("dbAdd", id)
                                 MainApp.getDbHelper().delete(profileSwitch)
                             })
                         }

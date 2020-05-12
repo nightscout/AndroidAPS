@@ -31,7 +31,8 @@ class DexcomPlugin @Inject constructor(
     private val sp: SP,
     private val mainApp: MainApp,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -78,10 +79,10 @@ class DexcomPlugin @Inject constructor(
                     bgReading.raw = 0.0
                     if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            NSUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
+                            nsUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
                         }
                         if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                            NSUpload.sendToXdrip(bgReading)
+                            nsUpload.sendToXdrip(bgReading)
                         }
                     }
                 }
@@ -108,7 +109,7 @@ class DexcomPlugin @Inject constructor(
                             careportalEvent.eventType = CareportalEvent.BGCHECK
                             careportalEvent.json = jsonObject.toString()
                             MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                            NSUpload.uploadCareportalEntryToNS(jsonObject)
+                            nsUpload.uploadCareportalEntryToNS(jsonObject)
                         }
                 }
             }
@@ -128,7 +129,7 @@ class DexcomPlugin @Inject constructor(
                             careportalEvent.eventType = CareportalEvent.SENSORCHANGE
                             careportalEvent.json = jsonObject.toString()
                             MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                            NSUpload.uploadCareportalEntryToNS(jsonObject)
+                            nsUpload.uploadCareportalEntryToNS(jsonObject)
                         }
                 }
             }

@@ -50,7 +50,7 @@ class DummyService : DaggerService() {
         stopForeground(true)
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
         return Service.START_STICKY

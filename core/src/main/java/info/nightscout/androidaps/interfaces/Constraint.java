@@ -10,7 +10,7 @@ import info.nightscout.androidaps.logging.LTag;
  * Created by mike on 19.03.2018.
  */
 
-public class Constraint<T extends Comparable> {
+public class Constraint<T extends Comparable<T>> {
     private T value;
     private T originalValue;
 
@@ -85,14 +85,12 @@ public class Constraint<T extends Comparable> {
         return from.getClass().getSimpleName().replace("Plugin", "");
     }
 
-    public Constraint addReason(String reason, Object from) {
+    public void addReason(String reason, Object from) {
         reasons.add(translateFrom(from) + ": " + reason);
-        return this;
     }
 
-    public Constraint addMostLimingReason(String reason, Object from) {
+    private void addMostLimingReason(String reason, Object from) {
         mostLimiting.add(translateFrom(from) + ": " + reason);
-        return this;
     }
 
     public String getReasons(AAPSLogger aapsLogger) {
@@ -102,7 +100,7 @@ public class Constraint<T extends Comparable> {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        aapsLogger.debug(LTag.CONSTRAINTS, "Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        aapsLogger.debug(LTag.CONSTRAINTS, "Limiting original value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
 
@@ -117,7 +115,7 @@ public class Constraint<T extends Comparable> {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        aapsLogger.debug(LTag.CONSTRAINTS, "Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        aapsLogger.debug(LTag.CONSTRAINTS, "Limiting original value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
 
@@ -126,8 +124,6 @@ public class Constraint<T extends Comparable> {
     }
 
     public void copyReasons(Constraint<?> another) {
-        for (String s : another.getReasonList()) {
-            reasons.add(s);
-        }
+        reasons.addAll(another.getReasonList());
     }
 }

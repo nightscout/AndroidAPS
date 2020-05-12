@@ -87,9 +87,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
     @Override
-    public <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz) {
+    public RLMessage createResponseMessage(byte[] payload) {
         PumpMessage pumpMessage = new PumpMessage(aapsLogger, payload);
-        return (E) pumpMessage;
+        return pumpMessage;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 if (radioResponse.isValid()) {
 
-                    PumpMessage pumpResponse = createResponseMessage(radioResponse.getPayload(), PumpMessage.class);
+                    PumpMessage pumpResponse = (PumpMessage) createResponseMessage(radioResponse.getPayload());
 
                     if (!pumpResponse.isValid()) {
                         aapsLogger.warn(LTag.PUMPCOMM, "Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
@@ -551,8 +551,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
 
     // All pump communications go through this function.
-    private PumpMessage sendAndListen(RLMessage msg, int timeout_ms) throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms, PumpMessage.class);
+    protected PumpMessage sendAndListen(RLMessage msg, int timeout_ms) throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms);
     }
 
 

@@ -485,7 +485,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 getAapsLogger().error("deliverTreatment: Invalid input");
                 return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(getResourceHelper().gs(R.string.danar_invalidinput));
+                        .comment(getResourceHelper().gs(R.string.invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -1259,7 +1259,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName) {
+    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
         if (!pump.initialized) {
             return null;
         }
@@ -1281,7 +1281,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             pumpJson.put("status", statusJson);
 
             JSONObject extendedJson = new JSONObject();
-            extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            extendedJson.put("Version", version);
             extendedJson.put("ActiveProfile", profileFunction.getProfileName());
             PumpState ps = pump.state;
             if (ps.tbrActive) {

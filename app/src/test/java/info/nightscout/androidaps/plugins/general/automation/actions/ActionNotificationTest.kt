@@ -5,7 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -29,6 +28,7 @@ class ActionNotificationTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var nsUpload: NSUpload
 
     private lateinit var sut: ActionNotification
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -36,6 +36,7 @@ class ActionNotificationTest : TestBase() {
             if (it is ActionNotification) {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
+                it.nsUpload = nsUpload
             }
             if (it is PumpEnactResult) {
                 it.aapsLogger = aapsLogger

@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
 import android.content.Context
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danaRv2.comm.MsgHistoryEvents_v2
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
@@ -23,10 +23,9 @@ class MsgHistoryEvents_v2Test : DanaRTestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
 
     @Test @Throws(Exception::class) fun runTest() {
-        var packet = MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, RxBusWrapper(), treatmentsPlugin, injector, DateUtil(context, resourceHelper), 0)
+        val packet = MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, RxBusWrapper(), activePluginProvider, injector, DateUtil(context, resourceHelper), 0)
 
         // test message decoding
         val array = ByteArray(100)

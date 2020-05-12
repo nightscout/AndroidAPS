@@ -15,6 +15,11 @@ public class PumpDescription {
         resetSettings();
     }
 
+   public PumpDescription (PumpType pumpType) {
+        this();
+        setPumpDescription(pumpType);
+    }
+
     public static final int NONE = 0;
     public static final int PERCENT = 0x01;
     public static final int ABSOLUTE = 0x02;

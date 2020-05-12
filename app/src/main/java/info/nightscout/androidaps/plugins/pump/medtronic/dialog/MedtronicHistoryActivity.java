@@ -23,11 +23,13 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 
 public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
     @Inject MedtronicHistoryData medtronicHistoryData;
+    @Inject ResourceHelper resourceHelper;
 
     Spinner historyTypeSpinner;
     TextView statusView;
@@ -119,7 +121,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
         statusView.setVisibility(View.GONE);
 
-        typeListFull = getTypeList(PumpHistoryEntryGroup.getList());
+        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper));
 
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);

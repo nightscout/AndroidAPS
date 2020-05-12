@@ -5,10 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.DateUtil;
 
 /**
@@ -18,7 +15,6 @@ import info.nightscout.androidaps.utils.DateUtil;
  */
 @DatabaseTable(tableName = "DBRequests")
 public class DbRequest {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.DATABASE);
 
     @DatabaseField(id = true)
     public String nsClientID = null;

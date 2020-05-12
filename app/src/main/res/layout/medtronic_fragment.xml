@@ -164,7 +164,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_battery_label"
+                        android:text="@string/battery_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -211,7 +211,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_lastconnection_label"
+                        android:text="@string/lastconnection_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -256,7 +256,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_lastbolus_label"
+                        android:text="@string/lastbolus_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -302,7 +302,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_basebasalrate_label"
+                        android:text="@string/basebasalrate_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -347,7 +347,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_tempbasal_label"
+                        android:text="@string/tempbasal_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -393,7 +393,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_reservoir_label"
+                        android:text="@string/reservoir_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -511,7 +511,7 @@
                     android:drawableTop="@drawable/icon_danarhistory"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/danar_history" />
+                    android:text="@string/pumphistory" />
 
                 <Button
                     android:id="@+id/medtronic_stats"

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.utils.extensions.toHex
 import org.spongycastle.util.encoders.Base64
 import java.nio.ByteBuffer
 import java.security.MessageDigest
@@ -16,42 +17,10 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val HEX_CHARS = "0123456789abcdef"
-private val HEX_CHARS_ARRAY = "0123456789abcdef".toCharArray()
-
-fun String.hexStringToByteArray() : ByteArray {
-
-    val upperCased = this.toLowerCase()
-    val result = ByteArray(length / 2)
-    for (i in 0 until length step 2) {
-        val firstIndex = HEX_CHARS.indexOf(upperCased[i]);
-        val secondIndex = HEX_CHARS.indexOf(upperCased[i + 1]);
-
-        val octet = firstIndex.shl(4).or(secondIndex)
-        result.set(i.shr(1), octet.toByte())
-    }
-
-    return result
-}
-
-fun ByteArray.toHex() : String{
-    val result = StringBuffer()
-
-    forEach {
-        val octet = it.toInt()
-        val firstIndex = (octet and 0xF0).ushr(4)
-        val secondIndex = octet and 0x0F
-        result.append(HEX_CHARS_ARRAY[firstIndex])
-        result.append(HEX_CHARS_ARRAY[secondIndex])
-    }
-
-    return result.toString()
-}
-
 @Singleton
 class CryptoUtil @Inject constructor(
     val aapsLogger: AAPSLogger
-)  {
+) {
 
     companion object {
         private const val IV_LENGTH_BYTE = 12
@@ -71,26 +40,26 @@ class CryptoUtil @Inject constructor(
     }
 
     fun hmac256(str: String, secret: String): String? {
-        val sha256_HMAC = Mac.getInstance("HmacSHA256")
+        val sha256HMAC = Mac.getInstance("HmacSHA256")
         val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
-        sha256_HMAC.init(secretKey)
-        return sha256_HMAC.doFinal(str.toByteArray()).toHex()
+        sha256HMAC.init(secretKey)
+        return sha256HMAC.doFinal(str.toByteArray()).toHex()
     }
 
-    private fun prepCipherKey(passPhrase: String, salt:ByteArray, iterationCount:Int = PBKDF2_ITERATIONS, keyStrength:Int = AES_KEY_SIZE_BIT): SecretKeySpec {
+    private fun prepCipherKey(passPhrase: String, salt: ByteArray, iterationCount: Int = PBKDF2_ITERATIONS, keyStrength: Int = AES_KEY_SIZE_BIT): SecretKeySpec {
         val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2withHmacSHA1")
         val spec: KeySpec = PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount, keyStrength)
         val tmp: SecretKey = factory.generateSecret(spec)
-        return SecretKeySpec(tmp.getEncoded(), "AES")
+        return SecretKeySpec(tmp.encoded, "AES")
     }
 
-    fun mineSalt(len :Int = SALT_SIZE_BYTE): ByteArray {
+    fun mineSalt(len: Int = SALT_SIZE_BYTE): ByteArray {
         val salt = ByteArray(len)
         secureRandom.nextBytes(salt)
         return salt
     }
 
-    fun encrypt(passPhrase: String, salt:ByteArray, rawData: String ): String? {
+    fun encrypt(passPhrase: String, salt: ByteArray, rawData: String): String? {
         val iv: ByteArray?
         val encrypted: ByteArray?
         return try {
@@ -107,12 +76,12 @@ class CryptoUtil @Inject constructor(
             String(Base64.encode(byteBuffer.array()))
         } catch (e: Exception) {
             lastException = e
-            aapsLogger.error("Encryption failed due to technical exception: ${e}")
+            aapsLogger.error("Encryption failed due to technical exception: $e")
             null
         }
     }
 
-    fun decrypt(passPhrase: String, salt:ByteArray, encryptedData: String): String? {
+    fun decrypt(passPhrase: String, salt: ByteArray, encryptedData: String): String? {
         val iv: ByteArray?
         val encrypted: ByteArray?
         return try {
@@ -129,7 +98,7 @@ class CryptoUtil @Inject constructor(
             String(dec)
         } catch (e: Exception) {
             lastException = e
-            aapsLogger.error("Decryption failed due to technical exception: ${e}")
+            aapsLogger.error("Decryption failed due to technical exception: $e")
             null
         }
     }

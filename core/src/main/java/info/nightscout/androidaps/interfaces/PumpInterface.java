@@ -79,7 +79,7 @@ public interface PumpInterface {
 
     // Status to be passed to NS
     @NotNull
-    JSONObject getJSONStatus(Profile profile, String profileName);
+    JSONObject getJSONStatus(Profile profile, String profileName, String version);
 
     @NotNull
     ManufacturerType manufacturer();

@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -91,8 +90,6 @@ import io.reactivex.schedulers.Schedulers;
 public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface, RileyLinkPumpDevice {
 
     // TODO Dagger (maybe done)
-    private static OmnipodPumpPlugin plugin = null;
-    private RileyLinkServiceData rileyLinkServiceData;
     private ServiceTaskExecutor serviceTaskExecutor;
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private OmnipodUtil omnipodUtil;
@@ -151,11 +148,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 PumpType.Insulet_Omnipod,
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil
         );
-        this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
 
         displayConnectionMessages = false;
-        OmnipodPumpPlugin.plugin = this;
         this.omnipodUtil = omnipodUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
 
@@ -249,14 +244,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //        this.serviceTaskExecutor = serviceTaskExecutor;
 
     }
-
-    @Deprecated
-    public static OmnipodPumpPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Plugin not injected jet");
-        return plugin;
-    }
-
 
     @Override
     protected void onStart() {

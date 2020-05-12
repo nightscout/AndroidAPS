@@ -10,12 +10,12 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgStatusTempBasal_v2Test : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgStatusTempBasal_v2(aapsLogger, danaRPump, dateUtil)
+        val packet = info.nightscout.androidaps.danaRv2.comm.MsgStatusTempBasal_v2(aapsLogger, danaPump, dateUtil)
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(true, danaPump.isTempBasalInProgress)
         // passing an bigger number
         packet.handleMessage(createArray(34, 2.toByte()))
-        Assert.assertEquals(false, danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(false, danaPump.isTempBasalInProgress)
     }
 }
