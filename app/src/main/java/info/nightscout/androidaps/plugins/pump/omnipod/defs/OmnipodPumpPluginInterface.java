@@ -10,6 +10,7 @@ public interface OmnipodPumpPluginInterface extends PumpInterface {
 
     void setDriverState(OmnipodDriverState state);
 
+    @Deprecated
     RxBusWrapper getRxBus();
 
 }
