@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.LongSparseArray;
-
-import androidx.annotation.RequiresApi;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
@@ -20,7 +17,6 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.AutotunePrep;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
@@ -34,7 +30,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -146,7 +141,7 @@ public class AutotunePlugin extends PluginBase {
                 aapsLogger, resourceHelper, injector
         );
         //create autotune subfolder for autotune files if not exists
-        FS.createAutotuneFolder();
+        AutotuneFS.createAutotuneFolder();
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.rxBus = rxBus;
@@ -302,6 +297,8 @@ public class AutotunePlugin extends PluginBase {
     }
 
     public void categorizeBGDatums(long from, long to) throws JSONException, ParseException, IOException {
+        log.debug("First version of categorizeBGDatums");
+
         // TODO: Although the data from NS should be sorted maybe we need to sort it
         // sortBGdata
         // sort treatments
@@ -608,7 +605,7 @@ public class AutotunePlugin extends PluginBase {
                     CRInitialIOB = iob.iob;
                     CRInitialBG = glucoseDatum.value;
                     CRInitialCarbTime = new Date(glucoseDatum.date);
-            //        log.debug("CRInitialIOB: "+CRInitialIOB+" CRInitialBG: "+CRInitialBG+" CRInitialCarbTime: "+CRInitialCarbTime.toString());
+                    log.debug("CRInitialIOB: "+CRInitialIOB+" CRInitialBG: "+CRInitialBG+" CRInitialCarbTime: "+CRInitialCarbTime.toString());
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if ( mealCOB > 0 && i>1 ) {
@@ -730,7 +727,7 @@ public class AutotunePlugin extends PluginBase {
             // debug line to print out all the things
 //            BGDateArray = BGDate.toString().split(" ");
 //            BGTime = BGDateArray[4];
-        //    log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+//            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 //        try {
@@ -1279,7 +1276,7 @@ public class AutotunePlugin extends PluginBase {
 
     public String result(int daysBack) throws IOException, ParseException {
         //clean autotune folder before run
-        FS.deleteAutotuneFiles();
+        AutotuneFS.deleteAutotuneFiles();
         lastRun = new Date(System.currentTimeMillis());
         int tunedISF = 0;
         double isfResult = 0;
@@ -1300,9 +1297,8 @@ public class AutotunePlugin extends PluginBase {
             endTime -= 24 * 60 * 60 * 1000L;
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
-        FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
+        AutotuneFS.createAutotunefile(AutotuneFS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
 
-        int toMgDl = 1;
         //Opts opts = new Opts(injector);
         Opts opts = new Opts();
         opts.categorize_uam_as_basal = sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false);
@@ -1317,14 +1313,14 @@ public class AutotunePlugin extends PluginBase {
         opts.pumpprofilename=profileFunction.getProfileName();
         autotuneResult = profile;
         try {
-            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2),true);
-            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2));
+            AutotuneFS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2),true);
+            AutotuneFS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2));
         } catch (JSONException e) {}
 
-        //todo remove once check if(sp.getString(R.string.key_units, "mg/dl").equals("mmol"))
+        int toMgDl = 1;
         if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
-        log.debug("AAPS units: " + profileFunction.getUnits() +" so divisor is "+toMgDl);
+        //log.debug("AAPS units: " + profileFunction.getUnits() +" so divisor is "+toMgDl);
 
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
@@ -1344,9 +1340,9 @@ public class AutotunePlugin extends PluginBase {
 
                 try {
                     //ns-entries files are for result compare with oref0 autotune on virtual machine
-                    FS.createAutotunefile("ns-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(2));
+                    AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(2));
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+                    AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(2).replace("\\/", "/"));
 
                     log.debug("Day "+i+" of "+daysBack);
 
@@ -1355,7 +1351,7 @@ public class AutotunePlugin extends PluginBase {
                     //AutotunePrep autotunePrep = new AutotunePrep();
                     autotunePrep.categorizeBGDatums(glucoseStart,glucoseEnd,opts); // line added for log and test
                     //PrepOutput prepOutput = autotunePrep.generate(opts);
-                    FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(2));
+                    AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(2));
 
                     tuneAllTheThings();
                 } catch (JSONException e) {
@@ -1413,7 +1409,7 @@ public class AutotunePlugin extends PluginBase {
             result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  |  "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
             result += line;
 
-            FS.createAutotunefile(FS.RECOMMENDATIONS,result);
+            AutotuneFS.createAutotunefile(AutotuneFS.RECOMMENDATIONS,result);
 
             // trying to create new profile ready for switch
             JSONObject json = new JSONObject();
@@ -1438,7 +1434,7 @@ public class AutotunePlugin extends PluginBase {
                 convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
                 convertedProfile.put("units", profileFunction.getUnits());
 
-                FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4).replace("\\/","/"));
+                AutotuneFS.createAutotunefile(AutotuneFS.profilName(null), convertedProfile.toString(4).replace("\\/","/"));
 
                 store.put(MainApp.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
@@ -1451,7 +1447,7 @@ public class AutotunePlugin extends PluginBase {
             }
 
             // zip all autotune files created during the run.
-            FS.zipAutotune(lastRun);
+            AutotuneFS.zipAutotune(lastRun);
 
             return result;
         } else
@@ -1512,6 +1508,18 @@ public class AutotunePlugin extends PluginBase {
         }
 
         return jsonString;
+    }
+
+    public double averageProfileValue(Profile.ProfileValue[] pf) {
+        double avgValue = 0;
+        int secondPerDay=24*60*60;
+        if (pf == null)
+            return avgValue;
+        for(int i = 0; i< pf.length;i++) {
+            avgValue+=pf[i].value*((i==pf.length -1 ? secondPerDay : pf[i+1].timeAsSeconds) -pf[i].timeAsSeconds);
+        }
+        avgValue/=secondPerDay;
+        return avgValue;
     }
 
     //todo replace round below by Round.roundTo function

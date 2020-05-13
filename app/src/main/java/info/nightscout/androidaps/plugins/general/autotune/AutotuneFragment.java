@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -43,6 +44,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     @Inject AutotunePlugin autotunePlugin;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
+    @Inject ProfileFunction profileFunction;
 
     public AutotuneFragment() {super();}
 
@@ -72,7 +74,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             tuneProfileSwitch.setOnClickListener(this);
 
             tune_days.setText(sp.getString(R.string.key_autotune_default_tune_days,"5"));
-            warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
+            warningView.setText(addWarnings());
             resultView.setText(AutotunePlugin.result);
             String latRunTxt = AutotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
@@ -174,6 +176,30 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
 
                 }
             });
+    }
+
+
+    //Todo add Strings and format text according to units
+    private String addWarnings() {
+        String warning = "";
+        String nl = "";
+        int toMgDl=1;
+        if(profileFunction.getUnits().equals("mmol"))
+            toMgDl = 18;
+        Profile profile = profileFunction.getProfile(System.currentTimeMillis());
+        if(profile.equals(null))
+            return "Non profile selected";
+        if (profile.getIcs().length>1) {
+            warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcs().length + " values. Average value is " + autotunePlugin.averageProfileValue(profile.getIcs()) + "g/U";
+            nl="\n";
+        }
+        if (profile.getIsfsMgdl().length>1) {
+            warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfsMgdl().length + " values. Average value is " + autotunePlugin.averageProfileValue(profile.getIsfsMgdl())/toMgDl + profileFunction.getUnits() + "/U";
+            nl="\n";
+        }
+
+
+        return warning;
     }
 
 }

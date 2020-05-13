@@ -1,22 +1,13 @@
-package info.nightscout.androidaps.plugins.general.autotune.AutotunePrep;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+package info.nightscout.androidaps.plugins.general.autotune;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,8 +16,6 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
@@ -45,20 +34,8 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin;
-import info.nightscout.androidaps.plugins.general.autotune.data.IobInputs;
-import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
-import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSTreatment;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
-import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
@@ -67,7 +44,9 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class AutotuneIob<from> {
+
+//Todo: Replace class below by a extended class of IobCobCalculatorPlugin (see IobCobStaticCalculatorPlugin in HistoryBrowser)
+public class AutotuneIob {
     private final HasAndroidInjector injector;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     @Inject ProfileFunction profileFunction;
@@ -80,33 +59,36 @@ public class AutotuneIob<from> {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private ArrayList<Treatment> treatments = new ArrayList<>();
+    public  ArrayList<Treatment> meals = new ArrayList<>();
     private Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
     private ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
+    private long from;
+    private long to;
 
     public AutotuneIob(
-            HasAndroidInjector injector,
+            //HasAndroidInjector injector,
             long from,
             long to
     ) {
-        this.injector=injector;
+        injector = MainApp.instance();
+        //this.injector=injector;
         injector.androidInjector().inject(this);
         initializeData(from,to);
-
     }
 
     private long range() {
         double dia = Constants.defaultDIA;
         if (profileFunction.getProfile() != null)
             dia = profileFunction.getProfile().getDia();
-        //Todo: Philoul Oref0 Autotune works with 6 hours, I prefer leave 6 hours mini for testing, maybe dia is a better setting
-        return (long) (60 * 60 * 1000L * Math.max(6 , dia));
+        return (long) (60 * 60 * 1000L * dia);
     }
 
-    //todo Philoul check consistency for treatments (treaments before oldest BG value are removed in categorize.js file
     private void initializeData(long from, long to) {
-        initializeTreatmentData(from, to);
+        this.from = from;
+        this.to = to;
+        initializeTreatmentData(from-range(), to);
         initializeTempBasalData(from-range(), to);
         initializeExtendedBolusData(from-range(), to);
         initializeTempTargetData(from, to);
@@ -117,6 +99,12 @@ public class AutotuneIob<from> {
         synchronized (treatments) {
             treatments.clear();
             treatments.addAll(treatmentsPlugin.getService().getTreatmentDataFromTime(from, to, false));
+            meals.clear();
+            for(int i = 0; i < treatments.size();i++) {
+                Treatment tp =  treatments.get(i);
+                if (tp.carbs > 0 && tp.date > from)
+                    meals.add(treatments.get(i));
+            }
         }
     }
 
@@ -147,15 +135,9 @@ public class AutotuneIob<from> {
     }
 
     public IobTotal getCalculationToTimeTreatments(long time) {
-        return getCalculationToTimeTreatments(time, null);
-    }
-
-    //Todo philoul check consistency with oref0-autotune detailled results
-    public IobTotal getCalculationToTimeTreatments(long time, Profile profile) {
         IobTotal total = new IobTotal(time);
 
-        if (profile == null)
-            profile = profileFunction.getProfile();
+        Profile profile = profileFunction.getProfile();
         if (profile == null)
             return total;
 
@@ -343,16 +325,10 @@ public class AutotuneIob<from> {
     }
 
     public IobTotal getAbsoluteIOBTempBasals(long time) {
-        return getAbsoluteIOBTempBasals( time, null);
-    }
-
-    //Todo philoul check consistency with oref0-autotune detailled results
-    public IobTotal getAbsoluteIOBTempBasals(long time, Profile profile) {
         IobTotal total = new IobTotal(time);
 
         for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
-            if (profile == null)
-                profile = profileFunction.getProfile(i);
+            Profile profile = profileFunction.getProfile(i);
 
             double basal = profile.getBasal(i);
             TemporaryBasal runningTBR = getTempBasalFromHistory(i);

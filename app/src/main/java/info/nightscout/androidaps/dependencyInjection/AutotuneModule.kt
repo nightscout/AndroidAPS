@@ -2,13 +2,20 @@ package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.general.autotune.FS
+import info.nightscout.androidaps.plugins.general.autotune.AutotuneCore
+import info.nightscout.androidaps.plugins.general.autotune.AutotuneIob
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep
+import info.nightscout.androidaps.plugins.general.autotune.AutotuneFS
 import info.nightscout.androidaps.plugins.general.autotune.data.*
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.*
 
 @Module
 @Suppress("unused")
 abstract class AutotuneModule {
+    @ContributesAndroidInjector abstract fun autoTunePrepInjector(): AutotunePrep
+    @ContributesAndroidInjector abstract fun autoTuneIobInjector(): AutotuneIob
+    @ContributesAndroidInjector abstract fun autoTuneCoreInjector(): AutotuneCore
+    @ContributesAndroidInjector abstract fun autoTuneFSInjector(): AutotuneFS
+
     @ContributesAndroidInjector abstract fun autoTuneBGDatumInjector(): BGDatum
     @ContributesAndroidInjector abstract fun autoTuneCRDatumInjector(): CRDatum
     @ContributesAndroidInjector abstract fun autoTuneIobInputsInjector(): IobInputs
@@ -16,9 +23,4 @@ abstract class AutotuneModule {
     @ContributesAndroidInjector abstract fun autoTuneOptsInjector(): Opts
     @ContributesAndroidInjector abstract fun autoTunePrepOutputInjector(): PrepOutput
     @ContributesAndroidInjector abstract fun autoTuneTunedProfileInjector(): TunedProfile
-    @ContributesAndroidInjector abstract fun autoTuneMealInjector(): Meal
-    @ContributesAndroidInjector abstract fun autoTunePrepInjector(): AutotunePrep
-    @ContributesAndroidInjector abstract fun autoTuneIobInjector(): AutotuneIob
-
-    @ContributesAndroidInjector abstract fun autoTuneFSInjector(): FS
 }

@@ -43,4 +43,16 @@ public class TunedProfile  {
         return profile;
     }
 
+    public static double averageProfileValue(Profile.ProfileValue[] pf) {
+        double avgValue = 0;
+        int secondPerDay=24*60*60;
+        if (pf == null)
+            return avgValue;
+        for(int i = 0; i< pf.length;i++) {
+            avgValue+=pf[i].value*((i==pf.length -1 ? secondPerDay : pf[i+1].timeAsSeconds) -pf[i].timeAsSeconds);
+        }
+        avgValue/=secondPerDay;
+        return avgValue;
+    }
+
 }

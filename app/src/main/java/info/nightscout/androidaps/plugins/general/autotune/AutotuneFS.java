@@ -17,7 +17,7 @@ import java.util.zip.ZipOutputStream;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.utils.DateUtil;
 
-public class FS {
+public class AutotuneFS {
     static final String logDirectory = LoggerUtils.getLogDirectory();
     static final int BUFFER_SIZE = 2048;
     static final String AUTOTUNEFOLDER = "autotune";
