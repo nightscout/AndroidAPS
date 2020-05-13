@@ -1,12 +1,8 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +20,8 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
-import info.nightscout.androidaps.plugins.general.autotune.data.IobInputs;
 import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
-import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
-import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin;
-import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
+import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -58,7 +50,7 @@ public class AutotunePrep {
         this.injector.androidInjector().inject(this);
     }
 
-    public PrepOutput categorizeBGDatums(long from, long to, Opts opts)  {
+    public PreppedGlucose categorizeBGDatums(long from, long to, Opts opts)  {
         long from_iob = from - 6 * 60 * 60 * 1000L;
         autotuneIob = new AutotuneIob(from,to);
 
@@ -89,11 +81,11 @@ public class AutotunePrep {
  //       iobInputs.history = opts.pumpHistory;
  //       iobInputs.treatments = opts.treatments;
  //       iobInputs.careportalEvents = opts.careportalEvents;
-        List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
-        List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
+        List<BGDatum> csfGlucoseData = new ArrayList<BGDatum>();
+        List<BGDatum> isfGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
-        List<BGDatum> UAMGlucoseData = new ArrayList<BGDatum>();
-        List<CRDatum> CRData = new ArrayList<CRDatum>();
+        List<BGDatum> uamGlucoseData = new ArrayList<BGDatum>();
+        List<CRDatum> crData = new ArrayList<CRDatum>();
 
         List<BGDatum> bucketedData = new ArrayList<BGDatum>();
         bucketedData.add(new BGDatum(glucoseData.get(0)));
@@ -146,12 +138,12 @@ public class AutotunePrep {
         boolean uam = false; // unannounced meal
         double mealCOB = 0d;
         double mealCarbs = 0;
-        double CRCarbs = 0;
+        double crCarbs = 0;
         String type = "";
 
-        double CRInitialIOB=0d;
-        double CRInitialBG=0d;
-        long CRInitialCarbTime=0L;
+        double crInitialIOB =0d;
+        double crInitialBG =0d;
+        long crInitialCarbTime =0L;
 
         //categorize.js#123
         // main for loop
@@ -183,7 +175,7 @@ public class AutotunePrep {
                 }
             }
 
-            double BG = 0;
+            double bg = 0;
             double avgDelta = 0;
 
             // TODO: re-implement interpolation to avoid issues here with gaps
@@ -191,12 +183,12 @@ public class AutotunePrep {
 
             if (bucketedData.get(i).value != 0 && bucketedData.get(i + 4).value != 0) {
                 //log.debug(bucketedData[i]);
-                BG = bucketedData.get(i).value;
-                if (BG < 40 || bucketedData.get(i + 4).value < 40) {
+                bg = bucketedData.get(i).value;
+                if (bg < 40 || bucketedData.get(i + 4).value < 40) {
                     //process.stderr.write("!");
                     continue;
                 }
-                avgDelta = (BG - bucketedData.get(i + 4).value) / 4;
+                avgDelta = (bg - bucketedData.get(i + 4).value) / 4;
 
             } else {
                 log.error("Could not find glucose data");
@@ -273,7 +265,7 @@ public class AutotunePrep {
             double deviation = avgDelta - BGI;
 
             // set positive deviations to zero if BG is below 80
-            if (BG < 80 && deviation > 0) {
+            if (bg < 80 && deviation > 0) {
                 deviation = 0;
             }
 
@@ -304,12 +296,12 @@ public class AutotunePrep {
             // Use entered carbs vs. starting IOB + delivered insulin + needed-at-end insulin to directly calculate CR.
             if (mealCOB > 0 || calculatingCR) {
                 // set initial values when we first see COB
-                CRCarbs += myCarbs;
+                crCarbs += myCarbs;
                 if (calculatingCR == false) {
-                    CRInitialIOB = iob.iob;
-                    CRInitialBG = glucoseDatum.value;
-                    CRInitialCarbTime = glucoseDatum.date;
-                    log.debug("CRInitialIOB: " + CRInitialIOB + " CRInitialBG: " + CRInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(CRInitialCarbTime));
+                    crInitialIOB = iob.iob;
+                    crInitialBG = glucoseDatum.value;
+                    crInitialCarbTime = glucoseDatum.date;
+                    log.debug("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime));
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -318,32 +310,32 @@ public class AutotunePrep {
                     calculatingCR = true;
                     // when COB=0 and IOB drops low enough, record end values and be done calculatingCR
                 } else {
-                    double CREndIOB = iob.iob;
-                    double CREndBG = glucoseDatum.value;
-                    long CREndTime = glucoseDatum.date;
-                    log.debug("CREndIOB: " + CREndIOB + " CREndBG: " + CREndBG + " CREndTime: " + CREndTime);
+                    double crEndIOB = iob.iob;
+                    double crEndBG = glucoseDatum.value;
+                    long crEndTime = glucoseDatum.date;
+                    log.debug("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + crEndTime);
 
                     CRDatum crDatum = new CRDatum();
-                    crDatum.CRInitialBG = CRInitialBG;
-                    crDatum.CRInitialIOB = CRInitialIOB;
-                    crDatum.CRInitialCarbTime = CRInitialCarbTime;
-                    crDatum.CREndBG = CREndBG;
-                    crDatum.CREndIOB = CREndIOB;
-                    crDatum.CREndTime = CREndTime;
+                    crDatum.crInitialBG = crInitialBG;
+                    crDatum.crInitialIOB = crInitialIOB;
+                    crDatum.crInitialCarbTime = crInitialCarbTime;
+                    crDatum.crEndBG = crEndBG;
+                    crDatum.crEndIOB = crEndIOB;
+                    crDatum.crEndTime = crEndTime;
                     //log.debug(CRDatum);
                     //String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime + ",   \"CRCarbs\": " + CRCarbs + "}";
                     log.debug("CRDatum is: " + crDatum.toString() );
 
-                    int CRElapsedMinutes = Math.round((CREndTime - CRInitialCarbTime) / (1000 * 60));
+                    int CRElapsedMinutes = Math.round((crEndTime - crInitialCarbTime) / (1000 * 60));
 
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if (CRElapsedMinutes < 60 || (i == 1 && mealCOB > 0)) {
                         log.debug("Ignoring " + CRElapsedMinutes + " m CR period.");
                     } else {
-                        CRData.add(crDatum);
+                        crData.add(crDatum);
                     }
 
-                    CRCarbs = 0;
+                    crCarbs = 0;
                     calculatingCR = false;
                 }
             }
@@ -372,12 +364,12 @@ public class AutotunePrep {
                 type = "csf";
                 glucoseDatum.mealCarbs = (int) mealCarbs;
                 //if (i == 0) { glucoseDatum.mealAbsorption = "end"; }
-                CSFGlucoseData.add(glucoseDatum);
+                csfGlucoseData.add(glucoseDatum);
             } else {
                 // check previous "type" value, and if it was csf, set a mealAbsorption end flag
                 if (type == "csf") {
-                    CSFGlucoseData.get(CSFGlucoseData.size() - 1).mealAbsorption = "end";
-                    log.debug(CSFGlucoseData.get(CSFGlucoseData.size() - 1).mealAbsorption + " carb absorption");
+                    csfGlucoseData.get(csfGlucoseData.size() - 1).mealAbsorption = "end";
+                    log.debug(csfGlucoseData.get(csfGlucoseData.size() - 1).mealAbsorption + " carb absorption");
                 }
 
                 if ((iob.iob > currentBasal || deviation > 6 || uam )) {
@@ -391,7 +383,7 @@ public class AutotunePrep {
                         log.debug(glucoseDatum.uamAbsorption + " unannnounced meal absorption");
                     }
                     type = "uam";
-                    UAMGlucoseData.add(glucoseDatum);
+                    uamGlucoseData.add(glucoseDatum);
                 } else {
                     if (type == "uam") {
                         log.debug("end unannounced meal absorption");
@@ -422,7 +414,7 @@ public class AutotunePrep {
                             basalGlucoseData.add(glucoseDatum);
                         } else {
                             type = "ISF";
-                            ISFGlucoseData.add(glucoseDatum);
+                            isfGlucoseData.add(glucoseDatum);
                         }
                     }
                 }
@@ -452,27 +444,27 @@ public class AutotunePrep {
         treatments = autotuneIob.getTreatmentsFromHistory();
 
 // categorize.js Lines 372-383
-        for (CRDatum crDatum : CRData) {
-            crDatum.CRInsulin = dosed(crDatum.CRInitialCarbTime,crDatum.CRInitialCarbTime,treatments);
+        for (CRDatum crDatum : crData) {
+            crDatum.crInsulin = dosed(crDatum.crInitialCarbTime,crDatum.crInitialCarbTime,treatments);
         }
 // categorize.js Lines 384-436
-        int CSFLength = CSFGlucoseData.size();
-        int ISFLength = ISFGlucoseData.size();
-        int UAMLength = UAMGlucoseData.size();
+        int CSFLength = csfGlucoseData.size();
+        int ISFLength = isfGlucoseData.size();
+        int UAMLength = uamGlucoseData.size();
         int basalLength = basalGlucoseData.size();
 
         if (opts.categorize_uam_as_basal) {
             log.debug("Categorizing all UAM data as basal.");
-            basalGlucoseData.addAll(UAMGlucoseData);
+            basalGlucoseData.addAll(uamGlucoseData);
         } else if (CSFLength > 12) {
             log.debug("Found at least 1h of carb absorption: assuming all meals were announced, and categorizing UAM data as basal.");
-            basalGlucoseData.addAll(UAMGlucoseData);
+            basalGlucoseData.addAll(uamGlucoseData);
         } else {
             if (2*basalLength < UAMLength) {
                 //log.debug(basalGlucoseData, UAMGlucoseData);
                 log.debug("Warning: too many deviations categorized as UnAnnounced Meals");
                 log.debug("Adding", UAMLength, "UAM deviations to", basalLength, "basal ones");
-                basalGlucoseData.addAll(UAMGlucoseData);
+                basalGlucoseData.addAll(uamGlucoseData);
                 //log.debug(basalGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
                 Collections.sort(basalGlucoseData, (o1, o2) -> (int) (o1.deviation - o2.deviation));
@@ -488,37 +480,37 @@ public class AutotunePrep {
 
             if (2*ISFLength < UAMLength) {
                 log.debug("Adding " + UAMLength + " UAM deviations to " + ISFLength + " ISF ones");
-                ISFGlucoseData.addAll(UAMGlucoseData);
+                isfGlucoseData.addAll(uamGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations to ISF, but then discard the highest 50%
-                Collections.sort(ISFGlucoseData, (o1, o2) -> (int) (o1.deviation - o2.deviation));
+                Collections.sort(isfGlucoseData, (o1, o2) -> (int) (o1.deviation - o2.deviation));
                 List<BGDatum> newISFGlucose = new ArrayList<BGDatum>();
-                for (int i = 0; i < ISFGlucoseData.size() / 2; i++) {
-                    newISFGlucose.add(ISFGlucoseData.get(i));
+                for (int i = 0; i < isfGlucoseData.size() / 2; i++) {
+                    newISFGlucose.add(isfGlucoseData.get(i));
                 }
                 //console.error(newISFGlucose);
-                ISFGlucoseData = newISFGlucose;
-                log.error("and selecting the lowest 50%, leaving" + ISFGlucoseData.size() + "ISF+UAM ones");
+                isfGlucoseData = newISFGlucose;
+                log.error("and selecting the lowest 50%, leaving" + isfGlucoseData.size() + "ISF+UAM ones");
                 //log.error(ISFGlucoseData.length, UAMLength);
             }
         }
         basalLength = basalGlucoseData.size();
-        ISFLength = ISFGlucoseData.size();
+        ISFLength = isfGlucoseData.size();
         if ( 4*basalLength + ISFLength < CSFLength && ISFLength < 10 ) {
             log.debug("Warning: too many deviations categorized as meals");
             //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
             //var basalGlucoseData = basalGlucoseData.concat(CSFGlucoseData);
             log.debug("Adding",CSFLength,"CSF deviations to",ISFLength,"ISF ones");
-            ISFGlucoseData.addAll(CSFGlucoseData);
-            CSFGlucoseData = new ArrayList<>();
+            isfGlucoseData.addAll(csfGlucoseData);
+            csfGlucoseData = new ArrayList<>();
         }
 
 // categorize.js Lines 437-444
-        log.debug("CRData: "+CRData.size());
-        log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
-        log.debug("ISFGlucoseData: "+ISFGlucoseData.size());
+        log.debug("CRData: "+crData.size());
+        log.debug("CSFGlucoseData: "+ csfGlucoseData.size());
+        log.debug("ISFGlucoseData: "+ isfGlucoseData.size());
         log.debug("BasalGlucoseData: "+basalGlucoseData.size());
 
-        return new PrepOutput(CRData, CSFGlucoseData, ISFGlucoseData, basalGlucoseData);
+        return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
     }
 
     //dosed.js full

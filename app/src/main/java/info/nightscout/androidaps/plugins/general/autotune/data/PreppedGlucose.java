@@ -10,19 +10,19 @@ import java.util.List;
 
 import info.nightscout.androidaps.utils.DateUtil;
 
-public class PrepOutput {
-    public List<CRDatum> CRData = new ArrayList<CRDatum>();
-    public List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
-    public List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
+public class PreppedGlucose {
+    public List<CRDatum> crData = new ArrayList<CRDatum>();
+    public List<BGDatum> csfGlucoseData = new ArrayList<BGDatum>();
+    public List<BGDatum> isfGlucoseData = new ArrayList<BGDatum>();
     public List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
 
     // to generate same king of json string than oref0-autotune-prep
     public String toString() { return toString(0); }
 
-    public PrepOutput (List<CRDatum> crData, List<BGDatum> csfGlucoseData, List<BGDatum> isfGlucoseData, List<BGDatum> basalGlucoseData) {
-        CRData = crData;
-        CSFGlucoseData=csfGlucoseData;
-        ISFGlucoseData=isfGlucoseData;
+    public PreppedGlucose(List<CRDatum> crData, List<BGDatum> csfGlucoseData, List<BGDatum> isfGlucoseData, List<BGDatum> basalGlucoseData) {
+        this.crData = crData;
+        this.csfGlucoseData =csfGlucoseData;
+        this.isfGlucoseData =isfGlucoseData;
         basalGlucoseData=basalGlucoseData;
     }
 
@@ -35,21 +35,21 @@ public class PrepOutput {
 
         try {
             JSONArray crjson = new JSONArray();
-            for (CRDatum crd : CRData ) {
+            for (CRDatum crd : crData) {
                 JSONObject crdjson = new JSONObject();
-                crdjson.put("CRInitialIOB",crd.CRInitialIOB);
-                crdjson.put("CRInitialBG",crd.CRInitialBG);
-                crdjson.put("CRInitialCarbTime", DateUtil.toISOAsUTC(crd.CRInitialCarbTime));
-                crdjson.put("CREndIOB",crd.CREndIOB);
-                crdjson.put("CREndBG",crd.CREndBG);
-                crdjson.put("CREndTime",DateUtil.toISOAsUTC(crd.CREndTime));
-                crdjson.put("CRCarbs",crd.CRCarbs);
-                crdjson.put("CRInsulin",crd.CRInsulin);
+                crdjson.put("CRInitialIOB",crd.crInitialIOB);
+                crdjson.put("CRInitialBG",crd.crInitialBG);
+                crdjson.put("CRInitialCarbTime", DateUtil.toISOAsUTC(crd.crInitialCarbTime));
+                crdjson.put("CREndIOB",crd.crEndIOB);
+                crdjson.put("CREndBG",crd.crEndBG);
+                crdjson.put("CREndTime",DateUtil.toISOAsUTC(crd.crEndTime));
+                crdjson.put("CRCarbs",crd.crCarbs);
+                crdjson.put("CRInsulin",crd.crInsulin);
                 crjson.put(crdjson);
             }
 
             JSONArray csfjson = new JSONArray();
-            for (BGDatum bgd:CSFGlucoseData) {
+            for (BGDatum bgd: csfGlucoseData) {
                 JSONObject bgdjson = new JSONObject();
                 bgdjson.put("_id",bgd._id);
                 bgdjson.put("date", bgd.date);
@@ -69,7 +69,7 @@ public class PrepOutput {
             }
 
             JSONArray isfjson = new JSONArray();
-            for (BGDatum bgd:ISFGlucoseData) {
+            for (BGDatum bgd: isfGlucoseData) {
                 JSONObject bgdjson = new JSONObject();
                 bgdjson.put("_id",bgd._id);
                 bgdjson.put("date", bgd.date);

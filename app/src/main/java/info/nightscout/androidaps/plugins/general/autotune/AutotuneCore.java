@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
@@ -8,7 +10,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
-import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
+import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class AutotuneCore {
@@ -22,7 +26,7 @@ public class AutotuneCore {
         injector.androidInjector().inject(this);
     }
 
-    public Profile tuneAllTheThings (PrepOutput inputs, Profile previousAutotune, Profile pumpProfile) {
+    public Profile tuneAllTheThings (PreppedGlucose preppedGlucose, Profile previousAutotune, Profile pumpProfile) {
 
         //var pumpBasalProfile = pumpProfile.basalprofile;
         Profile.ProfileValue[] pumpBasalProfile = pumpProfile.getBasalValues();
@@ -44,6 +48,11 @@ public class AutotuneCore {
             peak=55;
         else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK)
             peak=sp.getInt(R.string.key_insulin_oref_peak,75);
+
+        List<CRDatum> crData = preppedGlucose.crData;
+        List<BGDatum> csfGlucoseData = preppedGlucose.csfGlucoseData;
+        List<BGDatum> isfGlucoseData = preppedGlucose.isfGlucoseData;
+        List<BGDatum> basalGlucoseData = preppedGlucose.basalGlucoseData;
 
 
 

@@ -21,6 +21,6 @@ abstract class AutotuneModule {
     @ContributesAndroidInjector abstract fun autoTuneIobInputsInjector(): IobInputs
     @ContributesAndroidInjector abstract fun autoTuneNsTreatmentInjector(): NsTreatment
     @ContributesAndroidInjector abstract fun autoTuneOptsInjector(): Opts
-    @ContributesAndroidInjector abstract fun autoTunePrepOutputInjector(): PrepOutput
+    @ContributesAndroidInjector abstract fun autoTunePrepOutputInjector(): PreppedGlucose
     @ContributesAndroidInjector abstract fun autoTuneTunedProfileInjector(): TunedProfile
 }

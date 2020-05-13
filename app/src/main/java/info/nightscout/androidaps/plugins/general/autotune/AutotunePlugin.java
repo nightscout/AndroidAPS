@@ -20,7 +20,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
-import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
+import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -107,7 +107,7 @@ public class AutotunePlugin extends PluginBase {
     public static String result ="Press Run";
     public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
-    private PrepOutput prepOutput=null;
+    private PreppedGlucose preppedGlucose =null;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final Context context;
@@ -623,12 +623,12 @@ public class AutotunePlugin extends PluginBase {
                     String crDataString = "{\"CRInitialIOB\": "+CRInitialIOB+",   \"CRInitialBG\": "+CRInitialBG+",   \"CRInitialCarbTime\": "+CRInitialCarbTime.getTime()+",   \"CREndIOB\": " +CREndIOB+",   \"CREndBG\": "+CREndBG+",   \"CREndTime\": "+CREndTime.getTime()+",   \"CRCarbs\": "+CRCarbs+"}";
 //                    log.debug("CRData is: "+crDataString);
                     CRDatum crDatum = new CRDatum();
-                    crDatum.CRInitialBG = CRInitialBG;
-                    crDatum.CRInitialIOB = CRInitialIOB;
-                    crDatum.CRInitialCarbTime = CRInitialCarbTime.getTime();
-                    crDatum.CREndBG = CREndBG;
-                    crDatum.CREndIOB = CREndIOB;
-                    crDatum.CREndTime = CREndTime.getTime();
+                    crDatum.crInitialBG = CRInitialBG;
+                    crDatum.crInitialIOB = CRInitialIOB;
+                    crDatum.crInitialCarbTime = CRInitialCarbTime.getTime();
+                    crDatum.crEndBG = CREndBG;
+                    crDatum.crEndIOB = CREndIOB;
+                    crDatum.crEndTime = CREndTime.getTime();
                     //log.debug(CRDatum);
 
                     int CRElapsedMinutes = Math.round((CREndTime.getTime() - CRInitialCarbTime.getTime()) / (1000 * 60));
@@ -788,7 +788,7 @@ public class AutotunePlugin extends PluginBase {
             }
             CSFGlucoseData = new ArrayList<>();
         }
-        prepOutput = new PrepOutput(CRData,CSFGlucoseData,ISFGlucoseData,basalGlucoseData);
+        preppedGlucose = new PreppedGlucose(CRData,CSFGlucoseData,ISFGlucoseData,basalGlucoseData);
 
         //log.debug("CRData: "+CRData.size());
         //log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
@@ -883,17 +883,17 @@ public class AutotunePlugin extends PluginBase {
         double CRTotalInsulin = 0;
         List<CRDatum> CRDatum = new ArrayList<CRDatum>();
         for (int i=0; i<CRData.size()-1; i++) {
-                double CRBGChange = CRData.get(i).CREndBG - CRData.get(i).CRInitialBG;
+                double CRBGChange = CRData.get(i).crEndBG - CRData.get(i).crInitialBG;
                 double CRInsulinReq = CRBGChange / ISF;
-                double CRIOBChange = CRData.get(i).CREndIOB - CRData.get(i).CRInitialIOB;
-                CRData.get(i).CRInsulinTotal = CRData.get(i).CRInitialIOB + CRData.get(i).CRInsulin + CRInsulinReq;
+                double CRIOBChange = CRData.get(i).crEndIOB - CRData.get(i).crInitialIOB;
+                CRData.get(i).crInsulinTotal = CRData.get(i).crInitialIOB + CRData.get(i).crInsulin + CRInsulinReq;
                 //log.debug(CRDatum.CRInitialIOB, CRDatum.CRInsulin, CRInsulinReq, CRInsulinTotal);
-                double CR = Math.round(CRData.get(i).CRCarbs / CRData.get(i).CRInsulinTotal * 1000) / 1000;
+                double CR = Math.round(CRData.get(i).crCarbs / CRData.get(i).crInsulinTotal * 1000) / 1000;
                 //log.debug(CRBGChange, CRInsulinReq, CRIOBChange, CRInsulinTotal);
                 //log.debug("CRCarbs:",CRDatum.CRCarbs,"CRInsulin:",CRDatum.CRInsulinTotal,"CR:",CR);
-                if (CRData.get(i).CRInsulin > 0) {
-                    CRTotalCarbs += CRData.get(i).CRCarbs;
-                    CRTotalInsulin += CRData.get(i).CRInsulinTotal;
+                if (CRData.get(i).crInsulin > 0) {
+                    CRTotalCarbs += CRData.get(i).crCarbs;
+                    CRTotalInsulin += CRData.get(i).crInsulinTotal;
                 }
         }
 
@@ -1350,8 +1350,8 @@ public class AutotunePlugin extends PluginBase {
                     AutotunePrep autotunePrep = new AutotunePrep(injector);
                     //AutotunePrep autotunePrep = new AutotunePrep();
                     autotunePrep.categorizeBGDatums(glucoseStart,glucoseEnd,opts); // line added for log and test
-                    //PrepOutput prepOutput = autotunePrep.generate(opts);
-                    AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(2));
+                    //PreppedGlucose preppedGlucose = autotunePrep.generate(opts);
+                    AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", preppedGlucose.toString(2));
 
                     tuneAllTheThings();
                 } catch (JSONException e) {

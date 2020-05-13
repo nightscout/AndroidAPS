@@ -10,27 +10,27 @@ import info.nightscout.androidaps.utils.DateUtil;
  */
 
 public class CRDatum {
-    public double CRInitialIOB = 0d;
-    public double CRInitialBG = 0d;
-    public long CRInitialCarbTime = 0l;
-    public double CREndIOB = 0d;
-    public double CREndBG = 0d;
-    public long CREndTime = 0l;
-    public double CRCarbs = 0d;
-    public double CRInsulin = 0d;
-    public double CRInsulinTotal = 0d;
+    public double crInitialIOB = 0d;
+    public double crInitialBG = 0d;
+    public long crInitialCarbTime = 0l;
+    public double crEndIOB = 0d;
+    public double crEndBG = 0d;
+    public long crEndTime = 0l;
+    public double crCarbs = 0d;
+    public double crInsulin = 0d;
+    public double crInsulinTotal = 0d;
 
     public JSONObject toJSON() throws JSONException {
         JSONObject crjson = new JSONObject();
         try {
-            crjson.put("CRInitialIOB",CRInitialIOB);
-            crjson.put("CRInitialBG", (int) CRInitialBG);
-            crjson.put("CRInitialCarbTime",DateUtil.toISOString(CRInitialCarbTime));
-            crjson.put("CREndIOB",CREndIOB);
-            crjson.put("CREndBG", (int) CREndBG);
-            crjson.put("CREndTime", DateUtil.toISOString(CREndTime));
-            crjson.put("CRCarbs", (int) CRCarbs);
-            crjson.put("CRInsulin",CRInsulin);
+            crjson.put("CRInitialIOB", crInitialIOB);
+            crjson.put("CRInitialBG", (int) crInitialBG);
+            crjson.put("CRInitialCarbTime",DateUtil.toISOString(crInitialCarbTime));
+            crjson.put("CREndIOB", crEndIOB);
+            crjson.put("CREndBG", (int) crEndBG);
+            crjson.put("CREndTime", DateUtil.toISOString(crEndTime));
+            crjson.put("CRCarbs", (int) crCarbs);
+            crjson.put("CRInsulin", crInsulin);
         } catch (JSONException e) {}
         return crjson;
     }
