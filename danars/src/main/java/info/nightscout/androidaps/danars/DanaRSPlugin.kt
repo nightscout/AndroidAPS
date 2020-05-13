@@ -8,8 +8,8 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPumpInterface
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.dana.DanaPumpInterface
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -358,7 +358,13 @@ class DanaRSPlugin @Inject constructor(
             return result
         }
         if (doLowTemp || doHighTemp) {
-            var percentRate = java.lang.Double.valueOf(absoluteAfterConstrain / baseBasalRate * 100).toInt()
+            var percentRate = 0
+            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 mins. So if it's less than .10u/h, set a zero temp.
+            if (absoluteAfterConstrain >= 0.10) {
+                percentRate = java.lang.Double.valueOf(absoluteAfterConstrain / baseBasalRate * 100).toInt()
+            } else {
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Requested basal < 0.10u/h. Setting 0u/h (doLowTemp || doHighTemp)")
+            }
             percentRate = if (percentRate < 100) Round.ceilTo(percentRate.toDouble(), 10.0).toInt() else Round.floorTo(percentRate.toDouble(), 10.0).toInt()
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500

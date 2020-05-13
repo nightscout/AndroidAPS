@@ -201,8 +201,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
-        final boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d;
-        final boolean doLowTemp = absoluteRate < getBaseBasalRate();
+        final boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
+        final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
         final boolean doHighTemp = absoluteRate > getBaseBasalRate() && !useExtendedBoluses;
         final boolean doExtendedTemp = absoluteRate > getBaseBasalRate() && useExtendedBoluses;
 
@@ -232,6 +232,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
         if (doLowTemp || doHighTemp) {
             Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 mins. So if it's less than .10u/h, set a zero temp.
+            if (absoluteRate < 0.10d) percentRate = 0;
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
             if (percentRate > getPumpDescription().maxTempPercent) {
