@@ -757,6 +757,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_uploader?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
 
         // Sensitivity
+        if(sp.getBoolean(R.string.key_openapsama_useautosens, false))
+            overview_sensitivity_icon?.alpha=1F
+        else
+            overview_sensitivity_icon?.alpha=0.5F
         overview_sensitivity?.text =
             iobCobCalculatorPlugin.getLastAutosensData("Overview")?.let { autosensData ->
                 String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
