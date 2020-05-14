@@ -70,7 +70,6 @@ class BLEComm @Inject internal constructor(
         set(newValue) {
             bleEncryption.setEnhancedEncryption(newValue)
             field = newValue
-            danaPump.v3RSPump = newValue
         }
     private var isEasyMode: Boolean = false
     private var isUnitUD: Boolean = false
@@ -437,6 +436,7 @@ class BLEComm @Inject internal constructor(
         if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             v3Encryption = false
+            danaPump.v3RSPump = false
             // Grab pairing key from preferences if exists
             val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
@@ -450,6 +450,7 @@ class BLEComm @Inject internal constructor(
         } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
             // v3 2nd layer encryption
             v3Encryption = true
+            danaPump.v3RSPump = true
             rxBus.send(EventNewNotification(Notification(Notification.UNSUPPORTED_FIRMWARE, resourceHelper.gs(R.string.unsupportedfirmware), Notification.URGENT)))
             disconnect("Wrong firmware")
             /*
