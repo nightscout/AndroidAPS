@@ -4,10 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,6 +28,7 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
@@ -32,9 +38,11 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -46,7 +54,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
 
-//Todo: Replace class below by a extended class of IobCobCalculatorPlugin (see IobCobStaticCalculatorPlugin in HistoryBrowser)
+//Todo: Replace class below by a extended class of TreatmentsPlugin (see IobCobStaticCalculatorPlugin example in HistoryBrowser)
 public class AutotuneIob {
     private final HasAndroidInjector injector;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
@@ -59,8 +67,10 @@ public class AutotuneIob {
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    private ArrayList<NsTreatment> nsTreatments = new ArrayList<NsTreatment>();
     private ArrayList<Treatment> treatments = new ArrayList<>();
-    public  ArrayList<Treatment> meals = new ArrayList<>();
+    public ArrayList<Treatment> meals = new ArrayList<>();
+    public List<BgReading> glucose;
     private Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
@@ -89,11 +99,20 @@ public class AutotuneIob {
     private void initializeData(long from, long to) {
         this.from = from;
         this.to = to;
+        nsTreatments.clear();
+        initializeBgreadings(from, to);
         initializeTreatmentData(from-range(), to);
         initializeTempBasalData(from-range(), to);
         initializeExtendedBolusData(from-range(), to);
         initializeTempTargetData(from, to);
         initializeProfileSwitchData(from-range(), to);
+        //NsTreatment is used to export all "ns-treatments" for cross execution of oref0-autotune on a virtual machine
+        //it contains traitments, tempbasals and extendedbolus data (profileswitch data also included in ns-treatment files are not used by oref0-autotune)
+        Collections.sort(nsTreatments, (o1, o2) -> (int) (o2.date  - o1.date) );
+    }
+
+    private void initializeBgreadings(long from, long to) {
+        glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(from, to, false);
     }
 
     private void initializeTreatmentData(long from, long to) {
@@ -103,24 +122,34 @@ public class AutotuneIob {
             meals.clear();
             for(int i = 0; i < treatments.size();i++) {
                 Treatment tp =  treatments.get(i);
-                if (tp.carbs > 0 && tp.date > from)
+                nsTreatments.add(new NsTreatment(tp));
+                if (tp.carbs > 0 && tp.date >= from)
                     meals.add(treatments.get(i));
+            //only carbs after first BGReadings are taken into account in calculation of Autotune (I just have to check if I keep or not carbs after from and before first BGReadings)
+                else if (tp.carbs > 0 && tp.date < from)
+                    treatments.get(i).carbs = 0;
             }
         }
     }
 
     private void initializeTempBasalData(long from, long to) {
         synchronized (tempBasals) {
-            tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from, to, false));
+            List<TemporaryBasal> temp = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from, to, false);
+            for (TemporaryBasal tb: temp ) {
+                nsTreatments.add(new NsTreatment(tb));
+            }
+            tempBasals.reset().add(temp);
         }
-
     }
 
     private void initializeExtendedBolusData(long from, long to) {
         synchronized (extendedBoluses) {
-            extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(from, to, false));
+            List<ExtendedBolus> temp = MainApp.getDbHelper().getExtendedBolusDataFromTime(from, to, false);
+            for (ExtendedBolus eb: temp ) {
+                nsTreatments.add(new NsTreatment(eb));
+            }
+            extendedBoluses.reset().add(temp);
         }
-
     }
 
     private void initializeTempTargetData(long from, long to) {
@@ -134,6 +163,43 @@ public class AutotuneIob {
             profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(from, false));
         }
     }
+
+    // on each loop glucose containts only one day BG Value
+    public JSONArray glucosetoJSON()  {
+        JSONArray glucoseJson = new JSONArray();
+        Date now = new Date(System.currentTimeMillis());
+        int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(now,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(now)).getTime()) / (60 * 1000));
+        BgSourceInterface activeBgSource = activePlugin.getActiveBgSource();
+        //String device = activeBgSource.getClass().getTypeName();
+        try {
+            for (BgReading bgreading:glucose ) {
+                JSONObject bgjson = new JSONObject();
+                bgjson.put("_id",bgreading._id);
+                bgjson.put("device","AndroidAPS");
+                bgjson.put("date",bgreading.date);
+                bgjson.put("dateString", DateUtil.toISOString(bgreading.date));
+                bgjson.put("sgv",bgreading.value);
+                bgjson.put("direction",bgreading.direction);
+                bgjson.put("type","sgv");
+                bgjson.put("systime", DateUtil.toISOString(bgreading.date));
+                bgjson.put("utcOffset", utcOffset);
+                glucoseJson.put(bgjson);
+            }
+        } catch (JSONException e) {}
+        return glucoseJson;
+    }
+
+    public JSONArray nsHistorytoJSON() {
+        JSONArray json = new JSONArray();
+        for (NsTreatment t: nsTreatments ) {
+            if (t.isValid)
+                json.put(t.toJson());
+        }
+        return json;
+    }
+
+
+
 
     public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
