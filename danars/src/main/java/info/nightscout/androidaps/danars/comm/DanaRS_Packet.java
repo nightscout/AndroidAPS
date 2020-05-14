@@ -174,8 +174,6 @@ public class DanaRS_Packet {
     public String asciiStringFromBuff(byte[] buff, int offset, int length) {
         byte[] strbuff = new byte[length];
         System.arraycopy(buff, offset, strbuff, 0, length);
-        for (int pos = 0; pos < length; pos++)
-            strbuff[pos] += 65; // "A"
         return new String(strbuff, StandardCharsets.UTF_8);
     }
 

@@ -22,15 +22,9 @@ class DanaRS_Packet_General_Get_Shipping_Information(
             failed = true
             return
         } else failed = false
-        var dataIndex = DATA_START
-        var dataSize = 10
-        danaPump.serialNumber = stringFromBuff(data, dataIndex, dataSize)
-        dataIndex += dataSize
-        dataSize = 3
-        danaPump.shippingDate = dateFromBuff(data, dataIndex)
-        dataIndex += dataSize
-        dataSize = 3
-        danaPump.shippingCountry = asciiStringFromBuff(data, dataIndex, dataSize)
+        danaPump.serialNumber = stringFromBuff(data, DATA_START, 10)
+        danaPump.shippingCountry = asciiStringFromBuff(data, DATA_START + 10, 3)
+        danaPump.shippingDate = dateFromBuff(data, DATA_START + 13)
         aapsLogger.debug(LTag.PUMPCOMM, "Serial number: " + danaPump.serialNumber)
         aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + dateUtil.dateAndTimeString(danaPump.shippingDate))
         aapsLogger.debug(LTag.PUMPCOMM, "Shipping country: " + danaPump.shippingCountry)
