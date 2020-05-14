@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
@@ -22,7 +23,7 @@ public class AutotuneCore {
     private HasAndroidInjector injector;
 
     public AutotuneCore () {
-        injector = MainApp.instance();
+        injector = StaticInjector.Companion.getInstance();
         injector.androidInjector().inject(this);
     }
 

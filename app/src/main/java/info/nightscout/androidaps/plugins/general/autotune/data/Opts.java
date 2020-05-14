@@ -21,6 +21,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -60,7 +61,7 @@ public class Opts {
     public boolean ascending;
 
     public Opts() {
-        injector = MainApp.instance();
+        injector = StaticInjector.Companion.getInstance();
         injector.androidInjector().inject(this);
     }
 

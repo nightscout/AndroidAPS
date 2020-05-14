@@ -27,6 +27,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -72,7 +73,7 @@ public class AutotuneIob {
             long from,
             long to
     ) {
-        injector = MainApp.instance();
+        injector = StaticInjector.Companion.getInstance();
         //this.injector=injector;
         injector.androidInjector().inject(this);
         initializeData(from,to);
