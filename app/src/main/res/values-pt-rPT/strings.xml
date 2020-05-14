@@ -101,7 +101,7 @@
     <string name="constraints">Restrições</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Utilize isto para ativar a integração loop do AndroidAPS.</string>
+    <string name="configbuilder_loop_description">Utilize isto para activar a integração loop do AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Depois das restrições processadas</string>
     <string name="loop_tbrsetbypump_label">Basal temporária definida pela bomba</string>
@@ -112,7 +112,7 @@
     <string name="safety">Segurança</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
-    <string name="treatmentdeliveryerror">Erro na entrega do bolus</string>
+    <string name="treatmentdeliveryerror">Erro na administração do bólus</string>
     <string name="overview_newtempbasal_basalpercent">Valor da Basal [%]</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
@@ -169,10 +169,10 @@
     <string name="nav_import">Importar configurações</string>
     <string name="openapsma_maxbasal_title">Max U/hr em que uma Temp Basal pode ser definida</string>
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
-    <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
-    <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode dar de uma vez.</string>
-    <string name="password_preferences_encrypt_prompt">Será perguntado pela password mestre, que será usada para encriptar preferências exportadas.</string>
-    <string name="password_preferences_decrypt_prompt">Será perguntado pela password mestre, que será necessária para desencriptar preferências importadas.</string>
+    <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode administrar [U]</string>
+    <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode administrar de uma vez.</string>
+    <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestre, que será usada para encriptar preferências exportadas.</string>
+    <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
     <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
@@ -205,11 +205,11 @@
     <string name="prefdecrypt_settings_secure">Ficheiro de configurações é seguro</string>
     <string name="prefdecrypt_settings_unencrypted">A usar um formato de configurações não seguro e não encriptado</string>
     <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
-    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a password inserida não pode desencriptar o ficheiro</string>
+    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o ficheiro</string>
     <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
     <string name="prefdecrypt_issue_modified">Ficheiro foi modificado após exportação!</string>
     <string name="prefdecrypt_issue_parsing">Erro Desencriptação, a análise de preferências falhou!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a password é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Password Mestre diferente.</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestre diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <string name="exported_today">exportado hoje</string>
@@ -225,8 +225,8 @@
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_allowednumbers">Número de telefones permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode">Para dar bolus %1$.2fU responder com código %2$s</string>
-    <string name="smscommunicator_mealbolusreplywithcode">Para dar bólus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_bolusreplywithcode">Para administrar bólus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Para administrar bólus %1$.2fU responder com código %2$s</string>
     <string name="smscommunicator_temptargetwithcode">Para definir o Alvo Tempo %1$s responda com o código %2$s</string>
     <string name="smscommunicator_temptargetcancel">Para cancelar Alvo Temp responda com o código %1$s</string>
     <string name="smscommunicator_stopsmswithcode">Para desactivar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reactivar directamente apenas a partir do telemóvel mestre do AAPS.</string>
@@ -236,10 +236,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência você precisa adicionar pelo menos 2 números de telefone.</string>
-    <string name="bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
-    <string name="bolusrequested">Vai ser enviado %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
-    <string name="smscommunicator_mealbolusdelivered">Bólus de refeição %1$.2fU entregue com sucesso</string>
+    <string name="bolusdelivered">Bólus %1$.2fU administrado com êxito</string>
+    <string name="bolusrequested">A ser administrado %1$.2fU</string>
+    <string name="smscommunicator_bolusdelivered">Bólus %1$.2fU administrado com êxito</string>
+    <string name="smscommunicator_mealbolusdelivered">Bólus de refeição %1$.2fU administrado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
     <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
     <string name="smscommunicator_tt_canceled">Alvo Temp cancelado com êxito</string>
@@ -381,14 +381,14 @@
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Insira NS API secret (min 12 caract.)</string>
-    <string name="deliver_now">Entregar agora</string>
+    <string name="deliver_now">Administrar agora</string>
     <string name="clear_queue">Limpar fila de espera</string>
     <string name="show_queue">Mostrar file de espera</string>
     <string name="queue">Fila de espera:</string>
     <string name="status">Estado:</string>
     <string name="paused">Em pausa</string>
     <string name="clearlog">Limpar Registo</string>
-    <string name="nowritepermission">Cliente NS sem permissões para alterar dados. Tem a senha API correta?</string>
+    <string name="nowritepermission">NSCliente sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="wear_settings">Definições Wear</string>
     <string name="wear_detailedIOB_title">Mostrar IOB detalhada</string>
     <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
@@ -500,7 +500,7 @@
     <string name="virtualpump_extendedbolus_label_short">PROL</string>
     <string name="keep_screen_on_title">Manter ecrã ligado</string>
     <string name="keep_screen_on_summary">Impedir Android de desligar o ecrã. Isto irá consumir muita bateria quando não ligado ao carregador.</string>
-    <string name="sensitivity_warning">Ao activar a função Autosense lembre-se de introduzir todos os hidratos de carbono (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
+    <string name="sensitivity_warning">Ao activar a função Autosense lembre-se de introduzir todos os hidratos de carbono (carbs) que comeu. Caso contra contrário os desvios de hidratos serão erroneamente identificados como uma variação da sensibilidade !!</string>
     <string name="sensitivityweightedaverage">Média ponderada da Sensibilidade</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Cancelar</string>
@@ -558,7 +558,7 @@
     <string name="info">INFO</string>
     <string name="eversense">Aplicação Eversense (com patch)</string>
     <string name="dexcomg5_nsupload_title">Enviar dados Glic. para NS</string>
-    <string name="bgsource_upload">Configurações de upload de BG</string>
+    <string name="bgsource_upload">Configurações de upload de Glic</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="smbinterval_summary">Com que frequência em min os SMBs serão dados</string>
@@ -618,10 +618,10 @@
     <string name="combo_notification_check_time_date">Necesário actualizar relógio da bomba</string>
     <string name="combo_warning">Aviso</string>
     <string name="combo_pump_tbr_cancelled_warrning">Basal Temporária CANCELADA. O aviso foi confirmado</string>
-    <string name="combo_error_no_connection_no_bolus_delivered">Não foi possivel establecer comunicação com a bomba. Nenhum bolus foi administrado.</string>
-    <string name="combo_error_no_bolus_delivered">Administração de bolus falhou. Nenhum bolus parece ter sido administrado. Para confirmar, por favor verifique a bomba de forma a evitar uma dupla administração de bolus e programe novamente o bolus. De forma a evitar qualquer problema, os bolus não são reprogramados de forma automatica.</string>
-    <string name="combo_error_partial_bolus_delivered">Apenas %1$.2f U do bolus de %2$.2f U foi injectado de devido a um erro. Por favor verifique a bomba e tome as medidas necessárias.</string>
-    <string name="combo_error_bolus_verification_failed">A injeção do bolus e a verificação do histórico da bomba falharam, por favor verifique a bomba. Se o bolus foi injetado será adicionado ao histórico de tratamentos durante a próxima conexão com a bomba.</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Não foi possível estabelecer comunicação com a bomba. Nenhum bólus foi administrado</string>
+    <string name="combo_error_no_bolus_delivered">Administração de bólus falhou. Nenhum bólus parece ter sido administrado. Para confirmar, por favor verifique a bomba de forma a evitar uma dupla administração de bólus e programe novamente o bólus. De forma a evitar qualquer problema, os bólus não são reprogramados de forma automática.</string>
+    <string name="combo_error_partial_bolus_delivered">Apenas %1$.2f U do bólus de %2$.2f U foi administrado devido a um erro. Por favor verifique a bomba e tome as medidas necessárias.</string>
+    <string name="combo_error_bolus_verification_failed">A administrar o bólus e a verificação do histórico da bomba falharam, por favor verifique a bomba. Se o bólus foi administrado será adicionado ao histórico de tratamentos durante a próxima ligação com a bomba.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Não há insulina suficiente no reservatório para bolus</string>
     <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <string name="insightpump_shortname">Visão</string>
@@ -678,8 +678,8 @@
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
     <string name="not_eng_mode_or_release">Modo de engenharia não habilitado e não no na versão mestra</string>
     <string name="combo_actvity_reading_basal_profile">A ler perfil basal</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">O histórico da bomba foi alterado após o cálculo do bolo ter sido realizado. O bolus não foi injectado. Por favor, verifique se bolus ainda é necessário.</string>
-    <string name="combo_error_updating_treatment_record">O bolus foi injectado, mas não foi possível adicionar ao histórico. Isto é possível se dois bolus do mesmo valor baixo foram administrados nos últimos dois minutos. Por favor verifique o histórico da bomba e use o Careportal para adicionar os dados em falta caso necessário. Cuidado para não adicionar dados com o mesmo valor no mesmo minuto.</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">O histórico da bomba foi alterado após o cálculo do bolo ter sido realizado. O bólus não foi administrado. Por favor, verifique se bólus ainda é necessário.</string>
+    <string name="combo_error_updating_treatment_record">O bólus foi administrado, mas não foi possível adicionar ao histórico. Isto é possível se dois bólus do mesmo valor baixo foram administrados nos últimos dois minutos. Por favor verifique o histórico da bomba e use o Careportal para adicionar os dados em falta caso necessário. Cuidado para não adicionar dados com o mesmo valor no mesmo minuto.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">A rejeitar a temporal alta uma vez que o cálculo não considerou as mudanças do histórico da bomba</string>
     <string name="combo_activity_checking_pump_state">A actualizar estado bomba</string>
     <string name="combo_warning_pump_basal_rate_changed">O rácio da basal foi alterado na bomba e vai ser actualizado em breve</string>
@@ -688,7 +688,7 @@
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Bólus múltiplos, com a mesma quantidade e no mesmo minuto acabaram de ser importados. Apenas um registo pôde ser adicionado aos tratamentos. Por favor confirma na bomba e adicione o registo de bólus manualmente, utilizando o separador do Careportal. Tenha em atenção que deve criar um bólus com um tempo em que nã oexistem outros registos de bólus.</string>
     <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">O último bólus tem mais de 24 horas ou está no futuro. Por favor verifique se a data está definida correctamente na bomba.</string>
-    <string name="combo_suspious_bolus_time">Hora/data da entrega do bólus na bomba parece errado, IOB aparentemente está incorrecto. Verifique hora/data na bomba.</string>
+    <string name="combo_suspious_bolus_time">Hora/data da administração do bólus na bomba parece errado, IOB aparentemente está incorrecto. Verifique hora/data na bomba.</string>
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em PerfilLocal.</string>
     <string name="combo_bolus_count">Contagem Bólus</string>
     <string name="combo_tbr_count">Contagem DBT</string>
@@ -701,7 +701,7 @@
     <string name="uamdisabledoref1notselected">UAM desactivado porque confia no plugin de sensibilidade Oref1</string>
     <string name="maxbasalmultiplier">multiplicador de basal máx</string>
     <string name="maxdailybasalmultiplier">multiplicador de basal máx diária</string>
-    <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
+    <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
     <string name="basal_set_correctly">Basal correctamente definida</string>
     <string name="limitingextendedbolus">A limitar bólus prolongado para %1$.1f U porque %2$s</string>
     <string name="limitingmaxiob">A limitar IOB máx. para %1$.1f U porque %2$s</string>
@@ -711,7 +711,7 @@
     <string name="hardlimit">limite rígido</string>
     <string name="unsafeusage">uso não seguro</string>
     <string name="readstatusfailed">Erro na leitura de estado</string>
-    <string name="record_pump_site_change">Registar mudança de sítio</string>
+    <string name="record_pump_site_change">Registar mudança local bomba</string>
     <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicemia activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
@@ -757,8 +757,8 @@
     <string name="ns_autobackfill_title">Preenchimentoauto Glicemia</string>
     <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
-    <string name="wear_display_settings">Mostrar Configurações</string>
-    <string name="wear_general_settings">Configurações gerais</string>
+    <string name="wear_display_settings">Configurações Ecrã</string>
+    <string name="wear_general_settings">Configurações Gerais</string>
     <string name="enable_nsclient">Activar NSCliente</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="pumpsetup">Configurações da bomba</string>
@@ -836,14 +836,14 @@
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU entregue</string>
+    <string name="insight_delivered">%1$.2fU / %2$.2fU administado</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo mudado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="confirm">Confirmar</string>
     <string name="mute_alert">Silêncio</string>
     <string name="pump_alert">Alerta da Bomba</string>
-    <string name="log_site_changes">Registar alterações de local</string>
+    <string name="log_site_changes">Registar mudanças de local</string>
     <string name="log_reservoir_changes">Número de unidades do reservatório alteradas</string>
     <string name="log_tube_changes">Registar alterações de tubo</string>
     <string name="log_battery_changes">Registar mudanças de bateria</string>
@@ -942,8 +942,8 @@
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
     <string name="title_tidepool_username">Nome de Utilizador</string>
-    <string name="summary_tidepool_password">Palavra-passe da conta Tidepool</string>
-    <string name="title_tidepool_password">Palavra-passe</string>
+    <string name="summary_tidepool_password">Senha da conta Tidepool</string>
+    <string name="title_tidepool_password">Senha Login</string>
     <string name="title_tidepool_test_login">Teste de Conta Tidepool</string>
     <string name="summary_tidepool_dev_servers">Se activado, envio será para https://int-app.tidepool.org em vez do habitual https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Usar servidores de integração (teste)</string>
@@ -1141,8 +1141,8 @@
     <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler o DBT actual.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Não foi possível cancelar o DBT actual. A parar a operação.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Falhou Definir Perfil devido aos seguintes padrões, tem uma taxa de basal muito grande: %1$s</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered">O bólus não pôde ser entregue.</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bólus não foi entregue, porque o quantidade de insulina disponível (%1$.2f) é menor que o bólus necessário (%2$.2f).</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">O bólus não pôde ser administrado.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bólus não foi administado, porque o quantidade de insulina disponível (%1$.2f) é menor que o bólus necessário (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">DBT não pode ser definido.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Não foi possível cancelar o DBT actual.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Perfil Basal não pôde ser definido.</string>
@@ -1168,8 +1168,8 @@
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
-    <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
-    <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
+    <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
+    <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é administada. Útil com o algoritmo SMB.</string>
     <string name="loading">A carregar ...</string>
     <string name="snooze">Silenciar</string>
     <string name="time_range">Intervalo de tempo</string>
@@ -1247,9 +1247,9 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">a partir da app Autenticador para: %1$s</string>
     <string name="smscommunicator_otp_enabled">Activar Autenticador</string>
-    <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Password-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
+    <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Senha-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
     <string name="smscommunicator_otp_pin">PIN adicional no token final</string>
-    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
+    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_otp_verify_label">OTP para verificar:</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
@@ -1258,7 +1258,7 @@
     <string name="smscommunicator_otp_reset_successful">Nova Chave do Autenticador foi gerada! Por favor, use o QRCode actualizado para os autenticadores.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Pesquise o código para configurar os códigos OTP do AndroidAPS</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Teste Uma-Password-Única</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
     <string name="smscommunicator_otp_provisioning_warning">NÃO PARTILHE este código online!\nUse-o apenas para a instalação da app Autenticador nos telefones seguidores.</string>
@@ -1269,9 +1269,9 @@
     <string name="overview_show_deviationslope">Desvio de inclinação</string>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="overview_show_absinsulin">Insulina absoluta</string>
-    <string name="master_password_summary">Password Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
-    <string name="passwords_dont_match">As passwords não coincidem</string>
-    <string name="current_master_password">Password Mestre actual</string>
+    <string name="master_password_summary">Senha Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
+    <string name="passwords_dont_match">As senhas não coincidem</string>
+    <string name="current_master_password">Senha Mestre actual</string>
     <string name="statuslights">Luzes de Estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="copyexistingvalues">Copiar definições do NS (se existir)?</string>
@@ -1280,11 +1280,13 @@
     <string name="skin">Tema gráfico</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod">Integração de bomba para Omnipod, requer RileyLink (com pelo menos firmware 2.0) dispositivo.</string>
     <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Beep Bólus Activado</string>
-    <string name="omnipod_config_beep_basal_enabled">Beep Basal Activado</string>
-    <string name="omnipod_config_beep_smb_enabled">Beep SMB Activado</string>
-    <string name="omnipod_config_beep_tbr_enabled">Beep DBT Activado</string>
+    <string name="omnipod_config_beep_bolus_enabled">Sinal Bólus Activado</string>
+    <string name="omnipod_config_beep_basal_enabled">Sinal Basal Activado</string>
+    <string name="omnipod_config_beep_smb_enabled">Sinal SMB Activado</string>
+    <string name="omnipod_config_beep_tbr_enabled">Sinal DBT Activado</string>
+    <string name="omnipod_config_pod_debugging_options_enabled">Opções de Depuração do Pod habilitadas</string>
     <string name="omnipod_config_timechange_enabled">Detecção de DST/Fuso Horário Activado</string>
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Gestão Pod</string>
@@ -1301,8 +1303,27 @@
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">A operação não é possível.\n\n Precisa de esperar alguns minutos, até que AAPS tente definir o perfil para a primeira vez.</string>
+    <string name="omnipod_error_illegal_init_action_type">PodInitActionType Ilegal: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Nenhum Pod Activo.</string>
     <string name="omnipod_driver_error_setup_action_verification_failed">A verificação do comando falhou.</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Ocorreu um erro inesperado. Por favor reporte! (digite: %1$s).</string>
+    <string name="omnipod_driver_error_invalid_parameters">Falha na comunicação: foram recebidos parâmetros de entrada inválidos.</string>
+    <string name="omnipod_driver_error_communication_failed_timeout">Falha na comunicação: tempo limite.</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Falha na comunicação: ocorreu um erro inesperado. Por favor, reporte!</string>
+    <string name="omnipod_driver_error_crc_mismatch">Falha na comunicação: mensagem de falha de verificação de integridade.</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Falha na comunicação: recebeu um pacote inválido do Pod.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Falha na comunicação: o Pod está em um estado errado.</string>
+    <string name="omnipod_driver_error_invalid_response">Falha na comunicação: recebeu uma resposta inválida do Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_sequence_number">Falha na comunicação: recebeu uma mensagem com número de sequência inválido do Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_address">Falha na comunicação: recebeu uma mensagem com um endereço inválido do Pod.</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Falha na comunicação: falha ao descodificar a mensagem do Pod.</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Falha na comunicação: nonce resync falhou.</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Falha na comunicação: nonce fora de sincronização.</string>
+    <string name="omnipod_driver_error_not_enough_data">Falha na comunicação: não há dados suficientes recebidos do Pod.</string>
+    <string name="omnipod_driver_error_pod_fault">Uma falha de Pod (%1$03d %2$s) foi detectada. Por favor, desactive o Pod e inicie um novo.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">Falha na comunicação: o Pod devolveu uma resposta de erro.</string>
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_mgmt_title">Gestão Pod</string>
     <string name="omnipod_cmd_init_pod">Iniciar Pod</string>
@@ -1326,19 +1347,29 @@
     <string name="omnipod_cmd_bolus_value">%1$.1f U</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, HC=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Taxa: %1$.1f U, Duração: %2$d min</string>
+    <string name="omnipod_cmd_reset_pod_desc">Se pressionar <b>OK</b>, o estado do Pod vai ser forçado a redefinir e você não será capaz de comunicar mais com o Pod. Faça isso somente se você não pode comunicar mais com o Pod. Se ainda pode comunicar com o Pod, por favor, use o <b>Desactivar Pod</b> opção.</string>
+    <string name="omnipod_cmd_pod_history_na">Histórico do Pod não disponível no momento.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Encher o Pod</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nPreencher o novo Pod com insulina suficiente para 3 dias.\n\nOuvir dois sinais sonoros a partir do Pod durante o processo de enchimento. Isso indica que a quantidade mínima de 85U foi inserida. Certifique-se de esvaziar completamente a seringa, mesmo depois de ouvir dois sinais sonoros.\n\nDepois de preencher o Pod, por favor, pressione <b>Próximo</b>.\n\n<b>Nota:</b> não remova a tampa da agulha do Pod neste momento.</string>
     <string name="omnipod_init_pod_wizard_step2_title">A Purgar</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">A tentar emparelhar com o novo Pod e purgá-lo.\n\nQuando todos os itens forem verificados, pode pressionar <b>Próximo</b>.\n\n<b>Nota:</b> por favor, mantenha o Pod muito perto do RileyLink neste momento.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Anexar o Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e fixe o Pod no local de infusão.\n\nSe a canula sair, por favor, pressione <b>Cancelar</b> e descarte o seu Pod.\n\nPressione <b>Próximo</b> para inserir a canula e começar a administração da basal.</string>
     <string name="omnipod_init_pod_wizard_step4_title">A inserir canula</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">A tentar definir um plano da basal inicial e inserir canula.\n\nQuando todos os itens estiverem verificados, pode pressionar <b>Próximo</b>.</string>
     <string name="omnipod_init_pod_wizard_pod_info_title">Info Pod</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nO Pod está agora activo.\n\nO seu plano de basal foi programado e a canula foi inserida.\n\nPor favor, verifique se a canula foi inserida correctamente e substitua o seu Pod se você se sente que não.</string>
     <string name="omnipod_remove_pod_wizard_step1_title">Desactivar Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nPressione <b>Próximo</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">A Desactivar Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">A desactivar o Pod.\n\nQuando todos os itens forem verificados, pode pressionar <b>Próximo</b>.\n\n<b>Nota:</b> Se desactivar falhar continuamente, por favor, pressione <b>Cancelar</b> e use o <b>Repor Pod</b> opção para forçar a repor o estado do Pod.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
     <string name="omnipod_init_pod_pair_pod">Emparelhar Pod</string>
     <string name="omnipod_init_pod_prime_pod">Purgar Pod</string>
     <string name="omnipod_init_pod_fill_cannula">Enchimento de Canula</string>
     <string name="omnipod_init_pod_set_basal_profile">Definir Perfil Basal</string>
     <string name="omnipod_deactivate_pod_cancel_delivery">Cancelar Administração</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Desacitvar Pod</string>
+    <string name="omnipod_deactivate_pod_deactivate_pod">Desactivar Pod</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
     <string name="description_pump_omnipod_dash">Integração da Bomba para Omnipod Dash.</string>
@@ -1349,6 +1380,10 @@
     <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
     <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>
     <string name="omnipod_alert_unknown_alert">Alerta desconhecido</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Pode ter falhado ao definir perfil da basal. A administração pode estar suspensa! Por favor, actualize o estado do Pod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">Pode ter falhado ao definir basal temporária. Se houve uma basal temporária já em execução, pode ter sido cancelada! Por favor, actualize o estado do Pod.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Pode ter falhado ao definir a hora. A administração pode estar suspensa! Por favor, actualize o estado do Pod.</string>
+    <string name="omnipod_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem-sucedido. Por favor, verifique se o Pod está administrar ou cancelar o bólus.</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
     <string name="omnipod_read_pulse_log_short">Registo de Pulse</string>
 </resources>

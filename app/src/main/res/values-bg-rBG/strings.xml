@@ -346,6 +346,7 @@
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
+    <string name="notavailable">---</string>
     <string name="patientage">Възраст на потребителя</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
@@ -991,6 +992,7 @@
     <string name="rileylink_scanner_scanning">Сканиране</string>
     <string name="rileylink_scanner_scanning_finished">Завършено сканиране</string>
     <string name="rileylink_scanner_scanning_error">Грешка при сканиране: %1$d</string>
+    <string name="common_never">Никога</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
@@ -1170,6 +1172,7 @@
     <string name="loop_tbrrequest_time_label">Диапазон между временни базали</string>
     <string name="loop_tbrexecution_time_label">Продължителност на временни базали</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="overview_show_predictions">Прогнозни КЗ</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <!-- Omnipod Configuration -->
@@ -1177,6 +1180,10 @@
     <!-- Omnipod - Dialogs -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_set_bolus">Стартирай болус</string>
+    <string name="omnipod_cmd_set_tbr">Приложи временен базал</string>
+    <string name="omnipod_init_pod_set_basal_profile">Приложи базалният профил</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
+    <string name="omnipod_alert_low_reservoir">Минимален инсулин в резервоара</string>
 </resources>
