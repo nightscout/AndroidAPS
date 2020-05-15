@@ -485,11 +485,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_iobgraph.removeAllViews()
             for (i in 1 until numOfGraphs) {
                 val label = TextView(context)
-                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -50) }
+                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -90) }
                 overview_iobgraph.addView(label)
                 secondaryGraphsLabel.add(label)
                 val graph = GraphView(context)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, 0, 0, resourceHelper.dpToPx(10)) }
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(5), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
@@ -776,6 +776,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_uploader?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
 
         // Sensitivity
+        if (sp.getBoolean(R.string.key_openapsama_useautosens, false)) {
+            overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
+        }else {
+            overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert_48px_green)
+        }
+
         overview_sensitivity?.text =
             iobCobCalculatorPlugin.getLastAutosensData("Overview")?.let { autosensData ->
                 String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
