@@ -597,6 +597,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
+                    bolusMessage.setVibration(sp.getBoolean("insight_disable_vibration",false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -820,6 +821,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             bolusMessage.setDuration(durationInMinutes);
             bolusMessage.setExtendedAmount(insulin);
             bolusMessage.setImmediateAmount(0);
+            bolusMessage.setVibration(sp.getBoolean("insight_disable_vibration",false));
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
             InsightBolusID insightBolusID = new InsightBolusID();
             insightBolusID.bolusID = bolusID;
