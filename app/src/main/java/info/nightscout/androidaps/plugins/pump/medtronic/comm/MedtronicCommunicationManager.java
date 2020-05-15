@@ -552,7 +552,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     // All pump communications go through this function.
     protected PumpMessage sendAndListen(RLMessage msg, int timeout_ms) throws RileyLinkCommunicationException {
-        return sendAndListen(msg, timeout_ms);
+        return (PumpMessage) super.sendAndListen(msg, timeout_ms);
     }
 
 

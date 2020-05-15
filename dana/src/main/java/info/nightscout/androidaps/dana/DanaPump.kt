@@ -222,7 +222,7 @@ class DanaPump @Inject constructor(
         get() = password == sp.getInt(R.string.key_danar_password, -2)
 
     val isRSPasswordOK: Boolean
-        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true)
+        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true) || v3RSPump
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
