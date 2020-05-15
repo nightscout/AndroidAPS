@@ -391,15 +391,21 @@ public class AutotuneIob {
         return total;
     }
 
+    // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
+    // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
+    // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
     public IobTotal getAbsoluteIOBTempBasals(long time) {
         IobTotal total = new IobTotal(time);
+        Profile profile = profileFunction.getProfile(time);
+
+        double running = profile.getBasal(time);
+        running += profile.getBasal(time-1*60*60*1000);
+        running += profile.getBasal(time-2*60*60*1000);
+        running += profile.getBasal(time-3*60*60*1000);
+        running = Round.roundTo(running/4,0.001);
 
         for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
-            Profile profile = profileFunction.getProfile(i);
-
-            double basal = profile.getBasal(i);
             TemporaryBasal runningTBR = getTempBasalFromHistory(i);
-            double running = basal;
             if (runningTBR != null) {
                 running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
             }

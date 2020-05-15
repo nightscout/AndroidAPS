@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
@@ -53,6 +55,12 @@ public class AutotunePrep {
     public PreppedGlucose categorizeBGDatums(long from, long to, Opts opts)  {
         long from_iob = from - 6 * 60 * 60 * 1000L;
         autotuneIob = new AutotuneIob(from,to);
+        try {
+            //ns-entries files are for result compare with oref0 autotune on virtual machine
+            AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
+            //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
+            AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+        } catch (JSONException e) {}
 
         List<Treatment> treatments = autotuneIob.meals;
         // this sorts the treatments collection in order.
@@ -75,12 +83,6 @@ public class AutotunePrep {
         int boluses = 0;
         int maxCarbs = 0;
 
- //       IobInputs iobInputs = new IobInputs();
- //       iobInputs.profile = new TunedProfile(opts.profile);
-        // pumpHistory of oref0 are splitted in pumpHistory (for temp basals or extended bolus) and treatments (for bolus, meal bolus or correction carbs)
- //       iobInputs.history = opts.pumpHistory;
- //       iobInputs.treatments = opts.treatments;
- //       iobInputs.careportalEvents = opts.careportalEvents;
         List<BGDatum> csfGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> isfGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
@@ -161,15 +163,11 @@ public class AutotunePrep {
             Treatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
             double myCarbs = 0;
             if (treatment != null) {
-
                 if (treatment.date < BGTime) {
                     if (treatment.carbs >= 1) {
-                        // Here I parse Integers not float like the original source categorize.js#136
-
                         mealCOB += treatment.carbs;
                         mealCarbs += treatment.carbs;
                         myCarbs = treatment.carbs;
-
                     }
                     treatments.remove(treatments.size()-1);
                 }
@@ -200,42 +198,14 @@ public class AutotunePrep {
             //sens = ISF
             double sens = profileData.getIsfMgdl(BGTime);
             //log.debug("ISF data = " + sens);
-//            iobInputs.clock=BGTime;
-            // trim down IOBInputs.history to just the data for 6h prior to BGDate
-            //log.debug(IOBInputs.history[0].created_at);
-//            List<NsTreatment> newHistory = new ArrayList<NsTreatment>();
-/*
-            for (int h = 0; h < fullHistory.size(); h++) {
-                long hDate = fullHistory.get(h).date;
-                //log.debug(fullHistory[i].created_at, hDate, BGDate, BGDate-hDate);
-                //if (h == 0 || h == fullHistory.length - 1) {
-                //log.debug(hDate, BGDate, hDate-BGDate)
-                //}
-                if (BGTime - hDate < 6 * 60 * 60 * 1000 && BGTime - hDate > 0) {
-                    //process.stderr.write("i");
-                    //log.debug(hDate);
-                    newHistory.add(fullHistory.get(h));
-                }
-            }
-            iobInputs.history = newHistory;
-*/
-            // process.stderr.write("" + newHistory.length + " ");
-            //log.debug(newHistory[0].created_at,newHistory[newHistory.length-1].created_at,newHistory.length);
 
             // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
             // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
             // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
-            double currentPumpBasal = opts.pumpprofile.getBasal(BGTime);
-            //log.debug("Basal Rate = " + currentPumpBasal);
-            double basal1hAgo = opts.pumpprofile.getBasal(BGTime-1*60*60*1000);
-            double basal2hAgo = opts.pumpprofile.getBasal(BGTime-2*60*60*1000);
-            double basal3hAgo = opts.pumpprofile.getBasal(BGTime-3*60*60*1000);
-
-            double sum = currentPumpBasal + basal1hAgo + basal2hAgo + basal3hAgo;
-//            iobInputs.profile.currentBasal = Round.roundTo(sum/4 , 0.001);
+            //Philoul oref0-autotune doesn't use profile switch information, I think current bg profile is better for iob calculation
+            //This part of code moved to AutotuneIob in getAbsoluteIOBTempBasals function
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            //double currentBasal = AutotunePlugin.getBasal(hourOfDay);
             double currentBasal = profileData.getBasal(BGTime);
 
             //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
@@ -245,16 +215,12 @@ public class AutotunePrep {
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
 //****************************************************************************************************************************************
-            //todo Calculate iob or check initial proposition below
             //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
-            IobTotal iob;
-            //log.debug(JSON.stringify(iob));
-
             IobTotal bolusIob = autotuneIob.getCalculationToTimeTreatments(BGTime).round();
             IobTotal basalIob = autotuneIob.getAbsoluteIOBTempBasals(BGTime).round();
-            iob = IobTotal.combine(bolusIob, basalIob).round();
-            log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
+            IobTotal iob = IobTotal.combine(bolusIob, basalIob).round();
+            //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
             //log.debug("treatmentsPlugin Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
             // activity times ISF times 5 minutes is BGI
@@ -273,15 +239,15 @@ public class AutotunePrep {
             deviation = Round.roundTo(deviation, 0.01);
             glucoseDatum.deviation = deviation;
 
-
+            
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
                 Profile profile;
-                if (profileFunction.getProfile() == null) {
+                if (profileFunction.getProfile(BGTime) == null) {
                     log.debug("No profile selected");
                     return null;
                 }
-                profile = profileFunction.getProfile();
+                profile = profileFunction.getProfile(BGTime);
                 double ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
                 double absorbed = ci * profile.getIc() / sens;
                 // Store the COB, and use it as the starting point for the next data point.
@@ -429,12 +395,8 @@ public class AutotunePrep {
 //        iobInputs.profile = new TunedProfile(opts.profile);
 //        iobInputs.history = opts.pumpHistory;
 //        iobInputs.treatments = opts.treatments;
-        // todo: var find_insulin = require('../iob/history');
-
-
         //treatments = autotuneIob.find_insulin(iobInputs);
 //****************************************************************************************************************************************
-        log.debug("end find_insulin");
         /* Code template for IOB calculation trom tempBasal Object
         IobTotal iob = new IobTotal(now);
         Profile profile = ProfileFunctions.getInstance().getProfile(now);
@@ -453,7 +415,7 @@ public class AutotunePrep {
         int UAMLength = uamGlucoseData.size();
         int basalLength = basalGlucoseData.size();
 
-        if (opts.categorize_uam_as_basal) {
+        if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
             log.debug("Categorizing all UAM data as basal.");
             basalGlucoseData.addAll(uamGlucoseData);
         } else if (CSFLength > 12) {
@@ -510,7 +472,161 @@ public class AutotunePrep {
         log.debug("ISFGlucoseData: "+ isfGlucoseData.size());
         log.debug("BasalGlucoseData: "+basalGlucoseData.size());
 
+
+/* bloc below is for --tune-insulin-curve not developed for the moment
+        if (inputs.tune_insulin_curve) {
+            if (opts.profile.curve === 'bilinear') {
+                console.error('--tune-insulin-curve is set but only valid for exponential curves');
+            } else {
+                var minDeviations = 1000000;
+                var newDIA = 0;
+                var diaDeviations = [];
+                var peakDeviations = [];
+                var currentDIA = opts.profile.dia;
+                var currentPeak = opts.profile.insulinPeakTime;
+
+                var consoleError = console.error;
+                console.error = function() {};
+
+                var startDIA=currentDIA - 2;
+                var endDIA=currentDIA + 2;
+                for (var dia=startDIA; dia <= endDIA; ++dia) {
+                    var sqrtDeviations = 0;
+                    var deviations = 0;
+                    var deviationsSq = 0;
+
+                    opts.profile.dia = dia;
+
+                    var curve_output = categorize(opts);
+                    var basalGlucose = curve_output.basalGlucoseData;
+
+                    for (var hour=0; hour < 24; ++hour) {
+                        for (var i=0; i < basalGlucose.length; ++i) {
+                            var BGTime;
+
+                            if (basalGlucose[i].date) {
+                                BGTime = new Date(basalGlucose[i].date);
+                            } else if (basalGlucose[i].displayTime) {
+                                BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
+                            } else if (basalGlucose[i].dateString) {
+                                BGTime = new Date(basalGlucose[i].dateString);
+                            } else {
+                                consoleError("Could not determine last BG time");
+                            }
+
+                            var myHour = BGTime.getHours();
+                            if (hour === myHour) {
+                                //console.error(basalGlucose[i].deviation);
+                                sqrtDeviations += Math.pow(parseFloat(Math.abs(basalGlucose[i].deviation)), 0.5);
+                                deviations += Math.abs(parseFloat(basalGlucose[i].deviation));
+                                deviationsSq += Math.pow(parseFloat(basalGlucose[i].deviation), 2);
+                            }
+                        }
+                    }
+
+                    var meanDeviation = Math.round(Math.abs(deviations/basalGlucose.length)*1000)/1000;
+                    var SMRDeviation = Math.round(Math.pow(sqrtDeviations/basalGlucose.length,2)*1000)/1000;
+                    var RMSDeviation = Math.round(Math.pow(deviationsSq/basalGlucose.length,0.5)*1000)/1000;
+                    consoleError('insulinEndTime', dia, 'meanDeviation:', meanDeviation, 'SMRDeviation:', SMRDeviation, 'RMSDeviation:',RMSDeviation, '(mg/dL)');
+                    diaDeviations.push({
+                            dia: dia,
+                            meanDeviation: meanDeviation,
+                            SMRDeviation: SMRDeviation,
+                            RMSDeviation: RMSDeviation,
+        });
+                    autotune_prep_output.diaDeviations = diaDeviations;
+
+                    deviations = Math.round(deviations*1000)/1000;
+                    if (deviations < minDeviations) {
+                        minDeviations = Math.round(deviations*1000)/1000;
+                        newDIA = dia;
+                    }
+                }
+
+                // consoleError('Optimum insulinEndTime', newDIA, 'mean deviation:', Math.round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
+                //consoleError(diaDeviations);
+
+                minDeviations = 1000000;
+
+                var newPeak = 0;
+                opts.profile.dia = currentDIA;
+                //consoleError(opts.profile.useCustomPeakTime, opts.profile.insulinPeakTime);
+                if ( ! opts.profile.useCustomPeakTime === true && opts.profile.curve === "ultra-rapid" ) {
+                    opts.profile.insulinPeakTime = 55;
+                } else if ( ! opts.profile.useCustomPeakTime === true ) {
+                    opts.profile.insulinPeakTime = 75;
+                }
+                opts.profile.useCustomPeakTime = true;
+
+                var startPeak=opts.profile.insulinPeakTime - 10;
+                var endPeak=opts.profile.insulinPeakTime + 10;
+                for (var peak=startPeak; peak <= endPeak; peak=(peak+5)) {
+                    sqrtDeviations = 0;
+                    deviations = 0;
+                    deviationsSq = 0;
+
+                    opts.profile.insulinPeakTime = peak;
+
+
+                    curve_output = categorize(opts);
+                    basalGlucose = curve_output.basalGlucoseData;
+
+                    for (hour=0; hour < 24; ++hour) {
+                        for (i=0; i < basalGlucose.length; ++i) {
+                            if (basalGlucose[i].date) {
+                                BGTime = new Date(basalGlucose[i].date);
+                            } else if (basalGlucose[i].displayTime) {
+                                BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
+                            } else if (basalGlucose[i].dateString) {
+                                BGTime = new Date(basalGlucose[i].dateString);
+                            } else {
+                                consoleError("Could not determine last BG time");
+                            }
+
+                            myHour = BGTime.getHours();
+                            if (hour === myHour) {
+                                //console.error(basalGlucose[i].deviation);
+                                sqrtDeviations += Math.pow(parseFloat(Math.abs(basalGlucose[i].deviation)), 0.5);
+                                deviations += Math.abs(parseFloat(basalGlucose[i].deviation));
+                                deviationsSq += Math.pow(parseFloat(basalGlucose[i].deviation), 2);
+                            }
+                        }
+                    }
+                    console.error(deviationsSq);
+
+                    meanDeviation = Math.round(deviations/basalGlucose.length*1000)/1000;
+                    SMRDeviation = Math.round(Math.pow(sqrtDeviations/basalGlucose.length,2)*1000)/1000;
+                    RMSDeviation = Math.round(Math.pow(deviationsSq/basalGlucose.length,0.5)*1000)/1000;
+                    consoleError('insulinPeakTime', peak, 'meanDeviation:', meanDeviation, 'SMRDeviation:', SMRDeviation, 'RMSDeviation:',RMSDeviation, '(mg/dL)');
+                    peakDeviations.push({
+                            peak: peak,
+                            meanDeviation: meanDeviation,
+                            SMRDeviation: SMRDeviation,
+                            RMSDeviation: RMSDeviation,
+        });
+                    autotune_prep_output.diaDeviations = diaDeviations;
+
+                    deviations = Math.round(deviations*1000)/1000;
+                    if (deviations < minDeviations) {
+                        minDeviations = Math.round(deviations*1000)/1000;
+                        newPeak = peak;
+                    }
+                }
+
+                //consoleError('Optimum insulinPeakTime', newPeak, 'mean deviation:', Math.round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
+                //consoleError(peakDeviations);
+                autotune_prep_output.peakDeviations = peakDeviations;
+
+                console.error = consoleError;
+            }
+        }
+        */
+
+
         return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
+
+        // and later
+        // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);
     }
 
     //dosed.js full

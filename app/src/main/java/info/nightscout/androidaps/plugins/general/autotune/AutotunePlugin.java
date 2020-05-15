@@ -89,6 +89,7 @@ public class AutotunePlugin extends PluginBase {
     private static AutotunePlugin tuneProfile = null;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     private static Profile profile;
+    private static Profile pumpProfile;
     private static List<Double> basalsResult = new ArrayList<Double>();
     private static List<Treatment> treatments;
     private List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
@@ -115,9 +116,13 @@ public class AutotunePlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private AutotunePrep autotunePrep;
+    private AutotuneCore autotuneCore;
+
     private final SP sp;
     public final HasAndroidInjector injector;
 
+    //Todo add Inject if possible AutotunePrep and AutotuneCore... I don't know how to do that easily :-(
     @Inject
     public AutotunePlugin(
             HasAndroidInjector injector,
@@ -1274,22 +1279,14 @@ public class AutotunePlugin extends PluginBase {
         return autotuneOutput.toString();
     }
 
+
+    //Todo add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
     public String result(int daysBack) throws IOException, ParseException {
         //clean autotune folder before run
         AutotuneFS.deleteAutotuneFiles();
-        lastRun = new Date(System.currentTimeMillis());
-        int tunedISF = 0;
-        double isfResult = 0;
-        basalsResultInit();
-        long now = System.currentTimeMillis();
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(now );
-        c.set(Calendar.HOUR_OF_DAY, 4);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
 
-        //long endTime = c.getTimeInMillis();
+        long now = System.currentTimeMillis();
+        lastRun = new Date(System.currentTimeMillis());
         // Today at 4 AM
         long endTime = DateUtil.toTimeMinutesFromMidnight(now, 4*60);
         // Check if 4 AM is before now
@@ -1298,6 +1295,11 @@ public class AutotunePlugin extends PluginBase {
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
         AutotuneFS.createAutotunefile(AutotuneFS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
+
+
+        int tunedISF = 0;
+        double isfResult = 0;
+        basalsResultInit();
 
         //Opts opts = new Opts(injector);
         Opts opts = new Opts();
@@ -1340,17 +1342,16 @@ public class AutotunePlugin extends PluginBase {
 
                 try {
                     //ns-entries files are for result compare with oref0 autotune on virtual machine
-                    AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(2));
+                    //AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(2));
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                    AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+                    //AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(2).replace("\\/", "/"));
 
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-                    AutotunePrep autotunePrep = new AutotunePrep(injector);
+                    autotunePrep = new AutotunePrep(injector);
                     //AutotunePrep autotunePrep = new AutotunePrep();
-                    autotunePrep.categorizeBGDatums(glucoseStart,glucoseEnd,opts); // line added for log and test
-                    //PreppedGlucose preppedGlucose = autotunePrep.generate(opts);
+                    preppedGlucose = autotunePrep.categorizeBGDatums(glucoseStart,glucoseEnd,opts); // line added for log and test
                     AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", preppedGlucose.toString(2));
 
                     tuneAllTheThings();
@@ -1466,7 +1467,6 @@ public class AutotunePlugin extends PluginBase {
                 basalsResult.set(i, 0d);
             }
         }
-
     }
 
     private String settings (Date runDate, int nbDays, Date firstloopstart, Date lastloopend) {
