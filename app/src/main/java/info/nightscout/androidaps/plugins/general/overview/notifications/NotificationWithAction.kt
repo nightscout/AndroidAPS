@@ -57,7 +57,7 @@ class NotificationWithAction constructor(
                 id = NSURGENTALARM
                 level = URGENT
                 text = nsAlarm.title()
-                if (nsAlarm.low() && sp.getBoolean(R.string.key_nsalarm_low, false) || nsAlarm.high() && sp.getBoolean(R.string.key_nsalarm_high, false) || nsAlarm.timeago() && sp.getBoolean(R.string.key_nsalarm_staledata, false)) soundId = R.raw.urgentalarm
+                if (nsAlarm.low() && sp.getBoolean(R.string.key_nsalarm_urgent_low, false) || nsAlarm.high() && sp.getBoolean(R.string.key_nsalarm_urgent_high, false) || nsAlarm.timeago() && sp.getBoolean(R.string.key_nsalarm_staledata, false)) soundId = R.raw.urgentalarm
             }
         }
         buttonText = R.string.snooze
