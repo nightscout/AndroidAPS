@@ -18,6 +18,7 @@ import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class TunedProfile  {
@@ -28,6 +29,7 @@ public class TunedProfile  {
     public double currentBasal;
     @Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
+    @Inject ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
 
 
@@ -109,7 +111,7 @@ public class TunedProfile  {
                 json.put("curve","rapid-acting");
             else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
                 json.put("curve", "bilinear");
-                json.put("insulinpeaktime",sp.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
+                json.put("insulinpeaktime",sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75));
             }
 
         } catch (JSONException e) {}

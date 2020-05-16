@@ -31,6 +31,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -45,6 +46,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     @Inject SP sp;
     @Inject DateUtil dateUtil;
     @Inject ProfileFunction profileFunction;
+    @Inject ResourceHelper resourceHelper;
 
     public AutotuneFragment() {super();}
 
@@ -90,7 +92,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
 // disabled by philoul to build AAPS
 // @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
-        String name = MainApp.gs(R.string.autotune_tunedprofile_name);
+        String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
         ProfileStore store = nsProfilePlugin.getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
@@ -125,7 +127,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             String latRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
-            String name = MainApp.gs(R.string.autotune_tunedprofile_name);
+            String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
             ProfileStore profile = null;
             log.debug("ProfileSwitch pressed");
             /*todo Profile management to update

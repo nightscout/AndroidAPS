@@ -5,14 +5,18 @@ import org.json.JSONObject;
 
 import java.security.PublicKey;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class NsTreatment {
     //Common properties
@@ -40,13 +44,14 @@ public class NsTreatment {
     public boolean isAbsolute;
     public ExtendedBolus extendedBolus;
     private String origin;
-
+    @Inject ResourceHelper resourceHelper;
     //CarePortalEvents
     public CareportalEvent careportalEvent;
     public String json;
 
 
     public NsTreatment(Treatment t) {
+        StaticInjector.Companion.getInstance().androidInjector().inject(this);
         treatment = t;
         _id=t._id;
         date=t.date;
@@ -66,6 +71,7 @@ public class NsTreatment {
     }
 
     public NsTreatment (CareportalEvent t) {
+        StaticInjector.Companion.getInstance().androidInjector().inject(this);
         careportalEvent = t;
         _id=t._id;
         date=t.date;
@@ -78,10 +84,12 @@ public class NsTreatment {
 
 
     public NsTreatment (TemporaryBasal t) {
+        StaticInjector.Companion.getInstance().androidInjector().inject(this);
         temporaryBasal=t;
         _NsTreatment(t);
     }
     public NsTreatment(ExtendedBolus t) {
+        StaticInjector.Companion.getInstance().androidInjector().inject(this);
         extendedBolus = t;
         _NsTreatment(new TemporaryBasal(t));
     }
@@ -93,7 +101,7 @@ public class NsTreatment {
         isValid=t.isValid;
         isEndingEvent=t.isEndingEvent();
         eventType = CareportalEvent.TEMPBASAL;
-        enteredBy = "openaps://" + MainApp.gs(R.string.app_name);
+        enteredBy = "openaps://" + resourceHelper.gs(R.string.app_name);
         duration = t.getRealDuration();
         percentRate = t.percentRate;
         isFakeExtended = t.isFakeExtended;

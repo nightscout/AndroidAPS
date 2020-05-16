@@ -29,6 +29,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.general.autotune.data.*;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -1419,7 +1420,7 @@ public class AutotunePlugin extends PluginBase {
             int basalIncrement = 60 * 60;
 
             try {
-                json.put("defaultProfile", MainApp.gs(R.string.autotune_tunedprofile_name));
+                json.put("defaultProfile", resourceHelper.gs(R.string.autotune_tunedprofile_name));
                 json.put("store", store);
                 convertedProfile.put("dia", profile.getDia());
                 convertedProfile.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
@@ -1437,7 +1438,7 @@ public class AutotunePlugin extends PluginBase {
 
                 AutotuneFS.createAutotunefile(AutotuneFS.profilName(null), convertedProfile.toString(4).replace("\\/","/"));
 
-                store.put(MainApp.gs(R.string.autotune_tunedprofile_name), convertedProfile);
+                store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
                 //sp.putString("autotuneprofile", profileStore.getData().toString());
                 //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));

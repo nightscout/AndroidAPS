@@ -64,6 +64,7 @@ public class AutotuneIob {
     @Inject ActivePluginProvider activePlugin;
     @Inject DateUtil dateUtil;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject NSUpload nsUpload;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -552,7 +553,7 @@ public class AutotuneIob {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         //rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
-        NSUpload.uploadProfileSwitch(profileSwitch);
+        nsUpload.uploadProfileSwitch(profileSwitch);
     }
 
     public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {

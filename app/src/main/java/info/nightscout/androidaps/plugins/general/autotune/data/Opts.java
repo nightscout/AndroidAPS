@@ -30,7 +30,9 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.general.autotune.data.*;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
@@ -55,7 +57,7 @@ public class Opts {
     @Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject TreatmentsPlugin treatmentsPlugin;
-//    @Inject public info.nightscout.androidaps.utils.sharedPreferences.SP sp;
+    @Inject ResourceHelper resourceHelper;
 
     private final HasAndroidInjector injector;
     public boolean ascending;
@@ -223,7 +225,7 @@ public class Opts {
                 json.put("curve","rapid-acting");
             else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
                 json.put("curve", "bilinear");
-                json.put("insulinpeaktime",sp.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
+                json.put("insulinpeaktime",sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75));
             }
 
         } catch (JSONException e) {}
