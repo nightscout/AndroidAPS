@@ -22,7 +22,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class TunedProfile  {
-    private Profile profile;
+    public Profile profile;
     public String profilename;
     private Profile.ProfileValue pv;
     private static List basalsResult = new ArrayList<>();
@@ -74,9 +74,10 @@ public class TunedProfile  {
         return avgValue;
     }
 
-    public JSONObject profiletoOrefJSON()  {
+    public String profiletoOrefJSON()  {
         // Create a json profile with oref0 format
         // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
+        String jsonString = "";
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject convertedProfile = new JSONObject();
@@ -113,10 +114,11 @@ public class TunedProfile  {
                 json.put("curve", "bilinear");
                 json.put("insulinpeaktime",sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75));
             }
+            jsonString= json.toString(2);
 
         } catch (JSONException e) {}
 
-        return json;
+        return jsonString;
     }
 
     public static void basalsResultInit(){

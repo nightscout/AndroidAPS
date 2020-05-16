@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
+import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -44,6 +45,7 @@ public class AutotunePrep {
     private final HasAndroidInjector injector;
     private AutotuneIob autotuneIob;
 
+
     @Inject
     public AutotunePrep(
             HasAndroidInjector injector
@@ -52,14 +54,16 @@ public class AutotunePrep {
         this.injector.androidInjector().inject(this);
     }
 
-    public PreppedGlucose categorizeBGDatums(long from, long to, Opts opts)  {
-        long from_iob = from - 6 * 60 * 60 * 1000L;
+    public PreppedGlucose categorizeBGDatums(long from, long to, TunedProfile tunedprofile)  {
         autotuneIob = new AutotuneIob(from,to);
+
         try {
             //ns-entries files are for result compare with oref0 autotune on virtual machine
             AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
+            autotunePlugin.atLog("Create ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
             //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
             AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+            autotunePlugin.atLog("Create ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
         } catch (JSONException e) {}
 
         List<Treatment> treatments = autotuneIob.meals;
@@ -67,7 +71,7 @@ public class AutotunePrep {
         //Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
 
         log.debug("Nb of meals: " + treatments.size() + " Nb of treatments: " + autotuneIob.getTreatmentsFromHistory().size() + " Nb of TempBasals: " + autotuneIob.getTemporaryBasalsFromHistory().size() + " Nb of ExtBol:" + autotuneIob.getExtendedBolusesFromHistory().size());
-        Profile profileData = opts.profile;
+        Profile profileData = tunedprofile.profile;
 
         List<BgReading> glucose=MainApp.getDbHelper().getBgreadingsDataFromTime(from,to, false);
 
@@ -131,7 +135,7 @@ public class AutotunePrep {
         log.debug("Treatments size: " + treatments.size());
 */
         if (treatments.size() < 1) {
-            log.debug("No treatments");
+            autotunePlugin.atLog("No treatments");
             return null;
         }
 
@@ -267,7 +271,7 @@ public class AutotunePrep {
                     crInitialIOB = iob.iob;
                     crInitialBG = glucoseDatum.value;
                     crInitialCarbTime = glucoseDatum.date;
-                    log.debug("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime));
+                    autotunePlugin.atLog("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime));
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -325,7 +329,7 @@ public class AutotunePrep {
                 //log.debug(type);
                 if (type.equals("csf") == false) {
                     glucoseDatum.mealAbsorption = "start";
-                    log.debug(glucoseDatum.mealAbsorption + " carb absorption");
+                    autotunePlugin.atLog(glucoseDatum.mealAbsorption + " carb absorption");
                 }
                 type = "csf";
                 glucoseDatum.mealCarbs = (int) mealCarbs;
@@ -346,13 +350,13 @@ public class AutotunePrep {
                     }
                     if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start";
-                        log.debug(glucoseDatum.uamAbsorption + " unannnounced meal absorption");
+                        autotunePlugin.atLog(glucoseDatum.uamAbsorption + " unannnounced meal absorption");
                     }
                     type = "uam";
                     uamGlucoseData.add(glucoseDatum);
                 } else {
                     if (type == "uam") {
-                        log.debug("end unannounced meal absorption");
+                        autotunePlugin.atLog("end unannounced meal absorption");
                     }
 
 
@@ -388,7 +392,7 @@ public class AutotunePrep {
             // debug line to print out all the things
 //            BGDateArray = BGDate.toString().split(" ");
 //            BGTime = BGDateArray[4];
-            log.debug((absorbing?1:0)+" mealCOB: "+Math.round(mealCOB)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            autotunePlugin.atLog((absorbing?1:0)+" mealCOB: "+Math.round(mealCOB)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
         log.debug("end of loop bucket");
 

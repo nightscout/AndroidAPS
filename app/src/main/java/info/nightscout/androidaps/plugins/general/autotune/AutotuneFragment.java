@@ -110,17 +110,11 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         if (id == R.id.tune_run) {
 
             int daysBack = Integer.parseInt(tune_days.getText().toString());
-            if (daysBack > 0)
+            if (daysBack > 0) {
 //            resultView.setText(autotune.bgReadings(daysBack));
-                try {
-                    resultView.setText(autotunePlugin.result(daysBack));
-                    tuneProfileSwitch.setVisibility(View.VISIBLE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            else
+                resultView.setText(autotunePlugin.result(daysBack));
+                tuneProfileSwitch.setVisibility(View.VISIBLE);
+            } else
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");

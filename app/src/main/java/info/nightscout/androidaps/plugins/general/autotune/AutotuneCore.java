@@ -14,6 +14,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
+import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class AutotuneCore {
@@ -27,22 +28,22 @@ public class AutotuneCore {
         injector.androidInjector().inject(this);
     }
 
-    public Profile tuneAllTheThings (PreppedGlucose preppedGlucose, Profile previousAutotune, Profile pumpProfile) {
+    public TunedProfile tuneAllTheThings (PreppedGlucose preppedGlucose, TunedProfile previousAutotune, TunedProfile pumpProfile) {
 
         //var pumpBasalProfile = pumpProfile.basalprofile;
-        Profile.ProfileValue[] pumpBasalProfile = pumpProfile.getBasalValues();
+        Profile.ProfileValue[] pumpBasalProfile = pumpProfile.profile.getBasalValues();
         //console.error(pumpBasalProfile);
-        Profile.ProfileValue[] basalProfile = previousAutotune.getBasalValues();
+        Profile.ProfileValue[] basalProfile = previousAutotune.profile.getBasalValues();
         //console.error(basalProfile);
-        Profile.ProfileValue[]  isfProfile = previousAutotune.getIsfsMgdl();
+        Profile.ProfileValue[]  isfProfile = previousAutotune.profile.getIsfsMgdl();
         //console.error(isfProfile);
         Double ISF = isfProfile[0].value;
         //console.error(ISF);
-        Profile.ProfileValue[] carbRatioProfile = previousAutotune.getIcs();
+        Profile.ProfileValue[] carbRatioProfile = previousAutotune.profile.getIcs();
         Double carbRatio = carbRatioProfile[0].value;
         //console.error(carbRatio);
         Double CSF = ISF / carbRatio;
-        Double DIA = previousAutotune.getDia();
+        Double DIA = previousAutotune.profile.getDia();
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
         int peak=75;
         if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)

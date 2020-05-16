@@ -28,6 +28,7 @@ public class PreppedGlucose {
 
 
     public String toString(int indent) {
+        String jsonString = "";
         JSONObject json = new JSONObject();
 
         Date now = new Date(System.currentTimeMillis());
@@ -110,10 +111,13 @@ public class PreppedGlucose {
             json.put("basalGlucoseData", basaljson);
 
             if (indent != 0)
-                return json.toString(indent);
+                jsonString = json.toString(indent);
+            else
+                jsonString = json.toString();
+
         } catch (JSONException e) {}
 
-        return json.toString();
+        return jsonString;
     }
 
 

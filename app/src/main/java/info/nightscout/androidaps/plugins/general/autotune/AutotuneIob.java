@@ -62,6 +62,7 @@ public class AutotuneIob {
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject ActivePluginProvider activePlugin;
+    @Inject AutotunePlugin autotunePlugin;
     @Inject DateUtil dateUtil;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject NSUpload nsUpload;
