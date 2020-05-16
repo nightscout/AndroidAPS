@@ -119,6 +119,7 @@ public class AutotunePlugin extends PluginBase {
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private AutotunePrep autotunePrep;
     private AutotuneCore autotuneCore;
+    private AutotuneIob autotuneIob;
 
     private final SP sp;
     public final HasAndroidInjector injector;
@@ -196,90 +197,6 @@ public class AutotunePlugin extends PluginBase {
         return rouded;
     }
 
-    public IobTotal getCalculationToTimeTreatments(long time) {
-        IobTotal total = new IobTotal(time);
-
-        Profile profile = profileFunction.getProfile();
-        if (profile == null)
-            return total;
-
-        double dia = profile.getDia();
-
-        for (Integer pos = 0; pos < treatments.size(); pos++) {
-            Treatment t = treatments.get(pos);
-            if (!t.isValid) continue;
-            if (t.date > time) continue;
-            Iob tIOB = t.iobCalc(time, dia);
-            total.iob += tIOB.iobContrib;
-            total.activity += tIOB.activityContrib;
-            if (t.date > total.lastBolusTime)
-                total.lastBolusTime = t.date;
-            if (!t.isSMB) {
-                // instead of dividing the DIA that only worked on the bilinear curves,
-                // multiply the time the treatment is seen active.
-                long timeSinceTreatment = time - t.date;
-                long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
-                Iob bIOB = t.iobCalc(snoozeTime, dia);
-                total.bolussnooze += bIOB.iobContrib;
-            }
-        }
-        if (!activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
-            synchronized (extendedBoluses) {
-                for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-                    ExtendedBolus e = extendedBoluses.get(pos);
-                    if (e.date > time) continue;
-                    IobTotal calc = e.iobCalc(time);
-                    total.plus(calc);
-                }
-            }
-        return total;
-    }
-
-    public IobTotal getCalculationToTimeTempBasals(long time) {
-        IobTotal total = new IobTotal(time);
-        synchronized (tempBasals) {
-            for (Integer pos = 0; pos < tempBasals.size(); pos++) {
-                TemporaryBasal t = tempBasals.get(pos);
-                if (t.date > time)
-                    continue;
-                IobTotal calc = t.iobCalc(time, profile);
-                log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
-                total.plus(calc);
-                if (!t.isEndingEvent()) {
-                    total.lastTempDate = t.date;
-                    total.lastTempDuration = t.durationInMinutes;
-                    total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date, profile);
-                }
-
-            }
-        }
-        if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
-            IobTotal totalExt = new IobTotal(time);
-            synchronized (extendedBoluses) {
-                for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-                    ExtendedBolus e = extendedBoluses.get(pos);
-                    if (e.date > time) continue;
-                    IobTotal calc = e.iobCalc(time);
-                    totalExt.plus(calc);
-                    TemporaryBasal t = new TemporaryBasal(e);
-                    if (!t.isEndingEvent() && t.date > total.lastTempDate) {
-                        total.lastTempDate = t.date;
-                        total.lastTempDuration = t.durationInMinutes;
-                        total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date, profile);
-                    }
-                }
-            }
-            // Convert to basal iob
-            totalExt.basaliob = totalExt.iob;
-            totalExt.iob = 0d;
-            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
-            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
-            total.plus(totalExt);
-        }
-        return total;
-    }
-
-
     public IobTotal calculateFromTreatmentsAndTemps(long time) {
         long now = System.currentTimeMillis();
         time = roundUpTime(time);
@@ -292,8 +209,8 @@ public class AutotunePlugin extends PluginBase {
         IobTotal bolusIob = null;
         IobTotal basalIob = null;
 
-        bolusIob = getCalculationToTimeTreatments(time).round();
-        basalIob = getCalculationToTimeTempBasals(time).round();
+        bolusIob = autotuneIob.getCalculationToTimeTreatments(time).round();
+        basalIob = autotuneIob.getCalculationToTimeTempBasals(time).round();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         if (time < System.currentTimeMillis()) {
@@ -304,7 +221,7 @@ public class AutotunePlugin extends PluginBase {
 
     public void categorizeBGDatums(long from, long to) throws JSONException, ParseException, IOException {
         log.debug("First version of categorizeBGDatums");
-
+        AutotuneIob autotuneIob = new AutotuneIob(from, to);
         // TODO: Although the data from NS should be sorted maybe we need to sort it
         // sortBGdata
         // sort treatments
