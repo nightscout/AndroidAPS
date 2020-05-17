@@ -65,6 +65,7 @@ public class AutotunePrep {
             autotunePlugin.atLog("Create ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
         } catch (JSONException e) {}
 
+
         List<Treatment> treatments = autotuneIob.meals;
         // this sorts the treatments collection in order.
         //Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
@@ -72,10 +73,9 @@ public class AutotunePrep {
         log.debug("Nb of meals: " + treatments.size() + " Nb of treatments: " + autotuneIob.getTreatmentsFromHistory().size() + " Nb of TempBasals: " + autotuneIob.getTemporaryBasalsFromHistory().size() + " Nb of ExtBol:" + autotuneIob.getExtendedBolusesFromHistory().size());
         Profile profileData = tunedprofile.profile;
 
+        // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         List<BgReading> glucose=MainApp.getDbHelper().getBgreadingsDataFromTime(from,to, false);
-
         List<BgReading> glucoseData = new ArrayList<BgReading>();
-
         for (int i = 0; i < glucose.size(); i++) {
             if (glucose.get(i).value > 39) {
                 glucoseData.add(glucose.get(i));
@@ -83,15 +83,23 @@ public class AutotunePrep {
         }
         Collections.sort(glucoseData, (o1, o2) -> (int) (o2.date - o1.date));
 
+        // Bloc below replace bloc between #55 and #71
+        // boluses and maxCarbs not used here ?,
+        // IOBInputs are for iob calculation (done here in AutotuneIob Class)
         int boluses = 0;
         int maxCarbs = 0;
-
+        if (treatments.size() < 1) {
+            autotunePlugin.atLog("No treatments");
+            return null;
+        }
         List<BGDatum> csfGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> isfGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> uamGlucoseData = new ArrayList<BGDatum>();
         List<CRDatum> crData = new ArrayList<CRDatum>();
 
+        //Bloc below replace bloc between #72 and #93
+        // I keep it because BG lines in log are consistent between AAPS and Oref0
         List<BGDatum> bucketedData = new ArrayList<BGDatum>();
         bucketedData.add(new BGDatum(glucoseData.get(0)));
         //int j=0;
@@ -113,31 +121,13 @@ public class AutotunePrep {
                 bucketedData.add(new BGDatum(average));
             }
         }
-/*
-        //console.error(bucketedData);
-        //console.error(bucketedData[bucketedData.length-1]);
-        // go through the treatments and remove any that are older than the oldest glucose value
-        //console.error(treatments);
-        for (int i=treatments.size()-1; i>0; --i) {
-            NsTreatment treatment = treatments.get(i);
-            //console.error(treatment);
-            if (treatment != null) {
-                BGDatum glucoseDatum = bucketedData.get(bucketedData.size()-1);
-                //console.error(glucoseDatum);
-                if (glucoseDatum != null) {
-                    if ( treatment.date < glucoseDatum.date ) {
-                        treatments.remove(i);
-                    }
-                }
-            }
-        }
-        log.debug("Treatments size: " + treatments.size());
-*/
-        if (treatments.size() < 1) {
-            autotunePlugin.atLog("No treatments");
-            return null;
-        }
 
+        // Here treatments contains only meals data
+        // bloc between #94 and #114 remove meals before first BG value
+        // just difference (I have to check with Scott Leibrand) what happens if we have meal between 4 AM and first BG value, left here and removed in oref0-autotune, but I never had this case for the moment...
+
+        // Bloc below replace bloc between #115 and #122 (initialize data before main loop)
+        // crInitialxx are declaration to be able to use these data in whole loop
         boolean calculatingCR = false;
         boolean absorbing = false;
         boolean uam = false; // unannounced meal
@@ -145,16 +135,15 @@ public class AutotunePrep {
         double mealCarbs = 0;
         double crCarbs = 0;
         String type = "";
-
         double crInitialIOB =0d;
         double crInitialBG =0d;
         long crInitialCarbTime =0L;
 
-        //categorize.js#123
+        //categorize.js#123 (Note: don't need fullHistory because data are managed in AutotuneIob Class)
+        //Here is main loop between #125 and #366
+        // It's necessary to check and check again lines below because results are not consistent with oref0-autotune categorize.js results
+        // Todo: request help from Scott here because there are differences between iob for autotune and iob for loop... (oref0 doesn't take into account profileswitch so iob when no TBR are wrong for loop...)
         // main for loop
-//        List<NsTreatment> fullHistory = iobInputs.history ;//IOBInputs.history;
-
-
         for (int i = bucketedData.size() - 5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);
             //log.debug(glucoseDatum);
@@ -393,8 +382,8 @@ public class AutotunePrep {
 //            BGTime = BGDateArray[4];
             autotunePlugin.atLog((absorbing?1:0)+" mealCOB: "+Math.round(mealCOB)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
-        log.debug("end of loop bucket");
 
+        log.debug("end of loop bucket");
 //        iobInputs.profile = new TunedProfile(opts.profile);
 //        iobInputs.history = opts.pumpHistory;
 //        iobInputs.treatments = opts.treatments;
@@ -474,9 +463,10 @@ public class AutotunePrep {
         log.debug("CSFGlucoseData: "+ csfGlucoseData.size());
         log.debug("ISFGlucoseData: "+ isfGlucoseData.size());
         log.debug("BasalGlucoseData: "+basalGlucoseData.size());
-
+// Here is the end of categorize.js file
 
 /* bloc below is for --tune-insulin-curve not developed for the moment
+// these lines are in index.js file (autotune-prep folder)
         if (inputs.tune_insulin_curve) {
             if (opts.profile.curve === 'bilinear') {
                 console.error('--tune-insulin-curve is set but only valid for exponential curves');
@@ -625,10 +615,9 @@ public class AutotunePrep {
         }
         */
 
-
         return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
 
-        // and later
+        // and may be later
         // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);
     }
 
