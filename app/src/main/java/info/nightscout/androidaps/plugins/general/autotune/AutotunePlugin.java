@@ -654,8 +654,9 @@ public class AutotunePlugin extends PluginBase {
 
     //Todo add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
     public String result(int daysBack) {
+        //todo add autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
         autotunePrep = new AutotunePrep(injector);
-        autotuneCore = new AutotuneCore();
+        autotuneCore = new AutotuneCore(injector);
         //clean autotune folder before run
         logString="";
         atLog("Start Autotune with " + daysBack + " days back");
@@ -700,15 +701,26 @@ public class AutotunePlugin extends PluginBase {
         } else {
             for (int i = 0; i < daysBack; i++) {
                 // get 24 hours BG values from 4 AM to 4 AM next day
-                long glucoseStart = starttime + i * 24 * 60 * 60 * 1000L;
-                long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
+                long from = starttime + i * 24 * 60 * 60 * 1000L;
+                long to = from + 24 * 60 * 60 * 1000L;
 
                 atLog("Tune day "+ i +" of "+ daysBack);
 
+                //AutotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                autotuneIob = new AutotuneIob(from, to);
+                try {
+                    //ns-entries files are for result compare with oref0 autotune on virtual machine
+                    AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
+                    atLog("Create ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
+                    //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
+                    AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+                    atLog("Create ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
+                } catch (JSONException e) {}
+
                 //AutotunePrep autotunePrep = new AutotunePrep();
-                preppedGlucose = autotunePrep.categorizeBGDatums(glucoseStart,glucoseEnd,tunedProfile); // line added for log and test
-                AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", preppedGlucose.toString(2));
-                atLog("file aaps-autotune." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json created in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
+                preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob,tunedProfile, pumpprofile);
+                AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json", preppedGlucose.toString(2));
+                atLog("file aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json created in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
 
                 try {
                     tuneAllTheThings();
@@ -718,8 +730,8 @@ public class AutotunePlugin extends PluginBase {
 
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
 
-                AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json", tunedProfile.profiletoOrefJSON());
-                atLog("Create newprofile." + AutotuneFS.formatDate(new Date(glucoseStart)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folders");
+                AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json", tunedProfile.profiletoOrefJSON());
+                atLog("Create newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folders");
             }
         }
 

@@ -53,18 +53,7 @@ public class AutotunePrep {
         this.injector.androidInjector().inject(this);
     }
 
-    public PreppedGlucose categorizeBGDatums(long from, long to, TunedProfile tunedprofile)  {
-        autotuneIob = new AutotuneIob(from,to);
-
-        try {
-            //ns-entries files are for result compare with oref0 autotune on virtual machine
-            AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
-            autotunePlugin.atLog("Create ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
-            //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-            AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
-            autotunePlugin.atLog("Create ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
-        } catch (JSONException e) {}
-
+    public PreppedGlucose categorizeBGDatums(AutotuneIob autotuneIob, TunedProfile tunedprofile, TunedProfile pumpprofile)  {
 
         List<Treatment> treatments = autotuneIob.meals;
         // this sorts the treatments collection in order.
@@ -74,7 +63,8 @@ public class AutotunePrep {
         Profile profileData = tunedprofile.profile;
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
-        List<BgReading> glucose=MainApp.getDbHelper().getBgreadingsDataFromTime(from,to, false);
+        //List<BgReading> glucose=MainApp.getDbHelper().getBgreadingsDataFromTime(from,to, false);
+        List<BgReading> glucose=autotuneIob.glucose;
         List<BgReading> glucoseData = new ArrayList<BgReading>();
         for (int i = 0; i < glucose.size(); i++) {
             if (glucose.get(i).value > 39) {

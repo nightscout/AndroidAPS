@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.autotune;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
@@ -17,15 +18,18 @@ import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
+@Singleton
 public class AutotuneCore {
     @Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject AutotunePlugin autotunePlugin;
     private HasAndroidInjector injector;
 
-    public AutotuneCore () {
-        injector = StaticInjector.Companion.getInstance();
-        injector.androidInjector().inject(this);
+    public AutotuneCore (
+            HasAndroidInjector injector
+    ) {
+        this.injector=injector;
+        this.injector.androidInjector().inject(this);
     }
 
     public TunedProfile tuneAllTheThings (PreppedGlucose preppedGlucose, TunedProfile previousAutotune, TunedProfile pumpProfile) {
