@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -34,32 +35,36 @@ public class TunedProfile  {
     @Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
+    @Inject ProfileFunction profileFunction;
     private final HasAndroidInjector injector;
 
-
+//Todo add Autotune Injector
     public TunedProfile (Profile profile) {
         injector = StaticInjector.Companion.getInstance();
         injector.androidInjector().inject(this);
 
         this.profile=profile;
-        if (profile != null ) {
-            isValid = true;
+        if (profile != null )
+            isValid = profile.isValid("Autotune");
+        if (isValid) {
             //initialize tuned value with current profile values
             basal = getBasal();
             ic = getAvgIC();
             isf = getAvgISF();
             dia = profile.getDia();
-        } else
-            isValid = false;
+        }
     }
 
     public Profile getProfile() {
         return profile;
     }
 
-    public Profile getTunedProfile() {
+    public void updateProfile() {
+        profile = new Profile(injector, getData());
+    }
 
-        return profile;
+    public Profile getTunedProfile() {
+        return new Profile(injector, getData());
     }
 
     public int getIcSize() {
@@ -105,13 +110,12 @@ public class TunedProfile  {
         return avgValue;
     }
 
+    //Export json string with oref0 format used for autotune
     public String profiletoOrefJSON()  {
         // Create a json profile with oref0 format
         // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
         String jsonString = "";
         JSONObject json = new JSONObject();
-        JSONObject store = new JSONObject();
-        JSONObject convertedProfile = new JSONObject();
         int basalIncrement = 60 ;
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
@@ -135,7 +139,7 @@ public class TunedProfile  {
             json.put("carb_ratio", profile.getIc());
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")));
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")));
-            json.put("units",sp.getString(R.string.key_units, "mg/dl"));
+            json.put("units",profileFunction.getUnits());
             json.put("timezone", TimeZone.getDefault().getID());
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
@@ -150,6 +154,28 @@ public class TunedProfile  {
         } catch (JSONException e) {}
 
         return jsonString;
+    }
+
+    //json profile
+    public JSONObject getData() {
+        JSONObject json = profile.getData();
+        try{
+            json.put("dia",dia);
+            json.put("sens",new JSONArray().put(new JSONObject().put("time","00:00").put("timeAsSeconds",0).put("value",isf)));
+            json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
+            JSONArray basals = new JSONArray();
+            for (int h = 0; h < 24; h++) {
+                int secondfrommidnight = h * 60 * 60;
+                String time;
+                time = (h<10 ? "0"+ h : h)  + ":00";
+                //basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
+                basals.put(new JSONObject().put("time", time).put("timeAsSeconds", secondfrommidnight).put("value", basal[h]));
+            };
+            json.put("basal", basals);
+
+        } catch (JSONException e) {}
+
+        return json;
     }
 
 }

@@ -190,12 +190,11 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             nl="\n";
         }
 
-
         return warning;
     }
 
     private void log(String message) {
-        autotunePlugin.atLog(message);
+        autotunePlugin.atLog("Fragment] " + message);
     }
 
 }

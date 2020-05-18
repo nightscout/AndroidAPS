@@ -680,6 +680,9 @@ public class AutotunePlugin extends PluginBase {
         double isfResult = 0;
         basalsResultInit();
         profile = profileFunction.getProfile(now);
+        try {
+            AutotuneFS.createAutotunefile("aapsfullprofile.json", profile.getData().toString(2), true);
+        } catch (JSONException e) {}
         TunedProfile tunedProfile = new TunedProfile(profileFunction.getProfile(now));
         if(tunedProfile.profile.equals(null))
             return null;
@@ -731,9 +734,8 @@ public class AutotunePlugin extends PluginBase {
                     log.error(e.getMessage());
                 }
 
-                tunedProfile = new TunedProfile(autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile));
+                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
 
-                //Todo philoul create dedicated function including log in AutotuneFS
                 AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json", tunedProfile.profiletoOrefJSON());
                 atLog("Create newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folders");
             }
@@ -790,32 +792,11 @@ public class AutotunePlugin extends PluginBase {
 
             AutotuneFS.createAutotunefile(AutotuneFS.RECOMMENDATIONS,result);
 
-            // trying to create new profile ready for switch
-            JSONObject json = new JSONObject();
-            JSONObject store = new JSONObject();
-            JSONObject convertedProfile = new JSONObject();
-            int basalIncrement = 60 * 60;
-
             try {
-                json.put("defaultProfile", resourceHelper.gs(R.string.autotune_tunedprofile_name));
-                json.put("store", store);
-                convertedProfile.put("dia", profile.getDia());
-                convertedProfile.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
-                convertedProfile.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("sens", 0d))));
-                JSONArray basals = new JSONArray();
-                for (int h = 0; h < 24; h++) {
-                    String time;
-                    time = df.format(h) + ":00";
-                    basals.put(new JSONObject().put("time", time).put("timeAsSeconds", h * basalIncrement).put("value", tunedBasalProfile.get(h)));
-                };
-                convertedProfile.put("basal", basals);
-                convertedProfile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetLowMgdl())));
-                convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
-                convertedProfile.put("units", profileFunction.getUnits());
 
-                AutotuneFS.createAutotunefile(AutotuneFS.profilName(null), convertedProfile.toString(4).replace("\\/","/"));
+                AutotuneFS.createAutotunefile(AutotuneFS.profilName(null), tunedProfile.getData().toString(2).replace("\\/","/"));
 
-                store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
+                //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
                 //sp.putString("autotuneprofile", profileStore.getData().toString());
                 //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));

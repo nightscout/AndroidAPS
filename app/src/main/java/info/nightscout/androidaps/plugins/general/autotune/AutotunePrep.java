@@ -631,7 +631,7 @@ public class AutotunePrep {
 
 
     private void log(String message) {
-        autotunePlugin.atLog(message);
+        autotunePlugin.atLog("[Prep] " + message);
     }
 
 }

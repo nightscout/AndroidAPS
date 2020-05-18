@@ -39,7 +39,7 @@ public class AutotuneCore {
         this.injector.androidInjector().inject(this);
     }
 
-    public Profile tuneAllTheThings (PreppedGlucose preppedGlucose, TunedProfile previousAutotune, TunedProfile pumpProfile) {
+    public TunedProfile tuneAllTheThings (PreppedGlucose preppedGlucose, TunedProfile previousAutotune, TunedProfile pumpProfile) {
 
         //var pumpBasalProfile = pumpProfile.basalprofile;
         double[] pumpBasalProfile = pumpProfile.basal;
@@ -480,12 +480,12 @@ public class AutotuneCore {
         previousAutotune.basal=basalProfile;
         previousAutotune.isf = isf;
         previousAutotune.ic=Round.roundTo(carbRatio,0.001);
-        // to avoid error
-        return previousAutotune.getTunedProfile();
+        previousAutotune.updateProfile();
+
+        return previousAutotune;
     }
 
     private void log(String message) {
-        autotunePlugin.atLog(message);
+        autotunePlugin.atLog("[Core] " + message);
     }
-
 }
