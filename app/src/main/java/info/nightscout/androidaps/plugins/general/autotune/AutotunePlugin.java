@@ -156,503 +156,6 @@ public class AutotunePlugin extends PluginBase {
         // invoke
     }
 
-
-    public void getProfile(){
-        //get active profile
-        profile = profileFunction.getProfile();
-        if(profile==null)
-            log.debug("Autotune no profile selected");
-    }
-
-    public synchronized Double getBasal(Integer hour){
-        getProfile();
-        if(profile.equals(null))
-            return 0d;
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, hour);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        return profile.getBasal(c.getTimeInMillis());
-    }
-
-    //Todo Philoul remove funcion below once AutotuneCore finished
-    public String tuneAllTheThings() throws JSONException {
-
-//                var previousAutotune = inputs.previousAutotune;
-        //log.debug(previousAutotune);
-        JSONObject previousAutotune = new JSONObject();
-        if(previousResult != null) {
-            previousAutotune = previousResult.optJSONObject("basalProfile");
-            log.debug("PrevResult is: " + previousResult.toString());
-        }
-        List<Double> basalProfile  = new ArrayList<Double>();
-        //Parsing last result
-        if(previousAutotune != null) {
-            for (int i = 0; i < 24; i++) {
-                basalProfile.add(previousAutotune.optDouble("" + i));
-            }
-        }
-
-        Profile pumpProfile = profile;
-        Profile pumpBasalProfile = profile;
-        //TODO: Mabe get real pump values like in the original but use profile.ISF for now
-        Profile pumpISFProfile = null;
-        double pumpISF = 0d;
-        double pumpCarbRatio = 0d;
-        double pumpCSF = 0d;
-        // Autosens constraints
-        double autotuneMax = SafeParse.stringToDouble(sp.getString("openapsama_autosens_max", "1.2"));
-        double autotuneMin = SafeParse.stringToDouble(sp.getString("openapsama_autosens_min", "0.7"));
-        double min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
-        //log.debug(pumpBasalProfile);
-//        var basalProfile = previousAutotune.basalprofile;
-        //log.debug(basalProfile);
-//        var isfProfile = previousAutotune.isfProfile;
-        //log.debug(isfProfile);
-// TODO: Philoul retrieve the units from the main parameters instead of the profile or delete 5 lines below if not used
-        int toMgDl = 1;
-        if(profile.equals(null))
-            return null;
-        if(profile.getUnits().equals("mmol"))
-            toMgDl = 18;
-        double ISF = profile.getIsfMgdl();
-
-        //log.debug(ISF);
-        double carbRatio = profile.getIc();
-        //log.debug(carbRatio);
-        double CSF = ISF / carbRatio;
-
-        //Compy profile values to pump ones
-        pumpISF = ISF;
-        log.debug("PumpISF is: "+pumpISF);
-        pumpCarbRatio = carbRatio;
-        pumpCSF = CSF;
-        // conditional on there being a pump profile; if not then skip
-        if (pumpProfile != null) { pumpISFProfile = pumpProfile; }
-        if (pumpISFProfile != null && pumpISFProfile.getIsfMgdl() != 0d) {
-            pumpISF = pumpISFProfile.getIsfMgdl();
-            pumpCarbRatio = pumpProfile.getIc();
-            pumpCSF = pumpISF / pumpCarbRatio;
-            log.debug("After getting pumpProfile: pumpISF is "+pumpISF+" pumpCSF "+pumpCSF+" pumpCarbRatio "+pumpCarbRatio);
-        }
-        if (carbRatio == 0d) { carbRatio = pumpCarbRatio; }
-        if (CSF == 0d) { CSF = pumpCSF; }
-        if (ISF == 0d) { ISF = pumpISF; }
-        //log.debug(CSF);
-//        List<BGDatum> preppedGlucose = preppedGlucose;
-        List<BGDatum> CSFGlucose = preppedGlucose.csfGlucoseData;
-        //log.debug(CSFGlucose[0]);
-        List<BGDatum> ISFGlucose = preppedGlucose.isfGlucoseData;
-        //log.debug(ISFGlucose[0]);
-        List<BGDatum> basalGlucose = preppedGlucose.basalGlucoseData;
-        //log.debug(basalGlucose[0]);
-        List<CRDatum> CRData = preppedGlucose.crData;
-        //log.debug(CRData);
-
-        // Calculate carb ratio (CR) independently of CSF and ISF
-        // Use the time period from meal bolus/carbs until COB is zero and IOB is < currentBasal/2
-        // For now, if another meal IOB/COB stacks on top of it, consider them together
-        // Compare beginning and ending BGs, and calculate how much more/less insulin is needed to neutralize
-        // Use entered carbs vs. starting IOB + delivered insulin + needed-at-end insulin to directly calculate CR.
-
-        double CRTotalCarbs = 0;
-        double CRTotalInsulin = 0;
-        List<CRDatum> CRDatum = new ArrayList<CRDatum>();
-        for (int i=0; i<CRData.size()-1; i++) {
-                double CRBGChange = CRData.get(i).crEndBG - CRData.get(i).crInitialBG;
-                double CRInsulinReq = CRBGChange / ISF;
-                double CRIOBChange = CRData.get(i).crEndIOB - CRData.get(i).crInitialIOB;
-                CRData.get(i).crInsulinTotal = CRData.get(i).crInitialIOB + CRData.get(i).crInsulin + CRInsulinReq;
-                //log.debug(CRDatum.CRInitialIOB, CRDatum.CRInsulin, CRInsulinReq, CRInsulinTotal);
-                double CR = Math.round(CRData.get(i).crCarbs / CRData.get(i).crInsulinTotal * 1000) / 1000;
-                //log.debug(CRBGChange, CRInsulinReq, CRIOBChange, CRInsulinTotal);
-                //log.debug("CRCarbs:",CRDatum.CRCarbs,"CRInsulin:",CRDatum.CRInsulinTotal,"CR:",CR);
-                if (CRData.get(i).crInsulin > 0) {
-                    CRTotalCarbs += CRData.get(i).crCarbs;
-                    CRTotalInsulin += CRData.get(i).crInsulinTotal;
-                }
-        }
-
-        CRTotalInsulin = Math.round(CRTotalInsulin*1000)/1000;
-        double totalCR = Math.round( CRTotalCarbs / CRTotalInsulin * 1000 )/1000;
-        log.debug("CRTotalCarbs: "+CRTotalCarbs+" CRTotalInsulin: "+CRTotalInsulin+" totalCR: "+totalCR);
-
-        // convert the basal profile to hourly if it isn't already
-        List<Double> hourlyBasalProfile = new ArrayList<Double>();
-        List<Double> hourlyPumpProfile = new ArrayList<Double>();
-        for(int i=0; i<24; i++) {
-            hourlyBasalProfile.add(i, getBasal(i));
-//            log.debug("StartBasal at hour "+i+" is "+hourlyBasalProfile.get(i));
-            hourlyPumpProfile.add(i, getBasal(i));
-        }
-        //List<Double> basalProfile = new List<Double>;
-        /*for (int i=0; i < 24; i++) {
-            // autotuned basal profile
-            for (int j=0; j < basalProfile.size(); ++j) {
-                if (basalProfile[j].minutes <= i * 60) {
-                    if (basalProfile[j].rate == 0) {
-                        log.debug("ERROR: bad basalProfile",basalProfile[j]);
-                        return;
-                    }
-                    hourlyBasalProfile[i] = JSON.parse(JSON.stringify(basalProfile[j]));
-                }
-            }
-            hourlyBasalProfile[i].i=i;
-            hourlyBasalProfile[i].minutes=i*60;
-            var zeroPadHour = ("000"+i).slice(-2);
-            hourlyBasalProfile[i].start=zeroPadHour + ":00:00";
-            hourlyBasalProfile[i].rate=Math.round(hourlyBasalProfile[i].rate*1000)/1000
-            // pump basal profile
-            if (pumpBasalProfile && pumpBasalProfile[0]) {
-                for (int j=0; j < pumpBasalProfile.length; ++j) {
-                    //log.debug(pumpBasalProfile[j]);
-                    if (pumpBasalProfile[j].rate == 0) {
-                        log.debug("ERROR: bad pumpBasalProfile",pumpBasalProfile[j]);
-                        return;
-                    }
-                    if (pumpBasalProfile[j].minutes <= i * 60) {
-                        hourlyPumpProfile[i] = JSON.parse(JSON.stringify(pumpBasalProfile[j]));
-                    }
-                }
-                hourlyPumpProfile[i].i=i;
-                hourlyPumpProfile[i].minutes=i*60;
-                hourlyPumpProfile[i].rate=Math.round(hourlyPumpProfile[i].rate*1000)/1000
-            }
-        }
-        *///log.debug(hourlyPumpProfile);
-        //log.debug(hourlyBasalProfile);
-        List<Double> newHourlyBasalProfile = new ArrayList<Double>();
-        for(int i=0; i<hourlyBasalProfile.size();i++){
-            newHourlyBasalProfile.add(hourlyBasalProfile.get(i));
-        }
-
-        // look at net deviations for each hour
-        for (int hour=0; hour < 24; hour++) {
-            double deviations = 0;
-            for (int i=0; i < basalGlucose.size(); ++i) {
-                Date BGTime = null;
-
-                if (basalGlucose.get(i).date != 0) {
-                    BGTime = new Date(basalGlucose.get(i).date);
-                }  else {
-                    log.debug("Could not determine last BG time");
-                }
-
-                int myHour = BGTime.getHours();
-                if (hour == myHour) {
-                    //log.debug(basalGlucose[i].deviation);
-                    deviations += basalGlucose.get(i).deviation;
-                }
-            }
-            deviations = round( deviations,3);
-            log.debug("Hour "+hour+" total deviations: "+deviations+" mg/dL");
-            // calculate how much less or additional basal insulin would have been required to eliminate the deviations
-            // only apply 20% of the needed adjustment to keep things relatively stable
-            double basalNeeded = 0.2 * deviations / ISF;
-            basalNeeded = round( basalNeeded,2);
-            // if basalNeeded is positive, adjust each of the 1-3 hour prior basals by 10% of the needed adjustment
-            log.debug("Hour "+hour+" basal adjustment needed: "+basalNeeded+" U/hr");
-            if (basalNeeded > 0 ) {
-                for (int offset=-3; offset < 0; offset++) {
-                    int offsetHour = hour + offset;
-                    if (offsetHour < 0) { offsetHour += 24; }
-                    //log.debug(offsetHour);
-                    newHourlyBasalProfile.set(offsetHour, newHourlyBasalProfile.get(offsetHour) + basalNeeded / 3);
-                    newHourlyBasalProfile.set(offsetHour, round(newHourlyBasalProfile.get(offsetHour),3));
-                }
-                // otherwise, figure out the percentage reduction required to the 1-3 hour prior basals
-                // and adjust all of them downward proportionally
-            } else if (basalNeeded < 0) {
-                double threeHourBasal = 0;
-                for (int offset=-3; offset < 0; offset++) {
-                    int offsetHour = hour + offset;
-                    if (offsetHour < 0) { offsetHour += 24; }
-                    threeHourBasal += newHourlyBasalProfile.get(offsetHour);
-                }
-                double adjustmentRatio = 1.0 + basalNeeded / threeHourBasal;
-                //log.debug(adjustmentRatio);
-                for (int offset=-3; offset < 0; offset++) {
-                    int offsetHour = hour + offset;
-                    if (offsetHour < 0) { offsetHour += 24; }
-                    newHourlyBasalProfile.set(offsetHour, newHourlyBasalProfile.get(offsetHour) * adjustmentRatio);
-                    newHourlyBasalProfile.set(offsetHour, round(newHourlyBasalProfile.get(offsetHour),3));
-                }
-            }
-        }
-        if (pumpBasalProfile != null && pumpBasalProfile.getBasalValues() != null) {
-            for (int hour=0; hour < 24; hour++) {
-                //log.debug(newHourlyBasalProfile[hour],hourlyPumpProfile[hour].rate*1.2);
-                // cap adjustments at autosens_max and autosens_min
-
-                double maxRate = newHourlyBasalProfile.get(hour) * autotuneMax;
-                double minRate = newHourlyBasalProfile.get(hour) * autotuneMin;
-                if (newHourlyBasalProfile.get(hour) > maxRate ) {
-                    log.debug("Limiting hour"+hour+"basal to"+round(maxRate,2)+"(which is "+round(autotuneMax,2)+"* pump basal of"+hourlyPumpProfile.get(hour)+")");
-                    //log.debug("Limiting hour",hour,"basal to",maxRate.toFixed(2),"(which is 20% above pump basal of",hourlyPumpProfile[hour].rate,")");
-                    newHourlyBasalProfile.set(hour,maxRate);
-                } else if (newHourlyBasalProfile.get(hour) < minRate ) {
-                    log.debug("Limiting hour",hour,"basal to"+round(minRate,2)+"(which is"+autotuneMin+"* pump basal of"+newHourlyBasalProfile.get(hour)+")");
-                    //log.debug("Limiting hour",hour,"basal to",minRate.toFixed(2),"(which is 20% below pump basal of",hourlyPumpProfile[hour].rate,")");
-                    newHourlyBasalProfile.set(hour, minRate);
-                }
-                newHourlyBasalProfile.set(hour, round(newHourlyBasalProfile.get(hour),3));
-            }
-        }
-
-        // some hours of the day rarely have data to tune basals due to meals.
-        // when no adjustments are needed to a particular hour, we should adjust it toward the average of the
-        // periods before and after it that do have data to be tuned
-        int lastAdjustedHour = 0;
-        // scan through newHourlyBasalProfile and find hours where the rate is unchanged
-        for (int hour=0; hour < 24; hour++) {
-            if (hourlyBasalProfile.get(hour).equals(newHourlyBasalProfile.get(hour))) {
-                int nextAdjustedHour = 23;
-                for (int nextHour = hour; nextHour < 24; nextHour++) {
-                    if (! (hourlyBasalProfile.get(nextHour) == newHourlyBasalProfile.get(nextHour))) {
-                        nextAdjustedHour = nextHour;
-                        break;
-                        } else {
-                        log.debug("At hour: "+nextHour +" " +hourlyBasalProfile.get(nextHour)+" " +newHourlyBasalProfile.get(nextHour));
-                    }
-                }
-                //log.debug(hour, newHourlyBasalProfile);
-                newHourlyBasalProfile.set(hour, round( (0.8*hourlyBasalProfile.get(hour) + 0.1*newHourlyBasalProfile.get(lastAdjustedHour) + 0.1*newHourlyBasalProfile.get(nextAdjustedHour)),3));
-//                log.debug("Adjusting hour "+hour+" basal from "+hourlyBasalProfile.get(hour)+" to "+newHourlyBasalProfile.get(hour)+" based on hour "+lastAdjustedHour+" = "+newHourlyBasalProfile.get(lastAdjustedHour)+" and hour "+nextAdjustedHour+"="+newHourlyBasalProfile.get(nextAdjustedHour));
-            } else {
-                lastAdjustedHour = hour;
-            }
-        }
-        basalProfile = newHourlyBasalProfile;
-
-        // Calculate carb ratio (CR) independently of CSF and ISF
-        // Use the time period from meal bolus/carbs until COB is zero and IOB is < currentBasal/2
-        // For now, if another meal IOB/COB stacks on top of it, consider them together
-        // Compare beginning and ending BGs, and calculate how much more/less insulin is needed to neutralize
-        // Use entered carbs vs. starting IOB + delivered insulin + needed-at-end insulin to directly calculate CR.
-
-
-
-        // calculate net deviations while carbs are absorbing
-        // measured from carb entry until COB and deviations both drop to zero
-
-        double deviations = 0;
-        double mealCarbs = 0;
-        double totalMealCarbs = 0;
-        double totalDeviations = 0;
-        double fullNewCSF;
-        //log.debug(CSFGlucose[0].mealAbsorption);
-        //log.debug(CSFGlucose[0]);
-        for (int i=0; i < CSFGlucose.size(); ++i) {
-            //log.debug(CSFGlucose[i].mealAbsorption, i);
-            if ( CSFGlucose.get(i).mealAbsorption == "start" ) {
-                deviations = 0;
-                mealCarbs = CSFGlucose.get(i).mealCarbs;
-            } else if (CSFGlucose.get(i).mealAbsorption == "end") {
-                deviations += CSFGlucose.get(i).deviation;
-                // compare the sum of deviations from start to end vs. current CSF * mealCarbs
-                //log.debug(CSF,mealCarbs);
-                double csfRise = CSF * mealCarbs;
-                //log.debug(deviations,ISF);
-                //log.debug("csfRise:",csfRise,"deviations:",deviations);
-                totalMealCarbs += mealCarbs;
-                totalDeviations += deviations;
-
-            } else {
-                deviations += Math.max(0*min5minCarbImpact,CSFGlucose.get(i).deviation);
-                mealCarbs = Math.max(mealCarbs, CSFGlucose.get(i).mealCarbs);
-            }
-        }
-        // at midnight, write down the mealcarbs as total meal carbs (to prevent special case of when only one meal and it not finishing absorbing by midnight)
-        // TODO: figure out what to do with dinner carbs that don't finish absorbing by midnight
-        if (totalMealCarbs == 0) { totalMealCarbs += mealCarbs; }
-        if (totalDeviations == 0) { totalDeviations += deviations; }
-        //log.debug(totalDeviations, totalMealCarbs);
-        if (totalMealCarbs == 0) {
-            // if no meals today, CSF is unchanged
-            fullNewCSF = CSF;
-        } else {
-            // how much change would be required to account for all of the deviations
-            fullNewCSF = Math.round( (totalDeviations / totalMealCarbs)*100 )/100;
-        }
-        // TODO: philoul may be allow % of adjustments in settings with safety limits
-        // only adjust by 20%
-        double newCSF = ( 0.8 * CSF ) + ( 0.2 * fullNewCSF );
-        // safety cap CSF
-        if (pumpCSF != 0d) {
-            double maxCSF = pumpCSF * autotuneMax;
-            double minCSF = pumpCSF * autotuneMin;
-            if (newCSF > maxCSF) {
-                log.debug("Limiting CSF to "+round(maxCSF,2)+"(which is "+autotuneMax+"* pump CSF of "+pumpCSF+")");
-                newCSF = maxCSF;
-            } else if (newCSF < minCSF) {
-                log.debug("Limiting CSF to"+round(minCSF,2)+"(which is"+autotuneMin+"* pump CSF of"+pumpCSF+")");
-                newCSF = minCSF;
-            } //else { log.debug("newCSF",newCSF,"is close enough to",pumpCSF); }
-        }
-        double oldCSF = Math.round( CSF * 1000 ) / 1000;
-        newCSF = Math.round( newCSF * 1000 ) / 1000;
-        totalDeviations = Math.round ( totalDeviations * 1000 )/1000;
-        log.debug("totalMealCarbs: "+totalMealCarbs+" totalDeviations: "+totalDeviations+" oldCSF "+oldCSF+" fullNewCSF: "+fullNewCSF+" newCSF: "+newCSF);
-        // this is where CSF is set based on the outputs
-        if (newCSF == 0) {
-            CSF = newCSF;
-        }
-        double fullNewCR;
-        if (totalCR == 0) {
-            // if no meals today, CR is unchanged
-            fullNewCR = carbRatio;
-        } else {
-            // how much change would be required to account for all of the deviations
-            fullNewCR = totalCR;
-        }
-        // safety cap fullNewCR
-        if (pumpCarbRatio != 0) {
-            double maxCR = pumpCarbRatio * autotuneMax;
-            double minCR = pumpCarbRatio * autotuneMin;
-            if (fullNewCR > maxCR) {
-                log.debug("Limiting fullNewCR from"+fullNewCR+"to"+round(maxCR,2)+"(which is"+autotuneMax+"* pump CR of"+pumpCarbRatio+")");
-                fullNewCR = maxCR;
-            } else if (fullNewCR < minCR) {
-                log.debug("Limiting fullNewCR from"+fullNewCR+"to"+round(minCR,2)+"(which is"+autotuneMin+"* pump CR of"+pumpCarbRatio+")");
-                fullNewCR = minCR;
-            } //else { log.debug("newCR",newCR,"is close enough to",pumpCarbRatio); }
-        }
-        // TODO: philoul may be allow % of adjustments in settings with safety limits
-        // only adjust by 20%
-        double newCR = ( 0.8 * carbRatio ) + ( 0.2 * fullNewCR );
-        // safety cap newCR
-        if (pumpCarbRatio != 0) {
-            double maxCR = pumpCarbRatio * autotuneMax;
-            double minCR = pumpCarbRatio * autotuneMin;
-            if (newCR > maxCR) {
-                log.debug("Limiting CR to "+round(maxCR,2)+"(which is"+autotuneMax+"* pump CR of"+pumpCarbRatio+")");
-                newCR = maxCR;
-            } else if (newCR < minCR) {
-                log.debug("Limiting CR to "+round(minCR,2)+"(which is"+autotuneMin+"* pump CR of"+pumpCarbRatio+")");
-                newCR = minCR;
-            } //else { log.debug("newCR",newCR,"is close enough to",pumpCarbRatio); }
-        }
-        newCR = Math.round( newCR * 1000 ) / 1000;
-        log.debug("oldCR: "+carbRatio+" fullNewCR: "+fullNewCR+" newCR: "+newCR);
-        // this is where CR is set based on the outputs
-        //var ISFFromCRAndCSF = ISF;
-        if (newCR != 0) {
-            carbRatio = newCR;
-            //ISFFromCRAndCSF = Math.round( carbRatio * CSF * 1000)/1000;
-        }
-
-
-
-        // calculate median deviation and bgi in data attributable to ISF
-        List<Double> ISFdeviations =  new ArrayList<Double>();
-        List<Double> BGIs =   new ArrayList<Double>();
-        List<Double> avgDeltas =   new ArrayList<Double>();
-        List<Double> ratios =   new ArrayList<Double>();
-        int count = 0;
-        for (int i=0; i < ISFGlucose.size(); ++i) {
-            double deviation = ISFGlucose.get(i).deviation;
-            ISFdeviations.add(deviation);
-            double BGI = ISFGlucose.get(i).BGI;
-            BGIs.add(BGI);
-            double avgDelta = ISFGlucose.get(i).AvgDelta;
-            avgDeltas.add(avgDelta);
-            double ratio = 1 + deviation / BGI;
-            //log.debug("Deviation:",deviation,"BGI:",BGI,"avgDelta:",avgDelta,"ratio:",ratio);
-            ratios.add(ratio);
-            count++;
-        }
-        Collections.sort(avgDeltas);
-        Collections.sort(BGIs);
-        Collections.sort(ISFdeviations);
-        Collections.sort(ratios);
-        double p50deviation = IobCobCalculatorPlugin.percentile(ISFdeviations.toArray(new Double[ISFdeviations.size()]), 0.50);
-        double p50BGI =  IobCobCalculatorPlugin.percentile(BGIs.toArray(new Double[BGIs.size()]), 0.50);
-        double p50ratios = round(  IobCobCalculatorPlugin.percentile(ratios.toArray(new Double[ratios.size()]), 0.50),3);
-        double fullNewISF = 0d;
-        if (count < 10) {
-            // leave ISF unchanged if fewer than 5 ISF data points
-            fullNewISF = ISF;
-        } else {
-            // calculate what adjustments to ISF would have been necessary to bring median deviation to zero
-            fullNewISF = ISF * p50ratios;
-        }
-        fullNewISF = round( fullNewISF,3);
-        // adjust the target ISF to be a weighted average of fullNewISF and pumpISF
-        double adjustmentFraction;
-/*
-        if (typeof(pumpProfile.autotune_isf_adjustmentFraction) !== 'undefined') {
-            adjustmentFraction = pumpProfile.autotune_isf_adjustmentFraction;
-        } else {*/
-            adjustmentFraction = 1.0;
-//        }
-
-        // low autosens ratio = high ISF
-        double maxISF = pumpISF / autotuneMin;
-        // high autosens ratio = low ISF
-        double minISF = pumpISF / autotuneMax;
-        double adjustedISF = 0d;
-        double newISF = 0d;
-        if (pumpISF != 0) {
-            if ( fullNewISF < 0 ) {
-                adjustedISF = ISF;
-                log.debug("fullNewISF < 0 setting adjustedISF to "+adjustedISF);
-            } else {
-                adjustedISF = adjustmentFraction*fullNewISF + (1-adjustmentFraction)*pumpISF;
-            }
-            // cap adjustedISF before applying 10%
-            //log.debug(adjustedISF, maxISF, minISF);
-            if (adjustedISF > maxISF) {
-                log.debug("Limiting adjusted ISF of "+round(adjustedISF,2)+" to "+round(maxISF,2)+"(which is pump ISF of "+pumpISF+"/"+autotuneMin+")");
-                adjustedISF = maxISF;
-            } else if (adjustedISF < minISF) {
-                log.debug("Limiting adjusted ISF of"+round(adjustedISF,2)+" to "+round(minISF,2)+"(which is pump ISF of "+pumpISF+"/"+autotuneMax+")");
-                adjustedISF = minISF;
-            }
-
-            // TODO: philoul may be allow % of adjustments in settings with safety limits Check % (10% in original autotune OAPS for ISF ?)
-            // and apply 20% of that adjustment
-            newISF = ( 0.8 * ISF ) + ( 0.2 * adjustedISF );
-
-            if (newISF > maxISF) {
-                log.debug("Limiting ISF of"+round(newISF,2)+"to"+round(maxISF,2)+"(which is pump ISF of"+pumpISF+"/"+autotuneMin+")");
-                newISF = maxISF;
-            } else if (newISF < minISF) {
-                log.debug("Limiting ISF of"+round(newISF,2)+"to"+round(minISF,2)+"(which is pump ISF of"+pumpISF+"/"+autotuneMax+")");
-                newISF = minISF;
-            }
-        }
-        newISF = Math.round( newISF * 1000 ) / 1000;
-        //log.debug(avgRatio);
-        //log.debug(newISF);
-        p50deviation = Math.round( p50deviation * 1000 ) / 1000;
-        p50BGI = Math.round( p50BGI * 1000 ) / 1000;
-        adjustedISF = Math.round( adjustedISF * 1000 ) / 1000;
-        log.debug("p50deviation: "+p50deviation+" p50BGI "+p50BGI+" p50ratios: "+p50ratios+" Old ISF: "+ISF+" fullNewISF: "+fullNewISF+" adjustedISF: "+adjustedISF+" newISF: "+newISF);
-
-        if (newISF != 0d) {
-            ISF = newISF;
-        }
-
-
-        // reconstruct updated version of previousAutotune as autotuneOutput
-        JSONObject autotuneOutput = new JSONObject();
-        if(previousAutotune != null)
-            autotuneOutput = new JSONObject(previousAutotune.toString());
-        autotuneOutput.put("basalProfile",  basalProfile.toString());
-        //isfProfile.sensitivity = ISF;
-        //autotuneOutput.put("isfProfile", isfProfile);
-        autotuneOutput.put("sens", ISF);
-        autotuneOutput.put("csf", CSF);
-        //carbRatio = ISF / CSF;
-        carbRatio = Math.round( carbRatio * 1000 ) / 1000;
-        autotuneOutput.put("carb_ratio" , carbRatio);
-        previousResult = new JSONObject(autotuneOutput.toString());
-        return autotuneOutput.toString();
-    }
-
-
     //Todo add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
     public String aapsAutotune(int daysBack) {
         //todo add autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
@@ -727,13 +230,6 @@ public class AutotunePlugin extends PluginBase {
                 AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json", preppedGlucose.toString(2));
                 atLog("file aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json created in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
 
-                //todo philoul remove bloc below once AutotuneCore finished
-                try {
-                    tuneAllTheThings();
-                } catch (JSONException e) {
-                    log.error(e.getMessage());
-                }
-
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
 
                 AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json", tunedProfile.profiletoOrefJSON());
@@ -757,16 +253,17 @@ public class AutotunePlugin extends PluginBase {
             String line = "------------------------------------------\n";
 
 
+            //Todo add Strings and format for all results presentation
+            //Todo Replace % of modification by number of missing days for each hour
+            //May be we could remove CSF from the list...
             result = line;
             result += "|Hour| Profile | Tuned |   %   |\n";
             result += line;
             for (int i = 0; i < 24; i++) {
-                if(tunedBasalProfile.size() < i || tunedBasalProfile.size() == 0)
-                    return "Error at index "+i+" or empty basalprofile<List>";
-                String basalString = df.format(getBasal(i));
+                String basalString = df.format(pumpprofile.basal[i]);
 
-                String tunedString = df.format(tunedBasalProfile.get(i));
-                int percentageChangeValue = (int) ((tunedBasalProfile.get(i)/getBasal(i)) * 100 - 100) ;
+                String tunedString = df.format(tunedProfile.basal[i]);
+                int percentageChangeValue = (int) ((tunedBasalProfile.get(i)/pumpprofile.basal[i]) * 100 - 100) ;
                 String percentageChange;
                 if (percentageChangeValue == 0)
                     percentageChange = "   0  ";
@@ -778,23 +275,23 @@ public class AutotunePlugin extends PluginBase {
                     percentageChange += "%";
                 String hourString = i < 10 ? " 0"+ i : " " + i ;
 
-                result += "| " + hourString + "  |  " + basalString + "  |  " +tunedString+"  |"+percentageChange+" |\n";
+                result += "| " + hourString + "  |  " + basalString + "  |  " +tunedString+"  |" + percentageChange + " |\n";
 
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF |   "+ Round.roundTo(profile.getIsfMgdl()/toMgDl, 0.001) +"   |    "+ Round.roundTo(previousResult.optDouble("sens", 0d)/toMgDl,0.001)+"   |\n";
+            result += "|  ISF |   " + Round.roundTo(pumpprofile.isf / toMgDl, 0.001) + "   |    " + Round.roundTo(tunedProfile.isf / toMgDl,0.001)+"   |\n";
             result += line;
-            result += "|  CR  |     "+profile.getIc()+"   |      "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
+            result += "|  CR  |     " + pumpprofile.ic + "   |      " + Round.roundTo(tunedProfile.ic,0.001) + "   |\n";
             result += line;
-            result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  |  "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
+            result += "| CSF | " + Round.roundTo(pumpprofile.isf / pumpprofile.ic / toMgDl, 0.001) + "  |  " + Round.roundTo(tunedProfile.isf / tunedProfile.ic / toMgDl,0.001) + "  |\n";
             result += line;
 
             AutotuneFS.createAutotunefile(AutotuneFS.RECOMMENDATIONS,result);
 
             try {
 
-                AutotuneFS.createAutotunefile(AutotuneFS.profilName(null), tunedProfile.getData().toString(2).replace("\\/","/"));
+                AutotuneFS.createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name), tunedProfile.getData().toString(2).replace("\\/","/"),true);
 
                 //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
@@ -871,27 +368,7 @@ public class AutotunePlugin extends PluginBase {
         return jsonString;
     }
 
-    public double averageProfileValue(Profile.ProfileValue[] pf) {
-        double avgValue = 0;
-        int secondPerDay=24*60*60;
-        if (pf == null)
-            return avgValue;
-        for(int i = 0; i< pf.length;i++) {
-            avgValue+=pf[i].value*((i==pf.length -1 ? secondPerDay : pf[i+1].timeAsSeconds) -pf[i].timeAsSeconds);
-        }
-        avgValue/=secondPerDay;
-        return avgValue;
-    }
 
-    //todo replace round below by Round.roundTo function
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
     // end of autotune Plugin
     public void atLog(String message){
         aapsLogger.debug(LTag.AUTOTUNE,message);
