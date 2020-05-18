@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.autotune;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+
 import dagger.android.support.DaggerFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +16,11 @@ import com.crashlytics.android.Crashlytics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.text.ParseException;
-
 //2 unknown imports disabled by philoul to build AAPS
 //import butterknife.BindView;
 //import butterknife.OnClick;
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -112,7 +108,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0) {
 //            resultView.setText(autotune.bgReadings(daysBack));
-                resultView.setText(autotunePlugin.result(daysBack));
+                resultView.setText(autotunePlugin.aapsAutotune(daysBack));
                 tuneProfileSwitch.setVisibility(View.VISIBLE);
             } else
                 resultView.setText("Set days between 1 and 10!!!");

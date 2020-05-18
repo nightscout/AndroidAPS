@@ -653,7 +653,7 @@ public class AutotunePlugin extends PluginBase {
 
 
     //Todo add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
-    public String result(int daysBack) {
+    public String aapsAutotune(int daysBack) {
         //todo add autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
