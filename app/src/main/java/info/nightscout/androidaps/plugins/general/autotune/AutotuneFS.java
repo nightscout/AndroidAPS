@@ -14,9 +14,13 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.utils.DateUtil;
 
+//Todo replace static by injection and manage autotune file generation here
+//@Singleton
 public class AutotuneFS {
     static final String logDirectory = LoggerUtils.getLogDirectory();
     static final int BUFFER_SIZE = 2048;

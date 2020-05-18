@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
@@ -52,8 +53,9 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
-
-//Todo: Replace class below by a extended class of TreatmentsPlugin (see IobCobStaticCalculatorPlugin example in HistoryBrowser)
+//Todo clean unused function
+//and verify iob calculation for autotune
+@Singleton
 public class AutotuneIob {
     private final HasAndroidInjector injector;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);

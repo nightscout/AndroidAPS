@@ -51,25 +51,11 @@ import javax.inject.Singleton;
  let's start by taking 1 day of data from NS, and comparing it to ideal BG
  TODO: Make this plugin disabable
  TODO: ADD Support for multiple ISF, IC and target values to the exported profile
- START_DAYS_AGO=1  # Default to yesterday if not otherwise specified
- END_DAYS_AGO=1  # Default to yesterday if not otherwise specified
- EXPORT_EXCEL="" # Default is to not export to Microsoft Excel
- TERMINAL_LOGGING=true
- CATEGORIZE_UAM_AS_BASAL=false
- RECOMMENDS_REPORT=true
- UNKNOWN_OPTION=""
- FIRST WE NEED THE DATA PREPARATION
- -- oref0 autotuning data prep tool
- -- Collects and divides up glucose data for periods dominated by carb absorption,
- -- correction insulin, or basal insulin, and adds in avgDelta and deviations,
- -- for use in oref0 autotuning algorithm
- -- get glucoseData and sort it
- -- get profile - done
- -- get treatments
 
- * Update by philoul on 03/02/2020
- *  property getIsf / getTargetLow / getTargetHigh replaced by getIsfMgdl / getTargetLowMgdl / getTargetHighMgdl in Profile objects
- *  TODO: add Preference for main settings (categorize_uam_as_basal, nb of days, may be advanced settings for % of adjustment (default 20%))
+ * Update by philoul on 05/2020 (complete refactor of AutotunePlugin)
+ *  TODO: add Preference for main settings (may be advanced settings for % of adjustment (default 20%))
+ *  Manage ProfileSwitch once Results validated (Still lots of work!)
+ *
  */
 
 @Singleton
