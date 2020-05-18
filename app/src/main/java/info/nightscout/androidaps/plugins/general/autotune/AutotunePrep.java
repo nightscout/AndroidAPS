@@ -35,7 +35,7 @@ import info.nightscout.androidaps.utils.Round;
 public class AutotunePrep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
-    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
+//    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     @Inject ProfileFunction profileFunction;
     @Inject AutotunePlugin autotunePlugin;
     @Inject SP sp;
@@ -59,7 +59,7 @@ public class AutotunePrep {
         // this sorts the treatments collection in order.
         //Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
 
-        log.debug("Nb of meals: " + treatments.size() + " Nb of treatments: " + autotuneIob.getTreatmentsFromHistory().size() + " Nb of TempBasals: " + autotuneIob.getTemporaryBasalsFromHistory().size() + " Nb of ExtBol:" + autotuneIob.getExtendedBolusesFromHistory().size());
+        //log("Nb of meals: " + treatments.size() + " Nb of treatments: " + autotuneIob.getTreatmentsFromHistory().size() + " Nb of TempBasals: " + autotuneIob.getTemporaryBasalsFromHistory().size() + " Nb of ExtBol:" + autotuneIob.getExtendedBolusesFromHistory().size());
         Profile profileData = tunedprofile.profile;
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
@@ -79,7 +79,7 @@ public class AutotunePrep {
         int boluses = 0;
         int maxCarbs = 0;
         if (treatments.size() < 1) {
-            autotunePlugin.atLog("No treatments");
+            log("No treatments");
             return null;
         }
         List<BGDatum> csfGlucoseData = new ArrayList<BGDatum>();
@@ -171,7 +171,7 @@ public class AutotunePrep {
                 avgDelta = (bg - bucketedData.get(i + 4).value) / 4;
 
             } else {
-                log.error("Could not find glucose data");
+                log("Could not find glucose data");
             }
 
             avgDelta = Round.roundTo(avgDelta,0.01);
@@ -226,7 +226,7 @@ public class AutotunePrep {
             if (mealCOB > 0) {
                 Profile profile;
                 if (profileFunction.getProfile(BGTime) == null) {
-                    log.debug("No profile selected");
+                    log("No profile selected");
                     return null;
                 }
                 profile = profileFunction.getProfile(BGTime);
@@ -249,7 +249,7 @@ public class AutotunePrep {
                     crInitialIOB = iob.iob;
                     crInitialBG = glucoseDatum.value;
                     crInitialCarbTime = glucoseDatum.date;
-                    autotunePlugin.atLog("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime));
+                    log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime));
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -261,7 +261,7 @@ public class AutotunePrep {
                     double crEndIOB = iob.iob;
                     double crEndBG = glucoseDatum.value;
                     long crEndTime = glucoseDatum.date;
-                    log.debug("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + crEndTime);
+                    log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + crEndTime);
 
                     CRDatum crDatum = new CRDatum();
                     crDatum.crInitialBG = crInitialBG;
@@ -272,13 +272,13 @@ public class AutotunePrep {
                     crDatum.crEndTime = crEndTime;
                     //log.debug(CRDatum);
                     //String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime + ",   \"CRCarbs\": " + CRCarbs + "}";
-                    log.debug("CRDatum is: " + crDatum.toString() );
+                    log("CRDatum is: " + crDatum.toString() );
 
                     int CRElapsedMinutes = Math.round((crEndTime - crInitialCarbTime) / (1000 * 60));
 
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if (CRElapsedMinutes < 60 || (i == 1 && mealCOB > 0)) {
-                        log.debug("Ignoring " + CRElapsedMinutes + " m CR period.");
+                        log("Ignoring " + CRElapsedMinutes + " m CR period.");
                     } else {
                         crData.add(crDatum);
                     }
@@ -307,7 +307,7 @@ public class AutotunePrep {
                 //log.debug(type);
                 if (type.equals("csf") == false) {
                     glucoseDatum.mealAbsorption = "start";
-                    autotunePlugin.atLog(glucoseDatum.mealAbsorption + " carb absorption");
+                    log(glucoseDatum.mealAbsorption + " carb absorption");
                 }
                 type = "csf";
                 glucoseDatum.mealCarbs = (int) mealCarbs;
@@ -317,7 +317,7 @@ public class AutotunePrep {
                 // check previous "type" value, and if it was csf, set a mealAbsorption end flag
                 if (type == "csf") {
                     csfGlucoseData.get(csfGlucoseData.size() - 1).mealAbsorption = "end";
-                    log.debug(csfGlucoseData.get(csfGlucoseData.size() - 1).mealAbsorption + " carb absorption");
+                    log(csfGlucoseData.get(csfGlucoseData.size() - 1).mealAbsorption + " carb absorption");
                 }
 
                 if ((iob.iob > currentBasal || deviation > 6 || uam )) {
@@ -328,13 +328,13 @@ public class AutotunePrep {
                     }
                     if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start";
-                        autotunePlugin.atLog(glucoseDatum.uamAbsorption + " unannnounced meal absorption");
+                        log(glucoseDatum.uamAbsorption + " unannnounced meal absorption");
                     }
                     type = "uam";
                     uamGlucoseData.add(glucoseDatum);
                 } else {
                     if (type == "uam") {
-                        autotunePlugin.atLog("end unannounced meal absorption");
+                        log("end unannounced meal absorption");
                     }
 
 
@@ -370,10 +370,10 @@ public class AutotunePrep {
             // debug line to print out all the things
 //            BGDateArray = BGDate.toString().split(" ");
 //            BGTime = BGDateArray[4];
-            autotunePlugin.atLog((absorbing?1:0)+" mealCOB: "+Math.round(mealCOB)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            log((absorbing?1:0)+" mealCOB: "+Math.round(mealCOB)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
-        log.debug("end of loop bucket");
+        log("end of loop bucket");
 //        iobInputs.profile = new TunedProfile(opts.profile);
 //        iobInputs.history = opts.pumpHistory;
 //        iobInputs.treatments = opts.treatments;
@@ -398,16 +398,16 @@ public class AutotunePrep {
         int basalLength = basalGlucoseData.size();
 
         if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
-            log.debug("Categorizing all UAM data as basal.");
+            log("Categorizing all UAM data as basal.");
             basalGlucoseData.addAll(uamGlucoseData);
         } else if (CSFLength > 12) {
-            log.debug("Found at least 1h of carb absorption: assuming all meals were announced, and categorizing UAM data as basal.");
+            log("Found at least 1h of carb absorption: assuming all meals were announced, and categorizing UAM data as basal.");
             basalGlucoseData.addAll(uamGlucoseData);
         } else {
             if (2*basalLength < UAMLength) {
                 //log.debug(basalGlucoseData, UAMGlucoseData);
-                log.debug("Warning: too many deviations categorized as UnAnnounced Meals");
-                log.debug("Adding", UAMLength, "UAM deviations to", basalLength, "basal ones");
+                log("Warning: too many deviations categorized as UnAnnounced Meals");
+                log("Adding " + UAMLength + " UAM deviations to " + basalLength + " basal ones");
                 basalGlucoseData.addAll(uamGlucoseData);
                 //log.debug(basalGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
@@ -419,11 +419,11 @@ public class AutotunePrep {
                 }
                 //log.debug(newBasalGlucose);
                 basalGlucoseData = newBasalGlucose;
-                log.debug("and selecting the lowest 50%, leaving" + basalGlucoseData.size() + "basal+UAM ones");
+                log("and selecting the lowest 50%, leaving " + basalGlucoseData.size() + " basal+UAM ones");
             }
 
             if (2*ISFLength < UAMLength) {
-                log.debug("Adding " + UAMLength + " UAM deviations to " + ISFLength + " ISF ones");
+                log("Adding " + UAMLength + " UAM deviations to " + ISFLength + " ISF ones");
                 isfGlucoseData.addAll(uamGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations to ISF, but then discard the highest 50%
                 Collections.sort(isfGlucoseData, (o1, o2) -> (int) (o1.deviation - o2.deviation));
@@ -433,26 +433,26 @@ public class AutotunePrep {
                 }
                 //console.error(newISFGlucose);
                 isfGlucoseData = newISFGlucose;
-                log.error("and selecting the lowest 50%, leaving" + isfGlucoseData.size() + "ISF+UAM ones");
+                log("and selecting the lowest 50%, leaving " + isfGlucoseData.size() + " ISF+UAM ones");
                 //log.error(ISFGlucoseData.length, UAMLength);
             }
         }
         basalLength = basalGlucoseData.size();
         ISFLength = isfGlucoseData.size();
         if ( 4*basalLength + ISFLength < CSFLength && ISFLength < 10 ) {
-            log.debug("Warning: too many deviations categorized as meals");
+            log("Warning: too many deviations categorized as meals");
             //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
             //var basalGlucoseData = basalGlucoseData.concat(CSFGlucoseData);
-            log.debug("Adding",CSFLength,"CSF deviations to",ISFLength,"ISF ones");
+            log("Adding " + CSFLength + " CSF deviations to " + ISFLength + " ISF ones");
             isfGlucoseData.addAll(csfGlucoseData);
             csfGlucoseData = new ArrayList<>();
         }
 
 // categorize.js Lines 437-444
-        log.debug("CRData: "+crData.size());
-        log.debug("CSFGlucoseData: "+ csfGlucoseData.size());
-        log.debug("ISFGlucoseData: "+ isfGlucoseData.size());
-        log.debug("BasalGlucoseData: "+basalGlucoseData.size());
+        log("CRData: "+crData.size());
+        log("CSFGlucoseData: "+ csfGlucoseData.size());
+        log("ISFGlucoseData: "+ isfGlucoseData.size());
+        log("BasalGlucoseData: "+basalGlucoseData.size());
 // Here is the end of categorize.js file
 
 /* bloc below is for --tune-insulin-curve not developed for the moment
@@ -612,10 +612,10 @@ public class AutotunePrep {
     }
 
     //dosed.js full
-    private static double dosed(long start, long end, List<Treatment> treatments) {
+    private double dosed(long start, long end, List<Treatment> treatments) {
         double insulinDosed = 0;
         if (treatments.size()==0) {
-            log.debug("No treatments to process.");
+            log("No treatments to process.");
             return 0;
         }
 
@@ -624,11 +624,15 @@ public class AutotunePrep {
                 insulinDosed += treatment.insulin;
             }
         }
-        log.debug("insulin dosed: " + insulinDosed);
+        log("insulin dosed: " + insulinDosed);
 
         return Round.roundTo(insulinDosed,0.001);
     }
 
+
+    private void log(String message) {
+        autotunePlugin.atLog(message);
+    }
 
 }
 

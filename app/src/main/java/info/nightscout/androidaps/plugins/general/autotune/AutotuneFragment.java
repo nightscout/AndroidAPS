@@ -25,6 +25,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
+import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -36,7 +37,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 
 public class AutotuneFragment extends DaggerFragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(AutotuneFragment.class);
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject AutotunePlugin autotunePlugin;
     @Inject SP sp;
@@ -119,21 +119,21 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         } else if (id == R.id.tune_profileswitch){
             String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
             ProfileStore profile = null;
-            log.debug("ProfileSwitch pressed");
+            log("ProfileSwitch pressed");
             /*todo Profile management to update
             String profileString = SP.getString("autotuneprofile", null);
             if (profileString != null) {
                 if (L.isEnabled(L.PROFILE))
-                    log.debug("Loaded profile: " + profileString);
+                    log("Loaded profile: " + profileString);
                 try {
                     profile = new ProfileStore(new JSONObject(profileString));
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    log("Unhandled exception", e);
                     profile = null;
                 }
             } else {
                 if (L.isEnabled(L.PROFILE))
-                    log.debug("Stored profile not found");
+                    log("Stored profile not found");
             }
 
             if (profile != null) {
@@ -178,20 +178,24 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         int toMgDl=1;
         if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
-        Profile profile = profileFunction.getProfile(System.currentTimeMillis());
-        if(profile.equals(null))
+        TunedProfile profile = new TunedProfile(profileFunction.getProfile(System.currentTimeMillis()));
+        if(!profile.isValid)
             return "Non profile selected";
-        if (profile.getIcs().length>1) {
-            warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcs().length + " values. Average value is " + autotunePlugin.averageProfileValue(profile.getIcs()) + "g/U";
+        if (profile.getIcSize()>1) {
+            warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";
             nl="\n";
         }
-        if (profile.getIsfsMgdl().length>1) {
-            warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfsMgdl().length + " values. Average value is " + autotunePlugin.averageProfileValue(profile.getIsfsMgdl())/toMgDl + profileFunction.getUnits() + "/U";
+        if (profile.getIsfSize()>1) {
+            warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfSize() + " values. Average value is " + profile.isf/toMgDl + profileFunction.getUnits() + "/U";
             nl="\n";
         }
 
 
         return warning;
+    }
+
+    private void log(String message) {
+        autotunePlugin.atLog(message);
     }
 
 }

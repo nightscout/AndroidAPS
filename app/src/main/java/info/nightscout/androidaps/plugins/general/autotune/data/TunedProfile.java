@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -25,8 +26,11 @@ public class TunedProfile  {
     public Profile profile;
     public String profilename;
     private Profile.ProfileValue pv;
-    private static List basalsResult = new ArrayList<>();
-    public double currentBasal;
+    public double basal[] = new double[24];
+    public double ic;
+    public double isf;
+    public double dia;
+    public boolean isValid = false;
     @Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
@@ -36,15 +40,34 @@ public class TunedProfile  {
     public TunedProfile (Profile profile) {
         injector = StaticInjector.Companion.getInstance();
         injector.androidInjector().inject(this);
+
         this.profile=profile;
+        if (profile != null ) {
+            isValid = true;
+            //initialize tuned value with current profile values
+            basal = getBasal();
+            ic = getAvgIC();
+            isf = getAvgISF();
+            dia = profile.getDia();
+        } else
+            isValid = false;
     }
 
-    public void setIC(double ic) {
-
+    public Profile getProfile() {
+        return profile;
     }
 
-    public void setISF(double isf) {
+    public Profile getTunedProfile() {
 
+        return profile;
+    }
+
+    public int getIcSize() {
+        return profile.getIcs().length;
+    }
+
+    public int getIsfSize() {
+        return profile.getIsfsMgdl().length;
     }
 
     public double getAvgISF() {
@@ -55,11 +78,19 @@ public class TunedProfile  {
         return profile.getIcs().length==1?profile.getIcs()[0].value:averageProfileValue(profile.getIcs());
     }
 
-    public Profile getProfile() {
-        //todo add code to update profile with basal data, ISF and CR
+    public double[] getBasal() {
+        double basal[] = new double[24];
+        for (int i = 0; i < 24; i++) {
+            basal[i] = getBasal(i);
+        }
+        return basal;
+    }
 
-
-        return profile;
+    public double getBasal(Integer hour){
+        if(!isValid)
+            return 0d;
+        int secondfrommidnight = hour * 60 * 60;
+        return profile.getBasalTimeFromMidnight(secondfrommidnight);
     }
 
     public static double averageProfileValue(Profile.ProfileValue[] pf) {
@@ -119,20 +150,6 @@ public class TunedProfile  {
         } catch (JSONException e) {}
 
         return jsonString;
-    }
-
-    public static void basalsResultInit(){
-        // initialize basalsResult if
-//        log.debug(" basalsResult init");
-        if(basalsResult.isEmpty()) {
-            for (int i = 0; i < 24; i++) {
-                basalsResult.add(0d);
-            }
-        } else {
-            for (int i = 0; i < 24; i++) {
-                basalsResult.set(i, 0d);
-            }
-        }
     }
 
 }

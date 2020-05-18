@@ -177,6 +177,7 @@ public class AutotunePlugin extends PluginBase {
         return profile.getBasal(c.getTimeInMillis());
     }
 
+    //Todo Philoul remove funcion below once AutotuneCore finished
     public String tuneAllTheThings() throws JSONException {
 
 //                var previousAutotune = inputs.previousAutotune;
@@ -719,17 +720,20 @@ public class AutotunePlugin extends PluginBase {
 
                 //AutotunePrep autotunePrep = new AutotunePrep();
                 preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob,tunedProfile, pumpprofile);
+                //Todo philoul create dedicated function including log in AutotuneFS
                 AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json", preppedGlucose.toString(2));
                 atLog("file aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json created in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
 
+                //todo philoul remove bloc below once AutotuneCore finished
                 try {
                     tuneAllTheThings();
                 } catch (JSONException e) {
                     log.error(e.getMessage());
                 }
 
-                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
+                tunedProfile = new TunedProfile(autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile));
 
+                //Todo philoul create dedicated function including log in AutotuneFS
                 AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json", tunedProfile.profiletoOrefJSON());
                 atLog("Create newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folders");
             }
