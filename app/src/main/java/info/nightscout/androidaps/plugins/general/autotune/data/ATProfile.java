@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-public class TunedProfile  {
+public class ATProfile {
     public Profile profile;
     public String profilename;
     private Profile.ProfileValue pv;
@@ -40,7 +40,7 @@ public class TunedProfile  {
     private final HasAndroidInjector injector;
 
 //Todo add Autotune Injector
-    public TunedProfile (Profile profile) {
+    public ATProfile(Profile profile) {
         injector = StaticInjector.Companion.getInstance();
         injector.androidInjector().inject(this);
 

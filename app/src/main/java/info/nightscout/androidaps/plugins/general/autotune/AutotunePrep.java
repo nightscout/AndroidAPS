@@ -1,9 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
-import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,17 +9,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
-import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -53,7 +48,7 @@ public class AutotunePrep {
         this.injector.androidInjector().inject(this);
     }
 
-    public PreppedGlucose categorizeBGDatums(AutotuneIob autotuneIob, TunedProfile tunedprofile, TunedProfile pumpprofile)  {
+    public PreppedGlucose categorizeBGDatums(AutotuneIob autotuneIob, ATProfile tunedprofile, ATProfile pumpprofile)  {
 
         List<Treatment> treatments = autotuneIob.meals;
         // this sorts the treatments collection in order.
@@ -374,7 +369,7 @@ public class AutotunePrep {
         }
 
         log("end of loop bucket");
-//        iobInputs.profile = new TunedProfile(opts.profile);
+//        iobInputs.profile = new ATProfile(opts.profile);
 //        iobInputs.history = opts.pumpHistory;
 //        iobInputs.treatments = opts.treatments;
         //treatments = autotuneIob.find_insulin(iobInputs);

@@ -13,9 +13,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 //2 unknown imports disabled by philoul to build AAPS
 //import butterknife.BindView;
 //import butterknife.OnClick;
@@ -25,7 +22,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
-import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
+import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -104,7 +101,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.tune_run) {
-
+            //updateResult("Starting Autotune");
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0) {
 //            resultView.setText(autotune.bgReadings(daysBack));
@@ -178,7 +175,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         int toMgDl=1;
         if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
-        TunedProfile profile = new TunedProfile(profileFunction.getProfile(System.currentTimeMillis()));
+        ATProfile profile = new ATProfile(profileFunction.getProfile(System.currentTimeMillis()));
         if(!profile.isValid)
             return "Non profile selected";
         if (profile.getIcSize()>1) {
@@ -191,6 +188,12 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         }
 
         return warning;
+    }
+
+    //update if possible AutotuneFragment at beginning and during calculation between each day
+    public void updateResult(String message) {
+        resultView.setText(message);
+        updateGUI();
     }
 
     private void log(String message) {

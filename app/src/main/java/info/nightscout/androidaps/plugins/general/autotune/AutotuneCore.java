@@ -15,10 +15,8 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
-import info.nightscout.androidaps.plugins.general.autotune.data.DiaDatum;
-import info.nightscout.androidaps.plugins.general.autotune.data.PeakDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
-import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
+import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -38,12 +36,11 @@ public class AutotuneCore {
         this.injector.androidInjector().inject(this);
     }
 
-    public TunedProfile tuneAllTheThings (PreppedGlucose preppedGlucose, TunedProfile previousAutotune, TunedProfile pumpProfile) {
-
+    public ATProfile tuneAllTheThings (PreppedGlucose preppedGlucose, ATProfile previousAutotune, ATProfile pumpProfile) {
         //var pumpBasalProfile = pumpProfile.basalprofile;
         double[] pumpBasalProfile = pumpProfile.basal;
         //console.error(pumpBasalProfile);
-        double[] basalProfile = previousAutotune.basal;
+        double[] basalProfile=previousAutotune.basal;
         //console.error(basalProfile);
         //console.error(isfProfile);
         double isf = previousAutotune.isf;
@@ -191,13 +188,16 @@ public class AutotuneCore {
         log("crTotalCarbs: "+ crTotalCarbs +" crTotalInsulin: "+ crTotalInsulin +" totalCR: "+totalCR);
 
         // convert the basal profile to hourly if it isn't already
-        double hourlyBasalProfile[] = pumpProfile.basal;
-        double hourlyPumpProfile[] = pumpProfile.basal;
+        double hourlyBasalProfile[] = basalProfile;
+        double hourlyPumpProfile[] = pumpBasalProfile;
 
         //log(hourlyPumpProfile.toString());
         //log(hourlyBasalProfile.toString());
 
-        double newHourlyBasalProfile[] = hourlyBasalProfile;
+        double newHourlyBasalProfile[] = new double[24];
+        for (int i = 0 ; i < 24 ; i++)  {
+            newHourlyBasalProfile[i]  = hourlyBasalProfile [i];
+        }
         int basalUntuned[] = previousAutotune.basalUntuned;
 
         // look at net deviations for each hour
@@ -297,7 +297,7 @@ public class AutotuneCore {
                 lastAdjustedHour = hour;
             }
         }
-        log(newHourlyBasalProfile.toString());
+        //log(newHourlyBasalProfile.toString());
         basalProfile = newHourlyBasalProfile;
 
         // Calculate carb ratio (CR) independently of csf and isf
@@ -529,7 +529,6 @@ public class AutotuneCore {
         previousAutotune.basal=basalProfile;
         previousAutotune.isf = isf;
         previousAutotune.ic=Round.roundTo(carbRatio,0.001);
-        previousAutotune.updateProfile();
         previousAutotune.basalUntuned = basalUntuned;
         /*
         previousAutotune.dia=newDia;
@@ -538,6 +537,7 @@ public class AutotuneCore {
             autotuneOutput.useCustomPeakTime = true;
         }
         */
+        previousAutotune.updateProfile();
         return previousAutotune;
     }
 

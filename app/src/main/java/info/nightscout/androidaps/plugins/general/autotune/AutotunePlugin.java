@@ -23,11 +23,9 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.general.autotune.data.*;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,9 +34,6 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.TimeZone;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -91,6 +86,7 @@ public class AutotunePlugin extends PluginBase {
     private AutotunePrep autotunePrep;
     private AutotuneCore autotuneCore;
     private AutotuneIob autotuneIob;
+//    private AutotuneFragment autotuneFragment;
     private AAPSLogger aapsLogger;
 
     private final SP sp;
@@ -108,6 +104,7 @@ public class AutotunePlugin extends PluginBase {
             SP sp,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
+//            AutotuneFragment autotuneFragment,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
     )  {
         super(new PluginDescription()
@@ -130,6 +127,7 @@ public class AutotunePlugin extends PluginBase {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.injector = injector;
         this.sp=sp;
+//        this.autotuneFragment = autotuneFragment;
         this.aapsLogger = aapsLogger;
     }
 
@@ -165,20 +163,14 @@ public class AutotunePlugin extends PluginBase {
         atLog("Create " +  AutotuneFS.SETTINGS + " file in " + AutotuneFS.SETTINGSFOLDER + " folder");
         AutotuneFS.createAutotunefile(AutotuneFS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
 
-        int tunedISF = 0;
-        double isfResult = 0;
-        basalsResultInit();
         profile = profileFunction.getProfile(now);
-        try {
-            AutotuneFS.createAutotunefile("aapsfullprofile.json", profile.getData().toString(2), true);
-        } catch (JSONException e) {}
-        TunedProfile tunedProfile = new TunedProfile(profileFunction.getProfile(now));
-        if(tunedProfile.profile.equals(null))
-            return null;
-        tunedProfile.profilename=profileFunction.getProfileName();
-        TunedProfile pumpprofile = new TunedProfile(profileFunction.getProfile(now));
+        //try {
+        //    AutotuneFS.createAutotunefile("aapsfullprofile.json", profile.getData().toString(2), true);
+        //} catch (JSONException e) {}
+        ATProfile tunedProfile = new ATProfile(profile);
+        tunedProfile.profilename=resourceHelper.gs(R.string.autotune_tunedprofile_name);
+        ATProfile pumpprofile = new ATProfile(profile);
         pumpprofile.profilename=profileFunction.getProfileName();
-
         AutotuneFS.createAutotunefile("pumpprofile.json", pumpprofile.profiletoOrefJSON(),true);
         AutotuneFS.createAutotunefile("pumpprofile.json", pumpprofile.profiletoOrefJSON());
         atLog("Create pumpprofile.json file in " + AutotuneFS.SETTINGSFOLDER + " and " + AutotuneFS.AUTOTUNEFOLDER + " folders");
@@ -220,21 +212,11 @@ public class AutotunePlugin extends PluginBase {
 
                 AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json", tunedProfile.profiletoOrefJSON());
                 atLog("Create newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folders");
+//                autotuneFragment.updateResult("day " + i +" / "+ daysBack + " tuned");
             }
         }
 
-        if(previousResult != null) {
-            String previousAutotune = previousResult.optString("basalProfile");
-            previousAutotune = previousAutotune.substring(0, previousAutotune.length() - 1);
-            previousAutotune = previousAutotune.substring(1, previousAutotune.length());
-            List<String> basalProfile  = new ArrayList<String>(Arrays.asList(previousAutotune.split(", ")));
-            List<Double> tunedBasalProfile = new ArrayList<Double>();
-            //Parsing last result
-            if(basalProfile.size() > 0) {
-                for (int i = 0; i < 24; i++) {
-                    tunedBasalProfile.add(Double.parseDouble(basalProfile.get(i)));
-                }
-            }
+        if(tunedProfile.profile != null) {
             DecimalFormat df = new DecimalFormat("0.000");
             String line = "------------------------------------------\n";
 
@@ -243,13 +225,13 @@ public class AutotunePlugin extends PluginBase {
             //Todo Replace % of modification by number of missing days for each hour
             //May be we could remove CSF from the list...
             result = line;
-            result += "|Hour| Profile | Tuned |   %   |\n";
+            result += "|Hour| Profile | Tuned |   %   | nbKo\n";
             result += line;
             for (int i = 0; i < 24; i++) {
                 String basalString = df.format(pumpprofile.basal[i]);
-
                 String tunedString = df.format(tunedProfile.basal[i]);
-                int percentageChangeValue = (int) ((tunedBasalProfile.get(i)/pumpprofile.basal[i]) * 100 - 100) ;
+
+                int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpprofile.basal[i]) * 100 - 100) ;
                 String percentageChange;
                 if (percentageChangeValue == 0)
                     percentageChange = "   0  ";
@@ -261,7 +243,7 @@ public class AutotunePlugin extends PluginBase {
                     percentageChange += "%";
                 String hourString = i < 10 ? " 0"+ i : " " + i ;
 
-                result += "| " + hourString + "  |  " + basalString + "  |  " +tunedString+"  |" + percentageChange + " |\n";
+                result += "| " + hourString + "  |  " + basalString + "  |  " + tunedString + "  |" + percentageChange + " | " + tunedProfile.basalUntuned[i] + "\n";
 
             }
             result += line;
@@ -277,7 +259,7 @@ public class AutotunePlugin extends PluginBase {
 
             try {
 
-                AutotuneFS.createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name), tunedProfile.getData().toString(2).replace("\\/","/"),true);
+                AutotuneFS.createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.getData().toString(2).replace("\\/","/"),true);
 
                 //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
@@ -297,20 +279,6 @@ public class AutotunePlugin extends PluginBase {
             return result;
         } else
             return "No Result";
-    }
-
-    public static void basalsResultInit(){
-        // initialize basalsResult if
-//        log.debug(" basalsResult init");
-        if(basalsResult.isEmpty()) {
-            for (int i = 0; i < 24; i++) {
-                basalsResult.add(0d);
-            }
-        } else {
-            for (int i = 0; i < 24; i++) {
-                basalsResult.set(i, 0d);
-            }
-        }
     }
 
     private String settings (Date runDate, int nbDays, Date firstloopstart, Date lastloopend) {
@@ -357,8 +325,8 @@ public class AutotunePlugin extends PluginBase {
     // end of autotune Plugin
     public void atLog(String message){
         aapsLogger.debug(LTag.AUTOTUNE,message);
-        log.debug(message);
-        logString += message +"\n";
+        log.debug(message);                         // for debugging to have log even if Autotune Log disabled
+        logString += message +"\n";                 // for log file in autotune folder even if autotune log disable
 
     }
 }
