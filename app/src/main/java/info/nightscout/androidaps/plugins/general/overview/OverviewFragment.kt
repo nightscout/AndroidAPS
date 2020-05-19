@@ -485,11 +485,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_iobgraph.removeAllViews()
             for (i in 1 until numOfGraphs) {
                 val label = TextView(context)
-                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -90) }
+                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -120) }
                 overview_iobgraph.addView(label)
                 secondaryGraphsLabel.add(label)
                 val graph = GraphView(context)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(5), 0, resourceHelper.dpToPx(10)) }
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(35), 0, resourceHelper.dpToPx(15)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
@@ -790,7 +790,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // ****** GRAPH *******
         GlobalScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
-            val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin)
+            val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -853,7 +853,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // ------------------ 2nd graph
                 for (g in 0 until secondaryGraphs.size) {
-                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin)
+                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
                     var useIobForScale = false
                     var useCobForScale = false
                     var useDevForScale = false

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.db.DanaRHistoryRecord
+import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.dana.comm.RecordTypes
-import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
@@ -83,20 +83,17 @@ abstract class DanaRS_Packet_History_(
             val historySecond = byteArrayToInt(getBytes(data, DATA_START + 6, 1))
             val paramByte7 = historySecond.toByte()
             val dailyBolus: Double = ((data[DATA_START + 6].toInt() and 0xFF shl 8) + (data[DATA_START + 7].toInt() and 0xFF)) * 0.01
-            val date = DateTime(2000 + historyYear, historyMonth, historyDay, 0, 0)
-            val datetime = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute)
-            val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
             val historyCode = byteArrayToInt(getBytes(data, DATA_START + 7, 1))
             val paramByte8 = historyCode.toByte()
             val value: Int = (data[DATA_START + 8].toInt() and 0xFF shl 8) + (data[DATA_START + 9].toInt() and 0xFF)
-            aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
             danaRHistoryRecord.setBytes(data)
             // danaRHistoryRecord.recordCode is different from DanaR codes
-// set in switch for every type
+            // set in switch for every type
             var messageType = ""
             when (recordCode) {
                 0x02 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BOLUS
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_BOLUS
+                    val datetime = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute)
                     danaRHistoryRecord.recordDate = datetime.millis
                     when (0xF0 and paramByte8.toInt()) {
                         0xA0 -> {
@@ -123,61 +120,77 @@ abstract class DanaRS_Packet_History_(
                     }
                     danaRHistoryRecord.recordDuration = (paramByte8.toInt() and 0x0F) * 60 + paramByte7.toInt()
                     danaRHistoryRecord.recordValue = value * 0.01
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetime.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x03 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_DAILY
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_DAILY
                     messageType += "dailyinsulin"
+                    val date = DateTime(2000 + historyYear, historyMonth, historyDay, 0, 0)
                     danaRHistoryRecord.recordDate = date.millis
                     danaRHistoryRecord.recordDailyBasal = dailyBasal
                     danaRHistoryRecord.recordDailyBolus = dailyBolus
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(date.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x04 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_PRIME
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_PRIME
                     messageType += "prime"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     danaRHistoryRecord.recordValue = value * 0.01
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x05 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_REFILL
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_REFILL
                     messageType += "refill"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     danaRHistoryRecord.recordValue = value * 0.01
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x0b -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BASALHOUR
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_BASALHOUR
                     messageType += "basal hour"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     danaRHistoryRecord.recordValue = value * 0.01
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x99 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_TEMP_BASAL
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_TEMP_BASAL
                     messageType += "tb"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     danaRHistoryRecord.recordValue = value * 0.01
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x06 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_GLUCOSE
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_GLUCOSE
                     messageType += "glucose"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     danaRHistoryRecord.recordValue = value.toDouble()
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x07 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_CARBO
                     messageType += "carbo"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     danaRHistoryRecord.recordValue = value.toDouble()
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x0a -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ALARM
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_ALARM
                     messageType += "alarm"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     var strAlarm = "None"
                     when (paramByte8.toInt()) {
@@ -188,15 +201,18 @@ abstract class DanaRS_Packet_History_(
                     }
                     danaRHistoryRecord.recordAlarm = strAlarm
                     danaRHistoryRecord.recordValue = value * 0.01
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
 
                 0x09 -> {
-                    danaRHistoryRecord.recordCode = info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_SUSPEND
+                    danaRHistoryRecord.recordCode = RecordTypes.RECORD_TYPE_SUSPEND
                     messageType += "suspend"
+                    val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     var strRecordValue = "Off"
                     if (paramByte8.toInt() == 79) strRecordValue = "On"
                     danaRHistoryRecord.stringRecordValue = strRecordValue
+                    aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
                 }
             }
             databaseHelper.createOrUpdate(danaRHistoryRecord)
