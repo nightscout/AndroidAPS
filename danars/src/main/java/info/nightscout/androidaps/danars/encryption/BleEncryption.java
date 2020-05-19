@@ -75,6 +75,8 @@ public class BleEncryption {
     public static final int DANAR_PACKET__OPCODE_BOLUS__SET_CIR_CF_ARRAY = 0x4F;
     public static final int DANAR_PACKET__OPCODE_BOLUS__GET_BOLUS_OPTION = 0x50;
     public static final int DANAR_PACKET__OPCODE_BOLUS__SET_BOLUS_OPTION = 0x51;
+    public static final int DANAR_PACKET__OPCODE_BOLUS__GET_24_CIR_CF_ARRAY = 0x52;
+    public static final int DANAR_PACKET__OPCODE_BOLUS__SET_24_CIR_CF_ARRAY = 0x53;
 
     public static final int DANAR_PACKET__OPCODE_BASAL__SET_TEMPORARY_BASAL = 0x60;
     public static final int DANAR_PACKET__OPCODE_BASAL__TEMPORARY_BASAL_STATE = 0x61;
@@ -104,6 +106,12 @@ public class BleEncryption {
     // Easy Mode
     public static final int DANAR_PACKET__OPCODE_OPTION__GET_EASY_MENU_OPTION = 0x74;
     public static final int DANAR_PACKET__OPCODE_OPTION__SET_EASY_MENU_OPTION = 0x75;
+    public static final int DANAR_PACKET__OPCODE_OPTION__GET_EASY_MENU_STATUS = 0x76;
+    public static final int DANAR_PACKET__OPCODE_OPTION__SET_EASY_MENU_STATUS = 0x77;
+    public static final int DANAR_PACKET__OPCODE_OPTION__GET_PUMP_UTC_AND_TIME_ZONE = 0x78;
+    public static final int DANAR_PACKET__OPCODE_OPTION__SET_PUMP_UTC_AND_TIME_ZONE = 0x79;
+    public static final int DANAR_PACKET__OPCODE_OPTION__GET_PUMP_TIME_ZONE = 0x7A;
+    public static final int DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME_ZONE = 0x7B;
 
     public static final int DANAR_PACKET__OPCODE_ETC__SET_HISTORY_SAVE = 0xE0;
     public static final int DANAR_PACKET__OPCODE_ETC__KEEP_CONNECTION = 0xFF;

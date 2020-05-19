@@ -41,12 +41,18 @@ class DanaRS_Packet_Notify_Alarm(
                 errorString = resourceHelper.gs(R.string.lowbattery)
             0x06       ->  // Basal Compare
                 errorString = resourceHelper.gs(R.string.basalcompare)
-            0x09       ->  // Empty Reservoir
-                errorString = resourceHelper.gs(R.string.emptyreservoir)
             0x07, 0xFF ->  // Blood sugar measurement alert
                 errorString = resourceHelper.gs(R.string.bloodsugarmeasurementalert)
             0x08, 0xFE ->  // Remaining insulin level
                 errorString = resourceHelper.gs(R.string.remaininsulinalert)
+            0x09       ->  // Empty Reservoir
+                errorString = resourceHelper.gs(R.string.emptyreservoir)
+            0x0A       ->  // Check shaft
+                errorString = resourceHelper.gs(R.string.checkshaft)
+            0x0B       ->  // Basal MAX
+                errorString = resourceHelper.gs(R.string.basalmax)
+            0x0C       ->  // Daily MAX
+                errorString = resourceHelper.gs(R.string.dailymax)
             0xFD       ->  // Blood sugar check miss alarm
                 errorString = resourceHelper.gs(R.string.missedbolus)
         }

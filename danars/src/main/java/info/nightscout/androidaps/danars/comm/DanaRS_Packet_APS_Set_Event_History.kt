@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import java.util.*
+import info.nightscout.androidaps.logging.LTag
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import javax.inject.Inject
 
 class DanaRS_Packet_APS_Set_Event_History(
     injector: HasAndroidInjector,
@@ -13,29 +16,26 @@ class DanaRS_Packet_APS_Set_Event_History(
     private var param2: Int
 ) : DanaRS_Packet(injector) {
 
+    @Inject lateinit var danaPump: DanaPump
+
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY
-        if ((packetType == info.nightscout.androidaps.dana.DanaPump.CARBS || packetType == info.nightscout.androidaps.dana.DanaPump.BOLUS) && param1 <= 0) this.param1 = 0
+        if ((packetType == DanaPump.CARBS || packetType == DanaPump.BOLUS) && param1 <= 0) this.param1 = 0
         aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + dateUtil.dateAndTimeString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
     }
 
     override fun getRequestParams(): ByteArray {
-        val cal = GregorianCalendar()
-        cal.timeInMillis = time
-        val year = cal[Calendar.YEAR] - 1900 - 100
-        val month = cal[Calendar.MONTH] + 1
-        val day = cal[Calendar.DAY_OF_MONTH]
-        val hour = cal[Calendar.HOUR_OF_DAY]
-        val min = cal[Calendar.MINUTE]
-        val sec = cal[Calendar.SECOND]
+        val date =
+            if (danaPump.usingUTC) DateTime(time).withZone(DateTimeZone.UTC)
+            else DateTime(time)
         val request = ByteArray(11)
         request[0] = (packetType and 0xff).toByte()
-        request[1] = (year and 0xff).toByte()
-        request[2] = (month and 0xff).toByte()
-        request[3] = (day and 0xff).toByte()
-        request[4] = (hour and 0xff).toByte()
-        request[5] = (min and 0xff).toByte()
-        request[6] = (sec and 0xff).toByte()
+        request[1] = (date.year - 2000 and 0xff).toByte()
+        request[2] = (date.monthOfYear and 0xff).toByte()
+        request[3] = (date.dayOfMonth and 0xff).toByte()
+        request[4] = (date.hourOfDay and 0xff).toByte()
+        request[5] = (date.minuteOfHour and 0xff).toByte()
+        request[6] = (date.secondOfMinute and 0xff).toByte()
         request[7] = (param1 ushr 8 and 0xff).toByte()
         request[8] = (param1 and 0xff).toByte()
         request[9] = (param2 ushr 8 and 0xff).toByte()

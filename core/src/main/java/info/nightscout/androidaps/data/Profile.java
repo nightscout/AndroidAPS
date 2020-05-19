@@ -100,6 +100,7 @@ public class Profile {
     }
 
     protected void init(JSONObject json, int percentage, int timeshift) {
+        if (json == null) return;
         units = null;
         dia = Constants.defaultDIA;
         timeZone = TimeZone.getDefault();
@@ -402,6 +403,10 @@ public class Profile {
 
     public double getIsfMgdl(long time) {
         return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight(time)), units);
+    }
+
+    public double getIsfMgdlTimeFromMidnight(int timeAsSeconds) {
+        return toMgdl(getIsfTimeFromMidnight(timeAsSeconds), units);
     }
 
     public double getIsfTimeFromMidnight(int timeAsSeconds) {

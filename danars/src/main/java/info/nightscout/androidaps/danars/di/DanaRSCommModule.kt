@@ -25,6 +25,7 @@ abstract class DanaRSCommModule {
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_Calculation_Information(): DanaRS_Packet_Bolus_Get_Calculation_Information
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_Carbohydrate_Calculation_Information(): DanaRS_Packet_Bolus_Get_Carbohydrate_Calculation_Information
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_CIR_CF_Array(): DanaRS_Packet_Bolus_Get_CIR_CF_Array
+    @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_24_CIR_CF_Array(): DanaRS_Packet_Bolus_Get_24_CIR_CF_Array
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_Dual_Bolus(): DanaRS_Packet_Bolus_Get_Dual_Bolus
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_Extended_Bolus(): DanaRS_Packet_Bolus_Get_Extended_Bolus
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Get_Extended_Bolus_State(): DanaRS_Packet_Bolus_Get_Extended_Bolus_State
@@ -33,6 +34,7 @@ abstract class DanaRSCommModule {
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_Bolus_Option(): DanaRS_Packet_Bolus_Set_Bolus_Option
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_Initial_Bolus(): DanaRS_Packet_Bolus_Set_Initial_Bolus
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_CIR_CF_Array(): DanaRS_Packet_Bolus_Set_CIR_CF_Array
+    @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_24_CIR_CF_Array(): DanaRS_Packet_Bolus_Set_24_CIR_CF_Array
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_Dual_Bolus(): DanaRS_Packet_Bolus_Set_Dual_Bolus
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_Extended_Bolus(): DanaRS_Packet_Bolus_Set_Extended_Bolus
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(): DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel
@@ -76,4 +78,6 @@ abstract class DanaRSCommModule {
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_APS_Set_Event_History(): DanaRS_Packet_APS_Set_Event_History
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_General_Get_Shipping_Version(): DanaRS_Packet_General_Get_Shipping_Version
     @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Review_Get_Pump_Dec_Ratio(): DanaRS_Packet_Review_Get_Pump_Dec_Ratio
+    @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(): DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone
+    @ContributesAndroidInjector abstract fun contributesDanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(): DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone
 }

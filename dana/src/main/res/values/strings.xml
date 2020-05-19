@@ -42,6 +42,9 @@
     <string name="batterydischarged">Pump Battery Discharged</string>
     <string name="occlusion">Occlusion</string>
     <string name="emptyreservoir">Empty reservoir</string>
+    <string name="checkshaft">Check shaft</string>
+    <string name="basalmax">Basal max</string>
+    <string name="dailymax">Daily max</string>
     <string name="bloodsugarmeasurementalert">Blood sugar measurement alert</string>
     <string name="remaininsulinalert">Remaining insulin level</string>
     <string name="missedbolus">Missed bolus</string>

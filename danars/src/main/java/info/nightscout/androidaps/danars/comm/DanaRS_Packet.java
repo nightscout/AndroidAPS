@@ -151,6 +151,29 @@ public class DanaRS_Packet {
         return ret;
     }
 
+    protected static int intFromBuffMsbLsb(byte[] b, int srcStart, int srcLength) {
+        int ret;
+
+        switch (srcLength) {
+            case 1:
+                ret = b[DATA_START + srcStart] & 0x000000FF;
+                break;
+            case 2:
+                ret = ((b[DATA_START + srcStart] & 0x000000FF) << 8) + (b[DATA_START + srcStart + 1] & 0x000000FF);
+                break;
+            case 3:
+                ret = ((b[DATA_START + srcStart] & 0x000000FF) << 16) + ((b[DATA_START + srcStart + 1] & 0x000000FF) << 8) + (b[DATA_START + srcStart + 2] & 0x000000FF);
+                break;
+            case 4:
+                ret = ((b[DATA_START + srcStart] & 0x000000FF) << 24) + ((b[DATA_START + srcStart + 1] & 0x000000FF) << 16) + ((b[DATA_START + srcStart + 2] & 0x000000FF) << 8) + (b[DATA_START + srcStart + 3] & 0x000000FF);
+                break;
+            default:
+                ret = -1;
+                break;
+        }
+        return ret;
+    }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String stringFromBuff(byte[] buff, int offset, int length) {
         byte[] strbuff = new byte[length];

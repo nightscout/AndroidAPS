@@ -20,6 +20,7 @@ class DanaRS_Packet_APS_Set_Event_HistoryTest : DanaRSTestBase() {
                 it.dateUtil = dateUtil
             }
             if (it is DanaRS_Packet_APS_Set_Event_History) {
+                it.danaPump = danaPump
             }
         }
     }
