@@ -3,10 +3,11 @@ package info.nightscout.androidaps.dana
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.db.Treatment
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -49,8 +50,32 @@ class DanaPump @Inject constructor(
     var bleModel = "" // RS v3:  like BPN-1.0.1
     var isNewPump = true // R only , providing model info
     var password = -1 // R, RSv1
-    var pumpTime: Long = 0
+
+    // time
+    private var pumpTime: Long = 0
+    var zoneOffset: Int = 0 // i (hw 7+)
+
+    fun setPumpTime(value: Long) {
+        pumpTime = value
+    }
+
+    fun setPumpTime(value: Long, zoneOffset: Int) {
+        pumpTime = value + T.hours(zoneOffset.toLong()).msecs()
+        this.zoneOffset = zoneOffset
+    }
+
+    fun resetPumpTime() {
+        pumpTime = 0
+    }
+
+    fun getPumpTime() = pumpTime
+
     var hwModel = 0
+    val usingUTC
+        get() = hwModel >= 7
+    val profile24
+        get() = hwModel >= 7
+
     var protocol = 0
     var productCode = 0
     var errorState: ErrorState = ErrorState.NONE
@@ -90,8 +115,9 @@ class DanaPump @Inject constructor(
     var extendedBolusRemainingMinutes = 0
     var extendedBolusDeliveredSoFar = 0.0 //RS only = 0.0
 
-    // Profile
+    // Profile R,RSv1
     var units = 0
+    var activeProfile = 0
     var easyBasalMode = 0
     var basal48Enable = false
     var currentCIR = 0
@@ -107,7 +133,10 @@ class DanaPump @Inject constructor(
     var eveningCF = 0.0
     var nightCIR = 0
     var nightCF = 0.0
-    var activeProfile = 0
+
+    // Profile I
+    var cf24 = Array<Double>(24) { 0.0 }
+    var cir24 = Array<Double>(24) { 0.0 }
 
     //var pumpProfiles = arrayOf<Array<Double>>()
     var pumpProfiles: Array<Array<Double>>? = null
@@ -151,6 +180,8 @@ class DanaPump @Inject constructor(
     var bolusDone = false // success end
     var lastEventTimeLoaded: Long = 0 // timestamp of last received event
 
+    val lastKnownHistoryId: Int = 0 // hwver 7+, 1-2000
+
     fun createConvertedProfile(): ProfileStore? {
         pumpProfiles?.let {
             val json = JSONObject()
@@ -165,18 +196,30 @@ class DanaPump @Inject constructor(
                 json.put("store", store)
                 profile.put("dia", Constants.defaultDIA)
                 val carbratios = JSONArray()
-                carbratios.put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCIR))
-                carbratios.put(JSONObject().put("time", "06:00").put("timeAsSeconds", 6 * 3600).put("value", morningCIR))
-                carbratios.put(JSONObject().put("time", "11:00").put("timeAsSeconds", 11 * 3600).put("value", afternoonCIR))
-                carbratios.put(JSONObject().put("time", "14:00").put("timeAsSeconds", 17 * 3600).put("value", eveningCIR))
-                carbratios.put(JSONObject().put("time", "22:00").put("timeAsSeconds", 22 * 3600).put("value", nightCIR))
+                if (!profile24) {
+                    carbratios.put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCIR))
+                    carbratios.put(JSONObject().put("time", "06:00").put("timeAsSeconds", 6 * 3600).put("value", morningCIR))
+                    carbratios.put(JSONObject().put("time", "11:00").put("timeAsSeconds", 11 * 3600).put("value", afternoonCIR))
+                    carbratios.put(JSONObject().put("time", "14:00").put("timeAsSeconds", 17 * 3600).put("value", eveningCIR))
+                    carbratios.put(JSONObject().put("time", "22:00").put("timeAsSeconds", 22 * 3600).put("value", nightCIR))
+                } else { // 24 values
+                    for (i in 0..23) {
+                        carbratios.put(JSONObject().put("time", String.format("%02d", i) + ":00").put("timeAsSeconds", i * 3600).put("value", cir24[i]))
+                    }
+                }
                 profile.put("carbratio", carbratios)
                 val sens = JSONArray()
-                sens.put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCF))
-                sens.put(JSONObject().put("time", "06:00").put("timeAsSeconds", 6 * 3600).put("value", morningCF))
-                sens.put(JSONObject().put("time", "11:00").put("timeAsSeconds", 11 * 3600).put("value", afternoonCF))
-                sens.put(JSONObject().put("time", "17:00").put("timeAsSeconds", 17 * 3600).put("value", eveningCF))
-                sens.put(JSONObject().put("time", "22:00").put("timeAsSeconds", 22 * 3600).put("value", nightCF))
+                if (!profile24) {
+                    sens.put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCF))
+                    sens.put(JSONObject().put("time", "06:00").put("timeAsSeconds", 6 * 3600).put("value", morningCF))
+                    sens.put(JSONObject().put("time", "11:00").put("timeAsSeconds", 11 * 3600).put("value", afternoonCF))
+                    sens.put(JSONObject().put("time", "17:00").put("timeAsSeconds", 17 * 3600).put("value", eveningCF))
+                    sens.put(JSONObject().put("time", "22:00").put("timeAsSeconds", 22 * 3600).put("value", nightCF))
+                } else { // 24 values
+                    for (i in 0..23) {
+                        sens.put(JSONObject().put("time", String.format("%02d", i) + ":00").put("timeAsSeconds", i * 3600).put("value", cf24[i]))
+                    }
+                }
                 profile.put("sens", sens)
                 val basals = JSONArray()
                 val basalValues = if (basal48Enable) 48 else 24
@@ -270,6 +313,7 @@ class DanaPump @Inject constructor(
         const val PROFILECHANGE = 13
         const val CARBS = 14
         const val PRIMECANNULA = 15
+        const val TIMECHANGE = 16
 
         // Dana R btModel
         const val DOMESTIC_MODEL = 0x01
