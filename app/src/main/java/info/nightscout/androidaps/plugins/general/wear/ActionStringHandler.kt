@@ -86,7 +86,7 @@ class ActionStringHandler @Inject constructor(
         var rMessage = ""
         var rAction = ""
         // do the parsing and check constraints
-        val act = actionString.split("\\s+").toTypedArray()
+        val act = actionString.split("\\s+".toRegex()).toTypedArray()
         if ("fillpreset" == act[0]) { ///////////////////////////////////// PRIME/FILL
             val amount: Double = if ("1" == act[1]) {
                 sp.getDouble("fill_button1", 0.3)
@@ -470,7 +470,7 @@ class ActionStringHandler @Inject constructor(
         if (System.currentTimeMillis() - lastSentTimestamp > TIMEOUT) return
         lastConfirmActionString = null
         // do the parsing, check constraints and enact!
-        val act = actionString.split("\\s+").toTypedArray()
+        val act = actionString.split("\\s+".toRegex()).toTypedArray()
         if ("fill" == act[0]) {
             val amount = SafeParse.stringToDouble(act[1])
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
