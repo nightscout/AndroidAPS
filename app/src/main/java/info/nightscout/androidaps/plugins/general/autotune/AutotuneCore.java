@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -18,6 +15,8 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.DiaDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.PeakDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -61,21 +60,107 @@ public class AutotuneCore {
         else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK)
             peak=sp.getInt(R.string.key_insulin_oref_peak,75);
 
+        List<BGDatum> csfGlucose = preppedGlucose.csfGlucoseData;
+        List<BGDatum> isfGlucose = preppedGlucose.isfGlucoseData;
+        List<BGDatum> basalGlucose = preppedGlucose.basalGlucoseData;
         List<CRDatum> crData = preppedGlucose.crData;
-        List<BGDatum> csfGlucoseData = preppedGlucose.csfGlucoseData;
-        List<BGDatum> isfGlucoseData = preppedGlucose.isfGlucoseData;
-        List<BGDatum> basalGlucoseData = preppedGlucose.basalGlucoseData;
+        //List<DiaDatum> diaDeviations = preppedGlucose.diaDeviations;
+        //List<PeakDatum> peakDeviations = preppedGlucose.peakDeviations;
 
-        //TODO: Mabe get real pump values like in the original but use profile.isf for now
-        Profile pumpISFProfile = null;
-        double pumpISF = 0d;
-        double pumpCarbRatio = 0d;
-        double pumpCSF = 0d;
+        double pumpISF = pumpProfile.isf;
+        double pumpCarbRatio = pumpProfile.ic;
+        double pumpCSF = pumpISF / pumpCarbRatio;
         // Autosens constraints
         double autotuneMax = SafeParse.stringToDouble(sp.getString("openapsama_autosens_max", "1.2"));
         double autotuneMin = SafeParse.stringToDouble(sp.getString("openapsama_autosens_min", "0.7"));
         double min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
-//*****************************************************************************************************************************************************************************************************
+
+/**********************************************************************************************************************************************
+        // tune DIA
+        var newDIA = DIA;
+        if (diaDeviations) {
+            var currentDIAMeanDev = diaDeviations[2].meanDeviation;
+            var currentDIARMSDev = diaDeviations[2].RMSDeviation;
+            //console.error(DIA,currentDIAMeanDev,currentDIARMSDev);
+            var minMeanDeviations = 1000000;
+            var minRMSDeviations = 1000000;
+            var meanBest = 2;
+            var RMSBest = 2;
+            for (var i=0; i < diaDeviations.length; i++) {
+                var meanDeviations = diaDeviations[i].meanDeviation;
+                var RMSDeviations = diaDeviations[i].RMSDeviation;
+                if (meanDeviations < minMeanDeviations) {
+                    minMeanDeviations = Math.round(meanDeviations*1000)/1000;
+                    meanBest = i;
+                }
+                if (RMSDeviations < minRMSDeviations) {
+                    minRMSDeviations = Math.round(RMSDeviations*1000)/1000;
+                    RMSBest = i;
+                }
+            }
+            console.error("Best insulinEndTime for meanDeviations:",diaDeviations[meanBest].dia,"hours");
+            console.error("Best insulinEndTime for RMSDeviations:",diaDeviations[RMSBest].dia,"hours");
+            if ( meanBest < 2 && RMSBest < 2 ) {
+                if ( diaDeviations[1].meanDeviation < currentDIAMeanDev * 0.99 && diaDeviations[1].RMSDeviation < currentDIARMSDev * 0.99 ) {
+                    newDIA = diaDeviations[1].dia;
+                }
+            } else if ( meanBest > 2 && RMSBest > 2 ) {
+                if ( diaDeviations[3].meanDeviation < currentDIAMeanDev * 0.99 && diaDeviations[3].RMSDeviation < currentDIARMSDev * 0.99 ) {
+                    newDIA = diaDeviations[3].dia;
+                }
+            }
+            if ( newDIA > 12 ) {
+                console.error("insulinEndTime maximum is 12h: not raising further");
+                newDIA=12;
+            }
+            if ( newDIA !== DIA ) {
+                console.error("Adjusting insulinEndTime from",DIA,"to",newDIA,"hours");
+            } else {
+                console.error("Leaving insulinEndTime unchanged at",DIA,"hours");
+            }
+        }
+
+        // tune insulinPeakTime
+        var newPeak = peak;
+        if (peakDeviations && peakDeviations[2]) {
+            var currentPeakMeanDev = peakDeviations[2].meanDeviation;
+            var currentPeakRMSDev = peakDeviations[2].RMSDeviation;
+            //console.error(currentPeakMeanDev);
+            minMeanDeviations = 1000000;
+            minRMSDeviations = 1000000;
+            meanBest = 2;
+            RMSBest = 2;
+            for (i=0; i < peakDeviations.length; i++) {
+                meanDeviations = peakDeviations[i].meanDeviation;
+                RMSDeviations = peakDeviations[i].RMSDeviation;
+                if (meanDeviations < minMeanDeviations) {
+                    minMeanDeviations = Math.round(meanDeviations*1000)/1000;
+                    meanBest = i;
+                }
+                if (RMSDeviations < minRMSDeviations) {
+                    minRMSDeviations = Math.round(RMSDeviations*1000)/1000;
+                    RMSBest = i;
+                }
+            }
+            console.error("Best insulinPeakTime for meanDeviations:",peakDeviations[meanBest].peak,"minutes");
+            console.error("Best insulinPeakTime for RMSDeviations:",peakDeviations[RMSBest].peak,"minutes");
+            if ( meanBest < 2 && RMSBest < 2 ) {
+                if ( peakDeviations[1].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[1].RMSDeviation < currentPeakRMSDev * 0.99 ) {
+                    newPeak = peakDeviations[1].peak;
+                }
+            } else if ( meanBest > 2 && RMSBest > 2 ) {
+                if ( peakDeviations[3].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[3].RMSDeviation < currentPeakRMSDev * 0.99 ) {
+                    newPeak = peakDeviations[3].peak;
+                }
+            }
+            if ( newPeak !== peak ) {
+                console.error("Adjusting insulinPeakTime from",peak,"to",newPeak,"minutes");
+            } else {
+                console.error("Leaving insulinPeakTime unchanged at",peak);
+            }
+        }
+
+**************************************************************************************************************************************************************/
 
         // Calculate carb ratio (CR) independently of csf and isf
         // Use the time period from meal bolus/carbs until COB is zero and IOB is < currentBasal/2
@@ -85,19 +170,19 @@ public class AutotuneCore {
 
         double crTotalCarbs = 0;
         double crTotalInsulin = 0;
-        List<CRDatum> crDatum = new ArrayList<CRDatum>();
         for (int i=0; i<crData.size()-1; i++) {
-            double crBGChange = crData.get(i).crEndBG - crData.get(i).crInitialBG;
+            CRDatum crDatum = crData.get(i);
+            double crBGChange = crDatum.crEndBG - crDatum.crInitialBG;
             double crInsulinReq = crBGChange / isf;
-            double crIOBChange = crData.get(i).crEndIOB - crData.get(i).crInitialIOB;
-            crData.get(i).crInsulinTotal = crData.get(i).crInitialIOB + crData.get(i).crInsulin + crInsulinReq;
-            //log.debug(CRDatum.CRInitialIOB, CRDatum.CRInsulin, crInsulinReq, CRInsulinTotal);
-            double CR = Round.roundTo(crData.get(i).crCarbs / crData.get(i).crInsulinTotal,0.001);
-            //log.debug(crBGChange, crInsulinReq, crIOBChange, CRInsulinTotal);
-            //log.debug("CRCarbs:",CRDatum.CRCarbs,"CRInsulin:",CRDatum.CRInsulinTotal,"CR:",CR);
-            if (crData.get(i).crInsulin > 0) {
-                crTotalCarbs += crData.get(i).crCarbs;
-                crTotalInsulin += crData.get(i).crInsulinTotal;
+            double crIOBChange = crDatum.crEndIOB - crDatum.crInitialIOB;
+            crDatum.crInsulinTotal = crDatum.crInitialIOB + crDatum.crInsulin + crInsulinReq;
+            //log(crDatum.crInitialIOB + " " + crDatum.crInsulin + " " + crInsulinReq + " " + crDatum.crInsulinTotal);
+            double cr = Round.roundTo(crDatum.crCarbs / crDatum.crInsulinTotal,0.001);
+            //log(crBGChange + " " + crInsulinReq + " " + crIOBChange + " " + crDatum.crInsulinTotal);
+            //log("CRCarbs: " + crDatum.crCarbs + " CRInsulin: " + crDatum.crInsulinTotal + " CR:" + cr);
+            if (crDatum.crInsulin > 0) {
+                crTotalCarbs += crDatum.crCarbs;
+                crTotalInsulin += crDatum.crInsulinTotal;
             }
         }
 
@@ -109,54 +194,20 @@ public class AutotuneCore {
         double hourlyBasalProfile[] = pumpProfile.basal;
         double hourlyPumpProfile[] = pumpProfile.basal;
 
-        //List<Double> basalProfile = new List<Double>;
-        /*for (int i=0; i < 24; i++) {
-            // autotuned basal profile
-            for (int j=0; j < basalProfile.size(); ++j) {
-                if (basalProfile[j].minutes <= i * 60) {
-                    if (basalProfile[j].rate == 0) {
-                        log.debug("ERROR: bad basalProfile",basalProfile[j]);
-                        return;
-                    }
-                    hourlyBasalProfile[i] = JSON.parse(JSON.stringify(basalProfile[j]));
-                }
-            }
-            hourlyBasalProfile[i].i=i;
-            hourlyBasalProfile[i].minutes=i*60;
-            var zeroPadHour = ("000"+i).slice(-2);
-            hourlyBasalProfile[i].start=zeroPadHour + ":00:00";
-            hourlyBasalProfile[i].rate=Math.round(hourlyBasalProfile[i].rate*1000)/1000
-            // pump basal profile
-            if (pumpBasalProfile && pumpBasalProfile[0]) {
-                for (int j=0; j < pumpBasalProfile.length; ++j) {
-                    //log.debug(pumpBasalProfile[j]);
-                    if (pumpBasalProfile[j].rate == 0) {
-                        log.debug("ERROR: bad pumpBasalProfile",pumpBasalProfile[j]);
-                        return;
-                    }
-                    if (pumpBasalProfile[j].minutes <= i * 60) {
-                        hourlyPumpProfile[i] = JSON.parse(JSON.stringify(pumpBasalProfile[j]));
-                    }
-                }
-                hourlyPumpProfile[i].i=i;
-                hourlyPumpProfile[i].minutes=i*60;
-                hourlyPumpProfile[i].rate=Math.round(hourlyPumpProfile[i].rate*1000)/1000
-            }
-        }
-        *///log.debug(hourlyPumpProfile);
-        //log.debug(hourlyBasalProfile);
+        //log(hourlyPumpProfile.toString());
+        //log(hourlyBasalProfile.toString());
 
         double newHourlyBasalProfile[] = hourlyBasalProfile;
-
+        int basalUntuned[] = previousAutotune.basalUntuned;
 
         // look at net deviations for each hour
         for (int hour=0; hour < 24; hour++) {
             double deviations = 0;
-            for (int i=0; i < basalGlucoseData.size(); ++i) {
+            for (int i = 0; i < basalGlucose.size(); ++i) {
                 Date BGTime = null;
 
-                if (basalGlucoseData.get(i).date != 0) {
-                    BGTime = new Date(basalGlucoseData.get(i).date);
+                if (basalGlucose.get(i).date != 0) {
+                    BGTime = new Date(basalGlucose.get(i).date);
                 }  else {
                     log("Could not determine last BG time");
                 }
@@ -164,7 +215,7 @@ public class AutotuneCore {
                 int myHour = BGTime.getHours();
                 if (hour == myHour) {
                     //log.debug(basalGlucose[i].deviation);
-                    deviations += basalGlucoseData.get(i).deviation;
+                    deviations += basalGlucose.get(i).deviation;
                 }
             }
             deviations = Round.roundTo(deviations, 0.001);
@@ -234,18 +285,19 @@ public class AutotuneCore {
                     if (! (hourlyBasalProfile[nextHour] == newHourlyBasalProfile[nextHour])) {
                         nextAdjustedHour = nextHour;
                         break;
-                    } else {
-                        log("At hour: "+nextHour +" " + hourlyBasalProfile[nextHour] + " " +newHourlyBasalProfile[nextHour]);
+                    //} else {
+                    //    log("At hour: "+nextHour +" " + hourlyBasalProfile[nextHour] + " " +newHourlyBasalProfile[nextHour]);
                     }
                 }
                 //log.debug(hour, newHourlyBasalProfile);
-                // TODO: philoul may be allow % of adjustments in settings with safety limits
                 newHourlyBasalProfile[hour] = Round.roundTo( (0.8*hourlyBasalProfile[hour] + 0.1 * newHourlyBasalProfile[lastAdjustedHour] + 0.1 * newHourlyBasalProfile[nextAdjustedHour]),0.001);
-//                log.debug("Adjusting hour "+hour+" basal from "+hourlyBasalProfile.get(hour)+" to "+newHourlyBasalProfile.get(hour)+" based on hour "+lastAdjustedHour+" = "+newHourlyBasalProfile.get(lastAdjustedHour)+" and hour "+nextAdjustedHour+"="+newHourlyBasalProfile.get(nextAdjustedHour));
+                basalUntuned[hour]++;
+                log("Adjusting hour " + hour + " basal from " + hourlyBasalProfile[hour] + " to "+newHourlyBasalProfile[hour] + " based on hour "+lastAdjustedHour+" = "+newHourlyBasalProfile[lastAdjustedHour] + " and hour " + nextAdjustedHour + " = " + newHourlyBasalProfile[nextAdjustedHour]);
             } else {
                 lastAdjustedHour = hour;
             }
         }
+        log(newHourlyBasalProfile.toString());
         basalProfile = newHourlyBasalProfile;
 
         // Calculate carb ratio (CR) independently of csf and isf
@@ -265,13 +317,13 @@ public class AutotuneCore {
         double fullNewCSF;
         //log.debug(CSFGlucose[0].mealAbsorption);
         //log.debug(CSFGlucose[0]);
-        for (int i=0; i < csfGlucoseData.size(); ++i) {
+        for (int i = 0; i < csfGlucose.size(); ++i) {
             //log.debug(CSFGlucose[i].mealAbsorption, i);
-            if ( csfGlucoseData.get(i).mealAbsorption == "start" ) {
+            if ( csfGlucose.get(i).mealAbsorption == "start" ) {
                 deviations = 0;
-                mealCarbs = csfGlucoseData.get(i).mealCarbs;
-            } else if (csfGlucoseData.get(i).mealAbsorption == "end") {
-                deviations += csfGlucoseData.get(i).deviation;
+                mealCarbs = csfGlucose.get(i).mealCarbs;
+            } else if (csfGlucose.get(i).mealAbsorption == "end") {
+                deviations += csfGlucose.get(i).deviation;
                 // compare the sum of deviations from start to end vs. current csf * mealCarbs
                 //log.debug(csf,mealCarbs);
                 double csfRise = csf * mealCarbs;
@@ -282,8 +334,8 @@ public class AutotuneCore {
 
             } else {
                 //todo Philoul check 0 * min5minCarbImpact ???
-                deviations += Math.max(0*min5minCarbImpact,csfGlucoseData.get(i).deviation);
-                mealCarbs = Math.max(mealCarbs, csfGlucoseData.get(i).mealCarbs);
+                deviations += Math.max(0*min5minCarbImpact, csfGlucose.get(i).deviation);
+                mealCarbs = Math.max(mealCarbs, csfGlucose.get(i).mealCarbs);
             }
         }
         // at midnight, write down the mealcarbs as total meal carbs (to prevent special case of when only one meal and it not finishing absorbing by midnight)
@@ -298,7 +350,6 @@ public class AutotuneCore {
             // how much change would be required to account for all of the deviations
             fullNewCSF = Round.roundTo(totalDeviations/totalMealCarbs,0.01);
         }
-        // TODO: philoul may be allow % of adjustments in settings with safety limits
         // only adjust by 20%
         double newCSF = ( 0.8 * csf ) + ( 0.2 * fullNewCSF );
         // safety cap csf
@@ -318,7 +369,7 @@ public class AutotuneCore {
         totalDeviations = Round.roundTo(totalDeviations,0.001);
         log("totalMealCarbs: " + totalMealCarbs + " totalDeviations: " + totalDeviations + " oldCSF " + oldCSF + " fullNewCSF: " + fullNewCSF + " newCSF: " + newCSF);
         // this is where csf is set based on the outputs
-        if (newCSF == 0) {
+        if (newCSF != 0) {
             csf = newCSF;
         }
         double fullNewCR;
@@ -329,10 +380,13 @@ public class AutotuneCore {
             // how much change would be required to account for all of the deviations
             fullNewCR = totalCR;
         }
+        // don't tune CR out of bounds
+        double maxCR = pumpCarbRatio * autotuneMax;
+        if (maxCR > 150) { maxCR = 150 ; }
+        double minCR = pumpCarbRatio * autotuneMin;
+        if (minCR < 3) { minCR = 3 ; }
         // safety cap fullNewCR
         if (pumpCarbRatio != 0) {
-            double maxCR = pumpCarbRatio * autotuneMax;
-            double minCR = pumpCarbRatio * autotuneMin;
             if (fullNewCR > maxCR) {
                 log("Limiting fullNewCR from " + fullNewCR + " to "+Round.roundTo(maxCR,0.01) + " (which is " + autotuneMax+" * pump CR of " + pumpCarbRatio + ")");
                 fullNewCR = maxCR;
@@ -341,13 +395,10 @@ public class AutotuneCore {
                 fullNewCR = minCR;
             } //else { log.debug("newCR",newCR,"is close enough to",pumpCarbRatio); }
         }
-        // TODO: philoul may be allow % of adjustments in settings with safety limits
         // only adjust by 20%
         double newCR = ( 0.8 * carbRatio ) + ( 0.2 * fullNewCR );
         // safety cap newCR
         if (pumpCarbRatio != 0) {
-            double maxCR = pumpCarbRatio * autotuneMax;
-            double minCR = pumpCarbRatio * autotuneMin;
             if (newCR > maxCR) {
                 log("Limiting CR to " + Round.roundTo(maxCR,0.01) + " (which is " + autotuneMax + " * pump CR of " + pumpCarbRatio + ")");
                 newCR = maxCR;
@@ -373,12 +424,12 @@ public class AutotuneCore {
         List<Double> avgDeltas =   new ArrayList<Double>();
         List<Double> ratios =   new ArrayList<Double>();
         int count = 0;
-        for (int i=0; i < isfGlucoseData.size(); ++i) {
-            double deviation = isfGlucoseData.get(i).deviation;
+        for (int i = 0; i < isfGlucose.size(); ++i) {
+            double deviation = isfGlucose.get(i).deviation;
             isfDeviations.add(deviation);
-            double BGI = isfGlucoseData.get(i).BGI;
+            double BGI = isfGlucose.get(i).BGI;
             bGIs.add(BGI);
-            double avgDelta = isfGlucoseData.get(i).AvgDelta;
+            double avgDelta = isfGlucose.get(i).AvgDelta;
             avgDeltas.add(avgDelta);
             double ratio = 1 + deviation / BGI;
             //log.debug("Deviation:",deviation,"BGI:",BGI,"avgDelta:",avgDelta,"ratio:",ratio);
@@ -392,10 +443,10 @@ public class AutotuneCore {
         double p50deviation = IobCobCalculatorPlugin.percentile(isfDeviations.toArray(new Double[isfDeviations.size()]), 0.50);
         double p50BGI =  IobCobCalculatorPlugin.percentile(bGIs.toArray(new Double[bGIs.size()]), 0.50);
         double p50ratios = Round.roundTo( IobCobCalculatorPlugin.percentile(ratios.toArray(new Double[ratios.size()]), 0.50),0.001);
-        double fullNewISF = 0d;
+        double fullNewISF = isf;
         if (count < 10) {
             // leave isf unchanged if fewer than 5 isf data points
-            fullNewISF = isf;
+            log("Only found " + isfGlucose.size() + " ISF data points, leaving ISF unchanged at " + isf);
         } else {
             // calculate what adjustments to isf would have been necessary to bring median deviation to zero
             fullNewISF = isf * p50ratios;
@@ -404,6 +455,7 @@ public class AutotuneCore {
         // adjust the target isf to be a weighted average of fullNewISF and pumpISF
         double adjustmentFraction;
 /*
+        // TODO: philoul may be allow adjustmentFraction in settings with safety limits ?)
         if (typeof(pumpProfile.autotune_isf_adjustmentFraction) !== 'undefined') {
             adjustmentFraction = pumpProfile.autotune_isf_adjustmentFraction;
         } else {*/
@@ -419,7 +471,6 @@ public class AutotuneCore {
         if (pumpISF != 0) {
             if ( fullNewISF < 0 ) {
                 adjustedISF = isf;
-                log("fullNewISF < 0 setting adjustedISF to "+adjustedISF);
             } else {
                 adjustedISF = adjustmentFraction*fullNewISF + (1-adjustmentFraction)*pumpISF;
             }
@@ -433,7 +484,6 @@ public class AutotuneCore {
                 adjustedISF = minISF;
             }
 
-            // TODO: philoul may be allow % of adjustments in settings with safety limits Check % (10% in original autotune OAPS for isf ?)
             // and apply 20% of that adjustment
             newISF = ( 0.8 * isf ) + ( 0.2 * adjustedISF );
 
@@ -476,12 +526,18 @@ public class AutotuneCore {
 
  */
 
-//****************************************************************************************************************************************************************************************************
         previousAutotune.basal=basalProfile;
         previousAutotune.isf = isf;
         previousAutotune.ic=Round.roundTo(carbRatio,0.001);
         previousAutotune.updateProfile();
-
+        previousAutotune.basalUntuned = basalUntuned;
+        /*
+        previousAutotune.dia=newDia;
+        previousAutotune.insulinPeakTime = newPeak ;
+        if (diaDeviations || peakDeviations) {
+            autotuneOutput.useCustomPeakTime = true;
+        }
+        */
         return previousAutotune;
     }
 

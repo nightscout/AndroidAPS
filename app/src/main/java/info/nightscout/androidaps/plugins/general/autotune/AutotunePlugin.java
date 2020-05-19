@@ -354,7 +354,6 @@ public class AutotunePlugin extends PluginBase {
         return jsonString;
     }
 
-
     // end of autotune Plugin
     public void atLog(String message){
         aapsLogger.debug(LTag.AUTOTUNE,message);

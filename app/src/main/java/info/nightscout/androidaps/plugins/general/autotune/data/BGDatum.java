@@ -18,9 +18,6 @@ public class BGDatum extends BgReading {
     public String mealAbsorption = "";
     public  int mealCarbs = 0;
     public String uamAbsorption = "";
-    public long CRInitialCarbTime;
-    public long CREndTime;
-    public double CRInsulin;
     public double AvgDelta;
     private BgReading bgreading;
     public BGDatum() {

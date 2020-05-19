@@ -28,6 +28,7 @@ public class TunedProfile  {
     public String profilename;
     private Profile.ProfileValue pv;
     public double basal[] = new double[24];
+    public int basalUntuned[] = new int[24];
     public double ic;
     public double isf;
     public double dia;

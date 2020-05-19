@@ -15,6 +15,9 @@ public class PreppedGlucose {
     public List<BGDatum> csfGlucoseData = new ArrayList<BGDatum>();
     public List<BGDatum> isfGlucoseData = new ArrayList<BGDatum>();
     public List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
+    public List<DiaDatum> diaDeviations = new ArrayList<DiaDatum>();
+    public List<PeakDatum> peakDeviations = new ArrayList<PeakDatum>();
+
 
     // to generate same king of json string than oref0-autotune-prep
     public String toString() { return toString(0); }
