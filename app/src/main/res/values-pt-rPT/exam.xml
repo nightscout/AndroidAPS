@@ -115,7 +115,7 @@
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Tópico: Monitorização Remota</string>
     <string name="nsclient_howcanyou">Como pode monitorizar AAPS do seu filho remotamente?</string>
-    <string name="nsclient_nightscout">A usar um site Nightscout.</string>
+    <string name="nsclient_nightscout">Usando um site Nightscout.</string>
     <string name="nsclient_dexcomfollow">App Dex om Follow se estiver a usar a app original Dexcom (Glic apenas).</string>
     <string name="nsclient_dexcomfollowxdrip">Dexcom Follow se estiver a usar a app xDrip.</string>
     <string name="nsclient_xdripfollower">xDrip a correr no modo seguidor.</string>

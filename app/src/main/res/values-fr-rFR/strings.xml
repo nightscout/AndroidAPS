@@ -567,7 +567,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smbmaxminutes_summary">Max. minutes de basal pour limiter le SMB</string>
     <string name="uamsmbmaxminutes">SMB RNS minutes max</string>
     <string name="uamsmbmaxminutes_summary">Minutes de basal max pour limiter les SMB des RNS</string>
-    <string name="carbsReqThreshold">Seuil de suggestionde glucides</string>
+    <string name="carbsReqThreshold">Seuil de suggestion de glucides</string>
     <string name="carbsReqThreshold_summary">Quantité de glucides à partir de laquelle une notification est envoyée</string>
     <string name="dexcomg5_xdripupload_title">Transmettre les Gly vers xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>

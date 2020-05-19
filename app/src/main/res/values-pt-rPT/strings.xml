@@ -143,7 +143,7 @@
     <string name="careportal_newnstreatment_other">Outro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbs_label">Hidratos de Carbono</string>
+    <string name="careportal_newnstreatment_carbs_label">Hidratos</string>
     <string name="careportal_newnstreatment_insulin_label">Insulina</string>
     <string name="careportal_newnstreatment_carbtime_label">Tempo Hidratos</string>
     <string name="careportal_newnstreatment_split_label">Dividir</string>
@@ -370,12 +370,12 @@
     <string name="executing">A Executar</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
     <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
-    <string name="nsclientinternal">NSCliente</string>
-    <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="nsclientinternal">ClienteNS</string>
+    <string name="nsclientinternal_shortname">CLNS</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Rolar automático</string>
     <string name="restart">Reiniciar</string>
-    <string name="nsclientinternal_title">NSCliente</string>
+    <string name="nsclientinternal_title">ClienteNS</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientinternal_url_dialogmessage">Introduza o Nightscout URL</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
@@ -388,7 +388,7 @@
     <string name="status">Estado:</string>
     <string name="paused">Em pausa</string>
     <string name="clearlog">Limpar Registo</string>
-    <string name="nowritepermission">NSCliente sem permissões para alterar dados. Tem a senha API correta?</string>
+    <string name="nowritepermission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="wear_settings">Definições Wear</string>
     <string name="wear_detailedIOB_title">Mostrar IOB detalhada</string>
     <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
@@ -506,7 +506,7 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
-    <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip). Não habilite se tiver mais de uma instância de AAPS ou NSClient instalado!</string>
+    <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip). Não habilite se tiver mais de uma instância de AAPS ou ClienteNS instalado!</string>
     <string name="ns_localbroadcasts_title">Activar partilha local.</string>
     <string name="careportal_activity_label">ACTIVIDADE &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">HIDRATOS &amp; BÓLUS</string>
@@ -570,7 +570,7 @@
     <string name="carbsReqThreshold_summary">Quando Hidratos são sugeridos, quantos hidratos irá solicitar uma notificação</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
-    <string name="nsclientbg">Glic NSCliente</string>
+    <string name="nsclientbg">Glic ClienteNS</string>
     <string name="overview_editquickwizard_usebg">Cálculos Glic</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo de Bólus IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IOB</string>
@@ -584,7 +584,7 @@
     <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
     <string name="loopenabled">Loop activado</string>
     <string name="apsselected">APS seleccionado</string>
-    <string name="nsclienthaswritepermission">NSCLiente tem permissão de escrita</string>
+    <string name="nsclienthaswritepermission">ClienteNS tem permissão de escrita</string>
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
@@ -759,7 +759,7 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Configurações Ecrã</string>
     <string name="wear_general_settings">Configurações Gerais</string>
-    <string name="enable_nsclient">Activar NSCliente</string>
+    <string name="enable_nsclient">Activar ClienteNS</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="pumpsetup">Configurações da bomba</string>
     <string name="readstatus">Ler estado</string>
@@ -770,7 +770,7 @@
     <string name="sensitivitysetup">Configurar plugin Sensibilidade</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
+    <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="bgsourcesetup">Configure a fonte das glicemias</string>
     <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
@@ -821,7 +821,7 @@
     <string name="openaps_noasdata">Sem dados Autosens disponíveis</string>
     <string name="nav_logsettings">Definições de registo</string>
     <string name="resettodefaults">Repor definições por defeito</string>
-    <string name="nsmalfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
+    <string name="nsmalfunction">Erro de funcionamento do ClienteNS. Pondere reiniciar o NS e ClienteNS.</string>
     <string name="as">AS</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
     <string name="time_offset">Fuso horário</string>

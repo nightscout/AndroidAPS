@@ -132,12 +132,12 @@ Eversense-appen.</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Stopp innan lågt</string>
-    <string name="disabledloop">Loop avstängd</string>
+    <string name="disabledloop">Loop inaktiverad</string>
     <string name="disableloop">Inaktivera loop</string>
     <string name="enableloop">Aktivera loop</string>
     <string name="openloop_newsuggestion">Ny rekommendation tillgänglig</string>
     <string name="unsupportednsversion">Versionen av Nightscout stöds inte</string>
-    <string name="loopdisabled">LOOP STOPPAD PGA BEGRÄNSNINGAR</string>
+    <string name="loopdisabled">LOOP INAKTIVERAD PGA BEGRÄNSNINGAR</string>
     <string name="treatments_wizard_basaliob_label">IOB från basal</string>
     <string name="bolusconstraintapplied">Bolusspärr aktiverad</string>
     <string name="carbsconstraintapplied">Kolhydratsspärr aktiverad</string>
@@ -251,9 +251,9 @@ Eversense-appen.</string>
     <string name="uploading">Laddar upp</string>
     <string name="bolusstopped">Bolus avbruten</string>
     <string name="bolusstopping">Avbryter bolus</string>
-    <string name="smscommunicator_loophasbeendisabled">Loop stängdes av. </string>
-    <string name="smscommunicator_loophasbeenenabled">Loop aktiverades</string>
-    <string name="smscommunicator_loopisdisabled">Loop är avstängd</string>
+    <string name="smscommunicator_loophasbeendisabled">Loop inaktiverad.</string>
+    <string name="smscommunicator_loophasbeenenabled">Loop aktiverad</string>
+    <string name="smscommunicator_loopisdisabled">Loop är inaktiverad</string>
     <string name="smscommunicator_loopisenabled">Loop är aktiverad</string>
     <string name="valuelimitedto">%1$.2f begränsat till %2$.2f</string>
     <string name="valueoutofrange">Värdet %1$s är utanför hård begränsning</string>
@@ -423,7 +423,7 @@ Eversense-appen.</string>
     <string name="resume">Återuppta</string>
     <string name="reconnect">Återanslut Pump</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
-    <string name="smscommunicator_loopsuspended">Loop pausad. </string>
+    <string name="smscommunicator_loopsuspended">Loop pausad</string>
     <string name="smscommunicator_loopresumed">Loop återupptagen</string>
     <string name="treatments_wizard_bgtrend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
@@ -675,7 +675,7 @@ Eversense-appen.</string>
     <string name="overview_show_basals">Basaler</string>
     <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
     <string name="start_hypo_tt">Starta \"Hypo\"</string>
-    <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inte tillåtet.</string>
+    <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inaktiverat.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
     <string name="not_eng_mode_or_release">Engineering Mode inte aktiverat och appen körs inte som release</string>
     <string name="combo_actvity_reading_basal_profile">Läser basalprofil</string>

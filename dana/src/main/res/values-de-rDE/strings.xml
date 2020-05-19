@@ -29,6 +29,9 @@
     <string name="batterydischarged">Pumpenbatterie entladen</string>
     <string name="occlusion">Verstopfung</string>
     <string name="emptyreservoir">Reservoir leer</string>
+    <string name="checkshaft">Gewindestange prüfen</string>
+    <string name="basalmax">max. Basal</string>
+    <string name="dailymax">Tagesmaximum</string>
     <string name="bloodsugarmeasurementalert">Alarm BZ-Messung</string>
     <string name="remaininsulinalert">Restinsulin</string>
     <string name="missedbolus">Versäumter Bolus</string>
