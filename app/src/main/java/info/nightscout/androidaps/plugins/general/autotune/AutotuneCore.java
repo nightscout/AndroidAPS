@@ -45,7 +45,6 @@ public class AutotuneCore {
         //console.error(isfProfile);
         double isf = previousAutotune.isf;
         //console.error(isf);
-        Profile.ProfileValue[] carbRatioProfile = previousAutotune.profile.getIcs();
         double carbRatio = previousAutotune.ic;
         //console.error(carbRatio);
         Double csf = isf / carbRatio;
@@ -72,7 +71,7 @@ public class AutotuneCore {
         double autotuneMin = SafeParse.stringToDouble(sp.getString("openapsama_autosens_min", "0.7"));
         double min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
 
-/**********************************************************************************************************************************************
+/*******Tune DIA and Peak disabled for the first version code below in js********************************************************************************************************
         // tune DIA
         var newDIA = DIA;
         if (diaDeviations) {
@@ -507,30 +506,11 @@ public class AutotuneCore {
             isf = newISF;
         }
 
-/*
-        // reconstruct updated version of previousAutotune as autotuneOutput
-        JSONObject autotuneOutput = new JSONObject();
-        try {
-            if (previousAutotune != null)
-                autotuneOutput = new JSONObject(previousAutotune.toString());
-            autotuneOutput.put("basalProfile", basalProfile.toString());
-            //isfProfile.sensitivity = isf;
-            //autotuneOutput.put("isfProfile", isfProfile);
-            autotuneOutput.put("sens", isf);
-            autotuneOutput.put("csf", csf);
-            //carbRatio = isf / csf;
-            carbRatio = Round.roundTo(carbRatio,0.001);
-            autotuneOutput.put("carb_ratio", carbRatio);
-            previousResult = new JSONObject(autotuneOutput.toString());
-        } catch (JSONException e) {}
-
- */
-
         previousAutotune.basal=basalProfile;
         previousAutotune.isf = isf;
         previousAutotune.ic=Round.roundTo(carbRatio,0.001);
         previousAutotune.basalUntuned = basalUntuned;
-        /*
+        /* code prepared for future dia/peak integration
         previousAutotune.dia=newDia;
         previousAutotune.insulinPeakTime = newPeak ;
         if (diaDeviations || peakDeviations) {
