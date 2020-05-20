@@ -195,10 +195,10 @@ public class AutotunePlugin extends PluginBase {
                 autotuneIob = new AutotuneIob(from, to);
                 try {
                     //ns-entries files are for result compare with oref0 autotune on virtual machine
-                    AutotuneFS.createAutotunefile("ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
+                    AutotuneFS.createAutotunefile("aaps-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
                     atLog("Create ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                    AutotuneFS.createAutotunefile("ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+                    AutotuneFS.createAutotunefile("aaps-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
                     atLog("Create ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
                 } catch (JSONException e) {}
 
@@ -218,19 +218,30 @@ public class AutotunePlugin extends PluginBase {
 
         if(tunedProfile.profile != null) {
             DecimalFormat df = new DecimalFormat("0.000");
-            String line = "------------------------------------------\n";
+            DecimalFormat ef = new DecimalFormat("00");
+            String line = "-----------------------------------------------\n";
 
 
             //Todo add Strings and format for all results presentation
             //Todo Replace % of modification by number of missing days for each hour
             //May be we could remove CSF from the list...
             result = line;
-            result += "|Hour| Profile | Tuned |   %   | nbKo\n";
+            // show ISF CR and CSF
+            result += "|  ISF |   " + Round.roundTo(pumpprofile.isf / toMgDl, 0.1) + "   |    " + Round.roundTo(tunedProfile.isf / toMgDl,0.1)+"   |\n";
             result += line;
+            result += "|  CR  |     " + Round.roundTo(pumpprofile.ic,0.1) + "   |      " + Round.roundTo(tunedProfile.ic,0.1) + "   |\n";
+            //result += line;
+            //result += "| CSF | " + Round.roundTo(pumpprofile.isf / pumpprofile.ic / toMgDl, 0.001) + "  |  " + Round.roundTo(tunedProfile.isf / tunedProfile.ic / toMgDl,0.001) + "  |\n";
+            result += line;
+            result += "|Hour| Profile | Tuned |nbKo|  %   |\n";
+            result += line;
+            double totalBasal = 0d;
+            double totalTuned = 0d;
             for (int i = 0; i < 24; i++) {
                 String basalString = df.format(pumpprofile.basal[i]);
                 String tunedString = df.format(tunedProfile.basal[i]);
-
+                totalBasal +=pumpprofile.basal[i];
+                totalTuned +=tunedProfile.basal[i];
                 int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpprofile.basal[i]) * 100 - 100) ;
                 String percentageChange;
                 if (percentageChangeValue == 0)
@@ -241,18 +252,13 @@ public class AutotunePlugin extends PluginBase {
                     percentageChange = "+" + percentageChangeValue;
                 if (percentageChangeValue != 0)
                     percentageChange += "%";
-                String hourString = i < 10 ? " 0"+ i : " " + i ;
 
-                result += "| " + hourString + "  |  " + basalString + "  |  " + tunedString + "  |" + percentageChange + " | " + tunedProfile.basalUntuned[i] + "\n";
+
+                result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + ef.format(tunedProfile.basalUntuned[i]) + "  | " + percentageChange + " |\n";
 
             }
             result += line;
-            // show ISF CR and CSF
-            result += "|  ISF |   " + Round.roundTo(pumpprofile.isf / toMgDl, 0.001) + "   |    " + Round.roundTo(tunedProfile.isf / toMgDl,0.001)+"   |\n";
-            result += line;
-            result += "|  CR  |     " + pumpprofile.ic + "   |      " + Round.roundTo(tunedProfile.ic,0.001) + "   |\n";
-            result += line;
-            result += "| CSF | " + Round.roundTo(pumpprofile.isf / pumpprofile.ic / toMgDl, 0.001) + "  |  " + Round.roundTo(tunedProfile.isf / tunedProfile.ic / toMgDl,0.001) + "  |\n";
+            result += "|  Som  |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
             result += line;
 
             AutotuneFS.createAutotunefile(AutotuneFS.RECOMMENDATIONS,result);
