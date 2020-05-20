@@ -646,6 +646,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         } else {
             overview_apsmode_text?.visibility = View.GONE
         }
+        val lastRun = loopPlugin.lastRun
 
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
@@ -654,9 +655,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
         } else {
-            overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-            overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-            overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+            //If the target is not the same as set in the profile then oref has overridden it
+            //show this change to the user if it exists
+            if (lastRun != null){
+                var targetused = lastRun!!.constraintsProcessed!!.targetBG
+                if (units == Constants.MMOL)
+                    targetused *= Constants.MGDL_TO_MMOLL
+
+                if (profile.targetUnits != targetused) {
+                    overview_temptarget?.text = targetused.toString()
+                    overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                    overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+                }else{
+                    overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                    overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                    overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                }
+            }else {
+                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+            }
         }
 
         // Basal, TBR
@@ -741,7 +760,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_cob?.text = cobText
 
-        val lastRun = loopPlugin.lastRun
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
         // pump status from ns
