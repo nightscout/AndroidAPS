@@ -523,12 +523,27 @@ public class Profile {
         return ret;
     }
 
+    public double getTargetUnits() {
+        if (units.equals(Constants.MGDL)) {
+            return getTargetMgdl(secondsFromMidnight());
+        } else {
+            return getTargetMmol(secondsFromMidnight());
+        }
+    }
+
     public double getTargetMgdl() {
         return getTargetMgdl(secondsFromMidnight());
     }
 
+    public double getTargetMmol() {
+        return getTargetMmol(secondsFromMidnight());
+    }
+
     public double getTargetMgdl(int timeAsSeconds) {
         return toMgdl((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, units);
+    }
+    public double getTargetMmol(int timeAsSeconds) {
+        return toMmol((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, units);
     }
 
     public double getTargetLowMgdl() {
