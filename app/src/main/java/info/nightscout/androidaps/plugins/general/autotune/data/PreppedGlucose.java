@@ -26,7 +26,7 @@ public class PreppedGlucose {
         this.crData = crData;
         this.csfGlucoseData =csfGlucoseData;
         this.isfGlucoseData =isfGlucoseData;
-        basalGlucoseData=basalGlucoseData;
+        this.basalGlucoseData=basalGlucoseData;
     }
 
 

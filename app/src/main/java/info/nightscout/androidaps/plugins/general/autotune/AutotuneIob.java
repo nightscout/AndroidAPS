@@ -167,6 +167,12 @@ public class AutotuneIob {
         }
     }
 
+    public List<Treatment> getTreatmentsFromHistory() {
+        synchronized (treatments) {
+            return new ArrayList<>(treatments);
+        }
+    }
+
     // on each loop glucose containts only one day BG Value
     public JSONArray glucosetoJSON()  {
         JSONArray glucoseJson = new JSONArray();
@@ -201,7 +207,14 @@ public class AutotuneIob {
         return json;
     }
 
+    IobTotal calculateFromTreatmentsAndTemps(long time, Profile profile, double currenBasalRate) {
+        IobTotal bolusIob = getCalculationToTimeTreatments(time).round();
+        IobTotal basalIob = getAbsoluteIOBTempBasals( time,  profile,  currenBasalRate).round();
 
+        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
+
+        return iobTotal;
+    }
 
 
     public IobTotal getCalculationToTimeTreatments(long time) {
@@ -248,94 +261,11 @@ public class AutotuneIob {
         return total;
     }
 
-    public List<Treatment> getTreatmentsFromHistory() {
-        synchronized (treatments) {
-            return new ArrayList<>(treatments);
-        }
-    }
-
-
-    /**
-     * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
-     * map "Fill Canulla" entries to history (and not to add double bolus for it)
-     *
-     * @param fromTimestamp
-     * @return
-     */
-    public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
-        List<Treatment> in5minback = new ArrayList<>();
-
-        long time = System.currentTimeMillis();
-        synchronized (treatments) {
-
-            for (Treatment t : treatments) {
-                if (t.date <= time && t.date >= fromTimestamp)
-                    in5minback.add(t);
-            }
-            return in5minback;
-        }
-    }
-
-
-    public List<Treatment> getCarbTreatments5MinBackFromHistory(long time) {
-        List<Treatment> in5minback = new ArrayList<>();
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
-                    in5minback.add(t);
-            }
-            return in5minback;
-        }
-    }
-
-    public long getLastBolusTime() {
-        long now = System.currentTimeMillis();
-        long last = 0;
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date > last && t.insulin > 0 && t.date <= now)
-                    last = t.date;
-            }
-        }
-        return last;
-    }
-
-    public long getLastBolusTime(boolean isSMB) {
-        long now = System.currentTimeMillis();
-        long last = 0;
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date > last && t.insulin > 0 && t.date <= now && isSMB == t.isSMB)
-                    last = t.date;
-            }
-        }
-        return last;
-    }
-
-    public boolean isInHistoryRealTempBasalInProgress() {
-        return getRealTempBasalFromHistory(System.currentTimeMillis()) != null;
-    }
-
     public TemporaryBasal getRealTempBasalFromHistory(long time) {
         synchronized (tempBasals) {
             return tempBasals.getValueByInterval(time);
         }
     }
-
-    public boolean isTempBasalInProgress() {
-        return getTempBasalFromHistory(System.currentTimeMillis()) != null;
-    }
-
-    public boolean isInHistoryExtendedBoluslInProgress() {
-        return getExtendedBolusFromHistory(System.currentTimeMillis()) != null; //TODO:  crosscheck here
-    }
-
     public IobTotal getCalculationToTimeTempBasals(long time) {
         return getCalculationToTimeTempBasals(time, false, 0);
     }
@@ -397,25 +327,20 @@ public class AutotuneIob {
     // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
     // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
     // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
-    public IobTotal getAbsoluteIOBTempBasals(long time) {
+    public IobTotal getAbsoluteIOBTempBasals(long time, Profile tunedProfile, double running) {
         IobTotal total = new IobTotal(time);
-        Profile profile = profileFunction.getProfile(time);
-
-        double running = profile.getBasal(time);
-        running += profile.getBasal(time-1*60*60*1000);
-        running += profile.getBasal(time-2*60*60*1000);
-        running += profile.getBasal(time-3*60*60*1000);
-        running = Round.roundTo(running/4,0.001);
 
         for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
             TemporaryBasal runningTBR = getTempBasalFromHistory(i);
             if (runningTBR != null) {
+                //Here I think I should use real tunedProfile because in autotune it get absolute rates
+                Profile profile = profileFunction.getProfile(i);
                 running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
             }
             Treatment treatment = new Treatment(injector);
             treatment.date = i;
             treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
-            Iob iob = treatment.iobCalc(i, profile.getDia());
+            Iob iob = treatment.iobCalc(i, tunedProfile.getDia());
             total.iob += iob.iobContrib;
             total.activity += iob.activityContrib;
         }

@@ -36,6 +36,7 @@ public class AutotunePrep {
     @Inject SP sp;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject DateUtil dateUtil;
     private final HasAndroidInjector injector;
     private AutotuneIob autotuneIob;
 
@@ -49,12 +50,9 @@ public class AutotunePrep {
     }
 
     public PreppedGlucose categorizeBGDatums(AutotuneIob autotuneIob, ATProfile tunedprofile, ATProfile pumpprofile)  {
-
+        //lib/meals is called before to get only meals data (done in AutotuneIob)
         List<Treatment> treatments = autotuneIob.meals;
         // this sorts the treatments collection in order.
-        //Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
-
-        //log("Nb of meals: " + treatments.size() + " Nb of treatments: " + autotuneIob.getTreatmentsFromHistory().size() + " Nb of TempBasals: " + autotuneIob.getTemporaryBasalsFromHistory().size() + " Nb of ExtBol:" + autotuneIob.getExtendedBolusesFromHistory().size());
         Profile profileData = tunedprofile.profile;
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
@@ -181,6 +179,11 @@ public class AutotunePrep {
             // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
             //Philoul oref0-autotune doesn't use profile switch information, I think current bg profile is better for iob calculation
             //This part of code moved to AutotuneIob in getAbsoluteIOBTempBasals function
+            double currentPumpBasal = pumpprofile.profile.getBasal(BGTime);
+            currentPumpBasal += pumpprofile.profile.getBasal(BGTime-1*60*60*1000);
+            currentPumpBasal += pumpprofile.profile.getBasal(BGTime-2*60*60*1000);
+            currentPumpBasal += pumpprofile.profile.getBasal(BGTime-3*60*60*1000);
+            currentPumpBasal = Round.roundTo(currentPumpBasal/4,0.001); //CurrentPumpBasal for iob calculation is average of 4 last pumpProfile Basal rate
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
             double currentBasal = profileData.getBasal(BGTime);
@@ -194,9 +197,11 @@ public class AutotunePrep {
 //****************************************************************************************************************************************
             //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
-            IobTotal bolusIob = autotuneIob.getCalculationToTimeTreatments(BGTime).round();
-            IobTotal basalIob = autotuneIob.getAbsoluteIOBTempBasals(BGTime).round();
-            IobTotal iob = IobTotal.combine(bolusIob, basalIob).round();
+            // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
+            //IobTotal bolusIob = autotuneIob.getCalculationToTimeTreatments(BGTime).round();
+            //IobTotal basalIob = autotuneIob.getAbsoluteIOBTempBasals(BGTime).round();
+            //IobTotal iob = IobTotal.combine(bolusIob, basalIob).round();
+            IobTotal iob = autotuneIob.calculateFromTreatmentsAndTemps( BGTime,  profileData,  currentPumpBasal);
             //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
             //log.debug("treatmentsPlugin Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
@@ -219,14 +224,8 @@ public class AutotunePrep {
             
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
-                Profile profile;
-                if (profileFunction.getProfile(BGTime) == null) {
-                    log("No profile selected");
-                    return null;
-                }
-                profile = profileFunction.getProfile(BGTime);
                 double ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
-                double absorbed = ci * profile.getIc() / sens;
+                double absorbed = ci * tunedprofile.ic / sens;
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = Math.max(0, mealCOB - absorbed);
             }
@@ -244,7 +243,7 @@ public class AutotunePrep {
                     crInitialIOB = iob.iob;
                     crInitialBG = glucoseDatum.value;
                     crInitialCarbTime = glucoseDatum.date;
-                    log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime));
+                    log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + dateUtil.toISOString(crInitialCarbTime));
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -256,7 +255,7 @@ public class AutotunePrep {
                     double crEndIOB = iob.iob;
                     double crEndBG = glucoseDatum.value;
                     long crEndTime = glucoseDatum.date;
-                    log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + crEndTime);
+                    log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + dateUtil.toISOString(crEndTime));
 
                     CRDatum crDatum = new CRDatum();
                     crDatum.crInitialBG = crInitialBG;
@@ -265,9 +264,9 @@ public class AutotunePrep {
                     crDatum.crEndBG = crEndBG;
                     crDatum.crEndIOB = crEndIOB;
                     crDatum.crEndTime = crEndTime;
+                    crDatum.crCarbs = crCarbs;
                     //log.debug(CRDatum);
                     //String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime + ",   \"CRCarbs\": " + CRCarbs + "}";
-                    log("CRDatum is: " + crDatum.toString() );
 
                     int CRElapsedMinutes = Math.round((crEndTime - crInitialCarbTime) / (1000 * 60));
 
@@ -285,7 +284,7 @@ public class AutotunePrep {
 
             // If mealCOB is zero but all deviations since hitting COB=0 are positive, assign those data points to CSFGlucoseData
             // Once deviations go negative for at least one data point after COB=0, we can use the rest of the data to tune ISF or basals
-            if (mealCOB > 0 || !absorbing || mealCarbs > 0) {
+            if (mealCOB > 0 || absorbing || mealCarbs > 0) {
                 // if meal IOB has decayed, then end absorption after this data point unless COB > 0
                 if (iob.iob < currentBasal / 2) {
                     absorbing = false;
@@ -295,12 +294,12 @@ public class AutotunePrep {
                 } else {
                     absorbing = false;
                 }
-                if (!absorbing && mealCOB != 0) {
+                if (!absorbing && mealCOB == 0) {
                     mealCarbs = 0;
                 }
                 // check previous "type" value, and if it wasn't csf, set a mealAbsorption start flag
                 //log.debug(type);
-                if (type.equals("csf") == false) {
+                if (type != "csf") {
                     glucoseDatum.mealAbsorption = "start";
                     log(glucoseDatum.mealAbsorption + " carb absorption");
                 }
@@ -339,15 +338,6 @@ public class AutotunePrep {
                     // When BGI is negative and more than about 1/4 of basalBGI, we can use that data to tune ISF,
                     // unless avgDelta is positive: then that's some sort of unexplained rise we don't want to use for ISF, so that means basals
                     if (basalBGI > -4 * BGI) {
-                        // attempting to prevent basal from being calculated as negative; should help prevent basals from going below 0
-                        //var minPossibleDeviation = -( basalBGI + Math.max(0,BGI) );
-                        //var minPossibleDeviation = -basalBGI;
-                        //if ( deviation < minPossibleDeviation ) {
-                        //console.error("Adjusting deviation",deviation,"to",minPossibleDeviation.toFixed(2));
-                        //deviation = minPossibleDeviation;
-                        //deviation = deviation.toFixed(2);
-                        //glucoseDatum.deviation = deviation;
-                        //}
                         type = "basal";
                         basalGlucoseData.add(glucoseDatum);
                     } else {
@@ -363,28 +353,16 @@ public class AutotunePrep {
                 }
             }
             // debug line to print out all the things
-//            BGDateArray = BGDate.toString().split(" ");
-//            BGTime = BGDateArray[4];
-            log((absorbing?1:0)+" mealCOB: "+Math.round(mealCOB)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+ Round.roundTo(BGI,0.1) +" IOB: "+Round.roundTo(iob.iob,0.1) + " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
-        log("end of loop bucket");
-//        iobInputs.profile = new ATProfile(opts.profile);
-//        iobInputs.history = opts.pumpHistory;
-//        iobInputs.treatments = opts.treatments;
-        //treatments = autotuneIob.find_insulin(iobInputs);
 //****************************************************************************************************************************************
-        /* Code template for IOB calculation trom tempBasal Object
-        IobTotal iob = new IobTotal(now);
-        Profile profile = ProfileFunctions.getInstance().getProfile(now);
-        if (profile != null)
-            iob = tempBasal.iobCalc(now, profile);
-         */
+
         treatments = autotuneIob.getTreatmentsFromHistory();
 
 // categorize.js Lines 372-383
         for (CRDatum crDatum : crData) {
-            crDatum.crInsulin = dosed(crDatum.crInitialCarbTime,crDatum.crInitialCarbTime,treatments);
+            crDatum.crInsulin = dosed(crDatum.crInitialCarbTime,crDatum.crEndTime,treatments);
         }
 // categorize.js Lines 384-436
         int CSFLength = csfGlucoseData.size();
@@ -444,10 +422,7 @@ public class AutotunePrep {
         }
 
 // categorize.js Lines 437-444
-        log("CRData: "+crData.size());
-        log("CSFGlucoseData: "+ csfGlucoseData.size());
-        log("ISFGlucoseData: "+ isfGlucoseData.size());
-        log("BasalGlucoseData: "+basalGlucoseData.size());
+        log("CRData: " + crData.size() + " CSFGlucoseData: " + csfGlucoseData.size() + " ISFGlucoseData: " + isfGlucoseData.size() + " BasalGlucoseData: " + basalGlucoseData.size());
 // Here is the end of categorize.js file
 
 /* bloc below is for --tune-insulin-curve not developed for the moment
@@ -619,7 +594,7 @@ public class AutotunePrep {
                 insulinDosed += treatment.insulin;
             }
         }
-        log("insulin dosed: " + insulinDosed);
+        //log("insulin dosed: " + insulinDosed);
 
         return Round.roundTo(insulinDosed,0.001);
     }
