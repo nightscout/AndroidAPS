@@ -394,6 +394,12 @@ object OpenHumansUploader : PluginBase(
         applicationInfo.put("hasGitInfo", hasGitInfo)
         applicationInfo.put("customRemote", customRemote)
         applicationInfo.put("applicationId", appId.toString())
+        zos.writeFile("ApplicationInfo.json", applicationInfo.toString().toByteArray())
+        tags.add("ApplicationInfo")
+
+        val preferences = JSONObject(SP.sharedPreferences.all.filterKeys { it.isAllowedKey() })
+        zos.writeFile("Preferences.json", preferences.toString().toByteArray())
+        tags.add("Preferences")
 
         val deviceInfo = JSONObject()
         deviceInfo.put("brand", Build.BRAND)
@@ -430,7 +436,7 @@ object OpenHumansUploader : PluginBase(
         val bytes = baos.toByteArray()
 
         Single.just(UploadData(
-            fileName = "upload-num$uploadNumber-ver1-date${FILE_NAME_DATE_FORMAT.format(uploadDate)}-appid${appId.toString().replace("- ", "")}.zip",
+            fileName = "upload-num$uploadNumber-ver1-date${FILE_NAME_DATE_FORMAT.format(uploadDate)}-appid${appId.toString().replace("-", "")}.zip",
             metadata = OpenHumansAPI.FileMetadata(
                 tags = tags,
                 description = "AndroidAPS Database Upload",
