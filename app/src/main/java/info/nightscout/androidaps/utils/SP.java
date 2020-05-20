@@ -12,7 +12,7 @@ import info.nightscout.androidaps.MainApp;
  */
 
 public class SP {
-    private static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+    public static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
     static public Map<String, ?> getAll() {
         return sharedPreferences.getAll();

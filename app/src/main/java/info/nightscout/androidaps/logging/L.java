@@ -100,6 +100,7 @@ public class L {
     public static final String UI = "UI";
     public static final String LOCATION = "LOCATION";
     public static final String SMS = "SMS";
+    public static final String OPENHUMANS = "OPENHUMANS";
 
     private static void initialize() {
         logElements = new ArrayList<>();
@@ -128,6 +129,7 @@ public class L {
         logElements.add(new LogElement(PUMPQUEUE, true));
         logElements.add(new LogElement(SMS, true));
         logElements.add(new LogElement(UI, true));
+        logElements.add(new LogElement(OPENHUMANS, true));
     }
 
 }

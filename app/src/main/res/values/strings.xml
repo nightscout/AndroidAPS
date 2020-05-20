@@ -1699,5 +1699,25 @@
     <string name="loop_tbrrequest_time_label">Temp basal request time</string>
     <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
     <string name="insight_alert_notification_channel">Insight Pump Alerts</string>
-
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Finishing Open Humans setup…</string>
+    <string name="this_may_take_a_while">This may take a while. Do not turn your phone off.</string>
+    <string name="setup_finished">Setup finished</string>
+    <string name="your_phone_is_upload_data">Your phone is uploading data to Open Humans now.</string>
+    <string name="setup_failed">Setup failed</string>
+    <string name="there_was_an_error">There was an error.</string>
+    <string name="open_humans_terms">This is an open source tool that will copy your data to Open Humans. We retain no rights to share your data with third parties without your explicit authorization. The data the project and app receive are identified via a random user ID and will only be securely transmitted to an Open Humans account with your authorization of that process. You can stop uploading and delete your upload data at any time via www.openhumans.org.</string>
+    <string name="i_understand_and_agree">I understand and agree</string>
+    <string name="login">Login</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="you_need_to_accept_the_of_use_first">You need to accept the terms of use first.</string>
+    <string name="successfully_logged_in">Successfully logged in</string>
+    <string name="setup_will_continue_in_background">The setup will be completed in background now. Thanks for uploading your data.</string>
+    <string name="completing_login">Completing login…</string>
+    <string name="donate_your_data_to_science">Donate your data to science</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in a again if this wasn\'t on purpose.</string>
+    <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
+    <string name="only_upload_if_charging">Only upload if charging</string>
 </resources>

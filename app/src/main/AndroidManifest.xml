@@ -282,6 +282,19 @@
             android:label="@string/title_activity_rileylink_settings"
             android:theme="@style/Theme.AppCompat.NoTitle" />
         <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
+        <activity android:name=".plugins.general.openhumans.OpenHumansLoginActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="setup-openhumans"
+                    android:scheme="androidaps" />
+            </intent-filter>
+        </activity>
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
