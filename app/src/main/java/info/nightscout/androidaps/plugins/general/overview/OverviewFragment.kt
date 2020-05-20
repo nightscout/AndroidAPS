@@ -659,11 +659,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             //show this change to the user if it exists
             var targetused = lastRun?.constraintsProcessed?.targetBG
             if (targetused != null && targetused != 0.0) {
-                if (units == Constants.MMOL)
-                    targetused *= Constants.MGDL_TO_MMOLL
 
-                if (profile.targetUnits != targetused) {
-                    overview_temptarget?.text = targetused.toString()
+                if (((profile.targetLowMgdl+profile.targetHighMgdl)/2)!= targetused) {
+                    overview_temptarget?.text = Profile.toTargetRangeString(targetused, targetused, Constants.MGDL, units)
                     overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                     overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
                 } else {
