@@ -657,8 +657,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         } else {
             //If the target is not the same as set in the profile then oref has overridden it
             //show this change to the user if it exists
-            if (lastRun != null){
-                var targetused = lastRun!!.constraintsProcessed!!.targetBG
+            var targetused = lastRun?.constraintsProcessed?.targetBG
+            if (targetused != null && targetused != 0.0) {
                 if (units == Constants.MMOL)
                     targetused *= Constants.MGDL_TO_MMOLL
 
@@ -666,12 +666,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     overview_temptarget?.text = targetused.toString()
                     overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                     overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
-                }else{
+                } else {
                     overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                     overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
                     overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
                 }
-            }else {
+            } else {
                 overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
                 overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
@@ -696,7 +696,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (activeTemp != null)
             overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.icon_cp_basal_tbr_high else R.drawable.icon_cp_basal_tbr_low)
         else
-            overview_basebasal_icon.setImageResource( R.drawable.icon_cp_basal_no_tbr )
+            overview_basebasal_icon.setImageResource(R.drawable.icon_cp_basal_no_tbr)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -777,7 +777,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // Sensitivity
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
-        }else {
+        } else {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert_48px_green)
         }
 
