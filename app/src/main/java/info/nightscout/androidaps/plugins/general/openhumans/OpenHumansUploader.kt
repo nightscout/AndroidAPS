@@ -21,6 +21,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.SP
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -86,11 +87,12 @@ object OpenHumansUploader : PluginBase(
                 SP.remove("openhumans_access_token")
                 SP.remove("openhumans_refresh_token")
                 SP.remove("openhumans_expires_at")
+                SP.remove("openhumans_expires_at")
             }
         }
-    private var projectMemberId: String?
+    var projectMemberId: String?
         get() = SP.getString("openhumans_project_member_id", null)
-        set(value) {
+        private set(value) {
             if (value == null) SP.remove("openhumans_project_member_id")
             else SP.putString("openhumans_project_member_id", value)
         }
@@ -233,13 +235,14 @@ object OpenHumansUploader : PluginBase(
                     content = jsonObject.toString()
                 )
                 MainApp.getDbHelper().createOrUpdate(queueItem)
+                RxBus.send(OpenHumansFragment.UpdateQueueEvent)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
         }
     }
 
-    fun login(authCode: String) =
+    fun login(authCode: String): Completable =
         openHumansAPI.exchangeAuthToken(authCode)
             .doOnSuccess {
                 oAuthTokens = it
@@ -248,6 +251,7 @@ object OpenHumansUploader : PluginBase(
             .doOnSuccess {
                 projectMemberId = it
                 copyExistingDataToQueue()
+                RxBus.send(OpenHumansFragment.UpdateViewEvent)
             }
             .ignoreElement()
 
@@ -258,34 +262,39 @@ object OpenHumansUploader : PluginBase(
         oAuthTokens = null
         projectMemberId = null
         MainApp.getDbHelper().clearOpenHumansQueue()
+        RxBus.send(OpenHumansFragment.UpdateViewEvent)
     }
 
     private fun copyExistingDataToQueue() {
         copyDisposable?.dispose()
+        var currentProgress = 0L
+        var maxProgress = 0L
         copyDisposable = Completable.fromCallable { MainApp.getDbHelper().clearOpenHumansQueue() }
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) })
-            .map { queueBGReading(it) }
+            .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows) })
+            .doOnSuccess { maxProgress = it }
+            .flatMapObservable { Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) } }
+            .map { queueBGReading(it); showOngoingNotification(maxProgress, ++currentProgress) }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
-            .map { queueCareportalEvent(it) }
+            .map { queueCareportalEvent(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allExtendedBoluses) })
-            .map { queueExtendedBolus(it) }
+            .map { queueExtendedBolus(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allProfileSwitches) })
-            .map { queueProfileSwitch(it) }
+            .map { queueProfileSwitch(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTDDs) })
-            .map { queueTotalDailyDose(it) }
+            .map { queueTotalDailyDose(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTemporaryBasals) })
-            .map { queueTemporaryBasal(it) }
+            .map { queueTemporaryBasal(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTempTargets) })
-            .map { queueTempTarget(it) }
+            .map { queueTempTarget(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .doOnSubscribe {
-                wakeLock.acquire()
+                wakeLock.acquire(TimeUnit.MINUTES.toMillis(10))
                 showOngoingNotification()
             }
             .doOnComplete {
@@ -305,12 +314,12 @@ object OpenHumansUploader : PluginBase(
             .subscribe()
     }
 
-    private fun showOngoingNotification() {
+    private fun showOngoingNotification(maxProgress: Long? = null, currentProgress: Long? = null) {
         val notification = NotificationCompat.Builder(MainApp.instance(), "OpenHumans")
             .setContentTitle(MainApp.gs(R.string.finishing_open_humans_setup))
             .setContentText(MainApp.gs(R.string.this_may_take_a_while))
             .setStyle(NotificationCompat.BigTextStyle())
-            .setProgress(0, 0, true)
+            .setProgress(maxProgress?.toInt() ?: 0, currentProgress?.toInt() ?: 0, maxProgress == null || currentProgress == null)
             .setOngoing(true)
             .setAutoCancel(false)
             .setSmallIcon(R.drawable.notif_icon)
@@ -340,7 +349,7 @@ object OpenHumansUploader : PluginBase(
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    fun uploadData() = gatherData()
+    fun uploadData(): Completable = gatherData()
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
         .flatMap { uploadFile(it.first, it.second).andThen(Single.just(it.second)) }
         .flatMapCompletable {
@@ -355,6 +364,7 @@ object OpenHumansUploader : PluginBase(
                 handleSignOut()
             }
         }
+        .doOnComplete { RxBus.send(OpenHumansFragment.UpdateQueueEvent) }
 
     private fun uploadFile(accessToken: String, uploadData: UploadData) = Completable.defer {
         openHumansAPI.prepareFileUpload(accessToken, uploadData.fileName, uploadData.metadata)
@@ -459,10 +469,6 @@ object OpenHumansUploader : PluginBase(
     }
 
     private fun handleSignOut() {
-        isSetup = false
-        projectMemberId = null
-        oAuthTokens = null
-        cancelWorker()
         val notification = NotificationCompat.Builder(MainApp.instance(), "OpenHumans")
             .setContentTitle(MainApp.gs(R.string.you_have_been_signed_out_of_open_humans))
             .setContentText(MainApp.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose))
@@ -479,6 +485,7 @@ object OpenHumansUploader : PluginBase(
             ))
             .build()
         NotificationManagerCompat.from(MainApp.instance()).notify(NOTIFICATION_ID, notification)
+        logout()
     }
 
     private fun cancelWorker() {

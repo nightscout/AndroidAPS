@@ -2049,4 +2049,29 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return Collections.emptyList();
     }
+
+    public long getOHQueueSize() {
+        try {
+            return getDaoOpenHumansQueue().countOf();
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return 0L;
+    }
+
+    public long getCountOfAllRows() {
+        try {
+            return getDaoBgReadings().countOf()
+                    + getDaoCareportalEvents().countOf()
+                    + getDaoExtendedBolus().countOf()
+                    + getDaoCareportalEvents().countOf()
+                    + getDaoProfileSwitch().countOf()
+                    + getDaoTDD().countOf()
+                    + getDaoTemporaryBasal().countOf()
+                    + getDaoTempTargets().countOf();
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return 0L;
+    }
 }

@@ -1709,7 +1709,11 @@
     <string name="open_humans_terms">This is an open source tool that will copy your data to Open Humans. We retain no rights to share your data with third parties without your explicit authorization. The data the project and app receive are identified via a random user ID and will only be securely transmitted to an Open Humans account with your authorization of that process. You can stop uploading and delete your upload data at any time via www.openhumans.org.</string>
     <string name="i_understand_and_agree">I understand and agree</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="project_member_id">Project Member ID: %s</string>
+    <string name="queue_size">Queue Size: %d</string>
     <string name="terms_of_use">Terms of Use</string>
+    <string name="not_logged_in">Not logged in</string>
     <string name="you_need_to_accept_the_of_use_first">You need to accept the terms of use first.</string>
     <string name="successfully_logged_in">Successfully logged in</string>
     <string name="setup_will_continue_in_background">The setup will be completed in background now. Thanks for uploading your data.</string>
@@ -1720,4 +1724,7 @@
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in a again if this wasn\'t on purpose.</string>
     <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
     <string name="only_upload_if_charging">Only upload if charging</string>
+    <string name="worker_state">Worker State: %s</string>
+    <string name="uploaded_data">Uploaded Data</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">The following data will be uploaded to your Open Humans account: Glucose values, careportal events (except notes), extended boluses, profile switches, total daily doses, temporary basals, temp targets, preferences, application version, device model and screen dimensions. Secret or private information such as your Nightscout URL oder API secret will not be uploaded.</string>
 </resources>

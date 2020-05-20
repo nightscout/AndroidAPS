@@ -22,7 +22,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
-
+/*
     private lateinit var customTabsClient: CustomTabsClient
     private lateinit var customTabsSession: CustomTabsSession
 
@@ -37,17 +37,17 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
         override fun onServiceDisconnected(name: ComponentName?) {
         }
     }
-
+*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", connection)
+        //CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", connection)
         setContentView(R.layout.activity_open_humans_login)
         val button = findViewById<Button>(R.id.button)
         val checkbox = findViewById<CheckBox>(R.id.checkbox)
 
         button.setOnClickListener { _ ->
             if (checkbox.isChecked) {
-                CustomTabsIntent.Builder().setSession(customTabsSession).build().launchUrl(this, Uri.parse(OpenHumansUploader.AUTH_URL))
+                CustomTabsIntent.Builder()/*.setSession(customTabsSession)*/.build().launchUrl(this, Uri.parse(OpenHumansUploader.AUTH_URL))
             } else {
                 Toast.makeText(this, R.string.you_need_to_accept_the_of_use_first, Toast.LENGTH_SHORT).show()
             }
