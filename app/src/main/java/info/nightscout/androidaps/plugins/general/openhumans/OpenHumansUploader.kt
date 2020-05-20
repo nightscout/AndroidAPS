@@ -294,7 +294,7 @@ object OpenHumansUploader : PluginBase(
             .map { queueTempTarget(it); showOngoingNotification(maxProgress, ++currentProgress)  }
             .ignoreElements()
             .doOnSubscribe {
-                wakeLock.acquire(TimeUnit.MINUTES.toMillis(10))
+                wakeLock.acquire(TimeUnit.MINUTES.toMillis(20))
                 showOngoingNotification()
             }
             .doOnComplete {
