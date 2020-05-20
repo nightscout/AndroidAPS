@@ -655,20 +655,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
         } else {
-            //If the target is not the same as set in the profile then oref has overridden it
-            //show this change to the user if it exists
-            var targetused = lastRun?.constraintsProcessed?.targetBG
-            if (targetused != null && targetused != 0.0) {
+            // If the target is not the same as set in the profile then oref has overridden it
+            val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
-                if (((profile.targetLowMgdl+profile.targetHighMgdl)/2)!= targetused) {
-                    overview_temptarget?.text = Profile.toTargetRangeString(targetused, targetused, Constants.MGDL, units)
-                    overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                    overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
-                } else {
-                    overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                    overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-                    overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
-                }
+            if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+                overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
+                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
             } else {
                 overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
