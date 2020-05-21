@@ -145,17 +145,19 @@ public class AutotunePlugin extends PluginBase {
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
 
+        atLog("Start Autotune with " + daysBack + " days back");
+
         //create autotune subfolder for autotune files if not exists
         autotuneFS.createAutotuneFolder();
         logString="";
         //clean autotune folder before run
         autotuneFS.deleteAutotuneFiles();
 
-        atLog("Start Autotune with " + daysBack + " days back");
 
         long now = System.currentTimeMillis();
         lastRun = new Date(System.currentTimeMillis());
         // Today at 4 AM
+        //Note, I don't find on existing function the equivalent in DateUtil so I created a new function, but if any equivalent function already exists may be we can use it
         long endTime = DateUtil.toTimeMinutesFromMidnight(now, autotuneStartHour*60);
         // Check if 4 AM is before now
         if (endTime > now)
@@ -212,19 +214,16 @@ public class AutotunePlugin extends PluginBase {
         if(tunedProfile.profile != null) {
             DecimalFormat df = new DecimalFormat("0.000");
             DecimalFormat ef = new DecimalFormat("00");
-            String line = "-----------------------------------------------\n";
-
+            String line = "---------------------------------------------------\n";
 
             //Todo add Strings and format for all results presentation
             //Todo Replace % of modification by number of missing days for each hour
-            //May be we could remove CSF from the list...
+            //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
             result = line;
-            // show ISF CR and CSF
+            // show ISF and CR
             result += "|  ISF |   " + Round.roundTo(pumpprofile.isf / toMgDl, 0.1) + "   |    " + Round.roundTo(tunedProfile.isf / toMgDl,0.1)+"   |\n";
             result += line;
             result += "|  CR  |     " + Round.roundTo(pumpprofile.ic,0.1) + "   |      " + Round.roundTo(tunedProfile.ic,0.1) + "   |\n";
-            //result += line;
-            //result += "| CSF | " + Round.roundTo(pumpprofile.isf / pumpprofile.ic / toMgDl, 0.001) + "  |  " + Round.roundTo(tunedProfile.isf / tunedProfile.ic / toMgDl,0.001) + "  |\n";
             result += line;
             result += "|Hour| Profile | Tuned |nbKo|  %   |\n";
             result += line;
@@ -246,22 +245,22 @@ public class AutotunePlugin extends PluginBase {
                 if (percentageChangeValue != 0)
                     percentageChange += "%";
 
-
                 result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + ef.format(tunedProfile.basalUntuned[i]) + "  | " + percentageChange + " |\n";
-
             }
             result += line;
-            result += "|  Som  |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
+            result += "|  ∑  |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
             result += line;
+
+            atLog(result);
 
             autotuneFS.exportResult(result);
 
+            // TODO: integration with ProfileStore to develop below some part of previous code...
             //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
             //ProfileStore profileStore = new ProfileStore(json);
             //sp.putString("autotuneprofile", profileStore.getData().toString());
             //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
-// TODO: check line below modified by philoul => need to be verify...
-//                RxBus.INSTANCE.send(new EventProfileStoreChanged());
+            //     RxBus.INSTANCE.send(new EventProfileStoreChanged());
 
             // Export log file (can be compared with Oref0 log file and zip all autotune files created during the run.
             autotuneFS.exportLogAndZip(lastRun, logString);
