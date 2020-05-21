@@ -225,7 +225,7 @@ public class AutotunePlugin extends PluginBase {
             result += line;
             result += "|  CR  |     " + Round.roundTo(pumpprofile.ic,0.1) + "   |      " + Round.roundTo(tunedProfile.ic,0.1) + "   |\n";
             result += line;
-            result += "|Hour| Profile | Tuned |nbKo|  %   |\n";
+            result += "|Hour| Profile | Tuned |nbKo|   %   |\n";
             result += line;
             double totalBasal = 0d;
             double totalTuned = 0d;
@@ -248,7 +248,7 @@ public class AutotunePlugin extends PluginBase {
                 result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + ef.format(tunedProfile.basalUntuned[i]) + "  | " + percentageChange + " |\n";
             }
             result += line;
-            result += "|  ∑  |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
+            result += "|    ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";
             result += line;
 
             atLog(result);
