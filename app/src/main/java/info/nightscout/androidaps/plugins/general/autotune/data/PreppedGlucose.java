@@ -17,12 +17,13 @@ public class PreppedGlucose {
     public List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
     public List<DiaDatum> diaDeviations = new ArrayList<DiaDatum>();
     public List<PeakDatum> peakDeviations = new ArrayList<PeakDatum>();
-
+    public long from;
 
     // to generate same king of json string than oref0-autotune-prep
     public String toString() { return toString(0); }
 
-    public PreppedGlucose(List<CRDatum> crData, List<BGDatum> csfGlucoseData, List<BGDatum> isfGlucoseData, List<BGDatum> basalGlucoseData) {
+    public PreppedGlucose(long from, List<CRDatum> crData, List<BGDatum> csfGlucoseData, List<BGDatum> isfGlucoseData, List<BGDatum> basalGlucoseData) {
+        this.from = from;
         this.crData = crData;
         this.csfGlucoseData =csfGlucoseData;
         this.isfGlucoseData =isfGlucoseData;

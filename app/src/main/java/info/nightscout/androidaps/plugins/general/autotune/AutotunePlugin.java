@@ -41,11 +41,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Created by Rumen Georgiev on 1/29/2018.
+ * Initialized by Rumen Georgiev on 1/29/2018.
  idea is to port Autotune from OpenAPS to java
  let's start by taking 1 day of data from NS, and comparing it to ideal BG
- TODO: Make this plugin disabable
- TODO: ADD Support for multiple ISF, IC and target values to the exported profile
 
  * Update by philoul on 05/2020 (complete refactor of AutotunePlugin)
  *  TODO: add Preference for main settings (may be advanced settings for % of adjustment (default 20%))
@@ -86,6 +84,7 @@ public class AutotunePlugin extends PluginBase {
     private AutotunePrep autotunePrep;
     private AutotuneCore autotuneCore;
     private AutotuneIob autotuneIob;
+    private AutotuneFS autotuneFS;
 //    private AutotuneFragment autotuneFragment;
     private AAPSLogger aapsLogger;
 
@@ -116,8 +115,6 @@ public class AutotunePlugin extends PluginBase {
                 .preferencesId(R.xml.pref_autotune),
                 aapsLogger, resourceHelper, injector
         );
-        //create autotune subfolder for autotune files if not exists
-        AutotuneFS.createAutotuneFolder();
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.rxBus = rxBus;
@@ -129,6 +126,7 @@ public class AutotunePlugin extends PluginBase {
         this.sp=sp;
 //        this.autotuneFragment = autotuneFragment;
         this.aapsLogger = aapsLogger;
+
     }
 
 //    @Override
@@ -140,16 +138,20 @@ public class AutotunePlugin extends PluginBase {
         // invoke
     }
 
-    //Todo add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
+    //Todo futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
     public String aapsAutotune(int daysBack) {
-        //todo add autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
+        //todo add autotuneFS, autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
+        autotuneFS = new AutotuneFS(injector);
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
-        //clean autotune folder before run
+
+        //create autotune subfolder for autotune files if not exists
+        autotuneFS.createAutotuneFolder();
         logString="";
+        //clean autotune folder before run
+        autotuneFS.deleteAutotuneFiles();
+
         atLog("Start Autotune with " + daysBack + " days back");
-        atLog("Delete Autotune files in " + AutotuneFS.SETTINGSFOLDER + " and " + AutotuneFS.AUTOTUNEFOLDER + " folders");
-        AutotuneFS.deleteAutotuneFiles();
 
         long now = System.currentTimeMillis();
         lastRun = new Date(System.currentTimeMillis());
@@ -160,25 +162,20 @@ public class AutotunePlugin extends PluginBase {
             endTime -= 24 * 60 * 60 * 1000L;
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
-        atLog("Create " +  AutotuneFS.SETTINGS + " file in " + AutotuneFS.SETTINGSFOLDER + " folder");
-        AutotuneFS.createAutotunefile(AutotuneFS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
+        autotuneFS.exportSettings(settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
 
         profile = profileFunction.getProfile(now);
-        //try {
-        //    AutotuneFS.createAutotunefile("aapsfullprofile.json", profile.getData().toString(2), true);
-        //} catch (JSONException e) {}
+
         ATProfile tunedProfile = new ATProfile(profile);
         tunedProfile.profilename=resourceHelper.gs(R.string.autotune_tunedprofile_name);
         ATProfile pumpprofile = new ATProfile(profile);
         pumpprofile.profilename=profileFunction.getProfileName();
-        AutotuneFS.createAutotunefile("pumpprofile.json", pumpprofile.profiletoOrefJSON(),true);
-        AutotuneFS.createAutotunefile("pumpprofile.json", pumpprofile.profiletoOrefJSON());
-        atLog("Create pumpprofile.json file in " + AutotuneFS.SETTINGSFOLDER + " and " + AutotuneFS.AUTOTUNEFOLDER + " folders");
+
+        autotuneFS.exportPumpProfile(pumpprofile);
 
         int toMgDl = 1;
         if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
-        //log.debug("AAPS units: " + profileFunction.getUnits() +" so divisor is "+toMgDl);
 
         if(daysBack < 1){
             //todo add string
@@ -191,27 +188,23 @@ public class AutotunePlugin extends PluginBase {
 
                 atLog("Tune day "+ i +" of "+ daysBack);
 
-                //AutotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 autotuneIob = new AutotuneIob(from, to);
-                try {
-                    //ns-entries files are for result compare with oref0 autotune on virtual machine
-                    AutotuneFS.createAutotunefile("aaps-entries." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.glucosetoJSON().toString(2));
-                    atLog("Create ns-entries." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
-                    //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                    AutotuneFS.createAutotunefile("aaps-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
-                    atLog("Create ns-treatments." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
-                } catch (JSONException e) {}
+                //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                autotuneFS.exportEntries(autotuneIob);
+                //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
+                autotuneFS.exportTreatments(autotuneIob);
 
-                //AutotunePrep autotunePrep = new AutotunePrep();
                 preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob,tunedProfile, pumpprofile);
-                //Todo philoul create dedicated function including log in AutotuneFS
-                AutotuneFS.createAutotunefile("aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json", preppedGlucose.toString(2));
-                atLog("file aaps-autotune." + AutotuneFS.formatDate(new Date(from)) + ".json created in " + AutotuneFS.AUTOTUNEFOLDER + " folder");
+                //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                autotuneFS.exportPreppedGlucose(preppedGlucose);
 
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
+                //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                autotuneFS.exportTunedProfile(tunedProfile);
 
-                AutotuneFS.createAutotunefile("newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json", tunedProfile.profiletoOrefJSON());
-                atLog("Create newprofile." + AutotuneFS.formatDate(new Date(from)) + ".json file in " + AutotuneFS.AUTOTUNEFOLDER + " folders");
+                //Todo: if possible add feedback to user between each day
+                // This was a trial to update fragment results between each day (autotune calculation takes about 2 minutes for 30 days...)
 //                autotuneFragment.updateResult("day " + i +" / "+ daysBack + " tuned");
             }
         }
@@ -261,26 +254,17 @@ public class AutotunePlugin extends PluginBase {
             result += "|  Som  |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
             result += line;
 
-            AutotuneFS.createAutotunefile(AutotuneFS.RECOMMENDATIONS,result);
+            autotuneFS.exportResult(result);
 
-            try {
-
-                AutotuneFS.createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.getData().toString(2).replace("\\/","/"),true);
-
-                //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
-                //ProfileStore profileStore = new ProfileStore(json);
-                //sp.putString("autotuneprofile", profileStore.getData().toString());
-                //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
+            //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
+            //ProfileStore profileStore = new ProfileStore(json);
+            //sp.putString("autotuneprofile", profileStore.getData().toString());
+            //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
 // TODO: check line below modified by philoul => need to be verify...
 //                RxBus.INSTANCE.send(new EventProfileStoreChanged());
-            } catch (JSONException e) {
-                log.error("Unhandled exception", e);
-            }
 
-            atLog("Create autotune Log file and zip");
-            AutotuneFS.createAutotunefile("autotune." + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log", logString);
-            // zip all autotune files created during the run.
-            AutotuneFS.zipAutotune(lastRun);
+            // Export log file (can be compared with Oref0 log file and zip all autotune files created during the run.
+            autotuneFS.exportLogAndZip(lastRun, logString);
 
             return result;
         } else

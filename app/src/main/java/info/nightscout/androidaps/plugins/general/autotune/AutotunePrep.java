@@ -575,7 +575,7 @@ public class AutotunePrep {
         }
         */
 
-        return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
+        return new PreppedGlucose(autotuneIob.from, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
 
         // and may be later
         // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);

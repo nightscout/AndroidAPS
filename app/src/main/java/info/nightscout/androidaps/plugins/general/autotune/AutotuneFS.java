@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
+import org.json.JSONException;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -14,44 +16,74 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile;
+import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-//Todo replace static by injection and manage autotune file generation here
+//Todo replace by injection and manage autotune file generation here
 //@Singleton
 public class AutotuneFS {
-    static final String logDirectory = LoggerUtils.getLogDirectory();
+    final String logDirectory = LoggerUtils.getLogDirectory();
     static final int BUFFER_SIZE = 2048;
-    static final String AUTOTUNEFOLDER = "autotune";
-    static final String SETTINGSFOLDER = "settings";
-    static final String RECOMMENDATIONS = "autotune_recommendations.log";
-    static final String SETTINGS = "settings.json";
-    static final String PROFIL = "profil";
+    final String AUTOTUNEFOLDER = "autotune";
+    final String SETTINGSFOLDER = "settings";
+    final String RECOMMENDATIONS = "autotune_recommendations.log";
+    final String ENTRIES_PREF = "aaps-entries.";
+    final String TREATMENTS_PREF = "aaps-treatments.";
+    final String PREPPED_PREF = "aaps-autotune.";
+    final String SETTINGS = "settings.json";
+    final String PROFIL = "profil";
+    final String PUMPPROFILE = "pumpprofile.json";
+    final String TUNEDPROFILE = "newaapsprofile.";
+    final String LOG_PREF = "autotune.";
+    final String ZIP_PREF = "autotune_";
 
-    static File autotune_path;
-    static File autotune_settings;
+    File autotune_path;
+    File autotune_settings;
+
+    @Inject AutotunePlugin autotunePlugin;
+    @Inject SP sp;
+    @Inject DateUtil dateUtil;
+    @Inject ResourceHelper resourceHelper;
+    private final HasAndroidInjector injector;
+
+    @Inject
+    public AutotuneFS(
+            HasAndroidInjector injector
+    ) {
+        this.injector=injector;
+        this.injector.androidInjector().inject(this);
+    }
 
     /*****************************************************************************
      * Create autotune folder for all files created during an autotune session
      ****************************************************************************/
-    public static void createAutotuneFolder() {
+    public void createAutotuneFolder() {
         //create autotune subfolder for autotune files if not exists
         autotune_path = new File(logDirectory, AUTOTUNEFOLDER);
         if (! (autotune_path.exists() && autotune_path.isDirectory())) {
             autotune_path.mkdir();
+            log("Create " + AUTOTUNEFOLDER + " subfolder in " + logDirectory);
         }
         autotune_settings = new File(logDirectory, SETTINGSFOLDER);
         if (! (autotune_settings.exists() && autotune_settings.isDirectory())) {
             autotune_settings.mkdir();
+            log("Create " + SETTINGSFOLDER + " subfolder in " + logDirectory);
         }
     }
 
     /*****************************************************************************
      * between each run of autotune, clean autotune folder content
      ****************************************************************************/
-    public static void deleteAutotuneFiles() {
+    public void deleteAutotuneFiles() {
         for (File file : autotune_path.listFiles()) {
             if(file.isFile())
                 file.delete();
@@ -60,16 +92,59 @@ public class AutotuneFS {
             if(file.isFile())
                 file.delete();
         }
+        log("Delete previous Autotune files");
     }
 
     /*****************************************************************************
-     * Create a JSON autotune file or settings file
+     * Create a JSON autotune files or settings files
      *****************************************************************************/
-    public static void createAutotunefile(String fileName, String stringFile) {
+    public void exportSettings(String settings) {
+        createAutotunefile(SETTINGS,settings,true);
+    }
+
+    public void exportPumpProfile(ATProfile profile) {
+        createAutotunefile(PUMPPROFILE, profile.profiletoOrefJSON(),true);
+        createAutotunefile(PUMPPROFILE, profile.profiletoOrefJSON());
+    }
+
+    public void exportTunedProfile(ATProfile tunedProfile) {
+        createAutotunefile(TUNEDPROFILE + formatDate(new Date(tunedProfile.from)) + ".json", tunedProfile.profiletoOrefJSON());
+        try {
+            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.getData().toString(2).replace("\\/", "/"), true);
+        } catch (JSONException e) {}
+    }
+
+    public void exportEntries(AutotuneIob autotuneIob) {
+        try {
+            createAutotunefile(ENTRIES_PREF + formatDate(new Date(autotuneIob.from)) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"));
+        } catch (JSONException e) {}
+    }
+
+    public void exportTreatments(AutotuneIob autotuneIob) {
+        try {
+            createAutotunefile(TREATMENTS_PREF + formatDate(new Date(autotuneIob.from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+        } catch (JSONException e) {}
+    }
+
+    public void exportPreppedGlucose(PreppedGlucose preppedGlucose) {
+        createAutotunefile(PREPPED_PREF + formatDate(new Date(preppedGlucose.from)) + ".json", preppedGlucose.toString(2));
+    }
+
+    public void exportResult(String result) {
+        createAutotunefile(RECOMMENDATIONS,result);
+    }
+
+    public void exportLogAndZip(Date lastRun, String logString) {
+        log("Create " + LOG_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log" + " file in " + AUTOTUNEFOLDER + " folder");
+        zipAutotune(lastRun);
+        createAutotunefile(LOG_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log", logString);
+    }
+
+    private void createAutotunefile(String fileName, String stringFile) {
         createAutotunefile(fileName, stringFile, false);
     }
 
-    public static void createAutotunefile(String fileName, String stringFile, boolean isSettingFile) {
+    private void createAutotunefile(String fileName, String stringFile, boolean isSettingFile) {
         if (fileName != null && !fileName.isEmpty()) {
             if (stringFile.isEmpty())
                 stringFile = "";
@@ -80,6 +155,7 @@ public class AutotuneFS {
                 pw.println(stringFile);
                 pw.close();
                 fw.close();
+                log("Create " + fileName + " file in " + (isSettingFile ? SETTINGSFOLDER : AUTOTUNEFOLDER) + " folder" );
             } catch (FileNotFoundException e) {
                 //log.error("Unhandled exception", e);
             } catch (IOException e) {
@@ -88,7 +164,7 @@ public class AutotuneFS {
         }
     }
 
-    public static String profilName(Date daterun) {
+    private String profilName(Date daterun) {
         String strdate = "";
         String prefixe = "aaps-";
         if (daterun != null) {
@@ -98,23 +174,14 @@ public class AutotuneFS {
         return prefixe + PROFIL + strdate + ".json";
     }
 
-    public static String profilName(long longdayrun) {
-        Date daterun = null;
-        if (longdayrun != 0) {
-            daterun = new Date(longdayrun);
-        }
-        return profilName(daterun);
-    }
-
-
     /**********************************************************************************
      * create a zip file with all autotune files and settings in autotune folder at the end of run
      *********************************************************************************/
 
-    public static void zipAutotune(Date lastRun) {
+    public void zipAutotune(Date lastRun) {
         if (lastRun!=null) {
             try {
-                String zipFileName = "Autotune_" + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip";
+                String zipFileName = ZIP_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip";
                 File zipFile = new File(logDirectory, zipFileName);
                 ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
                 if (autotune_path != null)
@@ -123,6 +190,7 @@ public class AutotuneFS {
                     zipDirectory(autotune_settings, autotune_settings.getName(), out);
                 out.flush();
                 out.close();
+                log("Create " + zipFileName + " file in " + logDirectory + " folder" );
             } catch (IOException e) {}
 
         }
@@ -155,4 +223,7 @@ public class AutotuneFS {
         return dateFormat.format(date);
     }
 
+    private void log(String message) {
+        autotunePlugin.atLog("[FS] " + message);
+    }
 }

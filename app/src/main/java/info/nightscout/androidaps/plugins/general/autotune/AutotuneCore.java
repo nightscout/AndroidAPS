@@ -506,6 +506,7 @@ public class AutotuneCore {
             isf = newISF;
         }
 
+        previousAutotune.from = preppedGlucose.from;
         previousAutotune.basal=basalProfile;
         previousAutotune.isf = isf;
         previousAutotune.ic=Round.roundTo(carbRatio,0.001);

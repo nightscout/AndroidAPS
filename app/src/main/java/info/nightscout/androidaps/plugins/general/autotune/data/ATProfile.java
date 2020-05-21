@@ -33,6 +33,7 @@ public class ATProfile {
     public double isf;
     public double dia;
     public boolean isValid = false;
+    public long from;
     @Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
