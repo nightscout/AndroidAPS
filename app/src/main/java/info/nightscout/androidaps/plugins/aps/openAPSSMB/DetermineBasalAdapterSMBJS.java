@@ -259,8 +259,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("low_temptarget_lowers_sensitivity", false);
 
 
-        mProfile.put("sensitivity_raises_target", SMBDefaults.sensitivity_raises_target);
-        mProfile.put("resistance_lowers_target", SMBDefaults.resistance_lowers_target);
+        mProfile.put("sensitivity_raises_target", sp.getBoolean(resourceHelper.gs(R.string.key_sensitivity_raises_target),SMBDefaults.sensitivity_raises_target));
+        mProfile.put("resistance_lowers_target", sp.getBoolean(resourceHelper.gs(R.string.key_resistance_lowers_target),SMBDefaults.resistance_lowers_target));
         mProfile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments);
         mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
