@@ -71,7 +71,7 @@ public class AutotuneCore {
         double autotuneMin = SafeParse.stringToDouble(sp.getString("openapsama_autosens_min", "0.7"));
         double min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
 
-/*******Tune DIA and Peak disabled for the first version code below in js********************************************************************************************************
+/*******Tune DIA (#57-#99) and Peak (#101-#139) disabled for the first version code below in js********************************************************************************************************
         // tune DIA
         var newDIA = DIA;
         if (diaDeviations) {
@@ -164,9 +164,10 @@ public class AutotuneCore {
         // Compare beginning and ending BGs, and calculate how much more/less insulin is needed to neutralize
         // Use entered carbs vs. starting IOB + delivered insulin + needed-at-end insulin to directly calculate CR.
 
+		//autotune-core (lib/autotune/index.js) #149-#165
         double crTotalCarbs = 0;
         double crTotalInsulin = 0;
-        for (int i=0; i<crData.size()-1; i++) {
+        for (int i=0; i<crData.size(); i++) {
             CRDatum crDatum = crData.get(i);
             double crBGChange = crDatum.crEndBG - crDatum.crInitialBG;
             double crInsulinReq = crBGChange / isf;
@@ -182,23 +183,25 @@ public class AutotuneCore {
             }
         }
 
+		//autotune-core (lib/autotune/index.js) #166-#169
         crTotalInsulin = Round.roundTo(crTotalInsulin,0.001);
         double totalCR = Round.roundTo(crTotalCarbs / crTotalInsulin,0.001);
         log("crTotalCarbs: "+ crTotalCarbs +" crTotalInsulin: "+ crTotalInsulin +" totalCR: "+totalCR);
 
+		//autotune-core (lib/autotune/index.js) #170-#209 (already hourly in aaps)
         // convert the basal profile to hourly if it isn't already
         double hourlyBasalProfile[] = basalProfile;
         double hourlyPumpProfile[] = pumpBasalProfile;
 
         //log(hourlyPumpProfile.toString());
         //log(hourlyBasalProfile.toString());
-
         double newHourlyBasalProfile[] = new double[24];
         for (int i = 0 ; i < 24 ; i++)  {
             newHourlyBasalProfile[i]  = hourlyBasalProfile [i];
         }
         int basalUntuned[] = previousAutotune.basalUntuned;
-
+		
+		//autotune-core (lib/autotune/index.js) #210-#266
         // look at net deviations for each hour
         for (int hour=0; hour < 24; hour++) {
             double deviations = 0;
@@ -252,7 +255,8 @@ public class AutotuneCore {
                 }
             }
         }
-        if (pumpBasalProfile != null ) {
+        //autotune-core (lib/autotune/index.js) #267-#294
+		if (pumpBasalProfile != null ) {
             for (int hour=0; hour < 24; hour++) {
                 //log.debug(newHourlyBasalProfile[hour],hourlyPumpProfile[hour].rate*1.2);
                 // cap adjustments at autosens_max and autosens_min
@@ -277,6 +281,7 @@ public class AutotuneCore {
         // periods before and after it that do have data to be tuned
         int lastAdjustedHour = 0;
         // scan through newHourlyBasalProfile and find hours where the rate is unchanged
+		//autotune-core (lib/autotune/index.js) #302-#323
         for (int hour=0; hour < 24; hour++) {
             if (hourlyBasalProfile[hour] == newHourlyBasalProfile[hour]) {
                 int nextAdjustedHour = 23;
@@ -310,12 +315,13 @@ public class AutotuneCore {
         // measured from carb entry until COB and deviations both drop to zero
 
         double deviations = 0;
-        double mealCarbs = 0;
-        double totalMealCarbs = 0;
+        int mealCarbs = 0;
+        int totalMealCarbs = 0;
         double totalDeviations = 0;
         double fullNewCSF;
         //log.debug(CSFGlucose[0].mealAbsorption);
         //log.debug(CSFGlucose[0]);
+		//autotune-core (lib/autotune/index.js) #346-#365
         for (int i = 0; i < csfGlucose.size(); ++i) {
             //log.debug(CSFGlucose[i].mealAbsorption, i);
             if ( csfGlucose.get(i).mealAbsorption == "start" ) {
