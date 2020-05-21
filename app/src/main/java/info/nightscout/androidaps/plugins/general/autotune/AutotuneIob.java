@@ -53,7 +53,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
-//Todo clean unused function
+//Todo remove all unused functions
 //and verify iob calculation for autotune
 @Singleton
 public class AutotuneIob {
