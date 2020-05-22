@@ -223,7 +223,7 @@ public class AutotunePlugin extends PluginBase {
             // show ISF and CR
             result += "|  ISF |   " + Round.roundTo(pumpprofile.isf / toMgDl, 0.1) + "   |    " + Round.roundTo(tunedProfile.isf / toMgDl,0.1)+"   |\n";
             result += line;
-            result += "|  CR  |     " + Round.roundTo(pumpprofile.ic,0.1) + "   |      " + Round.roundTo(tunedProfile.ic,0.1) + "   |\n";
+            result += "|  IC  |     " + Round.roundTo(pumpprofile.ic,0.1) + "   |      " + Round.roundTo(tunedProfile.ic,0.1) + "   |\n";
             result += line;
             result += "|Hour| Profile | Tuned |nbKo|   %   |\n";
             result += line;

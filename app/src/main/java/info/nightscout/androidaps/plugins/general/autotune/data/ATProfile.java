@@ -151,7 +151,7 @@ public class ATProfile {
                 json.put("curve", "bilinear");
                 json.put("insulinpeaktime",sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75));
             }
-            jsonString= json.toString(2);
+            jsonString= json.toString(2).replace("\\/", "/");
 
         } catch (JSONException e) {}
 
