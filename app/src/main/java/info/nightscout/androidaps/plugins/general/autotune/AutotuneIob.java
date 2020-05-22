@@ -73,7 +73,7 @@ public class AutotuneIob {
     private ArrayList<NsTreatment> nsTreatments = new ArrayList<NsTreatment>();
     private ArrayList<Treatment> treatments = new ArrayList<>();
     public ArrayList<Treatment> meals = new ArrayList<>();
-    public List<BgReading> glucose;
+    public List<BgReading> glucose = new ArrayList<>();
     private Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
@@ -120,15 +120,16 @@ public class AutotuneIob {
 
     private void initializeTreatmentData(long from, long to) {
         synchronized (treatments) {
+            long oldestBgDate = glucose.size() > 0 ? glucose.get(glucose.size()-1).date : from ;
             treatments.clear();
             treatments.addAll(treatmentsPlugin.getService().getTreatmentDataFromTime(from, to, false));
             meals.clear();
             for(int i = 0; i < treatments.size();i++) {
                 Treatment tp =  treatments.get(i);
                 nsTreatments.add(new NsTreatment(tp));
-                if (tp.carbs > 0 && tp.date >= from)
+                //only carbs after first BGReadings are taken into account in calculation of Autotune
+                if (tp.carbs > 0 && tp.date >= oldestBgDate)
                     meals.add(treatments.get(i));
-            //only carbs after first BGReadings are taken into account in calculation of Autotune (I just have to check if I keep or not carbs after from and before first BGReadings)
                 else if (tp.carbs > 0 && tp.date < from)
                     treatments.get(i).carbs = 0;
             }
@@ -173,40 +174,6 @@ public class AutotuneIob {
         }
     }
 
-    // on each loop glucose containts only one day BG Value
-    public JSONArray glucosetoJSON()  {
-        JSONArray glucoseJson = new JSONArray();
-        Date now = new Date(System.currentTimeMillis());
-        int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(now,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(now)).getTime()) / (60 * 1000));
-        BgSourceInterface activeBgSource = activePlugin.getActiveBgSource();
-        //String device = activeBgSource.getClass().getTypeName();
-        try {
-            for (BgReading bgreading:glucose ) {
-                JSONObject bgjson = new JSONObject();
-                bgjson.put("_id",bgreading._id);
-                bgjson.put("device","AndroidAPS");
-                bgjson.put("date",bgreading.date);
-                bgjson.put("dateString", DateUtil.toISOString(bgreading.date));
-                bgjson.put("sgv",bgreading.value);
-                bgjson.put("direction",bgreading.direction);
-                bgjson.put("type","sgv");
-                bgjson.put("systime", DateUtil.toISOString(bgreading.date));
-                bgjson.put("utcOffset", utcOffset);
-                glucoseJson.put(bgjson);
-            }
-        } catch (JSONException e) {}
-        return glucoseJson;
-    }
-
-    public JSONArray nsHistorytoJSON() {
-        JSONArray json = new JSONArray();
-        for (NsTreatment t: nsTreatments ) {
-            if (t.isValid)
-                json.put(t.toJson());
-        }
-        return json;
-    }
-
     IobTotal calculateFromTreatmentsAndTemps(long time, Profile profile, double currenBasalRate) {
         IobTotal bolusIob = getCalculationToTimeTreatments(time).round();
         IobTotal basalIob = getAbsoluteIOBTempBasals( time,  profile,  currenBasalRate).round();
@@ -216,6 +183,14 @@ public class AutotuneIob {
         return iobTotal;
     }
 
+
+    public IobTotal calculateAbsInsulinFromTreatmentsAndTemps(long time) {
+        IobTotal bolusIob = getCalculationToTimeTreatments(time);
+        IobTotal basalIob = getAbsoluteIOBTempBasals(time);
+        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
+
+        return iobTotal;
+    }
 
     public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
@@ -346,6 +321,31 @@ public class AutotuneIob {
         }
         return total;
     }
+
+    // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
+    // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
+    // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
+    public IobTotal getAbsoluteIOBTempBasals(long time) {
+        IobTotal total = new IobTotal(time);
+
+        for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
+            Profile profile = profileFunction.getProfile(i);
+            double basal = profile.getBasal(i);
+            TemporaryBasal runningTBR = getTempBasalFromHistory(i);
+            double running = basal;
+            if (runningTBR != null) {
+                running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
+            }
+            Treatment treatment = new Treatment(injector);
+            treatment.date = i;
+            treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
+            Iob iob = treatment.iobCalc(i, profile.getDia());
+            total.iob += iob.iobContrib;
+            total.activity += iob.activityContrib;
+        }
+        return total;
+    }
+
 
     public IobTotal getCalculationToTimeTempBasals(long time, long truncateTime, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         IobTotal total = new IobTotal(time);
@@ -508,6 +508,43 @@ public class AutotuneIob {
             //log.error(LTag.PROFILE, "No profile switch exists");
         }
     }
+
+    /*********************************************************************************************************************************************************************************************/
+
+    public JSONArray glucosetoJSON()  {
+        JSONArray glucoseJson = new JSONArray();
+        Date now = new Date(System.currentTimeMillis());
+        int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(now,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(now)).getTime()) / (60 * 1000));
+        BgSourceInterface activeBgSource = activePlugin.getActiveBgSource();
+        //String device = activeBgSource.getClass().getTypeName();
+        try {
+            for (BgReading bgreading:glucose ) {
+                JSONObject bgjson = new JSONObject();
+                bgjson.put("_id",bgreading._id);
+                bgjson.put("device","AndroidAPS");
+                bgjson.put("date",bgreading.date);
+                bgjson.put("dateString", DateUtil.toISOString(bgreading.date));
+                bgjson.put("sgv",bgreading.value);
+                bgjson.put("direction",bgreading.direction);
+                bgjson.put("type","sgv");
+                bgjson.put("systime", DateUtil.toISOString(bgreading.date));
+                bgjson.put("utcOffset", utcOffset);
+                glucoseJson.put(bgjson);
+            }
+        } catch (JSONException e) {}
+        return glucoseJson;
+    }
+
+    public JSONArray nsHistorytoJSON() {
+        JSONArray json = new JSONArray();
+        for (NsTreatment t: nsTreatments ) {
+            if (t.isValid)
+                json.put(t.toJson());
+        }
+        return json;
+    }
+
+    /*********************************************************************************************************************************************************************************************/
 
     //I add this internal class to be able to export easily ns-treatment files with same containt and format than NS query used by oref0-autotune
     private class NsTreatment {
