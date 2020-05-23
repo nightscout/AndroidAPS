@@ -1,4 +1,5 @@
 <resources>
+    <string name="default_lang" translatable="false">System default</string>
     <string name="en_lang" translatable="false">English</string>
     <string name="cs_lang" translatable="false">Czech</string>
     <string name="af_lang" translatable="false">Afrikaans</string>
