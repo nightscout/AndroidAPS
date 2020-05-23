@@ -50,9 +50,15 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="insight_disable_vibration"
+            android:key="@string/key_disable_vibration"
             android:summary="@string/disable_vibration_summary"
             android:title="@string/disable_vibration" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_disable_vibration_auto"
+            android:summary="@string/disable_vibration_auto_summary"
+            android:title="@string/disable_vibration_auto" />
 
         <EditTextPreference
             android:defaultValue="5"
