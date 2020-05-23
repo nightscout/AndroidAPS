@@ -42,29 +42,12 @@
             android:title="@string/ns_alarmoptions">
 
             <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsalarm_urgent_high"
-                android:title="@string/nsalarm_urgenthigh" />
+                android:key="@string/key_ns_alarms"
+                android:title="@string/ns_alarms" />
 
             <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsalarm_high"
-                android:title="@string/nsalarm_high" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsalarm_low"
-                android:title="@string/nsalarm_low" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsalarm_urgent_low"
-                android:title="@string/nsalarm_urgentlow" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsalarm_staledata"
-                android:title="@string/nsalarm_staledata" />
+                android:key="@string/key_ns_announcements"
+                android:title="@string/ns_announcements" />
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="16"
@@ -78,11 +61,6 @@
                 validate:maxNumber="120"
                 validate:minNumber="15"
                 validate:testType="numericRange" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsalarm_urgent_staledata"
-                android:title="@string/nsalarm_urgentstaledata" />
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="31"

@@ -549,20 +549,12 @@
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
     <string name="ns_alarmoptions">Alarm options</string>
-    <string name="key_nsalarm_urgent_high" translatable="false">nsalarm_urgent_high</string>
-    <string name="key_nsalarm_high" translatable="false">nsalarm_high</string>
-    <string name="key_nsalarm_low" translatable="false">nsalarm_low</string>
-    <string name="key_nsalarm_urgent_low" translatable="false">nsalarm_urgent_low</string>
-    <string name="key_nsalarm_staledata" translatable="false">nsalarm_staledata</string>
-    <string name="key_nsalarm_urgent_staledata" translatable="false">nsalarm_urgent_staledata</string>
+    <string name="key_ns_announcements" translatable="false">ns_announcements</string>
+    <string name="key_ns_alarms" translatable="false">ns_alarms</string>
     <string name="key_nsalarm_staledatavalue" translatable="false">nsalarm_staledatavalue</string>
     <string name="key_nsalarm_urgent_staledatavalue" translatable="false">nsalarm_urgent_staledatavalue</string>
-    <string name="nsalarm_urgenthigh">Urgent high</string>
-    <string name="nsalarm_high">High</string>
-    <string name="nsalarm_low">Low</string>
-    <string name="nsalarm_urgentlow">Urgent low</string>
-    <string name="nsalarm_staledata">Stale data</string>
-    <string name="nsalarm_urgentstaledata">Urgent stale data</string>
+    <string name="ns_alarms">Create notifications from NS alarms</string>
+    <string name="ns_announcements">Create notifications from NS announcements</string>
     <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Urgent stale data threshold [min]</string>
     <string name="openapsama_autosens_period">Interval for autosens [h]</string>
