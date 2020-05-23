@@ -530,7 +530,6 @@ public class Profile {
     public double getTargetMgdl(int timeAsSeconds) {
         return toMgdl((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, units);
     }
-
     public double getTargetLowMgdl() {
         return toMgdl(getTargetLowTimeFromMidnight(secondsFromMidnight()), units);
     }

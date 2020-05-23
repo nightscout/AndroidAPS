@@ -646,6 +646,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         } else {
             overview_apsmode_text?.visibility = View.GONE
         }
+        val lastRun = loopPlugin.lastRun
 
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
@@ -654,9 +655,18 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
         } else {
-            overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-            overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-            overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+            // If the target is not the same as set in the profile then oref has overridden it
+            val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
+
+            if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+                overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
+                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+            } else {
+                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+            }
         }
 
         // Basal, TBR
@@ -677,7 +687,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (activeTemp != null)
             overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.icon_cp_basal_tbr_high else R.drawable.icon_cp_basal_tbr_low)
         else
-            overview_basebasal_icon.setImageResource( R.drawable.icon_cp_basal_no_tbr )
+            overview_basebasal_icon.setImageResource(R.drawable.icon_cp_basal_no_tbr)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -741,7 +751,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_cob?.text = cobText
 
-        val lastRun = loopPlugin.lastRun
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
         // pump status from ns
@@ -759,7 +768,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // Sensitivity
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
-        }else {
+        } else {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert_48px_green)
         }
 
