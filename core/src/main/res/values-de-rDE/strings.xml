@@ -124,25 +124,24 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
     <!--    Translator-->
-    <string name="careportal_bgcheck">BZ Test</string>
+    <string name="careportal_bgcheck">BZ-Test</string>
     <string name="careportal_announcement">Ankündigung</string>
     <string name="careportal_note">Notiz</string>
     <string name="careportal_question">Frage</string>
     <string name="careportal_exercise">Bewegung</string>
-    <string name="careportal_pumpsitechange">Pumpenkatheter Wechsel</string>
+    <string name="careportal_pumpsitechange">Pumpenkatheter-Wechsel</string>
     <string name="careportal_cgmsensorinsert">CGM-Sensor gesetzt</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
-    <string name="careportal_insulincartridgechange">Insulinreservoir Wechsel</string>
+    <string name="careportal_insulincartridgechange">Insulinreservoir-Wechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
-    <string name="careportal_snackbolus">Snack Bolus</string>
-    <string name="careportal_mealbolus">Mahlzeiten Bolus</string>
-    <string name="careportal_correctionbolus">Korrektur Bolus</string>
-    <string name="careportal_combobolus">Combo Bolus</string>
-    <string name="careportal_tempbasalstart">TBR Start</string>
+    <string name="careportal_snackbolus">Snack-Bolus</string>
+    <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
+    <string name="careportal_correctionbolus">Korrektur-Bolus</string>
+    <string name="careportal_combobolus">Combo-Bolus</string>
     <string name="careportal_tempbasalend">TBR Ende</string>
-    <string name="careportal_carbscorrection">Kohlenhydrat Korrektur</string>
+    <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>
-    <string name="careportal_pumpbatterychange">Pumpenbatterie Wechsel</string>
+    <string name="careportal_pumpbatterychange">Pumpenbatterie-Wechsel</string>
     <string name="careportal_temporarytarget">Temporäres Ziel</string>
     <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="glucosetype_finger">Finger</string>

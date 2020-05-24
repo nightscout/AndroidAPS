@@ -29,6 +29,8 @@
     <string name="batterydischarged">Batterie Pompe Déchargée</string>
     <string name="occlusion">Occlusion</string>
     <string name="emptyreservoir">Réservoir vide</string>
+    <string name="basalmax">Basal max</string>
+    <string name="dailymax">Quotidien max</string>
     <string name="bloodsugarmeasurementalert">Alerte de mesure de glycémie</string>
     <string name="remaininsulinalert">Niveau d\'insuline restant</string>
     <string name="missedbolus">Bolus manqués</string>

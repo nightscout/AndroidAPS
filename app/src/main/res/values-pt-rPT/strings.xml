@@ -468,12 +468,6 @@
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_pbage_label">Idade bateria bomba</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
-    <string name="nsalarm_urgenthigh">Urgência hiperglicemia</string>
-    <string name="nsalarm_high">Alto</string>
-    <string name="nsalarm_low">Baixo</string>
-    <string name="nsalarm_urgentlow">Urgência hipoglicemia</string>
-    <string name="nsalarm_staledata">Dados Obsoletos</string>
-    <string name="nsalarm_urgentstaledata">Dados obsoletos urgentes</string>
     <string name="nsalarm_staledatavalue_label">Tempo limite para dados obsoletos [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>

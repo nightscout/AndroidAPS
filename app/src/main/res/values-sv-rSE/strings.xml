@@ -469,12 +469,6 @@ Eversense-appen.</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="careportal_pbage_label">Pumpbatteri ålder</string>
     <string name="ns_alarmoptions">Larminställningar</string>
-    <string name="nsalarm_urgenthigh">Akut hög</string>
-    <string name="nsalarm_high">Hög</string>
-    <string name="nsalarm_low">Låg</string>
-    <string name="nsalarm_urgentlow">Akut låg</string>
-    <string name="nsalarm_staledata">BG-data saknas</string>
-    <string name="nsalarm_urgentstaledata">BG-data saknas (akut larm)</string>
     <string name="nsalarm_staledatavalue_label">Första varning efter [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
     <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>

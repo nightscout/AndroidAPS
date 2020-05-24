@@ -410,12 +410,6 @@
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
     <string name="ns_alarmoptions">Опции за аларми</string>
-    <string name="nsalarm_urgenthigh">Много висока</string>
-    <string name="nsalarm_high">Висока</string>
-    <string name="nsalarm_low">Ниска</string>
-    <string name="nsalarm_urgentlow">Много ниска</string>
-    <string name="nsalarm_staledata">Стари данни</string>
-    <string name="nsalarm_urgentstaledata">Много стари данни</string>
     <string name="nsalarm_staledatavalue_label">Когато няма данни повече от [мин]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>

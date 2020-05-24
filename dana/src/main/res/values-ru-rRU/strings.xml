@@ -29,6 +29,9 @@
     <string name="batterydischarged">батарея помпы разряжена</string>
     <string name="occlusion">закупорка</string>
     <string name="emptyreservoir">Резервуар пуст</string>
+    <string name="checkshaft">Проверьте шток помпы</string>
+    <string name="basalmax">Макс. шаг базала</string>
+    <string name="dailymax">Максимум в день</string>
     <string name="bloodsugarmeasurementalert">Предупреждение при измерении уровня СК</string>
     <string name="remaininsulinalert">Уровень оставшегося инсулина</string>
     <string name="missedbolus">Недоставленный болюс</string>

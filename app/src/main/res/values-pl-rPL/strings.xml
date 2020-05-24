@@ -459,12 +459,6 @@
     <string name="doprofileswitch">Zmień profil</string>
     <string name="careportal_pbage_label">Czas baterii pompy</string>
     <string name="ns_alarmoptions">Opcje alarmu</string>
-    <string name="nsalarm_urgenthigh">Uwaga wysoki</string>
-    <string name="nsalarm_high">Wysoki</string>
-    <string name="nsalarm_low">Niski</string>
-    <string name="nsalarm_urgentlow">Uwaga niski</string>
-    <string name="nsalarm_staledata">Nieaktualne dane</string>
-    <string name="nsalarm_urgentstaledata">Uwaga, nieaktualne dane</string>
     <string name="nsalarm_staledatavalue_label">Próg nieaktualne dane [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Próg uwaga nieaktualne dane [min]</string>
     <string name="openapsama_autosens_period">Przedział czasowy dla autosens [h]</string>
