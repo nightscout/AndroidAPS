@@ -14,7 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(DateUtil::class)
 class TriggerRecurringTimeTest : TriggerTestBase() {
 
-    var now = 1514766900000L
+    var now = 1514766900000L // 95 min from midnight
 
     @Before fun mock() {
         PowerMockito.mockStatic(DateUtil::class.java)
@@ -26,20 +26,14 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
 
-        // limit by validTo
-        var t: TriggerRecurringTime = TriggerRecurringTime(injector).time(94)
+        var t: TriggerRecurringTime = TriggerRecurringTime(injector).time(89)
         t.days.setAll(true)
         Assert.assertFalse(t.shouldRun())
 
         // scheduled 1 min before
-//        t = new TriggerRecurringTime().hour(1).minute(34);
-//        t.setAll(true);
-//        Assert.assertTrue(t.shouldRun());
-
-        // already run
         t = TriggerRecurringTime(injector).time(94)
         t.days.setAll(true)
-        Assert.assertFalse(t.shouldRun())
+        Assert.assertTrue(t.shouldRun())
     }
 
     private var timeJson = "{\"data\":{\"WEDNESDAY\":false,\"MONDAY\":false,\"THURSDAY\":false,\"SUNDAY\":false,\"TUESDAY\":false,\"FRIDAY\":false,\"SATURDAY\":false,\"time\":4444},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime\"}"
