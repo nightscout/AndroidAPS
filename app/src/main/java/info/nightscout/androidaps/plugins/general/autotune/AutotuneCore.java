@@ -67,9 +67,9 @@ public class AutotuneCore {
         double pumpCarbRatio = pumpProfile.ic;
         double pumpCSF = pumpISF / pumpCarbRatio;
         // Autosens constraints
-        double autotuneMax = SafeParse.stringToDouble(sp.getString("openapsama_autosens_max", "1.2"));
-        double autotuneMin = SafeParse.stringToDouble(sp.getString("openapsama_autosens_min", "0.7"));
-        double min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
+        double autotuneMax = sp.getDouble(R.string.key_openapsama_autosens_max, 1.2);
+        double autotuneMin = sp.getDouble(R.string.key_openapsama_autosens_min, 0.7);
+        double min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0);
 
 /*******Tune DIA (#57-#99) and Peak (#101-#139) disabled for the first version code below in js********************************************************************************************************
         // tune DIA
@@ -261,14 +261,14 @@ public class AutotuneCore {
                 //log.debug(newHourlyBasalProfile[hour],hourlyPumpProfile[hour].rate*1.2);
                 // cap adjustments at autosens_max and autosens_min
 
-                double maxRate = newHourlyBasalProfile[hour] * autotuneMax;
-                double minRate = newHourlyBasalProfile[hour] * autotuneMin;
+                double maxRate = hourlyPumpProfile[hour] * autotuneMax;
+                double minRate = hourlyPumpProfile[hour] * autotuneMin;
                 if (newHourlyBasalProfile[hour] > maxRate ) {
                     log("Limiting hour "+hour+" basal to " + Round.roundTo(maxRate,0.01) + " (which is " + Round.roundTo(autotuneMax,0.01) + " * pump basal of "+hourlyPumpProfile[hour]+")");
                     //log.debug("Limiting hour",hour,"basal to",maxRate.toFixed(2),"(which is 20% above pump basal of",hourlyPumpProfile[hour].rate,")");
                     newHourlyBasalProfile[hour] = maxRate;
                 } else if (newHourlyBasalProfile[hour] < minRate ) {
-                    log("Limiting hour " + hour + " basal to " + Round.roundTo(minRate,0.01) + " (which is" + autotuneMin + " * pump basal of " + newHourlyBasalProfile[hour] + ")");
+                    log("Limiting hour " + hour + " basal to " + Round.roundTo(minRate,0.01) + " (which is " + autotuneMin + " * pump basal of " + newHourlyBasalProfile[hour] + ")");
                     //log.debug("Limiting hour",hour,"basal to",minRate.toFixed(2),"(which is 20% below pump basal of",hourlyPumpProfile[hour].rate,")");
                     newHourlyBasalProfile[hour] = minRate;
                 }
