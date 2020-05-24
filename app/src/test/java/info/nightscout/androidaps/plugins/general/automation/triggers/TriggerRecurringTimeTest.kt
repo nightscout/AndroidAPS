@@ -17,11 +17,7 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
     var now = 1514766900000L // 95 min from midnight
 
     @Before fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
-//        val calendar = GregorianCalendar()
-//        calendar.timeInMillis = now
-//        PowerMockito.`when`(DateUtil.gregorianCalendar()).thenReturn(calendar)
+        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {

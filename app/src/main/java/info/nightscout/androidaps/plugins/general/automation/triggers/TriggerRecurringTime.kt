@@ -34,8 +34,8 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
-        val currentMinSinceMidnight = getMinSinceMidnight(DateUtil.now())
+    override fun shouldRun() : Boolean {
+        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil._now())
         val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
         if (days.isSet(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
             if (currentMinSinceMidnight >= time.value && currentMinSinceMidnight - time.value < 5) {

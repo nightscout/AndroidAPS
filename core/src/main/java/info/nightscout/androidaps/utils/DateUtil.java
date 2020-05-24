@@ -261,6 +261,10 @@ public class DateUtil {
         return timeFrameString(timestamp - System.currentTimeMillis(), resourceHelper);
     }
 
+    public long _now() {
+        return System.currentTimeMillis();
+    }
+
     public static long now() {
         return System.currentTimeMillis();
     }
@@ -358,6 +362,7 @@ public class DateUtil {
     // singletons to avoid repeated allocation
     private static DecimalFormatSymbols dfs;
     private static DecimalFormat df;
+
     public static String qs(double x, int digits) {
 
         if (digits == -1) {
