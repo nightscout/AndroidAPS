@@ -1531,7 +1531,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             //add last one without duration
             ProfileSwitch last = getLastProfileSwitchWithoutDuration();
             if (last != null) {
-                if (!profileSwitches.contains(last))
+                if (!isInList(profileSwitches, last))
                     profileSwitches.add(last);
             }
             return profileSwitches;
@@ -1539,6 +1539,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
+    }
+
+    boolean isInList(List<ProfileSwitch> profileSwitches, ProfileSwitch last) {
+        for (ProfileSwitch ps : profileSwitches) {
+            if (ps.isEqual(last)) return true;
+        }
+        return false;
     }
 
     @Nullable

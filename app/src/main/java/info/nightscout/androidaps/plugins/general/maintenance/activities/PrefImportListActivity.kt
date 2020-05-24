@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsFormatsHandler
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsMetadataKey
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
-import info.nightscout.androidaps.utils.LocaleHelper
+import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.maintenance_importlist_activity.*
 import javax.inject.Inject
