@@ -469,12 +469,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_pbage_label">Age batterie pompe</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
-    <string name="nsalarm_urgenthigh">Haute urgent</string>
-    <string name="nsalarm_high">Haute</string>
-    <string name="nsalarm_low">Basse</string>
-    <string name="nsalarm_urgentlow">Basse urgent</string>
-    <string name="nsalarm_staledata">Données obsolètes</string>
-    <string name="nsalarm_urgentstaledata">Urgent données obsolètes</string>
     <string name="nsalarm_staledatavalue_label">Seuil sans nouvelle donnée Glyc. [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="openapsama_autosens_period">Plage pour Autosens [h]</string>
@@ -852,6 +846,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="log_alerts">Enreg. alertes</string>
     <string name="enable_tbr_emulation">Activer l’émulation de DBT</string>
     <string name="enable_tbr_emulation_summary">Utilisez des Bolus étendus au lieu de DBTs pour contourner la limite de 250%%</string>
+    <string name="disable_vibration">Désactiver les vibrations des bolus manuels</string>
+    <string name="disable_vibration_summary">Concerne les bolus et bolus étendus (disponible uniquement pour les firmwares 3.x)</string>
+    <string name="disable_vibration_auto">Désactiver les vibrations des bolus automatiques</string>
+    <string name="disable_vibration_auto_summary">Concerne les SMB et les basal temp avec émulation DBT (disponible uniquement pour les firmwares 3.x)</string>
     <string name="disconnect_delay">Délai de déconnexion [s]</string>
     <string name="serial_number">Numéro de série</string>
     <string name="release_software_version">Version du logiciel</string>

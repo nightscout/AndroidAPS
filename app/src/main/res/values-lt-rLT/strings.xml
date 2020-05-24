@@ -450,12 +450,6 @@
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="careportal_pbage_label">Baterija</string>
     <string name="ns_alarmoptions">Aliarmų nustatymai</string>
-    <string name="nsalarm_urgenthigh">Kritiškai aukštas</string>
-    <string name="nsalarm_high">Aukštas</string>
-    <string name="nsalarm_low">Žemas</string>
-    <string name="nsalarm_urgentlow">Kritiškai žemas</string>
-    <string name="nsalarm_staledata">Seni duomenys</string>
-    <string name="nsalarm_urgentstaledata">Kritiškai seni duomenys</string>
     <string name="nsalarm_staledatavalue_label">Seni duomenys, riba [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="openapsama_autosens_period">Autosens intervalas [h]</string>

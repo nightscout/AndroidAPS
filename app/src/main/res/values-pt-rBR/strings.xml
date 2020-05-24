@@ -171,8 +171,8 @@
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode dar de uma vez.</string>
-    <string name="password_preferences_encrypt_prompt">Será perguntado pela password mestre, que será usada para encriptar preferências exportadas.</string>
-    <string name="password_preferences_decrypt_prompt">Será perguntado pela password mestre, que será necessária para desencriptar preferências importadas.</string>
+    <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestre, que será usada para encriptar preferências exportadas.</string>
+    <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
     <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
@@ -205,11 +205,11 @@
     <string name="prefdecrypt_settings_secure">Ficheiro de configurações é seguro</string>
     <string name="prefdecrypt_settings_unencrypted">A usar um formato de configurações não seguro e não encriptado</string>
     <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
-    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a password inserida não pode desencriptar o ficheiro</string>
+    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o ficheiro</string>
     <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
     <string name="prefdecrypt_issue_modified">Ficheiro foi modificado após exportação!</string>
     <string name="prefdecrypt_issue_parsing">Erro Desencriptação, a análise de preferências falhou!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a password é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Password Mestre diferente.</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestre diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <string name="exported_today">exportado hoje</string>
@@ -226,7 +226,7 @@
     <string name="smscommunicator_allowednumbers">Números de telefone permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Para dar bolus %1$.2fU responder com código %2$s</string>
-    <string name="smscommunicator_mealbolusreplywithcode">Para dar bólus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Para administrar bólus %1$.2fU responder com código %2$s</string>
     <string name="smscommunicator_temptargetwithcode">Para definir o Alvo Tempo %1$s responda com o código %2$s</string>
     <string name="smscommunicator_temptargetcancel">Para cancelar Alvo Temp responda com o código %1$s</string>
     <string name="smscommunicator_stopsmswithcode">Para desactivar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reactivar directamente apenas a partir do telemóvel mestre do AAPS.</string>
@@ -239,7 +239,7 @@
     <string name="bolusdelivered">Bolus %1$.2fU entregue com sucesso</string>
     <string name="bolusrequested">Vão ser administradas %1$.2fU</string>
     <string name="smscommunicator_bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
-    <string name="smscommunicator_mealbolusdelivered">Bólus de refeição %1$.2fU entregue com sucesso</string>
+    <string name="smscommunicator_mealbolusdelivered">Bólus de refeição %1$.2fU administrado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
     <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
     <string name="smscommunicator_tt_canceled">Alvo Temp cancelado com êxito</string>
@@ -468,12 +468,6 @@
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_pbage_label">Idade bateria bomba</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
-    <string name="nsalarm_urgenthigh">Urgência hiperglicemia</string>
-    <string name="nsalarm_high">Alta</string>
-    <string name="nsalarm_low">Baixa</string>
-    <string name="nsalarm_urgentlow">Urgência hipoglicemia</string>
-    <string name="nsalarm_staledata">Dados Obsoletos</string>
-    <string name="nsalarm_urgentstaledata">Dados obsoletos urgentes</string>
     <string name="nsalarm_staledatavalue_label">Tempo limite para dados obsoletos [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
@@ -1247,9 +1241,9 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">a partir da app Autenticador para: %1$s</string>
     <string name="smscommunicator_otp_enabled">Activar Autenticador</string>
-    <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Password-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
+    <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Senha-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
     <string name="smscommunicator_otp_pin">PIN adicional no token final</string>
-    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
+    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_otp_verify_label">OTP para verificar:</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
@@ -1258,7 +1252,7 @@
     <string name="smscommunicator_otp_reset_successful">Nova Chave do Autenticador foi gerada! Por favor, use o QRCode actualizado para os autenticadores.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Pesquise o código para configurar os códigos OTP do AndroidAPS</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Teste Uma-Password-Única</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
     <string name="smscommunicator_otp_provisioning_warning">NÃO PARTILHE este código online!\nUse-o apenas para a instalação da app Autenticador nos telefones seguidores.</string>
@@ -1269,9 +1263,9 @@
     <string name="overview_show_deviationslope">Desvio de inclinação</string>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="overview_show_absinsulin">Insulina absoluta</string>
-    <string name="master_password_summary">Password Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
-    <string name="passwords_dont_match">As passwords não coincidem</string>
-    <string name="current_master_password">Password Mestre actual</string>
+    <string name="master_password_summary">Senha Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
+    <string name="passwords_dont_match">As senhas não coincidem</string>
+    <string name="current_master_password">Senha Mestre actual</string>
     <string name="statuslights">Luzes de Estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="copyexistingvalues">Copiar definições do NS (se existir)?</string>
@@ -1280,11 +1274,13 @@
     <string name="skin">Tema gráfico</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod">Integração de bomba para Omnipod, requer RileyLink (com pelo menos firmware 2.0) dispositivo.</string>
     <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Beep Bólus Activado</string>
-    <string name="omnipod_config_beep_basal_enabled">Beep Basal Activado</string>
-    <string name="omnipod_config_beep_smb_enabled">Beep SMB Activado</string>
-    <string name="omnipod_config_beep_tbr_enabled">Beep DBT Activado</string>
+    <string name="omnipod_config_beep_bolus_enabled">Sinal Bólus Activado</string>
+    <string name="omnipod_config_beep_basal_enabled">Sinal Basal Activado</string>
+    <string name="omnipod_config_beep_smb_enabled">Sinal SMB Activado</string>
+    <string name="omnipod_config_beep_tbr_enabled">Sinal DBT Activado</string>
+    <string name="omnipod_config_pod_debugging_options_enabled">Opções de Depuração do Pod habilitadas</string>
     <string name="omnipod_config_timechange_enabled">Detecção de DST/Fuso Horário Activado</string>
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Gestão Pod</string>
@@ -1301,8 +1297,27 @@
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">A operação não é possível.\n\n Precisa de esperar alguns minutos, até que AAPS tente definir o perfil para a primeira vez.</string>
+    <string name="omnipod_error_illegal_init_action_type">PodInitActionType Ilegal: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Nenhum Pod Activo.</string>
     <string name="omnipod_driver_error_setup_action_verification_failed">A verificação do comando falhou.</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Ocorreu um erro inesperado. Por favor reporte! (digite: %1$s).</string>
+    <string name="omnipod_driver_error_invalid_parameters">Falha na comunicação: foram recebidos parâmetros de entrada inválidos.</string>
+    <string name="omnipod_driver_error_communication_failed_timeout">Falha na comunicação: tempo limite.</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Falha na comunicação: ocorreu um erro inesperado. Por favor, reporte!</string>
+    <string name="omnipod_driver_error_crc_mismatch">Falha na comunicação: mensagem de falha de verificação de integridade.</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Falha na comunicação: recebeu um pacote inválido do Pod.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Falha na comunicação: o Pod está em um estado errado.</string>
+    <string name="omnipod_driver_error_invalid_response">Falha na comunicação: recebeu uma resposta inválida do Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_sequence_number">Falha na comunicação: recebeu uma mensagem com número de sequência inválido do Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_address">Falha na comunicação: recebeu uma mensagem com um endereço inválido do Pod.</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Falha na comunicação: falha ao descodificar a mensagem do Pod.</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Falha na comunicação: nonce resync falhou.</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Falha na comunicação: nonce fora de sincronização.</string>
+    <string name="omnipod_driver_error_not_enough_data">Falha na comunicação: não há dados suficientes recebidos do Pod.</string>
+    <string name="omnipod_driver_error_pod_fault">Uma falha de Pod (%1$03d %2$s) foi detectada. Por favor, desactive o Pod e inicie um novo.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">Falha na comunicação: o Pod devolveu uma resposta de erro.</string>
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_mgmt_title">Gestão Pod</string>
     <string name="omnipod_cmd_init_pod">Iniciar Pod</string>
@@ -1326,19 +1341,29 @@
     <string name="omnipod_cmd_bolus_value">%1$.1f U</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, HC=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Taxa: %1$.1f U, Duração: %2$d min</string>
+    <string name="omnipod_cmd_reset_pod_desc">Se pressionar <b>OK</b>, o estado do Pod vai ser forçado a redefinir e você não será capaz de comunicar mais com o Pod. Faça isso somente se você não pode comunicar mais com o Pod. Se ainda pode comunicar com o Pod, por favor, use o <b>Desactivar Pod</b> opção.</string>
+    <string name="omnipod_cmd_pod_history_na">Histórico do Pod não disponível no momento.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Encher o Pod</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nPreencher o novo Pod com insulina suficiente para 3 dias.\n\nOuvir dois sinais sonoros a partir do Pod durante o processo de enchimento. Isso indica que a quantidade mínima de 85U foi inserida. Certifique-se de esvaziar completamente a seringa, mesmo depois de ouvir dois sinais sonoros.\n\nDepois de preencher o Pod, por favor, pressione <b>Próximo</b>.\n\n<b>Nota:</b> não remova a tampa da agulha do Pod neste momento.</string>
     <string name="omnipod_init_pod_wizard_step2_title">A Purgar</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">A tentar emparelhar com o novo Pod e purgá-lo.\n\nQuando todos os itens forem verificados, pode pressionar <b>Próximo</b>.\n\n<b>Nota:</b> por favor, mantenha o Pod muito perto do RileyLink neste momento.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Anexar o Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e fixe o Pod no local de infusão.\n\nSe a canula sair, por favor, pressione <b>Cancelar</b> e descarte o seu Pod.\n\nPressione <b>Próximo</b> para inserir a canula e começar a administração da basal.</string>
     <string name="omnipod_init_pod_wizard_step4_title">A inserir canula</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">A tentar definir um plano da basal inicial e inserir canula.\n\nQuando todos os itens estiverem verificados, pode pressionar <b>Próximo</b>.</string>
     <string name="omnipod_init_pod_wizard_pod_info_title">Info Pod</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nO Pod está agora activo.\n\nO seu plano de basal foi programado e a canula foi inserida.\n\nPor favor, verifique se a canula foi inserida correctamente e substitua o seu Pod se você se sente que não.</string>
     <string name="omnipod_remove_pod_wizard_step1_title">Desactivar Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nPressione <b>Próximo</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">A Desactivar Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">A desactivar o Pod.\n\nQuando todos os itens forem verificados, pode pressionar <b>Próximo</b>.\n\n<b>Nota:</b> Se desactivar falhar continuamente, por favor, pressione <b>Cancelar</b> e use o <b>Repor Pod</b> opção para forçar a repor o estado do Pod.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
     <string name="omnipod_init_pod_pair_pod">Emparelhar Pod</string>
     <string name="omnipod_init_pod_prime_pod">Purgar Pod</string>
     <string name="omnipod_init_pod_fill_cannula">Enchimento de Canula</string>
     <string name="omnipod_init_pod_set_basal_profile">Definir Perfil Basal</string>
     <string name="omnipod_deactivate_pod_cancel_delivery">Cancelar Administração</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Desacitvar Pod</string>
+    <string name="omnipod_deactivate_pod_deactivate_pod">Desactivar Pod</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
     <string name="description_pump_omnipod_dash">Integração da Bomba para Omnipod Dash.</string>
@@ -1349,6 +1374,10 @@
     <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
     <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>
     <string name="omnipod_alert_unknown_alert">Alerta desconhecido</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Pode ter falhado ao definir perfil da basal. A administração pode estar suspensa! Por favor, actualize o estado do Pod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">Pode ter falhado ao definir basal temporária. Se houve uma basal temporária já em execução, pode ter sido cancelada! Por favor, actualize o estado do Pod.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Pode ter falhado ao definir a hora. A administração pode estar suspensa! Por favor, actualize o estado do Pod.</string>
+    <string name="omnipod_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem-sucedido. Por favor, verifique se o Pod está administrar ou cancelar o bólus.</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
     <string name="omnipod_read_pulse_log_short">Registo de Pulse</string>
 </resources>
