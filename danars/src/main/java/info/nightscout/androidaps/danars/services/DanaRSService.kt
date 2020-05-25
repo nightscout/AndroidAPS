@@ -239,7 +239,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun setUserSettings(): PumpEnactResult {
-        sendMessage(DanaRS_Packet_Option_Get_User_Option(injector))
+        sendMessage(DanaRS_Packet_Option_Set_User_Option(injector))
         return PumpEnactResult(injector).success(true)
     }
 

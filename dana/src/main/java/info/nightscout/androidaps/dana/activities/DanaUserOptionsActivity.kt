@@ -82,7 +82,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         danar_screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, save_user_options)
         danar_backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
         danar_shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, save_user_options)
-        danar_lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 60.0, 10.0, DecimalFormat("10"), false, save_user_options)
+        danar_lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, save_user_options)
         when (danaPump.beepAndAlarm) {
             0x01  -> danar_pumpalarm_sound.isChecked = true
             0x02  -> danar_pumpalarm_vibrate.isChecked = true
