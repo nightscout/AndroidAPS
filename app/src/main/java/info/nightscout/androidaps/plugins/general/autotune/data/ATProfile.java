@@ -19,6 +19,7 @@ import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -100,6 +101,11 @@ public class ATProfile {
         return profile.getBasalTimeFromMidnight(secondfrommidnight);
     }
 
+    public void setBasal(long time, double value) {
+        int hour = (int) ((time - MidnightTime.calc(time))/60/60/1000);
+        basal[hour] = value;
+    }
+
     public static double averageProfileValue(Profile.ProfileValue[] pf) {
         double avgValue = 0;
         int secondPerDay=24*60*60;
@@ -135,7 +141,7 @@ public class ATProfile {
                 basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)));
             };
             json.put("basalprofile", basals);
-            int isfvalue = (int) profile.getIsfMgdl();
+            double isfvalue = profile.getIsfMgdl();
             json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
             // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
             json.put("carb_ratio", profile.getIc());

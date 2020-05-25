@@ -153,7 +153,6 @@ public class AutotunePlugin extends PluginBase {
         //clean autotune folder before run
         autotuneFS.deleteAutotuneFiles();
 
-
         long now = System.currentTimeMillis();
         lastRun = new Date(System.currentTimeMillis());
         // Today at 4 AM
@@ -165,6 +164,7 @@ public class AutotunePlugin extends PluginBase {
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
         autotuneFS.exportSettings(settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
+        autotuneIob = new AutotuneIob(starttime);
 
         profile = profileFunction.getProfile(now);
 
@@ -191,7 +191,7 @@ public class AutotunePlugin extends PluginBase {
                 atLog("Tune day "+ i +" of "+ daysBack);
 
                 //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                autotuneIob = new AutotuneIob(from, to);
+                autotuneIob.initializeData(from, to);
                 //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportEntries(autotuneIob);
                 //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
@@ -221,9 +221,9 @@ public class AutotunePlugin extends PluginBase {
             //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
             result = line;
             // show ISF and CR
-            result += "|  ISF |   " + Round.roundTo(pumpprofile.isf / toMgDl, 0.1) + "   |    " + Round.roundTo(tunedProfile.isf / toMgDl,0.1)+"   |\n";
+            result += "|  ISF | " + df.format(pumpprofile.isf / toMgDl) + " |  " + df.format(tunedProfile.isf / toMgDl)+" |\n";
             result += line;
-            result += "|  IC  |     " + Round.roundTo(pumpprofile.ic,0.1) + "   |      " + Round.roundTo(tunedProfile.ic,0.1) + "   |\n";
+            result += "|  IC  | " + df.format(pumpprofile.ic) + "  | " + df.format(tunedProfile.ic) + " |\n";
             result += line;
             result += "|Hour| Profile | Tuned |nbKo|   %   |\n";
             result += line;
@@ -245,7 +245,7 @@ public class AutotunePlugin extends PluginBase {
                 if (percentageChangeValue != 0)
                     percentageChange += "%";
 
-                result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + ef.format(tunedProfile.basalUntuned[i]) + "  | " + percentageChange + " |\n";
+                result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
             }
             result += line;
             result += "|    ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";

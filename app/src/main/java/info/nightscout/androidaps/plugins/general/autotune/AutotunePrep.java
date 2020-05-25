@@ -200,7 +200,7 @@ public class AutotunePrep {
             // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
             //IobTotal iob = autotuneIob.calculateFromTreatmentsAndTemps( BGTime,  profileData,  currentPumpBasal);
             //Todo Philoul check with Scott, (I think TunedProfile is only for dia and peak tuning that impact iob calculation)
-            IobTotal iob = autotuneIob.calculateAbsInsulinFromTreatmentsAndTemps(BGTime);
+            IobTotal iob = autotuneIob.calculateFromTreatmentsAndTempsSynchronized(BGTime);
 
             //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
             //log.debug("treatmentsPlugin Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
@@ -358,7 +358,7 @@ public class AutotunePrep {
 
 //****************************************************************************************************************************************
 
-        treatments = autotuneIob.getTreatmentsFromHistory();
+        treatments = autotuneIob.treatments;
 
 // categorize.js Lines 372-383
         for (CRDatum crDatum : crData) {
