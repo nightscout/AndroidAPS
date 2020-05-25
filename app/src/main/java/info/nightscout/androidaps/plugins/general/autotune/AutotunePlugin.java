@@ -5,15 +5,12 @@ import android.content.Context;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
-import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -33,9 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.TimeZone;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,26 +48,14 @@ import javax.inject.Singleton;
 
 @Singleton
 public class AutotunePlugin extends PluginBase {
-    private static AutotunePlugin tuneProfile = null;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     private static Profile profile;
-    private static Profile pumpProfile;
-    private static List<Double> basalsResult = new ArrayList<Double>();
-    private static List<Treatment> treatments;
+
     private String logString="";
-    private List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
-    private List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
-    private List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
-    private List<BGDatum> UAMGlucoseData = new ArrayList<BGDatum>();
-    private List<CRDatum> CRData = new ArrayList<CRDatum>();
-    private JSONObject previousResult = null;
-    private Profile autotuneResult;
-    private String tunedProfileName = "Autotune";
-    //copied from IobCobCalculator
+
     private static final int autotuneStartHour = 4;
     public static String result ="Press Run";
     public static Date lastRun=null;
-    public boolean nsDataDownloaded = false;
     private PreppedGlucose preppedGlucose =null;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -188,7 +171,7 @@ public class AutotunePlugin extends PluginBase {
                 long from = starttime + i * 24 * 60 * 60 * 1000L;
                 long to = from + 24 * 60 * 60 * 1000L;
 
-                atLog("Tune day "+ i +" of "+ daysBack);
+                atLog("Tune day "+ (i+1) +" of "+ daysBack);
 
                 //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 autotuneIob.initializeData(from, to);
@@ -225,7 +208,7 @@ public class AutotunePlugin extends PluginBase {
             result += line;
             result += "|  IC  | " + df.format(pumpprofile.ic) + "  | " + df.format(tunedProfile.ic) + " |\n";
             result += line;
-            result += "|Hour| Profile | Tuned |nbKo|   %   |\n";
+            result += "|Hour| Profile | Tuned |nbKo|Miss.days/%\n";
             result += line;
             double totalBasal = 0d;
             double totalTuned = 0d;
@@ -237,13 +220,11 @@ public class AutotunePlugin extends PluginBase {
                 int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpprofile.basal[i]) * 100 - 100) ;
                 String percentageChange;
                 if (percentageChangeValue == 0)
-                    percentageChange = "   0  ";
+                    percentageChange = "0%";
                 else if (percentageChangeValue < 0)
-                    percentageChange = " " + percentageChangeValue;
+                    percentageChange = "" + percentageChangeValue + "%";
                 else
-                    percentageChange = "+" + percentageChangeValue;
-                if (percentageChangeValue != 0)
-                    percentageChange += "%";
+                    percentageChange = "+" + percentageChangeValue +"%";
 
                 result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
             }
