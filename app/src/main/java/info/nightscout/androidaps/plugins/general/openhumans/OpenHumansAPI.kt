@@ -11,7 +11,6 @@ import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import okhttp3.RequestBody.Companion
 import okio.BufferedSink
 
 class OpenHumansAPI(
@@ -24,13 +23,13 @@ class OpenHumansAPI(
     private val authHeader = "Basic " + Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)
     private val client = OkHttpClient()
 
-    fun exchangeAuthToken(code: String) = sendTokenRequest(FormBody.Builder()
+    fun exchangeAuthToken(code: String): Single<OAuthTokens> = sendTokenRequest(FormBody.Builder()
         .add("grant_type", "authorization_code")
         .add("redirect_uri", redirectUri)
         .add("code", code)
         .build())
 
-    fun refreshAccessToken(refreshToken: String) = sendTokenRequest(FormBody.Builder()
+    fun refreshAccessToken(refreshToken: String): Single<OAuthTokens> = sendTokenRequest(FormBody.Builder()
         .add("grant_type", "refresh_token")
         .add("redirect_uri", redirectUri)
         .add("code", refreshToken)
@@ -57,14 +56,14 @@ class OpenHumansAPI(
             }
         }
 
-    fun getProjectMemberId(accessToken: String) = Request.Builder()
+    fun getProjectMemberId(accessToken: String): Single<String> = Request.Builder()
         .url("$baseUrl/api/direct-sharing/project/exchange-member/?access_token=$accessToken")
         .get()
         .build()
         .toSingle()
         .map { it.jsonBody.getString("project_member_id") ?: throw OHMissingFieldException("project_member_id") }
 
-    fun prepareFileUpload(accessToken: String, fileName: String, metadata: FileMetadata) = Request.Builder()
+    fun prepareFileUpload(accessToken: String, fileName: String, metadata: FileMetadata): Single<PreparedUpload> = Request.Builder()
         .url("$baseUrl/api/direct-sharing/project/files/upload/direct/?access_token=$accessToken")
         .post(FormBody.Builder()
             .add("filename", fileName)
@@ -80,7 +79,7 @@ class OpenHumansAPI(
             )
         }
 
-    fun uploadFile(url: String, content: ByteArray) = Request.Builder()
+    fun uploadFile(url: String, content: ByteArray): Completable = Request.Builder()
         .url(url)
         .put(object : RequestBody() {
             override fun contentType(): MediaType? = null
@@ -100,7 +99,7 @@ class OpenHumansAPI(
         }
         .ignoreElement()
 
-    fun completeFileUpload(accessToken: String, fileId: String) = Request.Builder()
+    fun completeFileUpload(accessToken: String, fileId: String): Completable = Request.Builder()
         .url("$baseUrl/api/direct-sharing/project/files/upload/complete/?access_token=$accessToken")
         .post(FormBody.Builder()
             .add("file_id", fileId)

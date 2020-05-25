@@ -24,6 +24,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -144,7 +145,9 @@ public class DetermineBasalAdapterSMBJS {
                 if (L.isEnabled(L.APS))
                     log.debug("Result: " + result);
                 try {
-                    determineBasalResultSMB = new DetermineBasalResultSMB(new JSONObject(result));
+                    JSONObject resultJson = new JSONObject(result);
+                    OpenHumansUploader.INSTANCE.enqueueSMBData(mProfile, mGlucoseStatus, mIobData, mMealData, mCurrentTemp, mAutosensData, mMicrobolusAllowed, mSMBAlwaysAllowed, resultJson);
+                    determineBasalResultSMB = new DetermineBasalResultSMB(resultJson);
                 } catch (JSONException e) {
                     log.error("Unhandled exception", e);
                 }

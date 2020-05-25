@@ -14,11 +14,13 @@ class OHUploadWorker(
 
     override fun createWork() = Single.defer {
         val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        if (SP.getBoolean("key_oh_wifi_only", true) && wifiManager.isWifiEnabled && wifiManager.connectionInfo.networkId != -1)
+        if (SP.getBoolean("key_oh_wifi_only", true) && wifiManager.isWifiEnabled && wifiManager.connectionInfo.networkId != -1) {
             OpenHumansUploader.uploadData()
                 .andThen(Single.just(Result.success()))
                 .onErrorResumeNext { Single.just(Result.retry()) }
-        else Single.just(Result.retry())
+        } else {
+            Single.just(Result.retry())
+        }
     }
 
 }

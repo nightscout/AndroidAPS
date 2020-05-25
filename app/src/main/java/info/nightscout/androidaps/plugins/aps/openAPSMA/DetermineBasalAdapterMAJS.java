@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -104,7 +105,9 @@ public class DetermineBasalAdapterMAJS {
                 if (L.isEnabled(L.APS))
                     log.debug("Result: " + result);
                 try {
-                    determineBasalResultMA = new DetermineBasalResultMA(jsResult, new JSONObject(result));
+                    JSONObject resultJson = new JSONObject(result);
+                    OpenHumansUploader.INSTANCE.enqueueAMAData(mProfile, mGlucoseStatus, mIobData, mMealData, mCurrentTemp, resultJson);
+                    determineBasalResultMA = new DetermineBasalResultMA(jsResult, resultJson);
                 } catch (JSONException e) {
                     log.error("Unhandled exception", e);
                 }

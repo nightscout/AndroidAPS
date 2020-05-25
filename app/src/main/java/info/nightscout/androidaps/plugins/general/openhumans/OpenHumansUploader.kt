@@ -39,7 +39,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import kotlin.math.max
 
 object OpenHumansUploader : PluginBase(
     PluginDescription()
@@ -134,7 +133,7 @@ object OpenHumansUploader : PluginBase(
         super.onStop()
     }
 
-    fun queueBGReading(bgReading: BgReading) = insertQueueItem("BgReadings") {
+    fun enqueueBGReading(bgReading: BgReading) = insertQueueItem("BgReadings") {
         put("date", bgReading.date)
         put("isValid", bgReading.isValid)
         put("value", bgReading.value)
@@ -145,7 +144,7 @@ object OpenHumansUploader : PluginBase(
     }
 
     @JvmOverloads
-    fun queueCareportalEvent(careportalEvent: CareportalEvent, deleted: Boolean = false) = insertQueueItem("CareportalEvents") {
+    fun enqueueCareportalEvent(careportalEvent: CareportalEvent, deleted: Boolean = false) = insertQueueItem("CareportalEvents") {
         put("date", careportalEvent.date)
         put("isValid", careportalEvent.isValid)
         put("source", careportalEvent.source)
@@ -166,7 +165,7 @@ object OpenHumansUploader : PluginBase(
     }
 
     @JvmOverloads
-    fun queueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
+    fun enqueueExtendedBolus(extendedBolus: ExtendedBolus, deleted: Boolean = false) = insertQueueItem("ExtendedBoluses") {
         put("date", extendedBolus.date)
         put("isValid", extendedBolus.isValid)
         put("source", extendedBolus.source)
@@ -178,7 +177,7 @@ object OpenHumansUploader : PluginBase(
     }
 
     @JvmOverloads
-    fun queueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
+    fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
         put("date", profileSwitch.date)
         put("isValid", profileSwitch.isValid)
         put("source", profileSwitch.source)
@@ -192,7 +191,7 @@ object OpenHumansUploader : PluginBase(
         put("isDeletion", deleted)
     }
 
-    fun queueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
+    fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
         put("double", tdd.date)
         put("double", tdd.bolus)
         put("double", tdd.basal)
@@ -200,7 +199,7 @@ object OpenHumansUploader : PluginBase(
     }
 
     @JvmOverloads
-    fun queueTemporaryBasal(temporaryBasal: TemporaryBasal, deleted: Boolean = false) = insertQueueItem("TemporaryBasals") {
+    fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal, deleted: Boolean = false) = insertQueueItem("TemporaryBasals") {
         put("date", temporaryBasal.date)
         put("isValid", temporaryBasal.isValid)
         put("source", temporaryBasal.source)
@@ -215,7 +214,7 @@ object OpenHumansUploader : PluginBase(
     }
 
     @JvmOverloads
-    fun queueTempTarget(tempTarget: TempTarget, deleted: Boolean = false) = insertQueueItem("TempTargets") {
+    fun enqueueTempTarget(tempTarget: TempTarget, deleted: Boolean = false) = insertQueueItem("TempTargets") {
         put("date", tempTarget.date)
         put("isValid", tempTarget.isValid)
         put("source", tempTarget.source)
@@ -225,6 +224,40 @@ object OpenHumansUploader : PluginBase(
         put("reason", tempTarget.reason)
         put("durationInMinutes", tempTarget.durationInMinutes)
         put("isDeletion", deleted)
+    }
+
+    fun enqueueSMBData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONArray, mealData: JSONObject, currentTemp: JSONObject, autosensData: JSONObject, smbAllowed: Boolean, smbAlwaysAllowed: Boolean, result: JSONObject) = insertQueueItem("APSData") {
+        put("algorithm", "SMB")
+        put("profile", profile)
+        put("glucoseStatus", glucoseStatus)
+        put("iobData", iobData)
+        put("mealData", mealData)
+        put("currentTemp", currentTemp)
+        put("autosensData", autosensData)
+        put("smbAllowed", smbAllowed)
+        put("smbAlwaysAllowed", smbAlwaysAllowed)
+        put("result", result)
+    }
+
+    fun enqueueAMAData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONArray, mealData: JSONObject, currentTemp: JSONObject, autosensData: JSONObject, result: JSONObject) = insertQueueItem("APSData") {
+        put("algorithm", "AMA")
+        put("profile", profile)
+        put("glucoseStatus", glucoseStatus)
+        put("iobData", iobData)
+        put("mealData", mealData)
+        put("currentTemp", currentTemp)
+        put("autosensData", autosensData)
+        put("result", result)
+    }
+
+    fun enqueueAMAData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONObject, mealData: JSONObject, currentTemp: JSONObject, result: JSONObject) = insertQueueItem("APSData") {
+        put("algorithm", "MA")
+        put("profile", profile)
+        put("glucoseStatus", glucoseStatus)
+        put("iobData", iobData)
+        put("mealData", mealData)
+        put("currentTemp", currentTemp)
+        put("result", result)
     }
 
     private fun insertQueueItem(file: String, structureVersion: Int = 1, generator: JSONObject.() -> Unit) {
@@ -282,25 +315,25 @@ object OpenHumansUploader : PluginBase(
             .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows) })
             .doOnSuccess { maxProgress = it }
             .flatMapObservable { Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) } }
-            .map { queueBGReading(it); increaseCounter() }
+            .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
-            .map { queueCareportalEvent(it); increaseCounter()  }
+            .map { enqueueCareportalEvent(it); increaseCounter()  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allExtendedBoluses) })
-            .map { queueExtendedBolus(it); increaseCounter()  }
+            .map { enqueueExtendedBolus(it); increaseCounter()  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allProfileSwitches) })
-            .map { queueProfileSwitch(it); increaseCounter()  }
+            .map { enqueueProfileSwitch(it); increaseCounter()  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTDDs) })
-            .map { queueTotalDailyDose(it); increaseCounter()  }
+            .map { enqueueTotalDailyDose(it); increaseCounter()  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTemporaryBasals) })
-            .map { queueTemporaryBasal(it); increaseCounter()  }
+            .map { enqueueTemporaryBasal(it); increaseCounter()  }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTempTargets) })
-            .map { queueTempTarget(it); increaseCounter()  }
+            .map { enqueueTempTarget(it); increaseCounter()  }
             .ignoreElements()
             .doOnSubscribe {
                 wakeLock.acquire(TimeUnit.MINUTES.toMillis(20))

@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.openhumans
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,11 +9,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.browser.customtabs.CustomTabsCallback
-import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsServiceConnection
-import androidx.browser.customtabs.CustomTabsSession
 import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
@@ -22,32 +17,16 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
-/*
-    private lateinit var customTabsClient: CustomTabsClient
-    private lateinit var customTabsSession: CustomTabsSession
 
-    private val connection = object : CustomTabsServiceConnection() {
-        override fun onCustomTabsServiceConnected(name: ComponentName, client: CustomTabsClient) {
-            customTabsClient = client
-            customTabsClient.warmup(0)
-            customTabsSession = customTabsClient.newSession(CustomTabsCallback())!!
-            customTabsSession.mayLaunchUrl(Uri.parse(OpenHumansUploader.AUTH_URL), null, null)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-        }
-    }
-*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", connection)
         setContentView(R.layout.activity_open_humans_login)
         val button = findViewById<Button>(R.id.button)
         val checkbox = findViewById<CheckBox>(R.id.checkbox)
 
         button.setOnClickListener { _ ->
             if (checkbox.isChecked) {
-                CustomTabsIntent.Builder()/*.setSession(customTabsSession)*/.build().launchUrl(this, Uri.parse(OpenHumansUploader.AUTH_URL))
+                CustomTabsIntent.Builder().build().launchUrl(this, Uri.parse(OpenHumansUploader.AUTH_URL))
             } else {
                 Toast.makeText(this, R.string.you_need_to_accept_the_of_use_first, Toast.LENGTH_SHORT).show()
             }
@@ -61,7 +40,6 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
             ExchangeAuthTokenDialog(code).show(supportFragmentManager, "ExchangeAuthTokenDialog")
         }
     }
-
 
     class ExchangeAuthTokenDialog : DialogFragment() {
 
@@ -89,7 +67,6 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
             })
         }
 
-
         override fun onDestroy() {
             disposable?.dispose()
             super.onDestroy()
@@ -107,8 +84,6 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
 
         }
     }
-
-
 
     class ErrorDialog : DialogFragment() {
 
