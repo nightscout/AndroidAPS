@@ -34,7 +34,7 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.LocaleHelper.update
+import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper

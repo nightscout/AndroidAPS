@@ -44,6 +44,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaR
     private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRv2
 
+    var minBacklight = 1
+
     @Synchronized
     override fun onResume() {
         super.onResume()
@@ -65,6 +67,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
         save_user_options.setOnClickListener { onSaveClick() }
 
+        minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero
+
         aapsLogger.debug(LTag.PUMP,
             "UserOptionsLoaded:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
                 + "\ntimeDisplayType:" + danaPump.timeDisplayType
@@ -76,7 +80,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
                 + "\nlowReservoir:" + danaPump.lowReservoirRate)
 
         danar_screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, save_user_options)
-        danar_backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), 1.0, 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
+        danar_backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
         danar_shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, save_user_options)
         danar_lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 60.0, 10.0, DecimalFormat("10"), false, save_user_options)
         when (danaPump.beepAndAlarm) {
@@ -136,7 +140,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         // step is 5 seconds, 5 to 240
         danaPump.lcdOnTimeSec = min(max(danar_screentimeout.value.toInt() / 5 * 5, 5), 240)
         // 1 to 60
-        danaPump.backlightOnTimeSec = min(max(danar_backlight.value.toInt(), 1), 60)
+        danaPump.backlightOnTimeSec = min(max(danar_backlight.value.toInt(), minBacklight), 60)
 
         danaPump.units = if (danar_units.isChecked) 1 else 0
 

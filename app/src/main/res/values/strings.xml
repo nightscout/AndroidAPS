@@ -1,4 +1,5 @@
 <resources>
+    <string name="default_lang" translatable="false">System default</string>
     <string name="en_lang" translatable="false">English</string>
     <string name="cs_lang" translatable="false">Czech</string>
     <string name="af_lang" translatable="false">Afrikaans</string>
@@ -307,6 +308,9 @@
     <string name="smscommunicator_carbsreplywithcode">To enter %1$dg at %2$s reply with code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">To resume loop reply with code %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">To enable loop reply with code %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">To disable loop reply with code %1$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
     <string name="smscommunicator_carbsset">Carbs %1$dg entered successfully</string>
@@ -548,20 +552,12 @@
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
     <string name="ns_alarmoptions">Alarm options</string>
-    <string name="key_nsalarm_urgent_high" translatable="false">nsalarm_urgent_high</string>
-    <string name="key_nsalarm_high" translatable="false">nsalarm_high</string>
-    <string name="key_nsalarm_low" translatable="false">nsalarm_low</string>
-    <string name="key_nsalarm_urgent_low" translatable="false">nsalarm_urgent_low</string>
-    <string name="key_nsalarm_staledata" translatable="false">nsalarm_staledata</string>
-    <string name="key_nsalarm_urgent_staledata" translatable="false">nsalarm_urgent_staledata</string>
+    <string name="key_ns_announcements" translatable="false">ns_announcements</string>
+    <string name="key_ns_alarms" translatable="false">ns_alarms</string>
     <string name="key_nsalarm_staledatavalue" translatable="false">nsalarm_staledatavalue</string>
     <string name="key_nsalarm_urgent_staledatavalue" translatable="false">nsalarm_urgent_staledatavalue</string>
-    <string name="nsalarm_urgenthigh">Urgent high</string>
-    <string name="nsalarm_high">High</string>
-    <string name="nsalarm_low">Low</string>
-    <string name="nsalarm_urgentlow">Urgent low</string>
-    <string name="nsalarm_staledata">Stale data</string>
-    <string name="nsalarm_urgentstaledata">Urgent stale data</string>
+    <string name="ns_alarms">Create notifications from NS alarms</string>
+    <string name="ns_announcements">Create notifications from NS announcements</string>
     <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Urgent stale data threshold [min]</string>
     <string name="openapsama_autosens_period">Interval for autosens [h]</string>
@@ -1019,6 +1015,12 @@
     <string name="log_alerts">Log alerts</string>
     <string name="enable_tbr_emulation">Enable TBR emulation</string>
     <string name="enable_tbr_emulation_summary">Use extended boluses instead of TBRs to bypass the 250%% limit</string>
+    <string name="key_disable_vibration" translatable="false">insight_disable_vibration</string>
+    <string name="disable_vibration">Disable vibrations on manual bolus delivery</string>
+    <string name="disable_vibration_summary">For bolus and extended bolus (only available with Insight firmware 3.x)</string>
+    <string name="key_disable_vibration_auto" translatable="false">insight_disable_vibration_auto</string>
+    <string name="disable_vibration_auto">Disable vibrations on automated bolus delivery</string>
+    <string name="disable_vibration_auto_summary">For SMB and Temp Basal with TBR emulation (only available with Insight firmware 3.x)</string>
     <string name="disconnect_delay">Disconnect delay [s]</string>
     <string name="serial_number">Serial number</string>
     <string name="release_software_version">Release software version</string>
@@ -1678,7 +1680,7 @@
     <string name="description_pump_omnipod_dash">Pump integration for Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Finish pairing reminder</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Finish setup reminder</string>
-    <string name="omnipod_alert_expiration">Pod wil expire soon</string>
+    <string name="omnipod_alert_expiration">Pod will expire soon</string>
     <string name="omnipod_alert_expiration_advisory">Pod will expire soon</string>
     <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>

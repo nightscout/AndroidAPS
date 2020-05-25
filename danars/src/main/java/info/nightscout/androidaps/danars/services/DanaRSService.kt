@@ -43,6 +43,9 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -110,6 +113,21 @@ class DanaRSService : DaggerService() {
 
     fun readPumpStatus() {
         try {
+            val now = System.currentTimeMillis()
+            val pump = activePlugin.activePump
+            if (danaPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized) {
+                rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
+                sendMessage(DanaRS_Packet_General_Get_Shipping_Information(injector)) // serial no
+                sendMessage(DanaRS_Packet_General_Get_Pump_Check(injector)) // firmware
+                sendMessage(DanaRS_Packet_Basal_Get_Profile_Number(injector))
+                sendMessage(DanaRS_Packet_Bolus_Get_Bolus_Option(injector)) // isExtendedEnabled
+                sendMessage(DanaRS_Packet_Basal_Get_Basal_Rate(injector)) // basal profile, basalStep, maxBasal
+                sendMessage(DanaRS_Packet_Bolus_Get_Calculation_Information(injector)) // target
+                if (danaPump.profile24) sendMessage(DanaRS_Packet_Bolus_Get_24_CIR_CF_Array(injector))
+                else sendMessage(DanaRS_Packet_Bolus_Get_CIR_CF_Array(injector))
+                sendMessage(DanaRS_Packet_Option_Get_User_Option(injector)) // Getting user options
+                danaPump.lastSettingsRead = now
+            }
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpstatus)))
             sendMessage(DanaRS_Packet_General_Initial_Screen_Information(injector))
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingextendedbolusstatus)))
@@ -120,7 +138,6 @@ class DanaRSService : DaggerService() {
             sendMessage(DanaRS_Packet_Basal_Get_Temporary_Basal_State(injector))
             danaPump.lastConnection = System.currentTimeMillis()
             val profile = profileFunction.getProfile()
-            val pump = activePlugin.activePump
             if (profile != null && abs(danaPump.currentBasal - profile.basal) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
                 sendMessage(DanaRS_Packet_Basal_Get_Basal_Rate(injector)) // basal profile, basalStep, maxBasal
@@ -129,28 +146,16 @@ class DanaRSService : DaggerService() {
                 }
             }
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)))
-            sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
-            var timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
-            if (danaPump.pumpTime == 0L) {
+            if (danaPump.usingUTC) sendMessage(DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(injector))
+            else sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
+            var timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L
+            if (danaPump.getPumpTime() == 0L) {
                 // initial handshake was not successful
                 // de-initialize pump
                 danaPump.reset()
                 rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
                 rxBus.send(EventInitializationChanged())
                 return
-            }
-            val now = System.currentTimeMillis()
-            if (danaPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized) {
-                rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
-                sendMessage(DanaRS_Packet_General_Get_Shipping_Information(injector)) // serial no
-                sendMessage(DanaRS_Packet_General_Get_Pump_Check(injector)) // firmware
-                sendMessage(DanaRS_Packet_Basal_Get_Profile_Number(injector))
-                sendMessage(DanaRS_Packet_Bolus_Get_Bolus_Option(injector)) // isExtendedEnabled
-                sendMessage(DanaRS_Packet_Basal_Get_Basal_Rate(injector)) // basal profile, basalStep, maxBasal
-                sendMessage(DanaRS_Packet_Bolus_Get_Calculation_Information(injector)) // target
-                sendMessage(DanaRS_Packet_Bolus_Get_CIR_CF_Array(injector))
-                sendMessage(DanaRS_Packet_Option_Get_User_Option(injector)) // Getting user options
-                danaPump.lastSettingsRead = now
             }
             aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
             if (abs(timeDiff) > 3) {
@@ -170,15 +175,22 @@ class DanaRSService : DaggerService() {
                     rxBus.send(EventInitializationChanged())
                     return
                 } else {
-                    if (danaPump.protocol >= 6) {
+                    if (danaPump.usingUTC) {
+                        val tz = DateTimeZone.getDefault()
+                        val instant = DateTime.now().millis
+                        val offsetInMilliseconds = tz.getOffset(instant).toLong()
+                        val hours = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
+                        sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), hours))
+                    } else if (danaPump.protocol >= 6) { // can set seconds
                         sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
                     } else {
                         waitForWholeMinute() // Dana can set only whole minute
                         // add 10sec to be sure we are over minute (will be cut off anyway)
                         sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now() + T.secs(10).msecs()))
                     }
-                    sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
-                    timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
+                    if (danaPump.usingUTC) sendMessage(DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(injector))
+                    else sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
+                    timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
                 }
             }

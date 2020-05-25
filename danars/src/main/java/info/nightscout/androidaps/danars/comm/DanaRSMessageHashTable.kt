@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.data.Profile
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,6 +38,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_Bolus_Get_Calculation_Information(injector))
         put(DanaRS_Packet_Bolus_Get_Carbohydrate_Calculation_Information(injector))
         put(DanaRS_Packet_Bolus_Get_CIR_CF_Array(injector))
+        put(DanaRS_Packet_Bolus_Get_24_CIR_CF_Array(injector))
         put(DanaRS_Packet_Bolus_Get_Dual_Bolus(injector))
         put(DanaRS_Packet_Bolus_Get_Extended_Bolus(injector))
         put(DanaRS_Packet_Bolus_Get_Extended_Bolus_State(injector))
@@ -45,6 +47,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_Bolus_Set_Bolus_Option(injector))
         put(DanaRS_Packet_Bolus_Set_Initial_Bolus(injector))
         put(DanaRS_Packet_Bolus_Set_CIR_CF_Array(injector))
+        put(DanaRS_Packet_Bolus_Set_24_CIR_CF_Array(injector, Profile(injector, null)))
         put(DanaRS_Packet_Bolus_Set_Dual_Bolus(injector))
         put(DanaRS_Packet_Bolus_Set_Extended_Bolus(injector))
         put(DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(injector))
@@ -60,8 +63,10 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_Notify_Delivery_Rate_Display(injector))
         put(DanaRS_Packet_Notify_Missed_Bolus_Alarm(injector))
         put(DanaRS_Packet_Option_Get_Pump_Time(injector))
+        put(DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(injector))
         put(DanaRS_Packet_Option_Get_User_Option(injector))
         put(DanaRS_Packet_Option_Set_Pump_Time(injector))
+        put(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector))
         put(DanaRS_Packet_Option_Set_User_Option(injector))
         //put(new DanaRS_Packet_History_(injector));
         put(DanaRS_Packet_History_Alarm(injector))

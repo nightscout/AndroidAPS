@@ -37,7 +37,7 @@ import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
-import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.locale.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class MainApp extends DaggerApplication {

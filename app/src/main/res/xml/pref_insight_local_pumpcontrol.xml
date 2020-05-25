@@ -48,6 +48,12 @@
             android:summary="@string/enable_tbr_emulation_summary"
             android:title="@string/enable_tbr_emulation" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_disable_vibration"
+            android:summary="@string/disable_vibration_summary"
+            android:title="@string/disable_vibration" />
+
         <EditTextPreference
             android:defaultValue="5"
             android:inputType="number"

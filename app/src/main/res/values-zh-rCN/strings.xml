@@ -378,12 +378,6 @@
     <string name="careportal_insulinage_label">胰岛素使用时间</string>
     <string name="careportal_pbage_label">泵电池使用时间</string>
     <string name="ns_alarmoptions">报警选项</string>
-    <string name="nsalarm_urgenthigh">紧急高</string>
-    <string name="nsalarm_high">高</string>
-    <string name="nsalarm_low">低</string>
-    <string name="nsalarm_urgentlow">紧急低</string>
-    <string name="nsalarm_staledata">陈旧数据</string>
-    <string name="nsalarm_urgentstaledata">紧急陈旧数据</string>
     <string name="nsalarm_staledatavalue_label">陈旧数据阈值 [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">紧急陈旧数据阈值 [min]</string>
     <string name="openapsama_autosens_period">Autosens间隔的 [h]</string>

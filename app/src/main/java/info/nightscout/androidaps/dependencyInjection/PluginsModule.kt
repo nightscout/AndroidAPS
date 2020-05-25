@@ -64,7 +64,7 @@ abstract class PluginsModule {
     abstract fun bindIobCobCalculatorPlugin(plugin: IobCobCalculatorPlugin): PluginBase
 
     @Binds
-    @NotNSClient
+    @AllConfigs
     @IntoMap
     @IntKey(20)
     abstract fun bindActionsPlugin(plugin: ActionsPlugin): PluginBase
