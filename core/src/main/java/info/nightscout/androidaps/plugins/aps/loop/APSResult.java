@@ -62,6 +62,7 @@ public class APSResult {
     public boolean hasPredictions = false;
     public double smb = 0d; // super micro bolus in units
     public long deliverAt = 0;
+    public double targetBG = 0d;
 
     public Constraint<Double> inputConstraints;
 
@@ -184,6 +185,7 @@ public class APSResult {
         newResult.smbConstraint = smbConstraint;
         newResult.percent = percent;
         newResult.usePercent = usePercent;
+        newResult.targetBG = targetBG;
     }
 
 

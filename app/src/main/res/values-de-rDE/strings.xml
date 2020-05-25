@@ -185,7 +185,7 @@
     <string name="check_preferences_import_anyway_btn">Trotzdem importieren (GEFÄHRLICH!)</string>
     <string name="metadata_warning_different_flavour">Einstellungen wurden mit einer anderen Variante von AAPS erstellt (%1$s). Du nutzt: %2$s.\n\nEinige Einstellungen können fehlen oder ungültig sein - überprüfe und aktualisiere Deine Einstellungen nach dem Import .</string>
     <string name="metadata_warning_different_device">Einstellungen wurden auf einem anderen Gerät erstellt. Das ist OK, wenn Du von einem älteren/anderen Handy importierst. Stelle aber sicher, dass die importierten Einstellungen korrekt sind!</string>
-    <string name="metadata_warning_outdated_format">Du verwendest das veraltete Format einer alten AAPS-Version das nicht sicher ist! Verwende dieses nur als letzte Möglichkeit, wenn Du keinen Export im aktuellen JSON-Format hast.</string>
+    <string name="metadata_warning_outdated_format">Du verwendest das veraltete Format einer alten AAPS-Version, das nicht sicher ist! Verwende dieses nur als letzte Möglichkeit, wenn Du keinen Export im aktuellen JSON-Format hast.</string>
     <string name="metadata_warning_old_export">Die importierten Einstellungen sind bereits %1$s Tage alt! Hast Du aktuellere Einstellungen oder evtl. die falsche Datei gewählt? Denke daran, die Einstellungen regelmäßig zu exportieren.</string>
     <string name="metadata_warning_date_format">Ungültiges Datums-/Zeitformat!</string>
     <string name="metadata_warning_different_version">Einstellungen stammen aus einer Vorgängerversion (Nebenversion). Du kannst diese importieren, prüfe aber unbedingt nach dem Import, ob diese noch korrekt sind!</string>
@@ -251,7 +251,7 @@
     <string name="bolusstopped">Bolus gestoppt</string>
     <string name="bolusstopping">Bolus wird gestoppt</string>
     <string name="smscommunicator_loophasbeendisabled">Loop wurde deaktiviert.</string>
-    <string name="smscommunicator_loophasbeenenabled">Loop wurde aktiviert</string>
+    <string name="smscommunicator_loophasbeenenabled">Lopp wurde aktiviert.</string>
     <string name="smscommunicator_loopisdisabled">Loop ist deaktiviert.</string>
     <string name="smscommunicator_loopisenabled">Loop ist aktiviert.</string>
     <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
@@ -266,15 +266,15 @@
     <string name="smscommunicator_suspendreplywithcode">Um das Loopen für %1$d Minuten zu pausieren, antworte mit dem Code %2$s.</string>
     <string name="smscommunicator_tempbasalset">TBR mit %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
     <string name="smscommunicator_extendedset">Der erweiterte Bolus %1$.2f IE/h für %2$d Minuten wurde erfolgreich gestartet</string>
-    <string name="smscommunicator_carbsset">%1$dg Kohlenhydrate erfolgreich erfasst</string>
+    <string name="smscommunicator_carbsset">%1$dg Kohlenhydrate erfolgreich erfasst.</string>
     <string name="smscommunicator_carbsfailed">Eingabe von %1$dg Kohlenhydraten ist fehlgeschlagen.</string>
-    <string name="smscommunicator_tempbasalset_percent">Die temporäre Basalrate wurde erfolgreich für %2$d Minuten auf %1$d%% gesetzt</string>
+    <string name="smscommunicator_tempbasalset_percent">Die temporäre Basalrate wurde erfolgreich für %2$d Minuten auf %1$d%% gesetzt.</string>
     <string name="smscommunicator_tempbasalfailed">Das Starten der TBR ist fehlgeschlagen.</string>
-    <string name="smscommunicator_extendedfailed">Die Abgabe des erweiterten Bolus ist fehlgeschlagen</string>
-    <string name="smscommunicator_basalstopreplywithcode">Antworte mit dem Code %1$s, um die temporäre Basalrate zu beenden</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Antworte mit dem Code %1$s, um den erweiterten Bolus zu beenden</string>
+    <string name="smscommunicator_extendedfailed">Die Abgabe des erweiterten Bolus ist fehlgeschlagen.</string>
+    <string name="smscommunicator_basalstopreplywithcode">Antworte mit dem Code %1$s, um die temporäre Basalrate zu beenden.</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Antworte mit dem Code %1$s, um den erweiterten Bolus zu beenden.</string>
     <string name="smscommunicator_tempbasalcanceled">TBR abgebrochen</string>
-    <string name="smscommunicator_extendedcanceled">Die Abgabe des erweiterten Bolus wurde abgebrochen</string>
+    <string name="smscommunicator_extendedcanceled">Die Abgabe des erweiterten Bolus wurde abgebrochen.</string>
     <string name="smscommunicator_tempbasalcancelfailed">Das Abbrechen der TBR ist fehlgeschlagen.</string>
     <string name="smscommunicator_extendedcancelfailed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
     <string name="smscommunicator_unknowncommand">Unbekannter Befehl oder falsche Antwort</string>
@@ -326,7 +326,7 @@
     <string name="array_of_elements">Array mit %1$d Elementen.\nWert:</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
     <string name="openapsma_scriptdebugdata_label">Skript Debug</string>
-    <string name="openapsama_useautosens">Nutze Autosense</string>
+    <string name="openapsama_useautosens">Nutze Autosens</string>
     <string name="refresheventsfromnightscout">Aktualisiere Einträge von Nightscout</string>
     <string name="deletefuturetreatments">Lösche Behandlungen in der Zukunft</string>
     <string name="eatingsoon">Bald essen</string>
@@ -468,12 +468,8 @@
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_pbage_label">Batteriealter</string>
     <string name="ns_alarmoptions">Alarm-Optionen</string>
-    <string name="nsalarm_urgenthigh">Sehr hoch</string>
-    <string name="nsalarm_high">Hoch</string>
-    <string name="nsalarm_low">Niedrig</string>
-    <string name="nsalarm_urgentlow">Sehr niedrig</string>
-    <string name="nsalarm_staledata">Veraltete Daten</string>
-    <string name="nsalarm_urgentstaledata">Stark veraltete Daten</string>
+    <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
+    <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
     <string name="nsalarm_staledatavalue_label">Veraltete Daten seit [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Stark veraltete Daten seit [min]</string>
     <string name="openapsama_autosens_period">Intervall für Autosens [h]</string>
@@ -832,9 +828,9 @@ Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="searching_for_devices">Geräte werden gesucht…</string>
-    <string name="pairing_completed">Pairing abgeschlossen</string>
+    <string name="pairing_completed">Kopplung abgeschlossen</string>
     <string name="code_compare">Stimmen die Codes auf diesem Gerät und auf deiner Pumpe überein?</string>
-    <string name="insight_pairing">Insight Pairing</string>
+    <string name="insight_pairing">Insight Kopplung</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_delivered">%1$.2f U / %2$.2f U abgegeben</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
@@ -851,6 +847,10 @@ Unerwartetes Verhalten.</string>
     <string name="log_alerts">Alarme protokollieren</string>
     <string name="enable_tbr_emulation">TBR-Emulation aktivieren</string>
     <string name="enable_tbr_emulation_summary">Verzögerte Boli an Stelle von TBRs verwenden, um die Beschränkung auf 250%% zu umgehen</string>
+    <string name="disable_vibration">Vibrationen bei manueller Bolus-Abgabe deaktivieren</string>
+    <string name="disable_vibration_summary">Für Boli und verlängerte Boli (nur mit Insight Firmware 3.x verfügbar)</string>
+    <string name="disable_vibration_auto">Vibrationen bei automatischer Bolus-Abgabe deaktivieren</string>
+    <string name="disable_vibration_auto_summary">Für SMB und Temporäre Basalraten mit TBR Emulation (nur mit Insight Firmware 3.x verfügbar)</string>
     <string name="disconnect_delay">Verbindungsabbau-Verzögerung [s]</string>
     <string name="serial_number">Seriennummer</string>
     <string name="release_software_version">Release-Softwareversion</string>
@@ -862,8 +862,8 @@ Unerwartetes Verhalten.</string>
     <string name="bluetooth_address">Bluetooth-Adresse</string>
     <string name="system_id_appendix">System-ID-Appendix</string>
     <string name="manufacturing_date">Herstellungsdatum</string>
-    <string name="delete_pairing">Pairing löschen</string>
-    <string name="pairing_information">Pairinginformationen</string>
+    <string name="delete_pairing">Kopplung aufheben</string>
+    <string name="pairing_information">Kopplungsinformation</string>
     <string name="start_pump">Pumpe starten</string>
     <string name="stop_pump">Pumpe stoppen</string>
     <string name="operating_mode">Betriebsmodus</string>

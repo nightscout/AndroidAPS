@@ -441,12 +441,6 @@
     <string name="doprofileswitch">Cambio de perfil</string>
     <string name="careportal_pbage_label">Edad batería bomba</string>
     <string name="ns_alarmoptions">Opciones alarma</string>
-    <string name="nsalarm_urgenthigh">Urgente alto</string>
-    <string name="nsalarm_high">Alto</string>
-    <string name="nsalarm_low">Bajo</string>
-    <string name="nsalarm_urgentlow">Urgente bajo</string>
-    <string name="nsalarm_staledata">Datos anticuados</string>
-    <string name="nsalarm_urgentstaledata">Datos antiguos urgentes</string>
     <string name="nsalarm_staledatavalue_label">Datos antiguos limite [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Datos antiguos urgentes limite [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>

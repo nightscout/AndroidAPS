@@ -331,7 +331,7 @@ public class NSDeviceStatus {
         // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
-        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_urgent_staledatavalue, 16) * 60 * 1000L < now)
+        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_urgent_staledatavalue, 31) * 60 * 1000L < now)
             level = Levels.URGENT;
         else if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_staledatavalue, 16) * 60 * 1000L < now)
             level = Levels.WARN;

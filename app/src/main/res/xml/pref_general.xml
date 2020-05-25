@@ -14,7 +14,7 @@
             android:title="@string/unitsnosemicolon" />
 
         <ListPreference
-            android:defaultValue="en"
+            android:defaultValue="default"
             android:entries="@array/languagesArray"
             android:entryValues="@array/languagesValues"
             android:key="@string/key_language"

@@ -842,33 +842,42 @@ public class NSClientService extends DaggerService {
     }
 
     private void handleAnnouncement(JSONObject announcement) {
-        NSAlarm nsAlarm = new NSAlarm(announcement);
-        Notification notification = new NotificationWithAction(injector, nsAlarm);
-        rxBus.send(new EventNewNotification(notification));
-        rxBus.send(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(announcement, "message", "received")));
-        aapsLogger.debug(LTag.NSCLIENT, announcement.toString());
+        boolean defaultVal = config.getNSCLIENT();
+        if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
+            NSAlarm nsAlarm = new NSAlarm(announcement);
+            Notification notification = new NotificationWithAction(injector, nsAlarm);
+            rxBus.send(new EventNewNotification(notification));
+            rxBus.send(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(announcement, "message", "received")));
+            aapsLogger.debug(LTag.NSCLIENT, announcement.toString());
+        }
     }
 
     private void handleAlarm(JSONObject alarm) {
-        long snoozedTo = sp.getLong(R.string.key_snoozedTo, 0L);
-        if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-            NSAlarm nsAlarm = new NSAlarm(alarm);
-            Notification notification = new NotificationWithAction(injector, nsAlarm);
-            rxBus.send(new EventNewNotification(notification));
+        boolean defaultVal = config.getNSCLIENT();
+        if (sp.getBoolean(R.string.key_ns_alarms, defaultVal)) {
+            long snoozedTo = sp.getLong(R.string.key_snoozedTo, 0L);
+            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
+                NSAlarm nsAlarm = new NSAlarm(alarm);
+                Notification notification = new NotificationWithAction(injector, nsAlarm);
+                rxBus.send(new EventNewNotification(notification));
+            }
+            rxBus.send(new EventNSClientNewLog("ALARM", JsonHelper.safeGetString(alarm, "message", "received")));
+            aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
         }
-        rxBus.send(new EventNSClientNewLog("ALARM", JsonHelper.safeGetString(alarm, "message", "received")));
-        aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
     }
 
     private void handleUrgentAlarm(JSONObject alarm) {
-        long snoozedTo = sp.getLong(R.string.key_snoozedTo, 0L);
-        if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-            NSAlarm nsAlarm = new NSAlarm(alarm);
-            Notification notification = new NotificationWithAction(injector, nsAlarm);
-            rxBus.send(new EventNewNotification(notification));
+        boolean defaultVal = config.getNSCLIENT();
+        if (sp.getBoolean(R.string.key_ns_alarms, defaultVal)) {
+            long snoozedTo = sp.getLong(R.string.key_snoozedTo, 0L);
+            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
+                NSAlarm nsAlarm = new NSAlarm(alarm);
+                Notification notification = new NotificationWithAction(injector, nsAlarm);
+                rxBus.send(new EventNewNotification(notification));
+            }
+            rxBus.send(new EventNSClientNewLog("URGENTALARM", JsonHelper.safeGetString(alarm, "message", "received")));
+            aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
         }
-        rxBus.send(new EventNSClientNewLog("URGENTALARM", JsonHelper.safeGetString(alarm, "message", "received")));
-        aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
     }
 
     public void handleNewCal(JSONArray cals, boolean isDelta) {

@@ -468,12 +468,6 @@
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="careportal_pbage_label">Vek batérie v pumpe</string>
     <string name="ns_alarmoptions">Nastavenie alarmov</string>
-    <string name="nsalarm_urgenthigh">Veľmi vysoká</string>
-    <string name="nsalarm_high">Vysoká</string>
-    <string name="nsalarm_low">Nízka</string>
-    <string name="nsalarm_urgentlow">Veľmi nízka</string>
-    <string name="nsalarm_staledata">Zastaralé dáta</string>
-    <string name="nsalarm_urgentstaledata">Veľmi zastaralé dáta</string>
     <string name="nsalarm_staledatavalue_label">Hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="openapsama_autosens_period">Interval pre automatickú detekciu citlivosti [h]</string>
