@@ -42,13 +42,13 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -72,6 +72,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public TreatmentsPlugin treatmentsPlugin;
     @Inject public ActionStringHandler actionStringHandler;
     @Inject ReceiverStatusStore receiverStatusStore;
+    @Inject Config config;
 
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
@@ -530,9 +531,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         }
 
-        final LoopPlugin.LastRun finalLastRun = loopPlugin.lastRun;
-        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null) {
-            List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
+        final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
+        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().hasPredictions && finalLastRun.getConstraintsProcessed() != null) {
+            List<BgReading> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
 
             if (!predArray.isEmpty()) {
                 for (BgReading bg : predArray) {
@@ -712,9 +713,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
             long openApsStatus;
             //OpenAPS status
-            if (Config.APS) {
+            if (config.getAPS()) {
                 //we are AndroidAPS
-                openApsStatus = loopPlugin.lastRun != null && loopPlugin.lastRun.lastTBREnact != 0 ? loopPlugin.lastRun.lastTBREnact : -1;
+                openApsStatus = loopPlugin.getLastRun() != null && loopPlugin.getLastRun().getLastTBREnact() != 0 ? loopPlugin.getLastRun().getLastTBREnact() : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();

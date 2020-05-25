@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -13,8 +14,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * Created by andy on 1/30/19.
  */
+@Ignore
 public class MedtronicConverterUTest {
-
+/*
     MedtronicConverter converter = new MedtronicConverter();
 
 
@@ -35,5 +37,5 @@ public class MedtronicConverterUTest {
 
         // byte[] data = new byte[] { 00 03 00 05 01 00 C8 00 A0 01 01 00 01 00 00 64 01 05 00 14 00 64 01 00 00 };
     }
-
+*/
 }

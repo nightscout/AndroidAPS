@@ -5,6 +5,7 @@ import java.util.Map;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public enum RileyLinkEncodingType {
 
@@ -20,33 +21,31 @@ public enum RileyLinkEncodingType {
 
     private static Map<String, RileyLinkEncodingType> encodingTypeMap;
 
-    static {
-        encodingTypeMap = new HashMap<>();
-
-        for (RileyLinkEncodingType encType : values()) {
-            if (encType.resourceId!=null) {
-                encodingTypeMap.put(MainApp.gs(encType.resourceId), encType);
-            }
-        }
-    }
-
-
     RileyLinkEncodingType(int value) {
         this.value = (byte)value;
     }
-
 
     RileyLinkEncodingType(int value, Integer resourceId) {
         this.value = (byte)value;
         this.resourceId = resourceId;
     }
 
-    public static RileyLinkEncodingType getByDescription(String description) {
+    private static void doTranslation(ResourceHelper resourceHelper) {
+        encodingTypeMap = new HashMap<>();
+
+        for (RileyLinkEncodingType encType : values()) {
+            if (encType.resourceId!=null) {
+                encodingTypeMap.put(resourceHelper.gs(encType.resourceId), encType);
+            }
+        }
+    }
+
+    public static RileyLinkEncodingType getByDescription(String description, ResourceHelper resourceHelper) {
+        if (encodingTypeMap == null) doTranslation(resourceHelper);
         if (encodingTypeMap.containsKey(description)) {
             return encodingTypeMap.get(description);
         }
 
         return RileyLinkEncodingType.FourByteSixByteLocal;
     }
-
 }

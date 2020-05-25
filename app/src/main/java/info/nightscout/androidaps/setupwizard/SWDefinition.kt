@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
@@ -34,7 +34,7 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.LocaleHelper.update
+import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -62,7 +62,8 @@ class SWDefinition @Inject constructor(
     private val protectionCheck: ProtectionCheck,
     private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
-    private val cryptoUtil: CryptoUtil
+    private val cryptoUtil: CryptoUtil,
+    private val config: Config
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -339,7 +340,7 @@ class SWDefinition @Inject constructor(
                 }, null)
             })
             .visibility(SWValidator { (activePlugin.activeAPS as PluginBase).preferencesId > 0 }))
-        .visibility(SWValidator { Config.APS })
+        .visibility(SWValidator { config.APS })
     private val screenApsMode = SWScreen(injector, R.string.apsmode_title)
         .skippable(false)
         .add(SWRadioButton(injector)
@@ -364,7 +365,7 @@ class SWDefinition @Inject constructor(
             })
             .visibility(SWValidator { !loopPlugin.isEnabled(PluginType.LOOP) }))
         .validator(SWValidator { loopPlugin.isEnabled(PluginType.LOOP) })
-        .visibility(SWValidator { !loopPlugin.isEnabled(PluginType.LOOP) && Config.APS })
+        .visibility(SWValidator { !loopPlugin.isEnabled(PluginType.LOOP) && config.APS })
     private val screenSensitivity = SWScreen(injector, R.string.configbuilder_sensitivity)
         .skippable(false)
         .add(SWInfotext(injector)
@@ -395,7 +396,7 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(ObjectivesFragment()))
         .validator(SWValidator { objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted })
-        .visibility(SWValidator { !objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted && Config.APS })
+        .visibility(SWValidator { !objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted && config.APS })
 
     private fun swDefinitionFull() { // List all the screens here
         add(screenSetupWizard)
@@ -468,6 +469,6 @@ class SWDefinition @Inject constructor(
     }
 
     init {
-        if (Config.APS) swDefinitionFull() else if (Config.PUMPCONTROL) swDefinitionPumpControl() else if (Config.NSCLIENT) swDefinitionNSClient()
+        if (config.APS) swDefinitionFull() else if (config.PUMPCONTROL) swDefinitionPumpControl() else if (config.NSCLIENT) swDefinitionNSClient()
     }
 }

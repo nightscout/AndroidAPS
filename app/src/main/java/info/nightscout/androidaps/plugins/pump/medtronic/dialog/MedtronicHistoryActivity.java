@@ -21,13 +21,15 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 
 public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
-    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject MedtronicHistoryData medtronicHistoryData;
+    @Inject ResourceHelper resourceHelper;
 
     Spinner historyTypeSpinner;
     TextView statusView;
@@ -49,7 +51,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
         this.filteredHistoryList.clear();
 
         List<PumpHistoryEntry> list = new ArrayList<>();
-        list.addAll(medtronicPumpPlugin.getMedtronicHistoryData().getAllHistory());
+        list.addAll(medtronicHistoryData.getAllHistory());
 
         //LOG.debug("Items on full list: {}", list.size());
 
@@ -119,7 +121,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
         statusView.setVisibility(View.GONE);
 
-        typeListFull = getTypeList(PumpHistoryEntryGroup.getList());
+        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper));
 
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);

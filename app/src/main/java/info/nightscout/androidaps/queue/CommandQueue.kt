@@ -24,11 +24,12 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -374,12 +375,14 @@ class CommandQueue @Inject constructor(
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false
         }
+        /* this is breaking setting of profile at all if not engineering mode
         if (!buildHelper.isEngineeringModeOrRelease()) {
             val notification = Notification(Notification.NOT_ENG_MODE_OR_RELEASE, resourceHelper.gs(R.string.not_eng_mode_or_release), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
             return false
         }
+        */
         // Compare with pump limits
         val basalValues = profile.basalValues
         for (basalValue in basalValues) {

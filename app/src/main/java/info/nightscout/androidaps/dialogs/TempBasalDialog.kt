@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -89,19 +89,19 @@ class TempBasalDialog : DialogFragmentWithDate() {
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(actions_tempbasal_basalpercentinput.text)
             percent = constraintChecker.applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
-            actions.add(resourceHelper.gs(R.string.pump_tempbasal_label) + ": $percent%")
+            actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": $percent%")
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
             if (percent != basalPercentInput) actions.add(resourceHelper.gs(R.string.constraintapllied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(actions_tempbasal_basalabsoluteinput.text)
             absolute = constraintChecker.applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
-            actions.add(resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
+            actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
                 actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.constraintapllied) + "</font>")
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.pump_tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {

@@ -6,7 +6,7 @@
     <string name="dia_minimumis5h">Mažiausia reikšmė - 5 valandos.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">Jis yra lygus IVT parametrui, kuris naudojamas pompoje.</string>
-    <string name="dia_valuemustbedetermined">Jūs turite nustatyti jūsų individualias vertes (bet ne mažiau kaip 5 valandas).</string>
+    <string name="dia_valuemustbedetermined">Jūs turite nustatyti savo individualią reikšmę (bet ne mažiau kaip 5 val.).</string>
     <string name="hypott_label">Tema: Hipo Laikinas tikslas</string>
     <string name="hypott_whenhypott">Kokia yra pagrindinė priežastis nustatyti hipo laikiną tikslą?</string>
     <string name="hypott_goinglow">Užkirsti kelią kristi gliukozės kiekiui kraujyje, kai jau veikia nulinė laikina bazė.</string>

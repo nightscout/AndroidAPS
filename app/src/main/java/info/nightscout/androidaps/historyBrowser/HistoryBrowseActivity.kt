@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
@@ -49,11 +49,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var iobCobStaticCalculatorPlugin: IobCobStaticCalculatorPlugin
+    @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
+    @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
@@ -117,7 +119,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             start = cal.timeInMillis
-            historybrowse_date?.text = DateUtil.dateAndTimeString(start)
+            historybrowse_date?.text = dateUtil.dateAndTimeString(start)
             updateGUI("onClickDate")
             runCalculation("onClickDate")
         }
@@ -147,7 +149,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     public override fun onPause() {
         super.onPause()
         disposable.clear()
-        iobCobStaticCalculatorPlugin.stopCalculation("onPause")
+        iobCobCalculatorPluginHistory.stopCalculation("onPause")
     }
 
     public override fun onResume() {
@@ -156,7 +158,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ event: EventAutosensCalculationFinished ->
-                // catch only events from iobCobStaticCalculatorPlugin
+                // catch only events from iobCobCalculatorPluginHistory
                 if (event.cause === eventCustomCalculationFinished) {
                     aapsLogger.debug(LTag.AUTOSENS, "EventAutosensCalculationFinished")
                     updateGUI("EventAutosensCalculationFinished")
@@ -219,10 +221,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun runCalculation(from: String) {
+        treatmentsPluginHistory.initializeData(start - T.hours(8).msecs())
         val end = start + T.hours(rangeToDisplay.toLong()).msecs()
-        iobCobStaticCalculatorPlugin.stopCalculation(from)
-        iobCobStaticCalculatorPlugin.clearCache()
-        iobCobStaticCalculatorPlugin.runCalculation(from, end, true, false, eventCustomCalculationFinished)
+        iobCobCalculatorPluginHistory.stopCalculation(from)
+        iobCobCalculatorPluginHistory.clearCache()
+        iobCobCalculatorPluginHistory.runCalculation(from, end, true, false, eventCustomCalculationFinished)
     }
 
     @Synchronized
@@ -236,19 +239,19 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
-        historybrowse_date?.text = DateUtil.dateAndTimeString(start)
+        historybrowse_date?.text = dateUtil.dateAndTimeString(start)
         historybrowse_zoom?.text = rangeToDisplay.toString()
 
         GlobalScope.launch(Dispatchers.Main) {
             historybrowse_bggraph ?: return@launch
-            val graphData = GraphData(injector, historybrowse_bggraph, iobCobStaticCalculatorPlugin)
+            val graphData = GraphData(injector, historybrowse_bggraph, iobCobCalculatorPluginHistory, treatmentsPluginHistory)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
             withContext(Dispatchers.Default) {
                 val fromTime: Long = start + T.secs(100).msecs()
                 val toTime: Long = start + T.hours(rangeToDisplay.toLong()).msecs()
-                aapsLogger.debug(LTag.UI, "Period: " + DateUtil.dateAndTimeString(fromTime) + " - " + DateUtil.dateAndTimeString(toTime))
+                aapsLogger.debug(LTag.UI, "Period: " + dateUtil.dateAndTimeString(fromTime) + " - " + dateUtil.dateAndTimeString(toTime))
                 val pointer = System.currentTimeMillis()
 
                 // **** In range Area ****
@@ -278,7 +281,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
                 // ------------------ 2nd graph
                 for (g in 0 until secondaryGraphs.size) {
-                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobStaticCalculatorPlugin)
+                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory, treatmentsPluginHistory)
                     var useIobForScale = false
                     var useCobForScale = false
                     var useDevForScale = false

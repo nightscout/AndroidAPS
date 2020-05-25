@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import info.nightscout.androidaps.danar.comm.MsgBolusStart
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -14,11 +14,9 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class)
 class MsgBolusStartTest : DanaRTestBase() {
 
-    @Mock lateinit var constraintChecker: ConstraintChecker
-
     @Test fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(Constraint(anyObject()))).thenReturn(Constraint(0.0))
-        val packet = MsgBolusStart(aapsLogger, constraintChecker, danaRPump, 1.0)
+        val packet = MsgBolusStart(injector, 1.0)
 
         // test message decoding
         val array = ByteArray(100)

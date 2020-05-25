@@ -116,6 +116,14 @@ class VersionCheckerUtils @Inject constructor(
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
 
+    fun versionDigits(versionString: String?): IntArray {
+        val digits = mutableListOf<Int>()
+        versionString?.numericVersionPart().toNumberList()?.let {
+            digits.addAll(it.take(4))
+        }
+        return digits.toIntArray()
+    }
+
     fun findVersion(file: String?): String? {
         val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
         return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()

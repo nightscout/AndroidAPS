@@ -31,7 +31,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -259,8 +259,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("low_temptarget_lowers_sensitivity", false);
 
 
-        mProfile.put("sensitivity_raises_target", SMBDefaults.sensitivity_raises_target);
-        mProfile.put("resistance_lowers_target", SMBDefaults.resistance_lowers_target);
+        mProfile.put("sensitivity_raises_target", sp.getBoolean(resourceHelper.gs(R.string.key_sensitivity_raises_target),SMBDefaults.sensitivity_raises_target));
+        mProfile.put("resistance_lowers_target", sp.getBoolean(resourceHelper.gs(R.string.key_resistance_lowers_target),SMBDefaults.resistance_lowers_target));
         mProfile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments);
         mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);

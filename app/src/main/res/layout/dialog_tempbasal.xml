@@ -24,7 +24,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/pump_tempbasal_label"
+                android:contentDescription="@string/tempbasal_label"
                 android:src="@drawable/icon_cp_basal_start" />
 
             <TextView
@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/pump_tempbasal_label"
+                android:text="@string/tempbasal_label"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </RelativeLayout>

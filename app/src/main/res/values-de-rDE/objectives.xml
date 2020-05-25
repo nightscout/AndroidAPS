@@ -20,8 +20,10 @@
     <string name="objectives_autosens_gate">Loope eine Woche tagsüber mit regelmäßiger Kohlenhydrat-Eingabe</string>
     <string name="objectives_ama_objective">Aktiviere zusätzliche Funktionen für die Nutzung tagsüber wie z. B. den erweiterten Mahlzeitenassistenten (AMA)</string>
     <string name="objectives_smb_objective">Aktiviere zusätzliche Funktionen für die Nutzung tagsüber wie z. B. SMB</string>
+    <string name="objectives_auto_objective">Automatisierung aktivieren</string>
     <string name="objectives_smb_gate">Lies das Wiki und erhöhe maxIOB, damit der SMB gut funktioniert. Ein guter Anfang ist
 die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</string>
+    <string name="objectives_auto_gate">Lies in den Docs wie Automatisierung funktioniert und erstelle dann eine erste einfache Regel. Verwende eine Benachrichtigung statt der tatsächlichen Aktion. Wenn die Automatisierung zum richtigen Zeitpunkt auslöst, ersetze die Benachrichtigung durch die gewünschte Aktion. (https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BZ in Nightscout verfügbar</string>
     <string name="objectives_pumpstatusavailableinns">Pumpen-Status in Nightscout verfügbar</string>
     <string name="objectives_manualenacts">Manuelle Aktionen</string>

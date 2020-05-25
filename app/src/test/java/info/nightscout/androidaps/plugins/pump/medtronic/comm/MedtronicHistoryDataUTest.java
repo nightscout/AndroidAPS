@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
-import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.Mockito.when;
 //import uk.org.lidalia.slf4jtest.TestLogger;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Created by andy on 3/10/19.
  */
 public class MedtronicHistoryDataUTest {
-
+/*
     //TestLogger LOGGER = TestLoggerFactory.getTestLogger(MedtronicHistoryDataUTest.class);
 
     byte[] historyPageData = ByteUtil
@@ -123,5 +122,5 @@ public class MedtronicHistoryDataUTest {
         }
     }
 
-
+*/
 }

@@ -9,23 +9,9 @@ import javax.inject.Singleton
 
 @Singleton
 class PluginStore @Inject constructor(
-    val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val config: Config
 ) : ActivePluginProvider {
-
-    // TODO remove
-    init {
-        pluginStore = this
-    }
-
-    companion object {
-        var pluginStore: PluginStore? = null
-
-        @Deprecated("Use dagger instead")
-        fun getInstance(): PluginStore {
-            checkNotNull(pluginStore) { "Accessing PluginStore before first instantiation" }
-            return pluginStore!!
-        }
-    }
 
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
@@ -83,7 +69,7 @@ class PluginStore @Inject constructor(
         var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        if (!Config.NSCLIENT && !Config.PUMPCONTROL) {
+        if (!config.NSCLIENT && !config.PUMPCONTROL) {
             pluginsInCategory = getSpecificPluginsList(PluginType.APS)
             activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
             if (activeAPS == null) {
@@ -122,7 +108,7 @@ class PluginStore @Inject constructor(
             (activeProfile as PluginBase).setPluginEnabled(PluginType.PROFILE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting ProfileInterface")
         }
-        setFragmentVisiblities((activeSensitivity as PluginBase).name, pluginsInCategory, PluginType.PROFILE)
+        setFragmentVisiblities((activeProfile as PluginBase).name, pluginsInCategory, PluginType.PROFILE)
 
         // PluginType.BGSOURCE
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
@@ -165,8 +151,7 @@ class PluginStore @Inject constructor(
      * @return
     </T> */
     private fun <T> determineActivePlugin(pluginInterface: Class<T>, pluginType: PluginType): T? {
-        val pluginsInCategory: ArrayList<PluginBase>
-        pluginsInCategory = pluginStore!!.getSpecificPluginsListByInterface(pluginInterface)
+        val pluginsInCategory: ArrayList<PluginBase> = getSpecificPluginsListByInterface(pluginInterface)
         return determineActivePlugin(pluginsInCategory, pluginType)
     }
 

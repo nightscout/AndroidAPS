@@ -12,11 +12,12 @@ import javax.inject.Singleton
 
 @Singleton
 class HardLimits @Inject constructor(
-    val aapsLogger: AAPSLogger,
-    val rxBus: RxBusWrapper,
-    val sp: SP,
-    val resourceHelper: ResourceHelper,
-    val context: Context
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBusWrapper,
+    private val sp: SP,
+    private val resourceHelper: ResourceHelper,
+    private val context: Context,
+    private val nsUpload: NSUpload
 ) {
 
     val CHILD = 0
@@ -44,6 +45,10 @@ class HardLimits @Inject constructor(
     val MAXIOB_AMA = doubleArrayOf(3.0, 5.0, 7.0, 12.0)
     val MAXIOB_SMB = doubleArrayOf(3.0, 7.0, 12.0, 25.0)
     val MAXBASAL = doubleArrayOf(2.0, 5.0, 10.0, 12.0)
+
+    //LGS Hard limits
+    //No IOB at all
+    val MAXIOB_LGS = 0.0
 
     private fun loadAge(): Int {
         val sp_age = sp.getString(R.string.key_age, "")
@@ -86,7 +91,7 @@ class HardLimits @Inject constructor(
             msg += ".\n"
             msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newvalue)
             aapsLogger.error(msg)
-            NSUpload.uploadError(msg)
+            nsUpload.uploadError(msg)
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)
         }
         return newvalue

@@ -23,15 +23,10 @@ import static org.mockito.Mockito.when;
 //@PrepareForTest({ MainApp.class, DatabaseHelper.class, DateUtil.class, SP.class })
 @Ignore
 public class BasalProfileUTest {
-
+/*
     // MainApp mainApp = new MainApp();
     @Before
     public void initMocking() {
-//        AAPSMocker.mockMainApp();
-//        AAPSMocker.mockStrings();
-//        AAPSMocker.mockDatabaseHelper();
-
-//        SPMocker.prepareMock();
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());
@@ -161,5 +156,5 @@ public class BasalProfileUTest {
         // 1.800 1.600 1.400 1.450 1.450 1.450 1.250 1.250 0.950 0.950 1.150 1.150 1.250 0.950 0.950 0.950 0.650 0.650
         // 0.650 0.650 0.650 0.500 0.500 0.500
     }
-
+*/
 }

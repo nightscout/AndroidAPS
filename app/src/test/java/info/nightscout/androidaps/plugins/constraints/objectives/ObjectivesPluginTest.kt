@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -38,7 +38,7 @@ class ObjectivesPluginTest : TestBase() {
     }
 
     @Before fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
         objectivesPlugin.onStart()
         `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
     }

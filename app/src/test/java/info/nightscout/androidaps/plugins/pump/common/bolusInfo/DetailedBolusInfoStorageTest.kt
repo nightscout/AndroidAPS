@@ -2,13 +2,11 @@ package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.logging.AAPSLogger
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)

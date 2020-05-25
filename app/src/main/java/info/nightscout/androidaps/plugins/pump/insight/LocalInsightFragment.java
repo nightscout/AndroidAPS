@@ -44,6 +44,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -237,7 +238,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 long lastConnection = localInsightPlugin.getConnectionService().getLastConnected();
                 if (lastConnection == 0) return;
                 int min = (int) ((System.currentTimeMillis() - lastConnection) / 60000);
-                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), DateUtil.timeString(lastConnection)));
+                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), dateUtil.timeString(lastConnection)));
         }
     }
 
@@ -268,7 +269,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
 
     private void getBatteryStatusItem(List<View> statusItems) {
         if (localInsightPlugin.getBatteryStatus() == null) return;
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_battery_label),
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.battery_label),
                 localInsightPlugin.getBatteryStatus().getBatteryAmount() + "%"));
     }
 
@@ -279,7 +280,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus.isInserted())
             status = DecimalFormatter.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
         else status = resourceHelper.gs(R.string.not_inserted);
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_reservoir_label), status));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.reservoir_label), status));
     }
 
     private void getTDDItems(List<View> statusItems) {
@@ -293,14 +294,14 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     private void getBaseBasalRateItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveBasalRate() == null) return;
         ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_basebasalrate_label),
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.basebasalrate_label),
                 DecimalFormatter.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveTBR() == null) return;
         ActiveTBR activeTBR = localInsightPlugin.getActiveTBR();
-        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_tempbasal_label),
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tempbasal_label),
                 resourceHelper.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
     }
 

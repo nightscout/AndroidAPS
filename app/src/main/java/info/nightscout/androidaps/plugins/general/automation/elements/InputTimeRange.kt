@@ -12,7 +12,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -20,6 +19,7 @@ import javax.inject.Inject
 class InputTimeRange(injector: HasAndroidInjector) : Element(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var context: Context
+    @Inject lateinit var dateUtil: DateUtil
 
     var start: Int = getMinSinceMidnight(DateUtil.now())
     var end: Int = getMinSinceMidnight(DateUtil.now())
@@ -28,13 +28,13 @@ class InputTimeRange(injector: HasAndroidInjector) : Element(injector) {
         val label = TextView(root.context)
         val startButton = TextView(root.context)
         val endButton = TextView(root.context)
-        startButton.text = DateUtil.timeString(toMills(start))
+        startButton.text = dateUtil.timeString(toMills(start))
         @Suppress("SetTextI18n")
-        endButton.text = resourceHelper.gs(R.string.and) + "      " + DateUtil.timeString(toMills(end))
+        endButton.text = resourceHelper.gs(R.string.and) + "      " + dateUtil.timeString(toMills(end))
 
         val startTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             start = 60 * hour + minute
-            startButton.text = DateUtil.timeString(toMills(start))
+            startButton.text = dateUtil.timeString(toMills(start))
         }
 
         startButton.setOnClickListener {
@@ -51,7 +51,7 @@ class InputTimeRange(injector: HasAndroidInjector) : Element(injector) {
 
         val endTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             end = 60 * hour + minute
-            endButton.text = DateUtil.timeString(toMills(end))
+            endButton.text = dateUtil.timeString(toMills(end))
         }
 
         endButton.setOnClickListener {

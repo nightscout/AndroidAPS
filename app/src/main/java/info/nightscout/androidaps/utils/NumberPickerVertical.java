@@ -30,8 +30,6 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
  * Created by mike on 28.06.2016.
  */
 public class NumberPickerVertical extends NumberPicker {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(NumberPickerVertical.class);
-
     public NumberPickerVertical(Context context) {
         super(context);
     }

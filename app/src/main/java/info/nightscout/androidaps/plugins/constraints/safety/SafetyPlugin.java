@@ -47,6 +47,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     private HardLimits hardLimits;
     private BuildHelper buildHelper;
     private TreatmentsPlugin treatmentsPlugin;
+    private Config config;
 
     @Inject
     public SafetyPlugin(
@@ -62,7 +63,8 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             ActivePluginProvider activePlugin,
             HardLimits hardLimits,
             BuildHelper buildHelper,
-            TreatmentsPlugin treatmentsPlugin
+            TreatmentsPlugin treatmentsPlugin,
+            Config config
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.CONSTRAINTS)
@@ -83,6 +85,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         this.hardLimits = hardLimits;
         this.buildHelper = buildHelper;
         this.treatmentsPlugin = treatmentsPlugin;
+        this.config = config;
     }
 
     /**
@@ -98,7 +101,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     @NonNull @Override
     public Constraint<Boolean> isClosedLoopAllowed(@NonNull Constraint<Boolean> value) {
         String mode = sp.getString(R.string.key_aps_mode, "open");
-        if (!mode.equals("closed"))
+        if ((mode.equals("open")))
             value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.closedmodedisabledinpreferences), this);
 
         if (!buildHelper.isEngineeringModeOrRelease()) {
@@ -159,7 +162,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         absoluteRate.setIfGreater(getAapsLogger(), 0d, String.format(getResourceHelper().gs(R.string.limitingbasalratio), 0d, getResourceHelper().gs(R.string.itmustbepositivevalue)), this);
 
-        if (Config.APS) {
+        if (config.getAPS()) {
             double maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1d);
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal();
@@ -266,6 +269,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     @NonNull @Override
     public Constraint<Double> applyMaxIOBConstraints(@NonNull Constraint<Double> maxIob) {
         double maxIobPref;
+        String apsmode = sp.getString(R.string.key_aps_mode, "open");
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))
             maxIobPref = sp.getDouble(R.string.key_openapssmb_max_iob, 3d);
         else
@@ -276,6 +280,9 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             maxIob.setIfSmaller(getAapsLogger(), hardLimits.maxIobAMA(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.maxIobAMA(), getResourceHelper().gs(R.string.hardlimit)), this);
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))
             maxIob.setIfSmaller(getAapsLogger(), hardLimits.maxIobSMB(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.maxIobSMB(), getResourceHelper().gs(R.string.hardlimit)), this);
+        if ((apsmode.equals("lgs")))
+            maxIob.setIfSmaller(getAapsLogger(), hardLimits.getMAXIOB_LGS(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.getMAXIOB_LGS(), getResourceHelper().gs(R.string.lowglucosesuspend)), this);
+
         return maxIob;
     }
 

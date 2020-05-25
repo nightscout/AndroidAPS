@@ -6,9 +6,9 @@ import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
-import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert

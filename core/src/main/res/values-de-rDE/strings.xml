@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pairing">Koppeln</string>
+    <!--    General-->
+    <string name="error">Fehler</string>
+    <string name="not_set_short">Nicht angegeben</string>
+    <string name="failedupdatebasalprofile">Fehler beim Aktualisieren des Basalprofils</string>
+    <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
+    <string name="invalidinput">Ungültige Eingabedaten</string>
+    <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
+    <string name="goingtodeliver">Werde %1$.2fIE abgeben</string>
+    <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="connectingfor">Verbindungsaufbau seit %1$d s</string>
+    <string name="bolusdelivering">Gebe %1$.2fIE ab</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connecting">Verbinden</string>
+    <string name="connected">Verbunden</string>
+    <string name="disconnected">Getrennt</string>
+    <string name="disconnecting">Verbindung wird getrennt</string>
+    <string name="androidaps_start">AndroidAPS gestartet</string>
+    <string name="formatinsulinunits">%1$.2f IE</string>
+    <string name="reservoirvalue">%1$.0f / %2$d IE</string>
+    <string name="pump_basebasalrate">%1$.2f IE/h</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min.</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pumpe ist beschäftigt</string>
+    <string name="connectionerror">Pumpen-Verbindungsfehler</string>
+    <string name="youareonallowedlimit">Limit erreicht</string>
+    <string name="objectives">Objectives (Ziele)</string>
+    <string name="close">Schließen</string>
+    <string name="please_wait">Bitte warten…</string>
+    <string name="mute">Alarm stoppen</string>
+    <string name="reload">Neu laden</string>
+    <string name="stoppressed">STOPP GEDRÜCKT</string>
+    <string name="stop">Stopp</string>
+    <string name="carbs">Kohlenhydrate</string>
+    <string name="invalidprofile">Ungültiges oder defektes Profil!</string>
+    <string name="noprofileset">KEIN PROFIL GESETZT</string>
+    <string name="date">Datum</string>
+    <string name="units_label">Einheiten</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Ziel</string>
+    <string name="initializing">Initialisierung...</string>
+    <string name="serialnumber">Seriennummer</string>
+    <string name="battery_label">Batterie</string>
+    <string name="lastconnection_label">Letzte Verbindung</string>
+    <string name="lastbolus_label">Letzter Bolus</string>
+    <string name="dailyunits">Tägliche Einheiten</string>
+    <string name="basebasalrate_label">Basis-Basalrate</string>
+    <string name="tempbasal_label">TBR</string>
+    <string name="virtualpump_extendedbolus_label">Verzögerter Bolus</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="pumphistory">Pumpen-Historie</string>
+    <string name="viewprofile">Profil anzeigen</string>
+    <string name="eventtype">Ereignistyp</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Erweiterte Einstellungen</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Deaktiviert Bluetooth kurzzeitig, falls keine Verbindung zur Pumpe besteht. Dies kann für Smartphones mit Verbindungsproblemen nützlich sein.</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
+    <string name="pumplimit">Limit der Pumpe</string>
+    <string name="limitingpercentrate">Begrenzung des max. Prozentsatzes auf %1$d%% wegen %2$s</string>
+    <string name="itmustbepositivevalue">Es muss ein positiver Wert sein.</string>
+    <string name="limitingbolus">Begrenze Bolusmenge auf %1$.1f IE wegen %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
+    <!--    Dialogs-->
+    <string name="confirmation">Bestätigung</string>
+    <string name="message">Nachricht</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="dismiss">VERWERFEN</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
+    <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
+    <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
+    <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
+    <!--    DateUtil-->
+    <string name="minago">vor %1$d Min.</string>
+    <string name="hoursago">vor %1$.1f Stunde</string>
+    <string name="shorthour">Std</string>
+    <string name="days">Tage</string>
+    <string name="hours">Stunden</string>
+    <string name="unit_second">Sekunde</string>
+    <string name="unit_minute">Minute</string>
+    <string name="unit_hour">Stunde</string>
+    <string name="unit_day">Tag</string>
+    <string name="unit_week">Woche</string>
+    <string name="unit_seconds">Sekunden</string>
+    <string name="unit_minutes">Minuten</string>
+    <string name="unit_hours">Stunden</string>
+    <string name="unit_days">Tage</string>
+    <string name="unit_weeks">Wochen</string>
+    <string name="shortminute">min</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
+    <string name="profile_per_unit">/IE</string>
+    <string name="profile_ins_units_per_hour">IE/h</string>
+    <string name="profile_carbs_per_unit">g/IE</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Kein Profil ausgewählt</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">TBR abbrechen</string>
+    <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
+    <string name="rate">Rate</string>
+    <string name="duration">Dauer</string>
+    <string name="reason">Begründung</string>
+    <string name="nochangerequested">Keine Anpassung benötigt</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d Min.</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">BZ-Test</string>
+    <string name="careportal_announcement">Ankündigung</string>
+    <string name="careportal_note">Notiz</string>
+    <string name="careportal_question">Frage</string>
+    <string name="careportal_exercise">Bewegung</string>
+    <string name="careportal_pumpsitechange">Pumpenkatheter-Wechsel</string>
+    <string name="careportal_cgmsensorinsert">CGM-Sensor gesetzt</string>
+    <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
+    <string name="careportal_insulincartridgechange">Insulinreservoir-Wechsel</string>
+    <string name="careportal_profileswitch">Profilwechsel</string>
+    <string name="careportal_snackbolus">Snack-Bolus</string>
+    <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
+    <string name="careportal_correctionbolus">Korrektur-Bolus</string>
+    <string name="careportal_combobolus">Combo-Bolus</string>
+    <string name="careportal_tempbasalend">TBR Ende</string>
+    <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
+    <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="careportal_pumpbatterychange">Pumpenbatterie-Wechsel</string>
+    <string name="careportal_temporarytarget">Temporäres Ziel</string>
+    <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manuell</string>
+    <string name="unknown">unbekannt</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Zeitüberschreitung bei Verbindung</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Ausgeführt</string>
+    <string name="comment">Kommentar</string>
+    <string name="success">Erfolgreich</string>
+    <string name="percent">Prozent</string>
+    <string name="absolute">Absolut</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">IE</string>
+    <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    TDDStatsActivity-->
+    <string name="stats">Statistik</string>
+    <string name="cumulative_tdd">Kumulative TDD</string>
+    <string name="expweight">Exponentiell gewichtete TDD</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Verhältnis</string>
+    <string name="amount_days"># Tage</string>
+    <string name="weight">Gewichtung</string>
+    <string name="warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
+    <string name="olddata_Message">Veraltete Daten, bitte klicke auf \"NEU LADEN\"</string>
+    <string name="tbb">Tägl. Basalmenge</string>
+    <string name="tbb2">Tägl. Basalmenge * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Zeiterkennung</string>
+</resources>

@@ -58,15 +58,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
-        <activity
-            android:name=".activities.BolusProgressHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity
-            android:name=".activities.ErrorHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
-        <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
@@ -74,14 +65,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.BLEScanActivity">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
+        <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />
@@ -148,22 +132,6 @@
         <service
             android:name=".services.LocationService"
             android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRKorean.services.DanaRKoreanExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRv2.services.DanaRv2ExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRS.services.DanaRSService"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -298,6 +266,17 @@
         <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <!-- Omnipod service and activities -->
+        <service
+            android:name=".plugins.pump.omnipod.service.RileyLinkOmnipodService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodManagementActivity" />
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodHistoryActivity" />
+        <activity android:name="com.atech.android.library.wizardpager.WizardPagerActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
 
     </application>
 

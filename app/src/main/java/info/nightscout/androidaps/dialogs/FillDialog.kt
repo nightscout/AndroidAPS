@@ -23,9 +23,10 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.dialog_fill.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
@@ -39,9 +40,9 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var ctx: Context
+    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var injector: HasAndroidInjector
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -112,7 +113,7 @@ class FillDialog : DialogFragmentWithDate() {
         eventTime -= eventTime % 1000
 
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         if (insulinAfterConstraints > 0 || fill_catheter_change.isChecked || fill_cartridge_change.isChecked) {
             activity?.let { activity ->
@@ -123,12 +124,12 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (siteChange) {
                         aapsLogger.debug("USER ENTRY: SITE CHANGE")
-                        generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
+                        nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
                         aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
-                        generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
+                        nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
                     }
                 }, null)
             }
@@ -161,28 +162,4 @@ class FillDialog : DialogFragmentWithDate() {
             }
         })
     }
-
-    private fun generateCareportalEvent(eventType: String, time: Long, notes: String) {
-        val careportalEvent = CareportalEvent(injector)
-        careportalEvent.source = Source.USER
-        careportalEvent.date = time
-        careportalEvent.json = generateJson(eventType, time, notes).toString()
-        careportalEvent.eventType = eventType
-        MainApp.getDbHelper().createOrUpdate(careportalEvent)
-        NSUpload.uploadEvent(eventType, time, notes)
-    }
-
-    private fun generateJson(careportalEvent: String, time: Long, notes: String): JSONObject {
-        val data = JSONObject()
-        try {
-            data.put("eventType", careportalEvent)
-            data.put("created_at", DateUtil.toISOString(time))
-            data.put("mills", time)
-            data.put("enteredBy", sp.getString("careportal_enteredby", resourceHelper.gs(R.string.app_name)))
-            if (notes.isNotEmpty()) data.put("notes", notes)
-        } catch (ignored: JSONException) {
-        }
-        return data
-    }
-
 }

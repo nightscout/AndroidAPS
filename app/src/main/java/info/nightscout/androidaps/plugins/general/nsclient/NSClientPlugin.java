@@ -7,11 +7,9 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.text.Html;
 import android.text.Spanned;
 
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceScreen;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +41,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientS
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -57,12 +56,14 @@ public class NSClientPlugin extends PluginBase {
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final Context context;
+    private final FabricPrivacy fabricPrivacy;
     private final SP sp;
+    private final Config config;
 
     public Handler handler;
 
     private final List<EventNSClientNewLog> listLog = new ArrayList<>();
-    Spanned textLog = Html.fromHtml("");
+    Spanned textLog = HtmlHelper.INSTANCE.fromHtml("");
 
     public boolean paused;
     boolean autoscroll;
@@ -80,8 +81,10 @@ public class NSClientPlugin extends PluginBase {
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             Context context,
+            FabricPrivacy fabricPrivacy,
             SP sp,
-            NsClientReceiverDelegate nsClientReceiverDelegate
+            NsClientReceiverDelegate nsClientReceiverDelegate,
+            Config config
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -97,10 +100,12 @@ public class NSClientPlugin extends PluginBase {
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.context = context;
+        this.fabricPrivacy = fabricPrivacy;
         this.sp = sp;
         this.nsClientReceiverDelegate = nsClientReceiverDelegate;
+        this.config = config;
 
-        if (Config.NSCLIENT) {
+        if (config.getNSCLIENT()) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
         }
         if (handler == null) {
@@ -132,17 +137,17 @@ public class NSClientPlugin extends PluginBase {
                 .subscribe(event -> {
                     status = event.getStatus(resourceHelper);
                     rxBus.send(new EventNSClientUpdateGUI());
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventNetworkChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
@@ -151,7 +156,7 @@ public class NSClientPlugin extends PluginBase {
                     if (nsClientService != null) {
                         context.unbindService(mConnection);
                     }
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientNewLog.class)
@@ -159,17 +164,17 @@ public class NSClientPlugin extends PluginBase {
                 .subscribe(event -> {
                     addToLog(event);
                     aapsLogger.debug(LTag.NSCLIENT, event.getAction() + " " + event.getLogText());
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventChargingState.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientResend.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> resend(event.getReason()), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> resend(event.getReason()), fabricPrivacy::logException)
         );
     }
 
@@ -184,7 +189,7 @@ public class NSClientPlugin extends PluginBase {
     public void preprocessPreferences(@NotNull PreferenceFragmentCompat preferenceFragment) {
         super.preprocessPreferences(preferenceFragment);
 
-        if (Config.NSCLIENT) {
+        if (config.getNSCLIENT()) {
             preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_overview_advanced));
         }
     }
@@ -234,7 +239,7 @@ public class NSClientPlugin extends PluginBase {
                     newTextLog.append(log.toPreparedHtml());
                 }
             }
-            textLog = Html.fromHtml(newTextLog.toString());
+            textLog = HtmlHelper.INSTANCE.fromHtml(newTextLog.toString());
         } catch (OutOfMemoryError e) {
             ToastUtils.showToastInUiThread(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error);
         }
@@ -249,10 +254,6 @@ public class NSClientPlugin extends PluginBase {
         sp.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
         rxBus.send(new EventPreferenceChange(resourceHelper, R.string.key_nsclientinternal_paused));
-    }
-
-    public UploadQueue queue() {
-        return NSClientService.uploadQueue;
     }
 
     public String url() {

@@ -37,7 +37,6 @@ import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.ArrayList
@@ -52,7 +51,8 @@ class AutomationPlugin @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val rxBus: RxBusWrapper,
     private val constraintChecker: ConstraintChecker,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutomationFragment::class.qualifiedName)
@@ -197,7 +197,7 @@ class AutomationPlugin @Inject constructor(
                     action.doAction(object : Callback() {
                         override fun run() {
                             val sb = StringBuilder()
-                            sb.append(DateUtil.timeString(DateUtil.now()))
+                            sb.append(dateUtil.timeString(DateUtil.now()))
                             sb.append(" ")
                             sb.append(if (result.success) "☺" else "▼")
                             sb.append(" <b>")

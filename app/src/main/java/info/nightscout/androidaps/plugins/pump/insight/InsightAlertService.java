@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.text.Html;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -34,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightExcepti
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
+import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class InsightAlertService extends DaggerService implements InsightConnectionService.StateCallback {
@@ -299,7 +299,7 @@ public class InsightAlertService extends DaggerService implements InsightConnect
         notificationBuilder.setContentTitle(alertUtils.getAlertCode(alert.getAlertType()) + " – " + alertUtils.getAlertTitle(alert.getAlertType()));
         String description = alertUtils.getAlertDescription(alert);
         if (description != null)
-            notificationBuilder.setContentText(Html.fromHtml(description).toString());
+            notificationBuilder.setContentText(HtmlHelper.INSTANCE.fromHtml(description).toString());
 
         Intent fullScreenIntent = new Intent(this, InsightAlertActivity.class);
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);

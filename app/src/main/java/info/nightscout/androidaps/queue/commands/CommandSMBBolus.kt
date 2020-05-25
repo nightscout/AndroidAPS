@@ -17,6 +17,7 @@ class CommandSMBBolus(
     callback: Callback?
 ) : Command(injector, CommandType.SMB_BOLUS, callback) {
 
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePluginProvider
 
     override fun execute() {
@@ -29,7 +30,7 @@ class CommandSMBBolus(
             r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         } else {
             r = PumpEnactResult(injector).enacted(false).success(false).comment("SMB request too old")
-            aapsLogger.debug(LTag.PUMPQUEUE, "SMB bolus canceled. deliverAt: " + DateUtil.dateAndTimeString(detailedBolusInfo.deliverAt))
+            aapsLogger.debug(LTag.PUMPQUEUE, "SMB bolus canceled. deliverAt: " + dateUtil.dateAndTimeString(detailedBolusInfo.deliverAt))
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()

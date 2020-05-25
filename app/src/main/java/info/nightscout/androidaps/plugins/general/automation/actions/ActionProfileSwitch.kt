@@ -7,7 +7,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder

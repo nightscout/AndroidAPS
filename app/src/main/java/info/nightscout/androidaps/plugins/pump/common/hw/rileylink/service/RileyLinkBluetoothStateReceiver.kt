@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service
 
 import android.bluetooth.BluetoothAdapter
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -15,6 +14,7 @@ import javax.inject.Inject
 class RileyLinkBluetoothStateReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var rileyLinkUtil: RileyLinkUtil
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -27,7 +27,7 @@ class RileyLinkBluetoothStateReceiver : DaggerBroadcastReceiver() {
 
                 BluetoothAdapter.STATE_ON                                                                         -> {
                     aapsLogger.debug("RileyLinkBluetoothStateReceiver: Bluetooth back on. Sending broadcast to RileyLink Framework")
-                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected)
+                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected, context)
                 }
             }
         }

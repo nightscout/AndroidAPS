@@ -24,8 +24,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpH
 
 public class DailyTotalsDTO {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
-
     // bg avg, bg low hi, number Bgs,
     // Sen Avg, Sen Lo/Hi, Sens Cal/Data = 0/0,
     // Insulin=19.8[8,9], Basal[10,11], Bolus[13,14], Carbs,

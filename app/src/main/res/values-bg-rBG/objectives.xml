@@ -46,6 +46,9 @@
     <string name="requestcode">Код (request code): %1$s</string>
     <string name="objectives_hint">(отбележете всички правилни отговори)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Няма връзка с Интернет!</string>
     <string name="failedretrievetime">Не може да се вземе времето</string>
     <string name="requirementnotmet">Задачите не са изпълнени</string>

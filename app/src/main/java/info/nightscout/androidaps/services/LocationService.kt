@@ -12,7 +12,6 @@ import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventLocationChange
@@ -21,6 +20,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -32,7 +32,7 @@ class LocationService : DaggerService() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var notificationHolder: NotificationHolder
     @Inject lateinit var lastLocationDataContainer: LastLocationDataContainer
 
     private val disposable = CompositeDisposable()
@@ -73,13 +73,13 @@ class LocationService : DaggerService() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startForeground(mainApp.notificationId(), mainApp.notification)
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
         return Service.START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(mainApp.notificationId(), mainApp.notification)
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
 
         // Get last location once until we get regular update
         LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {

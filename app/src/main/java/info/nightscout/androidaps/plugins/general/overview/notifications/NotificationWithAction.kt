@@ -22,8 +22,6 @@ class NotificationWithAction constructor(
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var nsClientPlugin: NSClientPlugin
 
-    private var nsAlarm: NSAlarm? = null
-
     init {
         injector.androidInjector().inject(this)
     }
@@ -36,7 +34,6 @@ class NotificationWithAction constructor(
     }
 
     constructor (injector: HasAndroidInjector, nsAlarm: NSAlarm) : this(injector) {
-        this.nsAlarm = nsAlarm
         date = System.currentTimeMillis()
         when (nsAlarm.level()) {
             0 -> {
@@ -50,14 +47,14 @@ class NotificationWithAction constructor(
                 id = NSALARM
                 level = NORMAL
                 text = nsAlarm.title()
-                if (nsAlarm.low() && sp.getBoolean(R.string.key_nsalarm_low, false) || nsAlarm.high() && sp.getBoolean(R.string.key_nsalarm_high, false) || nsAlarm.timeago() && sp.getBoolean(R.string.key_nsalarm_staledata, false)) soundId = R.raw.alarm
+                soundId = R.raw.alarm
             }
 
             2 -> {
                 id = NSURGENTALARM
                 level = URGENT
                 text = nsAlarm.title()
-                if (nsAlarm.low() && sp.getBoolean(R.string.key_nsalarm_low, false) || nsAlarm.high() && sp.getBoolean(R.string.key_nsalarm_high, false) || nsAlarm.timeago() && sp.getBoolean(R.string.key_nsalarm_staledata, false)) soundId = R.raw.urgentalarm
+                soundId = R.raw.urgentalarm
             }
         }
         buttonText = R.string.snooze

@@ -22,10 +22,9 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
@@ -35,10 +34,10 @@ import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -66,13 +65,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var config: Config
 
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var careportalPlugin: CareportalPlugin
     @Inject lateinit var comboPlugin: ComboPlugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
@@ -100,6 +99,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
 
+    // TODO why?
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
@@ -159,21 +159,20 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(careportalPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, Config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, Config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, Config.APS)
+            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
-            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !Config.NSCLIENT)
+            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !config.NSCLIENT)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
@@ -239,11 +238,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             resourceHelper.gs(R.string.key_high_mark),
             resourceHelper.gs(R.string.key_low_mark)
         )
-        if (listOf(*unitDependent).contains(pref.key)) {
-            val editTextPref = pref as EditTextPreference
-            val converted = Profile.toCurrentUnitsString(profileFunction, SafeParse.stringToDouble(editTextPref.text))
-            editTextPref.summary = converted
-            editTextPref.text = converted
+        if (unitDependent.toList().contains(pref.key) && pref is EditTextPreference) {
+            val converted = Profile.toCurrentUnits(profileFunction, SafeParse.stringToDouble(pref.text))
+            pref.summary = converted.toString()
         }
     }
 
@@ -275,11 +272,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             } else if (pref.text != null) {
                 pref.dialogMessage = pref.dialogMessage
                 pref.setSummary(pref.text)
-            } else {
-                for (plugin in pluginStore.plugins) {
-                    plugin.updatePreferenceSummary(pref)
-                }
             }
+        }
+
+        for (plugin in pluginStore.plugins) {
+            pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) }}
         }
 
         val hmacPasswords = arrayOf(

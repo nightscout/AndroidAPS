@@ -51,6 +51,9 @@ public class DetermineBasalResultSMB extends APSResult {
             } else {
                 smb = 0d;
             }
+            if (result.has("targetBG")) {
+                targetBG = result.getDouble("targetBG");
+            }
 
             if (result.has("deliverAt")) {
                 String date = result.getString("deliverAt");

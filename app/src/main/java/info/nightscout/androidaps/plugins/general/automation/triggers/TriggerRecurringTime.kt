@@ -13,11 +13,13 @@ import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabe
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import java.util.*
+import javax.inject.Inject
 
 class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
+    @Inject lateinit var dateUtil: DateUtil
+
     val days = InputWeekDay(injector)
     val time = InputTime(injector)
 
@@ -27,17 +29,16 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
     }
 
-    fun time(minutes:Int): TriggerRecurringTime {
+    fun time(minutes: Int): TriggerRecurringTime {
         time.value = minutes
-        return  this
+        return this
     }
 
-    override fun shouldRun(): Boolean {
-        val currentMinSinceMidnight = getMinSinceMidnight(DateUtil.now())
+    override fun shouldRun() : Boolean {
+        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil._now())
         val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-        val scheduled = getMinSinceMidnight(time.value.toLong())
         if (days.isSet(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
-            if (currentMinSinceMidnight >= scheduled && currentMinSinceMidnight - scheduled < 5) {
+            if (currentMinSinceMidnight >= time.value && currentMinSinceMidnight - time.value < 5) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 return true
             }
@@ -85,7 +86,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
             sb.append(resourceHelper.gs(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(i)).shortName))
         }
         sb.append(" ")
-        sb.append(DateUtil.timeString(toMills(time.value)))
+        sb.append(dateUtil.timeString(toMills(time.value)))
         return if (counter == 0) resourceHelper.gs(R.string.never) else sb.toString()
     }
 

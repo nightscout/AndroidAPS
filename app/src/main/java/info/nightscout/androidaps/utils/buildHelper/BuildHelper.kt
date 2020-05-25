@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BuildHelper @Inject constructor() {
+class BuildHelper @Inject constructor(private val config: Config) {
 
     private var devBranch = false
     private var engineeringMode = false
@@ -22,10 +22,10 @@ class BuildHelper @Inject constructor() {
     }
 
     fun isEngineeringModeOrRelease(): Boolean =
-        if (!Config.APS) true else engineeringMode || !devBranch
+        if (!config.APS) true else engineeringMode || !devBranch
 
     fun isEngineeringMode(): Boolean =
-        if (!Config.APS) true else engineeringMode || !devBranch
+        if (!config.APS) true else engineeringMode || !devBranch
 
     fun isDev(): Boolean = devBranch
 }

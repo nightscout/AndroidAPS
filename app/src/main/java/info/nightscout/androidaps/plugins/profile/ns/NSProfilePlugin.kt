@@ -4,7 +4,7 @@ import android.content.Intent
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -27,15 +27,16 @@ class NSProfilePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
-    private val sp: SP
+    private val sp: SP,
+    config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(NSProfileFragment::class.java.name)
     .pluginName(R.string.nsprofile)
     .shortName(R.string.profileviewer_shortname)
-    .alwaysEnabled(Config.NSCLIENT)
-    .alwaysVisible(Config.NSCLIENT)
-    .showInList(!Config.NSCLIENT)
+    .alwaysEnabled(config.NSCLIENT)
+    .alwaysVisible(config.NSCLIENT)
+    .showInList(!config.NSCLIENT)
     .description(R.string.description_profile_nightscout),
     aapsLogger, resourceHelper, injector
 ), ProfileInterface {

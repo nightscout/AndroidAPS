@@ -14,12 +14,11 @@
             android:title="@string/unitsnosemicolon" />
 
         <ListPreference
-            android:defaultValue="en"
+            android:defaultValue="default"
             android:entries="@array/languagesArray"
             android:entryValues="@array/languagesValues"
             android:key="@string/key_language"
             android:title="@string/language" />
-
 
         <EditTextPreference
             android:inputType="textPersonName"
@@ -73,6 +72,10 @@
                 android:title="@string/bolus_password" />
 
         </PreferenceCategory>
+
+        <info.nightscout.androidaps.skins.SkinListPreference
+            android:key="@string/key_skin"
+            android:title="@string/skin" />
 
     </PreferenceCategory>
 
