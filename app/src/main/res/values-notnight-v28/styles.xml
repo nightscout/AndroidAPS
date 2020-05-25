@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:actionBarTheme">@android:style/Theme.Material.Light</item>
+        <item name="iconColor">@color/iconColor</item>
+        <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
+        <item name="iconColorToolbar">@color/iconColorToolbar</item>
+        <item name="color_val">@color/color_val</item>
+        <item name="fabmenubackground">@color/fabmenubackground</item>
+        <item name="iobBorder">@color/iobBorder</item>
+        <item name="cobBorder">@color/cobBorder</item>
+        <item name="matButtonBackground">@color/materialButtonBackground</item>
+        <!-- New MaterialComponents attributes. -->
+        <item name="colorSecondary">?attr/colorAccent</item>
+        <item name="colorPrimaryVariant">?attr/colorPrimary</item>
+        <item name="colorSecondaryVariant">?attr/colorAccent</item>
+        <item name="colorSurface">@color/surface_color</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnError">@color/color_on_error</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <item name="android:textColorPrimary">@color/black_alpha_80</item>
+        <item name="android:textColor">@color/black_alpha_80</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.MaterialComponents.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.MaterialComponents.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.MaterialComponents.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
+        <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+        <!-- Color of bg value -->
+        <item name="bgInRange">@color/inrange_bg</item>
+        <item name="bgLow">@color/low</item>
+        <item name="bgHigh">@color/high</item>
+        <!-- Color of pills -->
+        <item name="PillColorStart">@color/PillColorStart</item>
+        <item name="PillColorEnd">@color/PillColorEnd</item>
+        <!-- Color of dialog -->
+        <item name="colorPrimaryDialog">?attr/colorPrimary</item>
+        <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
+        <item name="colorAccentDialog">?attr/colorAccent</item>
+        <!-- Color of graph background -->
+        <item name="colorGraphBackground">@color/transparent</item>
+        <!-- Top bar icons -->
+        <item name="iconSensor">@drawable/ic_sensor</item>
+        <item name="iconReservoir">@drawable/ic_cartridge</item>
+        <item name="iconCanula">@drawable/ic_katheter</item>
+        <item name="iconBattery">@drawable/ic_battery</item>
+        <!-- Icons of bottom naviagtion bar -->
+        <item name="iconInsulin">@drawable/ic_iob_48</item>
+        <item name="iconCarbs">@drawable/ic_carb_48</item>
+        <item name="iconWizzard">@drawable/ic_calculator_48</item>
+        <item name="iconCgm">@drawable/ic_blooddrop_48</item>
+        <!-- Fragment background for some themes default transparent  -->
+        <item name="fragmentbackground">@color/transparent</item>
+        <!-- Dialog -->
+        <item name="android:dialogCornerRadius">10dp</item>
+    </style>
+
+    <style name="AppTheme.YELLOW" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColorYellow</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorYellow</item>
+        <item name="colorAccent">@color/secondaryColorYellow</item>
+        <item name="overviewPillColor">@color/overviewPillColorYellow</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="colorOnPrimary">@color/black_alpha_80</item>
+        <item name="colorOnSecondary">@color/black_alpha_80</item>
+        <item name="colorSurface">@color/white_alpha_70</item>
+        <item name="android:popupBackground">@color/white_alpha_80</item>
+        <item name="android:windowBackground">@drawable/minions1</item>
+        <item name="iconColorbottomAppbar">@color/black_alpha_60</item>
+        <!-- Fragment background for some themes default transparent  -->
+        <item name="fragmentbackground">@color/white_alpha_40</item>
+        <item name="android:alertDialogTheme">@style/ApsDialogYellow</item>
+        <item name="android:dialogTheme">@style/ApsDialogYellow</item>
+        <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+    </style>
+
+    <style name="AppTheme.DARKSIDE" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColorDarkside</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorDarkside</item>
+        <item name="colorAccent">@color/secondaryColorDarkside</item>
+        <item name="colorSecondary">@color/secondaryColorDarkside</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColorDarkside</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColorDarkside</item>
+        <item name="colorOnPrimary">@color/primaryTextColorDarkside</item>
+        <item name="overviewPillColor">@color/plastic_grey</item>
+        <item name="iconColor">@color/concinnity_bright_grey</item>
+        <item name="iconColorbottomAppbar">@color/sphere_plastic_grey</item>
+        <item name="iconColorToolbar">@color/sphere_plastic_grey</item>
+        <item name="android:navigationBarColor">@color/sphere_plastic_grey</item>
+        <item name="android:windowBackground">@drawable/ic_overview_bg_gradient</item>
+        <item name="bottomAppBarStyle">@style/BottomAppbar</item>
+        <item name="colorSurface">@color/plastic</item>
+        <item name="colorOnSurface">@color/black_alpha_80</item>
+        <item name="fabmenubackground">@color/fabmenubackgroundDarkside</item>
+        <!-- Color of pills -->
+        <item name="PillColorStart">@color/PillColorStartDarkside</item>
+        <item name="PillColorEnd">@color/PillColorEndDarkside</item>
+        <item name="colorGraphBackground">@color/plastic_grey</item>
+        <!-- Icons of bottom naviagtion bar -->
+        <item name="iconInsulin">@drawable/ic_pumpe_48</item>
+        <item name="iconCarbs">@drawable/ic_carb_48</item>
+        <item name="android:dialogCornerRadius">10dp</item>
+        <item name="android:alertDialogTheme">@style/ApsDialogDarkside</item>
+        <item name="android:dialogTheme">@style/ApsDialogDarkside</item>
+    </style>
+
+    <style name="ApsDialogYellow" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:dialogCornerRadius">10dp</item>
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColorYellow</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorYellow</item>
+        <item name="colorAccent">@color/secondaryColorYellow</item>
+        <item name="colorSecondary">@color/secondaryColorYellow</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:colorBackgroundFloating">@color/white_alpha_80</item>
+        <item name="android:backgroundTint">@color/white_alpha_80</item>
+        <item name="android:backgroundTintMode">multiply</item>
+    </style>
+
+    <style name="ApsDialogDarkside" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:dialogCornerRadius">10dp</item>
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColorDarkside</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorDarkside</item>
+        <item name="colorAccent">@color/secondaryColorDarkside</item>
+        <item name="colorSecondary">@color/secondaryColorDarkside</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:colorBackgroundFloating">@color/white_alpha_80</item>
+        <item name="android:backgroundTint">@color/white_alpha_80</item>
+        <item name="android:backgroundTintMode">multiply</item>
+    </style>
+</resources>
