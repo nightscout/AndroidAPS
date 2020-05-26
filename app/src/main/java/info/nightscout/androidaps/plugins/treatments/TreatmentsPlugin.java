@@ -335,33 +335,27 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public long getLastBolusTime() {
-        long now = System.currentTimeMillis();
-        long last = 0;
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date > last && t.insulin > 0 && t.date <= now)
-                    last = t.date;
-            }
+        Treatment last = getService().getLastBolus(false);
+        if (last == null) {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: NOTHING FOUND");
+            return 0;
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + dateUtil.dateAndTimeString(last));
-        return last;
+        else {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + dateUtil.dateAndTimeString(last.date));
+            return last.date;
+        }
     }
 
-    public long getLastBolusTime(boolean isSMB) {
-        long now = System.currentTimeMillis();
-        long last = 0;
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date > last && t.insulin > 0 && t.date <= now && isSMB == t.isSMB)
-                    last = t.date;
-            }
+    public long getLastBolusTime(boolean excludeSMB) {
+        Treatment last = getService().getLastBolus(excludeSMB);
+        if (last == null) {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: NOTHING FOUND");
+            return 0;
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + dateUtil.dateAndTimeString(last));
-        return last;
+        else {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + dateUtil.dateAndTimeString(last.date));
+            return last.date;
+        }
     }
 
     @Override
