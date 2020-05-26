@@ -300,6 +300,9 @@
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange">Value %1$s is out of hard limits</string>
+    <string name="smscommunicator_pumpconnect">To connect pump reply with code %1$s</string>
+    <string name="smscommunicator_pumpdisconnect">To disconnect pump to %1d minutes reply with code %2$s</string>
+    <string name="smscommunicator_pumpconnectfail">To connect pump failed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_remotebolusnotallowed">Remote bolus not available. Try again later.</string>
     <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h for %2$d min reply with code %3$s</string>
