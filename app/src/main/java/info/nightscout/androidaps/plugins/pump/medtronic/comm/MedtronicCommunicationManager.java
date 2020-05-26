@@ -61,14 +61,11 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
 
-    @Inject AAPSLogger aapsLogger;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicConverter medtronicConverter;
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
-    @Inject RileyLinkServiceData rileyLinkServiceData;
-    @Inject ServiceTaskExecutor serviceTaskExecutor;
 
     private final int MAX_COMMAND_TRIES = 3;
     private final int DEFAULT_TIMEOUT = 2000;
