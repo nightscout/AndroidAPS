@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Чтобы ввести %1$d г в %2$s ответьте кодом %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Для начала подачи базала %1$d%% на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Чтобы возобновить цикл ответьте кодом %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Чтобы включить цикл ответьте кодом %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Чтобы отключить цикл ответьте кодом %1$s</string>
     <string name="smscommunicator_tempbasalset">врем базал %1$.2fU/h на %2$d мин начат успешно</string>
     <string name="smscommunicator_extendedset">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
     <string name="smscommunicator_carbsset">Углеводы %1$d г введены успешно</string>
@@ -468,6 +471,8 @@
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_pbage_label">Батарея помпы работает</string>
     <string name="ns_alarmoptions">опции оповещения</string>
+    <string name="ns_alarms">Создать уведомления из оповещений NS</string>
+    <string name="ns_announcements">Создать уведомления из оповещений NS</string>
     <string name="nsalarm_staledatavalue_label">Порог оповещения об устаревших данных [min] (мин)</string>
     <string name="nsalarm_urgent_staledatavalue_label">Порог тревоги об устаревших данных [min] (мин)</string>
     <string name="openapsama_autosens_period">Интервал для autosens [h] (ч)</string>
@@ -1375,7 +1380,7 @@ Context | Edit Context</string>
     <string name="description_pump_omnipod_dash">Интеграция с помпой Omnompod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
-    <string name="omnipod_alert_expiration">Срок Pod\'a истекает в ближайшее время</string>
+    <string name="omnipod_alert_expiration">Срок работы Pod\'a истекает</string>
     <string name="omnipod_alert_expiration_advisory">Срок Pod\'a истекает в ближайшее время</string>
     <string name="omnipod_alert_shutdown_imminent">Остановка неизбежна</string>
     <string name="omnipod_alert_low_reservoir">В резервуаре мало инсулина</string>

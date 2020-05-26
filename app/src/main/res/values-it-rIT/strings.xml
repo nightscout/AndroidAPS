@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Per riprendere il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Per abilitare il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Per disabilitare il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_tempbasalset">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
     <string name="smscommunicator_extendedset">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
     <string name="smscommunicator_carbsset">CHO %1$dg inseriti con successo</string>

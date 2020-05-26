@@ -79,6 +79,7 @@ class FabricPrivacy @Inject constructor(
         try {
             val crashlytics = Crashlytics.getInstance()
             crashlytics.core.logException(throwable)
+            aapsLogger.debug(LTag.CORE, "Exception: ", throwable)
         } catch (e: NullPointerException) {
             aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $throwable")
         } catch (e: IllegalStateException) {

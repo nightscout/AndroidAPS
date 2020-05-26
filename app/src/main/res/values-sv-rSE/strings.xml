@@ -1370,7 +1370,6 @@ Eversense-appen.</string>
     <string name="description_pump_omnipod_dash">Pumpintegration för Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Påminnelse att slutföra parkoppling</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Påminnelse att slutföra installation</string>
-    <string name="omnipod_alert_expiration">Pod kommer att gå ut inom kort</string>
     <string name="omnipod_alert_expiration_advisory">Pod kommer att gå ut inom kort</string>
     <string name="omnipod_alert_shutdown_imminent">Pod kommer snart att stängas av</string>
     <string name="omnipod_alert_low_reservoir">Låg reservoar</string>

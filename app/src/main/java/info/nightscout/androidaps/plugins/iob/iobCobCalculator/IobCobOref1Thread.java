@@ -30,6 +30,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
@@ -114,6 +115,7 @@ public class IobCobOref1Thread extends Thread {
                 if (bgDataReload) {
                     iobCobCalculatorPlugin.loadBgData(end);
                     iobCobCalculatorPlugin.createBucketedData();
+                    rxBus.send(new EventAutosensBgLoaded(cause));
                 }
                 List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();
                 LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
