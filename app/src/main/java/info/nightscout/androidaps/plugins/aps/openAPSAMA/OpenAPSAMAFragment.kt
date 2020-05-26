@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -25,6 +27,8 @@ import org.json.JSONException
 import javax.inject.Inject
 
 class OpenAPSAMAFragment : DaggerFragment() {
+    private lateinit var mRunnable:Runnable
+    private lateinit var mHandler: Handler
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -42,8 +46,24 @@ class OpenAPSAMAFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        openapsma_run.setOnClickListener {
-            openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
+        swipeRefresh_openaps_ama.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_openaps_ama.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        swipeRefresh_openaps_ama.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                swipeRefresh_openaps_ama.isRefreshing = false
+                openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
         }
     }
 

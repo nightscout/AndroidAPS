@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity">
+
+    <include layout="@layout/themeselector_text_fragment" />-->
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="16dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/ic_brightness_4_black_24dp"
+        android:tint="?android:attr/colorBackground"
+        android:onClick="onClick">
+        <requestFocus/>
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <!-- include bottom sheet -->
+    <include layout="@layout/themeselector_bottom_sheet" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

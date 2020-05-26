@@ -1,2 +1,14 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="compact_height">30dp</dimen>
+    <dimen name="toolbar_height">60dp</dimen>
+    <dimen name="design_fab_image_size" tools:override="true">56dp</dimen>
+    <dimen name="progress_bar_size">0dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="bottom_navigation_icon_size" tools:override="true">32dp</dimen>
+    <dimen name="design_bottom_navigation_height" tools:override="true">60dp</dimen>
 </resources>
+

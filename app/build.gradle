@@ -127,6 +127,8 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         multiDexEnabled true
+        renderscriptTargetApi 28 //must match target sdk and build tools
+        renderscriptSupportModeEnabled true
         versionCode 1500
         version "2.6.6-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
@@ -245,6 +247,8 @@ dependencies {
     implementation project(':dana')
     implementation project(':danars')
     implementation project(':danar')
+
+    implementation 'com.ms-square:etsyblur:0.2.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'

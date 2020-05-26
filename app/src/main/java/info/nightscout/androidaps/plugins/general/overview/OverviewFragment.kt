@@ -80,20 +80,20 @@ import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatment
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
+import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_arrow
+import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_bg
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_chartMenuButton
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobcalculationprogess
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobgraph
 import kotlinx.android.synthetic.main.overview_info_layout.*
-import kotlinx.android.synthetic.main.overview_info_layout.overview_arrow
 import kotlinx.android.synthetic.main.overview_info_layout.overview_basebasal
-import kotlinx.android.synthetic.main.overview_info_layout.overview_bg
 import kotlinx.android.synthetic.main.overview_info_layout.overview_cob
 import kotlinx.android.synthetic.main.overview_info_layout.overview_extendedbolus
 import kotlinx.android.synthetic.main.overview_info_layout.overview_iob
 import kotlinx.android.synthetic.main.overview_info_layout.overview_sensitivity
 import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
-import kotlinx.android.synthetic.main.overview_statuslights_layout.*
+import kotlinx.android.synthetic.main.status_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -198,22 +198,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overviewMenus.setupChartMenu(overview_chartMenuButton)
         prepareGraphs()
 
-        overview_accepttempbutton?.setOnClickListener(this)
-        overview_treatmentbutton?.setOnClickListener(this)
-        overview_wizardbutton?.setOnClickListener(this)
-        overview_calibrationbutton?.setOnClickListener(this)
-        overview_cgmbutton?.setOnClickListener(this)
-        overview_insulinbutton?.setOnClickListener(this)
-        overview_carbsbutton?.setOnClickListener(this)
-        overview_quickwizardbutton?.setOnClickListener(this)
-        overview_quickwizardbutton?.setOnLongClickListener(this)
     }
 
     override fun onPause() {
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacksAndMessages(null)
-        overview_apsmode_llayout?.let { unregisterForContextMenu(it) }
         overview_activeprofile?.let { unregisterForContextMenu(it) }
         overview_temptarget?.let { unregisterForContextMenu(it) }
     }
@@ -554,97 +544,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (glucoseStatus != null) {
                 overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
                 overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                //overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 overview_deltashort?.text = "---"
-                overview_avgdelta?.text = ""
+                //overview_avgdelta?.text = ""
             }
 
-            // strike through if BG is old
-            overview_bg?.let { overview_bg ->
-                var flag = overview_bg.paintFlags
-                flag = if (actualBG == null) {
-                    flag or Paint.STRIKE_THRU_TEXT_FLAG
-                } else flag and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                overview_bg.paintFlags = flag
-            }
             overview_timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
             overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
 
-        }
-        val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
-
-        // open loop mode
-        if (config.APS && pump.pumpDescription.isTempBasalCapable) {
-            overview_apsmode?.visibility = View.VISIBLE
-            when {
-                loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_superbolus)
-                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-                    //overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                }
-
-                loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_disconnected)
-                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
-                }
-
-                loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_paused)
-                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                }
-
-                pump.isSuspended                                                        -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_paused)
-                    overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.pumpsuspended)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                }
-
-                loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_lgs)
-                    overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                }
-
-                loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_closed)
-                    overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                }
-
-                loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_open)
-                    overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.openloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                }
-
-                else                                                                    -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_disabled)
-                    overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.disabledloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
-                }
-            }
-        } else {
-            overview_apsmode_text?.visibility = View.GONE
         }
         val lastRun = loopPlugin.lastRun
 
@@ -737,10 +646,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 )
             }
         }
-
-        // Status lights
-        overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
 
         // cob
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)

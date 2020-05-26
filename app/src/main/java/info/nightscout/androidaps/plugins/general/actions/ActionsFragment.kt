@@ -69,12 +69,6 @@ class ActionsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        actions_profileswitch.setOnClickListener {
-            ProfileSwitchDialog().show(childFragmentManager, "Actions")
-        }
-        actions_temptarget.setOnClickListener {
-            TempTargetDialog().show(childFragmentManager, "Actions")
-        }
         actions_extendedbolus.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable {
@@ -122,34 +116,34 @@ class ActionsFragment : DaggerFragment() {
                 })
             }
         }
-        actions_fill.setOnClickListener {
+      /*  actions_fill.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { FillDialog().show(childFragmentManager, "FillDialog") }))
             }
-        }
-        actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
-        actions_tddstats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
+        } */
+        //actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
+       // actions_tddstats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         actions_bgcheck.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.BGCHECK, R.string.careportal_bgcheck).show(childFragmentManager, "Actions")
         }
-        actions_cgmsensorinsert.setOnClickListener {
+       /* actions_cgmsensorinsert.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(childFragmentManager, "Actions")
         }
         actions_pumpbatterychange.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(childFragmentManager, "Actions")
-        }
+        }*/
         actions_note.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.NOTE, R.string.careportal_note).show(childFragmentManager, "Actions")
         }
         actions_exercise.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(childFragmentManager, "Actions")
         }
-        actions_question.setOnClickListener {
+      /*  actions_question.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.QUESTION, R.string.careportal_question).show(childFragmentManager, "Actions")
         }
         actions_announcement.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.ANNOUNCEMENT, R.string.careportal_announcement).show(childFragmentManager, "Actions")
-        }
+        }*/
 
         sp.putBoolean(R.string.key_objectiveuseactions, true)
     }
@@ -196,11 +190,11 @@ class ActionsFragment : DaggerFragment() {
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
 
-        actions_profileswitch?.visibility = (
+     /*   actions_profileswitch?.visibility = (
             activePlugin.activeProfileInterface.profile != null &&
                 pump.pumpDescription.isSetBasalProfileCapable &&
                 pump.isInitialized &&
-                !pump.isSuspended).toVisibility()
+                !pump.isSuspended).toVisibility()*/
 
         if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized || pump.isSuspended || pump.isFakingTempsByExtendedBoluses) {
             actions_extendedbolus?.visibility = View.GONE
@@ -234,12 +228,12 @@ class ActionsFragment : DaggerFragment() {
             }
         }
 
-        actions_historybrowser.visibility = (profile != null).toVisibility()
+      /*  actions_historybrowser.visibility = (profile != null).toVisibility()
         actions_fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized && !pump.isSuspended).toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
-        actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+        actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()*/
 
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
+        // statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
         checkPumpCustomActions()
     }
 

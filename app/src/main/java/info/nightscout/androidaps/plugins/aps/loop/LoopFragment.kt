@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.plugins.aps.loop
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -20,6 +23,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.loop_fragment.*
+import java.util.*
 import javax.inject.Inject
 
 class LoopFragment : DaggerFragment() {
@@ -31,6 +35,9 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var dateUtil: DateUtil
 
+    private lateinit var mRandom: Random
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -41,9 +48,28 @@ class LoopFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loop_run.setOnClickListener {
-            loop_lastrun.text = resourceHelper.gs(R.string.executing)
-            Thread { loopPlugin.invoke("Loop button", true) }.start()
+        swipeRefresh_loop.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_loop.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+
+        // Initialize a new Random instance
+        mRandom = Random()
+
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        swipeRefresh_loop.setOnRefreshListener {
+            mRunnable = Runnable {
+                loop_lastrun.text = resourceHelper.gs(R.string.executing)
+                Thread { loopPlugin.invoke("Loop button", true) }.start()
+                // Hide swipe to refresh icon animation
+                swipeRefresh_loop.isRefreshing = false
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
         }
     }
 

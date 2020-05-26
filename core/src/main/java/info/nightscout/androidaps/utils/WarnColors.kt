@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.widget.TextView
 import info.nightscout.androidaps.core.R
@@ -11,28 +12,37 @@ import javax.inject.Singleton
 @Singleton
 class WarnColors @Inject constructor(val resourceHelper: ResourceHelper) {
 
-    private val normalColor = Color.WHITE
+    private var normalColor = Color.TRANSPARENT
     private val warnColor = Color.YELLOW
     private val urgentColor = Color.RED
+
+    private fun getStandardColor(view: TextView?): Int {
+        if (this.normalColor == Color.TRANSPARENT) {
+            if (view != null) {
+                this.normalColor = view.textColors.defaultColor
+            }
+        }
+        return this.normalColor
+    }
 
     fun setColor(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double) =
         view?.setTextColor(when {
             value >= urgentLevel -> urgentColor
             value >= warnLevel   -> warnColor
-            else                 -> normalColor
+            else                 -> getStandardColor(view)
         })
 
     fun setColorInverse(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double) =
         view?.setTextColor(when {
             value <= urgentLevel -> urgentColor
             value <= warnLevel   -> warnColor
-            else                 -> normalColor
+            else                 -> getStandardColor(view)
         })
 
     fun setColorByAge(view: TextView?, careportalEvent: CareportalEvent, warnThreshold: Double, urgentThreshold: Double) =
         view?.setTextColor(when {
             careportalEvent.isOlderThan(urgentThreshold) -> resourceHelper.gc(R.color.low)
             careportalEvent.isOlderThan(warnThreshold)   -> resourceHelper.gc(R.color.high)
-            else                                         -> Color.WHITE
+            else                                         -> getStandardColor(view)
         })
 }

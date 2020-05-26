@@ -210,11 +210,6 @@
     <color name="common_background_grey">#707991</color>
     <color name="labelsColor">#FFFFFF</color>
 
-
-    <color name="colorPrimary1">#AF216D</color>
-    <color name="colorPrimaryDark1">#8E1A59</color>
-
-
     <color name="themeDeselected">#d69b9b9b</color>
     <color name="themeSelected">#e300aaff</color>
     <color name="seperator">#7ca6a6a6</color>

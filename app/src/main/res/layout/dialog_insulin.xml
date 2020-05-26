@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
@@ -16,27 +17,29 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
             android:orientation="horizontal"
             android:padding="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 android:contentDescription="@string/overview_insulin_label"
                 android:src="@drawable/icon_bolus" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/overview_insulin_label"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 
@@ -58,13 +61,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:text="@string/start_eating_soon_tt" />
+                android:text="@string/start_eating_soon_tt"
+                app:useMaterialThemeColors="true"/>
 
             <CheckBox
                 android:id="@+id/overview_insulin_record_only"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/do_not_bolus_record_only" />
+                android:text="@string/do_not_bolus_record_only"
+                app:useMaterialThemeColors="true"/>
 
         </LinearLayout>
 
@@ -169,5 +174,4 @@
         <include layout="@layout/okcancel" />
 
     </LinearLayout>
-
 </ScrollView>

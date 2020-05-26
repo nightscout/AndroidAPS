@@ -1689,4 +1689,6 @@
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
 
+    <string name="nav_themeselector">Set Colors</string>
+
 </resources>

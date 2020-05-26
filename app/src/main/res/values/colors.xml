@@ -166,13 +166,13 @@
     <color name="swipe_background">#121212</color>
 
     <!---Theme based colors-->
-    <color name="colorPrimary">#BBBBBB</color>
+    <color name="colorPrimary">#8c8c8c</color>
     <color name="colorPrimaryDark">#5a6275</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="mdtp_accent_color">#3A7EFF</color>
     <color name="iconColor">#000000</color>
-    <color name="iconColorbottomAppbar">#FFFFFF</color>
-    <color name="iconColorToolbar">#FFFFFF</color>
+    <color name="iconColorbottomAppbar">#999999</color>
+    <color name="iconColorToolbar">#999999</color>
     <color name="actionBarColor">#FFFFFF</color>
 
     <color name="colorInitializingBorder">#A6DEFF</color>
@@ -201,7 +201,7 @@
     <color name="background_end_color_grey">#FF000000</color>
 
     <!---Default material colors-->
-    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnPrimary">#000000</color>
     <color name="colorOnSecondary">#FFFFFF</color>
     <color name="colorOnSurface">#000000</color>
     <color name="color_on_error">#000000</color>
@@ -213,11 +213,6 @@
     <color name="colorAccent_grey">#FFFFFF</color>
     <color name="common_background_grey">#707991</color>
     <color name="labelsColor">#FFFFFF</color>
-
-
-    <color name="colorPrimary1">#AF216D</color>
-    <color name="colorPrimaryDark1">#8E1A59</color>
-
 
     <color name="themeDeselected">#d69b9b9b</color>
     <color name="themeSelected">#e300aaff</color>
