@@ -8,7 +8,7 @@
     <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
     <string name="invalidinput">Entrada Inválida</string>
     <string name="tempbasaldeliveryerror">Erro na administração da Basal Temp</string>
-    <string name="goingtodeliver">A ser administrada %1$.2fU</string>
+    <string name="goingtodeliver">Quantidade a ser administrada %1$.2fU</string>
     <string name="waitingforpump">À espera da bomba</string>
     <string name="connectingfor">A ligar durante %1$d s</string>
     <string name="bolusdelivering">A administrar %1$.2fU</string>
@@ -130,7 +130,7 @@
     <string name="careportal_question">Questão</string>
     <string name="careportal_exercise">Exercício</string>
     <string name="careportal_pumpsitechange">Mudança Local Bomba</string>
-    <string name="careportal_cgmsensorinsert">Colocação do Sensor CGM</string>
+    <string name="careportal_cgmsensorinsert">Colocação Sensor CGM</string>
     <string name="careportal_cgmsensorstart">Início do Sensor CGM</string>
     <string name="careportal_insulincartridgechange">Mudança de Cartucho de Insulina</string>
     <string name="careportal_profileswitch">Troca de Perfil</string>

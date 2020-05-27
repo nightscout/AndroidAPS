@@ -37,7 +37,7 @@ public class SMBDefaults {
     // (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120.
     // Essentially, this just limits AMA/SMB as a safety cap against excessive COB entry)
     public final static int maxCOB = 120;
-    public final static boolean skip_neutral_temps = true; // ***** default false in oref1 ***** if true, don't set neutral temps
+    //public final static boolean skip_neutral_temps = true; // ***** default false in oref1 ***** if true, don't set neutral temps
     // unsuspend_if_no_temp:false // if true, pump will un-suspend after a zero temp finishes
     // bolussnooze_dia_divisor:2 // bolus snooze decays after 1/2 of DIA
     public final static double min_5m_carbimpact = 8d; // mg/dL per 5m (8 mg/dL/5m corresponds to 24g/hr at a CSF of 4 mg/dL/g (x/5*60/4))

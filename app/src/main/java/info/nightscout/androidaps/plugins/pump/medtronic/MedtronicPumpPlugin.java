@@ -1571,6 +1571,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.hasTimeDateOrTimeZoneChanged = true;
     }
 
+    @Override public boolean setNeutralTempAtFullHour() {
+        return sp.getBoolean(R.string.key_set_neutral_temps, true);
+    }
+
 
     private void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {
 

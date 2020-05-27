@@ -25,6 +25,6 @@ class MsgSettingPumpTimeTest : DanaRTestBase() {
             packet.intFromBuff(bytes, 0, 1)
         ).time
         packet.handleMessage(bytes)
-        Assert.assertEquals(time, danaPump.pumpTime)
+        Assert.assertEquals(time, danaPump.getPumpTime())
     }
 }

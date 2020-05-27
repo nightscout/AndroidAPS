@@ -355,12 +355,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="careportal_insulinage_label">İnsülin yaşı</string>
     <string name="careportal_pbage_label">Pompa pil yaşı</string>
     <string name="ns_alarmoptions">Alarm türleri</string>
-    <string name="nsalarm_urgenthigh">Aşırı yüksek</string>
-    <string name="nsalarm_high">Yüksek</string>
-    <string name="nsalarm_low">Düşük</string>
-    <string name="nsalarm_urgentlow">Çok düşük</string>
-    <string name="nsalarm_staledata">Eski veriler</string>
-    <string name="nsalarm_urgentstaledata">Acil durum verileri</string>
     <string name="nsalarm_staledatavalue_label">Eski veri eşiği [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Acil durum verileri eşiği [min]</string>
     <string name="openapsama_autosens_period">Autosens [h] için aralık</string>

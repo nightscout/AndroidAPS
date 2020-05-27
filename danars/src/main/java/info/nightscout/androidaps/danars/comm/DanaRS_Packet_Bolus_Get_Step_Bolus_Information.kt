@@ -1,10 +1,11 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.androidaps.logging.LTag
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import javax.inject.Inject
 
 class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
@@ -24,7 +25,8 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
         danaPump.initialBolusAmount = intFromBuff(data, 2, 2) / 100.0
         val hours = intFromBuff(data, 4, 1)
         val minutes = intFromBuff(data, 5, 1)
-        danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
+        if (danaPump.usingUTC) danaPump.lastBolusTime = DateTime.now().withZone(DateTimeZone.UTC).withHourOfDay(hours).withMinuteOfHour(minutes).millis
+        else danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
         danaPump.lastBolusAmount = intFromBuff(data, 6, 2) / 100.0
         danaPump.maxBolus = intFromBuff(data, 8, 2) / 100.0
         danaPump.bolusStep = intFromBuff(data, 10, 1) / 100.0

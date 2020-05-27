@@ -98,6 +98,12 @@
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
         </Preference>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_set_neutral_temps"
+            android:summary="@string/set_neutral_temps_summary"
+            android:title="@string/set_neutral_temps_title" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

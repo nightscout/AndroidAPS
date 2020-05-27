@@ -62,6 +62,7 @@ public class APSResult {
     public boolean hasPredictions = false;
     public double smb = 0d; // super micro bolus in units
     public long deliverAt = 0;
+    public double targetBG = 0d;
 
     public int carbsReq = 0;
     public int carbsReqWithin = 0;
@@ -211,6 +212,7 @@ public class APSResult {
         newResult.usePercent = usePercent;
         newResult.carbsReq = carbsReq;
         newResult.carbsReqWithin = carbsReqWithin;
+        newResult.targetBG = targetBG;
     }
 
 

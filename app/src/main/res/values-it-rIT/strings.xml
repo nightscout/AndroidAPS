@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Per riprendere il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Per abilitare il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Per disabilitare il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_tempbasalset">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
     <string name="smscommunicator_extendedset">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
     <string name="smscommunicator_carbsset">CHO %1$dg inseriti con successo</string>
@@ -468,12 +471,8 @@
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_pbage_label">Età batteria micro</string>
     <string name="ns_alarmoptions">Opzioni allarme</string>
-    <string name="nsalarm_urgenthigh">Molto alto</string>
-    <string name="nsalarm_high">Alto</string>
-    <string name="nsalarm_low">Basso</string>
-    <string name="nsalarm_urgentlow">Molto basso</string>
-    <string name="nsalarm_staledata">Dati non aggiornati</string>
-    <string name="nsalarm_urgentstaledata">Dati non aggiornati da molto tempo</string>
+    <string name="ns_alarms">Crea notifiche da allarmi NS</string>
+    <string name="ns_announcements">Crea notifiche da avvisi NS</string>
     <string name="nsalarm_staledatavalue_label">Soglia dati non aggiornati [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Soglia dati non aggiornati da molto tempo [min]</string>
     <string name="openapsama_autosens_period">Intervallo per autosens [h]</string>
@@ -851,6 +850,10 @@
     <string name="log_alerts">Registra avvisi</string>
     <string name="enable_tbr_emulation">Abilita emulazione TBR</string>
     <string name="enable_tbr_emulation_summary">Usa i bolli estesi invece dei TBR per aggirare il limite del 250%%</string>
+    <string name="disable_vibration">Erogazione bolo manuale: disabilita vibrazioni</string>
+    <string name="disable_vibration_summary">Per bolo e bolo esteso (disponibile solo con firmware Insight 3.x)</string>
+    <string name="disable_vibration_auto">Erogazione bolo automatica: disabilita vibrazioni</string>
+    <string name="disable_vibration_auto_summary">Per SMB e basale temporanea con emulazione TBR (disponibile solo con firmware Insight 3.x)</string>
     <string name="disconnect_delay">Ritardo disconnessione [s]</string>
     <string name="serial_number">Numero seriale</string>
     <string name="release_software_version">Versione Release software</string>

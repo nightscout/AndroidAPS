@@ -29,6 +29,9 @@
     <string name="batterydischarged">Baterie v pumpě vybitá</string>
     <string name="occlusion">Okluze</string>
     <string name="emptyreservoir">Prázdný zásobník</string>
+    <string name="checkshaft">Zkontrolovat hřídel</string>
+    <string name="basalmax">Max. bazál</string>
+    <string name="dailymax">Max. denní</string>
     <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
     <string name="remaininsulinalert">Zbývající inzulín</string>
     <string name="missedbolus">Chybějící bolus</string>

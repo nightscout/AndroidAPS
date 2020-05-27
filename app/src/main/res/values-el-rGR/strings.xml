@@ -386,12 +386,6 @@
     <string name="careportal_insulinage_label">Χρόνος ζωής Ινσουλίνης</string>
     <string name="careportal_pbage_label">Χρόνος ζωής μπαταρίας αντλίας</string>
     <string name="ns_alarmoptions">Επιλογές συναγερμού</string>
-    <string name="nsalarm_urgenthigh">Επείγον υψηλό</string>
-    <string name="nsalarm_high">Υψηλό</string>
-    <string name="nsalarm_low">Χαμηλό</string>
-    <string name="nsalarm_urgentlow">Επείγον χαμηλό</string>
-    <string name="nsalarm_staledata">Παλιά δεδομένα</string>
-    <string name="nsalarm_urgentstaledata">Επείγον παλιά δεδομένα</string>
     <string name="nsalarm_staledatavalue_label">Οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Επείγουσα οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="openapsama_autosens_period">Εσωτερικά διαστήματα για autosense [h] </string>
