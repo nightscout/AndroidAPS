@@ -52,16 +52,16 @@ object OpenHumansUploader : PluginBase(
 
     private val log = LoggerFactory.getLogger(L.OPENHUMANS)
 
-    const val OPEN_HUMANS_URL = "https://www.openhumans.org"
-    const val CLIENT_ID = "oie6DvnaEOagTxSoD6BukkLPwDhVr6cMlN74Ihz1"
-    const val CLIENT_SECRET = "jR0N8pkH1jOwtozHc7CsB1UPcJzFN95ldHcK4VGYIApecr8zGJox0v06xLwPLMASScngT12aIaIHXAVCJeKquEXAWG1XekZdbubSpccgNiQBmuVmIF8nc1xSKSNJltCf"
-    const val REDIRECT_URL = "androidaps://setup-openhumans"
+    private const val OPEN_HUMANS_URL = "https://www.openhumans.org"
+    private const val CLIENT_ID = "oie6DvnaEOagTxSoD6BukkLPwDhVr6cMlN74Ihz1"
+    private const val CLIENT_SECRET = "jR0N8pkH1jOwtozHc7CsB1UPcJzFN95ldHcK4VGYIApecr8zGJox0v06xLwPLMASScngT12aIaIHXAVCJeKquEXAWG1XekZdbubSpccgNiQBmuVmIF8nc1xSKSNJltCf"
+    private const val REDIRECT_URL = "androidaps://setup-openhumans"
     const val AUTH_URL = "https://www.openhumans.org/direct-sharing/projects/oauth2/authorize/?client_id=$CLIENT_ID&response_type=code"
     const val WORK_NAME = "Open Humans"
-    const val COPY_NOTIFICATION_ID = 3122
-    const val FAILURE_NOTIFICATION_ID = 3123
-    const val SUCCESS_NOTIFICATION_ID = 3124
-    const val SIGNED_OUT_NOTIFICATION_ID = 3125
+    private const val COPY_NOTIFICATION_ID = 3122
+    private const val FAILURE_NOTIFICATION_ID = 3123
+    private const val SUCCESS_NOTIFICATION_ID = 3124
+    private const val SIGNED_OUT_NOTIFICATION_ID = 3125
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
     private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
@@ -123,13 +123,13 @@ object OpenHumansUploader : PluginBase(
         super.onStart()
         setupNotificationChannel()
         if (isSetup) scheduleWorker(false)
-        SP.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        SP.registerListener(this)
     }
 
     override fun onStop() {
         copyDisposable?.dispose()
         cancelWorker()
-        SP.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        SP.unregisterListener(this)
         super.onStop()
     }
 
@@ -250,7 +250,7 @@ object OpenHumansUploader : PluginBase(
         put("result", result)
     }
 
-    fun enqueueAMAData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONObject, mealData: JSONObject, currentTemp: JSONObject, result: JSONObject) = insertQueueItem("APSData") {
+    fun enqueueMAData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONObject, mealData: JSONObject, currentTemp: JSONObject, result: JSONObject) = insertQueueItem("APSData") {
         put("algorithm", "MA")
         put("profile", profile)
         put("glucoseStatus", glucoseStatus)
@@ -290,6 +290,9 @@ object OpenHumansUploader : PluginBase(
                 copyExistingDataToQueue()
                 RxBus.send(OpenHumansFragment.UpdateViewEvent)
             }
+            .doOnError {
+                log.error("Failed to login to Open Humans", it)
+            }
             .ignoreElement()
 
     fun logout() {
@@ -318,22 +321,22 @@ object OpenHumansUploader : PluginBase(
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
-            .map { enqueueCareportalEvent(it); increaseCounter()  }
+            .map { enqueueCareportalEvent(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allExtendedBoluses) })
-            .map { enqueueExtendedBolus(it); increaseCounter()  }
+            .map { enqueueExtendedBolus(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allProfileSwitches) })
-            .map { enqueueProfileSwitch(it); increaseCounter()  }
+            .map { enqueueProfileSwitch(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTDDs) })
-            .map { enqueueTotalDailyDose(it); increaseCounter()  }
+            .map { enqueueTotalDailyDose(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTemporaryBasals) })
-            .map { enqueueTemporaryBasal(it); increaseCounter()  }
+            .map { enqueueTemporaryBasal(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTempTargets) })
-            .map { enqueueTempTarget(it); increaseCounter()  }
+            .map { enqueueTempTarget(it); increaseCounter() }
             .ignoreElements()
             .doOnSubscribe {
                 wakeLock.acquire(TimeUnit.MINUTES.toMillis(20))
@@ -362,7 +365,8 @@ object OpenHumansUploader : PluginBase(
             .setContentTitle(MainApp.gs(R.string.finishing_open_humans_setup))
             .setContentText(MainApp.gs(R.string.this_may_take_a_while))
             .setStyle(NotificationCompat.BigTextStyle())
-            .setProgress(maxProgress?.toInt() ?: 0, currentProgress?.toInt() ?: 0, maxProgress == null || currentProgress == null)
+            .setProgress(maxProgress?.toInt() ?: 0, currentProgress?.toInt()
+                ?: 0, maxProgress == null || currentProgress == null)
             .setOngoing(true)
             .setAutoCancel(false)
             .setSmallIcon(R.drawable.notif_icon)
@@ -406,8 +410,15 @@ object OpenHumansUploader : PluginBase(
             if (it is OpenHumansAPI.OHHttpException && it.code == 401 && it.detail == "Invalid token.") {
                 handleSignOut()
             }
+            log.error("Error while uploading to Open Humans", it)
         }
-        .doOnComplete { RxBus.send(OpenHumansFragment.UpdateQueueEvent) }
+        .doOnComplete {
+            log.info("Upload successful")
+            RxBus.send(OpenHumansFragment.UpdateQueueEvent)
+        }
+        .doOnSubscribe {
+            log.info("Starting upload")
+        }
 
     private fun uploadFile(accessToken: String, uploadData: UploadData) = Completable.defer {
         openHumansAPI.prepareFileUpload(accessToken, uploadData.fileName, uploadData.metadata)
@@ -450,7 +461,7 @@ object OpenHumansUploader : PluginBase(
         zos.writeFile("ApplicationInfo.json", applicationInfo.toString().toByteArray())
         tags.add("ApplicationInfo")
 
-        val preferences = JSONObject(SP.sharedPreferences.all.filterKeys { it.isAllowedKey() })
+        val preferences = JSONObject(SP.getAll().filterKeys { it.isAllowedKey() })
         zos.writeFile("Preferences.json", preferences.toString().toByteArray())
         tags.add("Preferences")
 

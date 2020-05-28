@@ -6,12 +6,12 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposables
 import okhttp3.*
+import okio.BufferedSink
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import okio.BufferedSink
 
 class OpenHumansAPI(
     private val baseUrl: String,
@@ -32,7 +32,7 @@ class OpenHumansAPI(
     fun refreshAccessToken(refreshToken: String): Single<OAuthTokens> = sendTokenRequest(FormBody.Builder()
         .add("grant_type", "refresh_token")
         .add("redirect_uri", redirectUri)
-        .add("code", refreshToken)
+        .add("refresh_token", refreshToken)
         .build())
 
     private fun sendTokenRequest(body: FormBody) = Request.Builder()
@@ -49,8 +49,10 @@ class OpenHumansAPI(
                 if (jsonObject == null) throw OHHttpException(response.code, response.message, "No body")
                 if (!jsonObject.has("expires_in")) throw OHMissingFieldException("expires_in")
                 OAuthTokens(
-                    accessToken = jsonObject.getString("access_token") ?: throw OHMissingFieldException("access_token"),
-                    refreshToken = jsonObject.getString("refresh_token") ?: throw OHMissingFieldException("refresh_token"),
+                    accessToken = jsonObject.getString("access_token")
+                        ?: throw OHMissingFieldException("access_token"),
+                    refreshToken = jsonObject.getString("refresh_token")
+                        ?: throw OHMissingFieldException("refresh_token"),
                     expiresAt = response.sentRequestAtMillis + jsonObject.getInt("expires_in") * 1000L
                 )
             }
@@ -61,7 +63,10 @@ class OpenHumansAPI(
         .get()
         .build()
         .toSingle()
-        .map { it.jsonBody.getString("project_member_id") ?: throw OHMissingFieldException("project_member_id") }
+        .map {
+            it.jsonBody.getString("project_member_id")
+                ?: throw OHMissingFieldException("project_member_id")
+        }
 
     fun prepareFileUpload(accessToken: String, fileName: String, metadata: FileMetadata): Single<PreparedUpload> = Request.Builder()
         .url("$baseUrl/api/direct-sharing/project/files/upload/direct/?access_token=$accessToken")
@@ -109,7 +114,6 @@ class OpenHumansAPI(
         .doOnSuccess { it.jsonBody }
         .ignoreElement()
 
-
     private fun Request.toSingle() = Single.create<Response> {
         val call = client.newCall(this)
         call.enqueue(object : Callback {
@@ -124,11 +128,13 @@ class OpenHumansAPI(
         it.setDisposable(Disposables.fromRunnable { call.cancel() })
     }
 
-    private val Response.jsonBody get() = use { _ ->
-        val jsonObject = body?.let { JSONObject(it.string()) } ?: throw OHHttpException(code, message, null)
-        if (!isSuccessful) throw OHHttpException(code, message, jsonObject.getString("detail"))
-        jsonObject
-    }
+    private val Response.jsonBody
+        get() = use { _ ->
+            val jsonObject = body?.let { JSONObject(it.string()) }
+                ?: throw OHHttpException(code, message, null)
+            if (!isSuccessful) throw OHHttpException(code, message, jsonObject.getString("detail"))
+            jsonObject
+        }
 
     data class OAuthTokens(
         val accessToken: String,
@@ -144,6 +150,7 @@ class OpenHumansAPI(
         val startDate: Long? = null,
         val endDate: Long? = null
     ) {
+
         fun toJSON(): JSONObject {
             val jsonObject = JSONObject()
             jsonObject.put("tags", JSONArray().apply { tags.forEach { put(it) } })
@@ -166,12 +173,14 @@ class OpenHumansAPI(
         val meaning: String,
         val detail: String?
     ) : RuntimeException() {
+
         override val message: String get() = toString()
     }
 
     data class OHMissingFieldException(
         val name: String
     ) : RuntimeException() {
+
         override val message: String get() = toString()
     }
 

@@ -106,7 +106,7 @@ public class DetermineBasalAdapterMAJS {
                     log.debug("Result: " + result);
                 try {
                     JSONObject resultJson = new JSONObject(result);
-                    OpenHumansUploader.INSTANCE.enqueueAMAData(mProfile, mGlucoseStatus, mIobData, mMealData, mCurrentTemp, resultJson);
+                    OpenHumansUploader.INSTANCE.enqueueMAData(mProfile, mGlucoseStatus, mIobData, mMealData, mCurrentTemp, resultJson);
                     determineBasalResultMA = new DetermineBasalResultMA(jsResult, resultJson);
                 } catch (JSONException e) {
                     log.error("Unhandled exception", e);

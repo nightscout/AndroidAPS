@@ -12,7 +12,7 @@ import info.nightscout.androidaps.MainApp;
  */
 
 public class SP {
-    public static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+    private static final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
     static public Map<String, ?> getAll() {
         return sharedPreferences.getAll();
@@ -24,6 +24,14 @@ public class SP {
 
     static public boolean contains(String key) {
         return sharedPreferences.contains(key);
+    }
+
+    static public void registerListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    static public void unregisterListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     static public boolean contains(int resourceId) {
