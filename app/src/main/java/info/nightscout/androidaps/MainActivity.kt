@@ -94,7 +94,6 @@ import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_arrow
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_bg
-import kotlinx.android.synthetic.main.overview_statuslights_layout.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_batterylevel
 import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_canulaage
 import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_insulinage

@@ -18,11 +18,13 @@ import info.nightscout.androidaps.utils.textValidator.EditTextValidator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.danars_enter_pin_activity.*
+import kotlinx.android.synthetic.main.danars_pairingprogressdialog.*
+import kotlinx.android.synthetic.main.danars_pairingprogressdialog.ok
 import kotlinx.android.synthetic.main.okcancel.*
 import javax.inject.Inject
 import kotlin.experimental.xor
 
-class EnterPinActivity : NoSplashAppCompatActivity() {
+class EnterPinActivity : info.nightscout.androidaps.activities.NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy

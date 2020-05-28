@@ -117,7 +117,7 @@
     </style>
 
     <style name="AppTheme.base" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:textColorSecondary">@color/mdtp_white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -133,6 +133,7 @@
         <item name="colorAccent">@color/secondaryColorRed</item>
         <item name="overviewPillColor">@color/overviewPillColorRed</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
         <item name="bgInRange">@color/primaryColorPurple</item>
         <!-- Color of pills -->
@@ -156,6 +157,7 @@
         <item name="android:textColorPrimary">@color/primaryTextColorPink</item>
         <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="overviewPillColor">@color/overviewPillColorPink</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
         <item name="PillColorStart">@color/primaryColorPinkVariant</item>
@@ -178,6 +180,7 @@
         <item name="colorAccent">@color/secondaryColorPurple</item>
         <item name="overviewPillColor">@color/overviewPillColorPurple</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -188,6 +191,7 @@
         <item name="colorAccent">@color/secondaryColorDeepPurple</item>
         <item name="overviewPillColor">@color/overviewPillColorDeepPurple</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -198,6 +202,7 @@
         <item name="colorAccent">@color/secondaryColorIndigo</item>
         <item name="overviewPillColor">@color/overviewPillColorIndigo</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -208,6 +213,7 @@
         <item name="colorAccent">@color/secondaryColorBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorBlue</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="android:windowBackground">@drawable/frozen04</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/black</item>
@@ -221,6 +227,7 @@
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorLightBlue</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -231,6 +238,7 @@
         <item name="colorAccent">@color/secondaryColorCyan</item>
         <item name="overviewPillColor">@color/overviewPillColorCyan</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -301,6 +309,7 @@
         <item name="colorAccent">@color/secondaryColorAmber</item>
         <item name="overviewPillColor">@color/overviewPillColorAmber</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -311,6 +320,7 @@
         <item name="colorAccent">@color/secondaryColorOrange</item>
         <item name="overviewPillColor">@color/overviewPillColorOrange</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/black_alpha_80</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -352,6 +362,7 @@
         <item name="colorAccent">@color/secondaryColorBlueGray</item>
         <item name="overviewPillColor">@color/overviewPillColorBlueGray</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 

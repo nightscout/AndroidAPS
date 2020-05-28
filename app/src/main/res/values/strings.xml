@@ -1693,5 +1693,6 @@
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
 
     <string name="nav_themeselector">Set Colors</string>
+    <string name="theme_save">Save</string>
 
 </resources>

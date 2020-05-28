@@ -27,7 +27,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
+class DanaUserOptionsActivity : info.nightscout.androidaps.activities.NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy

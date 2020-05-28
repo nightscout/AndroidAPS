@@ -26,7 +26,6 @@
 
             <include layout="@layout/overview_info_layout" />
 
-            <include layout="@layout/overview_statuslights_layout" />
 
             <TextView
                 android:id="@+id/overview_pump"

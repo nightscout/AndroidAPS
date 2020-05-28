@@ -2,11 +2,13 @@ package info.nightscout.androidaps.plugins.treatments.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -30,11 +32,14 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.loop_fragment.*
 import kotlinx.android.synthetic.main.treatments_bolus_fragment.*
 import javax.inject.Inject
 
 class TreatmentsBolusFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
@@ -56,12 +61,32 @@ class TreatmentsBolusFragment : DaggerFragment() {
         treatments_recyclerview.setHasFixedSize(true)
         treatments_recyclerview.layoutManager = LinearLayoutManager(view.context)
         treatments_recyclerview.adapter = RecyclerViewAdapter(treatmentsPlugin.treatmentsFromHistory)
-        treatments_reshreshfromnightscout.setOnClickListener {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?", Runnable {
-                    treatmentsPlugin.service.resetTreatments()
-                    rxBus.send(EventNSClientRestart())
-                })
+
+        swipeRefreshBolus.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefreshBolus.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, false)
+        if (nsUploadOnly) {
+            swipeRefreshBolus.isEnabled = false
+        } else {
+            swipeRefreshBolus.setOnRefreshListener {
+                mRunnable = Runnable {
+                    activity?.let { activity ->
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?", Runnable {
+                            treatmentsPlugin.service.resetTreatments()
+                            rxBus.send(EventNSClientRestart())
+                        })
+                    }
+                    swipeRefreshBolus.isRefreshing = false
+                }
+                // Execute the task after specified time
+                mHandler.postDelayed(
+                    mRunnable,
+                    (3000).toLong() // Delay 1 to 5 seconds
+                )
             }
         }
         treatments_delete_future_treatments.setOnClickListener {
@@ -79,8 +104,6 @@ class TreatmentsBolusFragment : DaggerFragment() {
                 })
             }
         }
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, false)
-        if (nsUploadOnly) treatments_reshreshfromnightscout.visibility = View.GONE
     }
 
     @Synchronized override fun onResume() {

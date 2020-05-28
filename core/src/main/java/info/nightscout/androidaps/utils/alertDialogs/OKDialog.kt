@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.SystemClock
 import android.text.Spanned
+import android.view.ContextThemeWrapper
+import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
 
@@ -38,7 +40,7 @@ object OKDialog {
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
 
-        AlertDialogHelper.Builder(activity)
+        AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AppTheme))
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptytitle))
             .setMessage(message)
             .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->

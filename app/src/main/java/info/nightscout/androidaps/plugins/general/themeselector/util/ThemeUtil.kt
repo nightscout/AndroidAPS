@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.themeselector.util
 
+import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme
 import java.util.*

@@ -26,6 +26,7 @@ public class ThemeView extends View {
     private Paint mPrimaryPaint;
     private Paint mPrimaryDarkPaint;
     private Paint mAccentPaint;
+    private Paint mThemeTextPaint;
     private Paint mBackgroundPaint;
 
     private TextView themeLabel;
@@ -97,6 +98,11 @@ public class ThemeView extends View {
             mAccentPaint.setColor(ContextCompat.getColor(getContext(), mTheme.getAccentColor()));
             mAccentPaint.setAntiAlias(true);
             mAccentPaint.setDither(true);
+
+            mThemeTextPaint = new Paint();
+            mThemeTextPaint.setStyle(Paint.Style.FILL);
+            mThemeTextPaint.setTextSize(45);
+            mThemeTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -123,5 +129,6 @@ public class ThemeView extends View {
         canvas.drawRect(0,statusbar,width,toolbar,mPrimaryPaint);
         canvas.drawCircle(width-stroke-height*20 /100f,toolbar, height*16/100, mAccentPaint);
         canvas.drawRect(0,0,width,height,mBoarderPaint);
+        canvas.drawText("Theme name",15,50, mThemeTextPaint);
     }
 }

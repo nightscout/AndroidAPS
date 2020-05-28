@@ -24,7 +24,7 @@ import java.util.*
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class BLEScanActivity : NoSplashAppCompatActivity() {
+class BLEScanActivity : info.nightscout.androidaps.activities.NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper

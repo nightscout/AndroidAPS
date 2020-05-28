@@ -68,7 +68,8 @@
         </activity>
         <activity android:name=".plugins.general.themeselector.ScrollingActivity" />
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
-        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
+        <activity android:name=".historyBrowser.HistoryBrowseActivity"
+            android:theme="@style/AppTheme"  />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />
 

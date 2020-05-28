@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="2dp"
     tools:context=".plugins.general.maintenance.MaintenanceFragment">
 
@@ -10,83 +11,107 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_logsettings"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:text="@string/nav_logsettings"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
-       <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/log_send"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:text="@string/send_all_logs"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/log_delete"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:text="@string/delete_logs"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_export"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:text="@string/nav_export"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_import"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:text="@string/nav_import"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_resetdb"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:text="@string/nav_resetdb"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
     </LinearLayout>
 

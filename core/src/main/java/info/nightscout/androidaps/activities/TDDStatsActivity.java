@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -281,7 +282,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 sp.putString("TBB", totalBaseBasal.getText().toString());
                 TBB = sp.getString("TBB", "");
                 loadDataFromDB();
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(totalBaseBasal.getWindowToken(), 0);
             }
         });
