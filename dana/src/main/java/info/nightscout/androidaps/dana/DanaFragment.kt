@@ -6,6 +6,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
@@ -48,6 +49,8 @@ class DanaFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
 
@@ -65,6 +68,28 @@ class DanaFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        swipeRefresh_dana_rs.setColorSchemeResources(resourceHelper.gc(R.color.carbs), resourceHelper.gc(R.color.green), resourceHelper.gc(R.color.blue))
+        swipeRefresh_dana_rs.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, resourceHelper.gc(R.color.swipe_background), null))
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        swipeRefresh_dana_rs.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                swipeRefresh_dana_rs.isRefreshing = false
+                aapsLogger.debug(LTag.PUMP, "swiped to connect to pump")
+                danaPump.lastConnection = 0
+                commandQueue.readStatus("Swiped to connect to pump", null)
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
+        }
 
         dana_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 

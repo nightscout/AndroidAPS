@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/virtualpump_extendedbolus_label"
+                android:tint="?attr/iconColorToolbar"
                 android:src="@drawable/icon_actions_startextbolus" />
 
             <TextView
@@ -35,7 +36,7 @@
                 android:layout_marginRight="10dp"
                 android:text="@string/virtualpump_extendedbolus_label"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 

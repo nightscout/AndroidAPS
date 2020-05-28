@@ -11,7 +11,7 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme_NoActionBar)
+        //setTheme(R.style.AppTheme_NoActionBar)
     }
 
     public override fun attachBaseContext(newBase: Context) {

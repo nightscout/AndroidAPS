@@ -26,9 +26,14 @@ import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView;
 
 import static info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE;
 
-public class ScrollingActivity extends MainActivity implements View.OnClickListener{
+public class ScrollingActivity  extends MainActivity implements View.OnClickListener{
+
     public static List<Theme> mThemeList = new ArrayList<>();
-    public static int selectedTheme = 0;
+    public static int selectedTheme;
+    static {
+        selectedTheme = 0;
+    }
+
     private RecyclerView mRecyclerView;
     private ThemeAdapter mAdapter;
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -109,7 +114,7 @@ public class ScrollingActivity extends MainActivity implements View.OnClickListe
         mAdapter.notifyDataSetChanged();
     }
 
-
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.theme_selected :

@@ -7,6 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -560,21 +564,43 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
         if (tempTarget != null) {
-            overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-            overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
+            val drawable: Drawable = overview_temptarget.getBackground()
+            val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
+            if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextWarning)?.let { drawableLeft[0]!!.setTint(it) }
+            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
+            resourceHelper?.gc(R.color.ribbonTextWarning)?.let { overview_temptarget.setTextColor(it) }
+            overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
             if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
-                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+                val drawable: Drawable = overview_temptarget.getBackground()
+                val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
+                if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextWarning)?.let { drawableLeft[0]!!.setTint(it) }
+                drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
+                resourceHelper.gc(R.color.ribbonTextWarning)?.let { overview_temptarget.setTextColor(it) }
+                overview_activeprofile.setTypeface(null, Typeface.BOLD)
             } else {
-                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-                overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                val drawableLeft: Array<Drawable?> = overview_temptarget.getCompoundDrawables()
+                val theme = requireContext().theme
+                if (theme != null) {
+                    // create a gradient drawable
+                    overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                    val typedValueStart = TypedValue()
+                    theme.resolveAttribute(R.attr.PillColorStart, typedValueStart, true)
+                    val typedValueEnd = TypedValue()
+                    theme.resolveAttribute(R.attr.PillColorEnd, typedValueEnd, true)
+                    val colors = intArrayOf(typedValueStart.data, typedValueEnd.data)
+                    val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
+                    gradientDrawable.shape = GradientDrawable.RECTANGLE
+                    gradientDrawable.cornerRadius = 40f
+                    overview_temptarget.setBackground(gradientDrawable)
+                    if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextDefault)?.let { drawableLeft[0]!!.setTint(it) }
+                    resourceHelper?.gc(R.color.ribbonTextDefault)?.let { overview_temptarget.setTextColor(it) }
+                }
             }
         }
 
@@ -611,14 +637,33 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_extended_llayout?.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
-        // Active profile
-        overview_activeprofile?.text = profileFunction.getProfileNameWithDuration()
+        // Active profile pill button
+        overview_activeprofile?.setText(profileFunction.getProfileNameWithDuration())
         if (profile.percentage != 100 || profile.timeshift != 0) {
-            overview_activeprofile?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-            overview_activeprofile?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+            val drawable: Drawable = overview_activeprofile.getBackground()
+            val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
+            if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextWarning)?.let { drawableLeft[0]!!.setTint(it) }
+            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
+            resourceHelper?.gc(R.color.ribbonTextWarning)?.let { overview_activeprofile.setTextColor(it) }
+            overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
-            overview_activeprofile?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-            overview_activeprofile?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+            val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
+            val typedValue = TypedValue()
+            val theme = requireContext().theme
+            if (theme != null) {
+                // create a gradient drawable
+                val typedValueStart = TypedValue()
+                theme.resolveAttribute(R.attr.PillColorStart, typedValueStart, true)
+                val typedValueEnd = TypedValue()
+                theme.resolveAttribute(R.attr.PillColorEnd, typedValueEnd, true)
+                val colors = intArrayOf(typedValueStart.data, typedValueEnd.data)
+                val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
+                gradientDrawable.shape = GradientDrawable.RECTANGLE
+                gradientDrawable.cornerRadius = 40f
+                overview_activeprofile.setBackground(gradientDrawable)
+                if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextDefault)?.let { drawableLeft[0]!!.setTint(it) }
+                resourceHelper?.gc(R.color.ribbonTextDefault)?.let { overview_activeprofile.setTextColor(it) }
+            }
         }
 
         processButtonsVisibility()

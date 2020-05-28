@@ -51,5 +51,10 @@
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
 
+    <!---Swipe on refresh colors-->
+    <color name="orange">#FF9900</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
+    <color name="swipe_background">#121212</color>
 
 </resources>

@@ -30,6 +30,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
+import com.ms_square.etsyblur.BlurSupport
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
@@ -57,9 +58,9 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE
-import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_PINK
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
@@ -107,7 +108,6 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
-import kotlin.properties.Delegates
 import kotlin.system.exitProcess
 
 open class MainActivity : NoSplashAppCompatActivity() {
@@ -209,6 +209,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
             main_drawer_layout.addDrawerListener(it)
             it.syncState()
         }
+
+        BlurSupport.addTo(main_drawer_layout)
 
         fab.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
 
@@ -483,42 +485,42 @@ open class MainActivity : NoSplashAppCompatActivity() {
             overview_apsmode?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_superbolus)
+                    overview_apsmode?.setImageResource(R.drawable.loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_disconnected)
+                    overview_apsmode?.setImageResource(R.drawable.loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_paused)
+                    overview_apsmode?.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_paused)
+                    overview_apsmode?.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_lgs)
+                    overview_apsmode?.setImageResource(R.drawable.loop_lgs)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_closed)
+                    overview_apsmode?.setImageResource(R.drawable.loop_closed)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_open)
+                    overview_apsmode?.setImageResource(R.drawable.loop_open)
                     overview_apsmode_text?.text = ""
                 }
 
                 else                                                                    -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_disabled)
+                    overview_apsmode?.setImageResource(R.drawable.loop_disabled)
                     overview_apsmode_text?.text = ""
                 }
             }
@@ -771,7 +773,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             }
 
             R.id.nav_themeselector        -> {
-                startActivity(Intent(this, SetupWizardActivity::class.java))
+                startActivity(Intent(this, ScrollingActivity::class.java))
                 return true
             }
 

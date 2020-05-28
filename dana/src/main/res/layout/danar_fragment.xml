@@ -1,20 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="5dp"
-    tools:context="info.nightscout.androidaps.dana.DanaFragment">
-
-
-    <RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="5dp"
+        android:background="?attr/fragmentbackground"
+        tools:context="info.nightscout.androidaps.dana.DanaRFragment">
 
-        <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id = "@+id/swipeRefresh_dana_rs"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main_activity_content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/danar_buttons"
-            android:fillViewport="true">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,6 +42,20 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
+
+                <!-- Dana pump -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:drawableTop="@drawable/ic_dana_rs" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -684,8 +701,6 @@
 
             </LinearLayout>
 
-        </ScrollView>
-
         <LinearLayout
             android:id="@+id/danar_buttons"
             android:layout_width="match_parent"
@@ -747,6 +762,7 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 
-</FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout >

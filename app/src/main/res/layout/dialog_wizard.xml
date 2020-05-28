@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
+                android:tint="?attr/iconColorToolbar"
                 android:src="@drawable/icon_calculator" />
 
             <TextView
@@ -36,7 +37,7 @@
                 android:layout_marginRight="10dp"
                 android:text="@string/boluswizard"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 

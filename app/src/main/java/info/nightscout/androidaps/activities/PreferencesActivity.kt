@@ -5,17 +5,24 @@ import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     @Inject lateinit var resourceHelper: ResourceHelper
-
+    @Inject lateinit var sp: SP
     var preferenceId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // sets theme and color
+        val newTheme: Int = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        setTheme(ThemeUtil.getThemeId(newTheme))
+
         setContentView(R.layout.activity_single_fragment)
         title = resourceHelper.gs(R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

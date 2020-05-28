@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.themeselector.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity;
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme;
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-
-import static info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE;
 
 public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder> {
 
@@ -41,7 +39,9 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
         public void onClick(View view) {
             mListener.onClick(view, getAdapterPosition());
             ScrollingActivity.selectedTheme = getAdapterPosition();
-            sp.putInt("theme", ScrollingActivity.mThemeList.get(getAdapterPosition()).getId());
+            int mTheme = ScrollingActivity.mThemeList.get(getAdapterPosition()).getId();
+            Log.d("TAG", "theme id: " + mTheme);
+            //sp.putInt("theme", mTheme);
             themeView.setActivated(true);
             ThemeAdapter.this.notifyDataSetChanged();
         }
