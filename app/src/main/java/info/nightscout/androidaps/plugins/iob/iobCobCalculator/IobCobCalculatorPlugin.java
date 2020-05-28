@@ -814,9 +814,9 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         getAapsLogger().debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + dateUtil.dateAndTimeString(end));
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             if (sensitivityOref1Plugin.isEnabled())
-                thread = new IobCobOref1Thread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause);
+                thread = new IobCobOref1Thread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             else
-                thread = new IobCobThread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause);
+                thread = new IobCobThread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             thread.start();
         }
     }
