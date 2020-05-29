@@ -213,6 +213,7 @@
         <item name="colorAccent">@color/secondaryColorBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorBlue</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorToolbar">@color/sphere_plastic_grey</item>
         <item name="iconColorbottomAppbar">@color/white</item>
         <item name="android:windowBackground">@drawable/frozen04</item>
         <item name="android:textColorPrimary">@color/black</item>
@@ -227,6 +228,7 @@
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorLightBlue</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorToolbar">@color/white</item>
         <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
