@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.treatments.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,11 +28,14 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.treatments_bolus_fragment.*
 import kotlinx.android.synthetic.main.treatments_careportal_fragment.*
 import javax.inject.Inject
 
 class TreatmentsCareportalFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
@@ -52,12 +56,26 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         careportal_recyclerview.setHasFixedSize(true)
         careportal_recyclerview.layoutManager = LinearLayoutManager(view.context)
         careportal_recyclerview.adapter = RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false))
-        careportal_refreshfromnightscout.setOnClickListener {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    MainApp.getDbHelper().resetCareportalEvents()
-                    rxBus.send(EventNSClientRestart())
-                })
+
+        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, false)
+        if (nsUploadOnly) {
+            swipeRefresh.isEnabled = false
+        } else {
+            swipeRefresh.setOnRefreshListener {
+                mRunnable = Runnable {
+                    activity?.let { activity ->
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
+                            MainApp.getDbHelper().resetCareportalEvents()
+                            rxBus.send(EventNSClientRestart())
+                        })
+                    }
+                    swipeRefresh.isRefreshing = false
+                }
+                // Execute the task after specified time
+                mHandler.postDelayed(
+                    mRunnable,
+                    (3000).toLong() // Delay 1 to 5 seconds
+                )
             }
         }
         careportal_removeandroidapsstartedevents.setOnClickListener {
@@ -78,8 +96,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             }
         }
 
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, false)
-        if (nsUploadOnly) careportal_refreshfromnightscout.visibility = View.GONE
     }
 
     @Synchronized override fun onResume() {
