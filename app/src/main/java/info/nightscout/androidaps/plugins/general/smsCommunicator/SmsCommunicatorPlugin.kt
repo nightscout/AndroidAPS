@@ -480,18 +480,26 @@ class SmsCommunicatorPlugin @Inject constructor(
             })
         } else if (splitted.size == 3) {
             if (splitted[1].equals("DISCONNECT", ignoreCase = true)) {
-                val minutes = SafeParse.stringToInt(splitted[2])
-                val passCode = generatePasscode()
-                val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpdisconnectwithcode), minutes, passCode)
-                receivedSms.processed = true
-                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
-                    override fun run() {
-                        val profile = profileFunction.getProfile()
-                        loopPlugin.disconnectPump(minutes, profile)
-                        rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
-                        sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
-                    }
-                })
+                var duration = SafeParse.stringToInt(splitted[2])
+                duration = Math.max(0, duration)
+                duration = Math.min(120, duration)
+                if (duration == 0) {
+                    receivedSms.processed = true
+                    sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_wrongduration)))
+                    return
+                } else {
+                    val passCode = generatePasscode()
+                    val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpdisconnectwithcode), duration, passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                        override fun run() {
+                            val profile = profileFunction.getProfile()
+                            loopPlugin.disconnectPump(duration, profile)
+                            rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
+                            sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
+                        }
+                    })
+                }
             } else {
                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 return
