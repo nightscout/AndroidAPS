@@ -1382,13 +1382,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         pumpID.eventID = event.getEventPosition();
         pumpID.pumpSerial = serial;
         pumpID.eventType = "EndOfTBR";
-        pumpID.timestamp = timestamp - 1500L;
+        pumpID.timestamp = timestamp;
         MainApp.getDbHelper().createOrUpdate(pumpID);
         TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
         temporaryBasal.durationInMinutes = 0;
         temporaryBasal.source = Source.PUMP;
         temporaryBasal.pumpId = pumpID.id;
-        temporaryBasal.date = timestamp;
+        temporaryBasal.date = timestamp - 1500L;
         temporaryBasals.add(temporaryBasal);
     }
 
