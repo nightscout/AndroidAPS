@@ -33,6 +33,14 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Rebase with current dev by philoul on 03/02/2020
  */
 
+/* Todo: Reset results field when
+*       1   lastrun is older than Today 4 AM
+*       2   Nb of day is changed
+* Memorise NbDay of lastRun (inconsistencies if you leave AutotunePlugin and enter again in it (results of calculation still shown but default nb of days selected
+* Add rxBus, and event management to update field results during calculation (calculation as to be in dedicated thread
+* Add Copy to localPlugin button (to allow modification of tuned profile before ProfileSwitch
+* Enable Direct ProfileSwitch button (and probably refactor UI)
+*/
 public class AutotuneFragment extends DaggerFragment implements View.OnClickListener {
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject AutotunePlugin autotunePlugin;

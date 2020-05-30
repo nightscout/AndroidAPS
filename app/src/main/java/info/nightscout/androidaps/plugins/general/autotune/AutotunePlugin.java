@@ -158,14 +158,11 @@ public class AutotunePlugin extends PluginBase {
 
         autotuneFS.exportPumpProfile(pumpprofile);
 
-        int toMgDl = 1;
-        if(profileFunction.getUnits().equals("mmol"))
-            toMgDl = 18;
-
         if(daysBack < 1){
             //todo add string
             return "Sorry I cannot do it for less than 1 day!";
         } else {
+            // todo Add loop below (including result presentation) in a dedicated thread
             for (int i = 0; i < daysBack; i++) {
                 // get 24 hours BG values from 4 AM to 4 AM next day
                 long from = starttime + i * 24 * 60 * 60 * 1000L;
@@ -195,44 +192,8 @@ public class AutotunePlugin extends PluginBase {
         }
 
         if(tunedProfile.profile != null) {
-            DecimalFormat df = new DecimalFormat("0.000");
-            DecimalFormat ef = new DecimalFormat("00");
-            String line = "---------------------------------------------------\n";
 
-            //Todo add Strings and format for all results presentation
-            //Todo Replace % of modification by number of missing days for each hour
-            //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
-            result = line;
-            // show ISF and CR
-            result += "|  ISF | " + df.format(pumpprofile.isf / toMgDl) + " |  " + df.format(tunedProfile.isf / toMgDl)+" |\n";
-            result += line;
-            result += "|  IC  | " + df.format(pumpprofile.ic) + "  | " + df.format(tunedProfile.ic) + " |\n";
-            result += line;
-            result += "|Hour| Profile | Tuned |nbKo|Miss.days/%\n";
-            result += line;
-            double totalBasal = 0d;
-            double totalTuned = 0d;
-            for (int i = 0; i < 24; i++) {
-                String basalString = df.format(pumpprofile.basal[i]);
-                String tunedString = df.format(tunedProfile.basal[i]);
-                totalBasal +=pumpprofile.basal[i];
-                totalTuned +=tunedProfile.basal[i];
-                int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpprofile.basal[i]) * 100 - 100) ;
-                String percentageChange;
-                if (percentageChangeValue == 0)
-                    percentageChange = "0%";
-                else if (percentageChangeValue < 0)
-                    percentageChange = "" + percentageChangeValue + "%";
-                else
-                    percentageChange = "+" + percentageChangeValue +"%";
-
-                result += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
-            }
-            result += line;
-            result += "|    ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";
-            result += line;
-
-            atLog(result);
+            result = showResults(tunedProfile,pumpprofile);
 
             autotuneFS.exportResult(result);
 
@@ -249,6 +210,53 @@ public class AutotunePlugin extends PluginBase {
             return result;
         } else
             return "No Result";
+    }
+
+    private String showResults(ATProfile tunedProfile, ATProfile pumpProfile) {
+        int toMgDl = 1;
+        if(profileFunction.getUnits().equals("mmol"))
+            toMgDl = 18;
+
+        String strResult = "";
+        DecimalFormat df = new DecimalFormat("0.000");
+        DecimalFormat ef = new DecimalFormat("00");
+        String line = "---------------------------------------------------\n";
+
+        //Todo add Strings and format for all results presentation
+        //Todo Replace % of modification by number of missing days for each hour
+        //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
+        strResult = line;
+        // show ISF and CR
+        strResult += "|  ISF | " + df.format(pumpProfile.isf / toMgDl) + " |  " + df.format(tunedProfile.isf / toMgDl)+" |\n";
+        strResult += line;
+        strResult += "|  IC  | " + df.format(pumpProfile.ic) + "  | " + df.format(tunedProfile.ic) + " |\n";
+        strResult += line;
+        strResult += "|Hour| Profile | Tuned |nbKo|Miss.days/%\n";
+        strResult += line;
+        double totalBasal = 0d;
+        double totalTuned = 0d;
+        for (int i = 0; i < 24; i++) {
+            String basalString = df.format(pumpProfile.basal[i]);
+            String tunedString = df.format(tunedProfile.basal[i]);
+            totalBasal +=pumpProfile.basal[i];
+            totalTuned +=tunedProfile.basal[i];
+            int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpProfile.basal[i]) * 100 - 100) ;
+            String percentageChange;
+            if (percentageChangeValue == 0)
+                percentageChange = "0%";
+            else if (percentageChangeValue < 0)
+                percentageChange = "" + percentageChangeValue + "%";
+            else
+                percentageChange = "+" + percentageChangeValue +"%";
+
+            strResult += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
+        }
+        strResult += line;
+        strResult += "|    ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";
+        strResult += line;
+
+        atLog(strResult);
+        return strResult;
     }
 
     private String settings (Date runDate, int nbDays, Date firstloopstart, Date lastloopend) {
