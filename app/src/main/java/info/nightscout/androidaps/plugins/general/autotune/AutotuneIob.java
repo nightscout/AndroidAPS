@@ -121,7 +121,7 @@ public class AutotuneIob {
         //initializeProfileSwitchData(from-range(), to);
         //NsTreatment is used to export all "ns-treatments" for cross execution of oref0-autotune on a virtual machine
         //it contains traitments, tempbasals and extendedbolus data (profileswitch data also included in ns-treatment files are not used by oref0-autotune)
-        Collections.sort(nsTreatments, (o1, o2) -> (int) (o2.date  - o1.date) );
+        Collections.sort(nsTreatments, (o1, o2) -> (int) (o2.date  - o1.date));
     }
 
     private void initializeBgreadings(long from, long to) {
@@ -148,10 +148,48 @@ public class AutotuneIob {
     //nsTreatment is used only for export data
     private void initializeTempBasalData(long from, long to) {
         List<TemporaryBasal> temp = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from, to, false);
-        for (int i = 0; i < temp.size() ;i++) {
+        //first keep only valid data
+        for(int i=0; i<temp.size(); i++) {
+            if (!temp.get(i).isValid)
+                temp.remove(i--);
+        }
+        //Then add neutral TBR if start of next TBR is after the end of previous one
+        long previousend = temp.get(0).date + temp.get(0).getRealDuration() * 60 * 1000;
+        for(int i=0; i<temp.size(); i++) {
             TemporaryBasal tb = temp.get(i);
-            if(tb.date > from-range() && tb.date < to && tb.isValid)
+            if(tb.date < previousend + 60 * 1000) {                         // 1 min is minimum duration for TBR
                 nsTreatments.add(new NsTreatment(tb));
+                previousend = tb.date + tb.getRealDuration() * 60 * 1000;
+            } else {
+                int minutesToFill = (int) (tb.date - previousend)/(60*1000);
+                while (minutesToFill > 0) {
+                    Profile profile = profileFunction.getProfile(previousend);
+                    if ( Profile.secondsFromMidnight(tb.date) / 3600 == Profile.secondsFromMidnight(previousend) / 3600) {  // next tbr is in the same hour
+                        TemporaryBasal neutralTbr = new TemporaryBasal(injector);
+                        neutralTbr.date = previousend;
+                        neutralTbr.isValid=true;
+                        neutralTbr.absoluteRate = profile.getBasal(previousend);
+                        neutralTbr.durationInMinutes=minutesToFill;
+                        neutralTbr.isAbsolute = true;
+                        minutesToFill = 0;
+                        previousend += minutesToFill * 60 * 1000;
+                        nsTreatments.add(new NsTreatment(neutralTbr));
+                    } else {  //fill data until the end of current hour
+                        int minutesFilled = 60 - (Profile.secondsFromMidnight(previousend) % 60);
+                        TemporaryBasal neutralTbr = new TemporaryBasal(injector);
+                        neutralTbr.date = previousend;
+                        neutralTbr.isValid=true;
+                        neutralTbr.absoluteRate = profile.getBasal(previousend);
+                        neutralTbr.durationInMinutes=minutesFilled;
+                        neutralTbr.isAbsolute = true;
+                        minutesToFill -= minutesFilled;
+                        previousend = DateUtil.toTimeMinutesFromMidnight(previousend, (Profile.secondsFromMidnight(previousend) / 3600 + 1)* 60); //previousend is updated at the beginning of next hour
+                        nsTreatments.add(new NsTreatment(neutralTbr));
+                    }
+                }
+                nsTreatments.add(new NsTreatment(tb));
+            }
+
         }
     }
 
@@ -206,7 +244,6 @@ public class AutotuneIob {
     }
 
     /*********************************************************************************************************************************************************************************************/
-
     //I add this internal class to be able to export easily ns-treatment files with same containt and format than NS query used by oref0-autotune
     private class NsTreatment {
         //Common properties
