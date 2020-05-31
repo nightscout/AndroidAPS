@@ -435,20 +435,19 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             Constraint<Boolean> closedLoopEnabled = constraintChecker.isClosedLoopAllowed();
 
             if (closedLoopEnabled.value()) {
-
                 if (allowNotification) {
                     if (resultAfterConstraints.isCarbsRequired()
                             && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
-                            && carbsSuggestionsSuspendedUntil < System.currentTimeMillis()) {
+                            && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimethreshold(-15)) {
 
-                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local,true)) {
+                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local,true) && !sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)) {
                             Notification carbreqlocal = new Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.getCarbsRequiredText(), Notification.NORMAL);
                             rxBus.send(new EventNewNotification(carbreqlocal));
                         }
                         if (sp.getBoolean(R.string.key_ns_create_announcements_from_carbs_req, false)) {
                             nsUpload.uploadError(resultAfterConstraints.getCarbsRequiredText());
                         }
-                        if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)){
+                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local,true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)){
                             Intent intentAction5m = new Intent(context, CarbSuggestionReceiver.class);
                             intentAction5m.putExtra("ignoreDuration", 5);
                             PendingIntent pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT);
