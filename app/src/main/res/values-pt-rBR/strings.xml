@@ -1369,7 +1369,6 @@
     <string name="description_pump_omnipod_dash">Integração da Bomba para Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>
-    <string name="omnipod_alert_expiration">Pod vai expirar em breve</string>
     <string name="omnipod_alert_expiration_advisory">Pod vai expirar em breve</string>
     <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
     <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>

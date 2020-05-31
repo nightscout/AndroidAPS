@@ -531,8 +531,14 @@
     <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
     <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
@@ -736,6 +742,9 @@
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
     <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
     <string name="key_allowSMB_with_high_temptarget" translatable="false">enableSMB_with_high_temptarget</string>
+    <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
+    <string name="set_neutral_temps_title">Set neutral temp basals</string>
+    <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
     <string name="enablesmbalways">Enable SMB always</string>
     <string name="enablesmbalways_summary">Enable SMB always independently to boluses. Possible only with BG source with nice filtering of data like G5</string>
     <string name="enablesmbaftercarbs">Enable SMB after carbs</string>
