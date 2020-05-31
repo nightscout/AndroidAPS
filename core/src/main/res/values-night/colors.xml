@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Import  -->
     <color name="metadataOk">#77dd77</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="metadataTextError">#FF5555</color>
+
     <color name="importListFileName">#FFFFFF</color>
     <color name="importListAdditionalInfo">#BBBBBB</color>
 
@@ -11,12 +11,11 @@
     <color name="basal">#6B85FF</color>
     <!-- IOB  -->
     <color name="iob">#1ba1e2</color>
-    <color name="iobBorder">#36FFFFFF</color>
+    <color name="iobBorder">#FFFFFF</color>
     <color name="iobSurface">#1ba1e2</color>
-    <color name="iobPred">#00d2d2</color>
     <!-- COB  -->
     <color name="cob">#f0a30a</color>
-    <color name="cobBorder">#36FFFFFF</color>
+    <color name="cobBorder">#F0F0F0</color>
     <color name="cobSurface">#f0a30a</color>
 
     <color name="bolus">#1ea3e5</color>
@@ -25,12 +24,11 @@
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
-    <color name="activity">#d3f166</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
 
     <!-- BG colors  -->
-    <color name="inrange">#000000</color>
+    <color name="inrange">#1ba1e2</color>
     <color name="inrange_bg">#1ba1e2</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFEC0B</color>
@@ -40,36 +38,32 @@
     <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#5F7BA6</color>
     <color name="deviations">#FF0000</color>
+
     <!-- in range Area  -->
     <color name="inrangebackground">#10FFFFFF</color>
-    <color name="inrangebackgroundBorder">#10FFFFFF</color>
+    <color name="inrangebackgroundBorder">#4dB1B1B1</color>
 
     <!-- Basal   -->
-    <!-- Treatment-->
     <color name="basebasal">#3D15FF</color>
     <color name="tempbasal">#1ba1e2</color>
 
     <!-- Treatment Text   -->
     <color name="treatment">#B2B2B2</color>
 
-    <!-- Profil switch Text   -->
-    <color name="profilswitch">#B2B2B2</color>
-
     <!-- Value Text  -->
     <color name="color_val">#FFFFFF</color>
 
-    <color name="cobAlert">#7484E2</color>
+    <!-- Profil switch Text   -->
+    <color name="profilswitch">#5F7BA6</color>
+
     <color name="graphgrid">#757575</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="warning">#ff1a1a</color>
-    <color name="error_background">#66FC0000</color>
-    <color name="ok_background">#323232</color>
 
     <color name="defaultbackground">#BBBBBB</color>
     <color name="defaulttext">#BBBBBB</color>
-    <color name="defaulttextcolor">#B3FFFFFF</color>
 
-    <color name="fabmenubackground">#73101346</color>
+    <color name="fabmenubackground">#73141428</color>
 
     <!-- Target line  -->
     <color name="tempTargetBackground">#FAFAE1</color>
@@ -104,7 +98,6 @@
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
 
-    <!--    CareportalEvent-->
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
@@ -168,13 +161,14 @@
     <color name="swipe_background">#121212</color>
 
     <!---Theme based colors-->
-    <color name="colorPrimary">#8c8c8c</color>
+    <color name="colorPrimary">#707991</color>
     <color name="colorPrimaryDark">#5a6275</color>
     <color name="colorAccent">#FFFFFF</color>
-    <color name="iconColor">#000000</color>
-    <color name="iconColorbottomAppbar">#999999</color>
-    <color name="iconColorToolbar">#999999</color>
-    <color name="actionBarColor">#FFFFFF</color>
+    <color name="mdtp_accent_color">#3A7EFF</color>
+    <color name="iconColor">#FFFFFF</color>
+    <color name="iconColorbottomAppbar">#FFFFFF</color>
+    <color name="iconColorToolbar">#FFFFFF</color>
+    <color name="actionBarColor">#000000</color>
 
     <color name="colorInitializingBorder">#A6DEFF</color>
     <color name="colorInitializingBorderText">#000000</color>
@@ -201,10 +195,11 @@
     <color name="background_middle_color_grey">#FF707991</color>
     <color name="background_end_color_grey">#FF000000</color>
 
+
     <!---Default material colors-->
-    <color name="colorOnPrimary">#000000</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
     <color name="colorOnSecondary">#FFFFFF</color>
-    <color name="colorOnSurface">#000000</color>
+    <color name="colorOnSurface">#FFFFFF</color>
     <color name="color_on_error">#000000</color>
     <color name="color_on_background">#FFFFFF</color>
     <color name="surface_color">#363640</color>
@@ -218,6 +213,7 @@
     <color name="themeDeselected">#d69b9b9b</color>
     <color name="themeSelected">#e300aaff</color>
     <color name="seperator">#7ca6a6a6</color>
+
 
 
     <!-- RED Theme -->
@@ -248,10 +244,10 @@
     <color name="colorOnPrimaryPink">#FFFFFF</color>
     <color name="colorOnSecondaryPink">#000000</color>
     <color name="colorOnBackgroundPink">#000000</color>
-    <color name="colorOnSurfacePink">#000000</color>
+    <color name="colorOnSurfacePink">#FFFFFF</color>
     <color name="colorOnErrorPink">#FFFFFF</color>
-    <color name="primaryTextColorPink">#000000</color>
-    <color name="secondaryTextColorPink">#000000</color>
+    <color name="primaryTextColorPink">#FFFFFF</color>
+    <color name="secondaryTextColorPink">#FFFFFF</color>
     <color name="overviewPillColorPink">#E91E63</color>
     <color name="bottomBarBackgroundPink">#f76dc9</color>
 
@@ -381,15 +377,15 @@
     <color name="bottomBarBackgroundLightGreen">#8BC34A</color>
 
     <!-- Lime Theme -->
-    <color name="primaryColorLime">#17817b</color>
+    <color name="primaryColorLime">#6617817b</color>
     <color name="primaryLightColorLime">#53b1aa</color>
-    <color name="primaryDarkColorLime">#00544f</color>
+    <color name="primaryDarkColorLime">#6600544f</color>
     <color name="secondaryColorLime">#176480</color>
     <color name="secondaryLightColorLime">#5092af</color>
     <color name="secondaryDarkColorLime">#003a53</color>
     <color name="primaryTextColorLime">#ffffff</color>
     <color name="secondaryTextColorLime">#000000</color>
-    <color name="PillColorStartLime">#D32F2F</color>
+    <color name="PillColorStartLime">#17817b</color>
     <color name="PillColorEndLime">#00544f</color>
     <color name="colorOnPrimaryLime">#F0F4C3</color>
     <color name="bottomBarBackgroundLime">#CDDC39</color>
@@ -486,10 +482,11 @@
     <color name="colorOnPrimaryBlueGray">#CFD8DC</color>
     <color name="bottomBarBackgroundBlueGray">#607D8B</color>
 
+
     <!-- Darkside Theme -->
-    <color name="primaryColorDarkside">#1c171c</color>
+    <color name="primaryColorDarkside">#222222</color>
     <color name="primaryLightColorDarkside">#bbb9bb</color>
-    <color name="primaryDarkColorDarkside">#110d11</color>
+    <color name="primaryDarkColorDarkside">#222222</color>
     <color name="secondaryColorDarkside">#a0a0a0</color>
     <color name="secondaryLightColorDarkside">#e3e3e3</color>
     <color name="secondaryDarkColorDarkside">#848484</color>
@@ -497,13 +494,8 @@
     <color name="secondaryTextColorDarkside">#000000</color>
     <color name="overviewPillColorDarkside">#1c171c</color>
     <color name="colorOnPrimaryDarkside">#FFFFFF</color>
-    <color name="bottomBarBackgroundDarkside">#8c8c8c</color>
-    <color name="PillColorStartDarkside">#1c171c</color>
-    <color name="PillColorEndDarkside">#bbb9bb</color>
-    <color name="fabmenubackgroundDarkside">#43141428</color>
-
-
-    <color name="splashBackground">#2E2E2E</color>
+    <color name="bottomBarBackgroundDarkside">#1c171c</color>
+    <color name="fabmenubackgroundDarkside">#83141428</color>
 
     <!-- Rig22 Colors -->>
     <color name="black">#000000</color>
@@ -534,13 +526,13 @@
     <color name="careportal_low">#fa8a4b</color>
     <color name="careportal_high">#f06b0a</color>
 
+
     <!-- iOS Colors -->>
     <color name="ios_blue_default">#0A84FF</color>
 
     <color name="colorButton">#00000000</color>
 
     <color name="mdtp_button_selected">#33969696</color>
-    <color name="mdtp_accent_color">#009688</color>
     <color name="mdtp_button_color">@color/mdtp_accent_color</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>

@@ -415,6 +415,4 @@
         <item name="android:divider">@android:color/black</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
-
-
 </resources>

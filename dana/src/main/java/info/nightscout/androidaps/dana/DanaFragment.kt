@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.dana
 
+import android.app.AppComponentFactory
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
@@ -25,6 +27,7 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ViewAnimation
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -69,19 +72,18 @@ class DanaFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefresh_dana_rs.setColorSchemeResources(resourceHelper.gc(R.color.carbs), resourceHelper.gc(R.color.green), resourceHelper.gc(R.color.blue))
-        swipeRefresh_dana_rs.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, resourceHelper.gc(R.color.swipe_background), null))
+        swipeRefresh_dana_rs.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_dana_rs.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
         // Initialize the handler instance
         mHandler = Handler()
-
         swipeRefresh_dana_rs.setOnRefreshListener {
 
             mRunnable = Runnable {
                 // Hide swipe to refresh icon animation
                 swipeRefresh_dana_rs.isRefreshing = false
-                aapsLogger.debug(LTag.PUMP, "swiped to connect to pump")
+                aapsLogger.debug(LTag.PUMP, "swipe to connect to pump")
                 danaPump.lastConnection = 0
-                commandQueue.readStatus("Swiped to connect to pump", null)
+                commandQueue.readStatus("swipe to connect to pump", null)
             }
 
             // Execute the task after specified time
@@ -93,8 +95,14 @@ class DanaFragment : DaggerFragment() {
 
         dana_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
-        danar_history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
-        danar_viewprofile.setOnClickListener {
+        fabDanaMenuUserOptions.setOnClickListener(clickListener)
+        fabDanaMenu.setOnClickListener(clickListener)
+        danar_history.setOnClickListener(clickListener)
+        danar_stats.setOnClickListener(clickListener)
+        danar_viewprofile.setOnClickListener(clickListener)
+
+        //danar_history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
+      /*  danar_viewprofile.setOnClickListener {
             val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
@@ -108,9 +116,9 @@ class DanaFragment : DaggerFragment() {
             val pvd = ProfileViewerDialog()
             pvd.arguments = args
             pvd.show(childFragmentManager, "ProfileViewDialog")
-        }
-        danar_stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
-        danar_user_options.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
+        }*/
+        //danar_stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
+        //danar_user_options.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
         danar_btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.lastConnection = 0
@@ -125,6 +133,65 @@ class DanaFragment : DaggerFragment() {
                 }
                 true
             }
+    }
+
+    private val clickListener: View.OnClickListener = View.OnClickListener { view ->
+        when ( view.id ){
+            R.id.fabDanaMenu -> {
+                if ( fabDanaMenuUserOptions.visibility == View.GONE) {
+                    ViewAnimation.showIn(fabDanaMenuUserOptions)
+                    ViewAnimation.showIn(danar_history)
+                    ViewAnimation.showIn(danar_stats)
+                    ViewAnimation.showIn(danar_viewprofile)
+                } else if ( fabDanaMenuUserOptions.visibility == View.VISIBLE) {
+                    ViewAnimation.showOut(fabDanaMenuUserOptions)
+                    ViewAnimation.showOut(danar_history)
+                    ViewAnimation.showOut(danar_stats)
+                    ViewAnimation.showOut(danar_viewprofile)
+                }
+            }
+            R.id.fabDanaMenuUserOptions -> {
+                startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java))
+                ViewAnimation.showOut(fabDanaMenuUserOptions)
+                ViewAnimation.showOut(danar_history)
+                ViewAnimation.showOut(danar_stats)
+                ViewAnimation.showOut(danar_viewprofile)
+            }
+            R.id.danar_history -> {
+                startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java))
+                ViewAnimation.showOut(fabDanaMenuUserOptions)
+                ViewAnimation.showOut(danar_history)
+                ViewAnimation.showOut(danar_stats)
+                ViewAnimation.showOut(danar_viewprofile)
+            }
+            R.id.danar_stats -> {
+                startActivity(Intent(context, TDDStatsActivity::class.java))
+                ViewAnimation.showOut(fabDanaMenuUserOptions)
+                ViewAnimation.showOut(danar_history)
+                ViewAnimation.showOut(danar_stats)
+                ViewAnimation.showOut(danar_viewprofile)
+            }
+            R.id.danar_viewprofile -> {
+                val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
+                    ?: return@OnClickListener
+                val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
+                    ?: return@OnClickListener
+                val args = Bundle()
+                args.putLong("time", DateUtil.now())
+                args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+                args.putString("customProfile", profile.data.toString())
+                args.putString("customProfileUnits", profile.units)
+                args.putString("customProfileName", profileName)
+                val pvd = ProfileViewerDialog()
+                pvd.arguments = args
+                pvd.show(childFragmentManager, "ProfileViewDialog")
+                ViewAnimation.showOut(fabDanaMenuUserOptions)
+                ViewAnimation.showOut(danar_history)
+                ViewAnimation.showOut(danar_stats)
+                ViewAnimation.showOut(danar_viewprofile)
+            }
+        }
+
     }
 
     @Synchronized
@@ -239,7 +306,7 @@ class DanaFragment : DaggerFragment() {
         // also excludes pump with model 03 because of untested error
         val isKorean = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRKorean
         if (isKorean || pump.hwModel == 0 || pump.hwModel == 3) {
-            danar_user_options?.visibility = View.GONE
+            fabDanaMenuUserOptions?.visibility = View.GONE
         }
     }
 }

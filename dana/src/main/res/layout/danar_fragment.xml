@@ -8,6 +8,76 @@
         android:background="?attr/fragmentbackground"
         tools:context="info.nightscout.androidaps.dana.DanaRFragment">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDanaMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
+        app:backgroundTint="?attr/colorPrimaryDark"
+        android:backgroundTint="?attr/colorPrimaryDark"
+        android:background="?attr/colorPrimaryDark"
+        android:tint="?attr/iconColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_more" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabDanaMenuUserOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/danar_useroptions"
+        android:visibility="gone"
+        app:icon="@drawable/icon_danar_useropt"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="150dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/stats"
+        app:icon="@drawable/icon_danarstats"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="220dp"
+        android:text="@string/pumphistory"
+        app:icon="@drawable/icon_danarhistory"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_viewprofile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="290dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/viewprofile"
+        app:icon="@drawable/icon_danarprofile"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id = "@+id/swipeRefresh_dana_rs"
         android:layout_width = "match_parent"
@@ -89,7 +159,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
 
@@ -102,7 +171,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,7 +205,6 @@
                         android:gravity="start"
                         android:paddingLeft="5dp"
                         android:text="{fa-bluetooth-b}"
-                        android:textColor="@android:color/white"
                         android:textSize="20dp" />
 
 
@@ -156,7 +224,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,7 +257,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="20dp" />
 
 
@@ -202,7 +269,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -247,7 +314,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -280,7 +347,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -292,7 +358,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -325,7 +391,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -337,7 +402,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -370,7 +435,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -382,7 +446,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -415,7 +479,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -427,7 +490,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -460,7 +523,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -472,7 +534,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -505,7 +567,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -517,7 +578,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -550,7 +611,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -562,7 +622,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -595,7 +655,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -607,7 +666,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -640,7 +699,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -652,7 +710,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -701,68 +759,7 @@
 
             </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/danar_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/danar_viewprofile"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarprofile"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/viewprofile" />
-
-
-                <Button
-                    android:id="@+id/danar_history"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarhistory"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/pumphistory" />
-
-                <Button
-                    android:id="@+id/danar_stats"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/stats" />
-
-                <Button
-                    android:id="@+id/danar_user_options"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danar_useropt"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/danar_useroptions" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout >
