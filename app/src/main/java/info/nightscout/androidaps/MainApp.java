@@ -74,7 +74,7 @@ public class MainApp extends DaggerApplication {
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
-
+/*
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
             if (ex instanceof InternalError) {
                 // usually the app trying to spawn a thread while being killed
@@ -82,7 +82,7 @@ public class MainApp extends DaggerApplication {
             }
             aapsLogger.error("Uncaught exception crashing app", ex);
         });
-
+*/
         registerActivityLifecycleCallbacks(activityMonitor);
 
         JodaTimeAndroid.init(this);

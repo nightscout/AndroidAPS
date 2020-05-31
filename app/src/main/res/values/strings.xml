@@ -531,8 +531,14 @@
     <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
     <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
@@ -1542,8 +1548,9 @@
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-    <string name="classic_desrciption">Original skin</string>
-    <string name="buttonson_desrciption">Buttons are always displayed on bottom of screen</string>
+    <string name="classic_description">Original skin</string>
+    <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
+    <string name="largedisplay_description">Large display</string>
     <string name="key_skin" translatable="false">skin</string>
     <string name="skin">Skin</string>
 

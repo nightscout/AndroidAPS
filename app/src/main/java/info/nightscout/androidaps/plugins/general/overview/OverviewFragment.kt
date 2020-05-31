@@ -188,6 +188,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
+        overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -476,7 +477,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 overview_iobgraph.addView(label)
                 secondaryGraphsLabel.add(label)
                 val graph = GraphView(context)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(35), 0, resourceHelper.dpToPx(15)) }
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(35), 0, resourceHelper.dpToPx(15)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false

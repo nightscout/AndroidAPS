@@ -8,6 +8,7 @@ import dagger.multibindings.IntoMap
 import info.nightscout.androidaps.skins.SkinButtonsOn
 import info.nightscout.androidaps.skins.SkinClassic
 import info.nightscout.androidaps.skins.SkinInterface
+import info.nightscout.androidaps.skins.SkinLargeDisplay
 import javax.inject.Qualifier
 
 @Module
@@ -24,6 +25,12 @@ open class SkinsModule {
     @IntoMap
     @IntKey(10)
     fun bindsSkinButtonsOn(skinButtonsOn: SkinButtonsOn): SkinInterface = skinButtonsOn
+
+    @Provides
+    @Skin
+    @IntoMap
+    @IntKey(20)
+    fun bindsSkinLargeDisplay(skinLargeDisplay: SkinLargeDisplay): SkinInterface = skinLargeDisplay
 
     @Qualifier
     annotation class Skin
