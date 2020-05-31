@@ -1548,8 +1548,9 @@
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-    <string name="classic_desrciption">Original skin</string>
-    <string name="buttonson_desrciption">Buttons are always displayed on bottom of screen</string>
+    <string name="classic_description">Original skin</string>
+    <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
+    <string name="largedisplay_description">Large display</string>
     <string name="key_skin" translatable="false">skin</string>
     <string name="skin">Skin</string>
 
