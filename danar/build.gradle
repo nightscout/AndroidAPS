@@ -53,13 +53,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation "androidx.preference:preference-ktx:1.1.1"
-    implementation "androidx.activity:activity:${activityVersion}"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
-
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-
-    // remove after conversion to aapslogger
-    implementation 'org.slf4j:slf4j-api:1.7.30'
 
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
@@ -74,7 +68,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     //RxBus
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
