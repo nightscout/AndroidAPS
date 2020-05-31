@@ -722,14 +722,6 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
                     result.boluses += treatment.insulin;
                 }
             }
-
-            if (t > absorptionTime_ago && t <= now) {
-                if (treatment.carbs >= 1) {
-                    result.carbs += treatment.carbs;
-                    if (t > result.lastCarbTime)
-                        result.lastCarbTime = t;
-                }
-            }
         }
 
         AutosensData autosensData = getLastAutosensDataSynchronized("getMealData()");
@@ -739,6 +731,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
             result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
             result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact;
         }
+        result.lastCarbTime = treatmentsPlugin.getLastCarbTime();
         result.lastBolusTime = treatmentsPlugin.getLastBolusTime();
         return result;
     }
