@@ -1,13 +1,10 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
         jcenter()
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
-        classpath 'de.undercouch:gradle-download-task:3.4.3'
     }
 }
 apply plugin: 'com.android.application'
@@ -15,10 +12,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
-apply plugin: 'de.undercouch.download'
-
+apply plugin: 'com.google.firebase.crashlytics'
 
 jacoco {
     toolVersion = "0.8.3"
@@ -33,7 +28,6 @@ ext {
 
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     jcenter { url "https://jcenter.bintray.com/" }
     mavenCentral()
 }
@@ -249,12 +243,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation "com.google.android.gms:play-services-location:17.0.0"
-    implementation 'com.google.firebase:firebase-core:17.4.0'
+    implementation 'com.google.firebase:firebase-core:17.4.2'
     implementation 'com.google.firebase:firebase-auth:19.3.1'
     implementation 'com.google.firebase:firebase-database:19.3.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
-        transitive = true;
-    }
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
