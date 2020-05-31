@@ -337,6 +337,14 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         }
         return isDisconnected;
     }
+    public boolean treatmentTimethreshold(int duartionMinutes) {
+        long threshold = System.currentTimeMillis() + (duartionMinutes*60*1000);
+        boolean bool = false;
+        if (treatmentsPlugin.getLastBolusTime() > threshold || treatmentsPlugin.getLastCarbTime() > threshold)
+            bool = true;
+
+        return bool;
+    }
 
     public synchronized void invoke(String initiator, boolean allowNotification) {
         invoke(initiator, allowNotification, false);
