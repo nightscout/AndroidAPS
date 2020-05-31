@@ -2,16 +2,23 @@ package info.nightscout.androidaps.dialogs
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.support.DaggerDialogFragment
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.extensions.toVisibility
@@ -21,10 +28,16 @@ import kotlinx.android.synthetic.main.okcancel.*
 import java.util.*
 import javax.inject.Inject
 
-abstract class DialogFragmentWithDate : DaggerDialogFragment() {
+abstract class DialogFragmentWithDate : DaggerDialogFragment()  {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
+
+    class Nested : BlurDialogFragment() {
+
+    }
+
+    private lateinit var blurDialogFragment: Nested
 
     var eventTime = DateUtil.now()
     var eventTimeChanged = false
@@ -48,10 +61,19 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     }
 
     fun onCreateViewGeneral() {
+
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
+                .debug(true)
+                .asyncPolicy(it)
+                .build()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +81,17 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
         overview_eventdate?.text = DateUtil.dateString(eventTime)
         overview_eventtime?.text = dateUtil.timeString(eventTime)
+
+        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.getTheme()
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            if (theme != null) {
+                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->

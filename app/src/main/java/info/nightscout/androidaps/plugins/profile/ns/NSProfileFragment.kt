@@ -1,15 +1,17 @@
 package info.nightscout.androidaps.plugins.profile.ns
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -80,6 +82,8 @@ class NSProfileFragment : DaggerFragment() {
 
                 nsprofile_profileswitch.visibility = View.GONE
 
+                (parent!!.getChildAt(0) as TextView).textSize = 18f
+
                 nsProfilePlugin.profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->
                         profileview_units.text = profile.units
@@ -127,7 +131,7 @@ class NSProfileFragment : DaggerFragment() {
 
         nsProfilePlugin.profile?.let { profileStore ->
             val profileList = profileStore.getProfileList()
-            val adapter = ArrayAdapter(context!!, R.layout.spinner_centered, profileList)
+            val adapter = ArrayAdapter(requireContext(), R.layout.spinner_centered, profileList)
             nsprofile_spinner.adapter = adapter
             // set selected to actual profile
             for (p in profileList.indices) {

@@ -1,8 +1,10 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".plugins.profile.ns.NSProfileFragment">
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_activity_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        tools:context=".plugins.profile.ns.NSProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +64,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -74,7 +75,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter"
+            android:background="?android:attr/dividerHorizontal"
             android:visibility="gone" />
 
         <LinearLayout
@@ -110,7 +111,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -122,7 +122,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -155,7 +155,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -167,7 +166,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -200,7 +199,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -212,7 +210,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -245,7 +243,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -257,7 +254,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -290,7 +287,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -302,7 +298,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -335,7 +331,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -371,7 +366,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="17dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -379,8 +373,11 @@
         <info.nightscout.androidaps.plugins.treatments.fragments.ProfileGraph
             android:id="@+id/basal_graph"
             android:layout_width="match_parent"
-            android:layout_height="100dip"
-            android:layout_margin="20dp" />
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="120dip" />
 
         <View
             android:layout_width="fill_parent"
@@ -389,7 +386,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -422,7 +419,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -434,7 +430,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <Button
             android:id="@+id/profileview_reload"
@@ -448,4 +444,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
