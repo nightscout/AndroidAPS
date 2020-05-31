@@ -1374,7 +1374,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_pump_omnipod_dash">Intégration de la pompe Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
-    <string name="omnipod_alert_expiration">Le Pod expire bientôt</string>
     <string name="omnipod_alert_expiration_advisory">Le Pod expire bientôt</string>
     <string name="omnipod_alert_shutdown_imminent">Arrêt imminent</string>
     <string name="omnipod_alert_low_reservoir">Réservoir bas</string>

@@ -45,6 +45,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
 import io.reactivex.disposables.CompositeDisposable;
@@ -582,6 +583,30 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 return null;
             if (result.size() > 1)
                 aapsLogger.warn(LTag.DATATREATMENTS, "Multiple records with the same pump id found (returning first one): " + result.toString());
+            return result.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Returns the newest record with insulin > 0
+     */
+    @Nullable
+    public Treatment getLastBolus(boolean excludeSMB) {
+        try {
+            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
+            Where where = queryBuilder.where();
+            where.gt("insulin", 0);
+            where.and().le("date", DateUtil.now());
+            where.and().eq("isValid", true);
+            if (excludeSMB) where.and().eq("isSMB", false);
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(1L);
+
+            List<Treatment> result = getDao().query(queryBuilder.prepare());
+            if (result.isEmpty())
+                return null;
             return result.get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);

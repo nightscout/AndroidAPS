@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Pro zadání %1$dg na %2$s odpovězte pomocí SMS s kódem %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pro spuštění bazálu %1$d%% na %2$d min odpovězte SMS s kódem %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">K pozastavení smyčky na %1$d minut odpověz SMS s kódem %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Chcete-li obnovit smyčku, odpovězte SMS s kódem %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Chcete-li povolit smyčku, odpovězte SMS s kódem %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Chcete-li zakázat smyčku, odpovězte SMS s kódem %1$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fU/h na %2$d minut spuštěn</string>
     <string name="smscommunicator_extendedset">Prodloužený bolus %1$.2fU na %2$d min úspěšně spuštěn</string>
     <string name="smscommunicator_carbsset">Sacharidy %1$dg byly úspěšně zadány</string>
@@ -468,6 +471,8 @@
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
     <string name="careportal_pbage_label">Stáří baterie v pumpě</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>
+    <string name="ns_alarms">Vytvořit oznámení z alarmů NS</string>
+    <string name="ns_announcements">Vytvořit oznámení z NS upozornění </string>
     <string name="nsalarm_staledatavalue_label">Mezní hodnota pro zastaralá data [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="openapsama_autosens_period">Interval pro detekci senzitivity [h]</string>
@@ -845,6 +850,10 @@
     <string name="log_alerts">Zaznamenat výstrahy</string>
     <string name="enable_tbr_emulation">Povolit emulaci dočasných bazálů</string>
     <string name="enable_tbr_emulation_summary">Používat prodloužené bolusy na obejití limitu dočasných bazálů 250%%</string>
+    <string name="disable_vibration">Zakázat vibrace při ručním podání bolusu</string>
+    <string name="disable_vibration_summary">Pro bolus a prodloužený bolus (dostupné pouze s Insight firmware 3.x)</string>
+    <string name="disable_vibration_auto">Zakázat vibrace při automatickém podání bolusu</string>
+    <string name="disable_vibration_auto_summary">Pro SMB a Dočasný bazál s emulací TBR (k dispozici pouze s Insight firmware 3.x)</string>
     <string name="disconnect_delay">Limit pro odpojení [s]</string>
     <string name="serial_number">Sériové číslo</string>
     <string name="release_software_version">Verze softwaru</string>
@@ -1341,9 +1350,43 @@
     <string name="omnipod_cmd_bolus_value">%1$.1f U</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, Sach=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Rychlost: %1$.1f U, doba trvání: %2$d min</string>
+    <string name="omnipod_cmd_reset_pod_desc">Pokud stisknete <b>OK</b>, stav Podu bude vynuceně resetován a již nebudete moci komunikovat s Podem. Udělejte to pouze v případě, že s Podem již nelze komunikovat. Pokud stále můžete komunikovat s Podem, použijte volbu <b>Deaktivovat Pod</b>.</string>
+    <string name="omnipod_cmd_pod_history_na">Historie Podu není v daném okamžiku k dispozici.</string>
+    <string name="omnipod_init_pod_wizard_step1_title">Naplňte Pod</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nNaplňte nový Pod dostatkem inzulínu na 3 dny.\n\nSledujte dvě pípnutí z Podu během procesu plnění. Tyto ukazují, že minimální množství 85U bylo naplněno. Ujistěte se, že stříkačka je zcela vyprázdněná a to i po vyslechnutí dvou pípnutí.\n\nPo naplnění Podu, prosím, stiskněte <b>Další</b>.\n\n<b>Poznámka:</b> prozatím nesundavejte kryt jehly.</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Plnění</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Snažím se spárovat s novým Podem a naplnit ho.\n\nJakmile budou zaškrtnuty všechny položky, můžete stisknout <b>Další</b>.\n\n<b>Poznámka:</b> ponechte prosím Pod velmi blízko RileyLinku.</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Nasaďte Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPřipravte infuzní místo. Odstraňte krytku jehly a náplasti a nalepte Pod.\n\nPokud se kanyla odlepí, stiskněte <b>Zrušit</b> a zahoďte Pod.\n\nStiskněte <b>Další</b> pro vložení kanyly a spuštění bazálů.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Vkládání kanyly</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Snažím se nastavit počáteční základní bazální plán a vložit kanylu.\n\nPři zaškrtnutí všech položek můžete stisknout tlačítko <b>Další</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPod je nyní aktivní.\n\nVáš bazál byl naprogramován a kanyla byla vložena.\n\nOvěřte, prosím, že kanyla byla vložena správně a případně vyměňte Pod.</string>
     <string name="omnipod_remove_pod_wizard_step1_title">Deaktivovat Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nStiskněte <b>Další</b> pro deaktivaci Podu.\n\n<b>Poznámka:</b> Zastavíte veškerý výdej inzulínu a deaktivujete Pod.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Deaktivace Podu</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Deaktivace Podu.\n\nKdyž jsou zaškrtnuty všechny položky, můžete stisknout <b>Další</b>.\n\n<b>Poznámka:</b> Pokud deaktivace nepřetržitě selhává, prosím stiskněte <b>Zrušit</b> a použijte možnost <b>Resetovat Pod</b> pro resetování stavu Podu.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deaktivován.\n\nOdstraňte Pod z těla a znehodnoťte jej.</string>
+    <string name="omnipod_init_pod_pair_pod">Párování Podu</string>
+    <string name="omnipod_init_pod_prime_pod">Plnění Podu</string>
+    <string name="omnipod_init_pod_fill_cannula">Plnění kanyly</string>
     <string name="omnipod_init_pod_set_basal_profile">Nastavit bazální profil</string>
+    <string name="omnipod_deactivate_pod_cancel_delivery">Zrušit podávání</string>
     <string name="omnipod_deactivate_pod_deactivate_pod">Deaktivovat Pod</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod_dash">Integrace pumpy pro Omnipod Dash.</string>
+    <string name="omnipod_alert_finish_pairing_reminder">Upomínka dokončení párování</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Upomínka dokončení nastavení</string>
+    <string name="omnipod_alert_expiration">Životnost Podu brzy skončí</string>
+    <string name="omnipod_alert_expiration_advisory">Pod brzy vyprší</string>
+    <string name="omnipod_alert_shutdown_imminent">Blíží se vypnutí</string>
+    <string name="omnipod_alert_low_reservoir">Nízký stav zásobníku</string>
+    <string name="omnipod_alert_unknown_alert">Neznámá výstraha</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Nastavení bazálního profilu se možná nezdařilo. Výdej může být pozastaven! Obnovte prosím stav Podu.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">Nastavení dočasného bazálu mohlo být neúspěšné. Pokud je dočasný bazál již spuštěn, mohl by být zrušen! Aktualizujte prosím stav Podu.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Nastavení času se možná nezdařilo. Výdej může být pozastaven! Obnovte prosím stav Podu.</string>
+    <string name="omnipod_bolus_failed_uncertain">Nelze ověřit, zda byl bolus úspěšný. Ověřte prosím, zda Váš Pod dodává bolus nebo ho zrušte.</string>
+    <string name="omnipod_rl_stats">Statistika RL</string>
+    <string name="omnipod_read_pulse_log_short">Pulse Log</string>
 </resources>
