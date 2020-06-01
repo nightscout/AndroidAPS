@@ -1274,8 +1274,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights">Voyants d\'état</string>
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
-    <string name="classic_desrciption">Thème d\'origine</string>
-    <string name="buttonson_desrciption">Les boutons sont toujours affichés en bas de l\'écran</string>
     <string name="skin">Thème</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

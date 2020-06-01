@@ -452,8 +452,14 @@
     <string name="statuslights_res_critical">Soglia livello serbatoio critico [U]</string>
     <string name="statuslights_bat_warning">Soglia di avviso livello batteria [%]</string>
     <string name="statuslights_bat_critical">Soglia livello batteria critico [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ATT</string>
+    <string name="abs_insulin_shortname">ASS</string>
+    <string name="devslope_shortname">PENDEV</string>
     <string name="nav_about">Informazioni su</string>
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
@@ -625,6 +631,8 @@
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">fa</string>
+    <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
+    <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
     <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i CHO</string>
@@ -1278,8 +1286,9 @@
     <string name="statuslights">Indicatori di stato</string>
     <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
     <string name="copyexistingvalues">Copiare impostazioni NS (se esiste)?</string>
-    <string name="classic_desrciption">Tema originale</string>
-    <string name="buttonson_desrciption">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
+    <string name="classic_description">Tema originale</string>
+    <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
+    <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

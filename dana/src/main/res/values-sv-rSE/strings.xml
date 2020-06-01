@@ -29,6 +29,9 @@
     <string name="batterydischarged">Pumpbatteri urladdat</string>
     <string name="occlusion">Ocklusion</string>
     <string name="emptyreservoir">Tom reservoar</string>
+    <string name="checkshaft">Kontrollera axel</string>
+    <string name="basalmax">Max basal</string>
+    <string name="dailymax">Max daglig</string>
     <string name="bloodsugarmeasurementalert">Varning om blodsockermätning</string>
     <string name="remaininsulinalert">Återstående mängd insulin </string>
     <string name="missedbolus">Missad bolus</string>
