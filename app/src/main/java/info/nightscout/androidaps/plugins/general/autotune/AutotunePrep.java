@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.autotune;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -353,7 +352,8 @@ public class AutotunePrep {
                 }
             }
             // debug line to print out all the things
-            log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+ Round.roundTo(BGI,0.1) +" IOB: "+Round.roundTo(iob.iob,0.1) + " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            //log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+ Round.roundTo(BGI,0.1) +" IOB: "+Round.roundTo(iob.iob,0.1) + " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.001)+" BGI: "+ Round.roundTo(BGI,0.001) +" IOB: "+Round.roundTo(iob.iob,0.001) + " IAbas: "+Round.roundTo(iob.basaliob,0.01) + " IAbol: " +Round.roundTo(iob.iob-iob.basaliob,0.01)+ " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 //****************************************************************************************************************************************
@@ -575,7 +575,7 @@ public class AutotunePrep {
         }
         */
 
-        return new PreppedGlucose(autotuneIob.from, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
+        return new PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData);
 
         // and may be later
         // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);

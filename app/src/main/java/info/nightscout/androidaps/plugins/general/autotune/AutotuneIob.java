@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,8 +31,6 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -43,14 +39,11 @@ import info.nightscout.androidaps.historyBrowser.TreatmentsPluginHistory;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -82,8 +75,9 @@ public class AutotuneIob {
     private Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
     private ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
-    public long from;
-    public long to;
+    public long startBG;
+    public long endBG;
+    private LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
 
     public AutotuneIob(
             HasAndroidInjector injector
@@ -103,8 +97,8 @@ public class AutotuneIob {
 
     public void initializeData(long from, long to) {
 
-        this.from = from;
-        this.to = to;
+        this.startBG = from;
+        this.endBG = to;
         nsTreatments.clear();
         initializeBgreadings(from, to);
         initializeTreatmentData(from-range(), to);
@@ -193,7 +187,6 @@ public class AutotuneIob {
                 nsTreatments.add(new NsTreatment(tb));
                 previousend = tb.date + tb.getRealDuration() * 60 * 1000;
             }
-
         }
     }
 
@@ -207,6 +200,8 @@ public class AutotuneIob {
         }
     }
 
+    /*********************************************************************************************************************************************************************************************/
+
 
     public IobTotal calculateFromTreatmentsAndTempsSynchronized(long time) {
         //IobTotal iobTotal = iobCobCalculatorPluginHistory.calculateFromTreatmentsAndTempsSynchronized(time, profileFunction.getProfile(time)).round();
@@ -216,7 +211,7 @@ public class AutotuneIob {
 
     public IobTotal calculateFromTreatmentsAndTemps(long time) {
         IobTotal bolusIob = getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = getCalculationToTimeTempBasals(time, true, to).round();
+        IobTotal basalIob = getCalculationToTimeTempBasals(time, true, endBG).round();
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         return iobTotal;
     }
@@ -224,7 +219,7 @@ public class AutotuneIob {
     public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
 
-        Profile profile = profileFunction.getProfile();
+        Profile profile = profileFunction.getProfile(time);
         if (profile == null)
             return total;
 

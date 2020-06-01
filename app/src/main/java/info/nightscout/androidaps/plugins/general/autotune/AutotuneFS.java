@@ -17,7 +17,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
@@ -116,13 +115,13 @@ public class AutotuneFS {
 
     public void exportEntries(AutotuneIob autotuneIob) {
         try {
-            createAutotunefile(ENTRIES_PREF + formatDate(new Date(autotuneIob.from)) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"));
+            createAutotunefile(ENTRIES_PREF + formatDate(new Date(autotuneIob.startBG)) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"));
         } catch (JSONException e) {}
     }
 
     public void exportTreatments(AutotuneIob autotuneIob) {
         try {
-            createAutotunefile(TREATMENTS_PREF + formatDate(new Date(autotuneIob.from)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
+            createAutotunefile(TREATMENTS_PREF + formatDate(new Date(autotuneIob.startBG)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"));
         } catch (JSONException e) {}
     }
 
