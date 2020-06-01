@@ -5,6 +5,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import javax.inject.Inject
 
 class DanaRS_Packet_General_Get_More_Information(
@@ -30,7 +31,8 @@ class DanaRS_Packet_General_Get_More_Information(
         // val remainRate = intFromBuff(data, 7, 2) / 100.0
         val hours = intFromBuff(data, 9, 1)
         val minutes = intFromBuff(data, 10, 1)
-        danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
+        if (danaPump.usingUTC) danaPump.lastBolusTime = DateTime.now().withZone(DateTimeZone.UTC).withHourOfDay(hours).withMinuteOfHour(minutes).millis
+        else danaPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
         danaPump.lastBolusAmount = intFromBuff(data, 11, 2) / 100.0
         // On DanaRS DailyUnits can't be more than 160
         if (danaPump.dailyTotalUnits > 160) failed = true

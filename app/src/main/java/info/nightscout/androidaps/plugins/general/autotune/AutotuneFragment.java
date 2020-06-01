@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 
 //2 unknown imports disabled by philoul to build AAPS
 //import butterknife.BindView;
@@ -84,7 +83,6 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
         }
 
         return null;

@@ -174,6 +174,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
         if (ev.isChanged(resourceHelper, R.string.key_keep_screen_on)) setWakeLock()
+        if (ev.isChanged(resourceHelper, R.string.key_skin)) recreate()
     }
 
     private fun setupViews() {
