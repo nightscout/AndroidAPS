@@ -471,45 +471,37 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 loopPlugin.suspendTo(0L)
                                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_reconnect)))
                                 rxBus.send(EventRefreshOverview("SMS_PUMP_START"))
-                                sp.putBoolean(R.string.key_objectiveusereconnect, true)
                                 loopPlugin.createOfflineEvent(0)
                             }
                         }
                     })
                 }
             })
-        } else if (splitted.size == 3) {
-            if (splitted[1].equals("DISCONNECT", ignoreCase = true)) {
-                var duration = SafeParse.stringToInt(splitted[2])
-                duration = Math.max(0, duration)
-                duration = Math.min(120, duration)
-                if (duration == 0) {
-                    receivedSms.processed = true
-                    sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_wrongduration)))
-                    return
-                } else {
-                    val passCode = generatePasscode()
-                    val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpdisconnectwithcode), duration, passCode)
-                    receivedSms.processed = true
-                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
-                        override fun run() {
-                            val profile = profileFunction.getProfile()
-                            loopPlugin.disconnectPump(duration, profile)
-                            rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
-                            sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
-                        }
-                    })
-                }
-            } else {
-                sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
+        } else if ((splitted.size == 3) && (splitted[1].equals("DISCONNECT", ignoreCase = true))) {
+            var duration = SafeParse.stringToInt(splitted[2])
+            duration = Math.max(0, duration)
+            duration = Math.min(120, duration)
+            if (duration == 0) {
+                receivedSms.processed = true
+                sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_wrongduration)))
                 return
+            } else {
+                val passCode = generatePasscode()
+                val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpdisconnectwithcode), duration, passCode)
+                receivedSms.processed = true
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                    override fun run() {
+                        val profile = profileFunction.getProfile()
+                        loopPlugin.disconnectPump(duration, profile)
+                        rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
+                        sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
+                    }
+                })
             }
-
         } else {
             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
             return
         }
-
     }
 
     private fun processPROFILE(splitted: Array<String>, receivedSms: Sms) { // load profiles
