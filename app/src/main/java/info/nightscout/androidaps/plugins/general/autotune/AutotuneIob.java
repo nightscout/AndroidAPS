@@ -125,12 +125,13 @@ public class AutotuneIob {
     //nsTreatment is used only for export data, meals is used in AutotunePrep
     private void initializeTreatmentData(long from, long to) {
         long oldestBgDate = glucose.size() > 0 ? glucose.get(glucose.size()-1).date : from ;
-        List<Treatment> temp = treatmentsPluginHistory.getTreatmentsFromHistory();
+        List<Treatment> temp = treatmentsPlugin.getService().getTreatmentDataFromTime(from, to, false);
         meals.clear();
+        treatments.clear();
         for(int i = 0; i < temp.size() ;i++) {
             Treatment tp =  temp.get(i);
-            treatments.add(tp);
-            if(tp.date > from-range() && tp.date < to && tp.isValid) {
+            if(tp.isValid) {
+                treatments.add(tp);
                 nsTreatments.add(new NsTreatment(tp));
                 //only carbs after first BGReadings are taken into account in calculation of Autotune
                 if (tp.carbs > 0 && tp.date >= oldestBgDate )
@@ -141,7 +142,8 @@ public class AutotuneIob {
 
     //nsTreatment is used only for export data
     private void initializeTempBasalData(long from, long to) {
-        List<TemporaryBasal> temp = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from, to, false);
+        List<TemporaryBasal> temp = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from-range(), to, false);
+        tempBasals.reset().add(temp);
         //first keep only valid data
         //log.debug("D/AutotunePlugin Start inisalize Tempbasal from: " + dateUtil.dateAndTimeAndSecondsString(from) + " number of entries:" + temp.size());
         for(int i=0; i<temp.size(); i++) {
@@ -197,7 +199,8 @@ public class AutotuneIob {
 
     //nsTreatment is used only for export data
     private void initializeExtendedBolusData(long from, long to) {
-        List<ExtendedBolus> temp = MainApp.getDbHelper().getExtendedBolusDataFromTime(from, to, false);
+        List<ExtendedBolus> temp = MainApp.getDbHelper().getExtendedBolusDataFromTime(from-range(), to, false);
+        extendedBoluses.reset().add(temp);
         for (int i = 0; i < temp.size() ;i++) {
             ExtendedBolus eb = temp.get(i);
             nsTreatments.add(new NsTreatment(eb));
