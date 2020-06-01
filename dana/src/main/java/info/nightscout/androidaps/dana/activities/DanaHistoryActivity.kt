@@ -48,7 +48,6 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
 

@@ -13,8 +13,7 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:tint="#FFFFFF" />
+        android:layout_height="48dp" />
 
     <TextView
         android:id="@+id/error_code"
