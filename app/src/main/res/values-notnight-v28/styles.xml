@@ -115,6 +115,10 @@
         <item name="android:dialogCornerRadius">10dp</item>
         <item name="android:alertDialogTheme">@style/ApsDialogDarkside</item>
         <item name="android:dialogTheme">@style/ApsDialogDarkside</item>
+
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleColor">@color/dialog_title_color</item>
+        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
     <style name="ApsDialogYellow" parent="Theme.MaterialComponents.Light.Dialog">

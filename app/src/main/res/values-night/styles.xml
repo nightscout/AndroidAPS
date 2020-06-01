@@ -99,6 +99,10 @@
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
+
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleColor">@color/dialog_title_color</item>
+        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

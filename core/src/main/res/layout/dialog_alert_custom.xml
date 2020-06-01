@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?dialogTitleBackground"
+        android:background="?attr/colorPrimary"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -20,7 +20,7 @@
             android:id="@+id/alertdialog_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="?dialogTitleIconTint" />
+            android:tint="?attr/iconColorToolbar" />
 
         <TextView
             android:id="@+id/alertdialog_title"
@@ -32,8 +32,7 @@
             android:layout_marginEnd="50dp"
             android:layout_toEndOf="@id/alertdialog_icon"
             android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="?dialogTitleColor" />
+            style="@style/Text.Headline" />
 
     </RelativeLayout>
 

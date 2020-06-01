@@ -65,6 +65,10 @@
         <item name="fragmentbackground">@color/transparent</item>
         <!-- Dialog -->
         <item name="android:dialogCornerRadius">10dp</item>
+
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleColor">@color/dialog_title_color</item>
+        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
     <style name="AppTheme.LIME" parent="AppTheme.NoActionBar">
