@@ -845,29 +845,29 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // ------------------ 2nd graph
                 for (g in 0 until secondaryGraphs.size) {
                     val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
+                    var useABSForScale = false
                     var useIobForScale = false
                     var useCobForScale = false
                     var useDevForScale = false
                     var useRatioForScale = false
                     var useDSForScale = false
                     var useIAForScale = false
-                    var useABSForScale = false
                     when {
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                     }
 
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                     // set manual x bounds to have nice steps
@@ -881,12 +881,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             for (g in 0 until secondaryGraphs.size) {
                 secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                     ).toVisibility()
                 secondaryGraphsData[g].performUpdate()
