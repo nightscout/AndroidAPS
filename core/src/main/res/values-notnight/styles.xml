@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:ns2="http://schemas.android.com/tools">
 
     <attr name="overviewPillColor" format="reference|color" />
     <attr name="PillColorStart" format="reference|color" />
@@ -36,10 +36,10 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
-        <item name="android:actionBarTheme">@android:style/Theme.Material</item>
+        <item name="android:actionBarTheme">@android:style/Theme.Material.Light</item>
         <item name="iconColor">@color/iconColor</item>
         <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
-        <item name="iconColorToolbar">@color/iconColorbottomAppbar</item>
+        <item name="iconColorToolbar">@color/iconColorToolbar</item>
         <item name="color_val">@color/color_val</item>
         <item name="fabmenubackground">@color/fabmenubackground</item>
         <item name="iobBorder">@color/iobBorder</item>
@@ -56,6 +56,8 @@
         <item name="colorOnError">@color/color_on_error</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <item name="android:textColorPrimary">@color/black_alpha_80</item>
+        <item name="android:textColor">@color/black_alpha_80</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
         <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
@@ -69,8 +71,6 @@
         <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
         <item name="bgInRange">@color/inrange_bg</item>
         <item name="bgLow">@color/low</item>
@@ -99,26 +99,21 @@
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
-
-        <item name="dialogTitleBackground">@color/dialog_title_background</item>
-        <item name="dialogTitleColor">@color/dialog_title_color</item>
-        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
 
     <style name="AppTheme.preference" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="iconColor">@color/iconColor</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:singleLine">true</item>
+    <item name="iconColor">@color/iconColor</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:singleLine">true</item>
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
     <style name="AppTheme.Launcher"  parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowBackground">@drawable/launch_screen</item>
         <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
-
-        <item name="android:actionBarTheme">@android:style/Theme.Material</item>
+        <item name="colorPrimaryDark">@android:color/background_dark</item>
     </style>
 
     <style name="AppTheme.base" parent="Theme.AppCompat.NoActionBar">
@@ -130,17 +125,20 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
     <style name="AppTheme.RED" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorRed</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorRed</item>
         <item name="colorAccent">@color/secondaryColorRed</item>
         <item name="overviewPillColor">@color/overviewPillColorRed</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="bgInRange">@color/primaryColorPurple</item>
         <!-- Color of pills -->
         <item name="PillColorStart">@color/PillColorStartRed</item>
         <item name="PillColorEnd">@color/PillColorEndRed</item>
-        <item name="android:windowBackground">@drawable/ferrari3</item>
     </style>
 
     <style name="AppTheme.PINK" parent="AppTheme.NoActionBar">
@@ -159,10 +157,12 @@
         <item name="android:textColorPrimary">@color/primaryTextColorPink</item>
         <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="overviewPillColor">@color/overviewPillColorPink</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
         <item name="PillColorStart">@color/primaryColorPinkVariant</item>
         <item name="PillColorEnd">@color/primaryColorPink</item>
+        <item name="android:windowBackground">@drawable/fancy03</item>
     </style>
 
     <style name="AppTheme.PURPLE" parent="AppTheme.NoActionBar">
@@ -180,6 +180,7 @@
         <item name="colorAccent">@color/secondaryColorPurple</item>
         <item name="overviewPillColor">@color/overviewPillColorPurple</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -189,6 +190,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorDeepPurple</item>
         <item name="colorAccent">@color/secondaryColorDeepPurple</item>
         <item name="overviewPillColor">@color/overviewPillColorDeepPurple</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -198,9 +201,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorIndigo</item>
         <item name="colorAccent">@color/secondaryColorIndigo</item>
         <item name="overviewPillColor">@color/overviewPillColorIndigo</item>
-        <item name="android:windowBackground">@drawable/blue_gradient_background</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -210,8 +212,12 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorBlue</item>
         <item name="colorAccent">@color/secondaryColorBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorBlue</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorToolbar">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
+        <item name="android:windowBackground">@drawable/frozen04</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -221,6 +227,9 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorLightBlue</item>
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorLightBlue</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorToolbar">@color/white</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -230,6 +239,9 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorCyan</item>
         <item name="colorAccent">@color/secondaryColorCyan</item>
         <item name="overviewPillColor">@color/overviewPillColorCyan</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
+        <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
     <style name="AppTheme.TEAL" parent="AppTheme.NoActionBar">
@@ -238,6 +250,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorTeal</item>
         <item name="colorAccent">@color/secondaryColorTeal</item>
         <item name="overviewPillColor">@color/overviewPillColorTeal</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -247,6 +260,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorGreen</item>
         <item name="colorAccent">@color/secondaryColorGreen</item>
         <item name="overviewPillColor">@color/overviewPillColorGreen</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -256,6 +270,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorLightGreen</item>
         <item name="colorAccent">@color/secondaryColorLightGreen</item>
         <item name="overviewPillColor">@color/overviewPillColorLightGreen</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -264,18 +279,11 @@
         <item name="colorPrimary">@color/primaryColorLime</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorLime</item>
         <item name="colorAccent">@color/secondaryColorLime</item>
-        <item name="colorSecondary">@color/secondaryColorLime</item>
-        <item name="colorOnSecondary">@color/secondaryTextColorLime</item>
-        <item name="colorOnPrimary">@color/primaryTextColorLime</item>
-        <item name="colorSurface">@color/black_alpha_60</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="android:popupBackground">@color/black_alpha_80</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
         <!-- Color of pills -->
         <item name="PillColorStart">@color/PillColorStartLime</item>
         <item name="PillColorEnd">@color/PillColorEndLime</item>
-        <item name="android:windowBackground">@drawable/auroraborealis02</item>
-        <item name="bgInRange">@color/bgInRangeColorLime</item>
     </style>
 
     <style name="AppTheme.YELLOW" parent="AppTheme.NoActionBar">
@@ -287,6 +295,12 @@
         <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="colorOnPrimary">@color/black_alpha_80</item>
         <item name="colorOnSecondary">@color/black_alpha_80</item>
+        <item name="colorSurface">@color/white_alpha_70</item>
+        <item name="android:popupBackground">@color/white_alpha_80</item>
+        <item name="android:windowBackground">@drawable/minions1</item>
+        <item name="iconColorbottomAppbar">@color/black_alpha_60</item>
+        <!-- Fragment background for some themes default transparent  -->
+        <item name="fragmentbackground">@color/white_alpha_40</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -296,6 +310,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorAmber</item>
         <item name="colorAccent">@color/secondaryColorAmber</item>
         <item name="overviewPillColor">@color/overviewPillColorAmber</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -305,6 +321,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorOrange</item>
         <item name="colorAccent">@color/secondaryColorOrange</item>
         <item name="overviewPillColor">@color/overviewPillColorOrange</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/black_alpha_80</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -314,6 +332,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorDeepOrange</item>
         <item name="colorAccent">@color/secondaryColorDeepOrange</item>
         <item name="overviewPillColor">@color/overviewPillColorDeepOrange</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -323,6 +342,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorBrown</item>
         <item name="colorAccent">@color/secondaryColorBrown</item>
         <item name="overviewPillColor">@color/overviewPillColorBrown</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -332,6 +352,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorGray</item>
         <item name="colorAccent">@color/secondaryColorGray</item>
         <item name="overviewPillColor">@color/overviewPillColorGray</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -341,6 +363,8 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorBlueGray</item>
         <item name="colorAccent">@color/secondaryColorBlueGray</item>
         <item name="overviewPillColor">@color/overviewPillColorBlueGray</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
+        <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -353,63 +377,35 @@
         <item name="colorPrimaryVariant">@color/primaryLightColorDarkside</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDarkside</item>
         <item name="colorOnPrimary">@color/primaryTextColorDarkside</item>
-        <item name="colorSurface">@color/black_alpha_60</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="android:popupBackground">@color/black_alpha_80</item>
-        <item name="android:windowBackground">@drawable/carbonfiber03</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="overviewPillColor">@color/plastic_grey</item>
+        <item name="iconColor">@color/concinnity_bright_grey</item>
+        <item name="iconColorbottomAppbar">@color/sphere_plastic_grey</item>
+        <item name="iconColorToolbar">@color/sphere_plastic_grey</item>
+        <item name="android:navigationBarColor">@color/sphere_plastic_grey</item>
+        <item name="android:windowBackground">@drawable/ic_overview_bg_gradient</item>
+        <item name="bottomAppBarStyle">@style/BottomAppbar</item>
+        <item name="colorSurface">@color/plastic</item>
+        <item name="colorOnSurface">@color/sphere_plastic_grey</item>
+        <item name="fabmenubackground">@color/fabmenubackgroundDarkside</item>
+        <!-- Color of pills -->
+        <item name="PillColorStart">@color/PillColorStartDarkside</item>
+        <item name="PillColorEnd">@color/PillColorEndDarkside</item>
+        <item name="colorGraphBackground">@color/plastic_grey</item>
         <!-- Icons of bottom naviagtion bar -->
-        <item name="iconInsulin">@drawable/pumpe_white_shadow</item>
-        <item name="iconCarbs">@drawable/carb_white_shadow</item>
-        <item name="iconWizzard">@drawable/calculator_white_shadow</item>
-        <item name="iconCgm">@drawable/blooddrop_white_shadow</item>
-        <item name="android:backgroundDimAmount">0.2</item>
-        <item name="android:textColorPrimary">@color/ios_blue_default</item>
-        <!-- Color of dialogs -->
-        <item name="android:alertDialogTheme">@style/ApsDialogDarkside</item>
-        <item name="android:dialogTheme">@style/ApsDialogDarkside</item>
-    </style>
-
-
-    <style name="ApsDialogDarkside" parent="Theme.MaterialComponents.Dialog">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/ios_blue_default</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColorDarkside</item>
-        <item name="colorAccent">@color/secondaryColorDarkside</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColorDarkside</item>
-        <item name="colorSecondaryVariant">@color/secondaryLightColorDarkside</item>
-        <item name="colorSecondary">@color/secondaryColorDarkside</item>
-        <item name="colorOnPrimary">@color/primaryTextColorDarkside</item>
-        <item name="colorControlNormal">@color/white</item>
-        <item name="colorControlActivated">@color/white</item>
-        <item name="colorControlHighlight">@color/white</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="colorPrimarySurface">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="matButtonBackground">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
-        <item name="android:textColorPrimary">@color/ios_blue_default</item>
-        <item name="android:background">@color/transparent</item>
-        <item name="android:backgroundTint">@color/black_alpha_65</item>
-        <item name="android:backgroundTintMode">multiply</item>
-        <!-- Graph specific colors  -->
-        <item name="graphHorizontalLabelText">@color/ios_blue_default</item>
-        <item name="graphVerticalLabelText">@color/ios_blue_default</item>
+        <item name="iconInsulin">@drawable/ic_pumpe_48</item>
+        <item name="iconCarbs">@drawable/ic_carb_48</item>
     </style>
 
     <style name="BottomAppbar" parent="Widget.MaterialComponents.BottomAppBar.Colored" >
-
+        <item name="android:backgroundTint">@color/plastic</item>
+        <item name="android:textColor">@color/sphere_plastic_grey</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="NavigationDrawer" parent="Theme.MaterialComponents.DayNight.Bridge" >
-        <item name="android:colorActivatedHighlight">@color/white</item>
-    </style>
-
+    <style name="NavigationDrawer" />
 
     <!-- Text styles -->
     <style name="Text" parent="TextAppearance.AppCompat"/>
@@ -432,8 +428,7 @@
     <style name="Buton.Borderless" parent="Widget.AppCompat.Button.Borderless"/>
     <style name="Buton.Borderless.Colored" parent="Widget.AppCompat.Button.Borderless.Colored"/>
 
-
-    <style name="Theme.AppCompat.Translucent" parent="AppTheme">
+    <style name="Theme.AppCompat.Translucent" parent="Theme.MaterialComponents.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
@@ -444,12 +439,6 @@
     <style name="InsightAlertDialog" parent="Theme.MaterialComponents.Dialog">
         <item name="android:windowMinWidthMajor">96%</item>
         <item name="android:windowMinWidthMinor">96%</item>
-    </style>
-
-    <style name="StandardDialogs" parent="Theme.MaterialComponents.Dialog.Alert">
-        <item name="colorSurface">@color/black_alpha_20</item>
-        <item name="colorPrimarySurface">@color/black_alpha_20</item>
-        <item name="colorSecondary">@color/black_alpha_20</item>
     </style>
 
     <style name="ButtonSmallFontStyle">
@@ -464,3 +453,4 @@
         <item name="android:textColor">@color/textcolor_bright</item>
     </style>
 </resources>
+

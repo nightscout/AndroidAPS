@@ -55,5 +55,4 @@ public class ViewAnimation {
         v.setAlpha(0f);
     }
 
-
 }

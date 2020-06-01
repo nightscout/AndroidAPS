@@ -1,39 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns2="http://schemas.android.com/tools">
-    <attr name="overviewPillColor" format="reference|color" />
-    <attr name="PillColorStart" format="reference|color" />
-    <attr name="PillColorEnd" format="reference|color" />
-    <attr name="fabmenubackground" format="reference|color" />
-    <attr name="iconColor" format="reference|color" />
-    <attr name="iconColorbottomAppbar" format="reference|color" />
-    <attr name="iconColorToolbar" format="reference|color" />
-    <attr name="iobBorder" format="reference|color" />
-    <attr name="cobBorder" format="reference|color" />
-    <attr name="bgInRange" format="reference|color" />
-    <attr name="bgLow" format="reference|color" />
-    <attr name="bgHigh" format="reference|color" />
-    <attr name="matButtonBackground" format="reference|color" />
-    <attr name="color_val" format="reference|color" />
-    <attr name="colorPrimaryDialog" format="reference|color" />
-    <attr name="colorPrimaryDarkDialog" format="reference|color" />
-    <attr name="colorAccentDialog" format="reference|color" />
-    <attr name="colorGraphBackground" format="reference|color" />
-    <!-- Top bar icons -->
-    <attr name="iconSensor" format="reference|color" />
-    <attr name="iconReservoir" format="reference|color" />
-    <attr name="iconCanula" format="reference|color" />
-    <attr name="iconBattery" format="reference|color" />
-    <!-- Bottom bar icons -->
-    <attr name="iconInsulin" format="reference|color" />
-    <attr name="iconCarbs" format="reference|color" />
-    <attr name="iconWizzard" format="reference|color" />
-    <attr name="iconCgm" format="reference|color" />
-    <!-- Fragment background for some themes default transparent  -->
-    <attr name="fragmentbackground" format="reference|color" />
-    <!-- Graph specific colors  -->
-    <attr name="graphHorizontalLabelText" format="reference|color" />
-    <attr name="graphVerticalLabelText" format="reference|color" />
-
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:actionBarTheme">@android:style/Theme.Material</item>
