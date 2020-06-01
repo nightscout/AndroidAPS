@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import javax.inject.Inject;
 
@@ -22,8 +23,8 @@ import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
@@ -54,6 +55,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    SwipeRefreshLayout swipeRefresh;
     private RecyclerView recyclerView;
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
@@ -173,16 +175,26 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(treatmentsPlugin.getTempTargetsFromHistory());
         recyclerView.setAdapter(adapter);
 
-        Button refreshFromNS = view.findViewById(R.id.temptargetrange_refreshfromnightscout);
-        refreshFromNS.setOnClickListener(v ->
-                OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", () -> {
-                    MainApp.getDbHelper().resetTempTargets();
-                    rxBus.send(new EventNSClientRestart());
-                }));
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
+        swipeRefresh.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefresh.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(getResources(), R.color.swipe_background, null));
 
         boolean nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true);
-        if (nsUploadOnly)
-            refreshFromNS.setVisibility(View.GONE);
+        if (nsUploadOnly) {
+            swipeRefresh.setEnabled(false);
+        } else {
+            this.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    //do the refresh of data here
+                    OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", () -> {
+                        MainApp.getDbHelper().resetTempTargets();
+                        rxBus.send(new EventNSClientRestart());
+                    });
+                    swipeRefresh.setRefreshing(false);
+                }
+            });
+        }
 
         return view;
     }
