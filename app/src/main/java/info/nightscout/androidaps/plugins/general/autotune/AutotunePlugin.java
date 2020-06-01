@@ -182,6 +182,9 @@ public class AutotunePlugin extends PluginBase {
 
                 preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob,tunedProfile, pumpprofile);
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                if (preppedGlucose == null )
+                    return "Error in input data";
+
                 autotuneFS.exportPreppedGlucose(preppedGlucose);
 
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);

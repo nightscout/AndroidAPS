@@ -122,6 +122,7 @@ public class AutotuneIob {
         //NsTreatment is used to export all "ns-treatments" for cross execution of oref0-autotune on a virtual machine
         //it contains traitments, tempbasals and extendedbolus data (profileswitch data also included in ns-treatment files are not used by oref0-autotune)
         Collections.sort(nsTreatments, (o1, o2) -> (int) (o2.date  - o1.date));
+        log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size() + " Nb meals: " + meals.size());
     }
 
     private void initializeBgreadings(long from, long to) {
@@ -149,45 +150,53 @@ public class AutotuneIob {
     private void initializeTempBasalData(long from, long to) {
         List<TemporaryBasal> temp = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from, to, false);
         //first keep only valid data
+        //log.debug("D/AutotunePlugin Start inisalize Tempbasal from: " + dateUtil.dateAndTimeAndSecondsString(from) + " number of entries:" + temp.size());
         for(int i=0; i<temp.size(); i++) {
             if (!temp.get(i).isValid)
                 temp.remove(i--);
         }
+        //log.debug("D/AutotunePlugin after cleaning number of entries:" + temp.size());
         //Then add neutral TBR if start of next TBR is after the end of previous one
-        long previousend = temp.get(0).date + temp.get(0).getRealDuration() * 60 * 1000;
-        for(int i=0; i<temp.size(); i++) {
+        long previousend = temp.get(temp.size()-1).date + temp.get(temp.size()-1).getRealDuration() * 60 * 1000;
+        for(int i=temp.size()-1; i>=0; i--) {
             TemporaryBasal tb = temp.get(i);
+            //log.debug("D/AutotunePlugin previous end: " + dateUtil.dateAndTimeAndSecondsString(previousend) + " new entry start:" + dateUtil.dateAndTimeAndSecondsString(tb.date) + " new entry duration:" + tb.getRealDuration() + " test:" + (tb.date < previousend + 60 * 1000));
             if(tb.date < previousend + 60 * 1000) {                         // 1 min is minimum duration for TBR
                 nsTreatments.add(new NsTreatment(tb));
                 previousend = tb.date + tb.getRealDuration() * 60 * 1000;
             } else {
                 int minutesToFill = (int) (tb.date - previousend)/(60*1000);
+                //log.debug("D/AutotunePlugin Minutes to fill: "+ minutesToFill);
                 while (minutesToFill > 0) {
                     Profile profile = profileFunction.getProfile(previousend);
                     if ( Profile.secondsFromMidnight(tb.date) / 3600 == Profile.secondsFromMidnight(previousend) / 3600) {  // next tbr is in the same hour
                         TemporaryBasal neutralTbr = new TemporaryBasal(injector);
-                        neutralTbr.date = previousend;
+                        neutralTbr.date = previousend +1000;                           //add 1s to be sure it starts after endEvent
                         neutralTbr.isValid=true;
                         neutralTbr.absoluteRate = profile.getBasal(previousend);
-                        neutralTbr.durationInMinutes=minutesToFill;
+                        neutralTbr.durationInMinutes=minutesToFill+1;                   //add 1 minute to be sure there is no gap between TBR and neutral TBR
                         neutralTbr.isAbsolute = true;
                         minutesToFill = 0;
                         previousend += minutesToFill * 60 * 1000;
                         nsTreatments.add(new NsTreatment(neutralTbr));
+                        //log.debug("D/AutotunePlugin fill neutral start: " + dateUtil.dateAndTimeAndSecondsString(neutralTbr.date) + " duration:" + neutralTbr.durationInMinutes + " absolute:" + neutralTbr.absoluteRate);
                     } else {  //fill data until the end of current hour
-                        int minutesFilled = 60 - (Profile.secondsFromMidnight(previousend) % 60);
+                        int minutesFilled = 60 - ((Profile.secondsFromMidnight(previousend)/60) % 60);
+                        //log.debug("D/AutotunePlugin remaining time before next hour: "+ minutesFilled);
                         TemporaryBasal neutralTbr = new TemporaryBasal(injector);
-                        neutralTbr.date = previousend;
+                        neutralTbr.date = previousend + 1000;                           //add 1s to be sure it starts after endEvent
                         neutralTbr.isValid=true;
                         neutralTbr.absoluteRate = profile.getBasal(previousend);
-                        neutralTbr.durationInMinutes=minutesFilled;
+                        neutralTbr.durationInMinutes=minutesFilled+1;                   //add 1 minute to be sure there is no gap between TBR and neutral TBR
                         neutralTbr.isAbsolute = true;
                         minutesToFill -= minutesFilled;
                         previousend = DateUtil.toTimeMinutesFromMidnight(previousend, (Profile.secondsFromMidnight(previousend) / 3600 + 1)* 60); //previousend is updated at the beginning of next hour
                         nsTreatments.add(new NsTreatment(neutralTbr));
+                        //log.debug("D/AutotunePlugin fill neutral start: " + dateUtil.dateAndTimeAndSecondsString(neutralTbr.date) + " duration:" + neutralTbr.durationInMinutes + " absolute:" + neutralTbr.absoluteRate);
                     }
                 }
                 nsTreatments.add(new NsTreatment(tb));
+                previousend = tb.date + tb.getRealDuration() * 60 * 1000;
             }
 
         }
