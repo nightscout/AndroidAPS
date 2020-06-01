@@ -5,22 +5,36 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivity() {
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var sp: SP
 
     private var plugin: PluginBase? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Important to set theme here
+        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            setTheme(themeToSet)
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         setContentView(R.layout.activity_single_fragment)
         plugin = pluginStore.plugins[intent.getIntExtra("plugin", -1)]
         title = plugin?.name
