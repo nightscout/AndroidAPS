@@ -222,6 +222,7 @@ public class AutotunePlugin extends PluginBase {
 
         String strResult = "";
         DecimalFormat df = new DecimalFormat("0.000");
+        DecimalFormat df2 = new DecimalFormat("0.00");
         DecimalFormat ef = new DecimalFormat("00");
         String line = "---------------------------------------------------\n";
 
@@ -230,17 +231,17 @@ public class AutotunePlugin extends PluginBase {
         //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
         strResult = line;
         // show ISF and CR
-        strResult += "|  ISF | " + df.format(pumpProfile.isf / toMgDl) + " |  " + df.format(tunedProfile.isf / toMgDl)+" |\n";
+        strResult += "|  ISF | " + df2.format(pumpProfile.isf / toMgDl) + " |  " + df2.format(tunedProfile.isf / toMgDl)+" |\n";
         strResult += line;
-        strResult += "|  IC  | " + df.format(pumpProfile.ic) + "  | " + df.format(tunedProfile.ic) + " |\n";
+        strResult += "|  IC  | " + df2.format(pumpProfile.ic) + "  | " + df2.format(tunedProfile.ic) + " |\n";
         strResult += line;
-        strResult += "|Hour| Profile | Tuned |nbKo|Miss.days/%\n";
+        strResult += "|Hour| Profile | Tuned |Miss.days/%\n";
         strResult += line;
         double totalBasal = 0d;
         double totalTuned = 0d;
         for (int i = 0; i < 24; i++) {
-            String basalString = df.format(pumpProfile.basal[i]);
-            String tunedString = df.format(tunedProfile.basal[i]);
+            String basalString = df2.format(pumpProfile.basal[i]);
+            String tunedString = df2.format(tunedProfile.basal[i]);
             totalBasal +=pumpProfile.basal[i];
             totalTuned +=tunedProfile.basal[i];
             int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpProfile.basal[i]) * 100 - 100) ;
@@ -255,7 +256,7 @@ public class AutotunePlugin extends PluginBase {
             strResult += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
         }
         strResult += line;
-        strResult += "|    ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";
+        strResult += "|   ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";
         strResult += line;
 
         atLog(strResult);
