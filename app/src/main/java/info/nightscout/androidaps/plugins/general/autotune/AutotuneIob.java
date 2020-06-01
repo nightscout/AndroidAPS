@@ -86,19 +86,12 @@ public class AutotuneIob {
     public long to;
 
     public AutotuneIob(
-            //HasAndroidInjector injector,
-            long from
+            HasAndroidInjector injector
     ) {
-        injector = StaticInjector.Companion.getInstance();
-        //this.injector=injector;
+        //injector = StaticInjector.Companion.getInstance();
+        this.injector=injector;
         injector.androidInjector().inject(this);
-        loadData(from);
         //initializeData(from,to);
-    }
-
-    //Todo, limit data to only the end of selected day...
-    private void loadData(long from) {
-        treatmentsPluginHistory.initializeData(from - range());
     }
 
     private long range() {
@@ -213,8 +206,106 @@ public class AutotuneIob {
 
 
     public IobTotal calculateFromTreatmentsAndTempsSynchronized(long time) {
-        IobTotal iobTotal = iobCobCalculatorPluginHistory.calculateFromTreatmentsAndTempsSynchronized(time, profileFunction.getProfile(time)).round();
+        //IobTotal iobTotal = iobCobCalculatorPluginHistory.calculateFromTreatmentsAndTempsSynchronized(time, profileFunction.getProfile(time)).round();
+        //return iobTotal;
+        return calculateFromTreatmentsAndTemps(time);
+    }
+
+    public IobTotal calculateFromTreatmentsAndTemps(long time) {
+        IobTotal bolusIob = getCalculationToTimeTreatments(time).round();
+        IobTotal basalIob = getCalculationToTimeTempBasals(time, true, to).round();
+        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         return iobTotal;
+    }
+
+    public IobTotal getCalculationToTimeTreatments(long time) {
+        IobTotal total = new IobTotal(time);
+
+        Profile profile = profileFunction.getProfile();
+        if (profile == null)
+            return total;
+
+        PumpInterface pumpInterface = activePlugin.getActivePump();
+
+        double dia = profile.getDia();
+
+        for (int pos = 0; pos < treatments.size(); pos++) {
+            Treatment t = treatments.get(pos);
+            if (!t.isValid) continue;
+            if (t.date > time) continue;
+            Iob tIOB = t.iobCalc(time, dia);
+            total.iob += tIOB.iobContrib;
+            total.activity += tIOB.activityContrib;
+            if (t.insulin > 0 && t.date > total.lastBolusTime)
+                total.lastBolusTime = t.date;
+            if (!t.isSMB) {
+                // instead of dividing the DIA that only worked on the bilinear curves,
+                // multiply the time the treatment is seen active.
+                long timeSinceTreatment = time - t.date;
+                long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
+                Iob bIOB = t.iobCalc(snoozeTime, dia);
+                total.bolussnooze += bIOB.iobContrib;
+            }
+        }
+
+        if (!pumpInterface.isFakingTempsByExtendedBoluses())
+            for (int pos = 0; pos < extendedBoluses.size(); pos++) {
+                ExtendedBolus e = extendedBoluses.get(pos);
+                if (e.date > time) continue;
+                IobTotal calc = e.iobCalc(time);
+                total.plus(calc);
+            }
+        return total;
+    }
+
+    public IobTotal getCalculationToTimeTempBasals(long time, boolean truncate, long truncateTime) {
+        IobTotal total = new IobTotal(time);
+
+        PumpInterface pumpInterface = activePlugin.getActivePump();
+
+        for (Integer pos = 0; pos < tempBasals.size(); pos++) {
+            TemporaryBasal t = tempBasals.get(pos);
+            if (t.date > time) continue;
+            IobTotal calc;
+            Profile profile = profileFunction.getProfile(t.date);
+            if (profile == null) continue;
+            if (truncate && t.end() > truncateTime) {
+                TemporaryBasal dummyTemp = new TemporaryBasal(injector);
+                dummyTemp.copyFrom(t);
+                dummyTemp.cutEndTo(truncateTime);
+                calc = dummyTemp.iobCalc(time, profile);
+            } else {
+                calc = t.iobCalc(time, profile);
+            }
+            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+            total.plus(calc);
+        }
+        if (pumpInterface.isFakingTempsByExtendedBoluses()) {
+            IobTotal totalExt = new IobTotal(time);
+            for (int pos = 0; pos < extendedBoluses.size(); pos++) {
+                ExtendedBolus e = extendedBoluses.get(pos);
+                if (e.date > time) continue;
+                IobTotal calc;
+                Profile profile = profileFunction.getProfile(e.date);
+                if (profile == null) continue;
+                if (truncate && e.end() > truncateTime) {
+                    ExtendedBolus dummyExt = new ExtendedBolus(injector);
+                    dummyExt.copyFrom(e);
+                    dummyExt.cutEndTo(truncateTime);
+                    calc = dummyExt.iobCalc(time);
+                } else {
+                    calc = e.iobCalc(time);
+                }
+                totalExt.plus(calc);
+            }
+            // Convert to basal iob
+            totalExt.basaliob = totalExt.iob;
+            totalExt.iob = 0d;
+            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
+            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
+            total.plus(totalExt);
+        }
+        return total;
     }
 
     /*********************************************************************************************************************************************************************************************/

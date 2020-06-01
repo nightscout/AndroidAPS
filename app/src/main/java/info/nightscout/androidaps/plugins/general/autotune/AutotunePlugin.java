@@ -127,6 +127,7 @@ public class AutotunePlugin extends PluginBase {
         autotuneFS = new AutotuneFS(injector);
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
+        autotuneIob = new AutotuneIob(injector);
 
         atLog("Start Autotune with " + daysBack + " days back");
 
@@ -147,7 +148,6 @@ public class AutotunePlugin extends PluginBase {
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
         autotuneFS.exportSettings(settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
-        autotuneIob = new AutotuneIob(starttime);
 
         profile = profileFunction.getProfile(now);
 
