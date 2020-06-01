@@ -113,13 +113,16 @@ public class AutotuneIob {
     }
 
     private void initializeBgreadings(long from, long to) {
+        glucose.clear();
         glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(from, to, false);
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep
     private void initializeTreatmentData(long from, long to) {
         long oldestBgDate = glucose.size() > 0 ? glucose.get(glucose.size()-1).date : from ;
-        List<Treatment> temp = treatmentsPlugin.getService().getTreatmentDataFromTime(from, to, false);
+        log.debug("AutotunePlugin Check BG date: BG Size: "+ glucose.size() + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to));
+        List<Treatment> temp = treatmentsPluginHistory.getService().getTreatmentDataFromTime(from, to, false);
+        log.debug("AutotunePlugin Nb treatments après requete: " + temp.size());
         meals.clear();
         treatments.clear();
         for(int i = 0; i < temp.size() ;i++) {
