@@ -452,8 +452,14 @@
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
     <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
     <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Über</string>
     <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
     <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
@@ -624,6 +630,8 @@
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">her</string>
+    <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
+    <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
     <string name="enablesmbalways">SMB immer aktivieren</string>
     <string name="enablesmbalways_summary">Aktiviere SMB immer, unabhängig von Boli. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enablesmbaftercarbs">Aktiviere SMB nach Mahlzeiten.</string>
@@ -1278,8 +1286,9 @@ Unerwartetes Verhalten.</string>
     <string name="statuslights">Statusanzeige</string>
     <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
     <string name="copyexistingvalues">NS-Einstellungen kopieren (falls vorhanden)?</string>
-    <string name="classic_desrciption">Ursprüngliches Erscheinungsbild</string>
-    <string name="buttonson_desrciption">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
+    <string name="classic_description">Ursprüngliches Erscheinungsbild</string>
+    <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
+    <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
