@@ -95,13 +95,12 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     private final OmnipodManager delegate;
 
-    @Deprecated
+    //TODO: remove and use injection
     private static AapsOmnipodManager instance;
 
     private Date lastBolusTime;
     private Double lastBolusUnits;
 
-    @Deprecated
     public static AapsOmnipodManager getInstance() {
         return instance;
     }

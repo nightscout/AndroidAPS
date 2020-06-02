@@ -8,7 +8,7 @@
     <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
     <string name="invalidinput">Entrada Inválida</string>
     <string name="tempbasaldeliveryerror">Erro na administração da Basal Temp</string>
-    <string name="goingtodeliver">Quantidade a ser administrada %1$.2fU</string>
+    <string name="goingtodeliver">A ser administrado %1$.2fU</string>
     <string name="waitingforpump">À espera da bomba</string>
     <string name="connectingfor">A ligar durante %1$d s</string>
     <string name="bolusdelivering">A administrar %1$.2fU</string>

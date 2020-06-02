@@ -232,8 +232,7 @@ public class NSUpload {
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
-                if (L.isEnabled(LTag.NSCLIENT))
-                    aapsLogger.debug("OpenAPS data too old to upload, sending iob only");
+                aapsLogger.debug(LTag.NSCLIENT, "OpenAPS data too old to upload, sending iob only");
                 IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
                 if (iob.length > 0) {
                     deviceStatus.iob = iob[0].json();

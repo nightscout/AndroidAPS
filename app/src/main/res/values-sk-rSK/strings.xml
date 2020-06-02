@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Pre zadanie %1$dg na %2$s odpovedz SMS kódom %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pre spustenie bazálu %1$d%% na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Pre obnovenie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Pre povolenie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Pre zakázanie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fJI/h spustený na %2$d minút</string>
     <string name="smscommunicator_extendedset">Predĺžený bolus %1$.2fJI na %2$d min úspešne spustený</string>
     <string name="smscommunicator_carbsset">Sacharidy %1$dg zadané úspešne</string>
@@ -468,6 +471,8 @@
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="careportal_pbage_label">Vek batérie v pumpe</string>
     <string name="ns_alarmoptions">Nastavenie alarmov</string>
+    <string name="ns_alarms">Vytvoriť oznámenia z alarmov NS</string>
+    <string name="ns_announcements">Vytvoriť oznámenia z upozornení NS</string>
     <string name="nsalarm_staledatavalue_label">Hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="openapsama_autosens_period">Interval pre automatickú detekciu citlivosti [h]</string>
@@ -620,6 +625,8 @@
     <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">pred</string>
+    <string name="set_neutral_temps_title">Nastaviť neutrálny dočasný bazál</string>
+    <string name="set_neutral_temps_summary">Ak je povolená táto možnosť, zastaví sa dočasný bazál pred koncom každej hodiny. To môže u niektorých púmp pomôcť zastaviť pípanie/vibrácie na celú hodinu.</string>
     <string name="enablesmbalways">Vždy povoliť SMB</string>
     <string name="enablesmbalways_summary">Povoliť SMB nezávisle na bolusoch. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
     <string name="enablesmbaftercarbs">Povoliť SMB po jedle</string>
@@ -845,6 +852,10 @@
     <string name="log_alerts">Zaznamenať výstrahy</string>
     <string name="enable_tbr_emulation">Povoliť emuláciu dočasných bazálov</string>
     <string name="enable_tbr_emulation_summary">Používať predĺžené bolusy namiesto dočasných bázalov, aby sme sa vyhli 250%% limitu</string>
+    <string name="disable_vibration">Zakázať vibrácie pri ručnom podaní bolusu</string>
+    <string name="disable_vibration_summary">Pre bolus a predĺžený bolus (dostupné iba s Insight firmware 3.x)</string>
+    <string name="disable_vibration_auto">Zakázať vibrácie pri automatickom podaní bolusu</string>
+    <string name="disable_vibration_auto_summary">Pre SMB a Dočasný bazál s emuláciou TBR (k dispozícii iba s Insight firmware 3.x)</string>
     <string name="disconnect_delay">Oneskorenie odpojenia [s]</string>
     <string name="serial_number">Sériové číslo</string>
     <string name="release_software_version">Verzia softwaru</string>
@@ -1269,8 +1280,6 @@
     <string name="statuslights">Indikátory stavu</string>
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
     <string name="copyexistingvalues">Skopírovať nastavenia NS (ak existujú)?</string>
-    <string name="classic_desrciption">Pôvodný vzhľad</string>
-    <string name="buttonson_desrciption">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
     <string name="skin">Vzhľad</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1369,6 +1378,7 @@
     <string name="description_pump_omnipod_dash">Integrácia pumpy pre Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Pripomienka ukončenia párovania</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Pripomienka ukončenia nastavenia</string>
+    <string name="omnipod_alert_expiration">Pod čoskoro expiruje</string>
     <string name="omnipod_alert_expiration_advisory">Pod čoskoro expiruje</string>
     <string name="omnipod_alert_shutdown_imminent">Vypnutie je bezprostredné</string>
     <string name="omnipod_alert_low_reservoir">Nízka hladina zásobníka</string>
