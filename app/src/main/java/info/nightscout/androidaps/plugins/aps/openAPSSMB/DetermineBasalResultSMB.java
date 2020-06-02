@@ -38,10 +38,9 @@ public class DetermineBasalResultSMB extends APSResult {
             if (result.has("snoozeBG")) snoozeBG = result.getDouble("snoozeBG");
             //if (result.has("insulinReq")) insulinReq = result.getDouble("insulinReq");
 
-            if (sp.getBoolean(R.string.key_smb_enable_carbs_suggestions, false)) {
-                if (result.has("carbsReq")) carbsReq = result.getInt("carbsReq");
-                if (result.has("carbsReqWithin")) carbsReqWithin = result.getInt("carbsReqWithin");
-            }
+            if (result.has("carbsReq")) carbsReq = result.getInt("carbsReq");
+            if (result.has("carbsReqWithin")) carbsReqWithin = result.getInt("carbsReqWithin");
+            
 
             if (result.has("rate") && result.has("duration")) {
                 tempBasalRequested = true;

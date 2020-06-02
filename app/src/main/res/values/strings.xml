@@ -613,14 +613,11 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
-    <string name="key_smb_enable_carbs_suggestions" translatable="false">smb_enable_carbs_suggestions</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
     <string name="enableuam">Enable UAM</string>
     <string name="enablesmb">Enable SMB</string>
-    <string name="enablecarbssuggestions">Enable Carbs Suggestions</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
-    <string name="enablecarbssuggestions_summary">Enable carbs suggestions when BG is predicted to go below threshold</string>
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
