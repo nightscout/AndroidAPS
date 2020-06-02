@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -18,6 +19,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -62,6 +64,8 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
 
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val loopHandler = Handler()
@@ -81,6 +85,26 @@ class MedtronicFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        swipeRefresh_medtronic.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_medtronic.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        swipeRefresh_medtronic.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                swipeRefresh_medtronic.isRefreshing = false
+                readPumpStatus()
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
+        }
+
         medtronic_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
         medtronic_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId(RileyLinkTargetDevice.MedtronicPump))
@@ -88,34 +112,64 @@ class MedtronicFragment : DaggerFragment() {
         medtronic_pump_status.setTextColor(Color.WHITE)
         medtronic_pump_status.text = "{fa-bed}"
 
-        medtronic_history.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, MedtronicHistoryActivity::class.java))
-            } else {
-                displayNotConfiguredDialog()
+        medtronic_refresh.setOnClickListener(clickListener)
+        fabMedtronicMenu.setOnClickListener(clickListener)
+        medtronic_history.setOnClickListener(clickListener)
+        medtronic_stats.setOnClickListener(clickListener)
+
+        ViewAnimation.showOut(medtronic_refresh)
+        ViewAnimation.showOut(medtronic_history)
+        ViewAnimation.showOut(medtronic_stats)
+
+    }
+
+    private val clickListener: View.OnClickListener = View.OnClickListener { view ->
+        when ( view.id ){
+            R.id.fabMedtronicMenu -> {
+                if ( medtronic_refresh.visibility == View.GONE) {
+                    ViewAnimation.showIn(medtronic_refresh)
+                    ViewAnimation.showIn(medtronic_history)
+                    ViewAnimation.showIn(medtronic_stats)
+                } else if ( medtronic_refresh.visibility == View.VISIBLE) {
+                    ViewAnimation.showOut(medtronic_refresh)
+                    ViewAnimation.showOut(medtronic_history)
+                    ViewAnimation.showOut(medtronic_stats)
+                }
+            }
+            R.id.medtronic_refresh -> {
+                readPumpStatus()
+            }
+            R.id.medtronic_history -> {
+                if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true)  {
+                    startActivity(Intent(context, MedtronicHistoryActivity::class.java))
+                } else {
+                    displayNotConfiguredDialog()
+                }
+
+            }
+            R.id.medtronic_stats -> {
+                if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
+                    startActivity(Intent(context, RileyLinkStatusActivity::class.java))
+                } else {
+                    displayNotConfiguredDialog()
+                }
             }
         }
 
-        medtronic_refresh.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
-                displayNotConfiguredDialog()
-            } else {
-                medtronic_refresh.isEnabled = false
-                medtronicPumpPlugin.resetStatusState()
-                commandQueue.readStatus("Clicked refresh", object : Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread { medtronic_refresh?.isEnabled = true }
-                    }
-                })
-            }
-        }
+    }
 
-        medtronic_stats.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, RileyLinkStatusActivity::class.java))
-            } else {
-                displayNotConfiguredDialog()
-            }
+
+    private fun readPumpStatus() {
+        if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
+            displayNotConfiguredDialog()
+        } else {
+            medtronic_refresh.isEnabled = false
+            medtronicPumpPlugin.resetStatusState()
+            commandQueue.readStatus("Clicked refresh", object : Callback() {
+                override fun run() {
+                    activity?.runOnUiThread { medtronic_refresh?.isEnabled = true }
+                }
+            })
         }
     }
 
