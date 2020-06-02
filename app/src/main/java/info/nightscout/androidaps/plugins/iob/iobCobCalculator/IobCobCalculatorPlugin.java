@@ -39,6 +39,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryBgData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
@@ -159,7 +160,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
                     runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
                 }, fabricPrivacy::logException)
         );
-        // EventNewBG
+        // EventNewBG .... cannot be used for invalidating because only event with last BG is fired
         disposable.add(rxBus
                 .toObservable(EventNewBG.class)
                 .observeOn(Schedulers.io())
@@ -203,7 +204,13 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::newHistoryData, fabricPrivacy::logException)
+                .subscribe(event -> newHistoryData(event, false), fabricPrivacy::logException)
+        );
+        // EventNewHistoryBgData
+        disposable.add(rxBus
+                .toObservable(EventNewHistoryBgData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> newHistoryData(new EventNewHistoryData(event.getTimestamp()), true), fabricPrivacy::logException)
         );
     }
 
@@ -822,7 +829,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
-    private void newHistoryData(EventNewHistoryData ev) {
+    private void newHistoryData(EventNewHistoryData ev, boolean bgDataReload) {
         //log.debug("Locking onNewHistoryData");
         stopCalculation("onEventNewHistoryData");
         synchronized (dataLock) {
@@ -862,7 +869,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
                 }
             }
         }
-        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), false, true, ev);
+        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), bgDataReload, true, ev);
         //log.debug("Releasing onNewHistoryData");
     }
 

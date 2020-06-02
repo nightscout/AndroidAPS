@@ -52,6 +52,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryBgData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
@@ -386,7 +387,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 aapsLogger.debug(LTag.DATABASE, "BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange(bgReading);
+                rxBus.send(new EventNewHistoryBgData(old.date)); // trigger cache invalidation
+                scheduleBgChange(bgReading); // trigger new calculation
                 return false;
             }
         } catch (SQLException e) {
