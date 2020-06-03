@@ -122,9 +122,12 @@ public class AutotuneIob {
         long oldestBgDate = glucose.size() > 0 ? glucose.get(glucose.size()-1).date : from ;
         log.debug("AutotunePlugin Check BG date: BG Size: "+ glucose.size() + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to));
         List<Treatment> temp = treatmentsPluginHistory.getService().getTreatmentDataFromTime(from, to, false);
-        log.debug("AutotunePlugin Nb treatments après requete: " + temp.size());
+        log.debug("AutotunePlugin Nb treatments after query: " + temp.size());
         meals.clear();
         treatments.clear();
+        int nbCarbs = 0;
+        int nbSMB=0;
+        int nbBolus=0;
         for(int i = 0; i < temp.size() ;i++) {
             Treatment tp =  temp.get(i);
             if(tp.isValid) {
@@ -133,8 +136,17 @@ public class AutotuneIob {
                 //only carbs after first BGReadings are taken into account in calculation of Autotune
                 if (tp.carbs > 0 && tp.date >= oldestBgDate )
                     meals.add(temp.get(i));
+                if(tp.date<to) {
+                    if(tp.isSMB)
+                        nbSMB++;
+                    else if(tp.insulin>0)
+                        nbBolus++;
+                    if(tp.carbs>0)
+                        nbCarbs++;
+                }
             }
         }
+        log.debug("AutotunePlugin Nb Meals: " + nbCarbs + " Nb Bolus: " + nbBolus + " Nb SMB: " + nbSMB);
     }
 
     //nsTreatment is used only for export data
