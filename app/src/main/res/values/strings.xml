@@ -1250,8 +1250,9 @@
     <string name="autotune_warning">Warning</string>
     <string name="autotune_result">Result</string>
     <string name="autotune_tune_days">Tune days</string>
-    <string name="run_autotune">Tune run</string>
-    <string name="switch_autotune">Switch Autotune</string>
+    <string name="autotune_run">Run Autotune</string>
+    <string name="autotune_copy_localprofile">Copy to local profile</string>
+    <string name="autotune_switch">Switch Autotune</string>
 
 
     <!-- Pump Abstract -->

@@ -53,9 +53,10 @@ public class AutotunePlugin extends PluginBase {
 
     private String logString="";
 
-    private static final int autotuneStartHour = 4;
-    public static String result ="Press Run";
+    public static final int autotuneStartHour = 4;
+    public static String result="";
     public static Date lastRun=null;
+    public static String lastNbDays="";
     private PreppedGlucose preppedGlucose =null;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -127,6 +128,7 @@ public class AutotunePlugin extends PluginBase {
         autotuneFS = new AutotuneFS(injector);
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
+        lastNbDays = "" + daysBack;
         autotuneIob = new AutotuneIob(injector);
 
         atLog("Start Autotune with " + daysBack + " days back");
