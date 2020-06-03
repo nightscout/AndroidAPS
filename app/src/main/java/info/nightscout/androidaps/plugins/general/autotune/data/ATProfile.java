@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,6 +20,8 @@ import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileStore;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -39,6 +42,7 @@ public class ATProfile {
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
+    @Inject DateUtil dateUtil;
     private final HasAndroidInjector injector;
 
 //Todo add Autotune Injector
@@ -184,6 +188,21 @@ public class ATProfile {
         } catch (JSONException e) {}
 
         return json;
+    }
+
+    public ProfileStore getProfileStore() {
+        ProfileStore profileStore=null;
+        JSONObject json = new JSONObject();
+        JSONObject store = new JSONObject();
+
+        try {
+            store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), getData());
+            json.put("defaultProfile", resourceHelper.gs(R.string.autotune_tunedprofile_name));
+            json.put("store", store);
+            json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()));
+            profileStore = new ProfileStore(injector, json);
+        } catch (JSONException e) {}
+        return profileStore;
     }
 
 }

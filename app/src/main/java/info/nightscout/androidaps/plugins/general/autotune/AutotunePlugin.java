@@ -57,6 +57,7 @@ public class AutotunePlugin extends PluginBase {
     public static String result="";
     public static Date lastRun=null;
     public static String lastNbDays="";
+    public ATProfile tunedProfile;
     private PreppedGlucose preppedGlucose =null;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -69,7 +70,6 @@ public class AutotunePlugin extends PluginBase {
     private AutotuneCore autotuneCore;
     private AutotuneIob autotuneIob;
     private AutotuneFS autotuneFS;
-//    private AutotuneFragment autotuneFragment;
     private AAPSLogger aapsLogger;
 
     private final SP sp;
@@ -87,7 +87,6 @@ public class AutotunePlugin extends PluginBase {
             SP sp,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
-//            AutotuneFragment autotuneFragment,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
     )  {
         super(new PluginDescription()
@@ -108,7 +107,6 @@ public class AutotunePlugin extends PluginBase {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.injector = injector;
         this.sp=sp;
-//        this.autotuneFragment = autotuneFragment;
         this.aapsLogger = aapsLogger;
 
     }
@@ -153,7 +151,7 @@ public class AutotunePlugin extends PluginBase {
 
         profile = profileFunction.getProfile(now);
 
-        ATProfile tunedProfile = new ATProfile(profile);
+        tunedProfile = new ATProfile(profile);
         tunedProfile.profilename=resourceHelper.gs(R.string.autotune_tunedprofile_name);
         ATProfile pumpprofile = new ATProfile(profile);
         pumpprofile.profilename=profileFunction.getProfileName();
