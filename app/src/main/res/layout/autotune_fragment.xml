@@ -202,17 +202,25 @@
                 android:background="@color/listdelimiter" />
 
             <Button
-                android:id="@+id/tune_run"
+                android:id="@+id/autotune_run"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/run_autotune" />
+                android:text="@string/autotune_run" />
+
             <Button
-                android:id="@+id/tune_profileswitch"
+                android:id="@+id/autotune_copylocal"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/switch_autotune" />
+                android:text="@string/autotune_copy_localprofile" />
+
+            <Button
+                android:id="@+id/autotune_profileswitch"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/autotune_switch" />
 
         </LinearLayout>
 

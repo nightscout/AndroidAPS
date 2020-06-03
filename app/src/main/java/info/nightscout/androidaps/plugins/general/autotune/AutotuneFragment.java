@@ -15,6 +15,8 @@ import android.widget.TextView;
 //2 unknown imports disabled by philoul to build AAPS
 //import butterknife.BindView;
 //import butterknife.OnClick;
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
@@ -50,10 +52,11 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
 
     public AutotuneFragment() {super();}
 
-    Button runTuneNowButton;
+    Button autotuneRunButton;
 // disabled by philoul to build AAPS
 //    @BindView(R.id.tune_profileswitch)
-    Button tuneProfileSwitch;
+    Button autotuneProfileSwitchButton;
+    Button autotuneCopyLocalButton;
     TextView warningView;
     TextView resultView;
     TextView lastRunView;
@@ -68,18 +71,29 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             warningView = (TextView) view.findViewById(R.id.tune_warning);
             resultView = (TextView) view.findViewById(R.id.tune_result);
             lastRunView = (TextView) view.findViewById(R.id.tune_lastrun);
-            runTuneNowButton = (Button) view.findViewById(R.id.tune_run);
-            tuneProfileSwitch = (Button) view.findViewById(R.id.tune_profileswitch);
+            autotuneRunButton = (Button) view.findViewById(R.id.autotune_run);
+            autotuneCopyLocalButton=(Button) view.findViewById(R.id.autotune_copylocal);
+            autotuneProfileSwitchButton = (Button) view.findViewById(R.id.autotune_profileswitch);
             tune_days = (EditText) view.findViewById(R.id.tune_days);
-            runTuneNowButton.setOnClickListener(this);
-            tuneProfileSwitch.setVisibility(View.GONE);
-            tuneProfileSwitch.setOnClickListener(this);
+            autotuneRunButton.setOnClickListener(this);
+            autotuneCopyLocalButton.setVisibility(View.GONE);
+            autotuneCopyLocalButton.setOnClickListener(this);
+            autotuneProfileSwitchButton.setVisibility(View.GONE);
+            autotuneProfileSwitchButton.setOnClickListener(this);
 
             tune_days.setText(sp.getString(R.string.key_autotune_default_tune_days,"5"));
             warningView.setText(addWarnings());
-            resultView.setText(AutotunePlugin.result);
-            String latRunTxt = AutotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
-            lastRunView.setText(latRunTxt);
+            resultView.setText("");
+
+            Date lastRun = autotunePlugin.lastRun!=null? autotunePlugin.lastRun : new Date(0);
+            if (lastRun.getTime() > dateUtil.toTimeMinutesFromMidnight(System.currentTimeMillis(), autotunePlugin.autotuneStartHour*60) && autotunePlugin.result != "") {
+                tune_days.setText(autotunePlugin.lastNbDays);
+                resultView.setText(autotunePlugin.result);
+                autotuneCopyLocalButton.setVisibility(View.VISIBLE);
+                autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
+            }
+            String lastRunTxt = autotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(autotunePlugin.lastRun) : "";
+            lastRunView.setText(lastRunTxt);
             updateGUI();
             return view;
         } catch (Exception e) {
@@ -106,20 +120,20 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.tune_run) {
+        if (id == R.id.autotune_run) {
             //updateResult("Starting Autotune");
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0) {
 //            resultView.setText(autotune.bgReadings(daysBack));
                 resultView.setText(autotunePlugin.aapsAutotune(daysBack));
-                tuneProfileSwitch.setVisibility(View.VISIBLE);
+                autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
             } else
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            String latRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
-            lastRunView.setText(latRunTxt);
-        } else if (id == R.id.tune_profileswitch){
+            String lastRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
+            lastRunView.setText(lastRunTxt);
+        } else if (id == R.id.autotune_profileswitch){
             String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
             ProfileStore profile = null;
             log("ProfileSwitch pressed");
@@ -154,6 +168,8 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             } else
                 log.debug("ProfileStore is null!");
              */
+        }else if (id == R.id.autotune_copylocal){
+
         }
 
         //updateGUI();
