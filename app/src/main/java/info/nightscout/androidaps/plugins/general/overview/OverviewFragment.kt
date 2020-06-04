@@ -19,6 +19,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -478,19 +479,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             secondaryGraphsLabel.clear()
             overview_iobgraph.removeAllViews()
             for (i in 1 until numOfGraphs) {
-                val label = TextView(context)
-                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -120) }
-                overview_iobgraph.addView(label)
-                secondaryGraphsLabel.add(label)
+                val relativeLayout = RelativeLayout(context)
+                relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
                 val graph = GraphView(context)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(35), 0, resourceHelper.dpToPx(15)) }
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
                 graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
-                overview_iobgraph.addView(graph)
+                relativeLayout.addView(graph)
+
+                val label = TextView(context)
+                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                label.layoutParams = layoutParams
+                relativeLayout.addView(label)
+                secondaryGraphsLabel.add(label)
+
+                overview_iobgraph.addView(relativeLayout)
                 secondaryGraphs.add(graph)
             }
         }
@@ -583,65 +593,41 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode.setImageResource(R.drawable.loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-                    //overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     overview_apsmode.setImageResource(R.drawable.loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
                 pump.isSuspended                                                        -> {
                     overview_apsmode.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.pumpsuspended)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
                     overview_apsmode.setImageResource(R.drawable.loop_lgs)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode.setImageResource(R.drawable.loop_closed)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode.setImageResource(R.drawable.loop_open)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.openloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
                 else                                                                    -> {
                     overview_apsmode.setImageResource(R.drawable.loop_disabled)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.disabledloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
             }
         } else {
