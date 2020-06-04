@@ -21,13 +21,19 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile;
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin.SingleProfile;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged;
 
 /**
  * Created by Rumen Georgiev on 1/29/2018.
@@ -48,8 +54,13 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     @Inject DateUtil dateUtil;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
+    @Inject LocalProfilePlugin localProfilePlugin;
+    @Inject RxBusWrapper rxBus;
 
     public AutotuneFragment() {super();}
+
+    private Date lastRun;
+    private String lastRunTxt;
 
     Button autotuneRunButton;
 // disabled by philoul to build AAPS
@@ -84,7 +95,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             warningView.setText(addWarnings());
             resultView.setText("");
 
-            Date lastRun = autotunePlugin.lastRun!=null? autotunePlugin.lastRun : new Date(0);
+            lastRun = autotunePlugin.lastRun!=null? autotunePlugin.lastRun : new Date(0);
             if (lastRun.getTime() > dateUtil.toTimeMinutesFromMidnight(System.currentTimeMillis(), autotunePlugin.autotuneStartHour*60) && autotunePlugin.result != "") {
                 tune_days.setText(autotunePlugin.lastNbDays);
                 resultView.setText(autotunePlugin.result);
@@ -92,7 +103,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
                 autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
                 warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
             }
-            String lastRunTxt = autotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(autotunePlugin.lastRun) : "";
+            lastRunTxt = autotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(autotunePlugin.lastRun) : "";
             lastRunView.setText(lastRunTxt);
             updateGUI();
             return view;
@@ -129,10 +140,11 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
                 autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
                 autotuneCopyLocalButton.setVisibility(View.VISIBLE);
                 warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
-                String lastRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
+                lastRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
                 lastRunView.setText(lastRunTxt);
+                lastRun = autotunePlugin.lastRun!=null? autotunePlugin.lastRun : new Date(0);
             } else
-                resultView.setText("Set at least 1 day!!!");
+                resultView.setText(resourceHelper.gs(R.string.autotune_min_days));
             // lastrun in minutes ???
         } else if (id == R.id.autotune_profileswitch){
             String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
@@ -154,9 +166,13 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
                 log("ProfileStore is null!");
 
         }else if (id == R.id.autotune_copylocal){
-
+            String localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(AutotunePlugin.lastRun);
+            OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + localName + "\n" + dateUtil.dateAndTimeString(lastRun), () ->  {
+                    localProfilePlugin.addProfile(new SingleProfile().copyFrom(localProfilePlugin.createProfileStore(), autotunePlugin.tunedProfile.getProfile(), localName));
+                    rxBus.send(new EventLocalProfileChanged());
+                    autotuneCopyLocalButton.setVisibility(View.GONE);
+            });
         }
-
         //updateGUI();
     }
 

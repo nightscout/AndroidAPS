@@ -159,8 +159,8 @@ public class AutotunePlugin extends PluginBase {
         autotuneFS.exportPumpProfile(pumpprofile);
 
         if(daysBack < 1){
-            //todo add string
-            return "Sorry I cannot do it for less than 1 day!";
+            //Not necessary today (test is done in fragment, but left if other way to launch autotune i.e. with automation
+            return resourceHelper.gs(R.string.autotune_min_days);
         } else {
             // todo Add loop below (including result presentation) in a dedicated thread
             for (int i = 0; i < daysBack; i++) {
@@ -187,8 +187,10 @@ public class AutotunePlugin extends PluginBase {
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
                 //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTunedProfile(tunedProfile);
-                if(i< daysBack-1)
-                    result = "Partial result for day "+ (i+1) + "\n" + showResults(tunedProfile,pumpprofile);
+                if(i< daysBack-1) {
+                    atLog("Partial result for day " + (i + 1) + "\n");
+                    showResults(tunedProfile, pumpprofile);
+                }
 
                 //Todo: if possible add feedback to user between each day
                 // This was a trial to update fragment results between each day (autotune calculation takes about 2 minutes for 30 days...)
