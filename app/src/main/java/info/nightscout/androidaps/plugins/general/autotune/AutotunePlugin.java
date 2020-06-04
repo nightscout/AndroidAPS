@@ -54,9 +54,13 @@ public class AutotunePlugin extends PluginBase {
     private String logString="";
 
     public static final int autotuneStartHour = 4;
+
     public static String result="";
     public static Date lastRun=null;
     public static String lastNbDays="";
+    public static int copyButtonVisibility;
+    public static int profileSwitchButtonVisibility;
+
     public ATProfile tunedProfile;
     private PreppedGlucose preppedGlucose =null;
     private final ResourceHelper resourceHelper;
