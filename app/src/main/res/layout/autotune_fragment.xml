@@ -241,7 +241,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/icon_local_save"
-                    android:text="@string/autotune_copy_localprofile" />
+                    android:text="@string/autotune_copy_localprofile_button" />
 
                 <Button
                     android:id="@+id/autotune_profileswitch"

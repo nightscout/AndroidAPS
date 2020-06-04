@@ -1251,10 +1251,11 @@
     <string name="autotune_result">Result</string>
     <string name="autotune_tune_days">Tune days</string>
     <string name="autotune_run">Run Autotune</string>
-    <string name="autotune_copy_localprofile">Copy to local profile</string>
+    <string name="autotune_copy_localprofile_button">Copy to local profile</string>
     <string name="autotune_error">Error in input data, try to reduce the number of days</string>
     <string name="autotune_warning_after_run">You already pressed RUN - NO WARNING NEEDED!</string>
     <string name="autotune_min_days">Set at least 1 day!!!</string>
+    <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
 
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>

@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -56,6 +57,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     @Inject ResourceHelper resourceHelper;
     @Inject LocalProfilePlugin localProfilePlugin;
     @Inject RxBusWrapper rxBus;
+    @Inject ActivePluginProvider activePlugin;
 
     public AutotuneFragment() {super();}
 
@@ -121,13 +123,11 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
             if (profile != null) {
-// todo Philoul activate profile switch once AT is Ok (to update to be compatible with local profiles)
-//                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-//                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
-//                 );
+                //
             }
         }
     }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -152,22 +152,17 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             log("ProfileSwitch pressed");
 
             if (profileStore != null) {
-//                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-//                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCH;
-//                profileswitch.executeProfileSwitch = true;
-//                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
-//                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-
-// todo Philoul activate profile switch once AT is Ok
-//                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-//                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
-//                 );
+                 OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.activate_profile) + ": " + autotunePlugin.tunedProfile.profilename + " ?", () -> {
+                     activePlugin.getActiveTreatments().doProfileSwitch(autotunePlugin.tunedProfile.getProfileStore(), autotunePlugin.tunedProfile.profilename, 0, 100, 0, DateUtil.now());
+                     rxBus.send(new EventLocalProfileChanged());
+                     autotuneProfileSwitchButton.setVisibility(View.GONE);
+                });
             } else
                 log("ProfileStore is null!");
 
         }else if (id == R.id.autotune_copylocal){
             String localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(AutotunePlugin.lastRun);
-            OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + localName + "\n" + dateUtil.dateAndTimeString(lastRun), () ->  {
+            OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.autotune_copy_localprofile_button), resourceHelper.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + "\n" + dateUtil.dateAndTimeString(lastRun), () ->  {
                     localProfilePlugin.addProfile(new SingleProfile().copyFrom(localProfilePlugin.createProfileStore(), autotunePlugin.tunedProfile.getProfile(), localName));
                     rxBus.send(new EventLocalProfileChanged());
                     autotuneCopyLocalButton.setVisibility(View.GONE);
