@@ -338,19 +338,20 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until secondaryGraphs.size) {
-                secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
-                secondaryGraphs[g].visibility = (!bgOnly && (
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                    )).toVisibility()
-                secondaryGraphsData[g].performUpdate()
-            }
+            if (!bgOnly)
+                for (g in 0 until secondaryGraphs.size) {
+                    secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
+                    secondaryGraphs[g].visibility = (!bgOnly && (
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                        )).toVisibility()
+                    secondaryGraphsData[g].performUpdate()
+                }
         }
     }
 }
