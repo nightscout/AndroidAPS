@@ -187,6 +187,8 @@ public class AutotunePlugin extends PluginBase {
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
                 //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTunedProfile(tunedProfile);
+                if(i< daysBack-1)
+                    result = "Partial result for day "+ (i+1) + "\n" + showResults(tunedProfile,pumpprofile);
 
                 //Todo: if possible add feedback to user between each day
                 // This was a trial to update fragment results between each day (autotune calculation takes about 2 minutes for 30 days...)
@@ -200,14 +202,6 @@ public class AutotunePlugin extends PluginBase {
 
             autotuneFS.exportResult(result);
 
-            // TODO: integration with ProfileStore to develop below some part of previous code...
-            //store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), convertedProfile);
-            //ProfileStore profileStore = new ProfileStore(json);
-            //sp.putString("autotuneprofile", profileStore.getData().toString());
-            //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
-            //     RxBus.INSTANCE.send(new EventProfileStoreChanged());
-
-            // Export log file (can be compared with Oref0 log file and zip all autotune files created during the run.
             autotuneFS.exportLogAndZip(lastRun, logString);
 
             return result;
@@ -221,21 +215,21 @@ public class AutotunePlugin extends PluginBase {
             toMgDl = 18;
 
         String strResult = "";
-        DecimalFormat df = new DecimalFormat("0.000");
+        DecimalFormat df3 = new DecimalFormat("0.000");
         DecimalFormat df2 = new DecimalFormat("0.00");
+        DecimalFormat df1 = new DecimalFormat("0.0");
         DecimalFormat ef = new DecimalFormat("00");
         String line = "---------------------------------------------------\n";
 
         //Todo add Strings and format for all results presentation
-        //Todo Replace % of modification by number of missing days for each hour
         //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
         strResult = line;
         // show ISF and CR
-        strResult += "|  ISF | " + df2.format(pumpProfile.isf / toMgDl) + " |  " + df2.format(tunedProfile.isf / toMgDl)+" |\n";
+        strResult += "|  ISF | " + df1.format(pumpProfile.isf / toMgDl) + " |  " + df1.format(tunedProfile.isf / toMgDl)+" |\n";
         strResult += line;
-        strResult += "|  IC  | " + df2.format(pumpProfile.ic) + "  | " + df2.format(tunedProfile.ic) + " |\n";
+        strResult += "|   IC  | " + df2.format(pumpProfile.ic) + "  | " + df2.format(tunedProfile.ic) + " |\n";
         strResult += line;
-        strResult += "|Hour| Profile | Tuned |Miss.days/%\n";
+        strResult += "|Hour|Profile|Tuned |Miss.days/%\n";
         strResult += line;
         double totalBasal = 0d;
         double totalTuned = 0d;
@@ -256,7 +250,7 @@ public class AutotunePlugin extends PluginBase {
             strResult += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
         }
         strResult += line;
-        strResult += "|   ∑    |   " + Round.roundTo(totalBasal,0.1) + "   |   " + Round.roundTo(totalTuned,0.1) + "   |\n";
+        strResult += "|   ∑   |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
         strResult += line;
 
         atLog(strResult);

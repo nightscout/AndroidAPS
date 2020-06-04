@@ -135,39 +135,23 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             lastRunView.setText(lastRunTxt);
         } else if (id == R.id.autotune_profileswitch){
             String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
-            ProfileStore profile = null;
+            ProfileStore profileStore = autotunePlugin.tunedProfile.getProfileStore();
             log("ProfileSwitch pressed");
-            /*todo Profile management to update
-            String profileString = SP.getString("autotuneprofile", null);
-            if (profileString != null) {
-                if (L.isEnabled(L.PROFILE))
-                    log("Loaded profile: " + profileString);
-                try {
-                    profile = new ProfileStore(new JSONObject(profileString));
-                } catch (JSONException e) {
-                    log("Unhandled exception", e);
-                    profile = null;
-                }
-            } else {
-                if (L.isEnabled(L.PROFILE))
-                    log("Stored profile not found");
-            }
 
-            if (profile != null) {
-                final ProfileStore store = profile;
-                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+            if (profileStore != null) {
+//                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
 //                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCH;
 //                profileswitch.executeProfileSwitch = true;
 //                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
 //                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
 
-// todo Philoul activate profile switch once AT is Ok (to update to be compatible with local profiles)
+// todo Philoul activate profile switch once AT is Ok
 //                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
 //                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
 //                 );
             } else
-                log.debug("ProfileStore is null!");
-             */
+                log("ProfileStore is null!");
+
         }else if (id == R.id.autotune_copylocal){
 
         }
