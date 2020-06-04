@@ -84,7 +84,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment()  {
 
         var themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
         try {
-            val theme: Resources.Theme? = context?.getTheme()
+            val theme: Resources.Theme? = context?.theme
             // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
             if (theme != null) {
                 theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
