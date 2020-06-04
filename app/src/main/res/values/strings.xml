@@ -1252,7 +1252,8 @@
     <string name="autotune_tune_days">Tune days</string>
     <string name="autotune_run">Run Autotune</string>
     <string name="autotune_copy_localprofile">Copy to local profile</string>
-    <string name="autotune_switch">Switch Autotune</string>
+    <string name="autotune_error">Error in input data, try to reduce the number of days</string>
+    <string name="autotune_warning_after_run">You already pressed RUN - NO WARNING NEEDED!</string>
 
 
     <!-- Pump Abstract -->

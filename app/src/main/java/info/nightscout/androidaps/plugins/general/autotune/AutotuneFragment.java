@@ -34,9 +34,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Rebase with current dev by philoul on 03/02/2020
  */
 
-/* Todo: Reset results field when
-*       1   lastrun is older than Today 4 AM
-*       2   Nb of day is changed
+/* Todo: Reset results field and Switch/Copy button visibility when
+*       Nb of days is changed
 * Memorise NbDay of lastRun (inconsistencies if you leave AutotunePlugin and enter again in it (results of calculation still shown but default nb of days selected
 * Add rxBus, and event management to update field results during calculation (calculation as to be in dedicated thread
 * Add Copy to localPlugin button (to allow modification of tuned profile before ProfileSwitch
@@ -91,6 +90,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
                 resultView.setText(autotunePlugin.result);
                 autotuneCopyLocalButton.setVisibility(View.VISIBLE);
                 autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
+                warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
             }
             String lastRunTxt = autotunePlugin.lastRun != null ? dateUtil.dateAndTimeString(autotunePlugin.lastRun) : "";
             lastRunView.setText(lastRunTxt);
@@ -127,12 +127,13 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
 //            resultView.setText(autotune.bgReadings(daysBack));
                 resultView.setText(autotunePlugin.aapsAutotune(daysBack));
                 autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
+                autotuneCopyLocalButton.setVisibility(View.VISIBLE);
+                warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
+                String lastRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
+                lastRunView.setText(lastRunTxt);
             } else
-                resultView.setText("Set days between 1 and 10!!!");
+                resultView.setText("Set at least 1 day!!!");
             // lastrun in minutes ???
-            warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            String lastRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
-            lastRunView.setText(lastRunTxt);
         } else if (id == R.id.autotune_profileswitch){
             String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
             ProfileStore profileStore = autotunePlugin.tunedProfile.getProfileStore();
