@@ -43,10 +43,7 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 
 /* Todo: Reset results field and Switch/Copy button visibility when
 *       Nb of days is changed
-* Memorise NbDay of lastRun (inconsistencies if you leave AutotunePlugin and enter again in it (results of calculation still shown but default nb of days selected
-* Add rxBus, and event management to update field results during calculation (calculation as to be in dedicated thread
-* Add Copy to localPlugin button (to allow modification of tuned profile before ProfileSwitch
-* Enable Direct ProfileSwitch button (and probably refactor UI)
+* Memorise visibility status of CopyLocal and ProfileSwitch button
 */
 public class AutotuneFragment extends DaggerFragment implements View.OnClickListener {
     @Inject NSProfilePlugin nsProfilePlugin;
@@ -115,19 +112,6 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
         return null;
     }
 
-// disabled by philoul to build AAPS
-// @OnClick(R.id.nsprofile_profileswitch)
-    public void onClickProfileSwitch() {
-        String name = resourceHelper.gs(R.string.autotune_tunedprofile_name);
-        ProfileStore store = nsProfilePlugin.getProfile();
-        if (store != null) {
-            Profile profile = store.getSpecificProfile(name);
-            if (profile != null) {
-                //
-            }
-        }
-    }
-
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -135,7 +119,6 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             //updateResult("Starting Autotune");
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0) {
-//            resultView.setText(autotune.bgReadings(daysBack));
                 resultView.setText(autotunePlugin.aapsAutotune(daysBack));
                 autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
                 autotuneCopyLocalButton.setVisibility(View.VISIBLE);
