@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
@@ -222,19 +223,28 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             secondaryGraphsLabel.clear()
             history_iobgraph.removeAllViews()
             for (i in 1 until numOfGraphs) {
-                val label = TextView(this)
-                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -50) }
-                history_iobgraph.addView(label)
-                secondaryGraphsLabel.add(label)
+                val relativeLayout = RelativeLayout(this)
+                relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
                 val graph = GraphView(this)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, 0, 0, resourceHelper.dpToPx(10)) }
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
                 graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
-                history_iobgraph.addView(graph)
+                relativeLayout.addView(graph)
+
+                val label = TextView(this)
+                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                label.layoutParams = layoutParams
+                relativeLayout.addView(label)
+                secondaryGraphsLabel.add(label)
+
+                history_iobgraph.addView(relativeLayout)
                 secondaryGraphs.add(graph)
             }
         }
@@ -338,19 +348,20 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until secondaryGraphs.size) {
-                secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
-                secondaryGraphs[g].visibility = (!bgOnly && (
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                    )).toVisibility()
-                secondaryGraphsData[g].performUpdate()
-            }
+            if (!bgOnly)
+                for (g in 0 until secondaryGraphs.size) {
+                    secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
+                    secondaryGraphs[g].visibility = (!bgOnly && (
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                        )).toVisibility()
+                    secondaryGraphsData[g].performUpdate()
+                }
         }
     }
 }
