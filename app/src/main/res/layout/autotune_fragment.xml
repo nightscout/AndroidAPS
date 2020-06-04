@@ -157,7 +157,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
@@ -167,7 +167,7 @@
                 <TextView
                     android:layout_width="5dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_weight="0"
                     android:gravity="center_horizontal"
                     android:paddingEnd="2dp"
@@ -178,12 +178,12 @@
                 <EditText
                     android:id="@+id/tune_days"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="0dp"
                     android:layout_marginLeft="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="start"
+                    android:gravity="start|center_vertical"
                     android:inputType="number"
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
@@ -210,8 +210,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:drawableStart="@drawable/icon_local_reset"
                 android:text="@string/autotune_run" />
 
