@@ -2,16 +2,18 @@ package info.nightscout.androidaps.plugins.pump.combo;
 
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import javax.inject.Inject;
 
@@ -31,7 +33,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class ComboFragment extends DaggerFragment implements View.OnClickListener {
+public class ComboFragment extends DaggerFragment {
     @Inject ComboPlugin comboPlugin;
     @Inject CommandQueue commandQueue;
     @Inject ResourceHelper resourceHelper;
@@ -40,6 +42,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
     @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
+    SwipeRefreshLayout swipeRefresh;
 
     private TextView stateView;
     private TextView activityView;
@@ -49,9 +52,13 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
     private TextView lastBolusView;
     private TextView baseBasalRate;
     private TextView tempBasalText;
-    private Button refreshButton;
     private TextView bolusCount;
     private TextView tbrCount;
+    private ColorStateList ColorsstateView = null;
+    private ColorStateList Colorsactivity = null;
+    private ColorStateList Colorsbatterieview = null;
+    private ColorStateList ColorsreservoirView = null;
+    private ColorStateList ColorslastConnectionView = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -69,8 +76,23 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
         bolusCount = view.findViewById(R.id.combo_bolus_count);
         tbrCount = view.findViewById(R.id.combo_tbr_count);
 
-        refreshButton = view.findViewById(R.id.combo_refresh_button);
-        refreshButton.setOnClickListener(this);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
+        swipeRefresh.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefresh.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(getResources(), R.color.swipe_background, null));
+
+        this.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //do the refresh of data here
+                commandQueue.readStatus("User request", new Callback() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(() -> swipeRefresh.setRefreshing(false));
+                    }
+                });
+                swipeRefresh.setRefreshing(false);
+            }
+        });
 
         return view;
     }
@@ -104,23 +126,11 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.combo_refresh_button:
-                refreshButton.setEnabled(false);
-                commandQueue.readStatus("User request", new Callback() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> refreshButton.setEnabled(true));
-                    }
-                });
-                break;
-        }
-    }
-
     public void updateGui() {
 
+        if( this.ColorsstateView == null ) {
+            this.ColorsstateView = stateView.getTextColors();
+        }
         // state
         stateView.setText(comboPlugin.getStateSummary());
         PumpState ps = comboPlugin.getPump().state;
@@ -133,22 +143,25 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
             stateView.setTextColor(Color.YELLOW);
             stateView.setTypeface(null, Typeface.BOLD);
         } else {
-            stateView.setTextColor(Color.WHITE);
+            stateView.setTextColor(this.ColorsstateView);
             stateView.setTypeface(null, Typeface.NORMAL);
         }
 
+        if( this.Colorsactivity == null ) {
+            this.Colorsactivity = activityView.getTextColors();
+        }
         // activity
         String activity = comboPlugin.getPump().activity;
         if (activity != null) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(this.Colorsactivity);
             activityView.setTextSize(14);
             activityView.setText(activity);
         } else if (commandQueue.size() > 0) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(this.Colorsactivity);
             activityView.setTextSize(14);
             activityView.setText("");
         } else if (comboPlugin.isInitialized()) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(this.Colorsactivity);
             activityView.setTextSize(20);
             activityView.setText("{fa-bed}");
         } else {
@@ -157,6 +170,9 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
             activityView.setText(resourceHelper.gs(R.string.pump_unreachable));
         }
 
+        if( this.Colorsbatterieview == null ) {
+            this.Colorsbatterieview = batteryView.getTextColors();
+        }
         if (comboPlugin.isInitialized()) {
             // battery
             batteryView.setTextSize(20);
@@ -183,8 +199,11 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
                 reservoirView.setText(resourceHelper.gs(R.string.combo_reservoir_normal));
             }
 
+            if( this.ColorsreservoirView == null ) {
+                this.ColorsreservoirView = reservoirView.getTextColors();
+            }
             if (ps.insulinState == PumpState.UNKNOWN) {
-                reservoirView.setTextColor(Color.WHITE);
+                reservoirView.setTextColor(ColorsreservoirView);
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             } else if (ps.insulinState == PumpState.LOW) {
                 reservoirView.setTextColor(Color.YELLOW);
@@ -193,22 +212,25 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
                 reservoirView.setTextColor(Color.RED);
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else {
-                reservoirView.setTextColor(Color.WHITE);
+                reservoirView.setTextColor(ColorsreservoirView);
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             }
 
+            if( this.ColorslastConnectionView == null ) {
+                this.ColorslastConnectionView = lastConnectionView.getTextColors();
+            }
             // last connection
             String minAgo = DateUtil.minAgo(resourceHelper, comboPlugin.getPump().lastSuccessfulCmdTime);
             long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
             if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
-                lastConnectionView.setTextColor(Color.WHITE);
+                lastConnectionView.setTextColor(this.ColorslastConnectionView);
             } else if (comboPlugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                 lastConnectionView.setText(resourceHelper.gs(R.string.combo_no_pump_connection, min));
                 lastConnectionView.setTextColor(Color.RED);
             } else {
                 lastConnectionView.setText(minAgo);
-                lastConnectionView.setTextColor(Color.WHITE);
+                lastConnectionView.setTextColor(this.ColorslastConnectionView);
             }
 
             // last bolus

@@ -7,12 +7,10 @@
     android:background="?attr/fragmentbackground"
     tools:context=".plugins.pump.combo.ComboFragment">
 
-    <RelativeLayout
-        android:id="@+id/combopump_header"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:padding="5dp">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id = "@+id/swipeRefresh"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/main_activity_content_frame"
@@ -471,36 +469,6 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="70dp"
-            android:paddingEnd="4dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/combo_refresh_button"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    app:icon="@drawable/icon_actions_refill"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="0dp"
-                    android:text="@string/combo_refresh"
-                    android:textSize="14sp"
-                    app:cornerRadius="20dp"
-                    app:layout_gravity="fill_horizontal" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
