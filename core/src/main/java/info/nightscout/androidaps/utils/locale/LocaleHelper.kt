@@ -38,8 +38,6 @@ object LocaleHelper {
         val configuration = resources.configuration
         context.createConfigurationContext(configuration)
         configuration.setLocale(locale)
-        configuration.locale = locale
-        resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
     fun wrap(ctx: Context): Context {

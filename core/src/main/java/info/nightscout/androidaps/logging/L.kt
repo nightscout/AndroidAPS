@@ -12,19 +12,7 @@ class L @Inject constructor(
 
     private var logElements: MutableList<LogElement> = ArrayList()
 
-    companion object {
-        @Deprecated("Use Dagger")
-        lateinit var instance: L
-
-        @Deprecated("Use Dagger")
-        @JvmStatic
-        fun isEnabled(ltag: LTag): Boolean {
-            return instance.findByName(ltag.name).enabled
-        }
-    }
-
     init {
-        instance= this
         LTag.values().forEach { logElements.add(LogElement(it, sp)) }
     }
 
@@ -46,7 +34,7 @@ class L @Inject constructor(
     }
 
     class LogElement {
-        var sp : SP
+        var sp: SP
         var name: String
         var defaultValue: Boolean
         var enabled: Boolean

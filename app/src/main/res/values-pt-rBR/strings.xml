@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Para inserir %1$dg em %2$s responda com código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para começar a basal %1$d%% U/h durante %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Para retomar o loop responda com o código %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Para activar o loop responda com o código %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Para desactivar o loop responda com o código %1$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extendedset">Bólus estendido %1$.2fU/h para %2$d min iniciado com êxito</string>
     <string name="smscommunicator_carbsset">Hidratos %1$dg inseridos com sucesso</string>
@@ -449,8 +452,14 @@
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
     <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
     <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
+    <string name="prediction_shortname">PREV</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DESV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DESVINCLI</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
@@ -468,6 +477,8 @@
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_pbage_label">Idade bateria bomba</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
+    <string name="ns_alarms">Criar notificações dos alarmes NS</string>
+    <string name="ns_announcements">Criar notificações a partir dos anúncios NS</string>
     <string name="nsalarm_staledatavalue_label">Tempo limite para dados obsoletos [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
@@ -620,6 +631,8 @@
     <string name="extendedbolusdeliveryerror">Erro na entrega Bólus Estendido</string>
     <string name="insightpump_shortname">Visão</string>
     <string name="ago">atrás</string>
+    <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
+    <string name="set_neutral_temps_summary">Se activado, ele irá cancelar basal temporária antes do final de cada hora. Este método pode ajudar a parar o sinal sonoro/vibração em algumas bombas, de hora em hora.</string>
     <string name="enablesmbalways">SMB sempre activado</string>
     <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbaftercarbs">Ativar SMB após carbos</string>
@@ -845,6 +858,10 @@
     <string name="log_alerts">Alertas de registo</string>
     <string name="enable_tbr_emulation">Ativar a emulação TBR</string>
     <string name="enable_tbr_emulation_summary">Usar bólus prolongados em vez de basais temporárias para contornar o limite de 250%%</string>
+    <string name="disable_vibration">Desactivar vibrações na entrega manual de bólus</string>
+    <string name="disable_vibration_summary">Para bólus e bólus estendidos (só disponível com o firmware Insight 3.x)</string>
+    <string name="disable_vibration_auto">Desactivar vibrações na entrega automática de bólus</string>
+    <string name="disable_vibration_auto_summary">Para SMB e Basal Temp com emulação DBT (só disponível com firmware Insight 3.x)</string>
     <string name="disconnect_delay">Atraso de desconexão [s]</string>
     <string name="serial_number">Número de série</string>
     <string name="release_software_version">Lançar versão de software</string>
@@ -1269,8 +1286,6 @@
     <string name="statuslights">Luzes de Estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="copyexistingvalues">Copiar definições do NS (se existir)?</string>
-    <string name="classic_desrciption">Tema gráfico original</string>
-    <string name="buttonson_desrciption">Os botões são sempre exibidos na parte inferior do ecrã</string>
     <string name="skin">Tema gráfico</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1369,6 +1384,7 @@
     <string name="description_pump_omnipod_dash">Integração da Bomba para Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>
+    <string name="omnipod_alert_expiration">Pod vai expirar em breve</string>
     <string name="omnipod_alert_expiration_advisory">Pod vai expirar em breve</string>
     <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
     <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>

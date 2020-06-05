@@ -625,6 +625,8 @@
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="insightpump_shortname">Insight</string>
     <string name="ago">zpět</string>
+    <string name="set_neutral_temps_title">Nastavit neutrální dočasný bazál</string>
+    <string name="set_neutral_temps_summary">Je-li povoleno, zastaví dočasný bazál před koncem každé hodiny. To může u některých pump pomoci zastavit pípání/vibrace v celou hodinu.</string>
     <string name="enablesmbalways">Vždy povolit SMB</string>
     <string name="enablesmbalways_summary">Povolit SMB nezávisle na bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
     <string name="enablesmbaftercarbs">Povolit SMB po jídle</string>
@@ -1278,8 +1280,6 @@
     <string name="statuslights">Stavové indikátory</string>
     <string name="statuslights_copy_ns">Zkopírovat nastavení z NS</string>
     <string name="copyexistingvalues">Zkopírovat nastavení NS (existuje-li)?</string>
-    <string name="classic_desrciption">Původní vzhled</string>
-    <string name="buttonson_desrciption">Tlačítka jsou vždy zobrazena v dolní části obrazovky</string>
     <string name="skin">Vzhled</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

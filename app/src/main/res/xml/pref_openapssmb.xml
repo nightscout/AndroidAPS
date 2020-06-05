@@ -77,13 +77,13 @@
             android:defaultValue="3"
             android:digits="0123456789"
             android:inputType="number"
-            android:key="key_smbinterval"
+            android:key="@string/key_smbinterval"
             android:maxLines="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/smbinterval_summary"
             validate:maxNumber="10"
-            validate:minNumber="1"
+            validate:minNumber="3"
             validate:testType="numericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference

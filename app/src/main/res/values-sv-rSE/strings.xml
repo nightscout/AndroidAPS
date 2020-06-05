@@ -265,6 +265,9 @@ Eversense-appen.</string>
     <string name="smscommunicator_carbsreplywithcode">Om du vill ange %1$dg kl. %2$s, svara med kod %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">För att starta temp basal %1$d%% i %2$d min, svara med kod %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">För att pausa loop i %1$d minuter, svara med kod %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">För att återuppta loopen, svara med kod %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">För att aktivera loopen, svara med kod %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">För att inaktivera loopen, svara med kod %1$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2f enheter/tim i %2$d min startad</string>
     <string name="smscommunicator_extendedset">Förlängd bolus %1$.2f enheter över %2$d min har startats</string>
     <string name="smscommunicator_carbsset">%1$dg kolhydrater registrerat</string>
@@ -279,8 +282,8 @@ Eversense-appen.</string>
     <string name="smscommunicator_tempbasalcancelfailed">Misslyckades med att avbryta temp basal</string>
     <string name="smscommunicator_extendedcancelfailed">Avbryter förlängd bolus</string>
     <string name="smscommunicator_unknowncommand">Okänt kommando eller fel svar</string>
-    <string name="quickwizard">Kalkylator</string>
-    <string name="quickwizardsettings">Kalkylatorinställningar</string>
+    <string name="quickwizard">Snabbsteg</string>
+    <string name="quickwizardsettings">Inställningar för snabbsteg</string>
     <string name="overview_editquickwizard_buttontext">Knapptext:</string>
     <string name="overview_editquickwizard_carbs">KH:</string>
     <string name="overview_editquickwizard_valid">Giltig:</string>
@@ -450,8 +453,14 @@ Eversense-appen.</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
     <string name="statuslights_bat_warning">Varningsnivå för batteri [%]</string>
     <string name="statuslights_bat_critical">Akut varningsnivå för batteri [%]</string>
+    <string name="prediction_shortname">Prog</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">Bas</string>
+    <string name="deviation_shortname">Dev</string>
+    <string name="activity_shortname">Akt</string>
+    <string name="abs_insulin_shortname">Abs</string>
+    <string name="devslope_shortname">Devslope</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
@@ -469,6 +478,8 @@ Eversense-appen.</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="careportal_pbage_label">Pumpbatteri ålder</string>
     <string name="ns_alarmoptions">Larminställningar</string>
+    <string name="ns_alarms">Skapa aviseringar från NS-larm</string>
+    <string name="ns_announcements">Skapa aviseringar från NS-meddelanden</string>
     <string name="nsalarm_staledatavalue_label">Första varning efter [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
     <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
@@ -621,6 +632,8 @@ Eversense-appen.</string>
     <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">sedan</string>
+    <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
+    <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
     <string name="enablesmbalways">Använd alltid SMB</string>
     <string name="enablesmbalways_summary">Använd alltid SMB oberoende av bolus. Endast möjligt med en bra filtrerad BG-källa, t ex Dexcom G5.</string>
     <string name="enablesmbaftercarbs">Använd SMB efter kolhydrater</string>
@@ -646,7 +659,7 @@ Eversense-appen.</string>
     <string name="ns_create_announcements_from_errors_title">Skapa notiser vid fel</string>
     <string name="ns_create_announcements_from_errors_summary">Skapa notiser i Nightscout vid fel eller lokala meddelanden (även synliga i Careportal/Behandlingar)</string>
     <string name="wear_predictions_summary">Visa BG-prognos på klockan.</string>
-    <string name="wear_predictions_title">Prognos</string>
+    <string name="wear_predictions_title">BG-prognos</string>
     <string name="data_choices">Dataval</string>
     <string name="fabric_upload">Uppladdning till Fabric</string>
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
@@ -846,6 +859,10 @@ Eversense-appen.</string>
     <string name="log_alerts">Logga varningar</string>
     <string name="enable_tbr_emulation">Aktivera emulering av temp basal</string>
     <string name="enable_tbr_emulation_summary">Använda förlängda bolusar istället för temp basaler för att kringgå 250%%-begränsningen</string>
+    <string name="disable_vibration">Inaktivera vibration för manuell bolus</string>
+    <string name="disable_vibration_summary">För bolus och förlängd bolus (endast tillgängligt med Insight firmware 3.x)</string>
+    <string name="disable_vibration_auto">Inaktivera vibration för automatisk bolus</string>
+    <string name="disable_vibration_auto_summary">För SMB och temp basal med TBR-emulering (endast tillgängligt med Insight firmware 3.x)</string>
     <string name="disconnect_delay">Fördröjning av frånkoppling [s]</string>
     <string name="serial_number">Serienummer</string>
     <string name="release_software_version">Mjukvaruversion Release</string>
@@ -1260,7 +1277,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_otp_reset_warning">Genom att återställa autentiseringsfunktionen kommer alla redan driftsatta autentiserare bli ogiltiga. Du kommer behöva sätta upp dem igen!</string>
     <string name="onconnect">Vid anslutning</string>
     <string name="ondisconnect">Vid frånkoppling</string>
-    <string name="overview_show_predictions">Beräknade resultat</string>
+    <string name="overview_show_predictions">BG-prognos</string>
     <string name="overview_show_deviationslope">Avvikelsekurva</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
     <string name="overview_show_absinsulin">Absolut insulinmängd</string>
@@ -1270,8 +1287,9 @@ Eversense-appen.</string>
     <string name="statuslights">Statuslampor</string>
     <string name="statuslights_copy_ns">Kopiera inställningar från NS</string>
     <string name="copyexistingvalues">Kopiera NS-inställningar (om det finns)?</string>
-    <string name="classic_desrciption">Ursprungligt tema</string>
-    <string name="buttonson_desrciption">Knappar visas alltid längst ned på skärmen</string>
+    <string name="classic_description">Ursprungligt tema</string>
+    <string name="buttonson_description">Knappar visas alltid längst ned på skärmen</string>
+    <string name="largedisplay_description">Stor skärm</string>
     <string name="skin">Tema</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1370,6 +1388,7 @@ Eversense-appen.</string>
     <string name="description_pump_omnipod_dash">Pumpintegration för Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Påminnelse att slutföra parkoppling</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Påminnelse att slutföra installation</string>
+    <string name="omnipod_alert_expiration">Pod löper snart ut</string>
     <string name="omnipod_alert_expiration_advisory">Pod kommer att gå ut inom kort</string>
     <string name="omnipod_alert_shutdown_imminent">Pod kommer snart att stängas av</string>
     <string name="omnipod_alert_low_reservoir">Låg reservoar</string>
