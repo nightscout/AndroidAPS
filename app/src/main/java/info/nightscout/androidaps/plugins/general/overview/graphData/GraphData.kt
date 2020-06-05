@@ -348,8 +348,11 @@ class GraphData(
         }
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            //it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
+            //it.color = resourceHelper.gc(R.color.iob)
+
+            it.backgroundColor = -0x40000001 and resourceHelper.gc( R.color.iobSurface)
+            it.color = resourceHelper.gc( R.color.iobBorder)
             it.thickness = 3
         }
         if (showPrediction) {
@@ -403,8 +406,10 @@ class GraphData(
         }
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            // it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
+            // it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x40000001 and resourceHelper.gc( R.color.iobSurface)
+            it.color = resourceHelper.gc( R.color.iobBorder)
             it.thickness = 3
         }
         if (useForScale) {
@@ -444,8 +449,11 @@ class GraphData(
         // COB
         addSeries(FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.cob) //50%
-            it.color = resourceHelper.gc(R.color.cob)
+            //it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.cob) //50%
+            //it.color = resourceHelper.gc(R.color.cob)
+            //it.thickness = 3
+            it.backgroundColor = -0x40000001 and resourceHelper.gc( R.color.cobSurface)
+            it.color = resourceHelper.gc( R.color.cobBorder)
             it.thickness = 3
         })
         if (useForScale) {
