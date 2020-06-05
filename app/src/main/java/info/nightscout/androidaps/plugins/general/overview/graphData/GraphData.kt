@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview.graphData
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
+import androidx.core.content.ContextCompat
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
@@ -17,11 +18,11 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -96,8 +97,9 @@ class GraphData(
             DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
             DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
         )
+
         inRangeAreaSeries = AreaGraphSeries(inRangeAreaDataPoints)
-        inRangeAreaSeries.color = 0
+        inRangeAreaSeries.color = resourceHelper.gc(R.color.inrangebackgroundBorder)
         inRangeAreaSeries.isDrawBackground = true
         inRangeAreaSeries.backgroundColor = resourceHelper.gc(R.color.inrangebackground)
         addSeries(inRangeAreaSeries)

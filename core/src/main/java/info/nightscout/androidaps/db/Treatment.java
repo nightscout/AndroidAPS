@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.db;
 
-import android.graphics.Color;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -272,7 +270,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         if (isSMB)
             return resourceHelper.gc(R.color.tempbasal);
         else if (isValid)
-            return Color.CYAN;
+            return resourceHelper.gc(R.color.treatment);
         else
             return resourceHelper.gc(android.R.color.holo_red_light);
     }
