@@ -23,6 +23,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.MidnightTime;
+import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -83,11 +84,11 @@ public class ATProfile {
     }
 
     public double getAvgISF() {
-        return profile.getIsfsMgdl().length==1?profile.getIsfsMgdl()[0].value:averageProfileValue(profile.getIsfsMgdl());
+        return profile.getIsfsMgdl().length==1?profile.getIsfsMgdl()[0].value:Round.roundTo(averageProfileValue(profile.getIsfsMgdl()),0.01);
     }
 
     public double getAvgIC() {
-        return profile.getIcs().length==1?profile.getIcs()[0].value:averageProfileValue(profile.getIcs());
+        return profile.getIcs().length==1?profile.getIcs()[0].value: Round.roundTo(averageProfileValue(profile.getIcs()),0.01);
     }
 
     public double[] getBasal() {
