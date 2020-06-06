@@ -112,11 +112,9 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             //updateResult("Starting Autotune");
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0) {
-                resultView.setText(autotunePlugin.aapsAutotune(daysBack));
-                autotuneProfileSwitchButton.setVisibility(View.VISIBLE);
-                autotuneCopyLocalButton.setVisibility(View.VISIBLE);
-                autotunePlugin.profileSwitchButtonVisibility=View.VISIBLE;
-                autotunePlugin.copyButtonVisibility=View.VISIBLE;
+                resultView.setText(autotunePlugin.aapsAutotune(daysBack, sp.getBoolean(R.string.key_autotune_auto,false)));
+                autotuneProfileSwitchButton.setVisibility(autotunePlugin.profileSwitchButtonVisibility);
+                autotuneCopyLocalButton.setVisibility(autotunePlugin.copyButtonVisibility);
                 warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
                 lastRunTxt = AutotunePlugin.lastRun != null ? "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
                 lastRunView.setText(lastRunTxt);

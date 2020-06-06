@@ -1236,7 +1236,7 @@
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Autotune settings</string>
     <string name="autotune_auto_title">Automatic Autotune</string>
-    <string name="autotune_auto_summary">If enabled, Autotune will automatically runs every days at 04h00 and switch profile.</string>
+    <string name="autotune_auto_summary">If enabled, Autotune will automatically switch profile after calculation.</string>
     <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
     <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
     <string name="key_autotune_auto" translatable="false">autotune_auto</string>
@@ -1253,7 +1253,7 @@
     <string name="autotune_run">Run Autotune</string>
     <string name="autotune_copy_localprofile_button">Copy to local profile</string>
     <string name="autotune_error">Error in input data, try to reduce the number of days</string>
-    <string name="autotune_warning_after_run">You already pressed RUN - NO WARNING NEEDED!</string>
+    <string name="autotune_warning_after_run">Autotune plugin is not validated today, check the results carefully before using it!</string>
     <string name="autotune_min_days">Set at least 1 day!!!</string>
     <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
 

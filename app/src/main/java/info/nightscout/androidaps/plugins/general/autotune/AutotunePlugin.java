@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
 import android.content.Context;
+import android.view.View;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
@@ -16,6 +17,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.general.autotune.data.*;
 import info.nightscout.androidaps.utils.Round;
@@ -125,14 +127,14 @@ public class AutotunePlugin extends PluginBase {
     }
 
     //Todo futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
-    public String aapsAutotune(int daysBack) {
+    public String aapsAutotune(int daysBack, boolean autoSwitch) {
         //todo add autotuneFS, autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
         autotuneFS = new AutotuneFS(injector);
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
-        lastNbDays = "" + daysBack;
         autotuneIob = new AutotuneIob(injector);
 
+        lastNbDays = "" + daysBack;
         atLog("Start Autotune with " + daysBack + " days back");
 
         //create autotune subfolder for autotune files if not exists
@@ -163,10 +165,12 @@ public class AutotunePlugin extends PluginBase {
         autotuneFS.exportPumpProfile(pumpprofile);
 
         if(daysBack < 1){
-            //Not necessary today (test is done in fragment, but left if other way to launch autotune i.e. with automation
-            return resourceHelper.gs(R.string.autotune_min_days);
+            //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
+            profileSwitchButtonVisibility= View.GONE;
+            copyButtonVisibility=View.GONE;
+            result = resourceHelper.gs(R.string.autotune_min_days);
+            return result;
         } else {
-            // todo Add loop below (including result presentation) in a dedicated thread
             for (int i = 0; i < daysBack; i++) {
                 // get 24 hours BG values from 4 AM to 4 AM next day
                 long from = starttime + i * 24 * 60 * 60 * 1000L;
@@ -183,9 +187,12 @@ public class AutotunePlugin extends PluginBase {
 
                 preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob,tunedProfile, pumpprofile);
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-                if (preppedGlucose == null )
-                    return resourceHelper.gs(R.string.autotune_error);
-
+                if (preppedGlucose == null ) {
+                    profileSwitchButtonVisibility= View.GONE;
+                    copyButtonVisibility=View.GONE;
+                    result = resourceHelper.gs(R.string.autotune_error);
+                    return result;
+                }
                 autotuneFS.exportPreppedGlucose(preppedGlucose);
 
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile, pumpprofile);
@@ -207,8 +214,15 @@ public class AutotunePlugin extends PluginBase {
             result = showResults(tunedProfile,pumpprofile);
 
             autotuneFS.exportResult(result);
-
             autotuneFS.exportLogAndZip(lastRun, logString);
+
+            profileSwitchButtonVisibility= View.VISIBLE;
+            copyButtonVisibility=View.VISIBLE;
+            if (autoSwitch) {
+                profileSwitchButtonVisibility= View.GONE;   //hide profilSwitch button in fragment
+                activePlugin.getActiveTreatments().doProfileSwitch(tunedProfile.getProfileStore(), tunedProfile.profilename, 0, 100, 0, DateUtil.now());
+                rxBus.send(new EventLocalProfileChanged());
+            }
 
             return result;
         } else
@@ -235,7 +249,7 @@ public class AutotunePlugin extends PluginBase {
         strResult += line;
         strResult += "|   IC  | " + df2.format(pumpProfile.ic) + "  | " + df2.format(tunedProfile.ic) + " |\n";
         strResult += line;
-        strResult += "|Hour|Profile|Tuned |Miss.days/%\n";
+        strResult += "|Hour|Profile|Tuned|Miss.days/%\n";
         strResult += line;
         double totalBasal = 0d;
         double totalTuned = 0d;
