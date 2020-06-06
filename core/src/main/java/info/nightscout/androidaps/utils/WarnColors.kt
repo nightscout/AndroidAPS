@@ -12,15 +12,13 @@ import javax.inject.Singleton
 @Singleton
 class WarnColors @Inject constructor(val resourceHelper: ResourceHelper) {
 
-    private var normalColor = Color.TRANSPARENT
+    private var normalColor = Color.GRAY
     private val warnColor = Color.YELLOW
     private val urgentColor = Color.RED
 
     private fun getStandardColor(view: TextView?): Int {
-        if (this.normalColor == Color.TRANSPARENT) {
-            if (view != null) {
-                this.normalColor = view.textColors.defaultColor
-            }
+        if (view != null) {
+            this.normalColor = view.textColors.defaultColor
         }
         return this.normalColor
     }
