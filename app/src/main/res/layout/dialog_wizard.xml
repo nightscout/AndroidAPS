@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
@@ -32,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:background="@color/transparent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -182,31 +184,36 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_profile_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/treatments_wizard_profile"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_weight="0.5" />
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1.5"
+                android:hint="@string/careportal_newnstreatment_profile_label"
+                app:endIconMode="dropdown_menu">
 
+                <Spinner
+                    android:id="@+id/treatments_wizard_profile"
+                    android:inputType="none"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/treatments_wizard_sbcheckbox"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:padding="5dp"
                 android:checked="false"
-                android:text="@string/superbolus" />
+                android:text="@string/superbolus"
+                app:useMaterialThemeColors="true"/>
 
         </LinearLayout>
 
@@ -246,26 +253,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:labelFor="@+id/treatment_wizard_notes"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_notes_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:hint="@string/careportal_newnstreatment_notes_label"
+                app:endIconMode="clear_text">
 
-            <EditText
-                android:id="@+id/treatment_wizard_notes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@string/careportal_newnstreatment_notes_label"
-                android:gravity="start"
-                android:inputType="text|textCapSentences"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/treatment_wizard_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:autofillHints="@string/careportal_newnstreatment_notes_label"
+                    android:gravity="start"
+                    android:textStyle="bold"
+                    android:inputType="text|textCapSentences" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
