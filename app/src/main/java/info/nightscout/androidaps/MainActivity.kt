@@ -92,8 +92,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_arrow
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_bg
 import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_batterylevel
 import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_canulaage
 import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_insulinage
@@ -465,7 +463,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 overview_bg.paintFlags = flag
             }
             overview_timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
-            overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
+            //overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
         }
     }
 

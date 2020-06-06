@@ -85,8 +85,6 @@ import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatment
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_arrow
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.overview_bg
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_chartMenuButton
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobcalculationprogess
@@ -521,7 +519,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     fun updateGUI(from: String) {
         aapsLogger.debug("UpdateGUI from $from")
 
-        overview_time?.text = dateUtil.timeString(Date())
+        //overview_time?.text = dateUtil.timeString(Date())
 
         if (!profileFunction.isProfileValid("Overview")) {
             overview_pumpstatus?.setText(R.string.noprofileset)
@@ -558,16 +556,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
                 overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
-                overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                //overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                 //overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
-                overview_deltashort?.text = "---"
+                //overview_deltashort?.text = "---"
                 //overview_avgdelta?.text = ""
             }
 
             overview_timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
-            overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
+            //overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
 
         }
         val lastRun = loopPlugin.lastRun

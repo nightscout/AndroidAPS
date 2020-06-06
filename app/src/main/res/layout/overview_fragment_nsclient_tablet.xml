@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,9 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main_activity_content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginTop="6dp"
             android:fillViewport="true">
 
             <LinearLayout
@@ -27,74 +32,6 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
                 <include layout="@layout/overview_loop_pumpstatus_layout" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/overview_bg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="00.0"
-                        android:textSize="90dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/overview_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="-5dp"
-                        android:paddingLeft="-2dp"
-                        android:paddingRight="-2dp"
-                        android:text="→"
-                        android:textSize="50sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/overview_deltashort"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="-0.5"
-                        android:textSize="50sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/overview_sensitivity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="0.5"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="100%"
-                        android:textSize="50sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/overview_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="8:00 PM"
-                        android:textSize="80dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/overview_timeagoshort"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:text="(-5)"
-                        android:textSize="50sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -459,6 +396,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
