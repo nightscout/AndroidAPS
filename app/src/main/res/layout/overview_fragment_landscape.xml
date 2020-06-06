@@ -3,14 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".plugins.general.overview.OverviewFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/overview_toppart_scrollbar"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="130dp"
+        android:layout_above="@+id/overview_buttons"
+        android:fillViewport="true"
         tools:ignore="UselessParent">
 
         <LinearLayout
@@ -27,14 +35,10 @@
 
             <include layout="@layout/overview_info_layout" />
 
-            <include layout="@layout/overview_statuslights_layout" />
-
             <include layout="@layout/overview_graphs_layout" />
-
-            <include layout="@layout/overview_buttons_layout" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
