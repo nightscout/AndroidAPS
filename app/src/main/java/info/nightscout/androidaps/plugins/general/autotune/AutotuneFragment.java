@@ -35,10 +35,8 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
  * Deep rework by philoul on 06/2020
  */
 
-/* Todo: Reset results field and Switch/Copy button visibility when
-*       Nb of days is changed
-* Memorise visibility status of CopyLocal and ProfileSwitch button
-*/
+// Todo: Reset results field and Switch/Copy button visibility when Nb of selected days is changed
+
 public class AutotuneFragment extends DaggerFragment implements View.OnClickListener {
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject AutotunePlugin autotunePlugin;
@@ -158,31 +156,29 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
                 @Override
                 public void run() {
 
-
                 }
             });
     }
 
-
-    //Todo add Strings and format text according to units
     private String addWarnings() {
-        String warning = "";
-        String nl = "";
+        String warning = resourceHelper.gs(R.string.autotune_warning_before_run);
+        String nl = "\n";
         int toMgDl=1;
         if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
         ATProfile profile = new ATProfile(profileFunction.getProfile(System.currentTimeMillis()));
         if(!profile.isValid)
-            return "Non profile selected";
+            return resourceHelper.gs(R.string.autotune_profile_invalid);
         if (profile.getIcSize()>1) {
-            warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";
+            //warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";
+            warning = nl + resourceHelper.gs(R.string.format_autotune_ic_warning, profile.getIcSize(), profile.ic);
             nl="\n";
         }
         if (profile.getIsfSize()>1) {
-            warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfSize() + " values. Average value is " + profile.isf/toMgDl + profileFunction.getUnits() + "/U";
+            //warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfSize() + " values. Average value is " + profile.isf/toMgDl + profileFunction.getUnits() + "/U";
+            warning = nl + resourceHelper.gs(R.string.format_autotune_isf_warning, profile.getIsfSize(), profile.isf/toMgDl, profileFunction.getUnits());
             nl="\n";
         }
-
         return warning;
     }
 
@@ -193,7 +189,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     }
 
     private void log(String message) {
-        autotunePlugin.atLog("Fragment] " + message);
+        autotunePlugin.atLog("[Fragment] " + message);
     }
 
 }

@@ -43,9 +43,10 @@ import javax.inject.Singleton;
  let's start by taking 1 day of data from NS, and comparing it to ideal BG
 
  * Update by philoul on 05/2020 (complete refactor of AutotunePlugin)
+ *  TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
  *  TODO: add Preference for main settings (may be advanced settings for % of adjustment (default 20%))
- *  Manage ProfileSwitch once Results validated (Still lots of work!)
- *
+ *  TODO: Add Constraints for auto Switch (in Objective 11 ?) for safety => see with Milos once autotuneplugin validated
+ *  TODO: Add Automation Action for automatic autotune
  */
 
 @Singleton
@@ -126,9 +127,7 @@ public class AutotunePlugin extends PluginBase {
         // invoke
     }
 
-    //Todo futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
     public String aapsAutotune(int daysBack, boolean autoSwitch) {
-        //todo add autotuneFS, autotunePrep and autotuneCore in constructor (but I can't manage to do that, something probably wrong in dagger settings for these class ???)
         autotuneFS = new AutotuneFS(injector);
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
@@ -233,44 +232,27 @@ public class AutotunePlugin extends PluginBase {
         int toMgDl = 1;
         if(profileFunction.getUnits().equals("mmol"))
             toMgDl = 18;
-
         String strResult = "";
-        DecimalFormat df3 = new DecimalFormat("0.000");
-        DecimalFormat df2 = new DecimalFormat("0.00");
-        DecimalFormat df1 = new DecimalFormat("0.0");
-        DecimalFormat ef = new DecimalFormat("00");
-        String line = "---------------------------------------------------\n";
-
-        //Todo add Strings and format for all results presentation
-        //I don't work on this part of cade just do some improvement of existing code, probably to be reworked...
+        String line = resourceHelper.gs(R.string.format_autotune_separator);
         strResult = line;
-        // show ISF and CR
-        strResult += "|  ISF | " + df1.format(pumpProfile.isf / toMgDl) + " |  " + df1.format(tunedProfile.isf / toMgDl)+" |\n";
-        strResult += line;
-        strResult += "|   IC  | " + df2.format(pumpProfile.ic) + "  | " + df2.format(tunedProfile.ic) + " |\n";
-        strResult += line;
-        strResult += "|Hour|Profile|Tuned|Miss.days/%\n";
+
+        strResult += resourceHelper.gs(R.string.format_autotune_title);
         strResult += line;
         double totalBasal = 0d;
         double totalTuned = 0d;
         for (int i = 0; i < 24; i++) {
-            String basalString = df2.format(pumpProfile.basal[i]);
-            String tunedString = df2.format(tunedProfile.basal[i]);
             totalBasal +=pumpProfile.basal[i];
             totalTuned +=tunedProfile.basal[i];
-            int percentageChangeValue = (int) ((tunedProfile.basal[i]/pumpProfile.basal[i]) * 100 - 100) ;
-            String percentageChange;
-            if (percentageChangeValue == 0)
-                percentageChange = "0%";
-            else if (percentageChangeValue < 0)
-                percentageChange = "" + percentageChangeValue + "%";
-            else
-                percentageChange = "+" + percentageChangeValue +"%";
-
-            strResult += "|  " + ef.format(i) + "  |  " + basalString + "  |  " + tunedString + "  |  " + tunedProfile.basalUntuned[i] + " / " + percentageChange + "\n";
+            double percentageChangeValue =  ((tunedProfile.basal[i]/pumpProfile.basal[i]) * 100 - 100) ;
+            strResult += resourceHelper.gs(R.string.format_autotune_basal, (double) i, pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue);
         }
         strResult += line;
-        strResult += "|   ∑   |  " + Round.roundTo(totalBasal,0.1) + "  |  " + Round.roundTo(totalTuned,0.1) + "  |\n";
+        strResult += resourceHelper.gs(R.string.format_autotune_sum_basal, totalBasal, totalTuned);
+        strResult += line;
+        // show ISF and CR
+        strResult += resourceHelper.gs(R.string.format_autotune_isf, resourceHelper.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl);
+        strResult += line;
+        strResult += resourceHelper.gs(R.string.format_autotune_ic, resourceHelper.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic);
         strResult += line;
 
         atLog(strResult);
