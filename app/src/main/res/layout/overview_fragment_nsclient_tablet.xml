@@ -12,7 +12,6 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/overview_buttons"
             android:fillViewport="true">
 
             <LinearLayout
@@ -460,98 +459,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
         </ScrollView>
-
-        <LinearLayout
-            android:id="@+id/overview_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingRight="5dp">
-
-                <info.nightscout.androidaps.utils.SingleClickButton
-                    android:id="@+id/overview_treatmentbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_insulin_carbs"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_treatment_label"
-                    android:textColor="@color/colorTreatmentButton"
-                    android:textSize="10sp" />
-
-                <info.nightscout.androidaps.utils.SingleClickButton
-                    android:id="@+id/overview_insulinbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_bolus"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_insulin_label"
-                    android:textColor="@color/colorInsulinButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <info.nightscout.androidaps.utils.SingleClickButton
-                    android:id="@+id/overview_carbsbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_cp_bolus_carbs"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_carbs_label"
-                    android:textColor="@color/colorCarbsButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <info.nightscout.androidaps.utils.SingleClickButton
-                    android:id="@+id/overview_wizardbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_calculator"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_calculator_label"
-                    android:textColor="@color/colorCalculatorButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <info.nightscout.androidaps.utils.SingleClickButton
-                    android:id="@+id/overview_quickwizardbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_quickwizard"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="Quick wizard"
-                    android:textColor="@color/colorQuickWizardButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-        </LinearLayout>
     </RelativeLayout>
 </FrameLayout>
