@@ -91,12 +91,12 @@ class TreatmentsFragment : DaggerFragment() {
 
     private fun setBackgroundColorOnSelected(selected: View) {
 
-        treatments_treatments.setBackgroundColor(Helper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_extendedboluses.setBackgroundColor(Helper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_tempbasals.setBackgroundColor(Helper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_temptargets.setBackgroundColor(Helper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_profileswitches.setBackgroundColor(Helper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_careportal.setBackgroundColor(Helper.getAttributeColor( context, R.attr.colorSecondaryVariant))
+        treatments_treatments.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
+        treatments_extendedboluses.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
+        treatments_tempbasals.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
+        treatments_temptargets.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
+        treatments_profileswitches.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
+        treatments_careportal.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
         selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
     }
 
