@@ -36,4 +36,13 @@
     <attr name="dialogTitleBackground" format="reference" />
     <attr name="dialogTitleColor" format="reference" />
     <attr name="dialogTitleIconTint" format="reference" />
+
+    <!-- For bluring effect -->
+    <declare-styleable name="BlurringView">
+        <attr name="radius" format="integer"/>
+        <attr name="downScaleFactor" format="integer"/>
+        <attr name="overlayColor" format="color"/>
+        <attr name="allowFallback" format="boolean"/>
+        <attr name="debug" format="boolean"/>
+    </declare-styleable>
 </resources>

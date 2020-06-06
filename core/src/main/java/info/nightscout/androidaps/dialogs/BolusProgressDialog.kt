@@ -8,6 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.core.R
@@ -25,7 +29,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_bolusprogress.*
 import javax.inject.Inject
 
-class BolusProgressDialog : DaggerDialogFragment() {
+class BolusProgressDialog : BlurDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -65,6 +69,13 @@ class BolusProgressDialog : DaggerDialogFragment() {
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
 
+        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
+                .debug(true)
+                .asyncPolicy(it)
+                .build()
+        }
         return inflater.inflate(R.layout.dialog_bolusprogress, container, false)
     }
 

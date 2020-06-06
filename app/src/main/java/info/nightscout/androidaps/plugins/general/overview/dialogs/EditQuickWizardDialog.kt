@@ -8,6 +8,9 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.wizard.QuickWizard
@@ -17,17 +20,19 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.overview_editquickwizard_dialog.*
 import org.json.JSONException
 import java.util.*
 import javax.inject.Inject
 
-class EditQuickWizardDialog : DaggerDialogFragment() {
+class EditQuickWizardDialog : BlurDialogFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     var position = -1
 
@@ -37,6 +42,15 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(resourceHelper.gc(R.color.white_alpha_40))  // semi-transparent white color
+                .debug(true)
+                .asyncPolicy(it)
+                .build()
+        }
+
         return inflater.inflate(R.layout.overview_editquickwizard_dialog, container, false)
     }
 

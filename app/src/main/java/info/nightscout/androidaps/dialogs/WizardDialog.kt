@@ -12,6 +12,10 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -44,7 +48,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
-class WizardDialog : DaggerDialogFragment() {
+class WizardDialog : BlurDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintChecker
@@ -92,6 +96,14 @@ class WizardDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(resourceHelper.gc(R.color.white_alpha_40))  // semi-transparent white color
+                .debug(true)
+                .asyncPolicy(it)
+                .build()
+        }
 
         return inflater.inflate(R.layout.dialog_wizard, container, false)
     }

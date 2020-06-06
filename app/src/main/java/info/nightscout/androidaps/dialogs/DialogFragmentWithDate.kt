@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.okcancel.*
 import java.util.*
 import javax.inject.Inject
 
-abstract class DialogFragmentWithDate : DaggerDialogFragment()  {
+abstract class DialogFragmentWithDate : BlurDialogFragment()  {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
