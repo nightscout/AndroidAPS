@@ -48,8 +48,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
-//Todo remove all unused functions
-//and verify iob calculation for autotune
 @Singleton
 public class AutotuneIob {
     private final HasAndroidInjector injector;
@@ -445,7 +443,6 @@ public class AutotuneIob {
             isAbsolute = t.isAbsolute;
         }
 
-        //todo: See NSUpload to be as close as possible for each event type
         public JSONObject toJson() {
             JSONObject cPjson = new JSONObject();
             try {

@@ -49,13 +49,11 @@ public class AutotunePrep {
     }
 
     public PreppedGlucose categorizeBGDatums(AutotuneIob autotuneIob, ATProfile tunedprofile, ATProfile pumpprofile)  {
-        //lib/meals is called before to get only meals data (done in AutotuneIob)
+        //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         List<Treatment> treatments = autotuneIob.meals;
-        // this sorts the treatments collection in order.
         Profile profileData = tunedprofile.profile;
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
-        //List<BgReading> glucose=MainApp.getDbHelper().getBgreadingsDataFromTime(from,to, false);
         List<BgReading> glucose=autotuneIob.glucose;
         List<BgReading> glucoseData = new ArrayList<BgReading>();
         for (int i = 0; i < glucose.size(); i++) {
@@ -106,7 +104,6 @@ public class AutotunePrep {
 
         // Here treatments contains only meals data
         // bloc between #94 and #114 remove meals before first BG value
-        // just difference (I have to check with Scott Leibrand) what happens if we have meal between 4 AM and first BG value, left here and removed in oref0-autotune, but I never had this case for the moment...
 
         // Bloc below replace bloc between #115 and #122 (initialize data before main loop)
         // crInitialxx are declaration to be able to use these data in whole loop
@@ -123,8 +120,6 @@ public class AutotunePrep {
 
         //categorize.js#123 (Note: don't need fullHistory because data are managed in AutotuneIob Class)
         //Here is main loop between #125 and #366
-        // It's necessary to check and check again lines below because results are not consistent with oref0-autotune categorize.js results
-        // Todo: request help from Scott here because there are differences between iob for autotune and iob for loop... (oref0 doesn't take into account profileswitch so iob when no TBR are wrong for loop...)
         // main for loop
         for (int i = bucketedData.size() - 5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);

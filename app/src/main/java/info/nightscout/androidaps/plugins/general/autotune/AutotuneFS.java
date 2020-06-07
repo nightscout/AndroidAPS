@@ -27,7 +27,6 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-//Todo replace by injection and manage autotune file generation here
 //@Singleton
 public class AutotuneFS {
     final String logDirectory = LoggerUtils.getLogDirectory();
