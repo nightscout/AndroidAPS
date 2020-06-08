@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.plugins.general.themeselector.util
 
-import android.content.res.Resources
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 
 /**
  * Created by Pankaj on 12-11-2017.
  */
 object ThemeUtil {
-
     const val THEME_RED = 0
     const val THEME_PINK = 1
     const val THEME_PURPLE = 2
@@ -30,7 +30,8 @@ object ThemeUtil {
     const val THEME_GRAY = 17
     const val THEME_BLUEGRAY = 18
     const val THEME_DARKSIDE = 19
-    fun getThemeId(theme: Int): Int {
+
+    @JvmStatic fun getThemeId(theme: Int): Int {
         var themeId = 0
         when (theme) {
             THEME_RED        -> themeId = R.style.AppTheme_RED
@@ -58,6 +59,35 @@ object ThemeUtil {
             }
         }
         return themeId
+    }
+
+    @JvmStatic  fun getThemeName(theme: Int, mIsNightMode: Boolean): String {
+        var themeName = ""
+        when (theme) {
+            THEME_RED        -> themeName =  if ( mIsNightMode) "Ferrari" else "RED light"
+            THEME_PINK       -> themeName = if ( mIsNightMode) "PINK dark" else "PINK light"
+            THEME_PURPLE     -> themeName = if ( mIsNightMode) "PURPLE dark" else "PURPLE light"
+            THEME_DEEPPURPLE -> themeName = if ( mIsNightMode) "DEEP PURPLE dark" else "DEEP PURPLE light"
+            THEME_INDIGO     -> themeName = if ( mIsNightMode) "INDIGO dark" else "INDIGO light"
+            THEME_BLUE       -> themeName = if ( mIsNightMode) "BLUE dark" else "BLUE light"
+            THEME_LIGHTBLUE  -> themeName = if ( mIsNightMode) "LIGHTBLUE dark" else "Frozen"
+            THEME_CYAN       -> themeName = if ( mIsNightMode) "CYAN dark" else "CYAN light"
+            THEME_TEAL       -> themeName = if ( mIsNightMode) "Teal" else "Teal"
+            THEME_GREEN      -> themeName = if ( mIsNightMode) "GREEN dark" else "GREEN light"
+            THEME_LIGHTGREEN -> themeName = if ( mIsNightMode) "LIGHTGREEN dark" else "LIGHTGREEN light"
+            THEME_LIME       -> themeName = if ( mIsNightMode) "Aurora borealis" else "LIME light"
+            THEME_YELLOW     -> themeName = if ( mIsNightMode) "YELLOW dark" else "Minions"
+            THEME_AMBER      -> themeName = if ( mIsNightMode) "Amber dark" else "Amber light"
+            THEME_ORANGE     -> themeName = if ( mIsNightMode) "Orange dark" else "Orange light"
+            THEME_DEEPORANGE -> themeName = if ( mIsNightMode) "DEEPORANGE dark" else "DEEPORANGE light"
+            THEME_BROWN      -> themeName = if ( mIsNightMode) "BROWN dark" else "BROWN light"
+            THEME_GRAY       -> themeName = if ( mIsNightMode) "GRAY dark" else "GRAY light"
+            THEME_BLUEGRAY   -> themeName = if ( mIsNightMode) "BLUEGRAY dark" else "BLUEGRAY light"
+            THEME_DARKSIDE   -> themeName = if ( mIsNightMode) "Darkside" else "Lightside"
+            else             -> {
+            }
+        }
+        return themeName
     }
 
     @JvmStatic val themeList: ArrayList<Theme>

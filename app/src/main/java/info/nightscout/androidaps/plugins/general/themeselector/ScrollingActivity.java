@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.themeselector;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -39,7 +38,6 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
     private RecyclerView mRecyclerView;
     private ThemeAdapter mAdapter;
     private BottomSheetBehavior mBottomSheetBehavior;
-    private Button savebutton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
 
         actualTheme = sp.getInt("theme", THEME_DARKSIDE);
         ThemeView themeView = findViewById(R.id.theme_selected);
-        themeView.setTheme(mThemeList.get(actualTheme));
+        themeView.setTheme(mThemeList.get(actualTheme), actualTheme);
     }
 
     private void initBottomSheet(){
@@ -87,10 +85,6 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
 
         });
 
-        savebutton = findViewById(R.id.save_theme);
-        savebutton.setOnClickListener(this);
-
-
         mRecyclerView = findViewById(R.id.recyclerView);
 
         mAdapter = new ThemeAdapter(mThemeList, new RecyclerViewClickListener() {
@@ -101,10 +95,10 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
                     @Override
                     public void run() {
                         ThemeView themeView = findViewById(R.id.theme_selected);
-                        sp.putInt("theme",selectedTheme );
-                        themeView.setTheme(mThemeList.get(sp.getInt("theme", THEME_DARKSIDE)));
-                        setTheme(selectedTheme);
-                        ScrollingActivity.this.recreate();
+                        //sp.putInt("theme",selectedTheme );
+                        themeView.setTheme(mThemeList.get(selectedTheme), ThemeUtil.getThemeId(selectedTheme));
+                        //setTheme(selectedTheme);
+                        //ScrollingActivity.this.recreate();
                         changeTheme(selectedTheme);
                     }
                 },500);
@@ -112,7 +106,7 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
             }
         });
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(),4);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
@@ -143,15 +137,6 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         break;
                 }
-                break;
-            case R.id.save_theme:
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //ScrollingActivity.this.recreate();
-                        changeTheme(selectedTheme);
-                    }
-                },500);
                 break;
         }
     }

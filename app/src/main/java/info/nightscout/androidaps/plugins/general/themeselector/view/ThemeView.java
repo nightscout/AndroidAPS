@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.general.themeselector.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme;
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil;
 
 /**
  * Created by Pankaj on 27-10-2017.
@@ -21,7 +24,7 @@ import info.nightscout.androidaps.plugins.general.themeselector.model.Theme;
 
 public class ThemeView extends View {
     private Theme mTheme = new Theme(R.color.primaryColorAmber , R.color.primaryDarkColorAmber, R.color.secondaryColorAmber);
-
+    private int ThemeId = 0;
     private Paint mBoarderPaint;
     private Paint mPrimaryPaint;
     private Paint mPrimaryDarkPaint;
@@ -32,6 +35,9 @@ public class ThemeView extends View {
     private TextView themeLabel;
 
     private float stroke;
+
+    private SharedPreferences sp;
+
 
     public ThemeView(Context context) {
         super(context);
@@ -53,8 +59,9 @@ public class ThemeView extends View {
         init();
     }
 
-    public void setTheme(Theme theme){
+    public void setTheme(Theme theme, int ThemeId){
         this.mTheme = theme;
+        this.ThemeId = ThemeId;
         init();
         invalidate();
     }
@@ -63,6 +70,8 @@ public class ThemeView extends View {
         try {
 
             themeLabel = findViewById(R.id.themeLabel);
+
+             this.sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 
             if(themeLabel != null){
                 themeLabel.setText("Test");
@@ -110,6 +119,7 @@ public class ThemeView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
 
         final float height = getHeight();
@@ -129,6 +139,6 @@ public class ThemeView extends View {
         canvas.drawRect(0,statusbar,width,toolbar,mPrimaryPaint);
         canvas.drawCircle(width-stroke-height*20 /100f,toolbar, height*16/100, mAccentPaint);
         canvas.drawRect(0,0,width,height,mBoarderPaint);
-        canvas.drawText("Theme name",15,50, mThemeTextPaint);
+        canvas.drawText(ThemeUtil.getThemeName(this.ThemeId, this.sp.getBoolean("daynight", true)),18,55, mThemeTextPaint);
     }
 }

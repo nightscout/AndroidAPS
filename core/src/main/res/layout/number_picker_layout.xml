@@ -17,7 +17,6 @@
     <EditText
         android:id="@+id/display"
         android:layout_width="70dp"
-        android:background="@drawable/border_gray"
         android:layout_height="match_parent"
         android:text="1"
         android:inputType="number"

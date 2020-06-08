@@ -13,8 +13,6 @@ import androidx.core.content.ContextCompat
 import com.ms_square.etsyblur.BlurConfig
 import com.ms_square.etsyblur.BlurDialogFragment
 import com.ms_square.etsyblur.SmartAsyncPolicy
-import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag

@@ -1,37 +1,38 @@
 package info.nightscout.androidaps.plugins.general.themeselector.adapter;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity;
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme;
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder> {
 
-    @Inject SP sp;
+    private SharedPreferences sp;
 
     private List<Theme> themeList;
     private RecyclerViewClickListener mRecyclerViewClickListener;
  
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ThemeView themeView;
+        public TextView textView;
         private RecyclerViewClickListener mListener;
  
         public MyViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
             mListener = listener;
             themeView = view.findViewById(R.id.themeView);
+            textView = view.findViewById(R.id.themeLabel);
             view.setOnClickListener(this);
         }
 
@@ -57,15 +58,16 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.themeselector_list_row_theme, parent, false);
- 
+
         return new MyViewHolder(itemView, mRecyclerViewClickListener);
     }
  
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Theme theme = themeList.get(position);
-        holder.themeView.setTheme(theme);
 
+        // holder.textView.setText(ThemeUtil.getThemeName(position, this.sp.getBoolean("daynight", true)));
+        holder.themeView.setTheme(theme, position);
         if(ScrollingActivity.selectedTheme == position){
             holder.themeView.setActivated(true);
         }else {
