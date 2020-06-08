@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme;
-import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil;
 
 /**
  * Created by Pankaj on 27-10-2017.
@@ -139,6 +138,6 @@ public class ThemeView extends View {
         canvas.drawRect(0,statusbar,width,toolbar,mPrimaryPaint);
         canvas.drawCircle(width-stroke-height*20 /100f,toolbar, height*16/100, mAccentPaint);
         canvas.drawRect(0,0,width,height,mBoarderPaint);
-        canvas.drawText(ThemeUtil.getThemeName(this.ThemeId, this.sp.getBoolean("daynight", true)),18,55, mThemeTextPaint);
+        //canvas.drawText(ThemeUtil.getThemeName(this.ThemeId, this.sp.getBoolean("daynight", true)),18,55, mThemeTextPaint);
     }
 }

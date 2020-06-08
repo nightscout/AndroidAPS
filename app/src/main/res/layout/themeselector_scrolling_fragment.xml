@@ -20,7 +20,7 @@
         app:layout_anchorGravity="bottom|end"
         android:src="@drawable/ic_aaps_logo_white"
         android:tint="?android:attr/colorBackground"
-        app:elevation="6dp"
+        app:elevation="12dp"
         app:borderWidth="2dp"
         app:backgroundTint="?attr/colorSecondary"
         android:backgroundTint="?attr/colorSecondary"

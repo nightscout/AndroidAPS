@@ -24,4 +24,5 @@ interface ResourceHelper {
     fun shortTextMode(): Boolean
     fun getAttributeColor(context: Context?,
                           attributeId: Int): Int
+    fun isUsingNightMode(): Boolean
 }

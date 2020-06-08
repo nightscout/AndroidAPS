@@ -87,7 +87,7 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
 
         mRecyclerView = findViewById(R.id.recyclerView);
 
-        mAdapter = new ThemeAdapter(mThemeList, new RecyclerViewClickListener() {
+        mAdapter = new ThemeAdapter( sp, mThemeList, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
