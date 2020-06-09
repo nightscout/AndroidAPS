@@ -184,6 +184,7 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="0dp"
@@ -194,7 +195,8 @@
                 android:hint="@string/careportal_newnstreatment_profile_label"
                 app:endIconMode="dropdown_menu">
 
-                <Spinner
+
+                <AutoCompleteTextView
                     android:id="@+id/treatments_wizard_profile"
                     android:inputType="none"
                     android:layout_width="match_parent"
@@ -299,7 +301,7 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_visibility" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel"
                 style="@style/mdtp_ActionButton.Text"
                 android:layout_width="0dp"
@@ -309,7 +311,7 @@
                 android:text="@string/mdtp_cancel"
                 android:textAlignment="textEnd" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/ok"
                 style="@style/mdtp_ActionButton.Text"
                 android:layout_width="wrap_content"

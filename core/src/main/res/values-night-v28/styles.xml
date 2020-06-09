@@ -86,8 +86,9 @@
         <!-- Color of pills -->
         <item name="PillColorStart">@color/PillColorStartLime</item>
         <item name="PillColorEnd">@color/PillColorEndLime</item>
-        <item name="android:windowBackground">@drawable/auroraborealis02</item>
+        <!-- Color of bg value -->
         <item name="bgInRange">@color/bgInRangeColorLime</item>
+        <item name="android:windowBackground">@drawable/auroraborealis02</item>
     </style>
 
     <style name="AppTheme.DARKSIDE" parent="AppTheme.NoActionBar">

@@ -4,8 +4,9 @@
     android:layout_height="100dp"
     android:orientation="vertical">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/increment"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="@null"
@@ -22,8 +23,9 @@
         android:inputType="number"
         android:text="1" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/decrement"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="@null"

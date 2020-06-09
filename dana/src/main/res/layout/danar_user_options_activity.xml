@@ -318,13 +318,20 @@
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/save_user_options"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="match_parent"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/icon_local_save"
-            android:text="@string/danar_saveuseroptions" />
+            android:layout_width="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:icon="@drawable/icon_local_save"
+            android:paddingLeft="4dp"
+            android:paddingRight="0dp"
+            android:text="@string/danar_saveuseroptions"
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal|bottom" />
 
     </LinearLayout>
 

@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.text.NumberFormat;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -181,7 +183,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         });
     }
 
-    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, Button okButton, TextWatcher textWatcher) {
+    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, MaterialButton okButton, TextWatcher textWatcher) {
         if (this.textWatcher != null) {
             editText.removeTextChangedListener(this.textWatcher);
         }
@@ -191,7 +193,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             editText.addTextChangedListener(textWatcher);
     }
 
-    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, Button okButton) {
+    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, MaterialButton okButton) {
         this.value = initValue;
         this.minValue = minValue;
         this.maxValue = maxValue;

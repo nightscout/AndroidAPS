@@ -428,10 +428,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
         // **** BG value ****
         if (lastBG != null) {
             val color = when {
-                lastBG.valueToUnits(units) < lowLine  -> resourceHelper.gc(R.color.low)
-                lastBG.valueToUnits(units) > highLine -> resourceHelper.gc(R.color.high)
-                else                                  -> resourceHelper.gc(R.color.inrange)
+                lastBG.valueToUnits(units) < lowLine  -> resourceHelper.getAttributeColor(this, R.attr.bgLow)
+                lastBG.valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(this, R.attr.bgHigh)
+                else                                  -> resourceHelper.getAttributeColor(this, R.attr.bgInRange)
             }
+
 
             overview_bg?.text = lastBG.valueToUnitsToString(units)
             overview_bg?.setTextColor(color)

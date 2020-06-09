@@ -11,6 +11,7 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
 import com.ms_square.etsyblur.BlurConfig
@@ -237,7 +238,8 @@ class WizardDialog : BlurDialogFragment() {
         profileList.add(0, resourceHelper.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
-            treatments_wizard_profile.adapter = adapter
+            var editTextFilledExposedDropdown = treatments_wizard_profile as AutoCompleteTextView
+            editTextFilledExposedDropdown.setAdapter(adapter)
         } ?: return
 
         val units = profileFunction.getUnits()
@@ -273,9 +275,9 @@ class WizardDialog : BlurDialogFragment() {
 
     private fun calculateInsulin() {
         val profileStore = activePlugin.activeProfileInterface.profile
-        if (treatments_wizard_profile.selectedItem == null || profileStore == null)
+        if (treatments_wizard_profile.text.toString() == null || profileStore == null)
             return  // not initialized yet
-        var profileName = treatments_wizard_profile.selectedItem.toString()
+        var profileName = treatments_wizard_profile.text.toString()
         val specificProfile: Profile?
         if (profileName == resourceHelper.gs(R.string.active)) {
             specificProfile = profileFunction.getProfile()
