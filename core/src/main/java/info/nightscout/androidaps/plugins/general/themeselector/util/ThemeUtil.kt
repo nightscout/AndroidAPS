@@ -65,7 +65,7 @@ object ThemeUtil {
         var themeName = ""
         when (theme) {
             THEME_RED        -> themeName =  if ( mIsNightMode) "Ferrari" else "RED light"
-            THEME_PINK       -> themeName = if ( mIsNightMode) "PINK" else "Pink"
+            THEME_PINK       -> themeName = if ( mIsNightMode) "PINK" else "Ice"
             THEME_PURPLE     -> themeName = if ( mIsNightMode) "Purple" else "Purple"
             THEME_DEEPPURPLE -> themeName = if ( mIsNightMode) "Deep Purple" else "Deep Purple"
             THEME_INDIGO     -> themeName = if ( mIsNightMode) "Indigo" else "Indigo"
