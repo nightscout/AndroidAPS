@@ -63,6 +63,9 @@
         <item name="iconCgm">@drawable/ic_blooddrop_48</item>
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
+        <!-- Graph specific colors  -->
+        <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
+        <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
         <!-- Dialog -->
         <item name="android:dialogCornerRadius">10dp</item>
 

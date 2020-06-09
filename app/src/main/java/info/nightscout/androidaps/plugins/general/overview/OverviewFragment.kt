@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -25,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
@@ -78,11 +78,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_buttons_layout.*
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_carbsbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_insulinbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_quickwizardbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatmentbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
@@ -94,7 +89,6 @@ import kotlinx.android.synthetic.main.overview_info_layout.overview_basebasal
 import kotlinx.android.synthetic.main.overview_info_layout.overview_cob
 import kotlinx.android.synthetic.main.overview_info_layout.overview_extendedbolus
 import kotlinx.android.synthetic.main.overview_info_layout.overview_iob
-import kotlinx.android.synthetic.main.overview_info_layout.overview_sensitivity
 import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import kotlinx.android.synthetic.main.status_fragment.*
 import kotlinx.coroutines.Dispatchers
@@ -186,8 +180,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
+        overview_bggraph?.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
+        overview_bggraph?.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
         overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
+
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -477,6 +474,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val graph = GraphView(context)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                graph?.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
+                graph?.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
