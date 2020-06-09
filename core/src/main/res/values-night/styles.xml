@@ -83,7 +83,7 @@
         <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
         <item name="colorAccentDialog">?attr/colorAccent</item>
         <!-- Color of graph background -->
-        <item name="colorGraphBackground">@color/transparent</item>
+        <item name="colorGraphBackground">@color/white_alpha_08</item>
         <!-- Top bar icons -->
         <item name="iconSensor">@drawable/ic_sensor</item>
         <item name="iconReservoir">@drawable/ic_cartridge</item>

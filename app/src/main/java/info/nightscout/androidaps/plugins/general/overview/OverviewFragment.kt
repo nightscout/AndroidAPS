@@ -179,6 +179,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_notifications?.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        overview_bggraph?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
         overview_bggraph?.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
         overview_bggraph?.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
@@ -480,7 +481,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                //graph.viewport.backgroundColor = resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground )
+                graph.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
+
                 relativeLayout.addView(graph)
 
                 val label = TextView(context)

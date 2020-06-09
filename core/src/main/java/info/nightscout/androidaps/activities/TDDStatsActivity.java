@@ -163,27 +163,22 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
         TextView label_date = new TextView(this);
         label_date.setText(resourceHelper.gs(R.string.date));
-        label_date.setTextColor(Color.WHITE);
         tr_head.addView(label_date);
 
         TextView label_basalrate = new TextView(this);
         label_basalrate.setText(resourceHelper.gs(R.string.basalrate));
-        label_basalrate.setTextColor(Color.WHITE);
         tr_head.addView(label_basalrate);
 
         TextView label_bolus = new TextView(this);
         label_bolus.setText(resourceHelper.gs(R.string.bolus));
-        label_bolus.setTextColor(Color.WHITE);
         tr_head.addView(label_bolus);
 
         TextView label_tdd = new TextView(this);
         label_tdd.setText(resourceHelper.gs(R.string.tdd));
-        label_tdd.setTextColor(Color.WHITE);
         tr_head.addView(label_tdd);
 
         TextView label_ratio = new TextView(this);
         label_ratio.setText(resourceHelper.gs(R.string.ratio));
-        label_ratio.setTextColor(Color.WHITE);
         tr_head.addView(label_ratio);
 
         // add stats headers to tables
@@ -201,17 +196,14 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
         TextView label_cum_amount_days = new TextView(this);
         label_cum_amount_days.setText(resourceHelper.gs(R.string.amount_days));
-        label_cum_amount_days.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_amount_days);
 
         TextView label_cum_tdd = new TextView(this);
         label_cum_tdd.setText(resourceHelper.gs(R.string.tdd));
-        label_cum_tdd.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_tdd);
 
         TextView label_cum_ratio = new TextView(this);
         label_cum_ratio.setText(resourceHelper.gs(R.string.ratio));
-        label_cum_ratio.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_ratio);
 
         // add cummulative headers to tables
@@ -229,17 +221,14 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
         TextView label_exp_weight = new TextView(this);
         label_exp_weight.setText(resourceHelper.gs(R.string.weight));
-        label_exp_weight.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_weight);
 
         TextView label_exp_tdd = new TextView(this);
         label_exp_tdd.setText(resourceHelper.gs(R.string.tdd));
-        label_exp_tdd.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_tdd);
 
         TextView label_exp_ratio = new TextView(this);
         label_exp_ratio.setText(resourceHelper.gs(R.string.ratio));
-        label_exp_ratio.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_ratio);
 
         // add expontial headers to tables
@@ -358,31 +347,26 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 TextView labelDATE = new TextView(TDDStatsActivity.this);
                 labelDATE.setId(200 + i);
                 labelDATE.setText(df1.format(new Date(record.date)));
-                labelDATE.setTextColor(Color.WHITE);
                 tr.addView(labelDATE);
 
                 TextView labelBASAL = new TextView(TDDStatsActivity.this);
                 labelBASAL.setId(300 + i);
                 labelBASAL.setText(resourceHelper.gs(R.string.formatinsulinunits, record.basal));
-                labelBASAL.setTextColor(Color.WHITE);
                 tr.addView(labelBASAL);
 
                 TextView labelBOLUS = new TextView(TDDStatsActivity.this);
                 labelBOLUS.setId(400 + i);
                 labelBOLUS.setText(resourceHelper.gs(R.string.formatinsulinunits, record.bolus));
-                labelBOLUS.setTextColor(Color.WHITE);
                 tr.addView(labelBOLUS);
 
                 TextView labelTDD = new TextView(TDDStatsActivity.this);
                 labelTDD.setId(500 + i);
                 labelTDD.setText(resourceHelper.gs(R.string.formatinsulinunits, tdd));
-                labelTDD.setTextColor(Color.WHITE);
                 tr.addView(labelTDD);
 
                 TextView labelRATIO = new TextView(TDDStatsActivity.this);
                 labelRATIO.setId(600 + i);
                 labelRATIO.setText(Math.round(100 * tdd / magicNumber) + "%");
-                labelRATIO.setTextColor(Color.WHITE);
                 tr.addView(labelRATIO);
 
                 // add stats rows to tables
@@ -417,19 +401,16 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 TextView labelDAYS = new TextView(TDDStatsActivity.this);
                 labelDAYS.setId(800 + i);
                 labelDAYS.setText("" + i);
-                labelDAYS.setTextColor(Color.WHITE);
                 ctr.addView(labelDAYS);
 
                 TextView labelCUMTDD = new TextView(TDDStatsActivity.this);
                 labelCUMTDD.setId(900 + i);
                 labelCUMTDD.setText(resourceHelper.gs(R.string.formatinsulinunits, sum / i));
-                labelCUMTDD.setTextColor(Color.WHITE);
                 ctr.addView(labelCUMTDD);
 
                 TextView labelCUMRATIO = new TextView(TDDStatsActivity.this);
                 labelCUMRATIO.setId(1000 + i);
                 labelCUMRATIO.setText(Math.round(100 * sum / i / magicNumber) + "%");
-                labelCUMRATIO.setTextColor(Color.WHITE);
                 ctr.addView(labelCUMRATIO);
 
                 // add cummulative rows to tables
@@ -482,7 +463,6 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
             TextView labelWEIGHT = new TextView(TDDStatsActivity.this);
             labelWEIGHT.setId(1200 + i);
             labelWEIGHT.setText("0.3\n" + "0.5\n" + "0.7");
-            labelWEIGHT.setTextColor(Color.WHITE);
             etr.addView(labelWEIGHT);
 
             TextView labelEXPTDD = new TextView(TDDStatsActivity.this);
@@ -490,7 +470,6 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
             labelEXPTDD.setText(resourceHelper.gs(R.string.formatinsulinunits, weighted03) + "\n" +
                     resourceHelper.gs(R.string.formatinsulinunits, weighted05) + "\n" +
                     resourceHelper.gs(R.string.formatinsulinunits, weighted07));
-            labelEXPTDD.setTextColor(Color.WHITE);
             etr.addView(labelEXPTDD);
 
             TextView labelEXPRATIO = new TextView(TDDStatsActivity.this);
@@ -498,7 +477,6 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
             labelEXPRATIO.setText(Math.round(100 * weighted03 / magicNumber) + "%\n"
                     + Math.round(100 * weighted05 / magicNumber) + "%\n"
                     + Math.round(100 * weighted07 / magicNumber) + "%");
-            labelEXPRATIO.setTextColor(Color.WHITE);
             etr.addView(labelEXPRATIO);
 
             // add exponentail rows to tables

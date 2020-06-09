@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="info.nightscout.androidaps.dana.activities.DanaHistoryActivity">
 
 
@@ -81,13 +82,17 @@
         android:layout_above="@id/danar_history_reload"
         android:layout_below="@+id/danar_history_status" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/danar_history_reload"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:drawableStart="@drawable/icon_actions_refill"
-        android:text="@string/reload" />
+        android:layout_width="match_parent"
+        app:icon="@drawable/icon_actions_refill"
+        android:paddingLeft="4dp"
+        android:paddingRight="0dp"
+        android:text="@string/reload"
+        android:textSize="14sp"
+        app:cornerRadius="20dp"
+        app:layout_gravity="fill_horizontal" />
 
 </RelativeLayout>

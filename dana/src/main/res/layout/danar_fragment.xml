@@ -302,7 +302,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -743,7 +742,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -755,7 +753,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
             </LinearLayout>
 
