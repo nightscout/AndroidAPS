@@ -227,7 +227,6 @@
                 android:id="@+id/treatments_wizard_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_darkgray"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="2.35U 28g"
