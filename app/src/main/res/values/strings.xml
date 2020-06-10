@@ -1158,7 +1158,6 @@
     <string name="recurringTime">Recurring time</string>
     <string name="every">Every</string>
     <string name="never">Never</string>
-    <string name="mins">%1$dmins</string>
     <string name="condition">Condition:</string>
     <string name="action">Action:</string>
     <string name="iob_u">IOB [U]:</string>
@@ -1457,7 +1456,7 @@
     <string name="reorder_label">Reorder</string>
 
     <string name="age">Age:</string>
-    <string name="weight">Weight:</string>
+    <string name="weight_label">Weight:</string>
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
     <string name="mostcommonprofile">Most common profile:</string>
