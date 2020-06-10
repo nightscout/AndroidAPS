@@ -196,6 +196,8 @@
     <color name="background_middle_color_grey">#FF707991</color>
     <color name="background_end_color_grey">#FF000000</color>
 
+    <!-- TDD Stats   -->
+    <color name="background_stats_color">#666666</color>
 
     <!---Default material colors-->
     <color name="colorOnPrimary">#FFFFFF</color>

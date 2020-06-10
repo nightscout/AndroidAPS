@@ -99,6 +99,8 @@
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
+        <!-- TDD Stats   -->
+        <item name="backgroundStatsColor">@color/background_stats_color</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

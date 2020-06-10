@@ -71,6 +71,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     String TBB;
     double magicNumber;
     DecimalFormat decimalFormat;
+    Integer backGroundColor;
 
     List<TDD> historyList = new ArrayList<>();
     List<TDD> dummies;
@@ -137,6 +138,8 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         totalBaseBasal2.setFocusable(false);
         totalBaseBasal2.setInputType(0);
 
+        backGroundColor = resourceHelper.getAttributeColor(this,R.attr.backgroundStatsColor);
+
         decimalFormat = new DecimalFormat("0.000");
         llm = new LinearLayoutManager(this);
 
@@ -156,7 +159,8 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         // stats table
         tl = findViewById(R.id.main_table);
         TableRow tr_head = new TableRow(this);
-        tr_head.setBackgroundColor(Color.DKGRAY);
+
+        tr_head.setBackgroundColor(backGroundColor);
         tr_head.setLayoutParams(new TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
@@ -189,7 +193,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         // cumulative table
         ctl = findViewById(R.id.cumulative_table);
         TableRow ctr_head = new TableRow(this);
-        ctr_head.setBackgroundColor(Color.DKGRAY);
+        ctr_head.setBackgroundColor(backGroundColor);
         ctr_head.setLayoutParams(new TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
@@ -214,7 +218,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         // expontial table
         etl = findViewById(R.id.expweight_table);
         TableRow etr_head = new TableRow(this);
-        etr_head.setBackgroundColor(Color.DKGRAY);
+        etr_head.setBackgroundColor(backGroundColor);
         etr_head.setLayoutParams(new TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
@@ -334,7 +338,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
                 // Create the table row
                 TableRow tr = new TableRow(TDDStatsActivity.this);
-                if (i % 2 != 0) tr.setBackgroundColor(Color.DKGRAY);
+                if (i % 2 != 0) tr.setBackgroundColor(backGroundColor);
                 if (dummies.contains(record)) {
                     tr.setBackgroundColor(Color.argb(125, 255, 0, 0));
                 }
@@ -391,7 +395,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
                 // Create the cumtable row
                 TableRow ctr = new TableRow(TDDStatsActivity.this);
-                if (i % 2 == 0) ctr.setBackgroundColor(Color.DKGRAY);
+                if (i % 2 == 0) ctr.setBackgroundColor(backGroundColor);
                 ctr.setId(700 + i);
                 ctr.setLayoutParams(new TableLayout.LayoutParams(
                         TableLayout.LayoutParams.MATCH_PARENT,

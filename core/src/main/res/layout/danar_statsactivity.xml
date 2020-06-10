@@ -112,14 +112,14 @@
                             android:layout_weight="1" />
 
                         <EditText
+                            android:id="@+id/danar_stats_editTotalBaseBasal"
                             android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
                             android:layout_marginEnd="10dp"
                             android:gravity="center_vertical|center_horizontal"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:background="@drawable/pillborder"
-                            android:id="@+id/danar_stats_editTotalBaseBasal" />
+                            android:background="@drawable/pillborder" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -136,12 +136,12 @@
                             android:layout_weight="1" />
 
                         <TextView
+                            android:id="@+id/danar_stats_editTotalBaseBasal2"
                             android:layout_width="70dp"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
                             android:gravity="center_vertical|center_horizontal"
                             android:layout_marginEnd="10dp"
-                            android:id="@+id/danar_stats_editTotalBaseBasal2" />
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -193,6 +193,8 @@
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 app:icon="@drawable/icon_local_reset"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:paddingStart="4dp"
                 android:paddingEnd="0dp"
                 android:text="@string/reload"

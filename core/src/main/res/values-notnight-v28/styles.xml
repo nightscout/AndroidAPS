@@ -101,6 +101,8 @@
         <item name="fragmentbackground">@color/transparent</item>
         <!-- Dialog -->
         <item name="android:dialogCornerRadius">10dp</item>
+        <!-- TDD Stats   -->
+        <item name="backgroundStatsColor">@color/background_stats_color</item>
     </style>
 
     <style name="AppTheme.YELLOW" parent="AppTheme.NoActionBar">

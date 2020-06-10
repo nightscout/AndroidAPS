@@ -72,6 +72,8 @@
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
+        <!-- TDD Stats   -->
+        <item name="backgroundStatsColor">@color/background_stats_color</item>
     </style>
 
     <style name="AppTheme.LIME" parent="AppTheme.NoActionBar">
