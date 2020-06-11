@@ -572,8 +572,6 @@ Eversense-appen.</string>
     <string name="smbmaxminutes_summary">Max antal minuter som kan bli SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB max minuter</string>
     <string name="uamsmbmaxminutes_summary">Max antal minuter basal som kan bli SMB vid UAM</string>
-    <string name="carbsReqThreshold">Min föreslagen mängd kolhydrater</string>
-    <string name="carbsReqThreshold_summary">När kolhydrater rekommenderas som korrektion, ange minsta mängd KH som ger notifiering</string>
     <string name="dexcomg5_xdripupload_title">Skicka BG-data till xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
     <string name="nsclientbg">NSClient BG</string>
