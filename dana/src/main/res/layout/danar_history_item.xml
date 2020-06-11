@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        style="@style/Widget.MaterialComponents.CardView"
-        android:id="@+id/danar_history_cardview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginTop="4dp"
-        app:strokeColor="@color/plastic_grey"
-        app:strokeWidth="2dp"
-        app:cardCornerRadius="3dp"
-        app:contentPadding="2dp"
-        app:cardElevation="2dp"
-        app:cardUseCompatPadding="false"
-        android:layout_gravity="center">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/danar_history_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardBackgroundColor="@color/cardColorBackground"
+    card_view:cardCornerRadius="6dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="6dp">
 
 
     <LinearLayout
@@ -28,14 +22,14 @@
             android:id="@+id/danar_history_time"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="27.06.2016 18:00" />
 
         <TextView
             android:id="@+id/danar_history_value"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="0.25"
             android:gravity="right" />
 
@@ -43,23 +37,23 @@
             android:id="@+id/danar_history_bolustype"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="E"
-/>
+            />
 
         <TextView
             android:id="@+id/danar_history_stringvalue"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="XXXXXXX"
-/>
+            />
 
         <TextView
             android:id="@+id/danar_history_duration"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="30"
             android:gravity="right" />
 
@@ -67,21 +61,21 @@
             android:id="@+id/danar_history_dailybasal"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:gravity="right" />
 
         <TextView
             android:id="@+id/danar_history_dailybolus"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:gravity="right" />
 
         <TextView
             android:id="@+id/danar_history_dailytotal"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:gravity="right"
             android:visibility="gone"/>
 
@@ -89,8 +83,8 @@
             android:id="@+id/danar_history_alarm"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp" />
+            android:paddingStart="5dp" />
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>
