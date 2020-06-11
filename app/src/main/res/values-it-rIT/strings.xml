@@ -571,8 +571,6 @@
     <string name="smbmaxminutes_summary">Max minuti di basale a cui limitare SMB</string>
     <string name="uamsmbmaxminutes">SMB UAM max minuti</string>
     <string name="uamsmbmaxminutes_summary">Max minuti di basale a cui limitare SMB per UAM</string>
-    <string name="carbsReqThreshold">Soglia proposta CHO</string>
-    <string name="carbsReqThreshold_summary">Quando vengono proposti carboidrati, la quantità minima per la quale verrà mostrata una notifica</string>
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">BG NSClient</string>
