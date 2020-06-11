@@ -261,6 +261,7 @@
     <string name="smscommunicator_pumpconnectfail">Connessione al micro fallita</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Per disconnettere il micro per %1d minuti rispondi col codice %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Micro disconnesso</string>
+    <string name="smscommunicator_reconnect">Micro riconnesso</string>
     <string name="smscommunicator_remotecommandnotallowed">Il comando da remoto non è permesso</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolo remoto non disponibile. Riprova più tardi.</string>
     <string name="smscommunicator_basalreplywithcode">Per avviare la basale %1$.2fU/h per %2$d min rispondi col codice %3$s</string>
