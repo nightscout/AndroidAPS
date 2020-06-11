@@ -256,6 +256,11 @@
     <string name="smscommunicator_loopisenabled">Loop ist aktiviert.</string>
     <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
     <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits.</string>
+    <string name="smscommunicator_pumpconnectwithcode">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Verbindung zur Pumpe fehlgeschlagen</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1d Minuten zu trennen, antworte mit dem Code %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Verbindung zur Pumpe getrennt</string>
+    <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
     <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolusabgabe aus der Ferne nicht verfügbar. Versuche es später erneut.</string>
     <string name="smscommunicator_basalreplywithcode">Um eine Basalrate von %1$.2fIE/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
@@ -572,6 +577,7 @@
     <string name="uamsmbmaxminutes">UAM SMB max. Minuten</string>
     <string name="uamsmbmaxminutes_summary">SMB Basal-Limit in Minuten für UAM</string>
     <string name="carbsReqThreshold">Schwellenwert für KH-Empfehlung</string>
+    <string name="carbsReqThreshold_summary">Falls Kohlenhydrate vorgeschlagen werden, Menge ab der eine Benachrichtigung angezeigt wird</string>
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
@@ -991,7 +997,7 @@ Unerwartetes Verhalten.</string>
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
-    <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
+    <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
     <string name="dexcom_short">DXCM</string>

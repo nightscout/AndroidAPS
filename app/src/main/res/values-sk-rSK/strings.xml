@@ -452,8 +452,14 @@
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
     <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAZ</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">AKT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
@@ -1280,6 +1286,9 @@
     <string name="statuslights">Indikátory stavu</string>
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
     <string name="copyexistingvalues">Skopírovať nastavenia NS (ak existujú)?</string>
+    <string name="classic_description">Pôvodný vzhľad</string>
+    <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
+    <string name="largedisplay_description">Veľký displej</string>
     <string name="skin">Vzhľad</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

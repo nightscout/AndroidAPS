@@ -1286,6 +1286,9 @@
     <string name="statuslights">Luzes de Estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="copyexistingvalues">Copiar definições do NS (se existir)?</string>
+    <string name="classic_description">Tema Gráfico Original</string>
+    <string name="buttonson_description">Os botões são sempre exibidos na parte inferior do ecrã</string>
+    <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema gráfico</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

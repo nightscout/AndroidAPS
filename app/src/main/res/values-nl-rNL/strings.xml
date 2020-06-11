@@ -462,7 +462,7 @@
     <string name="invalid">Ongeldig</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
     <string name="careportal_newnstreatment_timeshift_label">Tijd verschuiving</string>
-    <string name="default_temptargets">Standaard tijdelijk basaal</string>
+    <string name="default_temptargets">Standaard tijdelijke streefdoelen</string>
     <string name="eatingsoon_duration">Eet binnenkort periode</string>
     <string name="eatingsoon_target">Eet binnenkort doel</string>
     <string name="activity_duration">Periode van inspanning</string>
@@ -1170,6 +1170,7 @@
     <!-- Omnipod - Dialogs -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_set_bolus">Bolus instellen</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
 </resources>

@@ -265,6 +265,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_carbsreplywithcode">Pour entrer %1$dg à %2$s renvoyer le code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pour démarrer la Basal %1$d%% pendant %2$d min, renvoyer le code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Envoyer le code %2$s pour suspendre la Boucle pour %1$d minutes</string>
+    <string name="smscommunicator_loopresumereplywithcode">Pour reprendre la veuillez répondre avec le code %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Pour activer la boucle veuillez répondre avec le code %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Pour désactiver la boucle veuillez répondre avec le code %1$s</string>
     <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal temporaire pour %2$d min</string>
     <string name="smscommunicator_extendedset">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
     <string name="smscommunicator_carbsset">Les %1$dg de glucides entrés avec succès</string>
@@ -444,14 +447,20 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_iage_critical">Seuil critique âge insuline [h]</string>
     <string name="statuslights_sage_warning">Seuil d\'alerte âge capteur [h]</string>
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
-    <string name="statuslights_bage_warning">Seuil d\'alerte niveau pile [h]</string>
-    <string name="statuslights_bage_critical">Seuil critique niveau pile [h]</string>
-    <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
-    <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%]</string>
+    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
+    <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
+    <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
+    <string name="statuslights_res_critical">Seuil critique de niveau réservoir [U]</string>
+    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile [%]</string>
+    <string name="statuslights_bat_critical">Seuil critique niveau pile [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">PENTEDEV</string>
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
@@ -467,8 +476,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_canulaage_label">Age Cathéter</string>
     <string name="careportal_insulinage_label">Age Insuline</string>
     <string name="doprofileswitch">Changer de profil</string>
-    <string name="careportal_pbage_label">Age batterie pompe</string>
+    <string name="careportal_pbage_label">Age Pile Pompe</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
+    <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
+    <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
     <string name="nsalarm_staledatavalue_label">Seuil sans nouvelle donnée Glyc. [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="openapsama_autosens_period">Plage pour Autosens [h]</string>
@@ -548,7 +559,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="localalertsettings_title">Alertes locales</string>
     <string name="enable_missed_bg_readings_alert">Alerte pas nouvelle donnée glycémique</string>
     <string name="enable_pump_unreachable_alert">Alerte si la pompe est hors de portée</string>
-    <string name="pump_unreachable_threshold">Seuil alerte pompe hors de portée [min]</string>
+    <string name="pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée [min]</string>
     <string name="urgent_alarm">Alarme d\'urgence</string>
     <string name="info">INFO</string>
     <string name="eversense">App Eversense (patché)</string>
@@ -621,6 +632,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
     <string name="insightpump_shortname">AC-I</string>
     <string name="ago">passé(e)s</string>
+    <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
+    <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
     <string name="enablesmbalways">Activer en permanence les SMB</string>
     <string name="enablesmbalways_summary">Activer toujours SMB de manière autonome pour les bolus. Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbaftercarbs">Activer SMB après ingestion de glucides</string>
@@ -1274,6 +1287,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights">Voyants d\'état</string>
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
+    <string name="classic_description">Thème d\'origine</string>
+    <string name="buttonson_description">Les boutons sont toujours affichés en bas de l\'écran</string>
+    <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1372,6 +1388,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_pump_omnipod_dash">Intégration de la pompe Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
+    <string name="omnipod_alert_expiration">Le Pod expire bientôt</string>
     <string name="omnipod_alert_expiration_advisory">Le Pod expire bientôt</string>
     <string name="omnipod_alert_shutdown_imminent">Arrêt imminent</string>
     <string name="omnipod_alert_low_reservoir">Réservoir bas</string>

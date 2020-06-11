@@ -174,6 +174,7 @@
     <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych preferencji.</string>
     <string name="preferences_export_canceled">Eksportowanie anulowane! Ustawienia NIE zostały wyeksportowane!</string>
     <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
+    <string name="preferences_import_list_title">Wybierz plik do zaimportowania</string>
     <string name="check_preferences_before_import">Proszę sprawdzić ustawienia przed importem:</string>
     <string name="check_preferences_cannot_import">Ustawienia nie mogą być zaimportowane!</string>
     <string name="check_preferences_dangerous_import">Ustawienia nie powinny być importowane!</string>
@@ -186,6 +187,8 @@
     <string name="metadata_warning_outdated_format">Używasz przestarzałego formatu ze starych wersji AAPS, który nie jest bezpieczny! Używaj go tylko w ostateczności, jeśli nie masz eksportu w aktualnym formacie JSON.</string>
     <string name="metadata_warning_old_export">Zaimportowane ustawienia mają już %1$s dni! Może masz bardziej aktualne ustawienia lub wybierzesz niewłaściwy plik? Pamiętaj o regularnym eksporcie ustawień!</string>
     <string name="metadata_warning_date_format">Niepoprawny format daty i czasu!</string>
+    <string name="metadata_warning_different_version">Importujesz ustawienia z innej, nieco starszej wersji aplikacji. Prawdopodobnie to jest OK bo np.: importujesz ustawienia po aktualizacji do nowej wersji, ale sprawdź po zaimportowaniu, czy ustawienia są nadal poprawne!</string>
+    <string name="metadata_urgent_different_version">Importujesz ustawienia ze znacząco innej wersji aplikacji. Zmiana głównego numeru wersji aplikacji oznacza znaczące zmiany, i może oznaczać niekompatybilność niektórych ustawień. Upewnij się po imporcie, że ustawienia są nadal poprawne!</string>
     <string name="metadata_label_format">Format pliku</string>
     <string name="metadata_label_created_at">Data utworzenia</string>
     <string name="metadata_label_aaps_version">Wersja AAPS</string>
@@ -208,6 +211,11 @@
     <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
     <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
+    <string name="exported_today">wyeksportowano dzisiaj</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
+    <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
+    <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
+    <string name="in_directory" comment="placeholder is for exported file path">w katalogu: %1$s</string>
     <string name="end_user_license_agreement">Umowa licencyjna użytkownika końcowego</string>
     <string name="end_user_license_agreement_text">NIE MOŻE BY WYKORZYSTYWANY DO PODEJMOWANIA DECYZJI MEDYCZNYCH. NIE MA ŻADNEJ GWARANCJI NA PROGRAM, W ZAKRESIE DOZWOLONYM PRZEZ OBOWIĄZUJĄCE PRAWO. Z WYJĄTKIEM PRZYPADKÓW, GDY W INNY SPOSÓB PISMO OŚWIADCZENIA PRAW AUTORSKICH I / LUB INNYCH STRON, PRZEDSTAWIAĆ PROGRAM \"W STANIE TAKIM, W JAKIM SIĘ ZNAJDUJE\" BEZ JAKIEJKOLWIEK GWARANCJI, WYRAŹNEJ LUB DOMNIEMANEJ, W TYM MIĘDZY INNYMI DOMNIEMANYCH GWARANCJI PRZYDATNOŚCI HANDLOWEJ I PRZYDATNOŚCI DO OKREŚLONEGO CELU. CAŁKOWITE RYZYKO ZWIĄZANE Z JAKOŚCIĄ I WYNIKIEM PROGRAMU JEST PO PAŃSTWA STRONIE. W PRZYPADKU USZKODZENIA PROGRAMU UŻYTKOWNIK PONOSI KOSZT CAŁEGO NIEZBĘDNEGO SERWISU, NAPRAWY LUB POPRAWEK. W PRZYPADKU NIEPOROZUMIEŃ ZASTOSOWANIE PRAWNE MA UMOWA W ANGIELSKIEJ WERSJI JĘZYKOWEJ!!!</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM I WYRAŻAM ZGODĘ</string>
@@ -384,6 +392,7 @@
     <string name="wear_detailedIOB_title">Pokaż szczegóły IOB</string>
     <string name="wear_detailedIOB_summary">Rozłóż IOB na bolus i IOB bazy na zegarku</string>
     <string name="nosuccess">nie udało się - proszę sprawdzić telefon</string>
+    <string name="notavailable">n/a</string>
     <string name="patientage">Wiek pacjenta</string>
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
@@ -1267,6 +1276,10 @@
     <!-- Omnipod - Dialogs -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_set_bolus">Podanie bolusa</string>
+    <string name="omnipod_cmd_cancel_bolus">Anulowanie bolusa</string>
+    <string name="omnipod_cmd_set_tbr">Ustaw tymczasową dawkę bazową</string>
+    <string name="omnipod_init_pod_set_basal_profile">Ustaw profil dawki bazowej</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
 </resources>
