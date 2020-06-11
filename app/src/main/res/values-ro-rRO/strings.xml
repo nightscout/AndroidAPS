@@ -383,12 +383,6 @@
     <string name="careportal_insulinage_label">Vechime insulină</string>
     <string name="careportal_pbage_label">Vechime baterie pompă</string>
     <string name="ns_alarmoptions">Opțiuni alarmare</string>
-    <string name="nsalarm_urgenthigh">Hiper urgent</string>
-    <string name="nsalarm_high">Hiper</string>
-    <string name="nsalarm_low">Hipo</string>
-    <string name="nsalarm_urgentlow">Hipo urgent</string>
-    <string name="nsalarm_staledata">Date învechite</string>
-    <string name="nsalarm_urgentstaledata">Date mult prea vechi</string>
     <string name="nsalarm_staledatavalue_label">Prag vechime date [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Prag date mult prea vechi [min]</string>
     <string name="openapsama_autosens_period">Interval pentru autosens [o]</string>

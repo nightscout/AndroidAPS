@@ -13,31 +13,37 @@ import info.nightscout.androidaps.utils.extensions.runOnUiThread
 object WarningDialog {
 
     @SuppressLint("InflateParams")
-    @JvmStatic
-    @JvmOverloads
     fun showWarning(context: Context, title: String, message: String, @StringRes positiveButton: Int = -1, ok: (() -> Unit)? = null, cancel: (() -> Unit)? = null) {
-
+        var okClicked = false
         val builder = AlertDialogHelper.Builder(context, R.style.AppThemeWarningDialog)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title, R.drawable.ic_header_warning, R.style.AppThemeWarningDialog))
             .setNegativeButton(R.string.dismiss) { dialog: DialogInterface, _: Int ->
-                dialog.dismiss()
-                SystemClock.sleep(100)
-                if (cancel != null) {
-                    runOnUiThread(Runnable {
-                        cancel()
-                    })
+                if (okClicked) return@setNegativeButton
+                else {
+                    okClicked = true
+                    dialog.dismiss()
+                    SystemClock.sleep(100)
+                    if (cancel != null) {
+                        runOnUiThread(Runnable {
+                            cancel()
+                        })
+                    }
                 }
             }
 
         if (positiveButton != -1) {
             builder.setPositiveButton(positiveButton) { dialog: DialogInterface, _: Int ->
-                dialog.dismiss()
-                SystemClock.sleep(100)
-                if (ok != null) {
-                    runOnUiThread(Runnable {
-                        ok()
-                    })
+                if (okClicked) return@setPositiveButton
+                else {
+                    okClicked = true
+                    dialog.dismiss()
+                    SystemClock.sleep(100)
+                    if (ok != null) {
+                        runOnUiThread(Runnable {
+                            ok()
+                        })
+                    }
                 }
             }
         }

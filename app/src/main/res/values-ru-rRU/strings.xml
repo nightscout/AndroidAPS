@@ -264,6 +264,9 @@
     <string name="smscommunicator_carbsreplywithcode">Чтобы ввести %1$d г в %2$s ответьте кодом %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Для начала подачи базала %1$d%% на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Чтобы возобновить цикл ответьте кодом %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Чтобы включить цикл ответьте кодом %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Чтобы отключить цикл ответьте кодом %1$s</string>
     <string name="smscommunicator_tempbasalset">врем базал %1$.2fU/h на %2$d мин начат успешно</string>
     <string name="smscommunicator_extendedset">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
     <string name="smscommunicator_carbsset">Углеводы %1$d г введены успешно</string>
@@ -449,8 +452,14 @@
     <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
     <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
     <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
+    <string name="prediction_shortname">ОЖИД</string>
     <string name="iob">IOB акт инс</string>
     <string name="cob">акт углев</string>
+    <string name="basal_shortname">БАЗ</string>
+    <string name="deviation_shortname">ОТКЛН</string>
+    <string name="activity_shortname">НАГР</string>
+    <string name="abs_insulin_shortname">НАДО</string>
+    <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingsmspermission">отсутствует смс подтверждение</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
@@ -468,12 +477,8 @@
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_pbage_label">Батарея помпы работает</string>
     <string name="ns_alarmoptions">опции оповещения</string>
-    <string name="nsalarm_urgenthigh">Тревога выс</string>
-    <string name="nsalarm_high">Высокий</string>
-    <string name="nsalarm_low">Низкий</string>
-    <string name="nsalarm_urgentlow">Тревога низкий</string>
-    <string name="nsalarm_staledata">Устаревшие данные</string>
-    <string name="nsalarm_urgentstaledata">Тревога! устаревшие данные</string>
+    <string name="ns_alarms">Создать уведомления из оповещений NS</string>
+    <string name="ns_announcements">Создать уведомления из оповещений NS</string>
     <string name="nsalarm_staledatavalue_label">Порог оповещения об устаревших данных [min] (мин)</string>
     <string name="nsalarm_urgent_staledatavalue_label">Порог тревоги об устаревших данных [min] (мин)</string>
     <string name="openapsama_autosens_period">Интервал для autosens [h] (ч)</string>
@@ -626,6 +631,8 @@
     <string name="extendedbolusdeliveryerror">Подача пролонгированного болюса не состоялась</string>
     <string name="insightpump_shortname">Поле обзора</string>
     <string name="ago">тому назад</string>
+    <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
+    <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
     <string name="enablesmbalways">Всегда включать супер микро болюс SMB</string>
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
@@ -853,6 +860,10 @@ Context | Edit Context</string>
     <string name="log_alerts">Журнал оповещений</string>
     <string name="enable_tbr_emulation">Включить эмуляцию TBR</string>
     <string name="enable_tbr_emulation_summary">Использовать пролонгированные болюсы вместо временных базалов TBR чтобы обойти лимит в 250%%</string>
+    <string name="disable_vibration">Отключение вибраций при ручном болюсе</string>
+    <string name="disable_vibration_summary">Для болюса и пролонгированного болюса (доступно только для Insight прошивки 3.х)</string>
+    <string name="disable_vibration_auto">Отключение вибрации при ручном болюсе</string>
+    <string name="disable_vibration_auto_summary">Для микроболюсов SMB и временных базалов с эмуляцией TBR (доступно только для Insight с прошивкой версии 3.x)</string>
     <string name="disconnect_delay">Задержка разъединения [s]</string>
     <string name="serial_number">Серийный номер</string>
     <string name="release_software_version">Версия ПО</string>
@@ -1277,8 +1288,6 @@ Context | Edit Context</string>
     <string name="statuslights">Индикаторы состояния</string>
     <string name="statuslights_copy_ns">Копировать параметры из NS</string>
     <string name="copyexistingvalues">Копировать настройки NS (если есть)?</string>
-    <string name="classic_desrciption">Исходная тема оформления</string>
-    <string name="buttonson_desrciption">Кнопки всегда отображаются в нижней части экрана</string>
     <string name="skin">Тема оформления</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1377,7 +1386,7 @@ Context | Edit Context</string>
     <string name="description_pump_omnipod_dash">Интеграция с помпой Omnompod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
-    <string name="omnipod_alert_expiration">Срок Pod\'a истекает в ближайшее время</string>
+    <string name="omnipod_alert_expiration">Срок работы Pod\'a истекает</string>
     <string name="omnipod_alert_expiration_advisory">Срок Pod\'a истекает в ближайшее время</string>
     <string name="omnipod_alert_shutdown_imminent">Остановка неизбежна</string>
     <string name="omnipod_alert_low_reservoir">В резервуаре мало инсулина</string>

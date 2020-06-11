@@ -37,7 +37,7 @@ import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
-import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.locale.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class MainApp extends DaggerApplication {
@@ -69,7 +69,7 @@ public class MainApp extends DaggerApplication {
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
-
+/*
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
             if (ex instanceof InternalError) {
                 // usually the app trying to spawn a thread while being killed
@@ -77,7 +77,7 @@ public class MainApp extends DaggerApplication {
             }
             aapsLogger.error("Uncaught exception crashing app", ex);
         });
-
+*/
         registerActivityLifecycleCallbacks(activityMonitor);
 
         JodaTimeAndroid.init(this);

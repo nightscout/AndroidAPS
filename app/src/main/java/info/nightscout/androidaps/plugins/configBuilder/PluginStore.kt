@@ -108,7 +108,7 @@ class PluginStore @Inject constructor(
             (activeProfile as PluginBase).setPluginEnabled(PluginType.PROFILE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting ProfileInterface")
         }
-        setFragmentVisiblities((activeSensitivity as PluginBase).name, pluginsInCategory, PluginType.PROFILE)
+        setFragmentVisiblities((activeProfile as PluginBase).name, pluginsInCategory, PluginType.PROFILE)
 
         // PluginType.BGSOURCE
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)

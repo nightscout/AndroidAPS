@@ -19,31 +19,19 @@ class DanaRS_Packet_Option_Get_Pump_Time(
     }
 
     override fun handleMessage(data: ByteArray) {
-        var dataIndex = DATA_START
-        var dataSize = 1
-        val year = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val month = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val day = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val hour = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val min = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val sec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        val year = byteArrayToInt(getBytes(data, DATA_START, 1))
+        val month = byteArrayToInt(getBytes(data, DATA_START + 1, 1))
+        val day = byteArrayToInt(getBytes(data, DATA_START + 2, 1))
+        val hour = byteArrayToInt(getBytes(data, DATA_START + 3, 1))
+        val min = byteArrayToInt(getBytes(data, DATA_START + 4, 1))
+        val sec = byteArrayToInt(getBytes(data, DATA_START + 5, 1))
         val time = DateTime(2000 + year, month, day, hour, min, sec)
-        danaPump.pumpTime = time.millis
+        danaPump.setPumpTime(time.millis)
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeString(time.millis))
     }
 
     override fun handleMessageNotReceived() {
-        danaPump.pumpTime = 0
+        danaPump.resetPumpTime()
     }
 
     override fun getFriendlyName(): String {

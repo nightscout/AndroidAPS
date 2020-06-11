@@ -193,11 +193,15 @@ abstract class DanaRS_Packet_History_(
                     val datetimewihtsec = DateTime(2000 + historyYear, historyMonth, historyDay, historyHour, historyMinute, historySecond)
                     danaRHistoryRecord.recordDate = datetimewihtsec.millis
                     var strAlarm = "None"
-                    when (paramByte8.toInt()) {
-                        67 -> strAlarm = "Check"
-                        79 -> strAlarm = "Occlusion"
-                        66 -> strAlarm = "Low Battery"
-                        83 -> strAlarm = "Shutdown"
+                    when (paramByte8) {
+                        'P'.toByte() -> strAlarm = "Basal Compare"
+                        'R'.toByte() -> strAlarm = "Empty Reservoir"
+                        'C'.toByte() -> strAlarm = "Check"
+                        'O'.toByte() -> strAlarm = "Occlusion"
+                        'M'.toByte() -> strAlarm = "Basal max"
+                        'D'.toByte() -> strAlarm = "Daily max"
+                        'B'.toByte() -> strAlarm = "Low Battery"
+                        'S'.toByte() -> strAlarm = "Shutdown"
                     }
                     danaRHistoryRecord.recordAlarm = strAlarm
                     danaRHistoryRecord.recordValue = value * 0.01

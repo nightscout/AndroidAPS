@@ -82,7 +82,7 @@ public class Profile {
             if (units != null)
                 this.units = units;
             else {
-                fabricPrivacy.log("Profile failover failed too");
+                fabricPrivacy.logCustom("Profile failover failed too");
                 this.units = Constants.MGDL;
             }
         }
@@ -100,6 +100,7 @@ public class Profile {
     }
 
     protected void init(JSONObject json, int percentage, int timeshift) {
+        if (json == null) return;
         units = null;
         dia = Constants.defaultDIA;
         timeZone = TimeZone.getDefault();
@@ -404,6 +405,10 @@ public class Profile {
         return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight(time)), units);
     }
 
+    public double getIsfMgdlTimeFromMidnight(int timeAsSeconds) {
+        return toMgdl(getIsfTimeFromMidnight(timeAsSeconds), units);
+    }
+
     public double getIsfTimeFromMidnight(int timeAsSeconds) {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
@@ -525,7 +530,6 @@ public class Profile {
     public double getTargetMgdl(int timeAsSeconds) {
         return toMgdl((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, units);
     }
-
     public double getTargetLowMgdl() {
         return toMgdl(getTargetLowTimeFromMidnight(secondsFromMidnight()), units);
     }

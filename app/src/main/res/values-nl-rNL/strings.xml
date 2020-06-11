@@ -408,12 +408,6 @@
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="careportal_pbage_label">Ouderdom batterij</string>
     <string name="ns_alarmoptions">Alarm opties</string>
-    <string name="nsalarm_urgenthigh">Zeer hoog</string>
-    <string name="nsalarm_high">Hoog</string>
-    <string name="nsalarm_low">Laag</string>
-    <string name="nsalarm_urgentlow">Zeer laag</string>
-    <string name="nsalarm_staledata">Oude gegevens</string>
-    <string name="nsalarm_urgentstaledata">Dringend oude gegevens vernieuwen</string>
     <string name="nsalarm_staledatavalue_label">Oude gegevens sinds [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Alarm oude gegevens sinds [min]</string>
     <string name="openapsama_autosens_period">Interval voor autosens [uur]</string>
@@ -895,6 +889,7 @@
     <string name="recurringTime">Herhaal tijd</string>
     <string name="every">Elke</string>
     <string name="never">Nooit</string>
+    <string name="mins">%1$dmin</string>
     <string name="condition">Voorwaarde:</string>
     <string name="action">Actie:</string>
     <string name="iob_u">IOB [E]:</string>

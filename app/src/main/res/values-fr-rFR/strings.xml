@@ -469,12 +469,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_pbage_label">Age batterie pompe</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
-    <string name="nsalarm_urgenthigh">Haute urgent</string>
-    <string name="nsalarm_high">Haute</string>
-    <string name="nsalarm_low">Basse</string>
-    <string name="nsalarm_urgentlow">Basse urgent</string>
-    <string name="nsalarm_staledata">Données obsolètes</string>
-    <string name="nsalarm_urgentstaledata">Urgent données obsolètes</string>
     <string name="nsalarm_staledatavalue_label">Seuil sans nouvelle donnée Glyc. [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="openapsama_autosens_period">Plage pour Autosens [h]</string>
@@ -567,7 +561,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smbmaxminutes_summary">Max. minutes de basal pour limiter le SMB</string>
     <string name="uamsmbmaxminutes">SMB RNS minutes max</string>
     <string name="uamsmbmaxminutes_summary">Minutes de basal max pour limiter les SMB des RNS</string>
-    <string name="carbsReqThreshold">Seuil de suggestionde glucides</string>
+    <string name="carbsReqThreshold">Seuil de suggestion de glucides</string>
     <string name="carbsReqThreshold_summary">Quantité de glucides à partir de laquelle une notification est envoyée</string>
     <string name="dexcomg5_xdripupload_title">Transmettre les Gly vers xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
@@ -852,6 +846,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="log_alerts">Enreg. alertes</string>
     <string name="enable_tbr_emulation">Activer l’émulation de DBT</string>
     <string name="enable_tbr_emulation_summary">Utilisez des Bolus étendus au lieu de DBTs pour contourner la limite de 250%%</string>
+    <string name="disable_vibration">Désactiver les vibrations des bolus manuels</string>
+    <string name="disable_vibration_summary">Concerne les bolus et bolus étendus (disponible uniquement pour les firmwares 3.x)</string>
+    <string name="disable_vibration_auto">Désactiver les vibrations des bolus automatiques</string>
+    <string name="disable_vibration_auto_summary">Concerne les SMB et les basal temp avec émulation DBT (disponible uniquement pour les firmwares 3.x)</string>
     <string name="disconnect_delay">Délai de déconnexion [s]</string>
     <string name="serial_number">Numéro de série</string>
     <string name="release_software_version">Version du logiciel</string>
@@ -1276,8 +1274,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights">Voyants d\'état</string>
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
-    <string name="classic_desrciption">Thème d\'origine</string>
-    <string name="buttonson_desrciption">Les boutons sont toujours affichés en bas de l\'écran</string>
     <string name="skin">Thème</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1376,7 +1372,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_pump_omnipod_dash">Intégration de la pompe Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
-    <string name="omnipod_alert_expiration">Le Pod expire bientôt</string>
     <string name="omnipod_alert_expiration_advisory">Le Pod expire bientôt</string>
     <string name="omnipod_alert_shutdown_imminent">Arrêt imminent</string>
     <string name="omnipod_alert_low_reservoir">Réservoir bas</string>

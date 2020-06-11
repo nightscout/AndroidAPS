@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.utils;
 
-import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -8,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
@@ -24,33 +22,24 @@ public class JSONFormatter {
         final JsonVisitor visitor = new JsonVisitor(1, '\t');
         try {
             if (jsonString.equals("undefined"))
-                return Html.fromHtml("undefined");
+                return HtmlHelper.INSTANCE.fromHtml("undefined");
             else if (jsonString.getBytes()[0] == '[')
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0), Html.FROM_HTML_MODE_COMPACT);
-                } else {
-                    return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
-                }
-            else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0), Html.FROM_HTML_MODE_COMPACT);
-                } else {
-                    return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
-                }
-            }
+                return HtmlHelper.INSTANCE.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
+            else
+                return HtmlHelper.INSTANCE.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            return Html.fromHtml("");
+            return HtmlHelper.INSTANCE.fromHtml("");
         }
     }
 
     public static Spanned format(final JSONObject object) {
         final JsonVisitor visitor = new JsonVisitor(1, '\t');
         try {
-            return Html.fromHtml(visitor.visit(object, 0));
+            return HtmlHelper.INSTANCE.fromHtml(visitor.visit(object, 0));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            return Html.fromHtml("");
+            return HtmlHelper.INSTANCE.fromHtml("");
         }
     }
 

@@ -19,6 +19,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -184,6 +185,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
+        overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -477,19 +479,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             secondaryGraphsLabel.clear()
             overview_iobgraph.removeAllViews()
             for (i in 1 until numOfGraphs) {
-                val label = TextView(context)
-                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -120) }
-                overview_iobgraph.addView(label)
-                secondaryGraphsLabel.add(label)
+                val relativeLayout = RelativeLayout(context)
+                relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
                 val graph = GraphView(context)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(35), 0, resourceHelper.dpToPx(15)) }
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
                 graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
-                overview_iobgraph.addView(graph)
+                relativeLayout.addView(graph)
+
+                val label = TextView(context)
+                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                label.layoutParams = layoutParams
+                relativeLayout.addView(label)
+                secondaryGraphsLabel.add(label)
+
+                overview_iobgraph.addView(relativeLayout)
                 secondaryGraphs.add(graph)
             }
         }
@@ -582,70 +593,47 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode.setImageResource(R.drawable.loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-                    //overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     overview_apsmode.setImageResource(R.drawable.loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
-//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
                 pump.isSuspended                                                        -> {
                     overview_apsmode.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.pumpsuspended)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
                     overview_apsmode.setImageResource(R.drawable.loop_lgs)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode.setImageResource(R.drawable.loop_closed)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode.setImageResource(R.drawable.loop_open)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.openloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
                 else                                                                    -> {
                     overview_apsmode.setImageResource(R.drawable.loop_disabled)
                     overview_apsmode_text?.text = ""
-//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.disabledloop)
-//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
             }
         } else {
             overview_apsmode_text?.visibility = View.GONE
         }
+        val lastRun = loopPlugin.lastRun
 
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
@@ -654,9 +642,18 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
         } else {
-            overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
-            overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-            overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+            // If the target is not the same as set in the profile then oref has overridden it
+            val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
+
+            if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+                overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
+                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+            } else {
+                overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+            }
         }
 
         // Basal, TBR
@@ -677,7 +674,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (activeTemp != null)
             overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.icon_cp_basal_tbr_high else R.drawable.icon_cp_basal_tbr_low)
         else
-            overview_basebasal_icon.setImageResource( R.drawable.icon_cp_basal_no_tbr )
+            overview_basebasal_icon.setImageResource(R.drawable.icon_cp_basal_no_tbr)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -741,7 +738,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_cob?.text = cobText
 
-        val lastRun = loopPlugin.lastRun
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
         // pump status from ns
@@ -757,9 +753,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_uploader?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
 
         // Sensitivity
-        if (sp.getBoolean(R.string.key_openapsama_useautosens, false)) {
+        if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
-        }else {
+        } else {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert_48px_green)
         }
 
@@ -771,7 +767,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // ****** GRAPH *******
         GlobalScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
-            val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin)
+            val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -834,30 +830,30 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // ------------------ 2nd graph
                 for (g in 0 until secondaryGraphs.size) {
-                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin)
+                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
+                    var useABSForScale = false
                     var useIobForScale = false
                     var useCobForScale = false
                     var useDevForScale = false
                     var useRatioForScale = false
                     var useDSForScale = false
                     var useIAForScale = false
-                    var useABSForScale = false
                     when {
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                     }
 
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                     // set manual x bounds to have nice steps
@@ -871,12 +867,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             for (g in 0 until secondaryGraphs.size) {
                 secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                     ).toVisibility()
                 secondaryGraphsData[g].performUpdate()

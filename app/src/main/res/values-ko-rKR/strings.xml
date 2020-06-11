@@ -408,12 +408,6 @@
     <string name="doprofileswitch">프로파일 변경 실행</string>
     <string name="careportal_pbage_label">펌프배터리사용기간</string>
     <string name="ns_alarmoptions">알람 옵션</string>
-    <string name="nsalarm_urgenthigh">위험 고혈당</string>
-    <string name="nsalarm_high">고혈당</string>
-    <string name="nsalarm_low">저혈당</string>
-    <string name="nsalarm_urgentlow">위험 저혈당</string>
-    <string name="nsalarm_staledata">누락 데이터</string>
-    <string name="nsalarm_urgentstaledata">위험 누락 데이터</string>
     <string name="nsalarm_staledatavalue_label">누락 데이터 기준값 [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">위험 누락 데이터 기준값 [min]</string>
     <string name="openapsama_autosens_period">autosens 시간 [h]</string>

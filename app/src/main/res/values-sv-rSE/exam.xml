@@ -130,7 +130,7 @@
     <string name="isf_profile">Om du ändrar ISF-värdet i din profil är det tillräckligt för att tillämpa ändringen.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label">Ämne: IC-kvoten</string>
+    <string name="ic_label">Ämne: KH-kvot</string>
     <string name="ic_increasingvalue">Högre IC-kvot leder till mindre insulin som levereras för en given mängd kolhydrater.</string>
     <string name="ic_decreasingvalue">Lägre IC-kvot leder till mindre insulin som levereras för en given mängd kolhydrater.</string>
     <string name="ic_noeffect">Om du har 0 COB, kommer en förändring av IC-kvoten leda till en annan mängd insulin för att korrigera din BG-nivå.</string>

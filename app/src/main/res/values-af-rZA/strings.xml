@@ -381,12 +381,6 @@
     <string name="careportal_insulinage_label">Insulien ouderdom</string>
     <string name="careportal_pbage_label">Pomp battery ouderdom</string>
     <string name="ns_alarmoptions">Alarm Opsies</string>
-    <string name="nsalarm_urgenthigh">Nood hoog</string>
-    <string name="nsalarm_high">Hoog</string>
-    <string name="nsalarm_low">Laag</string>
-    <string name="nsalarm_urgentlow">Nood laag</string>
-    <string name="nsalarm_staledata">Ou data</string>
-    <string name="nsalarm_urgentstaledata">Nood ou data</string>
     <string name="nsalarm_staledatavalue_label">Ou data drumpel [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Nood ou data drumpel [min]</string>
     <string name="openapsama_autosens_period">Interval vir autosens [h]</string>

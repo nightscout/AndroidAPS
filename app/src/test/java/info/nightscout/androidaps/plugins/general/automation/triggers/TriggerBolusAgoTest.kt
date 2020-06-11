@@ -30,7 +30,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() {
-        `when`(treatmentsPlugin.getLastBolusTime(false)).thenReturn(now) // Set last bolus time to now
+        `when`(treatmentsPlugin.getLastBolusTime(true)).thenReturn(now) // Set last bolus time to now
         `when`(DateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
@@ -53,7 +53,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(treatmentsPlugin.getLastBolusTime(false)).thenReturn(0L) // Set last bolus time to 0
+        PowerMockito.`when`(treatmentsPlugin.getLastBolusTime(true)).thenReturn(0L) // Set last bolus time to 0
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         Assert.assertTrue(t.shouldRun())
     }

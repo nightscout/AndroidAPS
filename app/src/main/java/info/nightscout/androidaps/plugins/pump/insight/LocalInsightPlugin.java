@@ -597,6 +597,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.isSMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration ,false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -720,7 +721,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
                     if (cancelTBRResult.success) {
                         PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
-                                * ((double) durationInMinutes), durationInMinutes);
+                                * ((double) durationInMinutes), durationInMinutes,
+                                sp.getBoolean(R.string.key_disable_vibration_auto,false));
                         if (ebResult.success) {
                             result.success = true;
                             result.enacted = true;
@@ -798,7 +800,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolusOnly();
-        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes);
+        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration,false));
         try {
             fetchStatus();
             readHistory();
@@ -812,7 +814,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         return result;
     }
 
-    public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes) {
+    public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes, boolean disableVibration) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
@@ -820,6 +822,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             bolusMessage.setDuration(durationInMinutes);
             bolusMessage.setExtendedAmount(insulin);
             bolusMessage.setImmediateAmount(0);
+            bolusMessage.setVibration(disableVibration);
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
             InsightBolusID insightBolusID = new InsightBolusID();
             insightBolusID.bolusID = bolusID;
