@@ -79,7 +79,7 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
                     }else{
                         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     }
-                    //changeTheme(selectedTheme);
+                    changeTheme(sp.getInt("theme", THEME_DARKSIDE));
                 }
             },delayTime);
 
@@ -95,14 +95,10 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
                     @Override
                     public void run() {
                         ThemeView themeView = findViewById(R.id.theme_selected);
-                        //sp.putInt("theme",selectedTheme );
                         themeView.setTheme(mThemeList.get(selectedTheme), ThemeUtil.getThemeId(selectedTheme));
-                        //setTheme(selectedTheme);
-                        //ScrollingActivity.this.recreate();
                         changeTheme(selectedTheme);
                     }
                 },500);
-                //sp.putInt("theme",actualTheme );
             }
         });
 
