@@ -74,6 +74,7 @@ public class AutotunePlugin extends PluginBase {
     public static String lastNbDays="";
     public static int copyButtonVisibility;
     public static int profileSwitchButtonVisibility;
+    public static boolean lastRunSuccess=false;
 
     public ATProfile tunedProfile;
     private PreppedGlucose preppedGlucose =null;
@@ -150,7 +151,7 @@ public class AutotunePlugin extends PluginBase {
         autotunePrep = new AutotunePrep(injector);
         autotuneCore = new AutotuneCore(injector);
         autotuneIob = new AutotuneIob(injector);
-
+        lastRunSuccess =false;
         lastNbDays = "" + daysBack;
         atLog("Start Autotune with " + daysBack + " days back");
 
@@ -240,7 +241,7 @@ public class AutotunePlugin extends PluginBase {
                 activePlugin.getActiveTreatments().doProfileSwitch(tunedProfile.getProfileStore(), tunedProfile.profilename, 0, 100, 0, DateUtil.now());
                 rxBus.send(new EventLocalProfileChanged());
             }
-
+            lastRunSuccess=true;
             return result;
         } else
             return "No Result";
