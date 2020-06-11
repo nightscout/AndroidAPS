@@ -177,10 +177,9 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     private fun processActions() {
-        if (!isEnabled(PluginType.GENERAL))
-            return
-        if (loopPlugin.isSuspended || !loopPlugin.isEnabled(PluginType.LOOP)) {
+        if (loopPlugin.isSuspended || !loopPlugin.isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
+            executionLog.add(resourceHelper.gs(R.string.smscommunicator_loopisdisabled))
             return
         }
         val enabled = constraintChecker.isAutomationEnabled()
