@@ -105,6 +105,9 @@
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
+        <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
+        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver"></receiver>
+
         <!-- Auto start -->
         <receiver
             android:name=".receivers.AutoStartReceiver"

@@ -1214,10 +1214,27 @@
     <string name="loop_tbrexecution_time_label">Laikinos bazės įvykdymo laikas</string>
     <string name="insight_alert_notification_channel">Insight pompos aliarmai</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Nuskanuoti kodą AndroidAPS OTP kodų nustatymyu</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
+    <string name="onconnect">Sujungimo metu</string>
+    <string name="ondisconnect">Išjungimo metu</string>
+    <string name="authorizationfailed">Autorizacija nepavyko</string>
+    <string name="overview_show_absinsulin">Insulinas absoliučiais vienetais</string>
+    <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
+    <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
+    <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
+    <string name="copyexistingvalues">Kopijuoti NS nustatymus (jei yra)?</string>
+    <string name="classic_description">Originali išvaizda</string>
+    <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
+    <string name="skin">Išvaizda</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
+    <string name="omnipod_reservoir_left">liko %1$.2f U</string>
+    <string name="omnipod_reservoir_over50">Daugiau nei 50 U</string>
+    <string name="omnipod_pod_name_no_info">Nėra informacijos</string>
     <!-- Omnipod - Dialogs -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->

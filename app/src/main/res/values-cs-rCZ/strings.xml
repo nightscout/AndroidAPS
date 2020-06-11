@@ -256,6 +256,9 @@
     <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
     <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
     <string name="valueoutofrange">Hodnota %1$s je mimo přednastavený rozsah</string>
+    <string name="smscommunicator_pumpconnectfail">Připojení k pumpě selhalo</string>
+    <string name="smscommunicator_pumpdisconnected">Pumpa odpojena</string>
+    <string name="smscommunicator_reconnect">Pumpa byla znovu připojena</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálený příkaz není povolen</string>
     <string name="smscommunicator_remotebolusnotallowed">Vzdálený bolus není momentálně povolen. Zkuste to později.</string>
     <string name="smscommunicator_basalreplywithcode">Pro spuštění bazálu %1$.2fU/h na %2$d min odpovězte SMS s kódem %3$s</string>
@@ -452,8 +455,14 @@
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
     <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
     <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAZ</string>
+    <string name="deviation_shortname">ODCH</string>
+    <string name="activity_shortname">AKT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
@@ -1280,6 +1289,9 @@
     <string name="statuslights">Stavové indikátory</string>
     <string name="statuslights_copy_ns">Zkopírovat nastavení z NS</string>
     <string name="copyexistingvalues">Zkopírovat nastavení NS (existuje-li)?</string>
+    <string name="classic_description">Původní vzhled</string>
+    <string name="buttonson_description">Tlačítka jsou vždy zobrazena v dolní části obrazovky</string>
+    <string name="largedisplay_description">Velký displej</string>
     <string name="skin">Vzhled</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

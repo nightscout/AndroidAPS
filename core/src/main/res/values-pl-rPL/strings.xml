@@ -1,20 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pairing">Parowanie</string>
     <!--    General-->
+    <string name="error">Błąd</string>
+    <string name="not_set_short">Nie ustawiono</string>
+    <string name="failedupdatebasalprofile">Nieudane uaktualnienie profilu bazy</string>
+    <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
+    <string name="invalidinput">Błędne dane wejściowe</string>
+    <string name="tempbasaldeliveryerror">Błąd podania bazy tymczasowej</string>
+    <string name="goingtodeliver">Zamierzam podać %1$.2fU</string>
+    <string name="waitingforpump">Czekam na pompę</string>
+    <string name="connectingfor">Łączenie przez %1$d s</string>
+    <string name="bolusdelivering">Dostarczam %1$.2fU</string>
+    <string name="handshaking">Uściskdłoni</string>
+    <string name="connecting">Łączę</string>
+    <string name="connected">Połączono</string>
+    <string name="disconnected">Rozłączono</string>
+    <string name="disconnecting">Rozłączanie</string>
+    <string name="androidaps_start">AndroidAPS uruchomiony</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min.</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pompa jest zajęta</string>
+    <string name="connectionerror">Błąd połączenia z pompą</string>
+    <string name="youareonallowedlimit">Osiągnąłeś dozwolony limit</string>
+    <string name="objectives">Zadania</string>
+    <string name="close">Zamknij</string>
+    <string name="please_wait">Proszę czekać…</string>
+    <string name="mute">Wycisz</string>
+    <string name="reload">Załaduj ponownie</string>
+    <string name="stoppressed">NACIŚNIĘTY STOP</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Węglowodany</string>
+    <string name="invalidprofile">Nieprawidłowy profil !!!</string>
+    <string name="noprofileset">NIE USTAWIONO PROFILU</string>
+    <string name="date">Data</string>
+    <string name="units_label">Jednostki</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    DateUtil-->
+    <string name="unit_hours">godzin</string>
+    <string name="unit_days">dni</string>
+    <string name="unit_weeks">tygodni</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
     <!--    Profile-->
+    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
+    <string name="noprofileselected">Nie wybrano profilu</string>
     <!--    PumpType-->
+    <string name="def_extended_note">*Tylko wartości dyskretne, nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
     <!--    APSResult-->
+    <string name="canceltemp">Wyłącz bazę tymczasową</string>
+    <string name="let_temp_basal_run">Pozwól na działanie bazy tymczasowej</string>
+    <string name="rate">Wartość</string>
+    <string name="duration">Czas trwania</string>
+    <string name="reason">Powód</string>
+    <string name="nochangerequested">Zmiana nie wymagana</string>
     <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Nieprawidłowy profil: %1$s</string>
     <!--    Temptarget-->
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Baz: <b>%4$.2f</b>]]></string>
     <!--    Translator-->
+    <string name="careportal_bgcheck">Sprawdź BG</string>
+    <string name="careportal_announcement">Powiadomienie</string>
+    <string name="careportal_note">Notatka</string>
+    <string name="careportal_question">Pytanie</string>
+    <string name="careportal_exercise">Ćwiczenia</string>
+    <string name="careportal_pumpsitechange">Zmiana wkłucia</string>
+    <string name="careportal_cgmsensorinsert">Założenie sensora CGM</string>
+    <string name="careportal_cgmsensorstart">Uruchomienie sensora CGM</string>
+    <string name="careportal_insulincartridgechange">Zmiana zasobnika insuliny</string>
+    <string name="careportal_profileswitch">Zmiana profilu</string>
+    <string name="careportal_snackbolus">Bolus na przekąskę</string>
+    <string name="careportal_mealbolus">Bolus na posiłek</string>
+    <string name="careportal_correctionbolus">Bolus korekcyjny</string>
+    <string name="careportal_combobolus">Bolus złożony</string>
+    <string name="careportal_tempbasalstart">Dawka Tymczasowa Start</string>
+    <string name="careportal_tempbasalend">Dawka Tymczasowa Koniec</string>
+    <string name="careportal_carbscorrection">Węglow. korekcyjne</string>
+    <string name="careportal_openapsoffline">OpenAPS Rozłączony (Offline)</string>
+    <string name="careportal_pumpbatterychange">Zmiana baterii pompy</string>
+    <string name="careportal_temporarytarget">Cel tymczasowy (TT)</string>
+    <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
+    <string name="glucosetype_finger">Palec</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Ręczne</string>
+    <string name="unknown">nieznany</string>
     <!--    Command-->
+    <string name="connectiontimedout">Przekroczono limit czasu połączenia</string>
     <!--    PumpEnactResult-->
+    <string name="enacted">Wykonane</string>
+    <string name="comment">Komentarz</string>
+    <string name="success">Sukces</string>
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
 </resources>

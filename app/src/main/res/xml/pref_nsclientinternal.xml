@@ -124,6 +124,12 @@
 
             <SwitchPreference
                 android:defaultValue="false"
+                android:key="@string/key_ns_create_announcements_from_carbs_req"
+                android:summary="@string/ns_create_announcements_from_carbs_req_summary"
+                android:title="@string/ns_create_announcements_from_carbs_req_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
                 android:key="@string/key_nsclient_localbroadcasts"
                 android:summary="@string/ns_localbroadcasts"
                 android:title="@string/ns_localbroadcasts_title" />

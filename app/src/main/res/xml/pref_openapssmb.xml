@@ -142,10 +142,11 @@
             android:key="@string/key_low_temptarget_lowers_sensitivity"
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
-
+            
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_carbsReqThreshold"
             android:title="@string/carbsReqThreshold"
+            android:summary="@string/carbsReqThreshold_summary"
             android:defaultValue="1"
             android:dialogMessage="@string/carbsReqThreshold_summary"
             android:digits="0123456789"

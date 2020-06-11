@@ -1391,7 +1391,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         temporaryBasal.durationInMinutes = 0;
         temporaryBasal.source = Source.PUMP;
         temporaryBasal.pumpId = pumpID.id;
-        temporaryBasal.date = timestamp;
+        temporaryBasal.date = timestamp - 1500L;
         temporaryBasals.add(temporaryBasal);
     }
 
