@@ -565,6 +565,7 @@
     <string name="enable_missed_bg_readings_alert">Avviso se non si ricevono dati BG</string>
     <string name="enable_pump_unreachable_alert">Avviso se il micro è irraggiungibile</string>
     <string name="pump_unreachable_threshold">Soglia micro irraggiungibile [min]</string>
+    <string name="enable_carbs_req_alert">Avviso se sono richiesti CHO</string>
     <string name="urgent_alarm">Allarme urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense app (modificata)</string>
@@ -577,7 +578,8 @@
     <string name="smbmaxminutes_summary">Max minuti di basale a cui limitare SMB</string>
     <string name="uamsmbmaxminutes">SMB UAM max minuti</string>
     <string name="uamsmbmaxminutes_summary">Max minuti di basale a cui limitare SMB per UAM</string>
-    <string name="carbsReqThreshold_summary">Quantità minima di carboidrati (in grammi) per visualizzare un avviso di suggerimento CHO. Al di sotto di questo numero non verrà attivata una notifica.</string>
+    <string name="carbsReqThreshold">CHO minimi richiesti per il suggerimento</string>
+    <string name="carbsReqThreshold_summary">Quantità minima di carboidrati (in grammi) necessaria per visualizzare un avviso di suggerimento CHO. Al di sotto di questo numero non verrà attivata alcuna notifica.</string>
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">BG NSClient</string>
@@ -657,6 +659,7 @@
     <string name="insulin_increment_button_message">Quantità di insulina da aggiungere quando si preme il tasto</string>
     <string name="error_starting_cgm">Impossibile avviare l\'applicazione CGM. Assicurati che sia installata.</string>
     <string name="overview_cgm">CGM</string>
+    <string name="required">ric</string>
     <string name="nav_historybrowser">Storico</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
