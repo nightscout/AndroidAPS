@@ -7,15 +7,88 @@
         android:background="?attr/fragmentbackground"
         tools:context=".plugins.profile.local.LocalProfileFragment">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
+        app:backgroundTint="?attr/colorPrimaryDark"
+        android:backgroundTint="?attr/colorPrimaryDark"
+        android:background="?attr/colorPrimaryDark"
+        android:tint="?attr/iconColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_more" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabNewProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/newProfile"
+        android:visibility="gone"
+        app:icon="@drawable/icon_danar_useropt"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabCloneProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="150dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/cloneProfile"
+        app:icon="@drawable/clone"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabDeleteProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="220dp"
+        android:text="@string/deleteProfile"
+        app:icon="@drawable/remove"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabActivateProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="290dp"
+        android:text="@string/activate_profile"
+        app:icon="@drawable/icon_local_activate"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/main_activity_content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="false"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -25,7 +98,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
@@ -39,7 +113,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
-                android:layout_weight="1" />
+                android:layout_marginEnd="60dp"
+                android:layout_weight="3" />
 
         </LinearLayout>
 
@@ -65,97 +140,20 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
-            <ImageView
-                android:id="@+id/localprofile_profile_add"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/addnew"
-                android:src="@drawable/add" />
-
-            <ImageView
-                android:id="@+id/localprofile_profile_clone"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/clone_label"
-                android:src="@drawable/clone" />
-
-            <ImageView
-                android:id="@+id/localprofile_profile_remove"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/remove_label"
-                android:src="@drawable/remove" />
-
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="5"
-            android:paddingBottom="10dp">
-
-            <TextView
-                android:id="@+id/dia_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/dia_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/ic_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/ic_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/isf_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/isf_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/basal_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/basal_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/target_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/target_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
+            app:tabMode="fixed"
+            app:tabIndicatorAnimationDuration="1400"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorColor="@color/iconColor"
+            app:tabUnboundedRipple="false"
+            android:layout_marginBottom="10dp"
+            android:layout_height="24dp"
+            android:layout_width="match_parent">
+        </com.google.android.material.tabs.TabLayout>
 
         <LinearLayout
             android:id="@+id/localprofile_dia_placeholder"
@@ -169,24 +167,28 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:labelFor="@+id/localprofile_name"
-                    android:text="@string/profile_name"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:hint="@string/profile_name"
+                    app:endIconMode="clear_text">
 
-                <EditText
-                    android:id="@+id/localprofile_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:importantForAutofill="no"
-                    android:inputType="text" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/localprofile_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:autofillHints="@string/profile_name"
+                        android:gravity="start"
+                        android:textStyle="bold"
+                        android:inputType="text|textCapSentences" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -227,7 +229,7 @@
             android:id="@+id/localprofile_ic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="100dp"
             android:orientation="vertical" />
 
         <LinearLayout
@@ -253,62 +255,77 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/localprofile_profileswitch"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/activate_profile"
-            android:drawableStart="@drawable/icon_local_activate" />
-
         <LinearLayout
+            android:id="@+id/profile_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="80dp"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/localprofile_reset"
-                style="?android:attr/buttonStyle"
+                android:id="@+id/localprofile_profileswitch"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/icon_local_reset"
+                app:icon="@drawable/icon_local_activate"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="@string/reset" />
+                android:text="@string/activate_profile"
+                app:cornerRadius="20dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/localprofile_save"
-                style="?android:attr/buttonStyle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/icon_local_save"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/save" />
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/localprofile_reset"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/icon_local_reset"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/reset"
+                    app:cornerRadius="20dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/localprofile_save"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/icon_local_save"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/save"
+                    app:cornerRadius="20dp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
-
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

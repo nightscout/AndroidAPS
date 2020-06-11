@@ -37,7 +37,7 @@
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/add" />
+        android:src="@drawable/ic_add_thin" />
 
     <ImageView
         android:id="@+id/timelistedit_remove"

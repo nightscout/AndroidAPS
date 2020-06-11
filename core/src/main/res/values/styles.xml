@@ -49,7 +49,7 @@
         <!-- Color of graph background -->
         <item name="colorGraphBackground">@color/transparent</item>
         <!-- Top bar icons -->
-        <item name="iconSensor">@drawable/ic_sensor</item>
+        <item name="iconSensor">@drawable/ic_dexcom_g6</item>
         <item name="iconReservoir">@drawable/ic_cartridge</item>
         <item name="iconCanula">@drawable/ic_katheter</item>
         <item name="iconBattery">@drawable/ic_battery</item>

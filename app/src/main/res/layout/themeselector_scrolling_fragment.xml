@@ -18,7 +18,7 @@
         android:layout_gravity="right"
         android:layout_margin="16dp"
         app:layout_anchorGravity="bottom|end"
-        android:src="@drawable/ic_aaps_logo_white"
+        android:src="@drawable/ic_androidaps_35"
         android:tint="?android:attr/colorBackground"
         app:elevation="12dp"
         app:borderWidth="2dp"

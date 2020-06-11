@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -71,30 +72,53 @@ class LocalProfileFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // activate DIA tab
-        processVisibilityOnClick(dia_tab)
+
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.dia_short))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.ic_short))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.isf_short))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.basal_short))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.target_short))
+
+        processVisibilityOnClick(view)
         localprofile_dia_placeholder.visibility = View.VISIBLE
-        // setup listeners
-        dia_tab.setOnClickListener {
-            processVisibilityOnClick(it)
-            localprofile_dia_placeholder.visibility = View.VISIBLE
-        }
-        ic_tab.setOnClickListener {
-            processVisibilityOnClick(it)
-            localprofile_ic.visibility = View.VISIBLE
-        }
-        isf_tab.setOnClickListener {
-            processVisibilityOnClick(it)
-            localprofile_isf.visibility = View.VISIBLE
-        }
-        basal_tab.setOnClickListener {
-            processVisibilityOnClick(it)
-            localprofile_basal.visibility = View.VISIBLE
-        }
-        target_tab.setOnClickListener {
-            processVisibilityOnClick(it)
-            localprofile_target.visibility = View.VISIBLE
-        }
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if ( tab.text == getText(R.string.dia_short)) {
+                    processVisibilityOnClick(view)
+                    localprofile_dia_placeholder.visibility = View.VISIBLE
+                }
+                if ( tab.text == getText(R.string.ic_short)) {
+                    processVisibilityOnClick(view)
+                    localprofile_ic.visibility = View.VISIBLE
+                }
+                if ( tab.text == getText(R.string.isf_short)) {
+                    processVisibilityOnClick(view)
+                    localprofile_isf.visibility = View.VISIBLE
+                }
+                if ( tab.text == getText(R.string.basal_short)) {
+                    processVisibilityOnClick(view)
+                    localprofile_basal.visibility = View.VISIBLE
+                }
+                if ( tab.text == getText(R.string.target_short)) {
+                    processVisibilityOnClick(view)
+                    localprofile_target.visibility = View.VISIBLE
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        fabMenu.setOnClickListener(clickListener)
+        fabNewProfile.setOnClickListener(clickListener)
+        fabCloneProfile.setOnClickListener(clickListener)
+        fabDeleteProfile.setOnClickListener(clickListener)
+        fabActivateProfile.setOnClickListener(clickListener)
+
+        // activate DIA tab
+        //processVisibilityOnClick(dia_tab)
+        updateGUI()
+        localprofile_dia_placeholder.visibility = View.VISIBLE
     }
 
     fun build() {
@@ -146,32 +170,6 @@ class LocalProfileFragment : DaggerFragment() {
             }
         })
 
-        localprofile_profile_add.setOnClickListener {
-            if (localProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
-            } else {
-                localProfilePlugin.addNewProfile()
-                build()
-            }
-        }
-
-        localprofile_profile_clone.setOnClickListener {
-            if (localProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
-            } else {
-                localProfilePlugin.cloneProfile()
-                build()
-            }
-        }
-
-        localprofile_profile_remove.setOnClickListener {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), Runnable {
-                    localProfilePlugin.removeCurrentProfile()
-                    build()
-                }, null)
-            }
-        }
 
         // this is probably not possible because it leads to invalid profile
         // if (!pumpDescription.isTempBasalCapable) localprofile_basal.visibility = View.GONE
@@ -207,6 +205,70 @@ class LocalProfileFragment : DaggerFragment() {
         updateGUI()
     }
 
+    private val clickListener: View.OnClickListener = View.OnClickListener { view ->
+        when ( view.id ){
+            R.id.fabMenu          -> {
+                if ( fabNewProfile.visibility == View.GONE) {
+                    ViewAnimation.showIn(fabNewProfile)
+                    ViewAnimation.showIn(fabCloneProfile)
+                    ViewAnimation.showIn(fabDeleteProfile)
+                    updateGUI()
+                } else if ( fabNewProfile.visibility == View.VISIBLE) {
+                    ViewAnimation.showOut(fabNewProfile)
+                    ViewAnimation.showOut(fabCloneProfile)
+                    ViewAnimation.showOut(fabDeleteProfile)
+                    ViewAnimation.showOut(fabActivateProfile)
+                }
+            }
+            R.id.fabNewProfile -> {
+                if (localProfilePlugin.isEdited) {
+                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+                } else {
+                    localProfilePlugin.addNewProfile()
+                    build()
+                }
+                ViewAnimation.showOut(fabNewProfile)
+                ViewAnimation.showOut(fabCloneProfile)
+                ViewAnimation.showOut(fabDeleteProfile)
+                ViewAnimation.showOut(fabActivateProfile)
+            }
+            R.id.fabCloneProfile          -> {
+                if (localProfilePlugin.isEdited) {
+                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+                } else {
+                    localProfilePlugin.cloneProfile()
+                    build()
+                }
+                ViewAnimation.showOut(fabNewProfile)
+                ViewAnimation.showOut(fabCloneProfile)
+                ViewAnimation.showOut(fabDeleteProfile)
+                ViewAnimation.showOut(fabActivateProfile)
+            }
+            R.id.fabDeleteProfile             -> {
+                activity?.let { activity ->
+                    OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), Runnable {
+                        localProfilePlugin.removeCurrentProfile()
+                        build()
+                    }, null)
+                }
+                ViewAnimation.showOut(fabNewProfile)
+                ViewAnimation.showOut(fabCloneProfile)
+                ViewAnimation.showOut(fabDeleteProfile)
+                ViewAnimation.showOut(fabActivateProfile)
+            }
+            R.id.fabActivateProfile             -> {
+                // TODO: select in dialog localProfilePlugin.currentProfileIndex
+                ProfileSwitchDialog().show(childFragmentManager, "NewNSTreatmentDialog")
+                ViewAnimation.showOut(fabNewProfile)
+                ViewAnimation.showOut(fabCloneProfile)
+                ViewAnimation.showOut(fabDeleteProfile)
+                ViewAnimation.showOut(fabActivateProfile)
+            }
+
+        }
+
+    }
+
     @Synchronized
     override fun onResume() {
         super.onResume()
@@ -234,19 +296,22 @@ class LocalProfileFragment : DaggerFragment() {
         val isValid = localProfilePlugin.isValidEditState()
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(resourceHelper.gc(R.color.transparent))
 
             if (isEdited) {
                 //edited profile -> save first
+                ViewAnimation.showOut(fabActivateProfile)
                 localprofile_profileswitch.visibility = View.GONE
                 localprofile_save.visibility = View.VISIBLE
             } else {
+                if ( fabNewProfile.visibility == View.VISIBLE)  ViewAnimation.showIn(fabActivateProfile)
                 localprofile_profileswitch.visibility = View.VISIBLE
                 localprofile_save.visibility = View.GONE
             }
         } else {
             this.view?.setBackgroundColor(resourceHelper.gc(R.color.error_background))
-            localprofile_profileswitch.visibility = View.GONE
+            ViewAnimation.showOut(fabActivateProfile)
+            fabActivateProfile.visibility = View.VISIBLE
             localprofile_save.visibility = View.GONE //don't save an invalid profile
         }
 
@@ -259,12 +324,6 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibilityOnClick(selected: View) {
-        dia_tab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        ic_tab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        isf_tab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        basal_tab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        target_tab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
         localprofile_dia_placeholder.visibility = View.GONE
         localprofile_ic.visibility = View.GONE
         localprofile_isf.visibility = View.GONE

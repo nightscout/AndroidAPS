@@ -13,24 +13,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 29.12.2016.
@@ -111,7 +106,7 @@ public class TimeListEdit {
         // last "plus" to append new interval
         float factor = layout.getContext().getResources().getDisplayMetrics().density;
         finalAdd = new ImageView(context);
-        finalAdd.setImageResource(R.drawable.add);
+        finalAdd.setImageResource(R.drawable.ic_add_thin);
         LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams((int) (35d * factor), (int) (35 * factor));
         illp.setMargins(0, 25, 0, 25); // llp.setMargins(left, top, right, bottom);
         illp.gravity = Gravity.CENTER;

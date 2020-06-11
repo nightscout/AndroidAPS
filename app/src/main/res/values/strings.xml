@@ -1701,5 +1701,9 @@
 
     <string name="nav_themeselector">Set Colors</string>
     <string name="theme_save">Save</string>
+    <!--    LocalProfile-->
+    <string name="newProfile">New profile</string>
+    <string name="cloneProfile">Clone profile</string>
+    <string name="deleteProfile">Delete profile</string>
 
 </resources>
