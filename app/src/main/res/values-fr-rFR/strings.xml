@@ -135,6 +135,7 @@
     <string name="disableloop">Désactiver la Boucle</string>
     <string name="enableloop">Activer la Boucle</string>
     <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
+    <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
     <string name="loopdisabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
@@ -257,6 +258,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loopisenabled">La Boucle est activée</string>
     <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
     <string name="valueoutofrange">La valeur %1$s est en dehors des limites</string>
+    <string name="smscommunicator_pumpconnectwithcode">Pour connecter la pompe, répondre avec le code %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Echec de la connexion pompe</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1d minutes, répondre avec le code %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Pompe déconnectée</string>
+    <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus à distance non disponible. Réessayez plus tard.</string>
     <string name="smscommunicator_basalreplywithcode">Pour démarrer la Basal %1$.2fU/h pendant %2$d min, renvoyer le code %3$s</string>
@@ -560,6 +566,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enable_missed_bg_readings_alert">Alerte pas nouvelle donnée glycémique</string>
     <string name="enable_pump_unreachable_alert">Alerte si la pompe est hors de portée</string>
     <string name="pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée [min]</string>
+    <string name="enable_carbs_req_alert">Alerte si glucides requis</string>
     <string name="urgent_alarm">Alarme d\'urgence</string>
     <string name="info">INFO</string>
     <string name="eversense">App Eversense (patché)</string>
@@ -572,6 +579,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smbmaxminutes_summary">Max. minutes de basal pour limiter le SMB</string>
     <string name="uamsmbmaxminutes">SMB RNS minutes max</string>
     <string name="uamsmbmaxminutes_summary">Minutes de basal max pour limiter les SMB des RNS</string>
+    <string name="carbsReqThreshold">Glucides minimum requis pour suggestion</string>
+    <string name="carbsReqThreshold_summary">Quantité de glucides minimum en g pour afficher une alerte de suggestion de glucides. Les suggestions inférieures ne déclencheront pas de notification.</string>
     <string name="dexcomg5_xdripupload_title">Transmettre les Gly vers xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
     <string name="nsclientbg">Glycémie NSClient</string>
@@ -651,11 +660,17 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
     <string name="overview_cgm">MGC</string>
+    <string name="ignore5m">Ignorer 5m</string>
+    <string name="ignore15m">Ignorer 15m</string>
+    <string name="ignore30m">Ignorer 30m</string>
+    <string name="required">req</string>
     <string name="nav_historybrowser">Historique</string>
     <string name="wear_notifysmb_title">Notifier en SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="ns_create_announcements_from_errors_title">Créer des messages d’erreurs</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Créer des annonces à partir des alertes Glucides requis</string>
     <string name="ns_create_announcements_from_errors_summary">Créer une annonce Nightscout pour les messages d\'erreur et les alertes locales (également visible dans la section Careportal de l\'onglet traitements)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Créer des annonces Nightscout pour les alertes besoins de glucides</string>
     <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de montre.</string>
     <string name="wear_predictions_title">Prédictions</string>
     <string name="data_choices">Choix de données</string>
