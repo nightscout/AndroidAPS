@@ -576,8 +576,6 @@
     <string name="smbmaxminutes_summary">SMB Basal-Limit in Minuten</string>
     <string name="uamsmbmaxminutes">UAM SMB max. Minuten</string>
     <string name="uamsmbmaxminutes_summary">SMB Basal-Limit in Minuten für UAM</string>
-    <string name="carbsReqThreshold">Schwellenwert für KH-Empfehlung</string>
-    <string name="carbsReqThreshold_summary">Falls Kohlenhydrate vorgeschlagen werden, Menge ab der eine Benachrichtigung angezeigt wird</string>
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
