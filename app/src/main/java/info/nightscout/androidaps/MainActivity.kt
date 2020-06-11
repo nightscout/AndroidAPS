@@ -269,9 +269,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
         action(view, view.id, supportFragmentManager)
     }
 
+
     private fun onLongClick(v: View): Boolean {
         when (v.id) {
-            R.id.overview_quickwizardbutton -> {
+            R.id.quickwizardButton -> {
                 val i = Intent(v.context, QuickWizardListActivity::class.java)
                 startActivity(i)
                 return true
@@ -320,6 +321,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     return
                 }
 
+
+                R.id.treatmentButton   -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(manager!!, "MainActivity") }))
+                R.id.quickwizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
+
                 R.id.overview_cgmbutton         -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
@@ -331,7 +336,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     }
                 }
 
-                R.id.overview_calibrationbutton -> {
+                R.id.calibrationButton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
                         CalibrationDialog().show(supportFragmentManager, "CalibrationDialog")
                     } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
