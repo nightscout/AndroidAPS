@@ -576,8 +576,6 @@
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB máx minutos</string>
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
-    <string name="carbsReqThreshold">Limite Sugestão de Hidratos</string>
-    <string name="carbsReqThreshold_summary">Quando Hidratos são sugeridos, quantos hidratos irá solicitar uma notificação</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glic ClienteNS</string>
