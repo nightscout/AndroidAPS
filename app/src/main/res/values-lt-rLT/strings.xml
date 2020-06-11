@@ -542,8 +542,6 @@
     <string name="smbmaxminutes_summary">SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
     <string name="uamsmbmaxminutes">NDM SMB maks. min.</string>
     <string name="uamsmbmaxminutes_summary">NDM SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
-    <string name="carbsReqThreshold">Angliavandenių pasiūlymo riba</string>
-    <string name="carbsReqThreshold_summary">Kai angliavandeniai yra siūlomi, kaip gramų angliavandenių aktyvuos pranešimą</string>
     <string name="dexcomg5_xdripupload_title">Siųsti KG duomenis į xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Xdrip+ pasirinkite 640g/Eversense duomenų šaltinį</string>
     <string name="nsclientbg">NSClient KG</string>
