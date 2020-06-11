@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin.SingleProfile;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -80,7 +81,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             autotuneProfileSwitchButton.setOnClickListener(this);
 
             lastRun = autotunePlugin.lastRun!=null? autotunePlugin.lastRun : new Date(0);
-            if (lastRun.getTime() > dateUtil.toTimeMinutesFromMidnight(System.currentTimeMillis(), autotunePlugin.autotuneStartHour*60) && autotunePlugin.result != "") {
+            if (lastRun.getTime() > (MidnightTime.calc(System.currentTimeMillis()) + autotunePlugin.autotuneStartHour*3600*1000L) && autotunePlugin.result != "") {
                 warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
                 tune_days.setText(autotunePlugin.lastNbDays);
                 resultView.setText(autotunePlugin.result);

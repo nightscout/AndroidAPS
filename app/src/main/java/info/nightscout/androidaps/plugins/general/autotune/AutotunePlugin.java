@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.general.autotune.data.*;
+import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -156,7 +157,7 @@ public class AutotunePlugin extends PluginBase {
         lastRun = new Date(System.currentTimeMillis());
         // Today at 4 AM
         //Note, I don't find on existing function the equivalent in DateUtil so I created a new function, but if any equivalent function already exists may be we can use it
-        long endTime = DateUtil.toTimeMinutesFromMidnight(now, autotuneStartHour*60);
+        long endTime = MidnightTime.calc(now) + autotuneStartHour*60*60*1000L;
         // Check if 4 AM is before now
         if (endTime > now)
             endTime -= 24 * 60 * 60 * 1000L;

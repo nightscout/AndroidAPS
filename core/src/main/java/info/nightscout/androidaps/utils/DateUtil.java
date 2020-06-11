@@ -151,18 +151,6 @@ public class DateUtil {
         return retval;
     }
 
-    public static long toTimeMinutesFromMidnight(long timeStamp, int minutesFromMidnight) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(timeStamp);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long retval = c.getTimeInMillis() + minutesFromMidnight * 60 * 1000L;
-
-        return retval;
-    }
-
     public static String dateString(Date date) {
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(date);

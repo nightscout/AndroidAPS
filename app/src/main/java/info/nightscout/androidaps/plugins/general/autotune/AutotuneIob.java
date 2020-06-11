@@ -43,6 +43,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -192,7 +193,7 @@ public class AutotuneIob {
                         neutralTbr.durationInMinutes=minutesFilled+1;                   //add 1 minute to be sure there is no gap between TBR and neutral TBR
                         neutralTbr.isAbsolute = true;
                         minutesToFill -= minutesFilled;
-                        previousend = DateUtil.toTimeMinutesFromMidnight(previousend, (Profile.secondsFromMidnight(previousend) / 3600 + 1)* 60); //previousend is updated at the beginning of next hour
+                        previousend = MidnightTime.calc(previousend) + (Profile.secondsFromMidnight(previousend) / 3600 + 1)*3600*1000L; //previousend is updated at the beginning of next hour
                         nsTreatments.add(new NsTreatment(neutralTbr));
                         //log.debug("D/AutotunePlugin fill neutral start: " + dateUtil.dateAndTimeAndSecondsString(neutralTbr.date) + " duration:" + neutralTbr.durationInMinutes + " absolute:" + neutralTbr.absoluteRate);
                     }
