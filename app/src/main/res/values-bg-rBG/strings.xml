@@ -571,8 +571,6 @@
     <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
     <string name="uamsmbmaxminutes">Максимум минути за отчитане на необявени хранения UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
-    <string name="carbsReqThreshold">Праг на предложение за въгл.</string>
-    <string name="carbsReqThreshold_summary">Когато се предлагат въгл., при колко да се покаже уведомление</string>
     <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
     <string name="nsclientbg">КЗ от NS</string>
