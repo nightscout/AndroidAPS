@@ -78,7 +78,7 @@ class CareDialog : DialogFragmentWithDate() {
         val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
             BlurConfig.Builder()
                 .overlayColor(ContextCompat.getColor(requireContext(), info.nightscout.androidaps.core.R.color.white_alpha_40))  // semi-transparent white color
-                .debug(true)
+                .debug(false)
                 .asyncPolicy(it)
                 .build()
         }

@@ -85,14 +85,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
-import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_batterylevel
-import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_canulaage
-import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_insulinage
-import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_pbage
-import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_reservoirlevel
-import kotlinx.android.synthetic.main.overview_statuslights_layout.careportal_sensorage
 import kotlinx.android.synthetic.main.status_fragment.*
 import java.util.*
 import java.util.concurrent.Executors
@@ -281,6 +275,45 @@ open class MainActivity : NoSplashAppCompatActivity() {
         return false
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun processButtonsVisibility() {
+        val lastBG = iobCobCalculatorPlugin.lastBg()
+        val pump = activePlugin.activePump
+        val profile = profileFunction.getProfile()
+        val profileName = profileFunction.getProfileName()
+        val actualBG = iobCobCalculatorPlugin.actualBg()
+        val xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE)
+        val dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE)
+
+        //sp.getBoolean(R.string.key_show_insulin_button, true)
+        //sp.getBoolean(R.string.key_show_carbs_button, true)
+        //sp.getBoolean(R.string.key_show_wizard_button, true)
+        //sp.getBoolean(R.string.key_show_cgm_button, false)
+
+        //sp.getBoolean(R.string.key_show_treatment_button, false)
+        //sp.getBoolean(R.string.key_show_calibration_button, true)
+
+
+
+        bottom_navigation.menu.getItem(R.id.insulinButton).isVisible = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
+        bottom_navigation.menu.getItem(R.id.carbsButton).isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
+        bottom_navigation.menu.getItem(R.id.wizardButton).isVisible  = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true))
+        bottom_navigation.menu.getItem(R.id.cgmButton).isVisible =     (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource))
+
+        treatmentButton.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
+        calibrationButton?.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
+        // QuickWizard button
+        val quickWizardEntry = quickWizard.getActive()
+        if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized && !pump.isSuspended) {
+            quickwizardButton?.visibility = View.VISIBLE
+            val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
+            quickwizardbutton_label?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
+                " " + resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
+            if (wizard.calculatedTotalInsulin <= 0) quickwizardButton?.visibility = View.GONE
+        } else quickwizardButton?.visibility = View.GONE
+
+    }
+
     fun action(view: View?, id: Int, manager: FragmentManager?) {
         //var newDialog: NewNSTreatmentDialog? = NewNSTreatmentDialog()
         val fillDialog = FillDialog()
@@ -325,7 +358,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 R.id.treatmentButton   -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(manager!!, "MainActivity") }))
                 R.id.quickwizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
 
-                R.id.overview_cgmbutton         -> {
+                R.id.cgmButton         -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
@@ -599,10 +632,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
             .toObservable(EventNewOpenLoopNotification::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }) { fabricPrivacy.logException(it) })
-        disposable.add(rxBus
-            .toObservable(EventIobCalculationProgress::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_iobcalculationprogess?.text = it.progress }) { fabricPrivacy.logException(it) })
+        //disposable.add(rxBus
+        //    .toObservable(EventIobCalculationProgress::class.java)
+        //    .observeOn(AndroidSchedulers.mainThread())
+        //    .subscribe({ overview_iobcalculationprogess?.text = it.progress }) { fabricPrivacy.logException(it) })
 
         refreshLoop = Runnable {
             scheduleUpdateGUI("refreshLoop")
