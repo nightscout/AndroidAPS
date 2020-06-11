@@ -138,6 +138,13 @@ public class AutotunePlugin extends PluginBase {
         // invoke
     }
 
+    //Launch Autotune with default settings
+    public void aapsAutotune() {
+        int daysBack = sp.getInt(R.string.key_autotune_default_tune_days,5);
+        boolean autoSwitch = sp.getBoolean(R.string.key_autotune_auto,false);
+        aapsAutotune(daysBack, autoSwitch);
+    }
+
     public String aapsAutotune(int daysBack, boolean autoSwitch) {
         autotuneFS = new AutotuneFS(injector);
         autotunePrep = new AutotunePrep(injector);
