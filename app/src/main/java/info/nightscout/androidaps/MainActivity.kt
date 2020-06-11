@@ -606,6 +606,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
         overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
+        upDateStatusLight()
+        upDateLoop()
+        scheduleUpdateGUI("onResume")
     }
 
     private fun scheduleUpdateGUI(from: String) {
