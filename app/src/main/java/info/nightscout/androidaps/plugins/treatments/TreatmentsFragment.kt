@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
@@ -17,7 +18,9 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.localprofile_fragment.*
 import kotlinx.android.synthetic.main.treatments_fragment.*
+import kotlinx.android.synthetic.main.treatments_fragment.tabLayout
 import javax.inject.Inject
 
 class TreatmentsFragment : DaggerFragment() {
@@ -37,32 +40,45 @@ class TreatmentsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        treatments_treatments.setOnClickListener {
-            setFragment(TreatmentsBolusFragment())
-            setBackgroundColorOnSelected(it)
-        }
-        treatments_extendedboluses.setOnClickListener {
-            setFragment(TreatmentsExtendedBolusesFragment())
-            setBackgroundColorOnSelected(it)
-        }
-        treatments_tempbasals.setOnClickListener {
-            setFragment(TreatmentsTemporaryBasalsFragment())
-            setBackgroundColorOnSelected(it)
-        }
-        treatments_temptargets.setOnClickListener {
-            setFragment(TreatmentsTempTargetFragment())
-            setBackgroundColorOnSelected(it)
-        }
-        treatments_profileswitches.setOnClickListener {
-            setFragment(TreatmentsProfileSwitchFragment())
-            setBackgroundColorOnSelected(it)
-        }
-        treatments_careportal.setOnClickListener {
-            setFragment(TreatmentsCareportalFragment())
-            setBackgroundColorOnSelected(it)
-        }
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.bolus))
+
+        if (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
+            tabLayout.addTab(tabLayout.newTab().setText(R.string.extended_bolus))
+
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tempbasal_label))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.careportal_temporarytarget))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.careportal_profileswitch))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.careportal))
+
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if ( tab.text == getText(R.string.bolus)) {
+                    setFragment(TreatmentsBolusFragment())
+                }
+                if (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0){
+                    if ( tab.text == getText(R.string.extended_bolus)) {
+                        setFragment(TreatmentsExtendedBolusesFragment())
+                    }
+                }
+                if ( tab.text == getText(R.string.tempbasal_label)) {
+                    setFragment(TreatmentsTemporaryBasalsFragment())
+                }
+                if ( tab.text == getText(R.string.careportal_temporarytarget)) {
+                    setFragment(TreatmentsTempTargetFragment())
+                }
+                if ( tab.text == getText(R.string.careportal_profileswitch)) {
+                    setFragment(TreatmentsProfileSwitchFragment())
+                }
+                if ( tab.text == getText(R.string.careportal)) {
+                    setFragment(TreatmentsCareportalFragment())
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
         setFragment(TreatmentsBolusFragment())
-        setBackgroundColorOnSelected(treatments_treatments)
     }
 
     @Synchronized
@@ -89,21 +105,7 @@ class TreatmentsFragment : DaggerFragment() {
         ft.commit()
     }
 
-    private fun setBackgroundColorOnSelected(selected: View) {
-
-        treatments_treatments.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_extendedboluses.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_tempbasals.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_temptargets.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_profileswitches.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        treatments_careportal.setBackgroundColor(resourceHelper.getAttributeColor( context, R.attr.colorSecondaryVariant))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
-    }
 
     private fun updateGui() {
-        if (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
-            treatments_extendedboluses?.visibility = View.VISIBLE
-        else
-            treatments_extendedboluses?.visibility = View.GONE
     }
 }
