@@ -138,6 +138,7 @@
     <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
     <string name="careportal_correctionbolus">Korrektur-Bolus</string>
     <string name="careportal_combobolus">Combo-Bolus</string>
+    <string name="careportal_tempbasalstart">TBR Start</string>
     <string name="careportal_tempbasalend">TBR Ende</string>
     <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>

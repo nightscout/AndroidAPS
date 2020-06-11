@@ -64,6 +64,9 @@ public class APSResult {
     public long deliverAt = 0;
     public double targetBG = 0d;
 
+    public int carbsReq = 0;
+    public int carbsReqWithin = 0;
+
     public Constraint<Double> inputConstraints;
 
     public Constraint<Double> rateConstraint;
@@ -100,6 +103,10 @@ public class APSResult {
         return this;
     }
 
+    public String getCarbsRequiredText() {
+        return String.format(resourceHelper.gs(R.string.carbsreq), carbsReq, carbsReqWithin);
+    }
+
     @Override
     public String toString() {
         final PumpInterface pump = activePlugin.getActivePump();
@@ -123,11 +130,20 @@ public class APSResult {
             if (smb != 0)
                 ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump()) + " U\n");
 
+            if (isCarbsRequired()) {
+                ret += getCarbsRequiredText()+"\n";
+            }
+
             // reason
             ret += resourceHelper.gs(R.string.reason) + ": " + reason;
             return ret;
-        } else
-            return resourceHelper.gs(R.string.nochangerequested);
+        }
+
+        if (isCarbsRequired()) {
+            return getCarbsRequiredText();
+        }
+
+        return resourceHelper.gs(R.string.nochangerequested);
     }
 
     public Spanned toSpanned() {
@@ -152,11 +168,20 @@ public class APSResult {
             if (smb != 0)
                 ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump()) + " U<br>");
 
+            if (isCarbsRequired()) {
+                ret += getCarbsRequiredText()+"<br>";
+            }
+
             // reason
             ret += "<b>" + resourceHelper.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return HtmlHelper.INSTANCE.fromHtml(ret);
-        } else
-            return HtmlHelper.INSTANCE.fromHtml(resourceHelper.gs(R.string.nochangerequested));
+        }
+
+        if (isCarbsRequired()) {
+            return HtmlHelper.INSTANCE.fromHtml(getCarbsRequiredText());
+        }
+
+        return HtmlHelper.INSTANCE.fromHtml(resourceHelper.gs(R.string.nochangerequested));
     }
 
     public APSResult newAndClone(HasAndroidInjector injector) {
@@ -185,6 +210,8 @@ public class APSResult {
         newResult.smbConstraint = smbConstraint;
         newResult.percent = percent;
         newResult.usePercent = usePercent;
+        newResult.carbsReq = carbsReq;
+        newResult.carbsReqWithin = carbsReqWithin;
         newResult.targetBG = targetBG;
     }
 
@@ -298,6 +325,10 @@ public class APSResult {
         }
 
         return latest;
+    }
+
+    public boolean isCarbsRequired() {
+        return carbsReq > 0;
     }
 
     public boolean isChangeRequested() {

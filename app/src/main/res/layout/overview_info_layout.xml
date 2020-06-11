@@ -51,7 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:tint="?attr/iconColorToolbar"
-            android:src="@drawable/icon_cp_bolus_carbs" />
+            android:src="@drawable/icon_cp_bolus_carbs"
+            android:id="@+id/overview_carbs_icon"
+            android:background="@drawable/anim_carbs" />
 
         <TextView
             android:id="@+id/overview_cob"

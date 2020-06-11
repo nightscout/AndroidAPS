@@ -20,7 +20,9 @@
     <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten</string>
     <string name="objectives_ama_objective">Activeren van extra functies overdag zoals AMA (geavanceerde maaltijdhulp, Advanced Meal Assist)</string>
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
+    <string name="objectives_auto_objective">Automatisering inschakelen</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
+    <string name="objectives_auto_gate">Zorg ervoor dat je goed begrijpt hoe automatisering werkt voordat je jouw eerste eenvoudige regel aanmaakt. In plaats van de regel een actie te laten uitvoeren, laat hem alleen een notificatie tonen. Pas als je zeker weet dat de automatisering op het juiste moment wordt geactiveerd, vervang je de melding door een echte actie. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG beschikbaar in NS</string>
     <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS</string>
     <string name="objectives_manualenacts">Handmatige aanpassingen</string>
