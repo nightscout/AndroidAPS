@@ -571,8 +571,6 @@
     <string name="smbmaxminutes_summary">Верхний лимит минут базала на SMB</string>
     <string name="uamsmbmaxminutes">Максимум минут микроболюса SMB для непредвиденного приема пищи UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимум минут базала ограничивающего микроболюсы SMB на непредвиденный прием пищи UAM</string>
-    <string name="carbsReqThreshold">Порог предлагаемых углеводов</string>
-    <string name="carbsReqThreshold_summary">Когда предлагаются углеводы, какое количество инициирует уведомление</string>
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
