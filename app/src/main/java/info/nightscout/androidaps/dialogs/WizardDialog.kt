@@ -233,6 +233,8 @@ class WizardDialog : BlurDialogFragment() {
             return
         }
 
+        treatments_wizard_profile.setText(resourceHelper.gs(R.string.active))
+
         val profileList: ArrayList<CharSequence>
         profileList = profileStore.getProfileList()
         profileList.add(0, resourceHelper.gs(R.string.active))
