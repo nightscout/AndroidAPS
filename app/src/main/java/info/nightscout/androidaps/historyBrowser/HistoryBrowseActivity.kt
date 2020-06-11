@@ -113,9 +113,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             val cal = Calendar.getInstance()
             cal.timeInMillis = start
-            cal.set(Calendar.YEAR, year)
-            cal.set(Calendar.MONTH, monthOfYear)
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            cal[Calendar.YEAR] = year
+            cal[Calendar.MONTH] = monthOfYear
+            cal[Calendar.DAY_OF_MONTH] = dayOfMonth
+            cal[Calendar.MILLISECOND] = 0
+            cal[Calendar.SECOND] = 0
+            cal[Calendar.MINUTE] = 0
+            cal[Calendar.HOUR_OF_DAY] = 0
             start = cal.timeInMillis
             historybrowse_date?.text = dateUtil.dateAndTimeString(start)
             runCalculation("onClickDate")
@@ -282,7 +286,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             // do preparation in different thread
             withContext(Dispatchers.Default) {
                 val fromTime: Long = start + T.secs(100).msecs()
-                val toTime: Long = start + T.hours(rangeToDisplay.toLong()).msecs()
+                val toTime: Long = start + T.hours(rangeToDisplay.toLong()).msecs() + T.secs(100).msecs()
                 aapsLogger.debug(LTag.UI, "Period: " + dateUtil.dateAndTimeString(fromTime) + " - " + dateUtil.dateAndTimeString(toTime))
                 val pointer = System.currentTimeMillis()
 
