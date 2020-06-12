@@ -286,7 +286,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
         overview_activeprofile?.let { registerForContextMenu(it) }
         overview_temptarget?.let { registerForContextMenu(it) }
         updateGUI("onResume")
@@ -307,38 +306,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
-                R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(childFragmentManager, "Overview") }))
-
-                R.id.overview_cgmbutton         -> {
-                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
-                        openCgmApp("com.eveningoutpost.dexdrip")
-                    else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        dexcomPlugin.findDexcomPackageName()?.let {
-                            openCgmApp(it)
-                        }
-                            ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
-                    }
-                }
-
-                R.id.overview_calibrationbutton -> {
-                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
-                    } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        try {
-                            dexcomPlugin.findDexcomPackageName()?.let {
-                                startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
-                            }
-                                ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
-                        } catch (e: ActivityNotFoundException) {
-                            ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.g5appnotdetected))
-                        }
-                    }
-                }
-
                 R.id.overview_accepttempbutton  -> {
                     profileFunction.getProfile() ?: return
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
@@ -360,42 +327,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-    private fun openCgmApp(packageName: String) {
-        context?.let {
-            val packageManager = it.packageManager
-            try {
-                val intent = packageManager.getLaunchIntentForPackage(packageName)
-                    ?: throw ActivityNotFoundException()
-                intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                it.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                OKDialog.show(it, "", resourceHelper.gs(R.string.error_starting_cgm))
-            }
-        }
-    }
-
-
-    private fun onClickQuickWizard() {
-        val actualBg = iobCobCalculatorPlugin.actualBg()
-        val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
-        val pump = activePlugin.activePump
-        val quickWizardEntry = quickWizard.getActive()
-        if (quickWizardEntry != null && actualBg != null && profile != null) {
-            overview_quickwizardbutton?.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
-            if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
-                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
-                activity?.let {
-                    if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                        OKDialog.show(it, resourceHelper.gs(R.string.treatmentdeliveryerror), resourceHelper.gs(R.string.constraints_violation) + "\n" + resourceHelper.gs(R.string.changeyourinput))
-                        return
-                    }
-                    wizard.confirmAndExecute(it)
-                }
-            }
-        }
-    }
 
     private fun updatePumpStatus(event: EventPumpStatusChanged) {
         val status = event.getStatus(resourceHelper)
