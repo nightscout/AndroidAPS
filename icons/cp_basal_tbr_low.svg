@@ -3,24 +3,9 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
 	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
-<g id="x_x5F_swap_x5F_vert" display="none">
-	<path display="inline" d="M19.375,17.01V10h-2v7.01h-3l4,3.99l4-3.99H19.375z M12.375,3l-4,3.99h3V14h2V6.99h3L12.375,3z"/>
-	<polygon display="inline" points="5.437,12.733 3.092,15.079 2.358,14.346 4.704,12 2.358,9.654 3.092,8.921 5.437,11.267 
-		7.783,8.921 8.517,9.654 6.171,12 8.517,14.346 7.783,15.079 	"/>
-	<path display="inline" fill="none" d="M0,0h24v24H0V0z"/>
-</g>
 <g id="cp_x5F_basal_x5F_tbr_x5F_low">
 	<path fill="none" d="M0,0h24v24H0V0z"/>
-	<polygon fill="#CF8BFE" points="17.438,17.854 12.021,17.854 12.021,6.813 3.667,6.813 3.667,6.104 12.729,6.104 12.729,17.146 
+	<polygon fill="#CF8BFE" points="17.438,17.854 12.021,17.854 12.021,6.813 3.667,6.813 3.667,6.104 12.729,6.104 12.729,17.146
 		16.729,17.146 16.729,6.104 19.083,6.104 19.083,6.813 17.438,6.813 	"/>
-</g>
-<g id="cp_x5F_basal_x5F_tbr_x5F_high" display="none">
-	<path display="inline" fill="none" d="M0,0h24v24H0V0z"/>
-	<polygon display="inline" fill="#CF8BFE" points="19.083,17.896 16.729,17.896 16.729,6.854 12.729,6.854 12.729,17.896 
-		3.667,17.896 3.667,17.188 12.021,17.188 12.021,6.146 17.438,6.146 17.438,17.188 19.083,17.188 	"/>
-</g>
-<g id="cp_x5F_basal_x5F_no_x5F_tbr" display="none">
-	<path display="inline" fill="none" d="M0,0.021h24v24H0V0.021z"/>
-	<rect x="3.667" y="11.646" display="inline" fill="#CF8BFE" width="15.417" height="0.709"/>
 </g>
 </svg>
