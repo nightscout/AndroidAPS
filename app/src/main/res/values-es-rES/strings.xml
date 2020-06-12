@@ -533,7 +533,6 @@
     <string name="smbmaxminutes_summary">Minutos máximos de basal para limitar SMB</string>
     <string name="uamsmbmaxminutes">Minutos máximos de UAM SMB</string>
     <string name="uamsmbmaxminutes_summary">Minutos máximos de basal para limitar SMB para UAM</string>
-    <string name="carbsReqThreshold">Umbral de sugerencia de Carbohidratos</string>
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
     <string name="nsclientbg">NSClient BG</string>

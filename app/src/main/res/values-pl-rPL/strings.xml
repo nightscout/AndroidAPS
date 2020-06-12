@@ -560,8 +560,6 @@
     <string name="smbmaxminutes_summary">Maks. ilość minut dawki bazowej do ograniczenia SMB</string>
     <string name="uamsmbmaxminutes">Maksymalna liczba minut UAM SMB</string>
     <string name="uamsmbmaxminutes_summary">Maks. ilość minut dawki bazowej do ograniczenia SMB dla UAM</string>
-    <string name="carbsReqThreshold">Próg sugerowania węglowodanów</string>
-    <string name="carbsReqThreshold_summary">Kiedy sugeruje się węglowodany, ile węglowodanów spowoduje powiadomienie</string>
     <string name="dexcomg5_xdripupload_title">Prześlij dane BG do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
     <string name="nsclientbg">NSClient BG</string>

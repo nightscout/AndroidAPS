@@ -161,6 +161,8 @@
     <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">In attesa del risultato</string>
     <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">\"%dg di CHO aggiuntivi richiesti entro %d minuti</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiche</string>
     <string name="cumulative_tdd">TDD cumulativo</string>

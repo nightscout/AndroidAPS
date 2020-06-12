@@ -135,6 +135,7 @@
     <string name="disableloop">Desactivar Loop</string>
     <string name="enableloop">Activar Loop</string>
     <string name="openloop_newsuggestion">Disponível nova sugestão</string>
+    <string name="carbssuggestion">Sugestão de Hidratos</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
     <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -564,6 +565,7 @@
     <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma glicemia seja recebida</string>
     <string name="enable_pump_unreachable_alert">Alerta caso não seja possivel alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
+    <string name="enable_carbs_req_alert">Alertar se forem necessários Hidratos</string>
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Aplicação Eversense (com patch)</string>
@@ -576,8 +578,7 @@
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB máx minutos</string>
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
-    <string name="carbsReqThreshold">Limite Sugestão de Hidratos</string>
-    <string name="carbsReqThreshold_summary">Quando Hidratos são sugeridos, quantos hidratos irá solicitar uma notificação</string>
+    <string name="carbsReqThreshold">Mínimo De Hidratos Necessários Para Sugestão</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glic ClienteNS</string>
@@ -657,6 +658,10 @@
     <string name="insulin_increment_button_message">Unidades de insulina a adicionar quando o botão é premido</string>
     <string name="error_starting_cgm">Não foi possível lançar aplicação de monitorização contínua. Por favor verifique que está instalada.</string>
     <string name="overview_cgm">CGM</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="required">req</string>
     <string name="nav_historybrowser">Navegador do histórico</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>

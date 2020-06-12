@@ -574,8 +574,6 @@
     <string name="smbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB max. minut</string>
     <string name="uamsmbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB pro UAM</string>
-    <string name="carbsReqThreshold">Prahová hodnota doporučení sacharidů</string>
-    <string name="carbsReqThreshold_summary">Po navržení sacharidů, kolik sacharidů vyvolá upozornění</string>
     <string name="dexcomg5_xdripupload_title">Odesílat data do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
