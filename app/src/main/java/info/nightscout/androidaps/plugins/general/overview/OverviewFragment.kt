@@ -779,7 +779,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until secondaryGraphs.size) {
+            for (g in 0 until secondaryGraphsData.size) {
                 secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
                     overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
