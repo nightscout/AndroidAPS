@@ -152,7 +152,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/icon_cp_bolus_carbs"
+                        android:drawableTop="@drawable/ic_cp_bolus_carbs"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_carbscorrection"
