@@ -240,6 +240,9 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorTeal</item>
         <item name="colorAccent">@color/secondaryColorTeal</item>
         <item name="overviewPillColor">@color/overviewPillColorTeal</item>
+        <item name="colorSurface">@color/black_alpha_40</item>
+        <item name="android:popupBackground">@color/black_alpha_80</item>
+        <item name="android:windowBackground">@drawable/green_domina</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 

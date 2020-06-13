@@ -341,7 +341,7 @@
     <color name="bottomBarBackgroundCyan">#00acc1</color>
 
     <!-- TEAL Theme -->
-    <color name="primaryColorTeal">#00796b</color>
+    <color name="primaryColorTeal">#D900796b</color>
     <color name="primaryLightColorTeal">#48a999</color>
     <color name="primaryDarkColorTeal">#004c40</color>
     <color name="secondaryColorTeal">#ffd180</color>
