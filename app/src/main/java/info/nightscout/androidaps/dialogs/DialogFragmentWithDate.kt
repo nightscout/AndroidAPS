@@ -31,12 +31,6 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
 
-    class Nested : BlurDialogFragment() {
-
-    }
-
-    private lateinit var blurDialogFragment: Nested
-
     var eventTime = DateUtil.now()
     var eventTimeChanged = false
 
