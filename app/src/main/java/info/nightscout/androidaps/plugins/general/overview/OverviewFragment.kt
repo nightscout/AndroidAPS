@@ -775,7 +775,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
         } else {
-            overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert_48px_green)
+            overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert)
         }
 
         overview_sensitivity?.text =

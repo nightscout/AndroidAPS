@@ -79,6 +79,6 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.icon_bolus), TriggerBolusAgo(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_bolus), TriggerBolusAgo(injector).icon())
     }
 }
