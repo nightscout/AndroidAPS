@@ -8,10 +8,10 @@
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="700dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="48dp"
+        app:behavior_peekHeight="75dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.cardview.widget.CardView
@@ -61,13 +61,22 @@
 
     </LinearLayout></androidx.cardview.widget.CardView>
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main_activity_content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="20dp"
         android:nestedScrollingEnabled="true"
         android:background="?android:colorBackground"/>
+
+        </androidx.core.widget.NestedScrollView>
+
     </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
