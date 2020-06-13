@@ -161,6 +161,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         delegate.applyDayNight()
         setTheme(newTheme)
+        ThemeUtil.setActualTheme(newTheme)
     }
 
     // restart activities if something like theme change happens
@@ -184,6 +185,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         delegate.applyDayNight()
         setTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))
+        ThemeUtil.setActualTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))
         Iconify.with(FontAwesomeModule())
         LocaleHelper.update(applicationContext)
         setContentView(R.layout.activity_main)

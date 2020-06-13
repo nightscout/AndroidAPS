@@ -4,12 +4,15 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Resources
 import android.os.SystemClock
 import android.text.Spanned
 import android.view.ContextThemeWrapper
 import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
+import kotlinx.coroutines.MainScope
 
 object OKDialog {
     @SuppressLint("InflateParams")
@@ -40,7 +43,7 @@ object OKDialog {
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
 
-        AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AppTheme))
+        AlertDialog.Builder(ContextThemeWrapper(activity, ThemeUtil.getActualTheme()))
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptytitle))
             .setMessage(message)
             .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->

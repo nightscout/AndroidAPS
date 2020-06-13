@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_marginBottom="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="info.nightscout.androidaps.dana.activities.DanaHistoryActivity">
-
 
     <RelativeLayout
         android:id="@+id/danar_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp"
         android:layout_gravity="center"
         android:background="@color/activity_title_background"
         android:orientation="horizontal"

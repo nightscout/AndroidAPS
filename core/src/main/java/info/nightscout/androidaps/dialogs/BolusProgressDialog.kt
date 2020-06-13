@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.dialogs
 
 import android.app.Activity
+import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -9,8 +11,10 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.AlwaysAsyncPolicy
 import com.ms_square.etsyblur.BlurConfig
 import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SimpleAsyncPolicy
 import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
@@ -22,11 +26,13 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_bolusprogress.*
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class BolusProgressDialog : BlurDialogFragment() {
@@ -35,6 +41,7 @@ class BolusProgressDialog : BlurDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
 
@@ -69,7 +76,18 @@ class BolusProgressDialog : BlurDialogFragment() {
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
 
-        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_PINK)
+        try {
+            val theme: Resources.Theme? = context?.getTheme()
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            if (theme != null) {
+                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        val blurConfig = context?.let { SimpleAsyncPolicy () }?.let {
             BlurConfig.Builder()
                 .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
                 .debug(false)

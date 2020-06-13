@@ -31,6 +31,8 @@ object ThemeUtil {
     const val THEME_BLUEGRAY = 18
     const val THEME_DARKSIDE = 19
 
+    private var ActualTheme: Int = THEME_DARKSIDE
+
     @JvmStatic fun getThemeId(theme: Int): Int {
         var themeId = 0
         when (theme) {
@@ -59,6 +61,14 @@ object ThemeUtil {
             }
         }
         return themeId
+    }
+
+    @JvmStatic  fun setActualTheme(theme: Int) {
+        ActualTheme = theme
+    }
+
+    @JvmStatic  fun getActualTheme(): Int {
+        return ActualTheme
     }
 
     @JvmStatic  fun getThemeName(theme: Int, mIsNightMode: Boolean): String {
