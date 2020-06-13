@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="700dp"
-    android:orientation="vertical"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="48dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="700dp"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="48dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -22,6 +27,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:clickable="true"
+        android:focusable="true"
         android:elevation="4dp">
 
         <androidx.appcompat.widget.SwitchCompat
@@ -29,8 +35,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="8dp"
             android:text="Dark Mode"
             />
         <View
@@ -42,13 +48,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="2dp"
             android:text="Selected"/>
         <info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
             android:id="@+id/theme_selected"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_alignParentRight="true"
             android:onClick="onClick"/>
 
@@ -59,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:nestedScrollingEnabled="true"
         android:background="?android:colorBackground"/>
-
-</LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
