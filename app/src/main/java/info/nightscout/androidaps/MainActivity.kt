@@ -204,15 +204,17 @@ open class MainActivity : NoSplashAppCompatActivity() {
             it.syncState()
         }
 
+        //bluring for navigation drawer
         BlurSupport.addTo(main_drawer_layout)
-
-        fab.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
 
         // below are declared as fields
         var downX = 0F
         var downY = 0F
         var dx = 0F
         var dy = 0F
+        //remember hamburger icon for switching fab icon from center to right and back
+        var navigationIcon = bottom_app_bar.navigationIcon
+        var overflowIcon = bottom_app_bar.overflowIcon
 
         // detect single tap like click
         class SingleTapDetector : GestureDetector.SimpleOnGestureListener() {
@@ -222,7 +224,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
             }
         }
         var gestureDetector = GestureDetector(this, SingleTapDetector())
-
         // set on touch listener for move detetction
         fab.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(view: View?, event: MotionEvent): Boolean {
@@ -247,28 +248,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
                         MotionEvent.ACTION_UP   -> {
                             if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER ) {
                                 bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
+                                bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
+                                //bottom_app_bar.navigationIcon = null
+                                bottom_app_bar.overflowIcon = null
                             }
                             else {
                                 bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_CENTER
-                            }
-
-                            if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_END ){
-                                bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
-                                layoutParams.marginStart = resourceHelper.dpToPx(-10)
-                                //bottom_navigation.setLayoutParams(layoutParams)
-
-                                //bottom_navigation.menu.add(Menu.NONE,99,99,"lastentry")
-
-                            } else{
-                                layoutParams.marginStart = resourceHelper.dpToPx(0)
                                 bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
-                                //bottom_navigation.setLayoutParams(layoutParams)
-                                //bottom_navigation.menu.removeItem(99)
+                                //bottom_app_bar.navigationIcon = navigationIcon
+                                bottom_app_bar.overflowIcon = overflowIcon
                             }
-
                         }
                     }
-                    //bottom_navigation.setLayoutParams(layoutParams)
                 }
                 return true
             }
@@ -338,7 +329,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
         action(view, view.id, supportFragmentManager)
     }
 
-
     private fun onLongClick(v: View): Boolean {
         when (v.id) {
             R.id.quickwizardButton -> {
@@ -367,8 +357,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         //sp.getBoolean(R.string.key_show_treatment_button, false)
         //sp.getBoolean(R.string.key_show_calibration_button, true)
-
-
 
         bottom_navigation.menu.getItem(R.id.insulinButton).isVisible = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
         bottom_navigation.menu.getItem(R.id.carbsButton).isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
@@ -427,7 +415,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     bottom_app_bar.performShow()
                     return
                 }
-
 
                 R.id.treatmentButton   -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(manager!!, "MainActivity") }))
                 R.id.quickwizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
@@ -544,7 +531,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 lastBG.valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(this, R.attr.bgHigh)
                 else                                  -> resourceHelper.getAttributeColor(this, R.attr.bgInRange)
             }
-
 
             overview_bg?.text = lastBG.valueToUnitsToString(units)
             overview_bg?.setTextColor(color)
@@ -706,11 +692,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
             .toObservable(EventNewOpenLoopNotification::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }) { fabricPrivacy.logException(it) })
-        //disposable.add(rxBus
-        //    .toObservable(EventIobCalculationProgress::class.java)
-        //    .observeOn(AndroidSchedulers.mainThread())
-        //    .subscribe({ overview_iobcalculationprogess?.text = it.progress }) { fabricPrivacy.logException(it) })
-
         refreshLoop = Runnable {
             scheduleUpdateGUI("refreshLoop")
             loopHandler.postDelayed(refreshLoop, 60 * 1000L)
