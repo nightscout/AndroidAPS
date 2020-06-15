@@ -37,7 +37,7 @@
         android:label="@string/app_name"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.Launcher"
+        android:theme="@style/AppTheme"
         android:fullBackupOnly="false"
         android:backupAgent=".utils.SPBackupAgent"
         android:restoreAnyVersion="true">
@@ -50,10 +50,18 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
+        <!-- The below is for the splash screen and we need no action bar and the default theme -->
+        <activity android:name=".utils.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
