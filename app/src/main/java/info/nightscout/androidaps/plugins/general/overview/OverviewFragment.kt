@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
@@ -30,6 +31,7 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
@@ -168,6 +170,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         if (smallWidth) overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35f)
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
@@ -183,8 +186,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
         carbAnimation = overview_carbs_icon.background as AnimationDrawable
-        carbAnimation.setEnterFadeDuration(1200)
-        carbAnimation.setExitFadeDuration(1200)
+        carbAnimation.setEnterFadeDuration(1600)
+        carbAnimation.setExitFadeDuration(1600)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
