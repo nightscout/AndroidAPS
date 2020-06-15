@@ -380,6 +380,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     }
 
+    @Synchronized
     private fun prepareGraphs() {
         val numOfGraphs = overviewMenus.setting.size
 
@@ -438,6 +439,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         scheduledUpdate = worker.schedule(task, 500, TimeUnit.MILLISECONDS)
     }
 
+    @Synchronized
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug("UpdateGUI from $from")
