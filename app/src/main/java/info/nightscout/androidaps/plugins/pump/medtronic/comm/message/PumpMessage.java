@@ -30,8 +30,8 @@ public class PumpMessage implements RLMessage {
 
 
     public PumpMessage(AAPSLogger aapsLogger, byte[] rxData) {
-        init(rxData);
         this.aapsLogger = aapsLogger;
+        init(rxData);
     }
 
 
