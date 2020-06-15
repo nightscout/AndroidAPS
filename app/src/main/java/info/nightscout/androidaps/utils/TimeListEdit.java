@@ -111,7 +111,7 @@ public class TimeListEdit {
         // last "plus" to append new interval
         float factor = layout.getContext().getResources().getDisplayMetrics().density;
         finalAdd = new ImageView(context);
-        finalAdd.setImageResource(R.drawable.add);
+        finalAdd.setImageResource(R.drawable.ic_add);
         LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams((int) (35d * factor), (int) (35 * factor));
         illp.setMargins(0, 25, 0, 25); // llp.setMargins(left, top, right, bottom);
         illp.gravity = Gravity.CENTER;
