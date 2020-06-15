@@ -15,6 +15,7 @@ import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -23,9 +24,12 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_END
 import com.google.android.material.tabs.TabLayoutMediator
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
@@ -63,7 +67,6 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.T
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -85,7 +88,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
 import kotlinx.android.synthetic.main.status_fragment.*
 import java.util.*
@@ -173,6 +175,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
         recreate()
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
@@ -201,6 +207,73 @@ open class MainActivity : NoSplashAppCompatActivity() {
         BlurSupport.addTo(main_drawer_layout)
 
         fab.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
+
+        // below are declared as fields
+        var downX = 0F
+        var downY = 0F
+        var dx = 0F
+        var dy = 0F
+
+        // detect single tap like click
+        class SingleTapDetector : GestureDetector.SimpleOnGestureListener() {
+
+            override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                return true
+            }
+        }
+        var gestureDetector = GestureDetector(this, SingleTapDetector())
+
+        // set on touch listener for move detetction
+        fab.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(view: View?, event: MotionEvent): Boolean {
+                if (gestureDetector.onTouchEvent(event)) {
+                    // code for single tap or onclick
+                    onClick(view!!)
+                } else {
+                    val layoutParams  = Toolbar.LayoutParams(
+                        Toolbar.LayoutParams.MATCH_PARENT,
+                        Toolbar.LayoutParams.MATCH_PARENT
+                    )
+                    when (event.actionMasked) {
+                        MotionEvent.ACTION_DOWN -> {
+                            downX = event.x
+                            downY = event.y
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            dx += event.x - downX
+                            dy += event.y - downY
+                            fab.translationX = dx
+                        }
+                        MotionEvent.ACTION_UP   -> {
+                            if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER ) {
+                                bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
+                            }
+                            else {
+                                bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_CENTER
+                            }
+
+                            if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_END ){
+                                bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
+                                layoutParams.marginStart = resourceHelper.dpToPx(-10)
+                                //bottom_navigation.setLayoutParams(layoutParams)
+
+                                //bottom_navigation.menu.add(Menu.NONE,99,99,"lastentry")
+
+                            } else{
+                                layoutParams.marginStart = resourceHelper.dpToPx(0)
+                                bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
+                                //bottom_navigation.setLayoutParams(layoutParams)
+                                //bottom_navigation.menu.removeItem(99)
+                            }
+
+                        }
+                    }
+                    //bottom_navigation.setLayoutParams(layoutParams)
+                }
+                return true
+            }
+        })
+
 
         treatmentButton.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
         calibrationButton.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
@@ -317,7 +390,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
     }
 
     fun action(view: View?, id: Int, manager: FragmentManager?) {
-        //var newDialog: NewNSTreatmentDialog? = NewNSTreatmentDialog()
         val fillDialog = FillDialog()
         val newCareDialog = CareDialog()
 
