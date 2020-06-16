@@ -618,7 +618,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_cp_bolus_correction"
+                    android:drawableTop="@drawable/ic_cp_bolus_correction"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_read_pulse_log_short"

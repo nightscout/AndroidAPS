@@ -73,7 +73,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), TriggerPumpLastConnection(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_remove), TriggerPumpLastConnection(injector).icon())
     }
 
     @Test fun friendlyNameTest() {

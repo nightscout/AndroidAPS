@@ -68,7 +68,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         resourceHelper.gs(R.string.autosenscompared, resourceHelper.gs(comparator.value.stringRes), autosens.value)
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.`as`)
+    override fun icon(): Optional<Int?> = Optional.of(R.drawable.`ic_as`)
 
     override fun duplicate(): Trigger = TriggerAutosensValue(injector, this)
 

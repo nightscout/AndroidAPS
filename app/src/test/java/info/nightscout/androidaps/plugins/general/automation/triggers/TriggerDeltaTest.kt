@@ -93,7 +93,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.icon_auto_delta), TriggerDelta(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_auto_delta), TriggerDelta(injector).icon())
     }
 
     @Test fun initializerTest() {
