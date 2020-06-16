@@ -460,42 +460,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overview_looplayout?.visibility = View.VISIBLE
 
         val profile = profileFunction.getProfile() ?: return
-        val actualBG = iobCobCalculatorPlugin.actualBg()
-        val lastBG = iobCobCalculatorPlugin.lastBg()
         val pump = activePlugin.activePump
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
 
-        //Start with updating the BG as it is unaffected by loop.
-        // **** BG value ****
-        if (lastBG != null) {
-            val color = when {
-                lastBG.valueToUnits(units) < lowLine  -> resourceHelper.gc(R.color.low)
-                lastBG.valueToUnits(units) > highLine -> resourceHelper.gc(R.color.high)
-                else                                  -> resourceHelper.gc(R.color.inrange)
-            }
-
-            overview_bg?.text = lastBG.valueToUnitsToString(units)
-            overview_bg?.setTextColor(color)
-            overview_arrow?.text = lastBG.directionToSymbol(databaseHelper)
-            overview_arrow?.setTextColor(color)
-
-            val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
-            if (glucoseStatus != null) {
-                overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
-                //overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                //overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
-            } else {
-                overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
-                //overview_deltashort?.text = "---"
-                //overview_avgdelta?.text = ""
-            }
-
-            overview_timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
-            //overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
-
-        }
         val lastRun = loopPlugin.lastRun
 
         // temp target
@@ -585,7 +554,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
             val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
-            val typedValue = TypedValue()
             val theme = requireContext().theme
             if (theme != null) {
                 // create a gradient drawable
