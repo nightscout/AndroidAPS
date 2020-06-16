@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">След ограничения</string>
     <string name="loop_tbrsetbypump_label">Временният базал зададен от помпата</string>
     <string name="openapsma_lastenact_label">Последно зададено</string>
-    <string name="ok">ОК</string>
-    <string name="cancel">Откажи</string>
     <string name="noapsselected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="safety">Сигурност</string>
     <string name="openapsma_disabled">Модула е изключен</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
     <string name="constraintapllied">Приложено ограничение!</string>
-    <string name="confirmation">Потвърждение</string>
-    <string name="bolus">Болус</string>
     <string name="sms_bolus">Болус:</string>
     <string name="basal">Базал</string>
     <string name="sms_basal">Базал:</string>
@@ -256,6 +252,11 @@
     <string name="smscommunicator_loopisenabled">APS е включен</string>
     <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <string name="valueoutofrange">Стойността %1$s е извън ограниченията</string>
+    <string name="smscommunicator_pumpconnectwithcode">За свързване с помпа отговорете с код %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Връзката с помпата е неуспешна</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1d минути отговорете с код %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Помпата е разкачена</string>
+    <string name="smscommunicator_reconnect">Връзката с помпа е възстановена</string>
     <string name="smscommunicator_remotecommandnotallowed">Отдалеченото управление е забранено</string>
     <string name="smscommunicator_remotebolusnotallowed">Отдалечено стартиране на болус не е възможно. Опитайте отново по-късно.</string>
     <string name="smscommunicator_basalreplywithcode">За да стартирате базал от %1$.2fЕ/ч за %2$d мин отговорете с код %3$s</string>
@@ -571,8 +572,6 @@
     <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
     <string name="uamsmbmaxminutes">Максимум минути за отчитане на необявени хранения UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
-    <string name="carbsReqThreshold">Праг на предложение за въгл.</string>
-    <string name="carbsReqThreshold_summary">Когато се предлагат въгл., при колко да се покаже уведомление</string>
     <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
     <string name="nsclientbg">КЗ от NS</string>
@@ -977,7 +976,6 @@
     <string name="recurringTime">Повтарящо се време</string>
     <string name="every">Всеки</string>
     <string name="never">Никога</string>
-    <string name="mins">%1$dмин</string>
     <string name="condition">Условие:</string>
     <string name="action">Действие:</string>
     <string name="iob_u">IOB [Ед]:</string>
@@ -1221,7 +1219,6 @@
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
     <string name="reorder_label">Подреди</string>
     <string name="age">Възраст:</string>
-    <string name="weight">Тегло:</string>
     <string name="id">Номер:</string>
     <string name="submit">Изпрати</string>
     <string name="mostcommonprofile">Най-често използван профил:</string>
@@ -1231,7 +1228,6 @@
     <string name="invalidweight">Невалидно тегло</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Ниски: <b>%2$02d%%</b> В: <b>%3$02d%%</b> Вис: <b>%4$02d%%</b>]]></string>
     <string name="average">Средно</string>
-    <string name="tdd">ТДД</string>
     <string name="tir">Време в границите</string>
     <string name="activitymonitor">Мониторинг на активност</string>
     <string name="doyouwantresetstats">Искате да нулирате статистиката?</string>

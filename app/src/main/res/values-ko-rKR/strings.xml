@@ -105,8 +105,6 @@
     <string name="loop_constraintsprocessed_label">제약 적용 후</string>
     <string name="loop_tbrsetbypump_label">펌프에 의한 임시Basal 설정</string>
     <string name="openapsma_lastenact_label">최근 실행</string>
-    <string name="ok">네</string>
-    <string name="cancel">취소</string>
     <string name="noapsselected">APS가 선택되지 않았거나 계산된 결과가 없습니다.</string>
     <string name="safety">안전성</string>
     <string name="openapsma_disabled">플러그인이 사용불가능 합니다</string>
@@ -117,8 +115,6 @@
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
     <string name="constraintapllied">제한 적용!</string>
-    <string name="confirmation">확인</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
@@ -889,7 +885,6 @@
     <string name="recurringTime">반복 시간</string>
     <string name="every">매일</string>
     <string name="never">절대</string>
-    <string name="mins">%1$d분</string>
     <string name="condition">상태:</string>
     <string name="action">실행:</string>
     <string name="iob_u">IOB [U]:</string>
@@ -1128,7 +1123,6 @@
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
     <string name="reorder_label">정렬</string>
     <string name="age">나이:</string>
-    <string name="weight">몸무게:</string>
     <string name="id">ID:</string>
     <string name="submit">확인</string>
     <string name="mostcommonprofile">가장 많이 사용된 프로파일:</string>
@@ -1138,7 +1132,6 @@
     <string name="invalidweight">유효하지 않은 몸무게입니다</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">평균</string>
-    <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">활동 모니터</string>
     <string name="doyouwantresetstats">활동 통계를 초기화하시겠습니까?</string>

@@ -63,6 +63,7 @@
     <!--    Translator-->
     <!--    Command-->
     <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <!--    Ntp-->

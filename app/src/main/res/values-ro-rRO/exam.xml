@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Care afirmații despre DIA sunt adevărate?</string>
-    <string name="dia_label">Subiect: Durata Acțiunii Insulinei</string>
     <string name="dia_minimumis3h">Valoarea minimă este de 3 ore.</string>
     <string name="dia_minimumis5h">Valoarea minimă este de 5 ore.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
