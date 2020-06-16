@@ -400,8 +400,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 val graph = GraphView(context)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-                graph?.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
-                graph?.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
+                graph.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
+                graph.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
@@ -504,9 +504,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
             val drawable: Drawable = overview_temptarget.getBackground()
             val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
-            if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextWarning)?.let { drawableLeft[0]!!.setTint(it) }
+            if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
-            resourceHelper?.gc(R.color.ribbonTextWarning)?.let { overview_temptarget.setTextColor(it) }
+            resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
             overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
@@ -516,9 +516,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 val drawable: Drawable = overview_temptarget.getBackground()
                 val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
-                if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextWarning)?.let { drawableLeft[0]!!.setTint(it) }
+                if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
                 drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
-                resourceHelper.gc(R.color.ribbonTextWarning)?.let { overview_temptarget.setTextColor(it) }
+                resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
                 overview_activeprofile.setTypeface(null, Typeface.BOLD)
             } else {
                 val drawableLeft: Array<Drawable?> = overview_temptarget.getCompoundDrawables()
@@ -535,8 +535,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                     gradientDrawable.shape = GradientDrawable.RECTANGLE
                     gradientDrawable.cornerRadius = 40f
                     overview_temptarget.setBackground(gradientDrawable)
-                    if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextDefault)?.let { drawableLeft[0]!!.setTint(it) }
-                    resourceHelper?.gc(R.color.ribbonTextDefault)?.let { overview_temptarget.setTextColor(it) }
+                    if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextDefault).let { drawableLeft[0]!!.setTint(it) }
+                    resourceHelper.gc(R.color.ribbonTextDefault).let { overview_temptarget.setTextColor(it) }
                 }
             }
         }
@@ -579,9 +579,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         if (profile.percentage != 100 || profile.timeshift != 0) {
             val drawable: Drawable = overview_activeprofile.getBackground()
             val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
-            if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextWarning)?.let { drawableLeft[0]!!.setTint(it) }
+            if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
-            resourceHelper?.gc(R.color.ribbonTextWarning)?.let { overview_activeprofile.setTextColor(it) }
+            resourceHelper.gc(R.color.ribbonTextWarning).let { overview_activeprofile.setTextColor(it) }
             overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
             val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
@@ -598,8 +598,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 gradientDrawable.shape = GradientDrawable.RECTANGLE
                 gradientDrawable.cornerRadius = 40f
                 overview_activeprofile.setBackground(gradientDrawable)
-                if (drawableLeft[0] != null) resourceHelper?.gc(R.color.ribbonTextDefault)?.let { drawableLeft[0]!!.setTint(it) }
-                resourceHelper?.gc(R.color.ribbonTextDefault)?.let { overview_activeprofile.setTextColor(it) }
+                if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextDefault).let { drawableLeft[0]!!.setTint(it) }
+                resourceHelper.gc(R.color.ribbonTextDefault).let { overview_activeprofile.setTextColor(it) }
             }
         }
 

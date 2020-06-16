@@ -89,6 +89,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
+import kotlinx.android.synthetic.main.overview_info_layout.*
 import kotlinx.android.synthetic.main.status_fragment.*
 import java.util.*
 import java.util.concurrent.Executors
@@ -104,6 +105,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private val worker = Executors.newSingleThreadScheduledExecutor()
     private var loopHandler = Handler()
     private var refreshLoop: Runnable? = null
+
+    private var deltashort = ""
+    private var avgdelta = ""
 
     //All for the fab menu
     private var isRotate = false
@@ -153,8 +157,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     // change to a new theme selected in theme manager
     open fun setNewTheme(newTheme: Int) {
         sp.putInt("theme", newTheme)
-        var mIsNightMode = sp.getBoolean("daynight", true)
-        if (mIsNightMode) {
+        if ( sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         } else {
@@ -214,7 +217,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         var dy = 0F
         //remember hamburger icon for switching fab icon from center to right and back
         var navigationIcon = bottom_app_bar.navigationIcon
-        var overflowIcon = bottom_app_bar.overflowIcon
+        val overflowIcon = bottom_app_bar.overflowIcon
 
         // detect single tap like click
         class SingleTapDetector : GestureDetector.SimpleOnGestureListener() {
@@ -231,10 +234,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     // code for single tap or onclick
                     onClick(view!!)
                 } else {
-                    val layoutParams  = Toolbar.LayoutParams(
-                        Toolbar.LayoutParams.MATCH_PARENT,
-                        Toolbar.LayoutParams.MATCH_PARENT
-                    )
                     when (event.actionMasked) {
                         MotionEvent.ACTION_DOWN -> {
                             downX = event.x
@@ -265,8 +264,17 @@ open class MainActivity : NoSplashAppCompatActivity() {
             }
         })
 
+        overview_bg?.setOnClickListener( {
+            val fullText = avgdelta
+            this.let {
+                OKDialog.show(it, "Delta", fullText)
+            }
 
-        treatmentButton.setOnClickListener({ view: View? -> onClick(view!!) })
+        })
+
+
+
+        treatmentButton.setOnClickListener { view: View? -> onClick(view!!) }
         calibrationButton.setOnClickListener({ view: View? -> onClick(view!!) })
         quickwizardButton.setOnClickListener({ view: View? -> onClick(view!!) })
         quickwizardButton.setOnLongClickListener({ view: View? -> onLongClick(view!!) })
@@ -540,12 +548,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
                 overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
-                //overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                //overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                deltashort = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                avgdelta = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
-                //overview_deltashort?.text = "---"
-                //overview_avgdelta?.text = ""
+                deltashort = "---"
+                avgdelta = ""
             }
 
             // strike through if BG is old
@@ -707,13 +715,14 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private fun scheduleUpdateGUI(from: String) {
         class UpdateRunnable : Runnable {
             override fun run() {
-                this?.let {
-                        runOnUiThread {
-                            updateGUI(from)
+                this.let {
+                    runOnUiThread {
+                        updateGUI(from)
                         scheduledUpdate = null
                     }
 
-                }          }
+                }
+            }
         }
         // prepare task for execution in 500 milliseconds
         // cancel waiting task to prevent multiple updates
