@@ -381,7 +381,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         val fillDialog = FillDialog()
         val newCareDialog = CareDialog()
 
-        this?.let { it ->
+        this.let {
             when (id) {
                 R.id.sensorage, R.id.careportal_cgmsensorstart -> {
                     newCareDialog.setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(manager!!, "Actions")
@@ -458,10 +458,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (manager.isStateSaved) return
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.wizardButton      -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(manager!!, "Main") }))
-                R.id.insulinButton           -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(manager!!, "Main") }))
+                R.id.wizardButton      -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(manager, "Main") }))
+                R.id.insulinButton           -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(manager, "Main") }))
                // R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
-                R.id.carbsButton       -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(manager!!, "Main") }))
+                R.id.carbsButton       -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(manager, "Main") }))
 
                 R.id.cgmButton         -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
@@ -479,7 +479,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun openCgmApp(packageName: String) {
-        this?.let {
+        this.let {
             val packageManager = it.packageManager
             try {
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
@@ -925,6 +925,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     // Correct place for calling setUserStats() would be probably MainApp
     // but we need to have it called at least once a day. Thus this location
 
+    @SuppressLint("Range")
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
