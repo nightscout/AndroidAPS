@@ -1230,6 +1230,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
     <string name="reorder_label">Réordonner</string>
     <string name="age">Âge :</string>
+    <string name="weight_label">Poids :</string>
     <string name="id">ID :</string>
     <string name="submit">Envoyer</string>
     <string name="mostcommonprofile">Profil le plus courant :</string>
@@ -1248,7 +1249,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="randombg_short">Gly</string>
     <string name="tools">Outils</string>
     <string name="show_calculation">Afficher le calcul</string>
-    <string name="automation_event">Evénement d\'automatisation</string>
+    <string name="automation_event">Evénement auto.</string>
     <string name="alreadyset">Déjà configuré</string>
     <string name="clearqueueconfirm">Effacer la file d\'attente ? Toutes les données en file d\'attente seront perdues !</string>
     <string name="ebstopsloop">L\'utilisation du bolus étendu arrètera la boucle fermée pour la durée d\'exécution du bolus étendu. Voulez-vous vraiment le faire ?</string>
