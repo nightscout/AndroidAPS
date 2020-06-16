@@ -266,10 +266,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
         })
 
 
-        treatmentButton.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
-        calibrationButton.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
-        quickwizardButton.setOnClickListener(View.OnClickListener { view: View? -> onClick(view!!) })
-        quickwizardButton.setOnLongClickListener(View.OnLongClickListener { view: View? -> onLongClick(view!!) })
+        treatmentButton.setOnClickListener({ view: View? -> onClick(view!!) })
+        calibrationButton.setOnClickListener({ view: View? -> onClick(view!!) })
+        quickwizardButton.setOnClickListener({ view: View? -> onClick(view!!) })
+        quickwizardButton.setOnLongClickListener({ view: View? -> onLongClick(view!!) })
 
         setupBottomNavigationView()
 
@@ -503,7 +503,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
-                this?.let {
+                this.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
                         OKDialog.show(it, resourceHelper.gs(R.string.treatmentdeliveryerror), resourceHelper.gs(R.string.constraints_violation) + "\n" + resourceHelper.gs(R.string.changeyourinput))
                         return
