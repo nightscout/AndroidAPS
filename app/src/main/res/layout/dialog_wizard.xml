@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
-                android:tint="?attr/iconColorToolbar"
+                android:tint="?attr/iconColorDialog"
                 android:src="@drawable/ic_calculator" />
 
             <TextView

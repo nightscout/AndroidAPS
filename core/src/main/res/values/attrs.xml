@@ -6,6 +6,7 @@
     <attr name="iconColor" format="reference|color" />
     <attr name="iconColorbottomAppbar" format="reference|color" />
     <attr name="iconColorToolbar" format="reference|color" />
+    <attr name="iconColorDialog" format="reference|color" />
     <attr name="iobBorder" format="reference|color" />
     <attr name="cobBorder" format="reference|color" />
     <attr name="bgInRange" format="reference|color" />

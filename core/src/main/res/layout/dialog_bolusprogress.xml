@@ -18,7 +18,7 @@
             android:id="@+id/header_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="?attr/iconColorToolbar"
+            android:tint="?attr/iconColorDialog"
             android:src="@drawable/ic_trending_flat_white_48dp" />
 
         <TextView

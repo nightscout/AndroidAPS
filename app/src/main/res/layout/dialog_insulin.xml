@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:contentDescription="@string/overview_insulin_label"
-                android:tint="?attr/iconColorToolbar"
+                android:tint="?attr/iconColorDialog"
                 android:src="@drawable/ic_bolus" />
 
             <TextView

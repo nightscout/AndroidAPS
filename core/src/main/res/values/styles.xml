@@ -4,6 +4,7 @@
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:actionBarTheme">@android:style/Theme.Material</item>
         <item name="iconColor">@color/iconColor</item>
+        <item name="iconColorDialog">@color/iconColor</item>
         <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
         <item name="iconColorToolbar">@color/iconColorbottomAppbar</item>
         <item name="color_val">@color/color_val</item>
