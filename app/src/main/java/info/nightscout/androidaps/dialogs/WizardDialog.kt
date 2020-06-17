@@ -98,7 +98,7 @@ class WizardDialog : BlurDialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+       context?.let { SmartAsyncPolicy(it) }?.let {
             BlurConfig.Builder()
                 .overlayColor(resourceHelper.gc(R.color.white_alpha_40))  // semi-transparent white color
                 .debug(false)

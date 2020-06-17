@@ -187,7 +187,6 @@ class ActionsFragment : DaggerFragment() {
     @Synchronized
     fun updateGui() {
 
-        val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
 
      /*   actions_profileswitch?.visibility = (

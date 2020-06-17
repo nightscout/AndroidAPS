@@ -59,7 +59,7 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        val blurConfig = context?.let { SmartAsyncPolicy(it) }?.let {
+        context?.let { SmartAsyncPolicy(it) }?.let {
             BlurConfig.Builder()
                 .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
                 .debug(false)

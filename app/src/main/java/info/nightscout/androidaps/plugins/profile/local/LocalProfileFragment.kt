@@ -79,29 +79,29 @@ class LocalProfileFragment : DaggerFragment() {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.basal_short))
         tabLayout.addTab(tabLayout.newTab().setText(R.string.target_short))
 
-        processVisibilityOnClick(view)
+        processVisibilityOnClick()
         localprofile_dia_placeholder.visibility = View.VISIBLE
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if ( tab.text == getText(R.string.dia_short)) {
-                    processVisibilityOnClick(view)
+                    processVisibilityOnClick()
                     localprofile_dia_placeholder.visibility = View.VISIBLE
                 }
                 if ( tab.text == getText(R.string.ic_short)) {
-                    processVisibilityOnClick(view)
+                    processVisibilityOnClick()
                     localprofile_ic.visibility = View.VISIBLE
                 }
                 if ( tab.text == getText(R.string.isf_short)) {
-                    processVisibilityOnClick(view)
+                    processVisibilityOnClick()
                     localprofile_isf.visibility = View.VISIBLE
                 }
                 if ( tab.text == getText(R.string.basal_short)) {
-                    processVisibilityOnClick(view)
+                    processVisibilityOnClick()
                     localprofile_basal.visibility = View.VISIBLE
                 }
                 if ( tab.text == getText(R.string.target_short)) {
-                    processVisibilityOnClick(view)
+                    processVisibilityOnClick()
                     localprofile_target.visibility = View.VISIBLE
                 }
             }
@@ -323,7 +323,7 @@ class LocalProfileFragment : DaggerFragment() {
         }
     }
 
-    private fun processVisibilityOnClick(selected: View) {
+    private fun processVisibilityOnClick() {
         localprofile_dia_placeholder.visibility = View.GONE
         localprofile_ic.visibility = View.GONE
         localprofile_isf.visibility = View.GONE
