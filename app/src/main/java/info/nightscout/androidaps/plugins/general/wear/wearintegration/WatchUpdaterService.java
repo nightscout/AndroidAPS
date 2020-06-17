@@ -536,9 +536,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             List<BgReading> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
 
             if (!predArray.isEmpty()) {
+                final String units = profileFunction.getUnits();
                 for (BgReading bg : predArray) {
                     if (bg.value < 40) continue;
-                    predictions.add(predictionMap(bg.date, bg.value, bg.getPredectionColor()));
+                    predictions.add(predictionMap(bg.date, bg.valueToUnits(units), bg.getPredectionColor()));
                 }
             }
         }
