@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Dopo elaborazione vincoli</string>
     <string name="loop_tbrsetbypump_label">Basale temporanea impostata dal micro</string>
     <string name="openapsma_lastenact_label">Ultima attivazione</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Annulla</string>
     <string name="noapsselected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
     <string name="safety">Sicurezza</string>
     <string name="openapsma_disabled">Il plugin è disabilitato</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Trattamento</string>
     <string name="overview_calculator_label">Calcolatore</string>
     <string name="constraintapllied">Vincolo applicato!</string>
-    <string name="confirmation">Conferma</string>
-    <string name="bolus">Bolo</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
@@ -990,7 +986,6 @@
     <string name="recurringTime">Tempo ricorrente</string>
     <string name="every">Ogni</string>
     <string name="never">Mai</string>
-    <string name="mins">%1$dmin</string>
     <string name="condition">Condizione:</string>
     <string name="action">Azione:</string>
     <string name="iob_u">IOB [U]:</string>
@@ -1234,7 +1229,7 @@
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="reorder_label">Riordina</string>
     <string name="age">Età:</string>
-    <string name="weight">Peso:</string>
+    <string name="weight_label">Peso:</string>
     <string name="id">ID:</string>
     <string name="submit">Invia</string>
     <string name="mostcommonprofile">Profilo più comune:</string>
@@ -1244,7 +1239,6 @@
     <string name="invalidweight">Inserimento peso non valido</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Basso: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Alto: <b>%4$02d%%</b>]]></string>
     <string name="average">Media</string>
-    <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor attività</string>
     <string name="doyouwantresetstats">Vuoi resettare le statistiche sull\'attività?</string>

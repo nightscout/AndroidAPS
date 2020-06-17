@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:labelFor="@+id/survey_weight"
-                    android:text="@string/weight"
+                    android:text="@string/weight_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <EditText

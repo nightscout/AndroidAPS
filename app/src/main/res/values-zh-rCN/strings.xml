@@ -102,8 +102,6 @@
     <string name="loop_constraintsprocessed_label">通过约束条件之后</string>
     <string name="loop_tbrsetbypump_label">通过泵设置临时基础率</string>
     <string name="openapsma_lastenact_label">上次制定</string>
-    <string name="ok">确定</string>
-    <string name="cancel">取消</string>
     <string name="noapsselected">APS没有被选择或者提供结果</string>
     <string name="safety">安全性</string>
     <string name="openapsma_disabled">插件已禁用</string>
@@ -113,8 +111,6 @@
     <string name="overview_treatment_label">治疗</string>
     <string name="overview_calculator_label">计算器</string>
     <string name="constraintapllied">应用约束!</string>
-    <string name="confirmation">确认</string>
-    <string name="bolus">大剂量</string>
     <string name="sms_bolus">大剂量:</string>
     <string name="basal">基础率</string>
     <string name="sms_basal">基础率:</string>

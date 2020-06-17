@@ -19,7 +19,7 @@ public class Objective2 extends Objective {
 
     @Override
     protected void setupTasks(List<Task> tasks) {
-        tasks.add(new ExamTask(R.string.dia_label, R.string.dia_whatmeansdia,"dia")
+        tasks.add(new ExamTask(R.string.dia_label_exam, R.string.dia_whatmeansdia,"dia")
                 .option(new Option(R.string.dia_minimumis3h, false))
                 .option(new Option(R.string.dia_minimumis5h, true))
                 .option(new Option(R.string.dia_meaningisequaltodiapump, false))
@@ -160,7 +160,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.nsclient_spikeiphone, true))
                 .hint(new Hint(R.string.nsclient_hint1))
         );
-        tasks.add(new ExamTask(R.string.isf_label, R.string.whatistrue,"isf")
+        tasks.add(new ExamTask(R.string.isf_label_exam, R.string.whatistrue,"isf")
                 .option(new Option(R.string.isf_increasingvalue, true))
                 .option(new Option(R.string.isf_decreasingvalue, false))
                 .option(new Option(R.string.isf_noeffect, false))
@@ -169,7 +169,7 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.isf_hint1))
                 .hint(new Hint(R.string.isf_hint2))
         );
-        tasks.add(new ExamTask(R.string.ic_label, R.string.whatistrue,"ic")
+        tasks.add(new ExamTask(R.string.ic_label_exam, R.string.whatistrue,"ic")
                 .option(new Option(R.string.ic_increasingvalue, true))
                 .option(new Option(R.string.ic_decreasingvalue, false))
                 .option(new Option(R.string.ic_noeffect, false))

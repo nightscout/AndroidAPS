@@ -101,8 +101,6 @@
     <string name="loop_constraintsprocessed_label">İşlenmiş kısıtlamalardan sonra</string>
     <string name="loop_tbrsetbypump_label">Geçici bazal pompa tarafından ayarla</string>
     <string name="openapsma_lastenact_label">Enson gönderilen</string>
-    <string name="ok">Tamam</string>
-    <string name="cancel">İptal</string>
     <string name="noapsselected">SEÇİLEN VEYA SAĞLANAN SONUCU APS YOK</string>
     <string name="safety">Güvenlik</string>
     <string name="openapsma_disabled">Eklenti devre dışı</string>
@@ -112,8 +110,6 @@
     <string name="overview_treatment_label">Tedavi</string>
     <string name="overview_calculator_label">Hesap makinesi</string>
     <string name="constraintapllied">Sınırlaması uygulanır!</string>
-    <string name="confirmation">Onaylama</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Bazal</string>
     <string name="sms_basal">Bazal:</string>

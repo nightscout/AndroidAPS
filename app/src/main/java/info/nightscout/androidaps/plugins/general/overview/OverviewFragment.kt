@@ -476,6 +476,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     }
 
+    @Synchronized
     private fun prepareGraphs() {
         val numOfGraphs = overviewMenus.setting.size
 
@@ -530,6 +531,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         scheduledUpdate = worker.schedule(task, 500, TimeUnit.MILLISECONDS)
     }
 
+    @Synchronized
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug("UpdateGUI from $from")
@@ -598,42 +600,42 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_apsmode?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_superbolus)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_disconnected)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_paused)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_paused)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_lgs)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_lgs)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_closed)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_closed)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_open)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_open)
                     overview_apsmode_text?.text = ""
                 }
 
                 else                                                                    -> {
-                    overview_apsmode.setImageResource(R.drawable.loop_disabled)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_disabled)
                     overview_apsmode_text?.text = ""
                 }
             }
@@ -679,9 +681,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
         if (activeTemp != null)
-            overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.icon_cp_basal_tbr_high else R.drawable.icon_cp_basal_tbr_low)
+            overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.ic_cp_basal_tbr_high else R.drawable.ic_cp_basal_tbr_low)
         else
-            overview_basebasal_icon.setImageResource(R.drawable.icon_cp_basal_no_tbr)
+            overview_basebasal_icon.setImageResource(R.drawable.ic_cp_basal_no_tbr)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -775,7 +777,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
             overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
         } else {
-            overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert_48px_green)
+            overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert)
         }
 
         overview_sensitivity?.text =

@@ -45,7 +45,7 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_bolus"
+            android:drawableTop="@drawable/ic_bolus"
             android:text="@string/overview_insulin_label"
             android:textColor="@color/colorInsulinButton"
             android:textSize="10sp" />
@@ -57,7 +57,7 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_cp_bolus_carbs"
+            android:drawableTop="@drawable/ic_cp_bolus_carbs"
             android:text="@string/overview_carbs_label"
             android:textColor="@color/colorCarbsButton"
             android:textSize="10sp" />
@@ -69,7 +69,7 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_calculator"
+            android:drawableTop="@drawable/ic_calculator"
             android:text="@string/overview_calculator_label"
             android:textColor="@color/colorCalculatorButton"
             android:textSize="10sp" />
@@ -81,7 +81,7 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_calibration"
+            android:drawableTop="@drawable/ic_calibration"
             android:text="@string/overview_calibration"
             android:textColor="@color/colorCalibrationButton"
             android:textSize="10sp"
@@ -94,7 +94,7 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_xdrip"
+            android:drawableTop="@drawable/ic_xdrip"
             android:text="@string/overview_cgm"
             android:textColor="@color/colorCalibrationButton"
             android:textSize="10sp"
@@ -107,7 +107,7 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_quickwizard"
+            android:drawableTop="@drawable/ic_quickwizard"
             android:text="@string/quickwizard"
             android:textColor="@color/colorQuickWizardButton"
             android:textSize="10sp" />

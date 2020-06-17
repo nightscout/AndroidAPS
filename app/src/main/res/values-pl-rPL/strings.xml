@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Po ograniczeniach</string>
     <string name="loop_tbrsetbypump_label">Baza tymczasowa ustawiona przez pompę</string>
     <string name="openapsma_lastenact_label">Ostatnie działanie</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Anuluj</string>
     <string name="noapsselected">NIE WYBRANO APS LUB NIE UZYSKANO WYNIKU</string>
     <string name="safety">Zabezpieczenia</string>
     <string name="openapsma_disabled">Wtyczka jest wyłączona</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Leczenie</string>
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="constraintapllied">Ograniczenie nałożone!</string>
-    <string name="confirmation">Potwierdzenie</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Baza</string>
     <string name="sms_basal">Baza:</string>
@@ -958,7 +954,6 @@
     <string name="recurringTime">Powtarzający się czas</string>
     <string name="every">Każdy/Każdego</string>
     <string name="never">Nigdy</string>
-    <string name="mins">%1$dmins</string>
     <string name="condition">Warunek:</string>
     <string name="action">Działanie:</string>
     <string name="iob_u">IOB [U]:</string>
@@ -1202,7 +1197,6 @@
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="reorder_label">Zmień kolejność</string>
     <string name="age">Wiek:</string>
-    <string name="weight">Waga:</string>
     <string name="id">ID:</string>
     <string name="submit">Wyślij</string>
     <string name="mostcommonprofile">Najczęściej używany profil:</string>
@@ -1212,7 +1206,6 @@
     <string name="invalidweight">Nieprawidłowy wpis wagi</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Od: <b>%2$02d%%</b> Cel: <b>%3$02d%%</b> Do: <b>%4$02d%%</b>]]></string>
     <string name="average">Średnio</string>
-    <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor aktywności</string>
     <string name="doyouwantresetstats">Czy chcesz zresetować statystyki aktywności?</string>

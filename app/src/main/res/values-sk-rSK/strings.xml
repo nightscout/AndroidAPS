@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Po spracovaní obmedzení</string>
     <string name="loop_tbrsetbypump_label">Bazál nastavený pumpou</string>
     <string name="openapsma_lastenact_label">Naposledy podané</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Zrušiť</string>
     <string name="noapsselected">NEVYBRANÉ ŽIADNE APS, ALEBO NEVRÁTILO VÝSLEDOK</string>
     <string name="safety">Bezpečnosť</string>
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikované obmedzenie!</string>
-    <string name="confirmation">Potvrdenie</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
@@ -975,7 +971,6 @@
     <string name="recurringTime">Čas zotavovania</string>
     <string name="every">Každých</string>
     <string name="never">Nikdy</string>
-    <string name="mins">%1$dminút</string>
     <string name="condition">Podmienka:</string>
     <string name="action">Akcia:</string>
     <string name="iob_u">IOB [JI]:</string>
@@ -1219,7 +1214,6 @@
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="reorder_label">Zmena poradia</string>
     <string name="age">Vek:</string>
-    <string name="weight">Váha:</string>
     <string name="id">ID:</string>
     <string name="submit">Odoslať</string>
     <string name="mostcommonprofile">Najčastejšie používaný profil:</string>
@@ -1229,7 +1223,6 @@
     <string name="invalidweight">Neplatný záznam váhy</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Priemer</string>
-    <string name="tdd">CDD</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovať štatistiky aktivity?</string>

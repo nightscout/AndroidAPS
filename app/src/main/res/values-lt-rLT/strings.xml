@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Pritaikius apribojimus</string>
     <string name="loop_tbrsetbypump_label">Laikina bazė nustatyta pompoje</string>
     <string name="openapsma_lastenact_label">Paskutinis veiksmas</string>
-    <string name="ok">Gerai</string>
-    <string name="cancel">Atšaukti</string>
     <string name="noapsselected">NEPASIRINKTA DKS ARBA NĖRA REZULTATO</string>
     <string name="safety">Saugumas</string>
     <string name="openapsma_disabled">Įskiepis išjungtas</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Terapija</string>
     <string name="overview_calculator_label">Skaičiuotuvas</string>
     <string name="constraintapllied">Taikomas ribojimas!</string>
-    <string name="confirmation">Patvirtinimas</string>
-    <string name="bolus">Bolusas</string>
     <string name="sms_bolus">Bolusas:</string>
     <string name="basal">Valandinė bazė</string>
     <string name="sms_basal">Valandinė bazė:</string>
@@ -938,7 +934,6 @@
     <string name="recurringTime">Pasikartojantis laikas</string>
     <string name="every">Kiekvienas</string>
     <string name="never">Niekada</string>
-    <string name="mins">%1$dmins</string>
     <string name="condition">Sąlyga:</string>
     <string name="action">Veiksmas:</string>
     <string name="iob_u">AIO [U]:</string>
@@ -1177,7 +1172,6 @@
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="age">Amžius:</string>
-    <string name="weight">Svoris:</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
     <string name="mostcommonprofile">Dažniausiai naudojamas profilis:</string>
@@ -1187,7 +1181,6 @@
     <string name="invalidweight">Neteisingas svorio įrašas</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Žemas: <b>%2$02d%%</b> Norma: <b>%3$02d%%</b> Aukštas: <b>%4$02d%%</b>]]></string>
     <string name="average">Vidutinis</string>
-    <string name="tdd">BPD</string>
     <string name="tir">TIR (Laikas normos ribose)</string>
     <string name="activitymonitor">Aktyvumo stebėjimas</string>
     <string name="doyouwantresetstats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>

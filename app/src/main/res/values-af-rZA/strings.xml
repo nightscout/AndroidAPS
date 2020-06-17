@@ -103,8 +103,6 @@
     <string name="loop_constraintsprocessed_label">Na verwerkte beperkings</string>
     <string name="loop_tbrsetbypump_label">Tydelike basale gestel deur pomp</string>
     <string name="openapsma_lastenact_label">Laaste per hand</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Kanselleer</string>
     <string name="noapsselected">GEEN APS GEKIES OF UITSLAG VERSKAF</string>
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeaktiveer</string>
@@ -114,8 +112,6 @@
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
     <string name="constraintapllied">Beperking toegepas!</string>
-    <string name="confirmation">Bevestiging</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
@@ -856,7 +852,6 @@
     <string name="recurringTime">Herhaaltyd</string>
     <string name="every">Elke</string>
     <string name="never">Nooit</string>
-    <string name="mins">%1$dmins</string>
     <string name="condition">Voorwaarde:</string>
     <string name="action">Aksie:</string>
     <string name="iob_u">IAB [U]:</string>
