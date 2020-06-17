@@ -104,8 +104,6 @@
     <string name="loop_constraintsprocessed_label">Constrângeri după procesare</string>
     <string name="loop_tbrsetbypump_label">Bazală Temporală programată în pompă</string>
     <string name="openapsma_lastenact_label">Ultima acțiune executată</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Renunță</string>
     <string name="noapsselected">NU AȚI SELECTAT APS SAU NU EXISTĂ REZULTAT GENERAT</string>
     <string name="safety">Siguranță</string>
     <string name="openapsma_disabled">Modul inactiv</string>
@@ -115,8 +113,6 @@
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Limitare aplicată!</string>
-    <string name="confirmation">Confirmare</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Bazală</string>
     <string name="sms_basal">Bazală:</string>
@@ -860,7 +856,6 @@
     <string name="recurringTime">Timp recurent</string>
     <string name="every">La fiecare</string>
     <string name="never">Niciodată</string>
-    <string name="mins">%1$dmin</string>
     <string name="condition">Condiție:</string>
     <string name="action">Acțiune:</string>
     <string name="iob_u">IOB [U]:</string>

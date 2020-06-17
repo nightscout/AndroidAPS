@@ -110,7 +110,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.`as`), TriggerAutosensValue(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.`ic_as`), TriggerAutosensValue(injector).icon())
     }
 
     @Before

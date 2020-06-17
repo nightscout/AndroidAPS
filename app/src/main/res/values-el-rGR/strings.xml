@@ -105,8 +105,6 @@
     <string name="loop_constraintsprocessed_label">Μετά από επεξεργασία περιορισμών</string>
     <string name="loop_tbrsetbypump_label">Προσωρινός Ρυθμός ορίστηκε από την αντλία</string>
     <string name="openapsma_lastenact_label">Τελευταία εφαρμογή</string>
-    <string name="ok">ΟΚ</string>
-    <string name="cancel">Ακύρωση</string>
     <string name="noapsselected">ΔΕΝ ΕΠΙΛΕΧΘΗΚΕ APS Ή ΒΡΕΘΗΚΕ ΑΠΟΤΕΛΕΣΜΑ</string>
     <string name="safety">Ασφάλεια</string>
     <string name="openapsma_disabled">Προσθήκη απενεργοποιημένη</string>
@@ -116,8 +114,6 @@
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
     <string name="constraintapllied">Εφαρμόστηκαν Περιορισμοί!</string>
-    <string name="confirmation">Επιβεβαίωση</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Βασικός Ρυθμός</string>
     <string name="sms_basal">Βασικός Ρυθμός:</string>
@@ -863,7 +859,6 @@
     <string name="recurringTime">Χρόνος επαναλαμβανόμενων</string>
     <string name="every">Κάθε</string>
     <string name="never">Ποτέ</string>
-    <string name="mins">%1$dλ</string>
     <string name="condition">Κατάσταση:</string>
     <string name="action">Ενέργεια:</string>
     <string name="iob_u">ΙΟΒ [U]:</string>

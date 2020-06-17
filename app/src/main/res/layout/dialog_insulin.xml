@@ -28,7 +28,7 @@
                 android:background="@color/transparent"
                 android:contentDescription="@string/overview_insulin_label"
                 android:tint="?attr/iconColorToolbar"
-                android:src="@drawable/icon_bolus" />
+                android:src="@drawable/ic_bolus" />
 
             <TextView
                 android:layout_width="match_parent"

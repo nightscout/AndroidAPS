@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Dopo elaborazione vincoli</string>
     <string name="loop_tbrsetbypump_label">Basale temporanea impostata dal micro</string>
     <string name="openapsma_lastenact_label">Ultima attivazione</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Annulla</string>
     <string name="noapsselected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
     <string name="safety">Sicurezza</string>
     <string name="openapsma_disabled">Il plugin è disabilitato</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Trattamento</string>
     <string name="overview_calculator_label">Calcolatore</string>
     <string name="constraintapllied">Vincolo applicato!</string>
-    <string name="confirmation">Conferma</string>
-    <string name="bolus">Bolo</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
@@ -135,6 +131,7 @@
     <string name="disableloop">Disabilita loop</string>
     <string name="enableloop">Abilita loop</string>
     <string name="openloop_newsuggestion">Nuovo suggerimento disponibile</string>
+    <string name="carbssuggestion">Suggerimento CHO</string>
     <string name="unsupportednsversion">Versione non supportata di Nightscout</string>
     <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
@@ -256,6 +253,11 @@
     <string name="smscommunicator_loopisenabled">Il loop è abilitato</string>
     <string name="valuelimitedto">%1$.2f limitato a %2$.2f</string>
     <string name="valueoutofrange">Il valore %1$s è fuori limite massimo</string>
+    <string name="smscommunicator_pumpconnectwithcode">Per connettere il micro rispondi col codice %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Connessione al micro fallita</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Per disconnettere il micro per %1d minuti rispondi col codice %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Micro disconnesso</string>
+    <string name="smscommunicator_reconnect">Micro riconnesso</string>
     <string name="smscommunicator_remotecommandnotallowed">Il comando da remoto non è permesso</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolo remoto non disponibile. Riprova più tardi.</string>
     <string name="smscommunicator_basalreplywithcode">Per avviare la basale %1$.2fU/h per %2$d min rispondi col codice %3$s</string>
@@ -559,6 +561,7 @@
     <string name="enable_missed_bg_readings_alert">Avviso se non si ricevono dati BG</string>
     <string name="enable_pump_unreachable_alert">Avviso se il micro è irraggiungibile</string>
     <string name="pump_unreachable_threshold">Soglia micro irraggiungibile [min]</string>
+    <string name="enable_carbs_req_alert">Avviso se sono richiesti CHO</string>
     <string name="urgent_alarm">Allarme urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense app (modificata)</string>
@@ -571,8 +574,8 @@
     <string name="smbmaxminutes_summary">Max minuti di basale a cui limitare SMB</string>
     <string name="uamsmbmaxminutes">SMB UAM max minuti</string>
     <string name="uamsmbmaxminutes_summary">Max minuti di basale a cui limitare SMB per UAM</string>
-    <string name="carbsReqThreshold">Soglia proposta CHO</string>
-    <string name="carbsReqThreshold_summary">Quando vengono proposti carboidrati, la quantità minima per la quale verrà mostrata una notifica</string>
+    <string name="carbsReqThreshold">CHO minimi richiesti per il suggerimento</string>
+    <string name="carbsReqThreshold_summary">Quantità minima di carboidrati (in grammi) necessaria per visualizzare un avviso di suggerimento CHO. Al di sotto di questo numero non verrà attivata alcuna notifica.</string>
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">BG NSClient</string>
@@ -652,11 +655,17 @@
     <string name="insulin_increment_button_message">Quantità di insulina da aggiungere quando si preme il tasto</string>
     <string name="error_starting_cgm">Impossibile avviare l\'applicazione CGM. Assicurati che sia installata.</string>
     <string name="overview_cgm">CGM</string>
+    <string name="ignore5m">Ignora | 5m</string>
+    <string name="ignore15m">Ignora | 15m</string>
+    <string name="ignore30m">Ignora | 30m</string>
+    <string name="required">ric</string>
     <string name="nav_historybrowser">Storico</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
     <string name="ns_create_announcements_from_errors_title">Crea avvisi da errori</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Crea avvisi da CHO richiesti</string>
     <string name="ns_create_announcements_from_errors_summary">Crea avviso su Nightscout per finestre di errore e allarmi locali (visualizzabile anche nella sezione Portale sotto la voce Trattamenti)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Crea avvisi su Nightscout dagli avvisi per CHO richiesti</string>
     <string name="wear_predictions_summary">Mostra le predizioni sulla watchface.</string>
     <string name="wear_predictions_title">Predizioni</string>
     <string name="data_choices">Scelta dei dati</string>
@@ -977,7 +986,6 @@
     <string name="recurringTime">Tempo ricorrente</string>
     <string name="every">Ogni</string>
     <string name="never">Mai</string>
-    <string name="mins">%1$dmin</string>
     <string name="condition">Condizione:</string>
     <string name="action">Azione:</string>
     <string name="iob_u">IOB [U]:</string>
@@ -1221,7 +1229,7 @@
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="reorder_label">Riordina</string>
     <string name="age">Età:</string>
-    <string name="weight">Peso:</string>
+    <string name="weight_label">Peso:</string>
     <string name="id">ID:</string>
     <string name="submit">Invia</string>
     <string name="mostcommonprofile">Profilo più comune:</string>
@@ -1231,7 +1239,6 @@
     <string name="invalidweight">Inserimento peso non valido</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Basso: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Alto: <b>%4$02d%%</b>]]></string>
     <string name="average">Media</string>
-    <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor attività</string>
     <string name="doyouwantresetstats">Vuoi resettare le statistiche sull\'attività?</string>

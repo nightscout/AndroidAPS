@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_calibration"
                 android:tint="?attr/iconColorToolbar"
-                android:src="@drawable/icon_calibration" />
+                android:src="@drawable/ic_calibration" />
 
             <TextView
                 android:id="@+id/actions_care_title"

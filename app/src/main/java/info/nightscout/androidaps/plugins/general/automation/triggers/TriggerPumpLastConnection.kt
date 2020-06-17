@@ -77,7 +77,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
     override fun friendlyDescription(): String =
         resourceHelper.gs(R.string.automation_trigger_pump_last_connection_compared, resourceHelper.gs(comparator.value.stringRes), minutesAgo.value)
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.remove)
+    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_remove)
 
     override fun duplicate(): Trigger = TriggerPumpLastConnection(injector, this)
 

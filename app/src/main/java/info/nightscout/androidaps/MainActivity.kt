@@ -216,7 +216,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
         var dx = 0F
         var dy = 0F
         //remember hamburger icon for switching fab icon from center to right and back
-        var navigationIcon = bottom_app_bar.navigationIcon
         val overflowIcon = bottom_app_bar.overflowIcon
 
         // detect single tap like click
@@ -575,57 +574,56 @@ open class MainActivity : NoSplashAppCompatActivity() {
         statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
     }
 
-    private fun upDateLoop() {
+    private fun upDateLoop() { 
         // open loop mode
         val pump = activePlugin.activePump
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
-        if (config.APS && pump.pumpDescription.isTempBasalCapable) {
+         if (config.APS && pump.pumpDescription.isTempBasalCapable) {
             overview_apsmode?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_superbolus)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_disconnected)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_paused)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_paused)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_lgs)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_lgs)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_closed)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_closed)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_open)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_open)
                     overview_apsmode_text?.text = ""
                 }
 
                 else                                                                    -> {
-                    overview_apsmode?.setImageResource(R.drawable.loop_disabled)
+                    overview_apsmode.setImageResource(R.drawable.ic_loop_disabled)
                     overview_apsmode_text?.text = ""
                 }
             }
         } else {
             overview_apsmode_text?.visibility = View.GONE
         }
-        val lastRun = loopPlugin.lastRun
     }
 
 

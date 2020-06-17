@@ -105,8 +105,6 @@
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
     <string name="loop_tbrsetbypump_label">Tijdelijk basaal gezet door pomp</string>
     <string name="openapsma_lastenact_label">Laatste uitvoering</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Annuleer</string>
     <string name="noapsselected">GEEN APS GESELECTEERD OF TOEGEKEND RESULTAAT</string>
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
@@ -117,8 +115,6 @@
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
     <string name="constraintapllied">Beperking toegepast!</string>
-    <string name="confirmation">Bevestiging</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basaal</string>
     <string name="sms_basal">Basaal:</string>
@@ -889,7 +885,6 @@
     <string name="recurringTime">Herhaal tijd</string>
     <string name="every">Elke</string>
     <string name="never">Nooit</string>
-    <string name="mins">%1$dmin</string>
     <string name="condition">Voorwaarde:</string>
     <string name="action">Actie:</string>
     <string name="iob_u">IOB [E]:</string>
@@ -1128,7 +1123,6 @@
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
     <string name="reorder_label">Sorteren</string>
     <string name="age">Leeftijd:</string>
-    <string name="weight">Gewicht:</string>
     <string name="id">ID:</string>
     <string name="submit">Verzenden</string>
     <string name="mostcommonprofile">Meest voorkomende profiel:</string>
@@ -1138,7 +1132,6 @@
     <string name="invalidweight">Ongeldige gewicht invoer</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Laag: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Hoog: <b>%4$02d%%</b>]]></string>
     <string name="average">Gemiddelde</string>
-    <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Activiteitsmonitor</string>
     <string name="doyouwantresetstats">Wil je de activiteitenstatistieken resetten?</string>

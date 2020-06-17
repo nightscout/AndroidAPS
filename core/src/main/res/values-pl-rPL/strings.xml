@@ -102,6 +102,7 @@
     <string name="enacted">Wykonane</string>
     <string name="comment">Komentarz</string>
     <string name="success">Sukces</string>
+    <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
 </resources>

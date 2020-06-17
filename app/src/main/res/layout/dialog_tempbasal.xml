@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/tempbasal_label"
                 android:tint="?attr/iconColorToolbar"
-                android:src="@drawable/icon_cp_basal_start" />
+                android:src="@drawable/ic_cp_basal_start" />
 
             <TextView
                 android:layout_width="match_parent"

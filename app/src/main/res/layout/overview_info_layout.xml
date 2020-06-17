@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:tint="?attr/iconColorToolbar"
-            android:src="@drawable/icon_bolus" />
+            android:src="@drawable/ic_bolus" />
 
         <TextView
             android:id="@+id/overview_iob"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:tint="?attr/iconColorToolbar"
-            android:src="@drawable/icon_cp_basal_start" />
+            android:src="@drawable/ic_cp_basal_no_tbr" />
 
         <TextView
             android:id="@+id/overview_basebasal"
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:tint="?attr/iconColorToolbar"
-            android:src="@drawable/icon_actions_startextbolus" />
+            android:src="@drawable/ic_actions_startextbolus" />
 
         <TextView
             android:id="@+id/overview_extendedbolus"
