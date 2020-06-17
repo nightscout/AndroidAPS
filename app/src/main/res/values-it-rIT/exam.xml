@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Cosa è vero riguardo DIA?</string>
-    <string name="dia_label">Argomento: durata dell\'azione dell\'insulina</string>
+    <string name="dia_label_exam">Argomento: durata dell\'azione dell\'insulina</string>
     <string name="dia_minimumis3h">Il valore minimo è 3 ore.</string>
     <string name="dia_minimumis5h">Il valore minimo è 5 ore.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
@@ -122,7 +122,7 @@
     <string name="nsclient_looponiphone">App Loop su iPhone.</string>
     <string name="nsclient_spikeiphone">App Spike su iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
-    <string name="isf_label">Argomento: fattore di sensibilità all\'insulina</string>
+    <string name="isf_label_exam">Argomento: fattore di sensibilità all\'insulina</string>
     <string name="isf_increasingvalue">Valori ISF più alti portano a una minore erogazione di insulina quando AAPS corregge glicemie alte.</string>
     <string name="isf_decreasingvalue">Valori ISF più bassi portano a una minore erogazione di insulina quando AAPS corregge glicemie alte.</string>
     <string name="isf_noeffect">Cambiare i valori di ISF non ha alcun effetto sulla quantità di insulina erogata quando AAPS corregge glicemie alte.</string>
@@ -130,7 +130,7 @@
     <string name="isf_profile">Cambiare il valore ISF nel tuo profilo è sufficiente per applicare la modifica.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label">Argomento: il rapporto IC</string>
+    <string name="ic_label_exam">Argomento: il rapporto IC</string>
     <string name="ic_increasingvalue">Rapporti IC più alti portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_decreasingvalue">Rapporti IC più bassi portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_noeffect">Se hai 0 COB, cambiare il rapporto IC porterà a una differente quantità di insulina necessaria a correggere una determinata glicemia.</string>

@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="-4dp"
-            android:src="@drawable/loop_closed" />
+            android:src="@drawable/ic_loop_closed" />
 
         <TextView
             android:id="@+id/overview_apsmode_text"
@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_bolus" />
+            android:src="@drawable/ic_bolus" />
 
         <TextView
             android:id="@+id/overview_iob"
@@ -140,7 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_cp_bolus_carbs" />
+            android:id="@+id/overview_carbs_icon"
+            android:background="@drawable/anim_carbs" />
 
         <TextView
             android:id="@+id/overview_cob"
@@ -169,7 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_cp_basal_start" />
+            android:src="@drawable/ic_cp_basal_no_tbr" />
 
         <TextView
             android:id="@+id/overview_basebasal"
@@ -197,7 +198,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_actions_startextbolus" />
+            android:src="@drawable/ic_actions_startextbolus" />
 
         <TextView
             android:id="@+id/overview_extendedbolus"

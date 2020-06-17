@@ -358,6 +358,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
     }
 
+    public long getLastCarbTime() {
+        Treatment last = getService().getLastCarb();
+        if (last == null) {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last Carb time: NOTHING FOUND");
+            return 0;
+        }
+        else {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last Carb time: " + dateUtil.dateAndTimeString(last.date));
+            return last.date;
+        }
+    }
+
+
     @Override
     public boolean isInHistoryRealTempBasalInProgress() {
         return getRealTempBasalFromHistory(System.currentTimeMillis()) != null;

@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">после наложенных ограничений</string>
     <string name="loop_tbrsetbypump_label">Временный базал определяется помпой</string>
     <string name="openapsma_lastenact_label">Последнее предпринятое</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Отменить</string>
     <string name="noapsselected">APS не выбрана или не выдала результат</string>
     <string name="safety">безопасность</string>
     <string name="openapsma_disabled">модуль не активен</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">болюс</string>
     <string name="overview_calculator_label">калькулятор</string>
     <string name="constraintapllied">применено ограничение!</string>
-    <string name="confirmation">подтверждение</string>
-    <string name="bolus">болюс</string>
     <string name="sms_bolus">болюс:</string>
     <string name="basal">базал</string>
     <string name="sms_basal">базал: </string>
@@ -135,6 +131,7 @@
     <string name="disableloop">Деактивировать цикличность</string>
     <string name="enableloop">Активировать цикличность</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
+    <string name="carbssuggestion">Предложены углеводы</string>
     <string name="unsupportednsversion">Неподдерживаемая версия Nightscout</string>
     <string name="loopdisabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
     <string name="treatments_wizard_basaliob_label">базал IOB</string>
@@ -256,6 +253,11 @@
     <string name="smscommunicator_loopisenabled">зцикл работает</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
     <string name="valueoutofrange">Величина %1$s недопустима</string>
+    <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1d мин ответьте кодом %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Помпа отключена</string>
+    <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
     <string name="smscommunicator_remotebolusnotallowed">Удаленный болюс недоступен, повторите попытку позже.</string>
     <string name="smscommunicator_basalreplywithcode">Чтобы подать базал %1$.2fед./ч в течение %2$d мин. ответьте кодом %3$s</string>
@@ -559,6 +561,7 @@
     <string name="enable_missed_bg_readings_alert">Оповещать при отсутствии данных СК</string>
     <string name="enable_pump_unreachable_alert">Оповещать в случае недоступности помпы</string>
     <string name="pump_unreachable_threshold">Порог недоступности помпы [min]</string>
+    <string name="enable_carbs_req_alert">Оповещать если требуются углеводы</string>
     <string name="urgent_alarm">Сигнал тревоги</string>
     <string name="info">ИНФОРМАЦИЯ</string>
     <string name="eversense">Приложение Eversense (пропатченное)</string>
@@ -571,8 +574,8 @@
     <string name="smbmaxminutes_summary">Верхний лимит минут базала на SMB</string>
     <string name="uamsmbmaxminutes">Максимум минут микроболюса SMB для непредвиденного приема пищи UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимум минут базала ограничивающего микроболюсы SMB на непредвиденный прием пищи UAM</string>
-    <string name="carbsReqThreshold">Порог предлагаемых углеводов</string>
-    <string name="carbsReqThreshold_summary">Когда предлагаются углеводы, какое количество инициирует уведомление</string>
+    <string name="carbsReqThreshold">Минимальный порог для напоминания о необходимых углеводах</string>
+    <string name="carbsReqThreshold_summary">Минимум граммов для активации предложения углеводов. Предложения ниже этой величины не будут инициировать уведомление.</string>
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
@@ -652,11 +655,17 @@
     <string name="insulin_increment_button_message">Количество инсулина, вводимого при нажатии кнопки</string>
     <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
     <string name="overview_cgm">Мониторинг СК</string>
+    <string name="ignore5m">Игнорировать 5 м</string>
+    <string name="ignore15m">Игнорировать 15 м</string>
+    <string name="ignore30m">Игнорировать 30 м</string>
+    <string name="required">надо</string>
     <string name="nav_historybrowser">История</string>
     <string name="wear_notifysmb_title">Сообщить о супер микро болюсе SMB</string>
     <string name="wear_notifysmb_summary">Показывать супер микро болюс SMB на часах как стандартный болюс.</string>
     <string name="ns_create_announcements_from_errors_title">Создавать оповещение на основе названия ошибки</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Создавать оповещения из напоминаний о необходимых углеводах</string>
     <string name="ns_create_announcements_from_errors_summary">Создать оповещение NS с диалогом об ошибке и оповещения на месте (также видимые в портале назначений в разделе лечение)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Создавать оповещения Nightscout из напоминаний о необходимых углеводах</string>
     <string name="wear_predictions_summary">Показывать линию тренда на смарт-часах.</string>
     <string name="wear_predictions_title">Прогнозирование</string>
     <string name="data_choices">Отбор данных</string>
@@ -979,7 +988,6 @@ Context | Edit Context</string>
     <string name="recurringTime">Время повторения</string>
     <string name="every">Раз в</string>
     <string name="never">Никогда</string>
-    <string name="mins">%1$d мин</string>
     <string name="condition">Условие:</string>
     <string name="action">Действие:</string>
     <string name="iob_u">Акт инс IOB [U]:</string>
@@ -1223,7 +1231,6 @@ Context | Edit Context</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
     <string name="reorder_label">Повторный заказ</string>
     <string name="age">Возраст:</string>
-    <string name="weight">Вес:</string>
     <string name="id">Идентификатор:</string>
     <string name="submit">Отправить</string>
     <string name="mostcommonprofile">Наиболее часто применяемый профиль:</string>
@@ -1233,7 +1240,6 @@ Context | Edit Context</string>
     <string name="invalidweight">Некорректное значение вес</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Низкий: <b>%2$02d%%</b> В целевом диапазоне: <b>%3$02d%%</b> Высокий: <b>%4$02d%%</b>]]></string>
     <string name="average">Средний</string>
-    <string name="tdd">TDD/общая суточная доза</string>
     <string name="tir">Время в целевом диапазоне TIR</string>
     <string name="activitymonitor">Монитор активности</string>
     <string name="doyouwantresetstats">Хотите сбросить статистику активности?</string>
@@ -1288,6 +1294,9 @@ Context | Edit Context</string>
     <string name="statuslights">Индикаторы состояния</string>
     <string name="statuslights_copy_ns">Копировать параметры из NS</string>
     <string name="copyexistingvalues">Копировать настройки NS (если есть)?</string>
+    <string name="classic_description">Исходная тема оформления</string>
+    <string name="buttonson_description">Кнопки всегда отображаются в нижней части экрана</string>
+    <string name="largedisplay_description">Большой дисплей</string>
     <string name="skin">Тема оформления</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

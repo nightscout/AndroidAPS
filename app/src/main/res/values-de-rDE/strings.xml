@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Beschränkungen angewendet</string>
     <string name="loop_tbrsetbypump_label">TBR der Pumpe</string>
     <string name="openapsma_lastenact_label">Zuletzt abgegeben</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Abbrechen</string>
     <string name="noapsselected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
     <string name="constraintapllied">Beschränkung angewendet!</string>
-    <string name="confirmation">Bestätigung</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
@@ -135,6 +131,7 @@
     <string name="disableloop">Deaktiviere Loop</string>
     <string name="enableloop">Aktiviere Loop</string>
     <string name="openloop_newsuggestion">Neue Empfehlung verfügbar</string>
+    <string name="carbssuggestion">Kohlenhydrate Vorschlag</string>
     <string name="unsupportednsversion">Nicht unterstützte Nightscout-Version</string>
     <string name="loopdisabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
@@ -256,6 +253,11 @@
     <string name="smscommunicator_loopisenabled">Loop ist aktiviert.</string>
     <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
     <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits.</string>
+    <string name="smscommunicator_pumpconnectwithcode">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Verbindung zur Pumpe fehlgeschlagen</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1d Minuten zu trennen, antworte mit dem Code %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Verbindung zur Pumpe getrennt</string>
+    <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
     <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolusabgabe aus der Ferne nicht verfügbar. Versuche es später erneut.</string>
     <string name="smscommunicator_basalreplywithcode">Um eine Basalrate von %1$.2fIE/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
@@ -559,6 +561,7 @@
     <string name="enable_missed_bg_readings_alert">Alarm, wenn keine Glukose-Daten empfangen werden</string>
     <string name="enable_pump_unreachable_alert">Alarm, wenn die Pumpe nicht erreichbar ist</string>
     <string name="pump_unreachable_threshold">Grenzwert Pumpe ist nicht erreichbar [min]</string>
+    <string name="enable_carbs_req_alert">Warnung, wenn Kohlenhydrate nötig sind</string>
     <string name="urgent_alarm">Wichtiger Alarm</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense App (gepatcht)</string>
@@ -571,7 +574,8 @@
     <string name="smbmaxminutes_summary">SMB Basal-Limit in Minuten</string>
     <string name="uamsmbmaxminutes">UAM SMB max. Minuten</string>
     <string name="uamsmbmaxminutes_summary">SMB Basal-Limit in Minuten für UAM</string>
-    <string name="carbsReqThreshold">Schwellenwert für KH-Empfehlung</string>
+    <string name="carbsReqThreshold">Minimale KH-Menge, die für einen Vorschlag erforderlich ist</string>
+    <string name="carbsReqThreshold_summary">Minimale KH-Menge in Gramm, die Vorschlags-Alarm erforderlich ist. Vorschläge unterhalb dieser Menge, lösen keine Benachrichtigung aus.</string>
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
@@ -651,11 +655,17 @@
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
     <string name="overview_cgm">CGM</string>
+    <string name="ignore5m">Ignoriere für 5 Min.</string>
+    <string name="ignore15m">Ignoriere für 15 Min.</string>
+    <string name="ignore30m">Ignoriere für 30 Min.</string>
+    <string name="required">Anfrage</string>
     <string name="nav_historybrowser">Historie</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
     <string name="ns_create_announcements_from_errors_title">Ankündigungen aus Fehlern generieren</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
     <string name="ns_create_announcements_from_errors_summary">Erstelle Nightscout-Ankündigungen für Fehler-Dialoge und lokale Alarme (auch einsehbar im Careportal unter \"Behandlungen\").</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Nightscout-Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
     <string name="wear_predictions_summary">Zeige Vorhersagen auf dem Watchface.</string>
     <string name="wear_predictions_title">Vorhersagen</string>
     <string name="data_choices">Datenübermittlung</string>
@@ -977,7 +987,6 @@ Unerwartetes Verhalten.</string>
     <string name="recurringTime">Wiederholungszeit</string>
     <string name="every">Jeder/jede/jedes</string>
     <string name="never">Nie</string>
-    <string name="mins">%1$d Minuten</string>
     <string name="condition">Bedingung:</string>
     <string name="action">Aktion:</string>
     <string name="iob_u">IOB [IE]:</string>
@@ -991,7 +1000,7 @@ Unerwartetes Verhalten.</string>
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
-    <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
+    <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
     <string name="dexcom_short">DXCM</string>
@@ -1221,7 +1230,7 @@ Unerwartetes Verhalten.</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="reorder_label">Umsortieren</string>
     <string name="age">Alter:</string>
-    <string name="weight">Gewicht:</string>
+    <string name="weight_label">Gewicht:</string>
     <string name="id">ID:</string>
     <string name="submit">Senden</string>
     <string name="mostcommonprofile">Meistgenutztes Profil:</string>
@@ -1231,7 +1240,6 @@ Unerwartetes Verhalten.</string>
     <string name="invalidweight">Ungültige Gewichtsangabe</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Durchschnitt</string>
-    <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
     <string name="doyouwantresetstats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>

@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Po spracovaní obmedzení</string>
     <string name="loop_tbrsetbypump_label">Bazál nastavený pumpou</string>
     <string name="openapsma_lastenact_label">Naposledy podané</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Zrušiť</string>
     <string name="noapsselected">NEVYBRANÉ ŽIADNE APS, ALEBO NEVRÁTILO VÝSLEDOK</string>
     <string name="safety">Bezpečnosť</string>
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikované obmedzenie!</string>
-    <string name="confirmation">Potvrdenie</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
@@ -452,8 +448,14 @@
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
     <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAZ</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">AKT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
@@ -565,8 +567,6 @@
     <string name="smbmaxminutes_summary">Maximálny počet minút bazálu, ku ktorým se limituje SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB max. minút</string>
     <string name="uamsmbmaxminutes_summary">Maximální počet minút bazálu, ku ktorým sa limituje SMB pre UAM</string>
-    <string name="carbsReqThreshold">Prahová hodnota doporučenia sacharidov</string>
-    <string name="carbsReqThreshold_summary">Po navrhnutí sacharidov, aké množstvo sacharidov vyvolá upozornenie</string>
     <string name="dexcomg5_xdripupload_title">Odosielať glykémie do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
@@ -971,7 +971,6 @@
     <string name="recurringTime">Čas zotavovania</string>
     <string name="every">Každých</string>
     <string name="never">Nikdy</string>
-    <string name="mins">%1$dminút</string>
     <string name="condition">Podmienka:</string>
     <string name="action">Akcia:</string>
     <string name="iob_u">IOB [JI]:</string>
@@ -1215,7 +1214,6 @@
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="reorder_label">Zmena poradia</string>
     <string name="age">Vek:</string>
-    <string name="weight">Váha:</string>
     <string name="id">ID:</string>
     <string name="submit">Odoslať</string>
     <string name="mostcommonprofile">Najčastejšie používaný profil:</string>
@@ -1225,7 +1223,6 @@
     <string name="invalidweight">Neplatný záznam váhy</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Priemer</string>
-    <string name="tdd">CDD</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovať štatistiky aktivity?</string>
@@ -1280,6 +1277,9 @@
     <string name="statuslights">Indikátory stavu</string>
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
     <string name="copyexistingvalues">Skopírovať nastavenia NS (ak existujú)?</string>
+    <string name="classic_description">Pôvodný vzhľad</string>
+    <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
+    <string name="largedisplay_description">Veľký displej</string>
     <string name="skin">Vzhľad</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

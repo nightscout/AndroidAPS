@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_treatment_label"
-                android:src="@drawable/icon_bolus" />
+                android:src="@drawable/ic_bolus" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -63,7 +63,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/addnew"
-                android:src="@drawable/add" />
+                android:src="@drawable/ic_add" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_clone"
@@ -72,7 +72,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/clone_label"
-                android:src="@drawable/clone" />
+                android:src="@drawable/ic_clone" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_remove"
@@ -81,7 +81,9 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/remove_label"
-                android:src="@drawable/remove" />
+                android:scaleX="1"
+                android:scaleY="1"
+                android:src="@drawable/ic_remove" />
 
         </LinearLayout>
 

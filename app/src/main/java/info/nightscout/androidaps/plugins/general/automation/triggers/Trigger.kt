@@ -98,7 +98,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         )
         params.gravity = Gravity.CENTER
         buttonAdd.layoutParams = params
-        buttonAdd.setImageResource(R.drawable.add)
+        buttonAdd.setImageResource(R.drawable.ic_add)
         buttonAdd.contentDescription = resourceHelper.gs(R.string.add_short)
         buttonAdd.setOnClickListener {
             scanForActivity(context)?.supportFragmentManager?.let {
@@ -124,7 +124,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         )
         params.gravity = Gravity.CENTER
         buttonRemove.layoutParams = params
-        buttonRemove.setImageResource(R.drawable.remove)
+        buttonRemove.setImageResource(R.drawable.ic_remove)
         buttonRemove.contentDescription = resourceHelper.gs(R.string.delete_short)
         buttonRemove.setOnClickListener {
             rxBus.send(EventTriggerRemove(trigger))
@@ -141,7 +141,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         )
         params.gravity = Gravity.CENTER
         buttonClone.layoutParams = params
-        buttonClone.setImageResource(R.drawable.clone)
+        buttonClone.setImageResource(R.drawable.ic_clone)
         buttonClone.contentDescription = resourceHelper.gs(R.string.copy_short)
         buttonClone.setOnClickListener {
             rxBus.send(EventTriggerClone(trigger))

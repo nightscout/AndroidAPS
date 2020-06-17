@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
     <string name="loop_tbrsetbypump_label">Bazál nastavený pumpou</string>
     <string name="openapsma_lastenact_label">Poslední provedení</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Zrušit</string>
     <string name="noapsselected">ŽÁDNÉ APS NEVYBRÁNO NEBO NEVRÁTILO VÝSLEDEK</string>
     <string name="safety">Bezpečnost</string>
     <string name="openapsma_disabled">Modul zakázán</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikováno omezení!</string>
-    <string name="confirmation">Potvrzení</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
@@ -135,6 +131,7 @@
     <string name="disableloop">Zakázat smyčku</string>
     <string name="enableloop">Povolit smyčku</string>
     <string name="openloop_newsuggestion">Dostupné nové doporučení</string>
+    <string name="carbssuggestion">Návrh sacharidů</string>
     <string name="unsupportednsversion">Nepodporovaná verze Nightscoutu</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="treatments_wizard_basaliob_label">Bazální IOB</string>
@@ -256,6 +253,11 @@
     <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
     <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
     <string name="valueoutofrange">Hodnota %1$s je mimo přednastavený rozsah</string>
+    <string name="smscommunicator_pumpconnectwithcode">Chcete-li připojit pumpu, odpovězte pomocí SMS s kódem %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Připojení k pumpě selhalo</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Chcete-li odpojit pumpu na %1d minut, odpovězte pomocí SMS s kódem %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Pumpa odpojena</string>
+    <string name="smscommunicator_reconnect">Pumpa byla znovu připojena</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálený příkaz není povolen</string>
     <string name="smscommunicator_remotebolusnotallowed">Vzdálený bolus není momentálně povolen. Zkuste to později.</string>
     <string name="smscommunicator_basalreplywithcode">Pro spuštění bazálu %1$.2fU/h na %2$d min odpovězte SMS s kódem %3$s</string>
@@ -452,8 +454,14 @@
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
     <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
     <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="basal_shortname">BAZ</string>
+    <string name="deviation_shortname">ODCH</string>
+    <string name="activity_shortname">AKT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
@@ -553,6 +561,7 @@
     <string name="enable_missed_bg_readings_alert">Výstraha při nedostupných glykémiích</string>
     <string name="enable_pump_unreachable_alert">Výstraha při nedostupné pumpě</string>
     <string name="pump_unreachable_threshold">Limit pro nedostupnost pumpy [min]</string>
+    <string name="enable_carbs_req_alert">Výstraha, jsou-li vyžadovány sacharidy</string>
     <string name="urgent_alarm">Urgentní alarm</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense aplikace (upravená)</string>
@@ -565,8 +574,8 @@
     <string name="smbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB max. minut</string>
     <string name="uamsmbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB pro UAM</string>
-    <string name="carbsReqThreshold">Prahová hodnota doporučení sacharidů</string>
-    <string name="carbsReqThreshold_summary">Po navržení sacharidů, kolik sacharidů vyvolá upozornění</string>
+    <string name="carbsReqThreshold">Minimální množství sacharidů potřebných pro návrh</string>
+    <string name="carbsReqThreshold_summary">Minimální množství sacharidů v gramech, které spustí upozornění návrhu sacharidů. Množství sacharidů pod touto hodnotou nespustí oznámení.</string>
     <string name="dexcomg5_xdripupload_title">Odesílat data do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
@@ -646,11 +655,17 @@
     <string name="insulin_increment_button_message">Množství inzulínu přidané po stisknutí tlačítka</string>
     <string name="error_starting_cgm">Nelze spustit aplikace CGM. Ujistěte se, že je nainstalovaná.</string>
     <string name="overview_cgm">CGM</string>
+    <string name="ignore5m">Ignorovat 5 m</string>
+    <string name="ignore15m">Ignorovat 15 m</string>
+    <string name="ignore30m">Ignorovat 30 m</string>
+    <string name="required">pož.</string>
     <string name="nav_historybrowser">Prohlížeč historie</string>
     <string name="wear_notifysmb_title">Oznámení při SMB</string>
     <string name="wear_notifysmb_summary">Ukazovat SMB na hodinkách jako normální bolus.</string>
     <string name="ns_create_announcements_from_errors_title">Vytvořit oznámení pro chyby</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Vytvořit oznámení z výstrahy vyžadovaných sacharidů</string>
     <string name="ns_create_announcements_from_errors_summary">Vytvořit oznámení v NS pro chyby a místní výstrahy (zobrazitelné v Péči pod Ošetřením)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Pro výstrahy vyžadovaných sacharidů vytvořit oznámení v Nightscoutu</string>
     <string name="wear_predictions_summary">Zobrazovat predikce na hodinkách.</string>
     <string name="wear_predictions_title">Predikce</string>
     <string name="data_choices">Možnosti dat</string>
@@ -971,7 +986,6 @@
     <string name="recurringTime">Opakující se čas</string>
     <string name="every">Každé</string>
     <string name="never">Nikdy</string>
-    <string name="mins">%1$dminut</string>
     <string name="condition">Podmínka:</string>
     <string name="action">Akce:</string>
     <string name="iob_u">IOB [U]:</string>
@@ -1215,7 +1229,6 @@
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="reorder_label">Změna pořadí</string>
     <string name="age">Věk:</string>
-    <string name="weight">Váha:</string>
     <string name="id">ID:</string>
     <string name="submit">Odeslat</string>
     <string name="mostcommonprofile">Nejběžnější profil:</string>
@@ -1225,7 +1238,6 @@
     <string name="invalidweight">Neplatná položka váhy</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Průměr</string>
-    <string name="tdd">CDD</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovat statistiky aktivity?</string>
@@ -1280,6 +1292,9 @@
     <string name="statuslights">Stavové indikátory</string>
     <string name="statuslights_copy_ns">Zkopírovat nastavení z NS</string>
     <string name="copyexistingvalues">Zkopírovat nastavení NS (existuje-li)?</string>
+    <string name="classic_description">Původní vzhled</string>
+    <string name="buttonson_description">Tlačítka jsou vždy zobrazena v dolní části obrazovky</string>
+    <string name="largedisplay_description">Velký displej</string>
     <string name="skin">Vzhled</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->

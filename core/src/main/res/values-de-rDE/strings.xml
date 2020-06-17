@@ -138,6 +138,7 @@
     <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
     <string name="careportal_correctionbolus">Korrektur-Bolus</string>
     <string name="careportal_combobolus">Combo-Bolus</string>
+    <string name="careportal_tempbasalstart">TBR Start</string>
     <string name="careportal_tempbasalend">TBR Ende</string>
     <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>
@@ -160,6 +161,8 @@
     <string name="insulin_unit_shortname">IE</string>
     <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
     <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">\"%dg zusätzliche Kohlenhydrate innerhalb von %d Minuten erforderlich.</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulative TDD</string>

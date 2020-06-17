@@ -161,6 +161,7 @@
     <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">À espera de resultado</string>
     <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
     <string name="cumulative_tdd">Dose diária acumulativa</string>

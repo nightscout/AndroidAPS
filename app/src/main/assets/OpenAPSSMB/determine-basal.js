@@ -878,8 +878,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     console.error("naive_eventualBG:",naive_eventualBG,"bgUndershoot:",bgUndershoot,"zeroTempDuration:",zeroTempDuration,"zeroTempEffect:",zeroTempEffect,"carbsReq:",carbsReq);
     if ( carbsReq >= profile.carbsReqThreshold && minutesAboveThreshold <= 45 ) {
         rT.carbsReq = carbsReq;
+        rT.carbsReqWithin = minutesAboveThreshold;
         rT.reason += carbsReq + " add'l carbs req w/in " + minutesAboveThreshold + "m; ";
     }
+
     // don't low glucose suspend if IOB is already super negative and BG is rising faster than predicted
     if (bg < threshold && iob_data.iob < -profile.current_basal*20/60 && minDelta > 0 && minDelta > expectedDelta) {
         rT.reason += "IOB "+iob_data.iob+" < " + round(-profile.current_basal*20/60,2);

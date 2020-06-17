@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
     <string name="loop_tbrsetbypump_label">Basal temporaire défini par la pompe</string>
     <string name="openapsma_lastenact_label">Dernière activation</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Annuler</string>
     <string name="noapsselected">Pas d\'APS séléctionné ou pas de résultat fourni</string>
     <string name="safety">Sécurité</string>
     <string name="openapsma_disabled">Plugin désactivé</string>
@@ -118,8 +116,6 @@
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Assistant</string>
     <string name="constraintapllied">Restriction appliquée !</string>
-    <string name="confirmation">Confirmation</string>
-    <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
@@ -135,6 +131,7 @@
     <string name="disableloop">Désactiver la Boucle</string>
     <string name="enableloop">Activer la Boucle</string>
     <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
+    <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
     <string name="loopdisabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
@@ -257,6 +254,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loopisenabled">La Boucle est activée</string>
     <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
     <string name="valueoutofrange">La valeur %1$s est en dehors des limites</string>
+    <string name="smscommunicator_pumpconnectwithcode">Pour connecter la pompe, répondre avec le code %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Echec de la connexion pompe</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1d minutes, répondre avec le code %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Pompe déconnectée</string>
+    <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus à distance non disponible. Réessayez plus tard.</string>
     <string name="smscommunicator_basalreplywithcode">Pour démarrer la Basal %1$.2fU/h pendant %2$d min, renvoyer le code %3$s</string>
@@ -265,6 +267,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_carbsreplywithcode">Pour entrer %1$dg à %2$s renvoyer le code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pour démarrer la Basal %1$d%% pendant %2$d min, renvoyer le code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Envoyer le code %2$s pour suspendre la Boucle pour %1$d minutes</string>
+    <string name="smscommunicator_loopresumereplywithcode">Pour reprendre la veuillez répondre avec le code %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Pour activer la boucle veuillez répondre avec le code %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Pour désactiver la boucle veuillez répondre avec le code %1$s</string>
     <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal temporaire pour %2$d min</string>
     <string name="smscommunicator_extendedset">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
     <string name="smscommunicator_carbsset">Les %1$dg de glucides entrés avec succès</string>
@@ -444,14 +449,20 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_iage_critical">Seuil critique âge insuline [h]</string>
     <string name="statuslights_sage_warning">Seuil d\'alerte âge capteur [h]</string>
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
-    <string name="statuslights_bage_warning">Seuil d\'alerte niveau pile [h]</string>
-    <string name="statuslights_bage_critical">Seuil critique niveau pile [h]</string>
-    <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
-    <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%]</string>
+    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
+    <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
+    <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
+    <string name="statuslights_res_critical">Seuil critique de niveau réservoir [U]</string>
+    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile [%]</string>
+    <string name="statuslights_bat_critical">Seuil critique niveau pile [%]</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">PENTEDEV</string>
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
@@ -467,8 +478,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_canulaage_label">Age Cathéter</string>
     <string name="careportal_insulinage_label">Age Insuline</string>
     <string name="doprofileswitch">Changer de profil</string>
-    <string name="careportal_pbage_label">Age batterie pompe</string>
+    <string name="careportal_pbage_label">Age Pile Pompe</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
+    <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
+    <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
     <string name="nsalarm_staledatavalue_label">Seuil sans nouvelle donnée Glyc. [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="openapsama_autosens_period">Plage pour Autosens [h]</string>
@@ -548,7 +561,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="localalertsettings_title">Alertes locales</string>
     <string name="enable_missed_bg_readings_alert">Alerte pas nouvelle donnée glycémique</string>
     <string name="enable_pump_unreachable_alert">Alerte si la pompe est hors de portée</string>
-    <string name="pump_unreachable_threshold">Seuil alerte pompe hors de portée [min]</string>
+    <string name="pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée [min]</string>
+    <string name="enable_carbs_req_alert">Alerte si glucides requis</string>
     <string name="urgent_alarm">Alarme d\'urgence</string>
     <string name="info">INFO</string>
     <string name="eversense">App Eversense (patché)</string>
@@ -561,8 +575,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smbmaxminutes_summary">Max. minutes de basal pour limiter le SMB</string>
     <string name="uamsmbmaxminutes">SMB RNS minutes max</string>
     <string name="uamsmbmaxminutes_summary">Minutes de basal max pour limiter les SMB des RNS</string>
-    <string name="carbsReqThreshold">Seuil de suggestion de glucides</string>
-    <string name="carbsReqThreshold_summary">Quantité de glucides à partir de laquelle une notification est envoyée</string>
+    <string name="carbsReqThreshold">Glucides minimum requis pour suggestion</string>
+    <string name="carbsReqThreshold_summary">Quantité de glucides minimum en g pour afficher une alerte de suggestion de glucides. Les suggestions inférieures ne déclencheront pas de notification.</string>
     <string name="dexcomg5_xdripupload_title">Transmettre les Gly vers xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
     <string name="nsclientbg">Glycémie NSClient</string>
@@ -621,6 +635,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
     <string name="insightpump_shortname">AC-I</string>
     <string name="ago">passé(e)s</string>
+    <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
+    <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
     <string name="enablesmbalways">Activer en permanence les SMB</string>
     <string name="enablesmbalways_summary">Activer toujours SMB de manière autonome pour les bolus. Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbaftercarbs">Activer SMB après ingestion de glucides</string>
@@ -640,11 +656,17 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
     <string name="overview_cgm">MGC</string>
+    <string name="ignore5m">Ignorer 5m</string>
+    <string name="ignore15m">Ignorer 15m</string>
+    <string name="ignore30m">Ignorer 30m</string>
+    <string name="required">req</string>
     <string name="nav_historybrowser">Historique</string>
     <string name="wear_notifysmb_title">Notifier en SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="ns_create_announcements_from_errors_title">Créer des messages d’erreurs</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Créer des annonces à partir des alertes Glucides requis</string>
     <string name="ns_create_announcements_from_errors_summary">Créer une annonce Nightscout pour les messages d\'erreur et les alertes locales (également visible dans la section Careportal de l\'onglet traitements)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Créer des annonces Nightscout pour les alertes besoins de glucides</string>
     <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de montre.</string>
     <string name="wear_predictions_title">Prédictions</string>
     <string name="data_choices">Choix de données</string>
@@ -965,7 +987,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="recurringTime">Période répétitive</string>
     <string name="every">Chaque</string>
     <string name="never">Jamais</string>
-    <string name="mins">%1$dmins</string>
     <string name="condition">État :</string>
     <string name="action">Action :</string>
     <string name="iob_u">IA [U]:</string>
@@ -1209,7 +1230,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
     <string name="reorder_label">Réordonner</string>
     <string name="age">Âge :</string>
-    <string name="weight">Poids :</string>
+    <string name="weight_label">Poids :</string>
     <string name="id">ID :</string>
     <string name="submit">Envoyer</string>
     <string name="mostcommonprofile">Profil le plus courant :</string>
@@ -1219,7 +1240,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidweight">Poids invalide</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
-    <string name="tdd">DTI</string>
     <string name="tir">Cible Gly</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
     <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
@@ -1229,7 +1249,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="randombg_short">Gly</string>
     <string name="tools">Outils</string>
     <string name="show_calculation">Afficher le calcul</string>
-    <string name="automation_event">Evénement d\'automatisation</string>
+    <string name="automation_event">Evénement auto.</string>
     <string name="alreadyset">Déjà configuré</string>
     <string name="clearqueueconfirm">Effacer la file d\'attente ? Toutes les données en file d\'attente seront perdues !</string>
     <string name="ebstopsloop">L\'utilisation du bolus étendu arrètera la boucle fermée pour la durée d\'exécution du bolus étendu. Voulez-vous vraiment le faire ?</string>
@@ -1274,6 +1294,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights">Voyants d\'état</string>
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
+    <string name="classic_description">Thème d\'origine</string>
+    <string name="buttonson_description">Les boutons sont toujours affichés en bas de l\'écran</string>
+    <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
@@ -1372,6 +1395,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_pump_omnipod_dash">Intégration de la pompe Omnipod Dash.</string>
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
+    <string name="omnipod_alert_expiration">Le Pod expire bientôt</string>
     <string name="omnipod_alert_expiration_advisory">Le Pod expire bientôt</string>
     <string name="omnipod_alert_shutdown_imminent">Arrêt imminent</string>
     <string name="omnipod_alert_low_reservoir">Réservoir bas</string>
