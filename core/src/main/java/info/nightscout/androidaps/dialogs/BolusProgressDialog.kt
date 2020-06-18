@@ -76,7 +76,7 @@ class BolusProgressDialog : BlurDialogFragment() {
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
 
-        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_PINK)
+        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
         try {
             val theme: Resources.Theme? = context?.getTheme()
             // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
