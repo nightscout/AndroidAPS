@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pairing">Koppelen</string>
+    <!--    General-->
+    <string name="error">Fout</string>
+    <string name="not_set_short">Niet ingesteld</string>
+    <string name="failedupdatebasalprofile">Update basaal profiel mislukt</string>
+    <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
+    <string name="invalidinput">Ongeldige invoer</string>
+    <string name="tempbasaldeliveryerror">Storing toedienen tijdelijk basaal</string>
+    <string name="goingtodeliver">Er worden %1$.2fE toegediend</string>
+    <string name="waitingforpump">Wacht op pomp</string>
+    <string name="connectingfor">Verbinding maken gedurende %1$d s</string>
+    <string name="bolusdelivering">Toedienen van %1$.2fE</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connecting">Verbining maken</string>
+    <string name="connected">Verbonden</string>
+    <string name="disconnected">Verbinding verbroken</string>
+    <string name="disconnecting">Verbinding aan het verbreken</string>
+    <string name="androidaps_start">AndroidAPS gestart</string>
+    <string name="formatinsulinunits">%1$.2fE</string>
+    <string name="reservoirvalue">%1$.0f / %2$d E</string>
+    <string name="pump_basebasalrate">%1$.2f E/uur</string>
+    <string name="format_hours">%1$.2f u</string>
+    <string name="format_mins">%1$d minuten</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pomp is bezig</string>
+    <string name="connectionerror">Pomp verbindingsstoring</string>
+    <string name="youareonallowedlimit">Limiet bereikt</string>
+    <string name="objectives">Doelen</string>
+    <string name="close">Sluiten</string>
+    <string name="please_wait">Even geduld a.u.b.…</string>
+    <string name="mute">Geluid dempen</string>
+    <string name="reload">Vernieuw</string>
+    <string name="stoppressed">STOP INGEDRUKT</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Koolhydraten</string>
+    <string name="invalidprofile">Ongeldig profiel !!!</string>
+    <string name="noprofileset">Geen profiel ingesteld</string>
+    <string name="date">Datum</string>
+    <string name="units_label">Eenheden</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">KH ratio</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basaal</string>
+    <string name="target_label">Streefdoel</string>
+    <string name="initializing">Initialiseren...</string>
+    <string name="serialnumber">Serie nummer</string>
+    <string name="battery_label">Batterij</string>
+    <string name="lastconnection_label">Laatste verbinding</string>
+    <string name="lastbolus_label">Laatste bolus</string>
+    <string name="dailyunits">Dag totaal</string>
+    <string name="basebasalrate_label">Basis basale dosis</string>
+    <string name="tempbasal_label">Tijdelijk basaal</string>
+    <string name="virtualpump_extendedbolus_label">Vertraagde bolus</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="pumphistory">Historiek</string>
+    <string name="viewprofile">Profiel bekijken</string>
+    <string name="eventtype">Gebeurtenis type</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Geavanceerde instellingen</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Zet de bluetooth van de telefoon even kort uit en weer aan. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
+    <string name="pumplimit">Pomp limiet</string>
+    <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% wegens de %2$s</string>
+    <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
+    <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pomp niet geïnitialiseerd, profiel niet ingesteld!</string>
+    <!--    Dialogs-->
+    <string name="confirmation">Bevestiging</string>
+    <string name="message">Bericht</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Afbreken</string>
+    <string name="dismiss">AFWIJZEN</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
+    <string name="ble_not_enabled">Bluetooth niet ingeschakeld.</string>
+    <string name="location_not_found_title">Locatie is niet ingeschakeld</string>
+    <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$dm geleden</string>
+    <string name="hoursago">%1$.1fu geleden</string>
+    <string name="shorthour">u</string>
+    <string name="days">dagen</string>
+    <string name="hours">uren</string>
+    <string name="unit_second">seconde</string>
+    <string name="unit_minute">minuut</string>
+    <string name="unit_hour">uur</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconden</string>
+    <string name="unit_minutes">minuten</string>
+    <string name="unit_hours">uren</string>
+    <string name="unit_days">dagen</string>
+    <string name="unit_weeks">weken</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %1$s</string>
+    <string name="profile_per_unit">/E</string>
+    <string name="profile_ins_units_per_hour">E/u</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Geen profiel geselecteerd</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">Annuleer tijdelijk basaal</string>
+    <string name="let_temp_basal_run">Laat tijdelijk basaal lopen</string>
+    <string name="rate">Dosis</string>
+    <string name="duration">Gedurende</string>
+    <string name="reason">Reden</string>
+    <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ongeldig profiel: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">BG Controle</string>
+    <string name="careportal_announcement">Mededeling</string>
+    <string name="careportal_note">Notitie</string>
+    <string name="careportal_question">Vraag</string>
+    <string name="careportal_exercise">Sport</string>
+    <string name="careportal_pumpsitechange">Infuus wissel</string>
+    <string name="careportal_cgmsensorinsert">CGM Sens. ingebracht</string>
+    <string name="careportal_cgmsensorstart">CGM Sens. Start</string>
+    <string name="careportal_insulincartridgechange">Insulinereservoir wissel</string>
+    <string name="careportal_profileswitch">Profiel wissel</string>
+    <string name="careportal_snackbolus">Snack bolus</string>
+    <string name="careportal_mealbolus">Maaltijd bolus</string>
+    <string name="careportal_correctionbolus">Correctie bolus</string>
+    <string name="careportal_combobolus">Combinatie-Bolus</string>
+    <string name="careportal_tempbasalstart">Start tijd. basaal</string>
+    <string name="careportal_tempbasalend">Einde tijd. basaal</string>
+    <string name="careportal_carbscorrection">Koolhydraten correctie</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Pomp bat. wissel</string>
+    <string name="careportal_temporarytarget">Tijdelijk streefdoel</string>
+    <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
+    <string name="glucosetype_finger">Vingerprik</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manueel</string>
+    <string name="unknown">onbekend</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Connectie verlopen</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Uitgevoerd</string>
+    <string name="comment">Commentaar</string>
+    <string name="success">Succes</string>
+    <string name="percent">Procent</string>
+    <string name="absolute">Absoluut</string>
+    <string name="configbuilder_insulin">Insuline</string>
+    <string name="insulin_unit_shortname">E</string>
+    <string name="waitingforpumpresult">Wachtend op resultaat</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="stats">Statistieken</string>
+    <string name="cumulative_tdd">Cumulatieve TDD</string>
+    <string name="expweight">Exponentieel gewogen TDD</string>
+    <string name="basalrate">Basaal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Ratio</string>
+    <string name="amount_days"># Dagen</string>
+    <string name="weight">Gewicht</string>
+    <string name="warning_Message">Mogelijks inaccuraat bij gebruik van bolussen om infusieset te vullen!</string>
+    <string name="olddata_Message">Oude gegevens, druk op \"VERNIEUW\"</string>
+    <string name="tbb">Totaal basaal</string>
+    <string name="tbb2">TBB * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Tijd detectie</string>
+</resources>

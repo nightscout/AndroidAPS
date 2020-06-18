@@ -1,29 +1,34 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA;
 
-import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.content.Context;
 
-import info.nightscout.androidaps.MainApp;
+import org.json.JSONException;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
-import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
-import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui;
+import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -33,21 +38,22 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
-/**
- * Created by mike on 05.08.2016.
- */
+@Singleton
 public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
-
-    private static OpenAPSAMAPlugin openAPSAMAPlugin;
-
-    public static OpenAPSAMAPlugin getPlugin() {
-        if (openAPSAMAPlugin == null) {
-            openAPSAMAPlugin = new OpenAPSAMAPlugin();
-        }
-        return openAPSAMAPlugin;
-    }
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ConstraintChecker constraintChecker;
+    private final ResourceHelper resourceHelper;
+    private final ProfileFunction profileFunction;
+    private final Context context;
+    private final ActivePluginProvider activePlugin;
+    private final TreatmentsPlugin treatmentsPlugin;
+    private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private final HardLimits hardLimits;
+    private final Profiler profiler;
+    private final FabricPrivacy fabricPrivacy;
 
     // last values
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
@@ -55,27 +61,60 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     DetermineBasalResultAMA lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    private OpenAPSAMAPlugin() {
+    @Inject
+    public OpenAPSAMAPlugin(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ConstraintChecker constraintChecker,
+            ResourceHelper resourceHelper,
+            ProfileFunction profileFunction,
+            Context context,
+            ActivePluginProvider activePlugin,
+            TreatmentsPlugin treatmentsPlugin,
+            IobCobCalculatorPlugin iobCobCalculatorPlugin,
+            HardLimits hardLimits,
+            Profiler profiler,
+            FabricPrivacy fabricPrivacy
+    ) {
         super(new PluginDescription()
-                .mainType(PluginType.APS)
-                .fragmentClass(OpenAPSAMAFragment.class.getName())
-                .pluginName(R.string.openapsama)
-                .shortName(R.string.oaps_shortname)
-                .preferencesId(R.xml.pref_openapsama)
-                .description(R.string.description_ama)
+                        .mainType(PluginType.APS)
+                        .fragmentClass(OpenAPSAMAFragment.class.getName())
+                        .pluginName(R.string.openapsama)
+                        .shortName(R.string.oaps_shortname)
+                        .preferencesId(R.xml.pref_openapsama)
+                        .description(R.string.description_ama),
+                aapsLogger, resourceHelper, injector
         );
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        this.constraintChecker = constraintChecker;
+        this.resourceHelper = resourceHelper;
+        this.profileFunction = profileFunction;
+        this.context = context;
+        this.activePlugin = activePlugin;
+        this.treatmentsPlugin = treatmentsPlugin;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        this.hardLimits = hardLimits;
+        this.profiler = profiler;
+        this.fabricPrivacy = fabricPrivacy;
     }
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        try {
+            PumpInterface pump = activePlugin.getActivePump();
+            return pump.getPumpDescription().isTempBasalCapable;
+        } catch (Exception ignored) {
+            // may fail during initialization
+            return true;
+        }
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        PumpInterface pump = activePlugin.getActivePump();
+        return pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -90,45 +129,34 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public void invoke(String initiator, boolean tempBasalFallback) {
-        if (L.isEnabled(L.APS))
-            log.debug("invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
+        aapsLogger.debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS;
-        determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(MainApp.instance().getBaseContext()));
+        determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(context), getInjector());
 
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        Profile profile = ProfileFunctions.getInstance().getProfile();
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        GlucoseStatus glucoseStatus = new GlucoseStatus(getInjector()).getGlucoseStatusData();
+        Profile profile = profileFunction.getProfile();
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (profile == null) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.noprofileselected));
-            return;
-        }
-
-        if (pump == null) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.nopumpselected)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.nopumpselected));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
+            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.openapsma_disabled));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_disabled)));
+            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_noglucosedata)));
+            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.openapsma_noglucosedata));
             return;
         }
 
-        double maxBasal = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+        double maxBasal = constraintChecker.getMaxBasalAllowed(profile).value();
         double minBg = profile.getTargetLowMgdl();
         double maxBg = profile.getTargetHighMgdl();
         double targetBg = profile.getTargetMgdl();
@@ -138,47 +166,45 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         long start = System.currentTimeMillis();
         long startPart = System.currentTimeMillis();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "calculateIobArrayInDia()", startPart);
+        IobTotal[] iobArray = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
+        profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();
-        MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "getMealData()", startPart);
+        MealData mealData = iobCobCalculatorPlugin.getMealData();
+        profiler.log(LTag.APS, "getMealData()", startPart);
 
-        double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
+        double maxIob = constraintChecker.getMaxIOBAllowed().value();
 
-        minBg = HardLimits.verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
-        maxBg = HardLimits.verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
-        targetBg = HardLimits.verifyHardLimits(targetBg, "targetBg", HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1]);
+        minBg = hardLimits.verifyHardLimits(minBg, "minBg", hardLimits.getVERY_HARD_LIMIT_MIN_BG()[0], hardLimits.getVERY_HARD_LIMIT_MIN_BG()[1]);
+        maxBg = hardLimits.verifyHardLimits(maxBg, "maxBg", hardLimits.getVERY_HARD_LIMIT_MAX_BG()[0], hardLimits.getVERY_HARD_LIMIT_MAX_BG()[1]);
+        targetBg = hardLimits.verifyHardLimits(targetBg, "targetBg", hardLimits.getVERY_HARD_LIMIT_TARGET_BG()[0], hardLimits.getVERY_HARD_LIMIT_TARGET_BG()[1]);
 
         boolean isTempTarget = false;
-        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis());
+        TempTarget tempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
             isTempTarget = true;
-            minBg = HardLimits.verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
-            maxBg = HardLimits.verifyHardLimits(tempTarget.high, "maxBg", HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
-            targetBg = HardLimits.verifyHardLimits(tempTarget.target(), "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
+            minBg = hardLimits.verifyHardLimits(tempTarget.low, "minBg", hardLimits.getVERY_HARD_LIMIT_TEMP_MIN_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_MIN_BG()[1]);
+            maxBg = hardLimits.verifyHardLimits(tempTarget.high, "maxBg", hardLimits.getVERY_HARD_LIMIT_TEMP_MAX_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_MAX_BG()[1]);
+            targetBg = hardLimits.verifyHardLimits(tempTarget.target(), "targetBg", hardLimits.getVERY_HARD_LIMIT_TEMP_TARGET_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_TARGET_BG()[1]);
         }
 
 
-        if (!HardLimits.checkOnlyHardLimits(profile.getDia(), "dia", HardLimits.MINDIA, HardLimits.MAXDIA))
+        if (!hardLimits.checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.getMINDIA(), hardLimits.getMAXDIA()))
             return;
-        if (!HardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", HardLimits.MINIC, HardLimits.MAXIC))
+        if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.getMINIC(), hardLimits.getMAXIC()))
             return;
-        if (!HardLimits.checkOnlyHardLimits(profile.getIsfMgdl(), "sens", HardLimits.MINISF, HardLimits.MAXISF))
+        if (!hardLimits.checkOnlyHardLimits(profile.getIsfMgdl(), "sens", hardLimits.getMINISF(), hardLimits.getMAXISF()))
             return;
-        if (!HardLimits.checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, HardLimits.maxBasal()))
+        if (!hardLimits.checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, hardLimits.maxBasal()))
             return;
-        if (!HardLimits.checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal()))
+        if (!hardLimits.checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, hardLimits.maxBasal()))
             return;
 
         startPart = System.currentTimeMillis();
-        if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
+        if (constraintChecker.isAutosensModeEnabled().value()) {
+            AutosensData autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("OpenAPSPlugin");
             if (autosensData == null) {
-                RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openaps_noasdata)));
+                rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)));
                 return;
             }
             lastAutosensResult = autosensData.autosensResult;
@@ -186,36 +212,32 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = new AutosensResult();
             lastAutosensResult.sensResult = "autosens disabled";
         }
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "AMA data gathering", start);
+        profiler.log(LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
+        profiler.log(LTag.APS, "AMA data gathering", start);
 
         start = System.currentTimeMillis();
 
         try {
-            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
+            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget
             );
         } catch (JSONException e) {
-            FabricPrivacy.logException(e);
+            fabricPrivacy.logException(e);
             return;
         }
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "AMA calculation", start);
+        profiler.log(LTag.APS, "AMA calculation", start);
         // Fix bug determine basal
         if (determineBasalResultAMA == null) {
-            if (L.isEnabled(L.APS))
-                log.error("SMB calculation returned null");
+            aapsLogger.error(LTag.APS, "SMB calculation returned null");
             lastDetermineBasalAdapterAMAJS = null;
             lastAPSResult = null;
             lastAPSRun = 0;
         } else {
-            if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
+            if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !treatmentsPlugin.isTempBasalInProgress())
                 determineBasalResultAMA.tempBasalRequested = false;
 
             determineBasalResultAMA.iob = iobArray[0];
@@ -225,14 +247,14 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             try {
                 determineBasalResultAMA.json.put("timestamp", DateUtil.toISOString(now));
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.APS, "Unhandled exception", e);
             }
 
             lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS;
             lastAPSResult = determineBasalResultAMA;
             lastAPSRun = now;
         }
-        RxBus.INSTANCE.send(new EventOpenAPSUpdateGui());
+        rxBus.send(new EventOpenAPSUpdateGui());
 
         //deviceStatus.suggested = determineBasalResultAMA.json;
     }

@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.utils.DateUtil;
+
 /**
  * Created by geoff on 4/28/15.
  * modified by Andy
@@ -82,8 +84,9 @@ public class StringUtil {
     }
 
 
-    public static String toDateTimeString(LocalDateTime localDateTime) {
-        return localDateTime.toString("dd.MM.yyyy HH:mm:ss");
+    public static String toDateTimeString(DateUtil dateUtil, LocalDateTime localDateTime) {
+        return dateUtil.dateAndTimeAndSecondsString(localDateTime.toDateTime().getMillis());
+        //return localDateTime.toString("dd.MM.yyyy HH:mm:ss");
     }
 
 

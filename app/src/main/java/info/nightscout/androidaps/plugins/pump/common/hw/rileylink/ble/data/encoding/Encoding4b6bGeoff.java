@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -16,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 
 public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
 
-    public static final Logger LOG = LoggerFactory.getLogger(Encoding4b6bGeoff.class);
+    public static final Logger LOG = StacktraceLoggerWrapper.getLogger(Encoding4b6bGeoff.class);
 
 
     public byte[] encode4b6b(byte[] data) {

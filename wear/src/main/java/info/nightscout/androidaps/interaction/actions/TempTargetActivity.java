@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -22,8 +21,6 @@ import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 /**
  * Created by adrian on 09/02/17.

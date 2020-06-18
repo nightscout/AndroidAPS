@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.message;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
@@ -13,9 +11,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
  */
 public class PumpMessage implements RLMessage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private final AAPSLogger aapsLogger;
 
-    public PacketType packetType = PacketType.Carelink;
+    private PacketType packetType = PacketType.Carelink;
     public byte[] address = new byte[]{0, 0, 0};
     public MedtronicCommandType commandType;
     public Byte invalidCommandType;
@@ -25,18 +23,20 @@ public class PumpMessage implements RLMessage {
     public static final int FRAME_DATA_LENGTH = 64;
 
 
-    public PumpMessage(String error) {
+    public PumpMessage(AAPSLogger aapsLogger, String error) {
         this.error = error;
+        this.aapsLogger = aapsLogger;
     }
 
 
-    public PumpMessage(byte[] rxData) {
+    public PumpMessage(AAPSLogger aapsLogger, byte[] rxData) {
+        this.aapsLogger = aapsLogger;
         init(rxData);
     }
 
 
-    public PumpMessage() {
-
+    public PumpMessage(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
     }
 
 
@@ -66,8 +66,7 @@ public class PumpMessage implements RLMessage {
         if (rxData.length > 4) {
             this.commandType = MedtronicCommandType.getByCode(rxData[4]);
             if (this.commandType == MedtronicCommandType.InvalidCommand) {
-                if (isLogEnabled())
-                    LOG.error("PumpMessage - Unknown commandType " + rxData[4]);
+                aapsLogger.error(LTag.PUMPCOMM, "PumpMessage - Unknown commandType " + rxData[4]);
             }
         }
         if (rxData.length > 5) {
@@ -79,7 +78,7 @@ public class PumpMessage implements RLMessage {
 
     @Override
     public byte[] getTxData() {
-        byte[] rval = ByteUtil.concat(new byte[]{(byte) packetType.getValue()}, address);
+        byte[] rval = ByteUtil.concat(new byte[]{packetType.getValue()}, address);
         rval = ByteUtil.concat(rval, commandType.getCommandCode());
         rval = ByteUtil.concat(rval, messageBody.getTxData());
         return rval;
@@ -210,10 +209,4 @@ public class PumpMessage implements RLMessage {
 
         return sb.toString();
     }
-
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
-    }
-
 }

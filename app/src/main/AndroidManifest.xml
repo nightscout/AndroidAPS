@@ -38,7 +38,14 @@
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher"
-        android:fullBackupContent="true">
+        android:fullBackupOnly="false"
+        android:backupAgent=".utils.SPBackupAgent"
+        android:restoreAnyVersion="true">
+
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAI3JiApyMrbP2QFzZ2fYfCPsgjkRp53Dm2S1-zPQ" />
+
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
@@ -51,15 +58,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
-        <activity
-            android:name=".activities.BolusProgressHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity
-            android:name=".activities.ErrorHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
-        <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
@@ -67,15 +65,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.BLEScanActivity">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
-        <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
+        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />
 
@@ -114,6 +105,9 @@
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
+        <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
+        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver"></receiver>
+
         <!-- Auto start -->
         <receiver
             android:name=".receivers.AutoStartReceiver"
@@ -141,22 +135,6 @@
         <service
             android:name=".services.LocationService"
             android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRKorean.services.DanaRKoreanExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRv2.services.DanaRv2ExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRS.services.DanaRSService"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -265,6 +243,13 @@
             android:label="@string/pairing_information"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
+        <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- Medtronic service and activities -->
         <service
@@ -284,6 +269,17 @@
         <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <!-- Omnipod service and activities -->
+        <service
+            android:name=".plugins.pump.omnipod.service.RileyLinkOmnipodService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodManagementActivity" />
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodHistoryActivity" />
+        <activity android:name="com.atech.android.library.wizardpager.WizardPagerActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
 
     </application>
 

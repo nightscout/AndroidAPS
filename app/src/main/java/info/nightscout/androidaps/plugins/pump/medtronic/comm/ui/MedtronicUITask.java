@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -24,7 +26,12 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 public class MedtronicUITask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    @Inject RxBusWrapper rxBus;
+    @Inject AAPSLogger aapsLogger;
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject MedtronicUtil medtronicUtil;
+
+    private final HasAndroidInjector injector;
 
     public MedtronicCommandType commandType;
     public Object returnData;
@@ -35,12 +42,16 @@ public class MedtronicUITask {
     MedtronicUIResponseType responseType;
 
 
-    public MedtronicUITask(MedtronicCommandType commandType) {
+    public MedtronicUITask(HasAndroidInjector injector, MedtronicCommandType commandType) {
+        this.injector = injector;
+        this.injector.androidInjector().inject(this);
         this.commandType = commandType;
     }
 
 
-    public MedtronicUITask(MedtronicCommandType commandType, Object... parameters) {
+    public MedtronicUITask(HasAndroidInjector injector, MedtronicCommandType commandType, Object... parameters) {
+        this.injector = injector;
+        this.injector.androidInjector().inject(this);
         this.commandType = commandType;
         this.parameters = parameters;
     }
@@ -48,8 +59,7 @@ public class MedtronicUITask {
 
     public void execute(MedtronicCommunicationManager communicationManager) {
 
-        if (isLogEnabled())
-            LOG.debug("MedtronicUITask: @@@ In execute. {}", commandType);
+        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. {}", commandType);
 
         switch (commandType) {
             case PumpModel: {
@@ -69,7 +79,7 @@ public class MedtronicUITask {
 
             case GetRealTimeClock: {
                 returnData = communicationManager.getPumpTime();
-                MedtronicUtil.setPumpTime(null);
+                medtronicUtil.setPumpTime(null);
             }
             break;
 
@@ -131,7 +141,7 @@ public class MedtronicUITask {
             break;
 
             default: {
-                LOG.warn("This commandType is not supported (yet) - {}.", commandType);
+                aapsLogger.warn(LTag.PUMP, "This commandType is not supported (yet) - {}.", commandType);
                 // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid;
             }
@@ -162,12 +172,12 @@ public class MedtronicUITask {
     }
 
 
-    public Double getDoubleFromParameters(int index) {
+    Double getDoubleFromParameters(int index) {
         return (Double) parameters[index];
     }
 
 
-    public Integer getIntegerFromParameters(int index) {
+    private Integer getIntegerFromParameters(int index) {
         return (Integer) parameters[index];
     }
 
@@ -184,25 +194,24 @@ public class MedtronicUITask {
 
     void postProcess(MedtronicUIPostprocessor postprocessor) {
 
-        if (isLogEnabled())
-            LOG.debug("MedtronicUITask: @@@ In execute. {}", commandType);
+        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. {}", commandType);
 
         if (responseType == MedtronicUIResponseType.Data) {
             postprocessor.postProcessData(this);
         }
 
         if (responseType == MedtronicUIResponseType.Invalid) {
-            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            rxBus.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
                     "Unsupported command in MedtronicUITask"));
         } else if (responseType == MedtronicUIResponseType.Error) {
-            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            rxBus.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
                     errorDescription));
         } else {
-            RxBus.INSTANCE.send(new EventMedtronicPumpValuesChanged());
-            MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
+            rxBus.send(new EventMedtronicPumpValuesChanged());
+            medtronicPumpStatus.setLastCommunicationToNow();
         }
 
-        MedtronicUtil.setCurrentCommand(null);
+        medtronicUtil.setCurrentCommand(null);
     }
 
 
@@ -211,13 +220,8 @@ public class MedtronicUITask {
     }
 
 
-    public Object getParameter(int index) {
+    Object getParameter(int index) {
         return parameters[index];
-    }
-
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
     }
 
 

@@ -8,8 +8,6 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,19 +18,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
@@ -49,11 +51,12 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
 /**
@@ -68,19 +71,25 @@ import info.nightscout.androidaps.utils.SP;
 
 // All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
+@Singleton
 public class MedtronicHistoryData {
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
-    private List<PumpHistoryEntry> allHistory = null;
+    private final HasAndroidInjector injector;
+    private final AAPSLogger aapsLogger;
+    private final SP sp;
+    private final ActivePluginProvider activePlugin;
+    private final NSUpload nsUpload;
+    private final MedtronicUtil medtronicUtil;
+    private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
+
+    private List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
 
-    private Long lastHistoryRecordTime;
     private boolean isInit = false;
 
-    private Gson gson;
-    private Gson gsonCore;
+    private Gson gson; // cannot be initialized in constructor because of injection
+    private Gson gsonCore; // cannot be initialized in constructor because of injection
 
-    private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
 
     private long lastIdUsed = 0;
@@ -92,21 +101,36 @@ public class MedtronicHistoryData {
      */
     public static boolean doubleBolusDebug = false;
 
-
-    public MedtronicHistoryData() {
+    @Inject
+    public MedtronicHistoryData(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            SP sp,
+            ActivePluginProvider activePlugin,
+            NSUpload nsUpload,
+            MedtronicUtil medtronicUtil,
+            MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder
+    ) {
         this.allHistory = new ArrayList<>();
-        this.gson = MedtronicUtil.gsonInstance;
-        this.gsonCore = MedtronicUtil.getGsonInstanceCore();
 
-        if (this.gson == null) {
-            this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        }
-
-        if (this.gsonCore == null) {
-            this.gsonCore = new GsonBuilder().create();
-        }
+        this.injector = injector;
+        this.aapsLogger = aapsLogger;
+        this.sp = sp;
+        this.activePlugin = activePlugin;
+        this.nsUpload = nsUpload;
+        this.medtronicUtil = medtronicUtil;
+        this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
     }
 
+    private Gson gson() {
+        if (gson == null) gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson;
+    }
+
+    private Gson gsonCore() {
+        if (gsonCore == null) gsonCore = new GsonBuilder().create();
+        return gsonCore;
+    }
 
     /**
      * Add New History entries
@@ -128,25 +152,21 @@ public class MedtronicHistoryData {
 
         this.newHistory = newEntries;
 
-        showLogs("List of history (before filtering): [" + this.newHistory.size() + "]", gson.toJson(this.newHistory));
+        showLogs("List of history (before filtering): [" + this.newHistory.size() + "]", gson().toJson(this.newHistory));
     }
 
 
-    private static void showLogs(String header, String data) {
-
-        if (!isLogEnabled())
-            return;
-
+    private void showLogs(String header, String data) {
         if (header != null) {
-            LOG.debug(header);
+            aapsLogger.debug(LTag.PUMP, header);
         }
 
         if (StringUtils.isNotBlank(data)) {
             for (final String token : StringUtil.splitString(data, 3500)) {
-                LOG.debug("{}", token);
+                aapsLogger.debug(LTag.PUMP, "{}", token);
             }
         } else {
-            LOG.debug("No data.");
+            aapsLogger.debug(LTag.PUMP, "No data.");
         }
     }
 
@@ -163,7 +183,7 @@ public class MedtronicHistoryData {
         List<PumpHistoryEntry> bolusEstimates = new ArrayList<>();
         long atechDate = DateTimeUtil.toATechDate(new GregorianCalendar());
 
-        //LOG.debug("Filter new entries: Before {}", newHistory);
+        //aapsLogger.debug(LTag.PUMP, "Filter new entries: Before {}", newHistory);
 
         if (!isCollectionEmpty(newHistory)) {
 
@@ -204,10 +224,9 @@ public class MedtronicHistoryData {
             sort(this.newHistory);
         }
 
-        if (isLogEnabled())
-            LOG.debug("New History entries found: {}", this.newHistory.size());
+        aapsLogger.debug(LTag.PUMP, "New History entries found: {}", this.newHistory.size());
 
-        showLogs("List of history (after filtering): [" + this.newHistory.size() + "]", gson.toJson(this.newHistory));
+        showLogs("List of history (after filtering): [" + this.newHistory.size() + "]", gson().toJson(this.newHistory));
 
     }
 
@@ -257,14 +276,14 @@ public class MedtronicHistoryData {
             return;
 
         this.setLastHistoryRecordTime(pheLast.atechDateTime);
-        SP.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime);
+        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime);
 
         LocalDateTime dt = null;
 
         try {
             dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime);
         } catch (Exception ex) {
-            LOG.error("Problem decoding date from last record: {}" + pheLast);
+            aapsLogger.error("Problem decoding date from last record: {}" + pheLast);
         }
 
         if (dt != null) {
@@ -286,11 +305,10 @@ public class MedtronicHistoryData {
 
             this.sort(this.allHistory);
 
-            if (isLogEnabled())
-                LOG.debug("All History records [afterFilterCount={}, removedItemsCount={}, newItemsCount={}]",
-                        allHistory.size(), removeList.size(), newHistory.size());
+            aapsLogger.debug(LTag.PUMP, "All History records [afterFilterCount={}, removedItemsCount={}, newItemsCount={}]",
+                    allHistory.size(), removeList.size(), newHistory.size());
         } else {
-            LOG.error("Since we couldn't determine date, we don't clean full history. This is just workaround.");
+            aapsLogger.error("Since we couldn't determine date, we don't clean full history. This is just workaround.");
         }
 
         this.newHistory.clear();
@@ -321,7 +339,7 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> items = getDataForPumpSuspends();
 
-        showLogs("isPumpSuspended: ", MedtronicUtil.gsonInstance.toJson(items));
+        showLogs("isPumpSuspended: ", gson().toJson(items));
 
         if (isCollectionNotEmpty(items)) {
 
@@ -334,8 +352,7 @@ public class MedtronicHistoryData {
                     pumpHistoryEntryType == PumpHistoryEntryType.BatteryChange || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Prime);
 
-            if (isLogEnabled())
-                LOG.debug("isPumpSuspended. Last entry type={}, isSuspended={}", pumpHistoryEntryType, isSuspended);
+            aapsLogger.debug(LTag.PUMP, "isPumpSuspended. Last entry type={}, isSuspended={}", pumpHistoryEntryType, isSuspended);
 
             return isSuspended;
         } else
@@ -408,14 +425,13 @@ public class MedtronicHistoryData {
         // Prime (for reseting autosense)
         List<PumpHistoryEntry> primeRecords = getFilteredItems(PumpHistoryEntryType.Prime);
 
-        if (isLogEnabled())
-            LOG.debug("ProcessHistoryData: Prime [count={}, items={}]", primeRecords.size(), gson.toJson(primeRecords));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Prime [count={}, items={}]", primeRecords.size(), gson().toJson(primeRecords));
 
         if (isCollectionNotEmpty(primeRecords)) {
             try {
                 processPrime(primeRecords);
             } catch (Exception ex) {
-                LOG.error("ProcessHistoryData: Error processing Prime entries: " + ex.getMessage(), ex);
+                aapsLogger.error("ProcessHistoryData: Error processing Prime entries: " + ex.getMessage(), ex);
                 throw ex;
             }
         }
@@ -423,31 +439,29 @@ public class MedtronicHistoryData {
         // TDD
         List<PumpHistoryEntry> tdds = getFilteredItems(PumpHistoryEntryType.EndResultTotals, getTDDType());
 
-        if (isLogEnabled())
-            LOG.debug("ProcessHistoryData: TDD [count={}, items={}]", tdds.size(), gson.toJson(tdds));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: TDD [count={}, items={}]", tdds.size(), gson().toJson(tdds));
 
         if (isCollectionNotEmpty(tdds)) {
             try {
                 processTDDs(tdds);
             } catch (Exception ex) {
-                LOG.error("ProcessHistoryData: Error processing TDD entries: " + ex.getMessage(), ex);
+                aapsLogger.error("ProcessHistoryData: Error processing TDD entries: " + ex.getMessage(), ex);
                 throw ex;
             }
         }
 
-        pumpTime = MedtronicUtil.getPumpTime();
+        pumpTime = medtronicUtil.getPumpTime();
 
         // Bolus
         List<PumpHistoryEntry> treatments = getFilteredItems(PumpHistoryEntryType.Bolus);
 
-        if (isLogEnabled())
-            LOG.debug("ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson.toJson(treatments));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson().toJson(treatments));
 
         if (treatments.size() > 0) {
             try {
                 processBolusEntries(treatments);
             } catch (Exception ex) {
-                LOG.error("ProcessHistoryData: Error processing Bolus entries: " + ex.getMessage(), ex);
+                aapsLogger.error("ProcessHistoryData: Error processing Bolus entries: " + ex.getMessage(), ex);
                 throw ex;
             }
         }
@@ -455,37 +469,35 @@ public class MedtronicHistoryData {
         // TBR
         List<PumpHistoryEntry> tbrs = getFilteredItems(PumpHistoryEntryType.TempBasalCombined);
 
-        if (isLogEnabled())
-            LOG.debug("ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson().toJson(tbrs));
 
         if (tbrs.size() > 0) {
             try {
                 processTBREntries(tbrs);
             } catch (Exception ex) {
-                LOG.error("ProcessHistoryData: Error processing TBR entries: " + ex.getMessage(), ex);
+                aapsLogger.error("ProcessHistoryData: Error processing TBR entries: " + ex.getMessage(), ex);
                 throw ex;
             }
         }
 
         // 'Delivery Suspend'
-        List<TempBasalProcessDTO> suspends = null;
+        List<TempBasalProcessDTO> suspends;
 
         try {
             suspends = getSuspends();
         } catch (Exception ex) {
-            LOG.error("ProcessHistoryData: Error getting Suspend entries: " + ex.getMessage(), ex);
+            aapsLogger.error("ProcessHistoryData: Error getting Suspend entries: " + ex.getMessage(), ex);
             throw ex;
         }
 
-        if (isLogEnabled())
-            LOG.debug("ProcessHistoryData: 'Delivery Suspend' Processed [count={}, items={}]", suspends.size(),
-                    gson.toJson(suspends));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: 'Delivery Suspend' Processed [count={}, items={}]", suspends.size(),
+                gson().toJson(suspends));
 
         if (isCollectionNotEmpty(suspends)) {
             try {
                 processSuspends(suspends);
             } catch (Exception ex) {
-                LOG.error("ProcessHistoryData: Error processing Suspends entries: " + ex.getMessage(), ex);
+                aapsLogger.error("ProcessHistoryData: Error processing Suspends entries: " + ex.getMessage(), ex);
                 throw ex;
             }
         }
@@ -508,12 +520,12 @@ public class MedtronicHistoryData {
         }
 
         if (lastPrimeRecord != 0L) {
-            long lastPrimeFromAAPS = SP.getLong(MedtronicConst.Statistics.LastPrime, 0L);
+            long lastPrimeFromAAPS = sp.getLong(MedtronicConst.Statistics.LastPrime, 0L);
 
             if (lastPrimeRecord != lastPrimeFromAAPS) {
                 uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), CareportalEvent.SITECHANGE);
 
-                SP.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
+                sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
             }
         }
     }
@@ -524,19 +536,19 @@ public class MedtronicHistoryData {
             return;
         try {
             JSONObject data = new JSONObject();
-            String enteredBy = SP.getString("careportal_enteredby", "");
+            String enteredBy = sp.getString("careportal_enteredby", "");
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
-            CareportalEvent careportalEvent = new CareportalEvent();
+            CareportalEvent careportalEvent = new CareportalEvent(injector);
             careportalEvent.date = date;
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            LOG.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -545,10 +557,9 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> tdds = filterTDDs(tddsIn);
 
-        if (isLogEnabled())
-            LOG.debug(getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gson.toJson(tdds));
+        aapsLogger.debug(LTag.PUMP, getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gson().toJson(tdds));
 
-        List<TDD> tddsDb = databaseHelper.getTDDsForLastXDays(3);
+        List<TDD> tddsDb = MainApp.getDbHelper().getTDDsForLastXDays(3);
 
         for (PumpHistoryEntry tdd : tdds) {
 
@@ -556,26 +567,24 @@ public class MedtronicHistoryData {
 
             DailyTotalsDTO totalsDTO = (DailyTotalsDTO) tdd.getDecodedData().get("Object");
 
-            //LOG.debug("DailyTotals: {}", totalsDTO);
+            //aapsLogger.debug(LTag.PUMP, "DailyTotals: {}", totalsDTO);
 
             if (tddDbEntry == null) {
                 TDD tddNew = new TDD();
                 totalsDTO.setTDD(tddNew);
 
-                if (isLogEnabled())
-                    LOG.debug("TDD Add: {}", tddNew);
+                aapsLogger.debug(LTag.PUMP, "TDD Add: {}", tddNew);
 
-                databaseHelper.createOrUpdateTDD(tddNew);
+                MainApp.getDbHelper().createOrUpdateTDD(tddNew);
 
             } else {
 
                 if (!totalsDTO.doesEqual(tddDbEntry)) {
                     totalsDTO.setTDD(tddDbEntry);
 
-                    if (isLogEnabled())
-                        LOG.debug("TDD Edit: {}", tddDbEntry);
+                    aapsLogger.debug(LTag.PUMP, "TDD Edit: {}", tddDbEntry);
 
-                    databaseHelper.createOrUpdateTDD(tddDbEntry);
+                    MainApp.getDbHelper().createOrUpdateTDD(tddDbEntry);
                 }
             }
         }
@@ -604,44 +613,40 @@ public class MedtronicHistoryData {
 
         long oldestTimestamp = getOldestTimestamp(entryList);
 
-        Gson gson = MedtronicUtil.getGsonInstance();
-
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.Bolus);
 
         if (doubleBolusDebug)
-            LOG.debug("DoubleBolusDebug: List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                    gsonCore.toJson(entriesFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: List (before filter): {}, FromDb={}", gson().toJson(entryList),
+                    gsonCore().toJson(entriesFromHistory));
 
         filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
         if (entryList.isEmpty()) {
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: EntryList was filtered out.");
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: EntryList was filtered out.");
             return;
         }
 
         filterOutNonInsulinEntries(entriesFromHistory);
 
         if (doubleBolusDebug)
-            LOG.debug("DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
-                    gsonCore.toJson(entriesFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: List (after filter): {}, FromDb={}", gson().toJson(entryList),
+                    gsonCore().toJson(entriesFromHistory));
 
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
-                if (isLogEnabled())
-                    LOG.debug("Add Bolus (no db entry): " + treatment);
+                aapsLogger.debug(LTag.PUMP, "Add Bolus (no db entry): " + treatment);
                 if (doubleBolusDebug)
-                    LOG.debug("DoubleBolusDebug: Add Bolus: FromDb=null, Treatment={}", treatment);
+                    aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: Add Bolus: FromDb=null, Treatment={}", treatment);
 
                 addBolus(treatment, null);
             }
         } else {
             for (PumpHistoryEntry treatment : entryList) {
                 DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
-                if (isLogEnabled())
-                    LOG.debug("Add Bolus {} - (entryFromDb={}) ", treatment, treatmentDb);
+                aapsLogger.debug(LTag.PUMP, "Add Bolus {} - (entryFromDb={}) ", treatment, treatmentDb);
                 if (doubleBolusDebug)
-                    LOG.debug("DoubleBolusDebug: Add Bolus: FromDb={}, Treatment={}", treatmentDb, treatment);
+                    aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: Add Bolus: FromDb={}, Treatment={}", treatmentDb, treatment);
 
                 addBolus(treatment, (Treatment) treatmentDb);
             }
@@ -655,9 +660,9 @@ public class MedtronicHistoryData {
 
         for (DbObjectBase dbObjectBase : entriesFromHistory) {
 
-            Treatment treatment = (Treatment)dbObjectBase;
+            Treatment treatment = (Treatment) dbObjectBase;
 
-            if (RileyLinkUtil.isSame(treatment.insulin, 0d)) {
+            if (Round.isSame(treatment.insulin, 0d)) {
                 removeList.add(dbObjectBase);
             }
         }
@@ -689,9 +694,8 @@ public class MedtronicHistoryData {
 
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.TBR);
 
-        if (isLogEnabled())
-            LOG.debug(ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                    gson.toJson(entriesFromHistory));
+        aapsLogger.debug(LTag.PUMP, ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson().toJson(entryList),
+                gson().toJson(entriesFromHistory));
 
 
         TempBasalProcessDTO processDTO = null;
@@ -711,7 +715,7 @@ public class MedtronicHistoryData {
                         readOldItem = false;
                     }
                 } else {
-                    LOG.error("processDTO was null - shouldn't happen. ItemTwo={}", treatment);
+                    aapsLogger.error("processDTO was null - shouldn't happen. ItemTwo={}", treatment);
                 }
             } else {
                 if (processDTO != null) {
@@ -741,12 +745,11 @@ public class MedtronicHistoryData {
 
                         tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
 
-                        databaseHelper.createOrUpdate(tempBasal);
+                        MainApp.getDbHelper().createOrUpdate(tempBasal);
 
-                        if (isLogEnabled())
-                            LOG.debug("Edit " + ProcessHistoryRecord.TBR.getDescription() + " - (entryFromDb={}) ", tempBasal);
+                        aapsLogger.debug(LTag.PUMP, "Edit " + ProcessHistoryRecord.TBR.getDescription() + " - (entryFromDb={}) ", tempBasal);
                     } else {
-                        LOG.error("TempBasal not found. Item: {}", tempBasalProcessDTO.itemOne);
+                        aapsLogger.error("TempBasal not found. Item: {}", tempBasalProcessDTO.itemOne);
                     }
 
                 } else {
@@ -762,14 +765,13 @@ public class MedtronicHistoryData {
                     if (tempBasal == null) {
                         DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
 
-                        if (isLogEnabled())
-                            LOG.debug("Add " + ProcessHistoryRecord.TBR.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
+                        aapsLogger.debug(LTag.PUMP, "Add " + ProcessHistoryRecord.TBR.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
 
                         addTBR(treatment, (TemporaryBasal) treatmentDb);
                     } else {
                         // this shouldn't happen
                         if (tempBasal.durationInMinutes != tempBasalProcessDTO.getDuration()) {
-                            LOG.debug("Found entry with wrong duration (shouldn't happen)... updating");
+                            aapsLogger.debug(LTag.PUMP, "Found entry with wrong duration (shouldn't happen)... updating");
                             tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
                         }
 
@@ -791,7 +793,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(pumpId);
+        TemporaryBasal tempBasal = MainApp.getDbHelper().findTempBasalByPumpId(pumpId);
         return tempBasal;
     }
 
@@ -812,26 +814,26 @@ public class MedtronicHistoryData {
         //proposedTime += (this.pumpTime.timeDifference * 1000);
 
         if (doubleBolusDebug)
-            LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}", treatment, gson.toJson(entriesFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}", treatment, gson().toJson(entriesFromHistory));
 
         if (entriesFromHistory.size() == 0) {
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb=null", treatment);
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb=null", treatment);
             return null;
         } else if (entriesFromHistory.size() == 1) {
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=SingleEntry", treatment, entriesFromHistory.get(0));
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=SingleEntry", treatment, entriesFromHistory.get(0));
 
             // TODO: Fix db code
             // if difference is bigger than 2 minutes we discard entry
             long maxMillisAllowed = DateTimeUtil.getMillisFromATDWithAddedMinutes(treatment.atechDateTime, 2);
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: findDbEntry maxMillisAllowed={}, AtechDateTime={} (add 2 minutes). ", maxMillisAllowed, treatment.atechDateTime);
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry maxMillisAllowed={}, AtechDateTime={} (add 2 minutes). ", maxMillisAllowed, treatment.atechDateTime);
 
             if (entriesFromHistory.get(0).getDate() > maxMillisAllowed) {
                 if (doubleBolusDebug)
-                    LOG.debug("DoubleBolusDebug: findDbEntry entry filtered out, returning null. ");
+                    aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry entry filtered out, returning null. ");
                 return null;
             }
 
@@ -859,18 +861,17 @@ public class MedtronicHistoryData {
 
                 if (outList.size() == 1) {
                     if (doubleBolusDebug)
-                        LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=EntrySelected, AtTimeMin={}, AtTimeSec={}", treatment, entriesFromHistory.get(0), min, sec);
+                        aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=EntrySelected, AtTimeMin={}, AtTimeSec={}", treatment, entriesFromHistory.get(0), min, sec);
 
                     return outList.get(0);
                 }
 
                 if (min == 0 && sec == 10 && outList.size() > 1) {
-                    if (isLogEnabled())
-                        LOG.error("Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
-                                min, sec, outList.size(), gson.toJson(outList));
+                    aapsLogger.error("Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
+                            min, sec, outList.size(), gson().toJson(outList));
                     if (doubleBolusDebug)
-                        LOG.debug("DoubleBolusDebug: findDbEntry Error - Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
-                                min, sec, outList.size(), gson.toJson(outList));
+                        aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Error - Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
+                                min, sec, outList.size(), gson().toJson(outList));
                 }
             }
         }
@@ -881,9 +882,9 @@ public class MedtronicHistoryData {
 
     private List<? extends DbObjectBase> getDatabaseEntriesByLastTimestamp(long startTimestamp, ProcessHistoryRecord processHistoryRecord) {
         if (processHistoryRecord == ProcessHistoryRecord.Bolus) {
-            return TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(startTimestamp);
+            return activePlugin.getActiveTreatments().getTreatmentsFromHistoryAfterTimestamp(startTimestamp);
         } else {
-            return databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true);
+            return MainApp.getDbHelper().getTemporaryBasalsDataFromTime(startTimestamp, true);
         }
     }
 
@@ -919,9 +920,9 @@ public class MedtronicHistoryData {
         }
 
         if (doubleBolusDebug)
-            LOG.debug("DoubleBolusDebug: filterOutAlreadyAddedEntries: PumpHistory={}, Treatments={}",
-                    gson.toJson(removeTreatmentsFromPH),
-                    gsonCore.toJson(removeTreatmentsFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: filterOutAlreadyAddedEntries: PumpHistory={}, Treatments={}",
+                    gson().toJson(removeTreatmentsFromPH),
+                    gsonCore().toJson(removeTreatmentsFromHistory));
 
         treatmentsFromHistory.removeAll(removeTreatmentsFromHistory);
     }
@@ -933,7 +934,7 @@ public class MedtronicHistoryData {
 
         if (treatment == null) {
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(tretament==null): Bolus={}", bolusDTO);
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament==null): Bolus={}", bolusDTO);
 
             switch (bolusDTO.getBolusType()) {
                 case Normal: {
@@ -947,21 +948,20 @@ public class MedtronicHistoryData {
                     addCarbsFromEstimate(detailedBolusInfo, bolus);
 
                     if (doubleBolusDebug)
-                        LOG.debug("DoubleBolusDebug: addBolus(tretament==null): DetailedBolusInfo={}", detailedBolusInfo);
+                        aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament==null): DetailedBolusInfo={}", detailedBolusInfo);
 
-                    boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+                    boolean newRecord = activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
 
                     bolus.setLinkedObject(detailedBolusInfo);
 
-                    if (isLogEnabled())
-                        LOG.debug("addBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
-                                detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
+                    aapsLogger.debug(LTag.PUMP, "addBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
+                            detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
                 }
                 break;
 
                 case Audio:
                 case Extended: {
-                    ExtendedBolus extendedBolus = new ExtendedBolus();
+                    ExtendedBolus extendedBolus = new ExtendedBolus(injector);
                     extendedBolus.date = tryToGetByLocalTime(bolus.atechDateTime);
                     extendedBolus.source = Source.PUMP;
                     extendedBolus.insulin = bolusDTO.getDeliveredAmount();
@@ -972,13 +972,12 @@ public class MedtronicHistoryData {
                     bolus.setLinkedObject(extendedBolus);
 
                     if (doubleBolusDebug)
-                        LOG.debug("DoubleBolusDebug: addBolus(tretament==null): ExtendedBolus={}", extendedBolus);
+                        aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament==null): ExtendedBolus={}", extendedBolus);
 
-                    TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+                    activePlugin.getActiveTreatments().addToHistoryExtendedBolus(extendedBolus);
 
-                    if (isLogEnabled())
-                        LOG.debug("addBolus - Extended [date={},pumpId={}, insulin={}, duration={}]", extendedBolus.date,
-                                extendedBolus.pumpId, extendedBolus.insulin, extendedBolus.durationInMinutes);
+                    aapsLogger.debug(LTag.PUMP, "addBolus - Extended [date={},pumpId={}, insulin={}, duration={}]", extendedBolus.date,
+                            extendedBolus.pumpId, extendedBolus.insulin, extendedBolus.durationInMinutes);
 
                 }
                 break;
@@ -987,20 +986,19 @@ public class MedtronicHistoryData {
         } else {
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(OldTreatment={}): Bolus={}", treatment, bolusDTO);
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(OldTreatment={}): Bolus={}", treatment, bolusDTO);
 
             treatment.source = Source.PUMP;
             treatment.pumpId = bolus.getPumpId();
             treatment.insulin = bolusDTO.getDeliveredAmount();
 
-            TreatmentService.UpdateReturn updateReturn = TreatmentsPlugin.getPlugin().getService().createOrUpdateMedtronic(treatment, false);
+            TreatmentService.UpdateReturn updateReturn = ((TreatmentsPlugin) activePlugin.getActiveTreatments()).getService().createOrUpdateMedtronic(treatment, false);
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): NewTreatment={}, UpdateReturn={}", treatment, updateReturn);
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament!=null): NewTreatment={}, UpdateReturn={}", treatment, updateReturn);
 
-            if (isLogEnabled())
-                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", treatment.date,
-                        treatment.pumpId, treatment.insulin, updateReturn.toString());
+            aapsLogger.debug(LTag.PUMP, "editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", treatment.date,
+                    treatment.pumpId, treatment.insulin, updateReturn.toString());
 
             bolus.setLinkedObject(treatment);
 
@@ -1015,7 +1013,7 @@ public class MedtronicHistoryData {
             BolusWizardDTO bolusWizard = (BolusWizardDTO) bolus.getDecodedData().get("Estimate");
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addCarbsFromEstimate: Bolus={}, BolusWizardDTO={}", bolus, bolusWizard);
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addCarbsFromEstimate: Bolus={}, BolusWizardDTO={}", bolus, bolusWizard);
 
             detailedBolusInfo.carbs = bolusWizard.carbs;
         }
@@ -1030,7 +1028,7 @@ public class MedtronicHistoryData {
         String operation = "editTBR";
 
         if (temporaryBasalDb == null) {
-            temporaryBasalDb = new TemporaryBasal();
+            temporaryBasalDb = new TemporaryBasal(injector);
             temporaryBasalDb.date = tryToGetByLocalTime(treatment.atechDateTime);
 
             operation = "addTBR";
@@ -1044,16 +1042,15 @@ public class MedtronicHistoryData {
 
         treatment.setLinkedObject(temporaryBasalDb);
 
-        databaseHelper.createOrUpdate(temporaryBasalDb);
+        MainApp.getDbHelper().createOrUpdate(temporaryBasalDb);
 
-        if (isLogEnabled())
-            LOG.debug(operation + " - [date={},pumpId={}, rate={} {}, duration={}]", //
-                    temporaryBasalDb.date, //
-                    temporaryBasalDb.pumpId, //
-                    temporaryBasalDb.isAbsolute ? String.format(Locale.ENGLISH, "%.2f", temporaryBasalDb.absoluteRate) :
-                            String.format(Locale.ENGLISH, "%d", temporaryBasalDb.percentRate), //
-                    temporaryBasalDb.isAbsolute ? "U/h" : "%", //
-                    temporaryBasalDb.durationInMinutes);
+        aapsLogger.debug(LTag.PUMP, operation + " - [date={},pumpId={}, rate={} {}, duration={}]", //
+                temporaryBasalDb.date, //
+                temporaryBasalDb.pumpId, //
+                temporaryBasalDb.isAbsolute ? String.format(Locale.ENGLISH, "%.2f", temporaryBasalDb.absoluteRate) :
+                        String.format(Locale.ENGLISH, "%d", temporaryBasalDb.percentRate), //
+                temporaryBasalDb.isAbsolute ? "U/h" : "%", //
+                temporaryBasalDb.durationInMinutes);
     }
 
 
@@ -1061,11 +1058,11 @@ public class MedtronicHistoryData {
 
         for (TempBasalProcessDTO tempBasalProcess : tempBasalProcessList) {
 
-            TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(tempBasalProcess.itemOne.getPumpId());
+            TemporaryBasal tempBasal = MainApp.getDbHelper().findTempBasalByPumpId(tempBasalProcess.itemOne.getPumpId());
 
             if (tempBasal == null) {
                 // add
-                tempBasal = new TemporaryBasal();
+                tempBasal = new TemporaryBasal(injector);
                 tempBasal.date = tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime);
 
                 tempBasal.source = Source.PUMP;
@@ -1077,7 +1074,7 @@ public class MedtronicHistoryData {
                 tempBasalProcess.itemOne.setLinkedObject(tempBasal);
                 tempBasalProcess.itemTwo.setLinkedObject(tempBasal);
 
-                databaseHelper.createOrUpdate(tempBasal);
+                MainApp.getDbHelper().createOrUpdate(tempBasal);
 
             }
         }
@@ -1224,11 +1221,11 @@ public class MedtronicHistoryData {
 
 
         if (!finishedItems) {
-            showLogs("NoDeliveryRewindPrimeRecords: Not finished Items: ", gson.toJson(tempData));
+            showLogs("NoDeliveryRewindPrimeRecords: Not finished Items: ", gson().toJson(tempData));
             return outList;
         }
 
-        showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson.toJson(tempData));
+        showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson().toJson(tempData));
 
         List<PumpHistoryEntry> items = getFilteredItems(tempData, //
                 PumpHistoryEntryType.Prime
@@ -1324,7 +1321,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        LocalDateTime oldestEntryTime = null;
+        LocalDateTime oldestEntryTime;
 
         try {
 
@@ -1335,7 +1332,7 @@ public class MedtronicHistoryData {
 //                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
 //            }
         } catch (Exception ex) {
-            LOG.error("Problem decoding date from last record: {}" + currentTreatment);
+            aapsLogger.error("Problem decoding date from last record: {}" + currentTreatment);
             return 8; // default return of 6 minutes
         }
 
@@ -1344,9 +1341,8 @@ public class MedtronicHistoryData {
         Minutes minutes = Minutes.minutesBetween(oldestEntryTime, now);
 
         // returns oldest time in history, with calculated time difference between pump and phone, minus 5 minutes
-        if (isLogEnabled())
-            LOG.debug("Oldest entry: {}, pumpTimeDifference={}, newDt={}, currentTime={}, differenceMin={}", dt,
-                    this.pumpTime.timeDifference, oldestEntryTime, now, minutes.getMinutes());
+        aapsLogger.debug(LTag.PUMP, "Oldest entry: {}, pumpTimeDifference={}, newDt={}, currentTime={}, differenceMin={}", dt,
+                this.pumpTime.timeDifference, oldestEntryTime, now, minutes.getMinutes());
 
         return minutes.getMinutes();
     }
@@ -1366,22 +1362,22 @@ public class MedtronicHistoryData {
         }
 
         if (doubleBolusDebug)
-            LOG.debug("DoubleBolusDebug: getOldestTimestamp. Oldest entry found: time={}, object={}", dt, currentTreatment);
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: getOldestTimestamp. Oldest entry found: time={}, object={}", dt, currentTreatment);
 
         try {
 
             GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(dt);
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: getOldestTimestamp. oldestEntryTime: {}", DateTimeUtil.toString(oldestEntryTime));
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: getOldestTimestamp. oldestEntryTime: {}", DateTimeUtil.toString(oldestEntryTime));
             oldestEntryTime.add(Calendar.MINUTE, -2);
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: getOldestTimestamp. oldestEntryTime (-2m): {}, timeInMillis={}", DateTimeUtil.toString(oldestEntryTime), oldestEntryTime.getTimeInMillis());
+                aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: getOldestTimestamp. oldestEntryTime (-2m): {}, timeInMillis={}", DateTimeUtil.toString(oldestEntryTime), oldestEntryTime.getTimeInMillis());
 
             return oldestEntryTime.getTimeInMillis();
 
         } catch (Exception ex) {
-            LOG.error("Problem decoding date from last record: {}", currentTreatment);
+            aapsLogger.error("Problem decoding date from last record: {}", currentTreatment);
             return 8; // default return of 6 minutes
         }
 
@@ -1390,11 +1386,11 @@ public class MedtronicHistoryData {
 
     private PumpHistoryEntryType getTDDType() {
 
-        if (MedtronicUtil.getMedtronicPumpModel() == null) {
+        if (medtronicUtil.getMedtronicPumpModel() == null) {
             return PumpHistoryEntryType.EndResultTotals;
         }
 
-        switch (MedtronicUtil.getMedtronicPumpModel()) {
+        switch (medtronicUtil.getMedtronicPumpModel()) {
 
             case Medtronic_515:
             case Medtronic_715:
@@ -1421,19 +1417,17 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
-        if (isLogEnabled())
-            LOG.debug("hasBasalProfileChanged. Items: " + gson.toJson(filteredItems));
+        aapsLogger.debug(LTag.PUMP, "hasBasalProfileChanged. Items: " + gson().toJson(filteredItems));
 
         return (filteredItems.size() > 0);
     }
 
 
-    public void processLastBasalProfileChange(MedtronicPumpStatus mdtPumpStatus) {
+    public void processLastBasalProfileChange(PumpType pumpType, MedtronicPumpStatus mdtPumpStatus) {
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
-        if (isLogEnabled())
-            LOG.debug("processLastBasalProfileChange. Items: " + filteredItems);
+        aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. Items: " + filteredItems);
 
         PumpHistoryEntry newProfile = null;
         Long lastDate = null;
@@ -1452,11 +1446,10 @@ public class MedtronicHistoryData {
         }
 
         if (newProfile != null) {
-            if (isLogEnabled())
-                LOG.debug("processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
+            aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
             BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
 
-            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour(pumpType);
         }
     }
 
@@ -1470,7 +1463,6 @@ public class MedtronicHistoryData {
     public void setLastHistoryRecordTime(Long lastHistoryRecordTime) {
 
         // this.previousLastHistoryRecordTime = this.lastHistoryRecordTime;
-        this.lastHistoryRecordTime = lastHistoryRecordTime;
     }
 
 
@@ -1493,8 +1485,8 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry pumpHistoryEntry : TBRs_Input) {
             if (map.containsKey(pumpHistoryEntry.DT)) {
-                MedtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
-                pumpHistoryEntry.setEntryType(PumpHistoryEntryType.TempBasalCombined);
+                medtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
+                pumpHistoryEntry.setEntryType(medtronicUtil.getMedtronicPumpModel(), PumpHistoryEntryType.TempBasalCombined);
                 TBRs.add(pumpHistoryEntry);
                 map.remove(pumpHistoryEntry.DT);
             } else {
@@ -1517,8 +1509,7 @@ public class MedtronicHistoryData {
         } else {
             List<PumpHistoryEntry> filteredItems = getFilteredItems(entryTypes);
 
-            if (isLogEnabled())
-                LOG.debug("Items: " + filteredItems);
+            aapsLogger.debug(LTag.PUMP, "Items: " + filteredItems);
 
             return filteredItems.size() > 0;
         }
@@ -1527,7 +1518,7 @@ public class MedtronicHistoryData {
 
     private List<PumpHistoryEntry> getFilteredItems(List<PumpHistoryEntry> inList, PumpHistoryEntryType... entryTypes) {
 
-        // LOG.debug("InList: " + inList.size());
+        // aapsLogger.debug(LTag.PUMP, "InList: " + inList.size());
         List<PumpHistoryEntry> outList = new ArrayList<>();
 
         if (inList != null && inList.size() > 0) {
@@ -1547,7 +1538,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        // LOG.debug("OutList: " + outList.size());
+        // aapsLogger.debug(LTag.PUMP, "OutList: " + outList.size());
 
         return outList;
     }
@@ -1560,10 +1551,6 @@ public class MedtronicHistoryData {
 
     private String getLogPrefix() {
         return "MedtronicHistoryData::";
-    }
-
-    private static boolean isLogEnabled() {
-        return (L.isEnabled(L.PUMP));
     }
 
 }

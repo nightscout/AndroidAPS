@@ -1,16 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.SystemClock;
 
-import info.nightscout.androidaps.logging.L;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 
@@ -19,12 +17,13 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Gatt
  */
 public class CharacteristicWriteOperation extends BLECommOperation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private final AAPSLogger aapsLogger;
 
     private BluetoothGattCharacteristic characteristic;
 
 
-    public CharacteristicWriteOperation(BluetoothGatt gatt, BluetoothGattCharacteristic chara, byte[] value) {
+    public CharacteristicWriteOperation(AAPSLogger aapsLogger, BluetoothGatt gatt, BluetoothGattCharacteristic chara, byte[] value) {
+        this.aapsLogger = aapsLogger;
         this.gatt = gatt;
         this.characteristic = chara;
         this.value = value;
@@ -41,14 +40,14 @@ public class CharacteristicWriteOperation extends BLECommOperation {
             boolean didAcquire = operationComplete.tryAcquire(getGattOperationTimeout_ms(), TimeUnit.MILLISECONDS);
             if (didAcquire) {
                 SystemClock.sleep(1); // This is to allow the IBinder thread to exit before we continue, allowing easier
-                                      // understanding of the sequence of events.
+                // understanding of the sequence of events.
                 // success
             } else {
-                LOG.error("Timeout waiting for gatt write operation to complete");
+                aapsLogger.error(LTag.PUMPBTCOMM, "Timeout waiting for gatt write operation to complete");
                 timedOut = true;
             }
         } catch (InterruptedException e) {
-            LOG.error("Interrupted while waiting for gatt write operation to complete");
+            aapsLogger.error(LTag.PUMPBTCOMM, "Interrupted while waiting for gatt write operation to complete");
             interrupted = true;
         }
 
@@ -59,16 +58,10 @@ public class CharacteristicWriteOperation extends BLECommOperation {
     @Override
     public void gattOperationCompletionCallback(UUID uuid, byte[] value) {
         if (!characteristic.getUuid().equals(uuid)) {
-            LOG.error(String.format(
-                "Completion callback: UUID does not match! out of sequence? Found: %s, should be %s",
-                GattAttributes.lookup(characteristic.getUuid()), GattAttributes.lookup(uuid)));
+            aapsLogger.error(LTag.PUMPCOMM, String.format(
+                    "Completion callback: UUID does not match! out of sequence? Found: %s, should be %s",
+                    GattAttributes.lookup(characteristic.getUuid()), GattAttributes.lookup(uuid)));
         }
         operationComplete.release();
     }
-
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPBTCOMM);
-    }
-
 }

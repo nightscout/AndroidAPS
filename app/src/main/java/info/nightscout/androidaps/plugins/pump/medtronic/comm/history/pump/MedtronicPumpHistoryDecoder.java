@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
-import android.util.Log;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
@@ -26,21 +25,26 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- * 
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
+@Singleton
 public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHistoryEntry> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private final AAPSLogger aapsLogger;
+    private final MedtronicUtil medtronicUtil;
 
     private PumpHistoryEntry tbrPreviousRecord;
     private PumpHistoryEntry changeTimeRecord;
-    private MedtronicDeviceType deviceType;
-    private static final String TAG = "MdtPumpHistoryDecoder";
 
-
-    public MedtronicPumpHistoryDecoder() {
+    @Inject
+    public MedtronicPumpHistoryDecoder(
+            AAPSLogger aapsLogger,
+            MedtronicUtil medtronicUtil
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.medtronicUtil = medtronicUtil;
     }
 
 
@@ -49,15 +53,13 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         int counter = 0;
         int record = 0;
-        boolean incompletePacket = false;
-        deviceType = MedtronicUtil.getMedtronicPumpModel();
+        boolean incompletePacket;
 
-        List<PumpHistoryEntry> outList = new ArrayList<PumpHistoryEntry>();
+        List<PumpHistoryEntry> outList = new ArrayList<>();
         String skipped = null;
-        int elementStart = 0;
 
         if (dataClear.size() == 0) {
-            Log.e(TAG, "Empty page.");
+            aapsLogger.error(LTag.PUMPBTCOMM, "Empty page.");
             return outList;
         }
 
@@ -75,7 +77,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 continue;
             } else {
                 if (skipped != null) {
-                    Log.w(TAG, " ... Skipped " + skipped);
+                    aapsLogger.warn(LTag.PUMPBTCOMM, " ... Skipped " + skipped);
                     skipped = null;
                 }
             }
@@ -83,7 +85,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             PumpHistoryEntryType entryType = PumpHistoryEntryType.getByCode(opCode);
 
             PumpHistoryEntry pe = new PumpHistoryEntry();
-            pe.setEntryType(entryType);
+            pe.setEntryType(medtronicUtil.getMedtronicPumpModel(), entryType);
             pe.setOffset(counter);
 
             counter++;
@@ -92,11 +94,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 break;
             }
 
-            List<Byte> listRawData = new ArrayList<Byte>();
+            List<Byte> listRawData = new ArrayList<>();
             listRawData.add((byte) opCode);
 
             if (entryType == PumpHistoryEntryType.UnabsorbedInsulin
-                || entryType == PumpHistoryEntryType.UnabsorbedInsulin512) {
+                    || entryType == PumpHistoryEntryType.UnabsorbedInsulin512) {
                 int elements = dataClear.get(counter);
                 listRawData.add((byte) elements);
                 counter++;
@@ -104,20 +106,20 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 int els = getUnsignedInt(elements);
 
                 for (int k = 0; k < (els - 2); k++) {
-                    listRawData.add((byte) dataClear.get(counter));
+                    listRawData.add(dataClear.get(counter));
                     counter++;
                 }
 
                 special = true;
             } else {
 
-                for (int j = 0; j < (entryType.getTotalLength() - 1); j++) {
+                for (int j = 0; j < (entryType.getTotalLength(medtronicUtil.getMedtronicPumpModel()) - 1); j++) {
 
                     try {
                         listRawData.add(dataClear.get(counter));
                         counter++;
                     } catch (Exception ex) {
-                        LOG.error("OpCode: " + ByteUtil.shortHexString((byte) opCode) + ", Invalid package: "
+                        aapsLogger.error(LTag.PUMPBTCOMM, "OpCode: " + ByteUtil.shortHexString((byte) opCode) + ", Invalid package: "
                                 + ByteUtil.getHex(listRawData));
                         // throw ex;
                         incompletePacket = true;
@@ -132,14 +134,14 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             }
 
             if (entryType == PumpHistoryEntryType.None) {
-                LOG.error("Error in code. We should have not come into this branch.");
+                aapsLogger.error(LTag.PUMPBTCOMM, "Error in code. We should have not come into this branch.");
             } else {
 
                 if (pe.getEntryType() == PumpHistoryEntryType.UnknownBasePacket) {
                     pe.setOpCode(opCode);
                 }
 
-                if (entryType.getHeadLength() == 0)
+                if (entryType.getHeadLength(medtronicUtil.getMedtronicPumpModel()) == 0)
                     special = true;
 
                 pe.setData(listRawData, special);
@@ -149,7 +151,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 if ((decoded == RecordDecodeStatus.OK) || (decoded == RecordDecodeStatus.Ignored)) {
                     //Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
                 } else {
-                    Log.w(TAG, "#" + record + " " + decoded.getDescription() + "  " + pe);
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "#" + record + " " + decoded.getDescription() + "  " + pe);
                 }
 
                 addToStatistics(pe, decoded, null);
@@ -172,13 +174,13 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         try {
             return decodeRecord(record, false);
         } catch (Exception ex) {
-            LOG.error("     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
+            aapsLogger.error(LTag.PUMPBTCOMM, "     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
             return RecordDecodeStatus.Error;
         }
     }
 
 
-    public RecordDecodeStatus decodeRecord(PumpHistoryEntry entry, boolean x) {
+    private RecordDecodeStatus decodeRecord(PumpHistoryEntry entry, boolean x) {
 
         if (entry.getDateTimeLength() > 0) {
             decodeDateTime(entry);
@@ -259,7 +261,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case EventUnknown_0x4d:
             case EventUnknown_MM522_0x25:
             case EventUnknown_MM522_0x05:
-                LOG.debug(" -- ignored Unknown Pump Entry: " + entry);
+                aapsLogger.debug(LTag.PUMPBTCOMM, " -- ignored Unknown Pump Entry: " + entry);
                 return RecordDecodeStatus.Ignored;
 
             case UnabsorbedInsulin:
@@ -339,7 +341,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 return RecordDecodeStatus.Error;
 
             default: {
-                LOG.debug("Not supported: " + entry.getEntryType());
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Not supported: " + entry.getEntryType());
                 return RecordDecodeStatus.NotSupported;
             }
 
@@ -366,7 +368,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         // LOG.debug("decodeBasalProfile: {}", entry);
 
-        BasalProfile basalProfile = new BasalProfile();
+        BasalProfile basalProfile = new BasalProfile(aapsLogger);
         basalProfile.setRawDataFromHistory(entry.getBody());
 
         // LOG.debug("decodeBasalProfile BasalProfile: {}", basalProfile);
@@ -395,7 +397,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    public static String getFormattedValue(float value, int decimals) {
+    private static String getFormattedValue(float value, int decimals) {
         return String.format(Locale.ENGLISH, "%." + decimals + "f", value);
     }
 
@@ -407,16 +409,14 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         Float rate = null;
         int index = entry.getHead()[0];
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
-                MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f;
         }
 
         //LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
 
         if (rate == null) {
-            LOG.warn("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
-                    body);
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
             return RecordDecodeStatus.Error;
         } else {
             entry.addDecodedData("Value", getFormattedFloat(rate, 3));
@@ -434,8 +434,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         float bolusStrokes = 10.0f;
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
-                MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolusStrokes = 40.0f;
 
@@ -446,19 +445,19 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             // carb_ratio (?) = (((self.body[2] & 0x07) << 8) + self.body[3]) /
             // 10.0s
             dto.insulinSensitivity = new Float(body[4]);
-            dto.bgTargetLow = (int)body[5];
-            dto.bgTargetHigh = (int)body[14];
+            dto.bgTargetLow = (int) body[5];
+            dto.bgTargetHigh = (int) body[14];
             dto.correctionEstimate = (((body[9] & 0x38) << 5) + body[6]) / bolusStrokes;
             dto.foodEstimate = ((body[7] << 8) + body[8]) / bolusStrokes;
             dto.unabsorbedInsulin = ((body[10] << 8) + body[11]) / bolusStrokes;
             dto.bolusTotal = ((body[12] << 8) + body[13]) / bolusStrokes;
         } else {
             dto.bloodGlucose = (((body[1] & 0x0F) << 8) | entry.getHead()[0]);
-            dto.carbs = (int)body[0];
+            dto.carbs = (int) body[0];
             dto.carbRatio = Float.valueOf(body[2]);
             dto.insulinSensitivity = new Float(body[3]);
-            dto.bgTargetLow = (int)body[4];
-            dto.bgTargetHigh = (int)body[12];
+            dto.bgTargetLow = (int) body[4];
+            dto.bgTargetHigh = (int) body[12];
             dto.bolusTotal = body[11] / bolusStrokes;
             dto.foodEstimate = body[6] / bolusStrokes;
             dto.unabsorbedInsulin = body[9] / bolusStrokes;
@@ -489,7 +488,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         dto.carbs = (body[1] & 0xC) << 6 | body[0]; // (int)body[0];
         dto.carbRatio = Float.valueOf(body[2]);
         dto.insulinSensitivity = new Float(body[3]);
-        dto.bgTargetLow = (int)body[4];
+        dto.bgTargetLow = (int) body[4];
         dto.foodEstimate = body[6] / 10.0f;
         dto.correctionEstimate = (body[7] + (body[5] & 0x0F)) / bolusStrokes;
         dto.unabsorbedInsulin = body[9] / bolusStrokes;
@@ -569,8 +568,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         byte[] data = entry.getHead();
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
-                MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus.setRequestedAmount(ByteUtil.toInt(data[0], data[1]) / 40.0d);
             bolus.setDeliveredAmount(ByteUtil.toInt(data[2], data[3]) / 40.0d);
             bolus.setInsulinOnBoard(ByteUtil.toInt(data[4], data[5]) / 40.0d);
@@ -605,7 +603,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    public static void decodeTempBasal(PumpHistoryEntry tbrPreviousRecord, PumpHistoryEntry entry) {
+    public void decodeTempBasal(PumpHistoryEntry tbrPreviousRecord, PumpHistoryEntry entry) {
 
         PumpHistoryEntry tbrRate = null, tbrDuration = null;
 
@@ -638,7 +636,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         byte[] dt = entry.getDatetime();
 
         if (dt == null) {
-            LOG.warn("DateTime not set.");
+            aapsLogger.warn(LTag.PUMPBTCOMM, "DateTime not set.");
         }
 
         if (entry.getDateTimeLength() == 5) {
@@ -672,7 +670,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
 
             if (dayOfMonth == 32) {
-                LOG.warn("Entry: Day 32 {} = [{}] {}", entry.getEntryType().name(),
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Entry: Day 32 {} = [{}] {}", entry.getEntryType().name(),
                         ByteUtil.getHex(entry.getRawData()), entry);
             }
 
@@ -685,7 +683,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
 
         } else {
-            LOG.warn("Unknown datetime format: " + entry.getDateTimeLength());
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Unknown datetime format: " + entry.getDateTimeLength());
         }
 
     }

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pairing">Párovanie</string>
+    <!--    General-->
+    <string name="error">Chyba</string>
+    <string name="not_set_short">Nenastavené</string>
+    <string name="failedupdatebasalprofile">Chyba pri aktualizovaní bazálneho profilu</string>
+    <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
+    <string name="invalidinput">Chybné vstupné dáta</string>
+    <string name="tempbasaldeliveryerror">Chyba podávania dočasného bazálu</string>
+    <string name="goingtodeliver">Podávanie %1$.2fJ inzulínu</string>
+    <string name="waitingforpump">Čakám na pumpu</string>
+    <string name="connectingfor">Pripájanie %1$d sek</string>
+    <string name="bolusdelivering">Podávanie %1$.2fJI</string>
+    <string name="handshaking">Overovanie</string>
+    <string name="connecting">Pripájanie</string>
+    <string name="connected">Pripojené</string>
+    <string name="disconnected">Odpojené</string>
+    <string name="disconnecting">Odpájanie</string>
+    <string name="androidaps_start">AndroidAPS spustený</string>
+    <string name="formatinsulinunits">%1$.2fJI</string>
+    <string name="reservoirvalue">%1$.0f / %2$d JI</string>
+    <string name="pump_basebasalrate">%1$.2fJI/h</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pumpa je zaneprázdnená</string>
+    <string name="connectionerror">Chyba pripájania pumpy</string>
+    <string name="youareonallowedlimit">Dosiahnutý limit</string>
+    <string name="objectives">Ciele</string>
+    <string name="close">Zavrieť</string>
+    <string name="please_wait">Čakajte prosím...</string>
+    <string name="mute">Stíšiť</string>
+    <string name="reload">Načítať</string>
+    <string name="stoppressed">STLAČENÝ STOP</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Sacharidy</string>
+    <string name="invalidprofile">Chybný profil !!!</string>
+    <string name="noprofileset">Nenastavený žiadny profil</string>
+    <string name="date">Dátum</string>
+    <string name="units_label">Jednotky</string>
+    <string name="dia_label">Doba pôsobenia inzulínu</string>
+    <string name="ic_label">Inzulínovo-sacharidový pomer</string>
+    <string name="isf_label">Citlivosť</string>
+    <string name="basal_label">Bazál</string>
+    <string name="target_label">Cieľ</string>
+    <string name="initializing">Inicializácia ...</string>
+    <string name="serialnumber">Sériové číslo</string>
+    <string name="battery_label">Batéria</string>
+    <string name="lastconnection_label">Posledné spojenie</string>
+    <string name="lastbolus_label">Posledný bolus</string>
+    <string name="dailyunits">Jednotiek za deň</string>
+    <string name="basebasalrate_label">Základná hodnota bazálu</string>
+    <string name="tempbasal_label">Dočasný bazál</string>
+    <string name="virtualpump_extendedbolus_label">Rozložený bolus</string>
+    <string name="reservoir_label">Zásobník</string>
+    <string name="pumphistory">História pumpy</string>
+    <string name="viewprofile">Zobraziť profil</string>
+    <string name="eventtype">Typ udalosti</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="advancedsettings_title">Rozšírené nastavenia</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">Strážny pes BT</string>
+    <string name="btwatchdog_summary">Vypne na 1 sekundu Bluetooth v telefóne, pokiaľ se nedarí pripojiť k pumpe. Môže to pomôcť pri telefónoch, ktoré majú problémy s BT.</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
+    <string name="pumplimit">limit pumpy</string>
+    <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
+    <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
+    <string name="limitingbolus">Bolus obmedzený na %1$.1f JI: %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pumpa nie je inicializovaná, profil nenastavený!</string>
+    <!--    Dialogs-->
+    <string name="confirmation">Potvrdenie</string>
+    <string name="message">Správa</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="dismiss">ODMIETNUŤ</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nie je podporované.</string>
+    <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
+    <string name="location_not_found_title">Poloha nie je aktivovaná</string>
+    <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
+    <!--    DateUtil-->
+    <string name="minago">pred %1$d min</string>
+    <string name="hoursago">pred %1$.1fh</string>
+    <string name="shorthour">h</string>
+    <string name="days">dní</string>
+    <string name="hours">hodín</string>
+    <string name="unit_second">sekunda</string>
+    <string name="unit_minute">minúta</string>
+    <string name="unit_hour">hodina</string>
+    <string name="unit_day">deň</string>
+    <string name="unit_week">týždeň</string>
+    <string name="unit_seconds">sekúnd</string>
+    <string name="unit_minutes">minút</string>
+    <string name="unit_hours">hodín</string>
+    <string name="unit_days">dní</string>
+    <string name="unit_weeks">týždňov</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %1$s</string>
+    <string name="profile_per_unit">/JI</string>
+    <string name="profile_ins_units_per_hour">JI/h</string>
+    <string name="profile_carbs_per_unit">g/JI</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Nebol vybraný žiadny profil</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Iba diskrétne hodnoty a nie rozsahy sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">Zrušiť dočasný bazál</string>
+    <string name="let_temp_basal_run">Nechať bežať aktuálny dočasný bazál</string>
+    <string name="rate">Hodnota</string>
+    <string name="duration">Trvanie</string>
+    <string name="reason">Zdôvodnenie</string>
+    <string name="nochangerequested">Nepožadovaná žiadna zmena</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Chybný profil: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Baz: <b>%4$.2f</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">Kontrola glykémie</string>
+    <string name="careportal_announcement">Oznámenie</string>
+    <string name="careportal_note">Poznámka</string>
+    <string name="careportal_question">Otázka</string>
+    <string name="careportal_exercise">Pohyb</string>
+    <string name="careportal_pumpsitechange">Výmena setu</string>
+    <string name="careportal_cgmsensorinsert">Výmena senzora</string>
+    <string name="careportal_cgmsensorstart">Spustenie senzora</string>
+    <string name="careportal_insulincartridgechange">Výmena inzulínu</string>
+    <string name="careportal_profileswitch">Prepnutie profilu</string>
+    <string name="careportal_snackbolus">Bolus na desiatu/olovrant</string>
+    <string name="careportal_mealbolus">Bolus na jedlo</string>
+    <string name="careportal_correctionbolus">Korekčný bolus</string>
+    <string name="careportal_combobolus">Kombinovaný bolus</string>
+    <string name="careportal_tempbasalstart">Začiatok dočasného bazálu</string>
+    <string name="careportal_tempbasalend">Koniec dočasného bazálu</string>
+    <string name="careportal_carbscorrection">Prídavok sacharidov</string>
+    <string name="careportal_openapsoffline">OpenAPS vypnuté</string>
+    <string name="careportal_pumpbatterychange">Výmena batérie v pumpe</string>
+    <string name="careportal_temporarytarget">Dočasný cieľ</string>
+    <string name="careportal_temporarytargetcancel">Zrušiť dočasný cieľ</string>
+    <string name="glucosetype_finger">Prst</string>
+    <string name="glucosetype_sensor">Senzor</string>
+    <string name="manual">Iný</string>
+    <string name="unknown">neznámy</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Vypršal čas na pripojenie</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Vykonané</string>
+    <string name="comment">Komentár</string>
+    <string name="success">Úspešne</string>
+    <string name="percent">Percent</string>
+    <string name="absolute">Absolútna</string>
+    <string name="configbuilder_insulin">Inzulín</string>
+    <string name="insulin_unit_shortname">JI</string>
+    <string name="waitingforpumpresult">Čakanie na výsledok</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="stats">Štatistiky</string>
+    <string name="cumulative_tdd">Kumulatívny TDD</string>
+    <string name="expweight">Exponenciálne vážený TDD</string>
+    <string name="basalrate">Bazál</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">CDD</string>
+    <string name="ratio">Pomer</string>
+    <string name="amount_days">Dní</string>
+    <string name="weight">Váha</string>
+    <string name="warning_Message">Pravdepodobne nepresné, ak bol použitý bolus na plnenie!</string>
+    <string name="olddata_Message">Zastaralé dáta. Prosím načítajte ich znovu</string>
+    <string name="tbb">Celk. denný bazál</string>
+    <string name="tbb2">TBB * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Detekcia času</string>
+</resources>

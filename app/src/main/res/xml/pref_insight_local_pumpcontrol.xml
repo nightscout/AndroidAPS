@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/insight_local">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/insight_local"
+        app:initialExpandedChildrenCount="0">
 
         <Preference android:title="@string/insight_pairing">
             <intent
@@ -44,6 +48,12 @@
             android:summary="@string/enable_tbr_emulation_summary"
             android:title="@string/enable_tbr_emulation" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_disable_vibration"
+            android:summary="@string/disable_vibration_summary"
+            android:title="@string/disable_vibration" />
+
         <EditTextPreference
             android:defaultValue="5"
             android:inputType="number"
@@ -61,5 +71,7 @@
             android:inputType="number"
             android:key="insight_disconnect_delay"
             android:title="@string/disconnect_delay" />
+
     </PreferenceCategory>
-</PreferenceScreen>
+
+</androidx.preference.PreferenceScreen>

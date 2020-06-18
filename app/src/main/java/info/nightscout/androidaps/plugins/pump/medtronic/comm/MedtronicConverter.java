@@ -2,13 +2,16 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
 import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -25,25 +28,30 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * High level decoder for data returned through MedtroniUIComm
  */
 
+@Singleton
 public class MedtronicConverter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private final AAPSLogger aapsLogger;
+    private final MedtronicUtil medtronicUtil;
 
-    MedtronicDeviceType pumpModel;
+    @Inject
+    public MedtronicConverter(
+            AAPSLogger aapsLogger,
+            MedtronicUtil medtronicUtil
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.medtronicUtil = medtronicUtil;
+    }
 
-
-    public Object convertResponse(MedtronicCommandType commandType, byte[] rawContent) {
+    Object convertResponse(PumpType pumpType, MedtronicCommandType commandType, byte[] rawContent) {
 
         if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
-            LOG.warn("Content is empty or too short, no data to convert (type={},isNull={},length={})",
+            aapsLogger.warn(LTag.PUMPCOMM, "Content is empty or too short, no data to convert (type={},isNull={},length={})",
                     commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
             return null;
         }
 
-        if (isLogEnabled())
-            LOG.debug("Raw response before convert: " + ByteUtil.shortHexString(rawContent));
-
-        this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
+        aapsLogger.debug(LTag.PUMPCOMM, "Raw response before convert: " + ByteUtil.shortHexString(rawContent));
 
         switch (commandType) {
 
@@ -66,12 +74,12 @@ public class MedtronicConverter {
             case GetBasalProfileSTD:
             case GetBasalProfileA:
             case GetBasalProfileB: {
-                return decodeBasalProfile(rawContent);
+                return decodeBasalProfile(pumpType, rawContent);
 
             }
 
             case ReadTemporaryBasal: {
-                return new TempBasalPair(rawContent); // 5
+                return new TempBasalPair(aapsLogger, rawContent); // 5
             }
 
             case Settings_512: {
@@ -95,29 +103,28 @@ public class MedtronicConverter {
     }
 
 
-    private BasalProfile decodeBasalProfile(byte[] rawContent) {
+    private BasalProfile decodeBasalProfile(PumpType pumpType, byte[] rawContent) {
 
-        BasalProfile basalProfile = new BasalProfile(rawContent);
+        BasalProfile basalProfile = new BasalProfile(aapsLogger, rawContent);
 
-        return basalProfile.verify() ? basalProfile : null;
+        return basalProfile.verify(pumpType) ? basalProfile : null;
     }
 
 
     private MedtronicDeviceType decodeModel(byte[] rawContent) {
 
         if ((rawContent == null || rawContent.length < 4)) {
-            LOG.warn("Error reading PumpModel, returning Unknown_Device");
+            aapsLogger.warn(LTag.PUMPCOMM, "Error reading PumpModel, returning Unknown_Device");
             return MedtronicDeviceType.Unknown_Device;
         }
 
         String rawModel = StringUtil.fromBytes(ByteUtil.substring(rawContent, 1, 3));
         MedtronicDeviceType pumpModel = MedtronicDeviceType.getByDescription(rawModel);
-        if (isLogEnabled())
-            LOG.debug("PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
+        aapsLogger.debug(LTag.PUMPCOMM, "PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
 
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
-            if (!MedtronicUtil.isModelSet()) {
-                MedtronicUtil.setMedtronicPumpModel(pumpModel);
+            if (!medtronicUtil.isModelSet()) {
+                medtronicUtil.setMedtronicPumpModel(pumpModel);
             }
         }
 
@@ -153,10 +160,10 @@ public class MedtronicConverter {
     }
 
 
-    protected Float decodeRemainingInsulin(byte[] rawData) {
+    private Float decodeRemainingInsulin(byte[] rawData) {
         int startIdx = 0;
 
-        this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
+        MedtronicDeviceType pumpModel = medtronicUtil.getMedtronicPumpModel();
 
         int strokes = pumpModel == null ? 10 : pumpModel.getBolusStrokes();
 
@@ -166,8 +173,7 @@ public class MedtronicConverter {
 
         float value = ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0f * strokes);
 
-        if (isLogEnabled())
-            LOG.debug("Remaining insulin: " + value);
+        aapsLogger.debug(LTag.PUMPCOMM, "Remaining insulin: " + value);
         return value;
     }
 
@@ -184,7 +190,7 @@ public class MedtronicConverter {
             LocalDateTime pumpTime = new LocalDateTime(year, month, day, hours, minutes, seconds);
             return pumpTime;
         } catch (IllegalFieldValueException e) {
-            LOG.error(
+            aapsLogger.error(LTag.PUMPCOMM,
                     "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
                     year, month, day, hours, minutes, seconds);
             return null;
@@ -193,7 +199,7 @@ public class MedtronicConverter {
     }
 
 
-    public Map<String, PumpSettingDTO> decodeSettingsLoop(byte[] rd) {
+    private Map<String, PumpSettingDTO> decodeSettingsLoop(byte[] rd) {
 
         Map<String, PumpSettingDTO> map = new HashMap<>();
 
@@ -270,7 +276,7 @@ public class MedtronicConverter {
         addSettingToMap("CFG_BASE_CLOCK_MODE", rd[getSettingIndexTimeDisplayFormat()] == 0 ? "12h" : "24h",
                 PumpConfigurationGroup.General, map);
 
-        if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] == 0 ? 50 : 100), PumpConfigurationGroup.Insulin,
                     map);
 //            LOG.debug("Insulin concentration: " + rd[9]);
@@ -322,7 +328,7 @@ public class MedtronicConverter {
     }
 
 
-    public void addSettingToMap(String key, String value, PumpConfigurationGroup group, Map<String, PumpSettingDTO> map) {
+    private void addSettingToMap(String key, String value, PumpConfigurationGroup group, Map<String, PumpSettingDTO> map) {
         map.put(key, new PumpSettingDTO(key, value, group));
     }
 
@@ -338,7 +344,7 @@ public class MedtronicConverter {
 
         addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20]), PumpConfigurationGroup.Other, map);
 
-        if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
 
             addSettingToMap("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus, map);
             addSettingToMap("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22]), PumpConfigurationGroup.Other, map);
@@ -351,7 +357,7 @@ public class MedtronicConverter {
     }
 
 
-    protected String parseResultEnable(int i) {
+    private String parseResultEnable(int i) {
         switch (i) {
             case 0:
                 return "No";
@@ -363,19 +369,19 @@ public class MedtronicConverter {
     }
 
 
-    public float getStrokesPerUnit(boolean isBasal) {
+    private float getStrokesPerUnit(boolean isBasal) {
         return isBasal ? 40.0f : 10; // pumpModel.getBolusStrokes();
     }
 
 
     // 512
-    public void decodeInsulinActionSetting(byte[] ai, Map<String, PumpSettingDTO> map) {
-        if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_512_712)) {
+    private void decodeInsulinActionSetting(byte[] ai, Map<String, PumpSettingDTO> map) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_512_712)) {
             addSettingToMap("PCFG_INSULIN_ACTION_TYPE", (ai[17] != 0 ? "Regular" : "Fast"),
                     PumpConfigurationGroup.Insulin, map);
         } else {
             int i = ai[17];
-            String s = "";
+            String s;
 
             if ((i == 0) || (i == 1)) {
                 s = ai[17] != 0 ? "Regular" : "Fast";
@@ -391,12 +397,12 @@ public class MedtronicConverter {
     }
 
 
-    public double decodeBasalInsulin(int i) {
+    private double decodeBasalInsulin(int i) {
         return (double) i / (double) getStrokesPerUnit(true);
     }
 
 
-    public double decodeBolusInsulin(int i) {
+    private double decodeBolusInsulin(int i) {
 
         return (double) i / (double) getStrokesPerUnit(false);
     }
@@ -412,19 +418,13 @@ public class MedtronicConverter {
     }
 
 
-    public double decodeMaxBolus(byte[] ai) {
+    private double decodeMaxBolus(byte[] ai) {
         return is523orHigher() ? decodeBolusInsulin(ByteUtil.toInt(ai[5], ai[6])) : decodeBolusInsulin(ByteUtil
                 .asUINT8(ai[5]));
     }
 
 
     private boolean is523orHigher() {
-        return (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher));
+        return (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher));
     }
-
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
-    }
-
 }

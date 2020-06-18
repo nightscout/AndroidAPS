@@ -13,22 +13,23 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryGroup;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+
 
 public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
-    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    @Inject MedtronicHistoryData medtronicHistoryData;
+    @Inject ResourceHelper resourceHelper;
 
     Spinner historyTypeSpinner;
     TextView statusView;
@@ -45,17 +46,12 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
     List<TypeList> typeListFull;
 
 
-    public MedtronicHistoryActivity() {
-        super();
-    }
-
-
     private void filterHistory(PumpHistoryEntryGroup group) {
 
         this.filteredHistoryList.clear();
 
         List<PumpHistoryEntry> list = new ArrayList<>();
-        list.addAll(MedtronicPumpPlugin.getPlugin().getMedtronicHistoryData().getAllHistory());
+        list.addAll(medtronicHistoryData.getAllHistory());
 
         //LOG.debug("Items on full list: {}", list.size());
 
@@ -112,9 +108,9 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.medtronic_history_activity);
 
-        historyTypeSpinner = (Spinner) findViewById(R.id.medtronic_historytype);
-        statusView = (TextView) findViewById(R.id.medtronic_historystatus);
-        recyclerView = (RecyclerView) findViewById(R.id.medtronic_history_recyclerview);
+        historyTypeSpinner = findViewById(R.id.medtronic_historytype);
+        statusView = findViewById(R.id.medtronic_historystatus);
+        recyclerView = findViewById(R.id.medtronic_history_recyclerview);
 
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
@@ -125,7 +121,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
         statusView.setVisibility(View.GONE);
 
-        typeListFull = getTypeList(PumpHistoryEntryGroup.getList());
+        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper));
 
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);
@@ -244,9 +240,9 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
             HistoryViewHolder(View itemView) {
                 super(itemView);
                 // cv = (CardView)itemView.findViewById(R.id.rileylink_history_item);
-                timeView = (TextView) itemView.findViewById(R.id.medtronic_history_time);
-                typeView = (TextView) itemView.findViewById(R.id.medtronic_history_source);
-                valueView = (TextView) itemView.findViewById(R.id.medtronic_history_description);
+                timeView = itemView.findViewById(R.id.medtronic_history_time);
+                typeView = itemView.findViewById(R.id.medtronic_history_source);
+                valueView = itemView.findViewById(R.id.medtronic_history_description);
             }
         }
     }

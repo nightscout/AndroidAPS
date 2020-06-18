@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_enable_fabric" translatable="false">enable_fabric</string>
+    <string name="key_language" translatable="false">language</string>
+    <string name="key_units" translatable="false">units</string>
+    <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
+    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
+    <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
+    <string name="key_activity_duration" translatable="false">activity_duration</string>
+    <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="key_hypo_duration" translatable="false">hypo_duration</string>
+    <string name="key_hypo_target" translatable="false">hypo_target</string>
+    <string name="key_low_mark" translatable="false">low_mark</string>
+    <string name="key_high_mark" translatable="false">high_mark</string>
+    <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
+    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
+    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
+    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="pairing">Pairing</string>
+
+    <!--    General-->
+    <string name="error">Error</string>
+    <string name="not_set_short">Not set</string>
+    <string name="failedupdatebasalprofile">Failed to update basal profile</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
+    <string name="invalidinput">Invalid input data</string>
+    <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
+    <string name="goingtodeliver">Going to deliver %1$.2fU</string>
+    <string name="waitingforpump">Waiting for pump</string>
+    <string name="connectingfor">Connecting for %1$d s</string>
+    <string name="bolusdelivering">Delivering %1$.2fU</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connecting">Connecting</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="disconnecting">Disconnecting</string>
+    <string name="androidaps_start">AndroidAPS started</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2fU/h</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d mins</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pump is busy</string>
+    <string name="connectionerror">Pump connection error</string>
+    <string name="youareonallowedlimit">You reached allowed limit</string>
+    <string name="objectives">Objectives</string>
+    <string name="close">Close</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="mute">Mute</string>
+    <string name="reload">Reload</string>
+    <string name="stoppressed">STOP PRESSED</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Carbs</string>
+    <string name="invalidprofile">Invalid profile !!!</string>
+    <string name="noprofileset">NO PROFILE SET</string>
+    <string name="date">Date</string>
+    <string name="units_label">Units</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Target</string>
+    <string name="initializing">Initializing ...</string>
+    <string name="serialnumber">Serial number</string>
+    <string name="battery_label">Battery</string>
+    <string name="lastconnection_label">Last connection</string>
+    <string name="lastbolus_label">Last bolus</string>
+    <string name="dailyunits">Daily units</string>
+    <string name="basebasalrate_label">Base basal rate</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="pumphistory">Pump history</string>
+    <string name="viewprofile">View profile</string>
+    <string name="eventtype">Event type</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
+
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
+    <string name="pumplimit">pump limit</string>
+    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="itmustbepositivevalue">it must be positive value</string>
+    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
+
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmation</string>
+    <string name="message">Message</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="dismiss">DISMISS</string>
+
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="location_not_found_title">Location Is Not Enabled</string>
+    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
+
+    <!--    DateUtil-->
+    <string name="minago">%1$dm ago</string>
+    <string name="hoursago">%1$.1fh ago</string>
+    <string name="shorthour">h</string>
+    <string name="days">days</string>
+    <string name="hours">hours</string>
+    <string name="unit_second">second</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconds</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">No profile selected</string>
+
+    <!--    PumpType-->
+    <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
+
+    <!--    APSResult-->
+    <string name="canceltemp">Cancel temp basal</string>
+    <string name="let_temp_basal_run">Let temp basal run</string>
+    <string name="rate">Rate</string>
+    <string name="duration">Duration</string>
+    <string name="reason">Reason</string>
+    <string name="nochangerequested">No change requested</string>
+
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Invalid profile: %1$s</string>
+
+    <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
+
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+
+    <!--    Translator-->
+    <string name="careportal_bgcheck">BG Check</string>
+    <string name="careportal_announcement">Announcement</string>
+    <string name="careportal_note">Note</string>
+    <string name="careportal_question">Question</string>
+    <string name="careportal_exercise">Exercise</string>
+    <string name="careportal_pumpsitechange">Pump Site Change</string>
+    <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
+    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
+    <string name="careportal_profileswitch">Profile switch</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
+    <string name="careportal_mealbolus">Meal Bolus</string>
+    <string name="careportal_correctionbolus">Correction Bolus</string>
+    <string name="careportal_combobolus">Combo Bolus</string>
+    <string name="careportal_tempbasalstart">Temp Basal Start</string>
+    <string name="careportal_tempbasalend">Temp Basal End</string>
+    <string name="careportal_carbscorrection">Carbs correction</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Pump Battery Change</string>
+    <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manual</string>
+    <string name="unknown">unknown</string>
+
+    <!--    Command-->
+    <string name="connectiontimedout">Connection timed out</string>
+
+    <!--    PumpEnactResult-->
+    <string name="enacted">Enacted</string>
+    <string name="comment">Comment</string>
+    <string name="success">Success</string>
+    <string name="percent">Percent</string>
+    <string name="absolute">Absolute</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="waitingforpumpresult">Waiting for result</string>
+    <string name="smb_shortname">SMB</string>
+
+    <!--    CarbsReq-->
+    <string name="carbsreq">%dg Additional Carbs Required Within %d Minutes</string>
+
+    <!--    TDDStatsActivity-->
+    <string name="stats">Stats</string>
+    <string name="cumulative_tdd">Cumulative TDD</string>
+    <string name="expweight">Exponentially Weighted TDD</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Ratio</string>
+    <string name="amount_days"># Days</string>
+    <string name="weight">Weight</string>
+    <string name="warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
+    <string name="olddata_Message">Old Data Please Press "RELOAD"</string>
+    <string name="tbb">Total Base Basal</string>
+    <string name="tbb2">TBB * 2</string>
+
+    <!--    Ntp-->
+    <string name="timedetection">Time detection</string>
+
+</resources>

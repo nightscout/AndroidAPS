@@ -5,22 +5,29 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import info.nightscout.androidaps.MainApp
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.virtualpump_fragment.*
-import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class VirtualPumpFragment : Fragment() {
+class VirtualPumpFragment : DaggerFragment() {
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+
     private val disposable = CompositeDisposable()
 
     private val loopHandler = Handler()
@@ -40,21 +47,18 @@ class VirtualPumpFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable.add(RxBus
-                .toObservable(EventVirtualPumpUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        )
-        disposable.add(RxBus
-                .toObservable(EventTempBasalChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        )
-        disposable.add(RxBus
-                .toObservable(EventExtendedBolusChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        )
+        disposable += rxBus
+            .toObservable(EventVirtualPumpUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventTempBasalChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventExtendedBolusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         updateGui()
     }
@@ -68,18 +72,18 @@ class VirtualPumpFragment : Fragment() {
 
     @Synchronized
     private fun updateGui() {
-        val virtualPump = VirtualPumpPlugin.getPlugin()
-        virtualpump_basabasalrate?.text = MainApp.gs(R.string.pump_basebasalrate, virtualPump.baseBasalRate)
-        virtualpump_tempbasal?.text = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
-                ?: ""
-        virtualpump_extendedbolus?.text = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis())?.toString() ?: ""
-        virtualpump_battery?.text = MainApp.gs(R.string.format_percent, virtualPump.batteryPercent)
-        virtualpump_reservoir?.text = MainApp.gs(R.string.formatinsulinunits, virtualPump.reservoirInUnits.toDouble())
+        virtualpump_basabasalrate?.text = resourceHelper.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
+        virtualpump_tempbasal?.text = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+            ?: ""
+        virtualpump_extendedbolus?.text = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
+            ?: ""
+        virtualpump_battery?.text = resourceHelper.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
+        virtualpump_reservoir?.text = resourceHelper.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
 
-        virtualPump.refreshConfiguration()
-        val pumpType = virtualPump.pumpType
+        virtualPumpPlugin.refreshConfiguration()
+        val pumpType = virtualPumpPlugin.pumpType
 
-        virtualpump_type?.text = pumpType.description
-        virtualpump_type_def?.text = pumpType.getFullDescription(MainApp.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals())
+        virtualpump_type?.text = pumpType?.description
+        virtualpump_type_def?.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), resourceHelper)
     }
 }

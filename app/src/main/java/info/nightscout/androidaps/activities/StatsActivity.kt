@@ -1,28 +1,34 @@
 package info.nightscout.androidaps.activities
 
 import android.os.Bundle
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.ActivityMonitor
-import info.nightscout.androidaps.utils.OKDialog
-import info.nightscout.androidaps.utils.TddCalculator
-import info.nightscout.androidaps.utils.TirCalculator
-import kotlinx.android.synthetic.main.stats_activity.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.stats.TddCalculator
+import info.nightscout.androidaps.utils.stats.TirCalculator
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import kotlinx.android.synthetic.main.activity_stats.*
+import javax.inject.Inject
 
 class StatsActivity : NoSplashAppCompatActivity() {
+    @Inject lateinit var tddCalculator: TddCalculator
+    @Inject lateinit var tirCalculator: TirCalculator
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activityMonitor: ActivityMonitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.stats_activity)
+        setContentView(R.layout.activity_stats)
 
-        stats_tdds.text = TddCalculator.stats()
-        stats_tir.text = TirCalculator.stats()
-        stats_activity.text = ActivityMonitor.stats()
+        stats_tdds.text = tddCalculator.stats()
+        stats_tir.text = tirCalculator.stats()
+        stats_activity.text = activityMonitor.stats()
 
         ok.setOnClickListener { finish() }
         stats_reset.setOnClickListener {
-            OKDialog.showConfirmation(this, MainApp.gs(R.string.doyouwantresetstats), Runnable {
-                ActivityMonitor.reset()
+            OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats), Runnable {
+                activityMonitor.reset()
                 recreate()
             })
         }

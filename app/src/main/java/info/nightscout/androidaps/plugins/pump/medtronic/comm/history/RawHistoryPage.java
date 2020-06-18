@@ -2,10 +2,8 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history;
 
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -15,12 +13,13 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class RawHistoryPage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private final AAPSLogger aapsLogger;
 
     private byte[] data = new byte[0];
 
 
-    public RawHistoryPage() {
+    public RawHistoryPage(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
     }
 
 
@@ -34,7 +33,7 @@ public class RawHistoryPage {
     }
 
 
-    public byte[] getOnlyData() {
+    byte[] getOnlyData() {
         return Arrays.copyOfRange(data, 0, 1022);
     }
 
@@ -54,11 +53,11 @@ public class RawHistoryPage {
         int crcStored = ByteUtil.toInt(data[1022], data[1023]);
 
         if (crcCalculated != crcStored) {
-            LOG.error("Stored CRC ({}) is different than calculated ({}), but ignored for now.", crcStored,
-                crcCalculated);
+            aapsLogger.error(LTag.PUMPBTCOMM, "Stored CRC ({}) is different than calculated ({}), but ignored for now.", crcStored,
+                    crcCalculated);
         } else {
             if (MedtronicUtil.isLowLevelDebug())
-                LOG.debug("CRC ok.");
+                aapsLogger.debug(LTag.PUMPBTCOMM, "CRC ok.");
         }
 
         return crcCalculated == crcStored;
@@ -69,7 +68,7 @@ public class RawHistoryPage {
         int linesize = 80;
         int offset = 0;
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         while (offset < data.length) {
             int bytesToLog = linesize;
@@ -82,7 +81,6 @@ public class RawHistoryPage {
             offset += linesize;
         }
 
-        LOG.debug("History Page Data:\n{}", sb.toString());
+        aapsLogger.debug(LTag.PUMPBTCOMM, "History Page Data:\n{}", sb.toString());
     }
-
 }

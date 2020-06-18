@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pairing">Parkoppling</string>
+    <!--    General-->
+    <string name="error">Fel</string>
+    <string name="not_set_short">Ej vald</string>
+    <string name="failedupdatebasalprofile">Lyckades inte uppdatera basalprofilen</string>
+    <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
+    <string name="invalidinput">Fel på inmatning</string>
+    <string name="tempbasaldeliveryerror">Fel vid justering av temp basal</string>
+    <string name="goingtodeliver">Kommer att leverera %1$.2f enheter</string>
+    <string name="waitingforpump">Väntar på pump</string>
+    <string name="connectingfor">Ansluter (%1$d s)</string>
+    <string name="bolusdelivering">Levererar %1$.2f enheter</string>
+    <string name="handshaking">Anslutningen verifieras</string>
+    <string name="connecting">Ansluter</string>
+    <string name="connected">Ansluten</string>
+    <string name="disconnected">Frånkopplad</string>
+    <string name="disconnecting">Kopplar från</string>
+    <string name="androidaps_start">AndroidAPS startad</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2fU/h</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pump upptagen</string>
+    <string name="connectionerror">Anslutningsfel</string>
+    <string name="youareonallowedlimit">Du har nått din tillåtna gräns</string>
+    <string name="objectives">Mål</string>
+    <string name="close">Stäng</string>
+    <string name="please_wait">Var god vänta…</string>
+    <string name="mute">Tysta</string>
+    <string name="reload">Hämta</string>
+    <string name="stoppressed">Stopp nedtryckt</string>
+    <string name="stop">Stopp</string>
+    <string name="carbs">Kolhydrater</string>
+    <string name="invalidprofile">Ogiltig profil!</string>
+    <string name="noprofileset">INGEN PROFIL VALD</string>
+    <string name="date">Datum</string>
+    <string name="units_label">Enheter</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">CR</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Målvärde</string>
+    <string name="initializing">Startar...</string>
+    <string name="serialnumber">Serienummer</string>
+    <string name="battery_label">Batterinivå</string>
+    <string name="lastconnection_label">Senast ansluten</string>
+    <string name="lastbolus_label">Senaste bolus</string>
+    <string name="dailyunits">Enheter per dag</string>
+    <string name="basebasalrate_label">Profilens basaldos</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="virtualpump_extendedbolus_label">Förlängd bolus</string>
+    <string name="reservoir_label">Reservoar</string>
+    <string name="pumphistory">Pumphistorik</string>
+    <string name="viewprofile">Visa profil</string>
+    <string name="eventtype">Händelsetyp</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Avancerade inställningar</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">Bluetooth-övervakare</string>
+    <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
+    <string name="pumplimit">pumpbegränsning</string>
+    <string name="limitingpercentrate">Begränsar max procent hastighet till %1$d%% pga %2$s</string>
+    <string name="itmustbepositivevalue">det måste vara ett positivt värde</string>
+    <string name="limitingbolus">Max bolus: %1$.1f U pga %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pump inte initierad, ingen profil vald.</string>
+    <!--    Dialogs-->
+    <string name="confirmation">Bekräftelse</string>
+    <string name="message">Meddelande</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Avbryt</string>
+    <string name="dismiss">TA BORT</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Enheten stöder inte BLE.</string>
+    <string name="ble_not_enabled">Bluetooth är avstängt.</string>
+    <string name="location_not_found_title">Platsdata är inte aktiverat</string>
+    <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$dm sedan</string>
+    <string name="hoursago">%1$.1f tim sedan</string>
+    <string name="shorthour">h</string>
+    <string name="days">dagar</string>
+    <string name="hours">timmar</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">timme</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">vecka</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minuter</string>
+    <string name="unit_hours">timmar</string>
+    <string name="unit_days">dagar</string>
+    <string name="unit_weeks">veckor</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det högsta tillåtna: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Ingen profil vald</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">Avbryt temp basal</string>
+    <string name="let_temp_basal_run">Låt temp basalen gå</string>
+    <string name="rate">Basaldos</string>
+    <string name="duration">Duration</string>
+    <string name="reason">Orsak</string>
+    <string name="nochangerequested">Ingen ändring behövs</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ogiltig profil: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">BG-kontroll</string>
+    <string name="careportal_announcement">Meddelande</string>
+    <string name="careportal_note">Anteckning</string>
+    <string name="careportal_question">Fråga</string>
+    <string name="careportal_exercise">Träning</string>
+    <string name="careportal_pumpsitechange">Byte pumpkanyl</string>
+    <string name="careportal_cgmsensorinsert">Byte CGM-sensor</string>
+    <string name="careportal_cgmsensorstart">Start CGM-sensor</string>
+    <string name="careportal_insulincartridgechange">Byte insulinreservoar</string>
+    <string name="careportal_profileswitch">Profilbyte</string>
+    <string name="careportal_snackbolus">Mellanmålsbolus</string>
+    <string name="careportal_mealbolus">Måltidsbolus</string>
+    <string name="careportal_correctionbolus">Korrektionsbolus</string>
+    <string name="careportal_combobolus">Kombi-bolus</string>
+    <string name="careportal_tempbasalstart">Temp basal start</string>
+    <string name="careportal_tempbasalend">Temp basal slut</string>
+    <string name="careportal_carbscorrection">KH-korrektion</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Byte pumpbatteri</string>
+    <string name="careportal_temporarytarget">Temp mål</string>
+    <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manuell</string>
+    <string name="unknown">okänd</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Anslutningen tog för lång tid</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Utförd</string>
+    <string name="comment">Kommentar</string>
+    <string name="success">Lyckad</string>
+    <string name="percent">Procent</string>
+    <string name="absolute">Absolut</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="waitingforpumpresult">Väntar på resultat</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">\"%dg kolhydrater krävs inom %d minuter</string>
+    <!--    TDDStatsActivity-->
+    <string name="stats">Statistik</string>
+    <string name="cumulative_tdd">Kumulativ TDD</string>
+    <string name="expweight">Exponentiellt viktad TDD</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Kvot</string>
+    <string name="amount_days">Antal dagar</string>
+    <string name="weight">Vikt</string>
+    <string name="warning_Message">Kan visa fel om man använder bolus för förfyllning!</string>
+    <string name="olddata_Message">Gammalt data. Tryck på Hämta</string>
+    <string name="tbb">Total grundbasal</string>
+    <string name="tbb2">TDB * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Tidsdetektering</string>
+</resources>

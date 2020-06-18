@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Autenticação necessária</string>
+    <string name="biometric_description">Coloque o dedo sobre o leitor de impressões digitais para verificar a sua identidade</string>
+    <string name="settings_protection">Definições Protecção</string>
+    <string name="application_protection">Protecção Aplicação</string>
+    <string name="bolus_protection">Protecção Bólus</string>
+    <string name="master_password">Password Mestre</string>
+    <string name="settings_password">Definições Password</string>
+    <string name="application_password">Password Aplicação</string>
+    <string name="bolus_password">Password Bólus</string>
+    <string name="unlock_settings">Definições Desbloqueio</string>
+    <string name="biometric">Biométrico</string>
+    <string name="custom_password">Password Personalizada</string>
+    <string name="noprotection">Sem Protecção</string>
+    <string name="protection">Protecção</string>
+    <string name="master_password_missing">A Password Mestre não está definida!\n\nPor favor, configure Password Mestre em Preferências (%1$s &#8594; %2$s)</string>
+    <string name="password_set">Password foi definida!</string>
+    <string name="password_not_set">Password não foi definida</string>
+    <string name="password_not_changed">Password não foi alterada</string>
+    <string name="password_cleared">Password apagada!</string>
+    <string name="password_hint">Insira a password aqui</string>
+</resources>

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/medtronic_name">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory
+        android:title="@string/medtronic_name"
+        app:initialExpandedChildrenCount="0">
 
         <EditTextPreference
             android:defaultValue="000000"
             android:key="@string/key_medtronic_serial"
             android:selectAllOnFocus="true"
             android:singleLine="false"
-            android:title="@string/medtronic_serial_number" />
+            android:title="@string/medtronic_serial_number"
+            validate:customRegexp="@string/sixdigitnumber"
+            validate:testErrorString="@string/error_mustbe6digitnumber"
+            validate:testType="regexp" />
+
 
         <ListPreference
             android:defaultValue="1"
@@ -28,21 +36,27 @@
 
         <EditTextPreference
             android:defaultValue="35"
+            android:digits="0123456789."
+            android:inputType="number"
             android:key="@string/key_medtronic_max_basal"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:inputType="number"
-            android:digits="0123456789."
-            android:title="@string/medtronic_pump_max_basal" />
+            android:title="@string/medtronic_pump_max_basal"
+            validate:maxNumber="35"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
 
         <EditTextPreference
             android:defaultValue="25"
+            android:digits="0123456789."
+            android:inputType="number"
             android:key="@string/key_medtronic_max_bolus"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:inputType="number"
-            android:digits="0123456789."
-            android:title="@string/medtronic_pump_max_bolus" />
+            android:title="@string/medtronic_pump_max_bolus"
+            validate:maxNumber="25"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
 
         <ListPreference
             android:defaultValue="10"
@@ -76,13 +90,20 @@
             android:selectable="true"
             android:title="@string/medtronic_bolus_debugging" />
 
-        <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
+        <Preference
             android:enabled="true"
+            android:key="@string/key_rileylink_mac_address"
             android:summary=""
-            android:title="RileyLink Configuration"
-            android:key="@string/key_rileylink_mac_address">
+            android:title="RileyLink Configuration">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
-        </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
+        </Preference>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_set_neutral_temps"
+            android:summary="@string/set_neutral_temps_summary"
+            android:title="@string/set_neutral_temps_title" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+
+</androidx.preference.PreferenceScreen>

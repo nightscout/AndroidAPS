@@ -5,19 +5,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import info.nightscout.androidaps.MainApp
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.utils.LocaleHelper
-import info.nightscout.androidaps.utils.PasswordProtection
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore
+import info.nightscout.androidaps.utils.locale.LocaleHelper
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import javax.inject.Inject
 
-class SingleFragmentActivity : AppCompatActivity() {
+class SingleFragmentActivity : DaggerAppCompatActivity() {
+    @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var protectionCheck: ProtectionCheck
+
     private var plugin: PluginBase? = null
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_fragment)
-        plugin = MainApp.getPluginsList()[intent.getIntExtra("plugin", -1)]
+        plugin = pluginStore.plugins[intent.getIntExtra("plugin", -1)]
         title = plugin?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -32,7 +37,7 @@ class SingleFragmentActivity : AppCompatActivity() {
             finish()
             return true
         } else if (item.itemId == R.id.nav_plugin_preferences) {
-            PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", Runnable {
+            protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
                 val i = Intent(this, PreferencesActivity::class.java)
                 i.putExtra("id", plugin?.preferencesId)
                 startActivity(i)

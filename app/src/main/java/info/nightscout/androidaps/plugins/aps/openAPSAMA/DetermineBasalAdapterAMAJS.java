@@ -11,37 +11,42 @@ import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
-import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback;
+import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class DetermineBasalAdapterAMAJS {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
+    @Inject ConstraintChecker constraintChecker;
+    @Inject SP sp;
+    @Inject ProfileFunction profileFunction;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
-
-    private ScriptReader mScriptReader = null;
+    private ScriptReader mScriptReader;
 
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
@@ -59,25 +64,26 @@ public class DetermineBasalAdapterAMAJS {
 
     private String scriptDebug = "";
 
-    public DetermineBasalAdapterAMAJS(ScriptReader scriptReader) {
+    DetermineBasalAdapterAMAJS(ScriptReader scriptReader, HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
         mScriptReader = scriptReader;
+        this.injector = injector;
     }
 
     @Nullable
     public DetermineBasalResultAMA invoke() {
 
-        if (L.isEnabled(L.APS)) {
-            log.debug(">>> Invoking detemine_basal <<<");
-            log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
-            log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
-            log.debug("Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
-            log.debug("Profile:        " + (storedProfile = mProfile.toString()));
-            log.debug("Meal data:      " + (storedMeal_data = mMealData.toString()));
-            if (mAutosensData != null)
-                log.debug("Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
-            else
-                log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
-        }
+        aapsLogger.debug(LTag.APS, ">>> Invoking detemine_basal <<<");
+        aapsLogger.debug(LTag.APS, "Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
+        aapsLogger.debug(LTag.APS, "IOB data:       " + (storedIobData = mIobData.toString()));
+        aapsLogger.debug(LTag.APS, "Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
+        aapsLogger.debug(LTag.APS, "Profile:        " + (storedProfile = mProfile.toString()));
+        aapsLogger.debug(LTag.APS, "Meal data:      " + (storedMeal_data = mMealData.toString()));
+        if (mAutosensData != null)
+            aapsLogger.debug(LTag.APS, "Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
+        else
+            aapsLogger.debug(LTag.APS, "Autosens data:  " + (storedAutosens_data = "undefined"));
+
 
         DetermineBasalResultAMA determineBasalResultAMA = null;
 
@@ -124,22 +130,21 @@ public class DetermineBasalAdapterAMAJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (L.isEnabled(L.APS))
-                    log.debug("Result: " + result);
+                aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
-                    determineBasalResultAMA = new DetermineBasalResultAMA(jsResult, new JSONObject(result));
+                    determineBasalResultAMA = new DetermineBasalResultAMA(injector, jsResult, new JSONObject(result));
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error(LTag.APS, "Unhandled exception", e);
                 }
             } else {
-                log.error("Problem loading JS Functions");
+                aapsLogger.error(LTag.APS, "Problem loading JS Functions");
             }
         } catch (IOException e) {
-            log.error("IOException");
+            aapsLogger.error(LTag.APS, "IOException");
         } catch (RhinoException e) {
-            log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
+            aapsLogger.error(LTag.APS, "RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            log.error(e.toString());
+            aapsLogger.error(LTag.APS, e.toString());
         } finally {
             Context.exit();
         }
@@ -206,25 +211,25 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
         mProfile.put("sens", profile.getIsfMgdl());
-        mProfile.put("max_daily_safety_multiplier", SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
-        mProfile.put("current_basal_safety_multiplier", SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
+        mProfile.put("max_daily_safety_multiplier", sp.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
+        mProfile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
         mProfile.put("skip_neutral_temps", true);
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
-        mProfile.put("autosens_adjust_targets", SP.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true));
+        mProfile.put("autosens_adjust_targets", sp.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true));
         //align with max-absorption model in AMA sensitivity
         if (mealData.usedMinCarbsImpact > 0) {
             mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
         } else {
-            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
+            mProfile.put("min_5m_carbimpact", sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
         }
 
-        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
+        if (profileFunction.getUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+        TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
@@ -232,7 +237,7 @@ public class DetermineBasalAdapterAMAJS {
         mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         // as we have non default temps longer than 30 mintues
-        TemporaryBasal tempBasal = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal tempBasal = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
         if (tempBasal != null) {
             mCurrentTemp.put("minutesrunning", tempBasal.getRealDuration());
         }
@@ -242,7 +247,7 @@ public class DetermineBasalAdapterAMAJS {
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
-        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
+        if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);
@@ -255,7 +260,7 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.put("boluses", mealData.boluses);
         mMealData.put("mealCOB", mealData.mealCOB);
 
-        if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
+        if (constraintChecker.isAutosensModeEnabled().value()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {

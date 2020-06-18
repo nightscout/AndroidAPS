@@ -1,31 +1,32 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
 public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> implements MedtronicHistoryDecoderInterface<T> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    @Inject AAPSLogger aapsLogger;
+    @Inject MedtronicUtil medtronicUtil;
 
     protected ByteUtil bitUtils;
 
@@ -33,7 +34,6 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
     protected boolean statisticsEnabled = true;
     protected Map<Integer, Integer> unknownOpCodes;
     protected Map<RecordDecodeStatus, Map<String, String>> mapStatistics;
-    protected MedtronicDeviceType deviceType;
 
 
     public MedtronicHistoryDecoder() {
@@ -61,8 +61,8 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         // return byteList;
         // }
 
-        if (MedtronicUtil.getMedtronicPumpModel() == null) {
-            LOG.error("Device Type is not defined.");
+        if (medtronicUtil.getMedtronicPumpModel() == null) {
+            aapsLogger.error(LTag.PUMPCOMM, "Device Type is not defined.");
             return byteList;
         }
 
@@ -85,17 +85,16 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         if (!statisticsEnabled)
             return;
 
-        unknownOpCodes = new HashMap<Integer, Integer>();
-        mapStatistics = new HashMap<RecordDecodeStatus, Map<String, String>>();
+        unknownOpCodes = new HashMap<>();
+        mapStatistics = new HashMap<>();
 
         for (RecordDecodeStatus stat : RecordDecodeStatus.values()) {
-            mapStatistics.put(stat, new HashMap<String, String>());
+            mapStatistics.put(stat, new HashMap<>());
         }
     }
 
 
-    protected void addToStatistics(MedtronicHistoryEntryInterface pumpHistoryEntry, RecordDecodeStatus status,
-                                   Integer opCode) {
+    protected void addToStatistics(MedtronicHistoryEntryInterface pumpHistoryEntry, RecordDecodeStatus status, Integer opCode) {
         if (!statisticsEnabled)
             return;
 
@@ -119,11 +118,10 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
             StringUtil.appendToStringBuilder(sb, "" + unknownEntry.getKey(), ", ");
         }
 
-        if (isLogEnabled())
-            LOG.debug("STATISTICS OF PUMP DECODE");
+        aapsLogger.error(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE");
 
         if (unknownOpCodes.size() > 0) {
-            LOG.warn("Unknown Op Codes: {}", sb.toString());
+            aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: {}", sb.toString());
         }
 
         for (Map.Entry<RecordDecodeStatus, Map<String, String>> entry : mapStatistics.entrySet()) {
@@ -139,12 +137,9 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                if (isLogEnabled())
-                    LOG.debug("    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(),
-                            sb.toString());
+                aapsLogger.error(LTag.PUMPCOMM, "    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
             } else {
-                if (isLogEnabled())
-                    LOG.debug("    {}             - {}", entry.getKey().name(), entry.getValue().size());
+                aapsLogger.error(LTag.PUMPCOMM, "    {}             - {}", entry.getKey().name(), entry.getValue().size());
             }
         }
     }
@@ -183,9 +178,4 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
         return records;
     }
-
-    protected boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
-    }
-
 }

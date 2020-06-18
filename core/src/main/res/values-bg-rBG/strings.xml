@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="error">Грешка</string>
+    <string name="not_set_short">Не е зададен</string>
+    <string name="failedupdatebasalprofile">Неуспешно обновяване на базалния профил</string>
+    <string name="profile_set_ok">Профила на помпата е обновен</string>
+    <string name="invalidinput">Грешни данни</string>
+    <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
+    <string name="goingtodeliver">Ще стартира %1$.2fЕ болус</string>
+    <string name="waitingforpump">Чакаме помпата</string>
+    <string name="connectingfor">Свързване %1$d сек</string>
+    <string name="bolusdelivering">Пускам %1$.2fЕ</string>
+    <string name="handshaking">Сдвояване</string>
+    <string name="connecting">Свързване</string>
+    <string name="connected">Свързана</string>
+    <string name="disconnected">Не е сврзана</string>
+    <string name="disconnecting">Разкачане</string>
+    <string name="androidaps_start">Стартиран AndroidAPS</string>
+    <string name="formatinsulinunits">%1$.2fЕ</string>
+    <string name="reservoirvalue">%1$.0f / %2$d Е</string>
+    <string name="pump_basebasalrate">%1$.2f Е/ч</string>
+    <string name="format_hours">%1$.2f ч</string>
+    <string name="format_mins">%1$d мин</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Помпата е заета</string>
+    <string name="connectionerror">Грешка при връзка с помпата</string>
+    <string name="youareonallowedlimit">Достигнахте лимита</string>
+    <string name="objectives">Цели</string>
+    <string name="close">Затвори</string>
+    <string name="please_wait">Моля изчакайте...</string>
+    <string name="mute">Заглушаване</string>
+    <string name="reload">Презареди</string>
+    <string name="stoppressed">Натиснат е СТОП!</string>
+    <string name="stop">Стоп</string>
+    <string name="carbs">въглехидрати</string>
+    <string name="invalidprofile">Грешен профил !!!</string>
+    <string name="noprofileset">НЕ Е АКТИВИРАН ПРОФИЛ</string>
+    <string name="date">Дата</string>
+    <string name="units_label">Единици</string>
+    <string name="dia_label">DIA (Време на действие на инсулина):</string>
+    <string name="ic_label">IC (Инсулин/въглехидр.):</string>
+    <string name="isf_label">ISF (Инс.чувствителност):</string>
+    <string name="basal_label">Базал</string>
+    <string name="target_label">Целeва КЗ:</string>
+    <string name="initializing">Инициализация ...</string>
+    <string name="serialnumber">Сериен номер</string>
+    <string name="battery_label">Батерия</string>
+    <string name="lastconnection_label">Последна връзка</string>
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <!--    BlePreCheck-->
+    <!--    DateUtil-->
+    <string name="minago">преди %1$d мин</string>
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    PumpType-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <string name="mins">%1$dмин</string>
+    <!--    TDD-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="stats">Статистика</string>
+    <!--    Ntp-->
+</resources>

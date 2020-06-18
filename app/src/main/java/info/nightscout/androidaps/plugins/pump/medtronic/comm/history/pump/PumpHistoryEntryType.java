@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -158,8 +158,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     TempBasalCombined(0xfe, "TBR", PumpHistoryEntryGroup.Basal), //
     UnknownBasePacket(0xff, "Unknown Base Packet", PumpHistoryEntryGroup.Unknown);
 
-    private static Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<Integer, PumpHistoryEntryType>();
-    private static PumpHistoryEntryType tddType;
+    private static Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<>();
 
     static {
         for (PumpHistoryEntryType type : values()) {
@@ -171,7 +170,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     private int opCode;
     private String description;
-    private int headLength = 0;
+    private int headLength;
     private int dateLength;
     // private MinimedDeviceType deviceType;
     private int bodyLength;
@@ -181,8 +180,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     private List<SpecialRule> specialRulesHead;
     private List<SpecialRule> specialRulesBody;
     private boolean hasSpecialRules = false;
-    private PumpHistoryEntryGroup group = PumpHistoryEntryGroup.Unknown;
-    private static Object TDDType;
+    private PumpHistoryEntryGroup group;
 
 
     PumpHistoryEntryType(int opCode, String name, PumpHistoryEntryGroup group) {
@@ -288,9 +286,9 @@ public enum PumpHistoryEntryType // implements CodeEnum
     }
 
 
-    public int getTotalLength() {
+    public int getTotalLength(MedtronicDeviceType medtronicDeviceType) {
         if (hasSpecialRules()) {
-            return getHeadLength() + getBodyLength() + getDateLength();
+            return getHeadLength(medtronicDeviceType) + getBodyLength(medtronicDeviceType) + getDateLength();
         } else {
             return totalLength;
         }
@@ -304,7 +302,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     void addSpecialRuleHead(SpecialRule rule) {
         if (isEmpty(specialRulesHead)) {
-            specialRulesHead = new ArrayList<SpecialRule>();
+            specialRulesHead = new ArrayList<>();
         }
 
         specialRulesHead.add(rule);
@@ -314,7 +312,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     void addSpecialRuleBody(SpecialRule rule) {
         if (isEmpty(specialRulesBody)) {
-            specialRulesBody = new ArrayList<SpecialRule>();
+            specialRulesBody = new ArrayList<>();
         }
 
         specialRulesBody.add(rule);
@@ -332,10 +330,10 @@ public enum PumpHistoryEntryType // implements CodeEnum
     }
 
 
-    public int getHeadLength() {
+    public int getHeadLength(MedtronicDeviceType medtronicDeviceType) {
         if (hasSpecialRules) {
             if (isNotEmpty(specialRulesHead)) {
-                return determineSizeByRule(headLength, specialRulesHead);
+                return determineSizeByRule(medtronicDeviceType, headLength, specialRulesHead);
             } else {
                 return headLength;
             }
@@ -350,10 +348,10 @@ public enum PumpHistoryEntryType // implements CodeEnum
     }
 
 
-    public int getBodyLength() {
+    public int getBodyLength(MedtronicDeviceType medtronicDeviceType) {
         if (hasSpecialRules) {
             if (isNotEmpty(specialRulesBody)) {
-                return determineSizeByRule(bodyLength, specialRulesBody);
+                return determineSizeByRule(medtronicDeviceType, bodyLength, specialRulesBody);
             } else {
                 return bodyLength;
             }
@@ -375,11 +373,11 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     // byte[] dh = { 2, 3 };
 
-    private int determineSizeByRule(int defaultValue, List<SpecialRule> rules) {
+    private int determineSizeByRule(MedtronicDeviceType medtronicDeviceType, int defaultValue, List<SpecialRule> rules) {
         int size = defaultValue;
 
         for (SpecialRule rule : rules) {
-            if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), rule.deviceType)) {
+            if (MedtronicDeviceType.isSameDevice(medtronicDeviceType, rule.deviceType)) {
                 size = rule.size;
                 break;
             }
@@ -394,36 +392,13 @@ public enum PumpHistoryEntryType // implements CodeEnum
         return group;
     }
 
-    enum DateFormat {
-        None(0), //
-        LongDate(5), //
-        ShortDate(2);
-
-        private int length;
-
-
-        DateFormat(int length) {
-            this.length = length;
-        }
-
-
-        public int getLength() {
-            return length;
-        }
-
-
-        public void setLength(int length) {
-            this.length = length;
-        }
-    }
-
     public static class SpecialRule {
 
         MedtronicDeviceType deviceType;
         int size;
 
 
-        public SpecialRule(MedtronicDeviceType deviceType, int size) {
+        SpecialRule(MedtronicDeviceType deviceType, int size) {
             this.deviceType = deviceType;
             this.size = size;
         }

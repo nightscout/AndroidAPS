@@ -1,18 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
+import android.os.AsyncTask;
+import android.os.SystemClock;
+
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import android.os.AsyncTask;
-import android.os.SystemClock;
-
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
@@ -24,7 +21,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
  */
 public class RFSpyReader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private final AAPSLogger aapsLogger;
     private static AsyncTask<Void, Void, Void> readerTask;
     private RileyLinkBLE rileyLinkBle;
     private Semaphore waitForRadioData = new Semaphore(0, true);
@@ -34,13 +31,9 @@ public class RFSpyReader {
     private boolean stopAtNull = true;
 
 
-    public RFSpyReader(RileyLinkBLE rileyLinkBle) {
+    RFSpyReader(AAPSLogger aapsLogger, RileyLinkBLE rileyLinkBle) {
         this.rileyLinkBle = rileyLinkBle;
-    }
-
-
-    public void init(RileyLinkBLE rileyLinkBLE) {
-        this.rileyLinkBle = rileyLinkBLE;
+        this.aapsLogger = aapsLogger;
     }
 
 
@@ -51,45 +44,43 @@ public class RFSpyReader {
         this.rileyLinkBle = rileyLinkBle;
     }
 
-    public void setRileyLinkEncodingType(RileyLinkEncodingType encodingType) {
+    void setRileyLinkEncodingType(RileyLinkEncodingType encodingType) {
         stopAtNull = !(encodingType == RileyLinkEncodingType.Manchester || //
                 encodingType == RileyLinkEncodingType.FourByteSixByteRileyLink);
     }
 
 
     // This timeout must be coordinated with the length of the RFSpy radio operation or Bad Things Happen.
-    public byte[] poll(int timeout_ms) {
-        if (isLogEnabled())
-            LOG.trace(ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms
+    byte[] poll(int timeout_ms) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms
                 + " mDataQueue size is " + mDataQueue.size());
 
-        if (mDataQueue.isEmpty())
+        if (mDataQueue.isEmpty()) {
             try {
                 // block until timeout or data available.
                 // returns null if timeout.
                 byte[] dataFromQueue = mDataQueue.poll(timeout_ms, TimeUnit.MILLISECONDS);
                 if (dataFromQueue != null) {
-                    if (isLogEnabled())
-                        LOG.debug("Got data [" + ByteUtil.shortHexString(dataFromQueue) + "] at t=="
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Got data [" + ByteUtil.shortHexString(dataFromQueue) + "] at t=="
                             + SystemClock.uptimeMillis());
                 } else {
-                    if (isLogEnabled())
-                        LOG.debug("Got data [null] at t==" + SystemClock.uptimeMillis());
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Got data [null] at t==" + SystemClock.uptimeMillis());
                 }
                 return dataFromQueue;
             } catch (InterruptedException e) {
-                LOG.error("poll: Interrupted waiting for data");
+                aapsLogger.error(LTag.PUMPBTCOMM, "poll: Interrupted waiting for data");
             }
+        }
+
         return null;
     }
 
 
     // Call this from the "response count" notification handler.
-    public void newDataIsAvailable() {
+    void newDataIsAvailable() {
         releaseCount++;
 
-        if (isLogEnabled())
-            LOG.trace(ThreadUtil.sig() + "waitForRadioData released(count=" + releaseCount + ") at t="
+        aapsLogger.debug(LTag.PUMPBTCOMM, ThreadUtil.sig() + "waitForRadioData released(count=" + releaseCount + ") at t="
                 + SystemClock.uptimeMillis());
         waitForRadioData.release();
     }
@@ -107,8 +98,7 @@ public class RFSpyReader {
                     try {
                         acquireCount++;
                         waitForRadioData.acquire();
-                        if (isLogEnabled())
-                            LOG.trace(ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t="
+                        aapsLogger.debug(LTag.PUMPBTCOMM, ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t="
                                 + SystemClock.uptimeMillis());
                         SystemClock.sleep(100);
                         SystemClock.sleep(1);
@@ -127,24 +117,19 @@ public class RFSpyReader {
                             }
                             mDataQueue.add(result.value);
                         } else if (result.resultCode == BLECommOperationResult.RESULT_INTERRUPTED) {
-                            LOG.error("Read operation was interrupted");
+                            aapsLogger.error(LTag.PUMPBTCOMM, "Read operation was interrupted");
                         } else if (result.resultCode == BLECommOperationResult.RESULT_TIMEOUT) {
-                            LOG.error("Read operation on Radio Data timed out");
+                            aapsLogger.error(LTag.PUMPBTCOMM, "Read operation on Radio Data timed out");
                         } else if (result.resultCode == BLECommOperationResult.RESULT_BUSY) {
-                            LOG.error("FAIL: RileyLinkBLE reports operation already in progress");
+                            aapsLogger.error(LTag.PUMPBTCOMM, "FAIL: RileyLinkBLE reports operation already in progress");
                         } else if (result.resultCode == BLECommOperationResult.RESULT_NONE) {
-                            LOG.error("FAIL: got invalid result code: " + result.resultCode);
+                            aapsLogger.error(LTag.PUMPBTCOMM, "FAIL: got invalid result code: " + result.resultCode);
                         }
                     } catch (InterruptedException e) {
-                        LOG.error("Interrupted while waiting for data");
+                        aapsLogger.error(LTag.PUMPBTCOMM, "Interrupted while waiting for data");
                     }
                 }
             }
         }.execute();
     }
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPBTCOMM);
-    }
-
 }

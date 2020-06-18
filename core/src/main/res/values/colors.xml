@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#40bbaa</color>
+    <color name="mdtp_button_selected">#33969696</color>
+    <color name="mdtp_accent_color">#009688</color>
+    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
+    <color name="mdtp_white">#ffffff</color>
+    <color name="mdtp_line_dark">#808080</color>
+    <color name="colorLightGray">#d8d8d8</color>
+    <color name="cardColorBackground">#121212</color>
+
+    <!--    Fragments-->
+    <color name="colorInitializingBorder">#00695c</color>
+
+    <!--    Dialogs-->
+    <color name="dialog_title_background">#303030</color>
+    <color name="activity_title_background">#121212</color>
+    <color name="dialog_title_color">#FFFFFF</color>
+    <color name="dialog_title_icon_tint">#FFFFFF</color>
+    <color name="warningAlertBackground">#FFFB8C00</color>
+    <color name="warningAlertHeaderText">#FF000000</color>
+    <color name="errorAlertBackground">#FFFF5555</color>
+    <color name="errorAlertHeaderText">#FF000000</color>
+
+    <!--    Treatment-->
+    <color name="tempbasal">#C803A9F4</color>
+    <color name="listdelimiter">#505050</color>
+
+    <!--    BgReading-->
+    <color name="inrange">#00FF00</color>
+    <color name="low">#FF0000</color>
+    <color name="high">#FFFF00</color>
+    <color name="iob">#1e88e5</color>
+    <color name="iobPredAS">#1ea3e5</color>
+    <color name="cob">#FFFB8C00</color>
+    <color name="carbs">#FFFB8C00</color>
+    <color name="uam">#c9bd60</color>
+    <color name="zt">#00d2d2</color>
+    <color name="white">#ffffff</color>
+
+    <!--    CareportalEvent-->
+    <color name="notificationAnnouncement">#FF8C00</color>
+
+    <!--    Toasts-->
+    <color name="toastBorder">#666666</color>
+    <color name="toastBase">#ffffff</color>
+    <color name="toastOk">#77dd77</color>
+    <color name="toastError">#ff0400</color>
+    <color name="toastWarn">#FF8C00</color>
+    <color name="toastInfo">#03A9F4</color>
+
+
+</resources>

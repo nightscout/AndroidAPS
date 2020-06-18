@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.SystemClock;
 
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 
 /**
@@ -17,12 +16,13 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
  */
 public class DescriptorWriteOperation extends BLECommOperation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DescriptorWriteOperation.class);
+    private final AAPSLogger aapsLogger;
 
     private BluetoothGattDescriptor descr;
 
 
-    public DescriptorWriteOperation(BluetoothGatt gatt, BluetoothGattDescriptor descr, byte[] value) {
+    public DescriptorWriteOperation(AAPSLogger aapsLogger, BluetoothGatt gatt, BluetoothGattDescriptor descr, byte[] value) {
+        this.aapsLogger = aapsLogger;
         this.gatt = gatt;
         this.descr = descr;
         this.value = value;
@@ -45,14 +45,14 @@ public class DescriptorWriteOperation extends BLECommOperation {
             boolean didAcquire = operationComplete.tryAcquire(getGattOperationTimeout_ms(), TimeUnit.MILLISECONDS);
             if (didAcquire) {
                 SystemClock.sleep(1); // This is to allow the IBinder thread to exit before we continue, allowing easier
-                                      // understanding of the sequence of events.
+                // understanding of the sequence of events.
                 // success
             } else {
-                LOG.error("Timeout waiting for descriptor write operation to complete");
+                aapsLogger.error(LTag.PUMPBTCOMM, "Timeout waiting for descriptor write operation to complete");
                 timedOut = true;
             }
         } catch (InterruptedException e) {
-            LOG.error("Interrupted while waiting for descriptor write operation to complete");
+            aapsLogger.error(LTag.PUMPBTCOMM, "Interrupted while waiting for descriptor write operation to complete");
             interrupted = true;
         }
     }

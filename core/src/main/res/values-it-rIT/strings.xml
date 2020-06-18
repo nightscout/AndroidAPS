@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pairing">Associazione</string>
+    <!--    General-->
+    <string name="error">Errore</string>
+    <string name="not_set_short">Non impostato</string>
+    <string name="failedupdatebasalprofile">Impossibile aggiornare il profilo basale</string>
+    <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
+    <string name="invalidinput">Dati di input non validi</string>
+    <string name="tempbasaldeliveryerror">Errore erogazione basale temporanea</string>
+    <string name="goingtodeliver">Sto per erogare %1$.2fU</string>
+    <string name="waitingforpump">In attesa del micro</string>
+    <string name="connectingfor">In connessione per %1$d s</string>
+    <string name="bolusdelivering">Erogazione di %1$.2fU</string>
+    <string name="handshaking">Connessione</string>
+    <string name="connecting">Connessione</string>
+    <string name="connected">Connesso</string>
+    <string name="disconnected">Disconnesso</string>
+    <string name="disconnecting">Disconnessione</string>
+    <string name="androidaps_start">AndroidAPS avviato</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2fU/h</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Il micro è occupato</string>
+    <string name="connectionerror">Errore connessione micro</string>
+    <string name="youareonallowedlimit">Hai raggiunto il limite consentito</string>
+    <string name="objectives">Obiettivi</string>
+    <string name="close">Chiudi</string>
+    <string name="please_wait">Attendi…</string>
+    <string name="mute">Muto</string>
+    <string name="reload">Ricarica</string>
+    <string name="stoppressed">STOP PREMUTO</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">CHO</string>
+    <string name="invalidprofile">Profilo non valido !!!</string>
+    <string name="noprofileset">NESSUN PROFILO IMPOSTATO</string>
+    <string name="date">Data</string>
+    <string name="units_label">Unità</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basale</string>
+    <string name="target_label">Target</string>
+    <string name="initializing">Inizializzazione...</string>
+    <string name="serialnumber">Numero seriale</string>
+    <string name="battery_label">Batteria</string>
+    <string name="lastconnection_label">Ultima connessione</string>
+    <string name="lastbolus_label">Ultimo bolo</string>
+    <string name="dailyunits">Unità giornaliere</string>
+    <string name="basebasalrate_label">Velocità basale originale</string>
+    <string name="tempbasal_label">Basale temporanea</string>
+    <string name="virtualpump_extendedbolus_label">Bolo Esteso</string>
+    <string name="reservoir_label">Serbatoio</string>
+    <string name="pumphistory">Storico micro</string>
+    <string name="viewprofile">Visualizza profilo</string>
+    <string name="eventtype">Tipo evento</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Impostazioni avanzate</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
+    <string name="pumplimit">limite micro</string>
+    <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
+    <string name="itmustbepositivevalue">deve essere un valore positivo</string>
+    <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Micro non inizializzato, profilo non impostato!</string>
+    <!--    Dialogs-->
+    <string name="confirmation">Conferma</string>
+    <string name="message">Messaggio</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annulla</string>
+    <string name="dismiss">RIMUOVI</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
+    <string name="ble_not_enabled">Bluetooth non abilitato.</string>
+    <string name="location_not_found_title">La localizzazione non è abilitata</string>
+    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$dm fa</string>
+    <string name="hoursago">%1$.1fh fa</string>
+    <string name="shorthour">h</string>
+    <string name="days">giorni</string>
+    <string name="hours">ore</string>
+    <string name="unit_second">secondo</string>
+    <string name="unit_minute">minuto</string>
+    <string name="unit_hour">ora</string>
+    <string name="unit_day">giorno</string>
+    <string name="unit_week">settimana</string>
+    <string name="unit_seconds">secondi</string>
+    <string name="unit_minutes">minuti</string>
+    <string name="unit_hours">ore</string>
+    <string name="unit_days">giorni</string>
+    <string name="unit_weeks">settimane</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Nessun profilo selezionato</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">Cancella basale temporanea</string>
+    <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
+    <string name="rate">Tasso</string>
+    <string name="duration">Durata</string>
+    <string name="reason">Motivo</string>
+    <string name="nochangerequested">Nessun cambiamento richiesto</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">Controllo BG</string>
+    <string name="careportal_announcement">Avviso</string>
+    <string name="careportal_note">Nota</string>
+    <string name="careportal_question">Domanda</string>
+    <string name="careportal_exercise">Esercizio fisico</string>
+    <string name="careportal_pumpsitechange">Cambio posizione cannula</string>
+    <string name="careportal_cgmsensorinsert">Inserimento sensore</string>
+    <string name="careportal_cgmsensorstart">Avvio sensore</string>
+    <string name="careportal_insulincartridgechange">Cambio cartuccia insulina</string>
+    <string name="careportal_profileswitch">Cambio profilo</string>
+    <string name="careportal_snackbolus">Bolo spuntino</string>
+    <string name="careportal_mealbolus">Bolo pasto</string>
+    <string name="careportal_correctionbolus">Bolo di correzione</string>
+    <string name="careportal_combobolus">Bolo combo</string>
+    <string name="careportal_tempbasalstart">Avvio basale temporanea</string>
+    <string name="careportal_tempbasalend">Fine basale temporanea</string>
+    <string name="careportal_carbscorrection">Correzione con CHO</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Cambio batteria micro</string>
+    <string name="careportal_temporarytarget">Target temporaneo</string>
+    <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
+    <string name="glucosetype_finger">Dito</string>
+    <string name="glucosetype_sensor">Sensore</string>
+    <string name="manual">Manuale</string>
+    <string name="unknown">sconosciuto</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Time out connessione</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Attivato</string>
+    <string name="comment">Commento</string>
+    <string name="success">OK</string>
+    <string name="percent">Percento</string>
+    <string name="absolute">Assoluto</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="waitingforpumpresult">In attesa del risultato</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">\"%dg di CHO aggiuntivi richiesti entro %d minuti</string>
+    <!--    TDDStatsActivity-->
+    <string name="stats">Statistiche</string>
+    <string name="cumulative_tdd">TDD cumulativo</string>
+    <string name="expweight">TDD esponenzialmente ponderato</string>
+    <string name="basalrate">Basale</string>
+    <string name="bolus">Bolo</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Rapporto</string>
+    <string name="amount_days"># Giorni</string>
+    <string name="weight">Peso</string>
+    <string name="warning_Message">Probabilmente inaccurato se per il caricamento/riempimento si usano i boli al posto dell\'apposita funzione!</string>
+    <string name="olddata_Message">Dati vecchi, premi \"RICARICA\"</string>
+    <string name="tbb">Basale originale totale</string>
+    <string name="tbb2">TBB * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Rilevamento tempo</string>
+</resources>

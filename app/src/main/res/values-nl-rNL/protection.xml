@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_description">Plaats uw vinger op de vingerafdruklezer om uw identiteit te verifiëren</string>
+    <string name="settings_protection">Instellingen beveiliging</string>
+    <string name="settings_password">Instellingen wachtwoord</string>
+    <string name="bolus_password">Bolus wachtwoord</string>
+    <string name="unlock_settings">Instellingen ontgrendelen</string>
+    <string name="biometric">Biometrisch</string>
+    <string name="custom_password">Aangepast wachtwoord</string>
+    <string name="password_set">Wachtwoord ingesteld!</string>
+    <string name="password_not_set">Wachtwoord niet ingesteld</string>
+    <string name="password_not_changed">Wachtwoord niet gewijzigd</string>
+    <string name="password_cleared">Wachtwoord gewist!</string>
+    <string name="password_hint">Vul hier het wachtwoord in</string>
+</resources>

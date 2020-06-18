@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.dialog;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/19/18.
@@ -26,7 +30,10 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
  */
 
 // TODO needs to be implemented
-public class RileyLinkStatusDeviceMedtronic extends Fragment implements RefreshableInterface {
+public class RileyLinkStatusDeviceMedtronic extends DaggerFragment implements RefreshableInterface {
+
+    @Inject ResourceHelper resourceHelper;
+    @Inject DateUtil dateUtil;
 
     // @BindView(R.id.rileylink_history_list)
     ListView listView;
@@ -148,9 +155,9 @@ public class RileyLinkStatusDeviceMedtronic extends Fragment implements Refresha
             }
 
             RLHistoryItem item = historyItemList.get(i);
-            viewHolder.itemTime.setText(StringUtil.toDateTimeString(item.getDateTime()));
+            viewHolder.itemTime.setText(StringUtil.toDateTimeString(dateUtil, item.getDateTime()));
             viewHolder.itemSource.setText("Riley Link"); // for now
-            viewHolder.itemDescription.setText(item.getDescription());
+            viewHolder.itemDescription.setText(item.getDescription(resourceHelper));
 
             return view;
         }

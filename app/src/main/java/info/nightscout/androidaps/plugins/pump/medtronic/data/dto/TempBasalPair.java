@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import com.google.gson.annotations.Expose;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
@@ -18,21 +17,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * <p>
  * Just need a class to keep the pair together, for parcel transport.
  */
-public class TempBasalPair {
-
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
-
-    @Expose
-    private double insulinRate = 0.0d;
-    @Expose
-    private int durationMinutes = 0;
-    @Expose
-    private boolean isPercent = false;
-
-
-    public TempBasalPair() {
-    }
-
+public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair {
 
     /**
      * This constructor is for use with PumpHistoryDecoder
@@ -42,6 +27,7 @@ public class TempBasalPair {
      * @param isPercent
      */
     public TempBasalPair(byte rateByte, int startTimeByte, boolean isPercent) {
+        super();
         int rateInt = ByteUtil.asUINT8(rateByte);
 
         if (isPercent)
@@ -53,17 +39,10 @@ public class TempBasalPair {
     }
 
 
-    public TempBasalPair(double insulinRate, boolean isPercent, int durationMinutes) {
-        this.insulinRate = insulinRate;
-        this.isPercent = isPercent;
-        this.durationMinutes = durationMinutes;
-    }
+    public TempBasalPair(AAPSLogger aapsLogger, byte[] response) {
+        super();
 
-
-    public TempBasalPair(byte[] response) {
-
-        if (L.isEnabled(L.PUMPCOMM))
-            LOG.debug("Received TempBasal response: " + ByteUtil.getHex(response));
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response));
 
         isPercent = response[0] == 1;
 
@@ -75,50 +54,25 @@ public class TempBasalPair {
             insulinRate = strokes / 40.0d;
         }
 
-        if (response.length<6) {
+        if (response.length < 6) {
             durationMinutes = ByteUtil.asUINT8(response[4]);
         } else {
             durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
         }
 
-        LOG.warn("TempBasalPair (with {} byte response): {}", response.length, toString());
+        aapsLogger.warn(LTag.PUMPBTCOMM, "TempBasalPair (with {} byte response): {}", response.length, toString());
 
     }
 
 
-    public double getInsulinRate() {
-        return insulinRate;
-    }
-
-
-    public void setInsulinRate(double insulinRate) {
-        this.insulinRate = insulinRate;
-    }
-
-
-    public int getDurationMinutes() {
-        return durationMinutes;
-    }
-
-
-    public void setDurationMinutes(int durationMinutes) {
-        this.durationMinutes = durationMinutes;
-    }
-
-
-    public boolean isPercent() {
-        return isPercent;
-    }
-
-
-    public void setIsPercent(boolean yesIsPercent) {
-        this.isPercent = yesIsPercent;
+    public TempBasalPair(double insulinRate, boolean isPercent, int durationMinutes) {
+        super(insulinRate, isPercent, durationMinutes);
     }
 
 
     public byte[] getAsRawData() {
 
-        List<Byte> list = new ArrayList<Byte>();
+        List<Byte> list = new ArrayList<>();
 
         list.add((byte) 5);
 
@@ -167,7 +121,7 @@ public class TempBasalPair {
     }
 
 
-    @Override
+    @NotNull @Override
     public String toString() {
         return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="
                 + isPercent + "]";

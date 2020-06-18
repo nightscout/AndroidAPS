@@ -14,20 +14,25 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
+
+    @Inject ResourceHelper resourceHelper;
+    @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     TextView connectionStatus;
     TextView configuredAddress;
     TextView connectedDevice;
     TextView connectionError;
-    RileyLinkServiceData rileyLinkServiceData;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private FloatingActionButton floatingActionButton;
@@ -47,14 +52,14 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
         // primary sections of the activity.
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.rileylink_settings_container);
+        mViewPager = findViewById(R.id.rileylink_settings_container);
         // mViewPager.setAdapter(mSectionsPagerAdapter);
         setupViewPager(mViewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.rileylink_settings_tabs);
+        tabLayout = findViewById(R.id.rileylink_settings_tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.rileylink_settings_fab);
+        floatingActionButton = findViewById(R.id.rileylink_settings_fab);
         floatingActionButton.setOnClickListener(v -> {
 
             RefreshableInterface selectableInterface = (RefreshableInterface) mSectionsPagerAdapter
@@ -71,8 +76,6 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
         this.configuredAddress = findViewById(R.id.rls_t1_configured_address);
         this.connectedDevice = findViewById(R.id.rls_t1_connected_device);
         this.connectionError = findViewById(R.id.rls_t1_connection_error);
-
-        rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
 
         // // 7-12
         // int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
@@ -93,12 +96,12 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
     public void refreshData(int position) {
         if (position == 0) {
             // FIXME i18n
-            this.connectionStatus.setText(rileyLinkServiceData.serviceState.name());
+            this.connectionStatus.setText(rileyLinkServiceData.rileyLinkServiceState.name());
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
             // FIXME
             this.connectedDevice.setText("???");
             // FIXME i18n
-            this.connectionError.setText(rileyLinkServiceData.errorCode.name());
+            this.connectionError.setText(rileyLinkServiceData.rileyLinkError.name());
         } else {
 
         }
@@ -110,8 +113,8 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mSectionsPagerAdapter.addFragment(new RileyLinkStatusGeneral(), MainApp.gs(R.string.rileylink_settings_tab1));
-        mSectionsPagerAdapter.addFragment(new RileyLinkStatusHistory(), MainApp.gs(R.string.rileylink_settings_tab2));
+        mSectionsPagerAdapter.addFragment(new RileyLinkStatusGeneralFragment(), resourceHelper.gs(R.string.rileylink_settings_tab1));
+        mSectionsPagerAdapter.addFragment(new RileyLinkStatusHistoryFragment(), resourceHelper.gs(R.string.rileylink_settings_tab2));
         //mSectionsPagerAdapter.addFragment(new RileyLinkStatusDevice(), "Medtronic");
 
         mViewPager.setAdapter(mSectionsPagerAdapter);

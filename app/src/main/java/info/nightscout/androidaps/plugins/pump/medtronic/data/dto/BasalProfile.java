@@ -3,13 +3,13 @@ package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 import com.google.gson.annotations.Expose;
 
 import org.joda.time.Instant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -31,7 +31,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class BasalProfile {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private final AAPSLogger aapsLogger;
 
     public static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
     private static final boolean DEBUG_BASALPROFILE = false;
@@ -40,18 +40,20 @@ public class BasalProfile {
     private List<BasalProfileEntry> listEntries;
 
 
-    public BasalProfile() {
+    public BasalProfile(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
         init();
     }
 
 
-    public BasalProfile(byte[] data) {
+    public BasalProfile(AAPSLogger aapsLogger, byte[] data) {
+        this .aapsLogger = aapsLogger;
         setRawData(data);
     }
 
 
     // this asUINT8 should be combined with Record.asUINT8, and placed in a new util class.
-    protected static int readUnsignedByte(byte b) {
+    private static int readUnsignedByte(byte b) {
         return (b < 0) ? b + 256 : b;
     }
 
@@ -64,9 +66,9 @@ public class BasalProfile {
     }
 
 
-    public boolean setRawData(byte[] data) {
+    private boolean setRawData(byte[] data) {
         if (data == null) {
-            LOG.error("setRawData: buffer is null!");
+            aapsLogger.error(LTag.PUMPCOMM,"setRawData: buffer is null!");
             return false;
         }
 
@@ -89,7 +91,7 @@ public class BasalProfile {
 
     public boolean setRawDataFromHistory(byte[] data) {
         if (data == null) {
-            LOG.error("setRawData: buffer is null!");
+            aapsLogger.error(LTag.PUMPCOMM,"setRawData: buffer is null!");
             return false;
         }
 
@@ -114,13 +116,13 @@ public class BasalProfile {
 
 
     public void dumpBasalProfile() {
-        LOG.debug("Basal Profile entries:");
+        aapsLogger.debug(LTag.PUMPCOMM,"Basal Profile entries:");
         List<BasalProfileEntry> entries = getEntries();
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
             // this doesn't work
-            LOG.debug(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
+            aapsLogger.debug(LTag.PUMPCOMM,String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
                     entry.rate_raw, startString, entry.startTime_raw));
 
         }
@@ -167,14 +169,14 @@ public class BasalProfile {
         BasalProfileEntry rval = new BasalProfileEntry();
         List<BasalProfileEntry> entries = getEntries();
         if (entries.size() == 0) {
-            LOG.warn(String.format("getEntryForTime(%s): table is empty",
+            aapsLogger.warn(LTag.PUMPCOMM,String.format("getEntryForTime(%s): table is empty",
                     when.toDateTime().toLocalTime().toString("HH:mm")));
             return rval;
         }
         // Log.w(TAG,"Assuming first entry");
         rval = entries.get(0);
         if (entries.size() == 1) {
-            LOG.debug("getEntryForTime: Only one entry in profile");
+            aapsLogger.debug(LTag.PUMPCOMM,"getEntryForTime: Only one entry in profile");
             return rval;
         }
 
@@ -184,17 +186,17 @@ public class BasalProfile {
         while (!done) {
             BasalProfileEntry entry = entries.get(i);
             if (DEBUG_BASALPROFILE) {
-                LOG.debug(String.format("Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
+                aapsLogger.debug(LTag.PUMPCOMM,String.format("Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
                         .toString("HH:mm"), entry.startTime.toString("HH:mm")));
             }
             if (localMillis >= entry.startTime.getMillisOfDay()) {
                 rval = entry;
                 if (DEBUG_BASALPROFILE)
-                    LOG.debug("Accepted Entry");
+                    aapsLogger.debug(LTag.PUMPCOMM,"Accepted Entry");
             } else {
                 // entry at i has later start time, keep older entry
                 if (DEBUG_BASALPROFILE)
-                    LOG.debug("Rejected Entry");
+                    aapsLogger.debug(LTag.PUMPCOMM,"Rejected Entry");
                 done = true;
             }
             i++;
@@ -203,7 +205,7 @@ public class BasalProfile {
             }
         }
         if (DEBUG_BASALPROFILE) {
-            LOG.debug(String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when
+            aapsLogger.debug(LTag.PUMPCOMM,String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when
                             .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, rval.rate_raw,
                     rval.startTime.toString("HH:mm"), rval.startTime_raw));
         }
@@ -215,7 +217,7 @@ public class BasalProfile {
         List<BasalProfileEntry> entries = new ArrayList<>();
 
         if (mRawData == null || mRawData[2] == 0x3f) {
-            LOG.warn("Raw Data is empty.");
+            aapsLogger.warn(LTag.PUMPCOMM,"Raw Data is empty.");
             return entries; // an empty list
         }
         boolean done = false;
@@ -233,9 +235,9 @@ public class BasalProfile {
             st = readUnsignedByte(mRawData[i + 2]);
 
             try {
-                entries.add(new BasalProfileEntry(r, st));
+                entries.add(new BasalProfileEntry(aapsLogger, r, st));
             } catch (Exception ex) {
-                LOG.error("Error decoding basal profile from bytes: {}", ByteUtil.shortHexString(mRawData));
+                aapsLogger.error(LTag.PUMPCOMM,"Error decoding basal profile from bytes: {}", ByteUtil.shortHexString(mRawData));
                 throw ex;
             }
 
@@ -277,17 +279,17 @@ public class BasalProfile {
     }
 
 
-    public Double[] getProfilesByHour() {
+    public Double[] getProfilesByHour(PumpType pumpType) {
 
         List<BasalProfileEntry> entries = null;
 
         try {
             entries = getEntries();
         } catch (Exception ex) {
-            LOG.error("=============================================================================");
-            LOG.error("  Error generating entries. Ex.: " + ex, ex);
-            LOG.error("  rawBasalValues: " + ByteUtil.shortHexString(this.getRawData()));
-            LOG.error("=============================================================================");
+            aapsLogger.error(LTag.PUMPCOMM,"=============================================================================");
+            aapsLogger.error(LTag.PUMPCOMM,"  Error generating entries. Ex.: " + ex, ex);
+            aapsLogger.error(LTag.PUMPCOMM,"  rawBasalValues: " + ByteUtil.shortHexString(this.getRawData()));
+            aapsLogger.error(LTag.PUMPCOMM,"=============================================================================");
 
             //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
         }
@@ -303,8 +305,6 @@ public class BasalProfile {
         }
 
         Double[] basalByHour = new Double[24];
-
-        PumpType pumpType = MedtronicUtil.getPumpStatus().pumpType;
 
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry current = entries.get(i);
@@ -363,11 +363,7 @@ public class BasalProfile {
     }
 
 
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
-    }
-
-    public boolean verify() {
+    public boolean verify(PumpType pumpType) {
 
         try {
             getEntries();
@@ -375,7 +371,7 @@ public class BasalProfile {
             return false;
         }
 
-        Double[] profilesByHour = getProfilesByHour();
+        Double[] profilesByHour = getProfilesByHour(pumpType);
 
         for (Double aDouble : profilesByHour) {
             if (aDouble > 35.0d)

@@ -16,12 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/careportal_stats"
-                layout="@layout/careportal_stats_fragment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
             <TextView
                 android:id="@+id/profileview_noprofile"
                 android:layout_width="match_parent"
@@ -144,7 +138,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/icon_cp_bolus_correction"
+                        android:drawableTop="@drawable/ic_cp_bolus_correction"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_correctionbolus"
@@ -158,7 +152,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/icon_cp_bolus_carbs"
+                        android:drawableTop="@drawable/ic_cp_bolus_carbs"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_carbscorrection"
@@ -172,7 +166,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/icon_cp_bolus_correction"
+                        android:drawableTop="@drawable/ic_cp_bolus_correction"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_combobolus"
@@ -186,7 +180,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/icon_cp_basal_start"
+                        android:drawableTop="@drawable/ic_cp_basal_start"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_tempbasalstart"
@@ -200,7 +194,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/icon_cp_basal_end"
+                        android:drawableTop="@drawable/ic_cp_basal_end"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_tempbasalend"

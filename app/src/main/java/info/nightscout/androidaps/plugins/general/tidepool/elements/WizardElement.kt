@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.db.Treatment
 import java.util.*
 
 class WizardElement(treatment: Treatment)

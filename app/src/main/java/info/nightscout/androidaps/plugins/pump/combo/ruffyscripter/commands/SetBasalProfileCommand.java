@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 
 public class SetBasalProfileCommand extends BaseCommand {
-    private static final Logger log = LoggerFactory.getLogger(SetBasalProfileCommand.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(SetBasalProfileCommand.class);
 
     private final BasalProfile basalProfile;
 

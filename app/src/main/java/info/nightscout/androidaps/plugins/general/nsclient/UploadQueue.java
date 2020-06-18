@@ -8,71 +8,86 @@ import com.j256.ormlite.dao.CloseableIterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 21.02.2016.
  */
-public class UploadQueue {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+public class UploadQueue implements UploadQueueInterface {
+    private final AAPSLogger aapsLogger;
+    private final DatabaseHelperInterface databaseHelper;
+    private final Context context;
+    private final SP sp;
+    private final RxBusWrapper rxBus;
 
-    public static String status() {
-        return "QUEUE: " + MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);
+    @Inject
+    public UploadQueue(
+            AAPSLogger aapsLogger,
+            DatabaseHelperInterface databaseHelper,
+            Context context,
+            SP sp,
+            RxBusWrapper rxBus
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.databaseHelper = databaseHelper;
+        this.context = context;
+        this.sp = sp;
+        this.rxBus = rxBus;
     }
 
-    public static long size() {
-        return MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);
+    public String status() {
+        return "QUEUE: " + databaseHelper.size(DatabaseHelper.DATABASE_DBREQUESTS);
     }
 
-    private static void startService() {
+    public long size() {
+        return databaseHelper.size(DatabaseHelper.DATABASE_DBREQUESTS);
+    }
+
+    private void startService() {
         if (NSClientService.handler == null) {
-            Context context = MainApp.instance();
             context.startService(new Intent(context, NSClientService.class));
             SystemClock.sleep(2000);
         }
     }
 
-    public static void add(final DbRequest dbr) {
-        if (SP.getBoolean(R.string.key_ns_noupload, false)) return;
-        startService();
-        if (L.isEnabled(L.NSCLIENT))
-            log.debug("Adding to queue: " + dbr.log());
+    public void add(final DbRequest dbr) {
+        if (sp.getBoolean(R.string.key_ns_noupload, false)) return;
+        aapsLogger.debug(LTag.NSCLIENT, "Adding to queue: " + dbr.log());
         try {
-            MainApp.getDbHelper().create(dbr);
+            databaseHelper.create(dbr);
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
-        NSClientPlugin plugin = NSClientPlugin.getPlugin();
-        if (plugin != null) {
-            plugin.resend("newdata");
-        }
+        rxBus.send(new EventNSClientResend("newdata"));
     }
 
-    static void clearQueue() {
+    void clearQueue() {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
-                if (L.isEnabled(L.NSCLIENT))
-                    log.debug("ClearQueue");
-                MainApp.getDbHelper().deleteAllDbRequests();
-                if (L.isEnabled(L.NSCLIENT))
-                    log.debug(status());
+                aapsLogger.debug(LTag.NSCLIENT, "ClearQueue");
+                databaseHelper.deleteAllDbRequests();
+                aapsLogger.debug(LTag.NSCLIENT, status());
             });
         }
     }
 
-    public static void removeID(final JSONObject record) {
+    public void removeID(final JSONObject record) {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
@@ -83,26 +98,24 @@ public class UploadQueue {
                     } else {
                         return;
                     }
-                    if (MainApp.getDbHelper().deleteDbRequest(id) == 1) {
-                        if (L.isEnabled(L.NSCLIENT))
-                            log.debug("Removed item from UploadQueue. " + UploadQueue.status());
+                    if (databaseHelper.deleteDbRequest(id) == 1) {
+                        aapsLogger.debug(LTag.NSCLIENT, "Removed item from UploadQueue. " + status());
                     }
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error("Unhandled exception", e);
                 }
             });
         }
     }
 
-    public static void removeID(final String action, final String _id) {
+    public void removeID(final String action, final String _id) {
         if (_id == null || _id.equals(""))
             return;
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
-                MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
-                if (L.isEnabled(L.NSCLIENT))
-                    log.debug("Removing " + _id + " from UploadQueue. " + UploadQueue.status());
+                databaseHelper.deleteDbRequestbyMongoId(action, _id);
+                aapsLogger.debug(LTag.NSCLIENT, "Removing " + _id + " from UploadQueue. " + status());
             });
         }
     }
@@ -111,7 +124,7 @@ public class UploadQueue {
         String result = "";
         CloseableIterator<DbRequest> iterator;
         try {
-            iterator = MainApp.getDbHelper().getDbRequestInterator();
+            iterator = databaseHelper.getDbRequestInterator();
             try {
                 while (iterator.hasNext()) {
                     DbRequest dbr = iterator.next();
@@ -124,7 +137,7 @@ public class UploadQueue {
                 iterator.close();
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return result;
     }

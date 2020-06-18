@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="resetpairing">Нулиране на сдвояването?</string>
+    <string name="dana_model">Модел: %1$02X Протокол: %2$02X Код: %3$02X</string>
+    <string name="basalcompare">Доставяне на по-малко от предварително зададена базал</string>
+    <string name="checkshaft">Проверете вал</string>
+    <string name="basalmax">Базал макс</string>
+    <string name="dailymax">Дневния максимум</string>
+    <string name="missedbolus">Пропуснат болус</string>
+    <string name="invalidpairing">Невалидна информация при сдвояване. Нов опит </string>
+    <string name="danars_password_title">Парола на помпата (само v1)</string>
+    <string name="rs_loginsulinchange_title">Записвай смените на резервоар</string>
+    <string name="rs_loginsulinchange_summary">Добави \"Смяна на резервоар\" в НС, когато е открит в историята</string>
+    <string name="rs_logcanulachange_title">Записвай смяна на канюла</string>
+    <string name="rs_logcanulachange_summary">Добави \"смяна на канюла\" в НС, когато е открит в историята</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+    <string name="press_ok_on_the_pump">Натиснете OK на помпата\nи въведете двата номера\nДръжте дисплея на помпата включен чрез натискане минус бутон, докато завършите въвеждане на код.</string>
+    <string name="num1pin">1: (12 цифри)</string>
+    <string name="num2pin">2: (8 цифри)</string>
+</resources>
