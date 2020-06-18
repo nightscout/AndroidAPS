@@ -1,7 +1,6 @@
-package com.ms_square.etsyblur;
+package com.ms_square.etsyblur
 
-
-import androidx.annotation.AnyThread;
+import androidx.annotation.AnyThread
 
 /**
  * AsyncPolicy.java
@@ -9,7 +8,7 @@ import androidx.annotation.AnyThread;
  * @author Manabu-GT on 3/22/17.
  */
 @AnyThread
-public interface AsyncPolicy {
+interface AsyncPolicy {
 
     /**
      * Decides if a blur operation should run asynchronously given the estimated
@@ -18,7 +17,7 @@ public interface AsyncPolicy {
      * @param computation
      * @return true if it blur operation should execute in a background thread
      */
-    boolean shouldAsync(boolean isRenderScript, long computation);
+    fun shouldAsync(isRenderScript: Boolean, computation: Long): Boolean
 
     /**
      * Put a pair of estimated computation amount and actual time took to further improve
@@ -27,5 +26,5 @@ public interface AsyncPolicy {
      * @param computation
      * @param timeInNanos
      */
-    void putSampleData(boolean isRenderScript, long computation, long timeInNanos);
+    fun putSampleData(isRenderScript: Boolean, computation: Long, timeInNanos: Long)
 }

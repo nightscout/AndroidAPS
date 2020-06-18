@@ -61,8 +61,7 @@ class JavaFastBlur extends BaseBlurEngine {
         return bmpHeight * (2 * radius + bmpWidth) + bmpWidth * (2 * radius + bmpHeight);
     }
 
-    @Override
-    boolean shouldAsync(int bmpWidth, int bmpHeight, int radius) {
+    @Override public boolean shouldAsync(int bmpWidth, int bmpHeight, int radius) {
         return blurConfig.asyncPolicy().shouldAsync(false, calculateComputation(bmpWidth, bmpHeight, radius));
     }
 
