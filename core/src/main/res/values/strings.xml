@@ -200,7 +200,7 @@
     <string name="smb_shortname">SMB</string>
 
     <!--    CarbsReq-->
-    <string name="carbsreq">"%dg Additional Carbs Required Within %d Minutes</string>
+    <string name="carbsreq">%dg Additional Carbs Required Within %d Minutes</string>
 
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
