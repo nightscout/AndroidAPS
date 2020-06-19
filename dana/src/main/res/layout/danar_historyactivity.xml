@@ -3,17 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginBottom="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="info.nightscout.androidaps.dana.activities.DanaHistoryActivity">
+
 
     <RelativeLayout
         android:id="@+id/danar_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:background="@color/activity_title_background"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -21,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/pumphistory"
+            android:tint="?attr/iconColorDialog"
             android:src="@drawable/icon_danarhistory" />
 
         <TextView
@@ -88,6 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:icon="@drawable/icon_actions_refill"
+        android:layout_alignParentBottom="true"
         android:paddingLeft="4dp"
         android:paddingRight="0dp"
         android:text="@string/reload"
