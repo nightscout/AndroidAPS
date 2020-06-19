@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:src="@drawable/icon_quickwizard_laughing"
+                android:src="@drawable/ic_quickwizard"
                 app:fabSize="auto" />
 
             <TextView
