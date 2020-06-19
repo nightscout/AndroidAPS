@@ -337,21 +337,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
-        val lastBG = iobCobCalculatorPlugin.lastBg()
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
-        val profileName = profileFunction.getProfileName()
         val actualBG = iobCobCalculatorPlugin.actualBg()
-
-        // QuickWizard button
-        val quickWizardEntry = quickWizard.getActive()
-        if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized && !pump.isSuspended) {
-            overview_quickwizardbutton?.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
-            overview_quickwizardbutton?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
-                " " + resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
-            if (wizard.calculatedTotalInsulin <= 0) overview_quickwizardbutton?.visibility = View.GONE
-        } else overview_quickwizardbutton?.visibility = View.GONE
 
         // **** Temp button ****
         val lastRun = loopPlugin.lastRun
