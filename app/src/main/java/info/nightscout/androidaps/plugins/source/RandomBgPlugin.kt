@@ -31,6 +31,8 @@ class RandomBgPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
+    private val virtualPumpPlugin: VirtualPumpPlugin,
+    private val buildHelper: BuildHelper,
     private val sp: SP,
     private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
@@ -72,7 +74,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return true //isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
+        return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
     }
 
     override fun handleNewData(intent: Intent) {
