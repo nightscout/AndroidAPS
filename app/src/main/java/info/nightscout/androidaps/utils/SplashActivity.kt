@@ -1,11 +1,18 @@
 package info.nightscout.androidaps.utils
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.concurrent.schedule
 
 class SplashActivity : AppCompatActivity() {
 
@@ -23,4 +30,62 @@ class SplashActivity : AppCompatActivity() {
             finish()
         }, SPLASH_TIME_OUT)
     }
+}
+
+
+class TimerSplashActivity : AppCompatActivity() {
+
+    var timer = Timer()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+
+        timer.schedule(3000) {
+            var intent = Intent(this@TimerSplashActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    override fun onPause() {
+        timer.cancel()
+        super.onPause()
+    }
+}
+
+class CoroutinesSplashActivity : AppCompatActivity() {
+
+    val activityScope = CoroutineScope(Dispatchers.Main)
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+
+        activityScope.launch {
+            delay(3000)
+            var intent = Intent(this@CoroutinesSplashActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    override fun onPause() {
+        activityScope.cancel()
+        super.onPause()
+    }
+}
+
+class SplashEasyActivity : AppCompatActivity() {
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        var intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
 }
