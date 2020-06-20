@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.overview
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
@@ -12,7 +11,6 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import android.view.ContextMenu
 import android.view.ContextMenu.ContextMenuInfo
@@ -23,7 +21,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
@@ -31,7 +28,6 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
@@ -50,7 +46,6 @@ import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
@@ -180,8 +175,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
         overview_bggraph?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
-        overview_bggraph?.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
-        overview_bggraph?.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
+        overview_bggraph?.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
+        overview_bggraph?.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
         overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
@@ -338,8 +333,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
         val pump = activePlugin.activePump
-        val profile = profileFunction.getProfile()
-        val actualBG = iobCobCalculatorPlugin.actualBg()
 
         // **** Temp button ****
         val lastRun = loopPlugin.lastRun
@@ -374,8 +367,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 val graph = GraphView(context)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-                graph.gridLabelRenderer?.setHorizontalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText ))
-                graph.gridLabelRenderer?.setVerticalLabelsColor(resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText ))
+                graph.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
+                graph.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
@@ -444,7 +437,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
         if (tempTarget != null) {
             overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
-            val drawable: Drawable = overview_temptarget.getBackground()
+            val drawable: Drawable = overview_temptarget.background
             val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
             if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
@@ -456,14 +449,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
             if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
-                val drawable: Drawable = overview_temptarget.getBackground()
+                val drawable: Drawable = overview_temptarget.background
                 val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
                 if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
                 drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
                 resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
                 overview_activeprofile.setTypeface(null, Typeface.BOLD)
             } else {
-                val drawableLeft: Array<Drawable?> = overview_temptarget.getCompoundDrawables()
+                val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
                 val theme = requireContext().theme
                 if (theme != null) {
                     // create a gradient drawable
@@ -476,7 +469,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                     val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
                     gradientDrawable.shape = GradientDrawable.RECTANGLE
                     gradientDrawable.cornerRadius = 40f
-                    overview_temptarget.setBackground(gradientDrawable)
+                    overview_temptarget.background = gradientDrawable
                     if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextDefault).let { drawableLeft[0]!!.setTint(it) }
                     resourceHelper.gc(R.color.ribbonTextDefault).let { overview_temptarget.setTextColor(it) }
                 }
@@ -517,16 +510,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overview_extended_llayout?.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
         // Active profile pill button
-        overview_activeprofile?.setText(profileFunction.getProfileNameWithDuration())
+        overview_activeprofile?.text = profileFunction.getProfileNameWithDuration()
         if (profile.percentage != 100 || profile.timeshift != 0) {
-            val drawable: Drawable = overview_activeprofile.getBackground()
-            val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
+            val drawable: Drawable = overview_activeprofile.background
+            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
             if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
             resourceHelper.gc(R.color.ribbonTextWarning).let { overview_activeprofile.setTextColor(it) }
             overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
-            val drawableLeft: Array<Drawable?> = overview_activeprofile.getCompoundDrawables()
+            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
             val theme = requireContext().theme
             if (theme != null) {
                 // create a gradient drawable
@@ -538,7 +531,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
                 gradientDrawable.shape = GradientDrawable.RECTANGLE
                 gradientDrawable.cornerRadius = 40f
-                overview_activeprofile.setBackground(gradientDrawable)
+                overview_activeprofile.background = gradientDrawable
                 if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextDefault).let { drawableLeft[0]!!.setTint(it) }
                 resourceHelper.gc(R.color.ribbonTextDefault).let { overview_activeprofile.setTextColor(it) }
             }
@@ -587,7 +580,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 overview_cob?.text = cobText
                 if (carbAnimation.isRunning)
                     carbAnimation.stop()
-                carbAnimation.selectDrawable(0);
+                carbAnimation.selectDrawable(0)
             }
         }
 
