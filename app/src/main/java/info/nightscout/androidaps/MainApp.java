@@ -3,7 +3,6 @@ package info.nightscout.androidaps;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
@@ -44,7 +43,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class MainApp extends DaggerApplication {
 
     static MainApp sInstance;
-    private static Resources sResources;
 
     static DatabaseHelper sDatabaseHelper = null;
 
@@ -71,18 +69,8 @@ public class MainApp extends DaggerApplication {
 
         aapsLogger.debug("onCreate");
         sInstance = this;
-        sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
-/*
-        Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
-            if (ex instanceof InternalError) {
-                // usually the app trying to spawn a thread while being killed
-                return;
-            }
-            aapsLogger.error("Uncaught exception crashing app", ex);
-        });
-*/
         registerActivityLifecycleCallbacks(activityMonitor);
 
         JodaTimeAndroid.init(this);
@@ -118,7 +106,6 @@ public class MainApp extends DaggerApplication {
                 .build();
     }
 
-    @SuppressWarnings("deprecation")
     private void registerLocalBroadcastReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_TREATMENT);
