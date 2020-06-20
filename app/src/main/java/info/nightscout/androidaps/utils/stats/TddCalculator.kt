@@ -41,7 +41,7 @@ class TddCalculator @Inject constructor(
         service = TreatmentService(injector) // plugin is not started
     }
 
-    fun calculate(days: Long): LongSparseArray<TDD> {
+    private fun calculate(days: Long): LongSparseArray<TDD> {
         val range = T.days(days + 1).msecs()
         val startTime = MidnightTime.calc(DateUtil.now() - T.days(days).msecs())
         val endTime = MidnightTime.calc(DateUtil.now())

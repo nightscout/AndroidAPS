@@ -21,7 +21,7 @@ class TirCalculator @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil
 ){
-    fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
+    private fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
         val startTime = MidnightTime.calc(DateUtil.now() - T.days(days).msecs())
@@ -44,7 +44,7 @@ class TirCalculator @Inject constructor(
         return result
     }
 
-    fun averageTIR(tirs: LongSparseArray<TIR>): TIR {
+    private fun averageTIR(tirs: LongSparseArray<TIR>): TIR {
         val totalTir = if (tirs.size() > 0) {
             TIR(tirs.valueAt(0).date, tirs.valueAt(0).lowThreshold, tirs.valueAt(0).highThreshold)
         } else {
@@ -87,7 +87,7 @@ class TirCalculator @Inject constructor(
         )
     }
 
-    fun toText(resourceHelper: ResourceHelper, tirs: LongSparseArray<TIR>): String {
+    private fun toText(resourceHelper: ResourceHelper, tirs: LongSparseArray<TIR>): String {
         var t = ""
         for (i in 0 until tirs.size()) {
             t += "${tirs.valueAt(i).toText(resourceHelper, dateUtil)}<br>"
