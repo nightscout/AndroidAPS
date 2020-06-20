@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils;
 
 import android.annotation.SuppressLint;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
