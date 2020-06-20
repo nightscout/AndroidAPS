@@ -87,7 +87,7 @@ class BolusProgressDialog : BlurDialogFragment() {
             e.printStackTrace()
         }
 
-        val blurConfig = context?.let { SimpleAsyncPolicy () }?.let {
+        context?.let { SimpleAsyncPolicy () }?.let {
             BlurConfig.Builder()
                 .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
                 .debug(false)
