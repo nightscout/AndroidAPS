@@ -74,13 +74,11 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
         overview_eventdate?.text = DateUtil.dateString(eventTime)
         overview_eventtime?.text = dateUtil.timeString(eventTime)
 
-        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
         try {
             val theme: Resources.Theme? = context?.theme
             // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
-            if (theme != null) {
-                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
-            }
+            theme?.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
         } catch (e: Exception) {
             e.printStackTrace()
         }

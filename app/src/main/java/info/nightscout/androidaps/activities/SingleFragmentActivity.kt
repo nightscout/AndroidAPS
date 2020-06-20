@@ -27,7 +27,7 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Important to set theme here
-        var themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
         try {
             setTheme(themeToSet)
             // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
