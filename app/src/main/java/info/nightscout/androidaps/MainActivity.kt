@@ -381,7 +381,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
         // fab menu is empty -> so we do not need the fab menu button for opening fab menu
         if ( treatmentButton?.visibility == View.GONE && calibrationButton?.visibility == View.GONE && quickwizardButton?.visibility == View.GONE ) {
             fab.hide()
+            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
         } else {
+            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
             fab.show()
         }
     }
@@ -466,7 +468,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
             when (item.itemId) {
                 R.id.wizardButton      -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(manager, "Main") }))
                 R.id.insulinButton           -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(manager, "Main") }))
-               // R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
                 R.id.carbsButton       -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(manager, "Main") }))
 
                 R.id.cgmButton         -> {
@@ -563,8 +564,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 } else flag and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 overview_bg.paintFlags = flag
             }
-            overview_timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
-            //overview_timeagoshort?.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
+            timeago?.text = DateUtil.minAgo(resourceHelper, lastBG.date)
         }
     }
 
