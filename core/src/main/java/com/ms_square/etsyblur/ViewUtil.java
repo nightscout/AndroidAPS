@@ -64,7 +64,7 @@ public final class ViewUtil {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     public static void animateAlpha(@NonNull View view, float fromAlpha, float toAlpha, int duration,
-                                    @NonNull final Runnable endAction) {
+                                    final Runnable endAction) {
         if (IS_POST_HONEYCOMB_MR1) {
             ViewPropertyAnimator animator = view.animate().alpha(toAlpha).setDuration(duration);
             if (endAction != null) {
