@@ -23,7 +23,7 @@
     android:layout_gravity="center_vertical"
     android:paddingBottom="8dp">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/cancel"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         style="@style/mdtp_ActionButton.Text"
         android:text="@string/cancel" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
