@@ -21,7 +21,8 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:text="1" />
+        android:text="1"
+        android:autofillHints="" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/decrement"
