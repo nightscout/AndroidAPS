@@ -18,9 +18,9 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationHolder @Inject constructor(
-    private val resourceHelper: ResourceHelper,
-    private val context: Context,
-    private val iconsProvider: IconsProvider
+    resourceHelper: ResourceHelper,
+    context: Context,
+    iconsProvider: IconsProvider
 ) : NotificationHolderInterface {
 
     override val channelID = "AndroidAPS-Ongoing"
