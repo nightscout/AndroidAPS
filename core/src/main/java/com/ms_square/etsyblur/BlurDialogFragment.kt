@@ -114,14 +114,16 @@ abstract class BlurDialogFragment : DaggerDialogFragment() {
         root!!.addView(blurImgView)
 
         // apply blur effect
-        val bitmapToBlur = ViewUtil.drawViewToBitmap(root, visibleFrame.right,
+        val bitmapToBlur = ViewUtil.drawViewToBitmap(root!!, visibleFrame.right,
             visibleFrame.bottom, visibleFrame.left.toFloat(), visibleFrame.top.toFloat(), blurConfig().downScaleFactor(),
             blurConfig().overlayColor())
-        blur!!.execute(bitmapToBlur, true, object : BlurEngine.Callback {
-            override fun onFinished(blurredBitmap: Bitmap?) {
-                blurImgView!!.setImageBitmap(blurredBitmap)
-            }
-        })
+        if (bitmapToBlur != null) {
+            blur!!.execute(bitmapToBlur, true, object : BlurEngine.Callback {
+                override fun onFinished(blurredBitmap: Bitmap?) {
+                    blurImgView!!.setImageBitmap(blurredBitmap)
+                }
+            })
+        }
     }
 
     private fun startEnterAnimation() {
