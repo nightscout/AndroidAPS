@@ -48,20 +48,14 @@ public class SingleClickButton extends androidx.appcompat.widget.AppCompatButton
     @Override
     public void onClick(final View v) {
         setEnabled(false);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SystemClock.sleep(3000);
-                Activity activity = (Activity) context;
-                if (activity != null)
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setEnabled(true);
-                            log.debug("Button enabled");
-                        }
-                    });
-            }
+        new Thread(() -> {
+            SystemClock.sleep(3000);
+            Activity activity = (Activity) context;
+            if (activity != null)
+                activity.runOnUiThread(() -> {
+                    setEnabled(true);
+                    log.debug("Button enabled");
+                });
         }).start();
         if (listener != null)
             listener.onClick(v);

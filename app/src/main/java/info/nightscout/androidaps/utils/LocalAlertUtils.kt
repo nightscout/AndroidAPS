@@ -35,7 +35,7 @@ class LocalAlertUtils @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-    fun missedReadingsThreshold(): Long {
+    private fun missedReadingsThreshold(): Long {
         return T.mins(sp.getInt(resourceHelper.gs(R.string.key_missed_bg_readings_threshold), 30).toLong()).msecs()
     }
 
@@ -74,10 +74,10 @@ class LocalAlertUtils @Inject constructor(
 
     fun shortenSnoozeInterval() { //shortens alarm times in case of setting changes or future data
         var nextMissedReadingsAlarm = sp.getLong("nextMissedReadingsAlarm", 0L)
-        nextMissedReadingsAlarm = Math.min(System.currentTimeMillis() + missedReadingsThreshold(), nextMissedReadingsAlarm)
+        nextMissedReadingsAlarm = (System.currentTimeMillis() + missedReadingsThreshold()).coerceAtMost(nextMissedReadingsAlarm)
         sp.putLong("nextMissedReadingsAlarm", nextMissedReadingsAlarm)
         var nextPumpDisconnectedAlarm = sp.getLong("nextPumpDisconnectedAlarm", 0L)
-        nextPumpDisconnectedAlarm = Math.min(System.currentTimeMillis() + pumpUnreachableThreshold(), nextPumpDisconnectedAlarm)
+        nextPumpDisconnectedAlarm = (System.currentTimeMillis() + pumpUnreachableThreshold()).coerceAtMost(nextPumpDisconnectedAlarm)
         sp.putLong("nextPumpDisconnectedAlarm", nextPumpDisconnectedAlarm)
     }
 

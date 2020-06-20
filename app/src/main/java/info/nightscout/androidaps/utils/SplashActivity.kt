@@ -17,7 +17,7 @@ import kotlin.concurrent.schedule
 class SplashActivity : AppCompatActivity() {
 
     // This is the loading time of the splash screen
-    private val SPLASH_TIME_OUT:Long = 3000 // 6 sec
+    private val _sPLASHTIMEOUT:Long = 3000 // 6 sec
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -28,21 +28,21 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             // close this activity
             finish()
-        }, SPLASH_TIME_OUT)
+        }, _sPLASHTIMEOUT)
     }
 }
 
 
 class TimerSplashActivity : AppCompatActivity() {
 
-    var timer = Timer()
+    private var timer = Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
         timer.schedule(3000) {
-            var intent = Intent(this@TimerSplashActivity, MainActivity::class.java)
+            val intent = Intent(this@TimerSplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -56,7 +56,7 @@ class TimerSplashActivity : AppCompatActivity() {
 
 class CoroutinesSplashActivity : AppCompatActivity() {
 
-    val activityScope = CoroutineScope(Dispatchers.Main)
+    private val activityScope = CoroutineScope(Dispatchers.Main)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +65,7 @@ class CoroutinesSplashActivity : AppCompatActivity() {
 
         activityScope.launch {
             delay(3000)
-            var intent = Intent(this@CoroutinesSplashActivity, MainActivity::class.java)
+            val intent = Intent(this@CoroutinesSplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -83,7 +83,7 @@ class SplashEasyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils;
 
+import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -99,13 +100,10 @@ public class SpinnerHelper implements OnItemSelectedListener {
         spinner.setOnItemSelectedListener(listener == null ? null : this);
     }
 
-    public void setTouchListener() {
-        spinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                userTouched = true;
-                return false;
-            }
+    @SuppressLint("ClickableViewAccessibility") public void setTouchListener() {
+        spinner.setOnTouchListener((v, event) -> {
+            userTouched = true;
+            return false;
         });
     }
 
@@ -140,11 +138,7 @@ public class SpinnerHelper implements OnItemSelectedListener {
 
     public SpinnerAdapter getAdapter() { return spinner.getAdapter(); }
     public int getCount() { return spinner.getCount(); }
-    public Object getItemAtPosition(int position) { return spinner.getItemAtPosition(position); }
-    public long getItemIdAtPosition(int position) { return spinner.getItemIdAtPosition(position); }
-    public Object getSelectedItem() { return spinner.getSelectedItem(); }
-    public long getSelectedItemId() { return spinner.getSelectedItemId(); }
-    public int getSelectedItemPosition() { return spinner.getSelectedItemPosition(); }
+
     public void setEnabled(boolean enabled) { spinner.setEnabled(enabled); }
     public boolean isEnabled() { return spinner.isEnabled(); }
 }
