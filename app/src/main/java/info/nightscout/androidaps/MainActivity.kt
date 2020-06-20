@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
@@ -15,8 +14,6 @@ import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
-import android.util.Log
-import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -24,7 +21,6 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
@@ -89,7 +85,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
-import kotlinx.android.synthetic.main.overview_info_layout.*
 import kotlinx.android.synthetic.main.status_fragment.*
 import java.util.*
 import java.util.concurrent.Executors
@@ -105,11 +100,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private val worker = Executors.newSingleThreadScheduledExecutor()
     private var loopHandler = Handler()
     private var refreshLoop: Runnable? = null
-
     private var deltashort = ""
     private var avgdelta = ""
-
-    //All for the fab menu
     private var isRotate = false
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -143,11 +135,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
 
-    // get active theme
-    open fun getActiveTheme(): Resources.Theme? {
-        return theme
-    }
-
     // change to selected theme in theme manager
     open fun changeTheme(newTheme: Int) {
         setNewTheme(newTheme)
@@ -178,10 +165,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         recreate()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
@@ -210,12 +194,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
         //bluring for navigation drawer
         BlurSupport.addTo(main_drawer_layout)
 
-        // below are declared as fields
         var downX = 0F
         var downY = 0F
         var dx = 0F
         var dy = 0F
-        //remember hamburger icon for switching fab icon from center to right and back
+        //remember 3 dot icon for switching fab icon from center to right and back
         val overflowIcon = bottom_app_bar.overflowIcon
 
         // detect single tap like click
@@ -225,58 +208,53 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
         }
-        var gestureDetector = GestureDetector(this, SingleTapDetector())
+        val gestureDetector = GestureDetector(this, SingleTapDetector())
         // set on touch listener for move detetction
-        fab.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(view: View?, event: MotionEvent): Boolean {
-                if (gestureDetector.onTouchEvent(event)) {
-                    // code for single tap or onclick
-                    onClick(view!!)
-                } else {
-                    when (event.actionMasked) {
-                        MotionEvent.ACTION_DOWN -> {
-                            downX = event.x
-                            downY = event.y
-                        }
-                        MotionEvent.ACTION_MOVE -> {
-                            dx += event.x - downX
-                            dy += event.y - downY
-                            fab.translationX = dx
-                        }
-                        MotionEvent.ACTION_UP   -> {
-                            if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER ) {
-                                bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
-                                bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
-                                //bottom_app_bar.navigationIcon = null
-                                bottom_app_bar.overflowIcon = null
-                            }
-                            else {
-                                bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_CENTER
-                                bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
-                                //bottom_app_bar.navigationIcon = navigationIcon
-                                bottom_app_bar.overflowIcon = overflowIcon
-                            }
+        fab.setOnTouchListener { view, event ->
+            if (gestureDetector.onTouchEvent(event)) {
+                // code for single tap or onclick
+                onClick(view!!)
+            } else {
+                when (event.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        downX = event.x
+                        downY = event.y
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        dx += event.x - downX
+                        dy += event.y - downY
+                        fab.translationX = dx
+                    }
+
+                    MotionEvent.ACTION_UP   -> {
+                        if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER ) {
+                            bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
+                            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
+                            bottom_app_bar.overflowIcon = null
+                        } else {
+                            bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_CENTER
+                            bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = true
+                            bottom_app_bar.overflowIcon = overflowIcon
                         }
                     }
                 }
-                return true
             }
-        })
+            true
+        }
 
-        overview_bg?.setOnClickListener( {
+        overview_bg?.setOnClickListener {
             val fullText = avgdelta
             this.let {
                 OKDialog.show(it, "Delta", fullText)
             }
-
-        })
-
+        }
 
 
         treatmentButton.setOnClickListener { view: View? -> onClick(view!!) }
-        calibrationButton.setOnClickListener({ view: View? -> onClick(view!!) })
-        quickwizardButton.setOnClickListener({ view: View? -> onClick(view!!) })
-        quickwizardButton.setOnLongClickListener({ view: View? -> onLongClick(view!!) })
+        calibrationButton.setOnClickListener { view: View? -> onClick(view!!) }
+        quickwizardButton.setOnClickListener { view: View? -> onClick(view!!) }
+        quickwizardButton.setOnLongClickListener { view: View? -> onLongClick(view!!) }
 
         setupBottomNavigationView()
 
@@ -285,7 +263,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         ViewAnimation.init(calibrationButton)
         ViewAnimation.init(quickwizardButton)
         if (main_bottom_fab_menu != null) {
-            main_bottom_fab_menu.setVisibility(View.GONE)
+            main_bottom_fab_menu.visibility = View.GONE
         }
 
         // initialize screen wake lock
@@ -479,9 +457,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    /*
-     sets clicklistener on BottomNavigationView
-    */
     private fun setupBottomNavigationView() {
         val manager = supportFragmentManager
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
@@ -545,6 +520,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun upDateGlucose() {
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -737,12 +713,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private fun scheduleUpdateGUI(from: String) {
         class UpdateRunnable : Runnable {
             override fun run() {
-                this.let {
-                    runOnUiThread {
-                        updateGUI(from)
-                        scheduledUpdate = null
-                    }
-
+                runOnUiThread {
+                    updateGUI(from)
+                    scheduledUpdate = null
                 }
             }
         }
@@ -755,7 +728,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
-        aapsLogger.debug("UpdateGUI from $from")
+        aapsLogger.debug("UpdateGUI in MainActivity from $from")
         upDateGlucose()
         upDateStatusLight()
         upDateLoop()
@@ -815,11 +788,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
         } else {
             tabs_normal.visibility = View.VISIBLE
             tabs_compact.visibility = View.GONE
-            val typedValue = TypedValue()
-            if (theme.resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
-                //toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
-                   // TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics))
-            }
             TabLayoutMediator(tabs_normal, main_pager) { tab, position ->
                 tab.text = (main_pager.adapter as TabPageAdapter).getPluginAt(position).name
             }.attach()
