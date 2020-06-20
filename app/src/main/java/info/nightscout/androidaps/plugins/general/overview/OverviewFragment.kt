@@ -356,19 +356,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         } else {
             overview_accepttempbutton?.visibility = View.GONE
         }
-
-        // **** Various treatment buttons ****
-        overview_carbsbutton?.visibility = ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
-        overview_treatmentbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
-        overview_wizardbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
-        overview_insulinbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
-
-        // **** Calibration & CGM buttons ****
-        val xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE)
-        val dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE)
-        overview_calibrationbutton?.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
-        overview_cgmbutton?.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
-
     }
 
     @Synchronized
@@ -376,7 +363,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         val numOfGraphs = overviewMenus.setting.size
 
         if (numOfGraphs != secondaryGraphs.size - 1) {
-            //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
             // rebuild needed
             secondaryGraphs.clear()
             secondaryGraphsLabel.clear()
@@ -394,7 +380,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                //graph.viewport.backgroundColor = resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground )
                 graph.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
 
                 relativeLayout.addView(graph)
