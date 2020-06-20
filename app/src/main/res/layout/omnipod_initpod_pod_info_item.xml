@@ -20,8 +20,8 @@
     android:minHeight="@dimen/list_item_height_small"
     android:orientation="horizontal"
     android:baselineAligned="true"
-    android:paddingLeft="@dimen/list_item_padding_left"
-    android:paddingRight="@dimen/list_item_padding_right"
+    android:paddingStart="@dimen/list_item_padding_left"
+    android:paddingEnd="@dimen/list_item_padding_right"
     android:paddingTop="12dp"
     android:paddingBottom="12dp">
 

@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_lastrun_label"
                     android:textSize="14sp" />
 
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_aps_label"
                     android:textSize="14sp" />
 
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_request_label"
                     android:textSize="14sp" />
 
@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_constraintsprocessed_label"
                     android:textSize="14sp" />
 
@@ -181,7 +181,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -205,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/constraints"
                     android:textSize="14sp" />
 
@@ -225,7 +225,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_tbrrequest_time_label"
                     android:textSize="14sp" />
 
@@ -269,7 +269,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -293,7 +293,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_tbrexecution_time_label"
                     android:textSize="14sp" />
 
@@ -313,7 +313,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -337,7 +337,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_tbrsetbypump_label"
                     android:textSize="14sp" />
 
@@ -357,7 +357,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -381,7 +381,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_smbrequest_time_label"
                     android:textSize="14sp" />
 
@@ -401,7 +401,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -425,7 +425,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_smbexecution_time_label"
                     android:textSize="14sp" />
 
@@ -445,7 +445,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -469,7 +469,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/loop_smbsetbypump_label"
                     android:textSize="14sp" />
 
@@ -489,7 +489,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>

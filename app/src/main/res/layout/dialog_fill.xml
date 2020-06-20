@@ -88,8 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"

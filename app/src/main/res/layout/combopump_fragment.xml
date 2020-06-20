@@ -33,7 +33,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/combo_pump_state_label"
                         android:textSize="14sp" />
 
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/combo_pump_activity_label"
                         android:textSize="14sp" />
 
@@ -122,7 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/battery_label"
                         android:textSize="14sp" />
 
@@ -167,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/reservoir_label"
                         android:textSize="14sp" />
 
@@ -211,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastconnection_label"
                         android:textSize="14sp" />
 
@@ -255,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastbolus_label"
                         android:textSize="14sp" />
 
@@ -299,7 +299,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basebasalrate_label"
                         android:textSize="14sp" />
 
@@ -343,7 +343,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/tempbasal_label"
                         android:textSize="14sp" />
 
@@ -387,7 +387,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/combo_bolus_count"
                         android:textSize="14sp" />
 
@@ -431,7 +431,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/combo_tbr_count"
                         android:textSize="14sp" />
 

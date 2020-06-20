@@ -179,8 +179,8 @@
                 android:textStyle="bold"
                 android:textColor="#ff0000"
                 android:background="@drawable/pillborder"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/warning_Message" />
 
             <Space

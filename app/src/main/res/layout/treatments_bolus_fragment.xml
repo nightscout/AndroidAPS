@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="6dp"
+                android:paddingStart="6dp"
                 android:text="@string/treatments_iobtotal_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -48,7 +48,7 @@
                 android:id="@+id/treatments_iobtotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="6dp"
+                android:paddingStart="6dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="6dp"
+                android:paddingStart="6dp"
                 android:text="@string/treatments_iobactivitytotal_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -69,7 +69,7 @@
                 android:id="@+id/treatments_iobactivitytotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="6dp"
+                android:paddingStart="6dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
 

@@ -53,7 +53,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="mg/dl"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -124,7 +124,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="g"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -157,7 +157,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="U"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -190,7 +190,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="%"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -277,7 +277,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="min"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -310,7 +310,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="%"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -343,7 +343,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="U/h"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -376,7 +376,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="min"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -436,7 +436,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text=" "
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -469,7 +469,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="%"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -502,7 +502,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:minWidth="45dp"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="h"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 

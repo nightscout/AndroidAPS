@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_lastrun_label"
                     android:textSize="14sp" />
 
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="center_horizontal"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_inputparameters_label"
                     android:textSize="14sp" />
 
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_glucosestatus_label"
                     android:textSize="14sp" />
 
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_currenttemp_label"
                     android:textSize="14sp" />
 
@@ -180,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -204,7 +204,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_iobdata_label"
                     android:textSize="14sp" />
 
@@ -224,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -248,7 +248,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_profile_label"
                     android:textSize="14sp" />
 
@@ -268,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -292,7 +292,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_mealdata_label"
                     android:textSize="14sp" />
 
@@ -312,7 +312,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -336,7 +336,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="center_horizontal"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/result"
                     android:textSize="14sp" />
 
@@ -361,7 +361,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/result"
                     android:textSize="14sp" />
 
@@ -381,7 +381,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -405,7 +405,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/openapsma_request_label"
                     android:textSize="14sp" />
 
@@ -425,7 +425,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
 
             </LinearLayout>

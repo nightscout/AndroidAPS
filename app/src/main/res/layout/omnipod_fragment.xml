@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/rileylink_status"
                         android:textSize="14sp" />
 
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:text="{fa-bluetooth-b}"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_pod_address"
                         android:textSize="14sp" />
 
@@ -130,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -149,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_pod_expiry"
                         android:textSize="14sp" />
 
@@ -169,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -186,7 +186,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_pod_status"
                         android:textSize="14sp" />
 
@@ -241,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastconnection_label"
                         android:textSize="14sp" />
 
@@ -261,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -286,7 +286,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastbolus_label"
                         android:textSize="14sp" />
 
@@ -306,7 +306,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -332,7 +332,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basebasalrate_label"
                         android:textSize="14sp" />
 
@@ -352,7 +352,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -377,7 +377,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/tempbasal_label"
                         android:textSize="14sp" />
 
@@ -397,7 +397,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -423,7 +423,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/reservoir_label"
                         android:textSize="14sp" />
 
@@ -443,7 +443,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -469,7 +469,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/medtronic_errors"
                         android:textSize="14sp" />
 
@@ -489,7 +489,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -514,7 +514,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_pod_active_alerts"
                         android:textSize="14sp" />
 
@@ -534,7 +534,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -574,8 +574,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/icon_actions_refill"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/combo_refresh" />
 
 
@@ -586,8 +586,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/icon_danarhistory"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/omnipod_pod_mgmt" />
 
                 <Button
@@ -597,8 +597,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/icon_cp_aaps_offline"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/omnipod_ack_short" />
 
                 <Button
@@ -608,8 +608,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/icon_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/omnipod_rl_stats" />
 
                 <Button
@@ -619,8 +619,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_cp_bolus_correction"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/omnipod_read_pulse_log_short"
                     />
 

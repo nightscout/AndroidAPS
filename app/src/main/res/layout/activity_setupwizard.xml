@@ -65,8 +65,8 @@
         android:layout_gravity="bottom|center_horizontal"
         android:background="@color/black_overlay"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <Button
             android:id="@+id/previous_button"

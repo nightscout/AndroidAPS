@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="32dp">
+    android:paddingStart="32dp">
 
     <TextView
         android:id="@+id/rileylink_device_name"

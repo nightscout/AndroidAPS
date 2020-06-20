@@ -363,8 +363,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">20px</item>
-        <item name="android:paddingRight">20px</item>
+        <item name="android:paddingStart">20px</item>
+        <item name="android:paddingEnd">20px</item>
         <item name="android:textSize">18sp</item>
 
         <!--        <item name="android:textColor">?android:textColorPrimary</item> -->
@@ -377,8 +377,8 @@
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:paddingTop">20px</item>
         <item name="android:paddingBottom">20px</item>
-        <item name="android:paddingLeft">60px</item>
-        <item name="android:paddingRight">60px</item>
+        <item name="android:paddingStart">60px</item>
+        <item name="android:paddingEnd">60px</item>
         <item name="android:textSize">18sp</item>
         <!-- <item name="android:textColor">#000000</item> -->
     </style>
@@ -435,8 +435,8 @@
         <item name="android:stateListAnimator">@null</item>
         <item name="android:background">@drawable/mdtp_material_button_background</item>
         <item name="android:minWidth">@dimen/mdtp_material_button_minwidth</item>
-        <item name="android:paddingLeft">@dimen/mdtp_material_button_textpadding_horizontal</item>
-        <item name="android:paddingRight">@dimen/mdtp_material_button_textpadding_horizontal</item>
+        <item name="android:paddingStart">@dimen/mdtp_material_button_textpadding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/mdtp_material_button_textpadding_horizontal</item>
         <item name="android:textColor">@color/mdtp_button_color</item>
         <item name="android:textAllCaps">true</item>
     </style>

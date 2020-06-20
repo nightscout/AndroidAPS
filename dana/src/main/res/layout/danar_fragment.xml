@@ -138,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/serialnumber"
                         android:textSize="14sp" />
 
@@ -158,7 +158,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
 
@@ -183,7 +183,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/danar_bluetooth_status"
                         android:textSize="14sp" />
 
@@ -203,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:text="{fa-bluetooth-b}"
                         android:textSize="20dp" />
 
@@ -236,7 +236,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/battery_label"
                         android:textSize="14sp" />
 
@@ -256,7 +256,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="20dp" />
 
 
@@ -281,7 +281,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastconnection_label"
                         android:textSize="14sp" />
 
@@ -301,7 +301,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -325,7 +325,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastbolus_label"
                         android:textSize="14sp" />
 
@@ -345,7 +345,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -369,7 +369,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/dailyunits"
                         android:textSize="14sp" />
 
@@ -389,7 +389,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -413,7 +413,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basebasalrate_label"
                         android:textSize="14sp" />
 
@@ -433,7 +433,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -457,7 +457,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/tempbasal_label"
                         android:textSize="14sp" />
 
@@ -477,7 +477,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -501,7 +501,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/virtualpump_extendedbolus_label"
                         android:textSize="14sp" />
 
@@ -521,7 +521,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -545,7 +545,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/reservoir_label"
                         android:textSize="14sp" />
 
@@ -565,7 +565,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -589,7 +589,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/danar_iob_label"
                         android:textSize="14sp" />
 
@@ -609,7 +609,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -633,7 +633,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basal_step"
                         android:textSize="14sp" />
 
@@ -653,7 +653,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -677,7 +677,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/bolus_step"
                         android:textSize="14sp" />
 
@@ -697,7 +697,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -721,7 +721,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/virtualpump_firmware_label"
                         android:textSize="14sp" />
 
@@ -741,7 +741,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>

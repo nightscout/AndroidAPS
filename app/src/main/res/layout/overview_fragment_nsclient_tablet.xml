@@ -60,7 +60,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="end"
-                                    android:paddingRight="5dp"
+                                    android:paddingEnd="5dp"
                                     android:text="@string/basal"
                                     android:textSize="14sp" />
 
@@ -81,7 +81,7 @@
                                     android:layout_weight="0.5"
                                     android:gravity="start"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="5dp"
+                                    android:paddingStart="5dp"
                                     android:text="0.50U/h @17:35 1/30min - 0.40U/h"
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp" />
@@ -108,7 +108,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="end"
-                                    android:paddingRight="5dp"
+                                    android:paddingEnd="5dp"
                                     android:text="@string/virtualpump_extendedbolus_label"
                                     android:textSize="14sp" />
 
@@ -129,7 +129,7 @@
                                     android:layout_weight="0.5"
                                     android:gravity="start"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="5dp"
+                                    android:paddingStart="5dp"
                                     android:text="0.50U/h @17:35 1/30min"
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp" />
@@ -156,7 +156,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="end"
-                                    android:paddingRight="5dp"
+                                    android:paddingEnd="5dp"
                                     android:text="@string/iob"
                                     android:textSize="14sp" />
 
@@ -177,7 +177,7 @@
                                     android:layout_weight="0.5"
                                     android:gravity="start"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="5dp"
+                                    android:paddingStart="5dp"
                                     android:text=""
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp" />
@@ -203,7 +203,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="end"
-                                    android:paddingRight="5dp"
+                                    android:paddingEnd="5dp"
                                     android:text="@string/cob"
                                     android:textSize="14sp" />
 
@@ -224,7 +224,7 @@
                                     android:layout_weight="0.5"
                                     android:gravity="start"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="5dp"
+                                    android:paddingStart="5dp"
                                     android:text=""
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp" />
@@ -276,7 +276,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="20dp"
+                                android:paddingStart="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -305,7 +305,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="20dp"
+                                android:paddingStart="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -333,7 +333,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="20dp"
+                                android:paddingStart="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />

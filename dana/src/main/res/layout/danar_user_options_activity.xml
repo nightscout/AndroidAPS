@@ -183,8 +183,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -220,8 +220,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -276,8 +276,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -313,8 +313,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
         </LinearLayout>
 
@@ -326,8 +326,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             app:icon="@drawable/icon_local_save"
-            android:paddingLeft="4dp"
-            android:paddingRight="0dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
             android:text="@string/danar_saveuseroptions"
             android:textSize="14sp"
             app:cornerRadius="20dp"
