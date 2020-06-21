@@ -495,7 +495,7 @@
     <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
     <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens adjust targets too</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens adjust targets, too</string>
     <string name="openapsama_autosens_adjusttargets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
     <string name="key_openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
