@@ -42,7 +42,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="0dp"
-                    android:layout_marginTop="-4dp"
+                    android:layout_marginTop="-10dp"
                     android:ellipsize="marquee"
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
@@ -53,12 +53,12 @@
                     android:id="@+id/overview_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="top"
                     android:layout_marginTop="-8dp"
                     android:layout_marginEnd="0dp"
                     android:paddingStart="-2dp"
                     android:paddingEnd="0dp"
-                    android:textSize="20sp"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
