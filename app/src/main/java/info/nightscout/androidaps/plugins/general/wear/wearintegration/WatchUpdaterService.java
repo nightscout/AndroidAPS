@@ -303,9 +303,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         double highLine = defaultValueHelper.determineHighLine();
 
         long sgvLevel = 0L;
-        if (lastBG.value > highLine) {
+        if (lastBG.valueToUnits(units) > highLine) {
             sgvLevel = 1;
-        } else if (lastBG.value < lowLine) {
+        } else if (lastBG.valueToUnits(units) < lowLine) {
             sgvLevel = -1;
         }
 
