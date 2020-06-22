@@ -28,6 +28,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
 
+    var profileIndex: Int? = null
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("overview_profileswitch_duration", overview_profileswitch_duration.value)
@@ -38,6 +40,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateViewGeneral()
+        arguments?.let { bundle ->
+            profileIndex = bundle.getInt("profileIndex", 0)
+        }
         return inflater.inflate(R.layout.dialog_profileswitch, container, false)
     }
 
@@ -59,9 +64,12 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
             overview_profileswitch_profile.adapter = adapter
             // set selected to actual profile
-            for (p in profileList.indices)
-                if (profileList[p] == profileFunction.getProfileName(false))
-                    overview_profileswitch_profile.setSelection(p)
+            if (profileIndex != null)
+                overview_profileswitch_profile.setSelection(profileIndex as Int)
+            else
+                for (p in profileList.indices)
+                    if (profileList[p] == profileFunction.getProfileName(false))
+                        overview_profileswitch_profile.setSelection(p)
         } ?: return
 
         treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->

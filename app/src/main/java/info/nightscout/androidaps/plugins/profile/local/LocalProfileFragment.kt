@@ -181,7 +181,9 @@ class LocalProfileFragment : DaggerFragment() {
 
         localprofile_profileswitch.setOnClickListener {
             // TODO: select in dialog localProfilePlugin.currentProfileIndex
-            ProfileSwitchDialog().show(childFragmentManager, "NewNSTreatmentDialog")
+            ProfileSwitchDialog()
+                .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) }}
+                .show(childFragmentManager, "NewNSTreatmentDialog")
         }
 
         localprofile_reset.setOnClickListener {
