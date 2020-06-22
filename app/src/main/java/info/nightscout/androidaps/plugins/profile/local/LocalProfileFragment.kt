@@ -178,8 +178,9 @@ class LocalProfileFragment : DaggerFragment() {
         localprofile_units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (localProfilePlugin.currentProfile().mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
 
         localprofile_profileswitch.setOnClickListener {
-            // TODO: select in dialog localProfilePlugin.currentProfileIndex
-            ProfileSwitchDialog().show(childFragmentManager, "NewNSTreatmentDialog")
+            ProfileSwitchDialog()
+                .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) }}
+                .show(childFragmentManager, "NewNSTreatmentDialog")
         }
 
         localprofile_reset.setOnClickListener {
