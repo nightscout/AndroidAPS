@@ -139,7 +139,7 @@ class NSSettingsStatus @Inject constructor(
         val targetlow = getSettingsThreshold("bgTargetBottom")
         if (targetHigh != null) defaultValueHelper.bgTargetHigh = targetHigh
         if (targetlow != null) defaultValueHelper.bgTargetLow = targetlow
-        copyStatusLightsNsSettings(null)
+        if (config.NSCLIENT) copyStatusLightsNsSettings(null)
     }
 
     fun getName(): String? =

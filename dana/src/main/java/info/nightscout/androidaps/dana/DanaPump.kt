@@ -9,10 +9,13 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,7 +63,13 @@ class DanaPump @Inject constructor(
     }
 
     fun setPumpTime(value: Long, zoneOffset: Int) {
-        pumpTime = value + T.hours(zoneOffset.toLong()).msecs()
+        // Store time according to timezone in phone
+        val tz = DateTimeZone.getDefault()
+        val instant = DateTime.now().millis
+        val offsetInMilliseconds = tz.getOffset(instant).toLong()
+        val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds)
+        pumpTime = value + T.hours(offset).msecs()
+        // but save zone in pump
         this.zoneOffset = zoneOffset
     }
 
