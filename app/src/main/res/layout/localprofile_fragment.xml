@@ -73,7 +73,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="290dp"
         android:text="@string/activate_profile"
-        app:icon="@drawable/icon_local_activate"
+        app:icon="@drawable/ic_local_activate"
         android:visibility="gone"
         app:fabSize="auto" />
 
@@ -274,7 +274,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
-                app:icon="@drawable/icon_local_activate"
+                app:icon="@drawable/ic_local_activate"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/activate_profile"
