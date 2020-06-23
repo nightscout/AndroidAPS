@@ -81,7 +81,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             autotuneProfileSwitchButton.setOnClickListener(this);
 
             lastRun = autotunePlugin.lastRun!=null? autotunePlugin.lastRun : new Date(0);
-            if (lastRun.getTime() > (MidnightTime.calc(System.currentTimeMillis()) + autotunePlugin.autotuneStartHour*3600*1000L) && autotunePlugin.result != "") {
+            if (lastRun.getTime() > (MidnightTime.calc(System.currentTimeMillis()-autotunePlugin.autotuneStartHour*3600*1000L) + autotunePlugin.autotuneStartHour*3600*1000L) && autotunePlugin.result != "") {
                 warningView.setText(resourceHelper.gs(R.string.autotune_warning_after_run));
                 tune_days.setText(autotunePlugin.lastNbDays);
                 resultView.setText(autotunePlugin.result);

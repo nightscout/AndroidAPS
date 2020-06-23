@@ -1246,8 +1246,8 @@
     <string name="autotune_description">Help for potential adjustments of profile (ISF, carb ratio, and basal rates)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Autotune settings</string>
-    <string name="autotune_auto_title">Switch Profile after run</string>
-    <string name="autotune_auto_summary">If enabled, Autotune will automatically switch profile after run.</string>
+    <string name="autotune_auto_title">Automation Switch Profile</string>
+    <string name="autotune_auto_summary">If enabled, Autotune will automatically switch profile after calculation from an automation rule.</string>
     <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
     <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
     <string name="key_autotune_auto" translatable="false">autotune_auto</string>
@@ -1256,7 +1256,7 @@
     <string name="autotune_categorize_uam_as_basal_summary">Enable only if you have reliably entered all carbs eaten, with this option sudden rises seen by Autotune will be used to recommend changes to the basal rate.</string>
     <string name="autotune_default_tune_days_title">Number of days of data</string>
     <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to xx)</string>
-    <string name="autotune_tunedprofile_name">Autotune</string>
+    <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_last_run">Last run</string>
     <string name="autotune_warning">Warning</string>
     <string name="autotune_result">Result</string>
