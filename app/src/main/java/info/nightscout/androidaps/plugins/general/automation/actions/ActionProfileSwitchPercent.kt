@@ -30,7 +30,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         if (duration.value == 0) resourceHelper.gs(R.string.startprofileforever, pct.value.toInt())
         else resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value)
 
-    @DrawableRes override fun icon(): Int = R.drawable.icon_actions_profileswitch
+    @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     init {
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)

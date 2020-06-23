@@ -494,7 +494,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:layout_marginRight="-4dp"
-                android:drawableTop="@drawable/icon_actions_refill"
+                android:drawableTop="@drawable/ic_actions_refill"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/combo_refresh" />
