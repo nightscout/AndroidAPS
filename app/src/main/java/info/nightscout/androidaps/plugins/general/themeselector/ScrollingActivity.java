@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.themeselector;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -25,6 +26,8 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil;
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView;
 
 import static info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE;
+
+import android.util.Log;
 
 public class ScrollingActivity  extends MainActivity implements View.OnClickListener{
 
@@ -69,6 +72,7 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
         SwitchCompat switchCompatBackground = findViewById(R.id.switch_backgroundimage);
         switchCompatBackground.setChecked(backGround);
         switchCompatBackground.setOnCheckedChangeListener((compoundButton, b) -> {
+
             sp.putBoolean("backgroundcolor", b);
             int delayTime = 200;
             compoundButton.postDelayed(new Runnable() {
