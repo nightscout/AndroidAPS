@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_temporarytarget"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/icon_actions_temptarget" />
+                android:src="@drawable/ic_actions_temptarget" />
 
             <TextView
                 android:layout_width="match_parent"

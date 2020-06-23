@@ -162,7 +162,6 @@
     <string name="filenotfound">Failas nerastas</string>
     <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="nav_import">Importuoti nustatymus</string>
-    <string name="openapsma_maxbasal_title">Maks vv/val skaičius, kuris gali būti nustatytas kaip laikina bazė</string>
     <string name="openapsma_maxbasal_summary">Šis skaičius OpenAPS kontekste vadinamas maks. valandine baze</string>
     <string name="openapsma_maxiob_title">Didžiausias valandinės bazės insulino kiekis, kurį gali suleisti OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Ši vertė OpenAPS kontekste vadinama Maks AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
@@ -282,7 +281,6 @@
     <string name="primefill">Užpildymas</string>
     <string name="fillwarning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
     <string name="othersettings_title">Kita</string>
-    <string name="fillbolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui.</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
@@ -341,7 +339,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
     <string name="openapsama_autosens_max_summary">Numatytoji reikšmė: 1.2\nTai daugiklis Autosens (ir netrukus Autotune) funkcijoje, kuris nustato 20%% maksimalią ribą iki kurios Autosens gali padidinti valandinę bazę, sumažinti JIF ir tikslinę gliukozės vertę.</string>
     <string name="openapsama_autosens_min_summary">Numatytoji reikšmė: 0.7\nTai antras daugiklis Autosens funkcijoje, kuris nustato, kad Autosens gali iki minimalios 70 % ribos sumažinti valandinę bazę bei padidinti JIF ir tikslinę gliukozės vertę.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens nustatomi tikslai</string>
     <string name="openapsama_autosens_adjusttargets_summary">Numatytoji reikšmė: true\nTai suteikia Autosens funkcijai leidimą keisti tikslinės gliukozės vertes, JIF ir valandinę bazę.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Numatytoji reikšmė: 2\nBoluso snaudimas aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų LBD iškart po valgio. Pvz.: jei IVT yra 3 val, tai boluso snaudimas pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį kraujo gliukozei kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus kraujo gliukozės kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>

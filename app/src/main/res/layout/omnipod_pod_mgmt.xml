@@ -40,7 +40,7 @@
                 android:layout_marginTop="3dp"
                 android:textAllCaps="false"
                 android:layout_weight="0.5"
-                android:drawableTop="@drawable/icon_cp_pump_canula"
+                android:drawableTop="@drawable/ic_cp_pump_canula"
                 android:text="@string/omnipod_cmd_init_pod" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_marginTop="3dp"
                 android:textAllCaps="false"
                 android:layout_weight="0.5"
-                android:drawableTop="@drawable/icon_actions_temptarget"
+                android:drawableTop="@drawable/ic_actions_temptarget"
                 android:text="@string/omnipod_cmd_deactivate_pod" />
 
             <TextView
@@ -82,7 +82,7 @@
                 android:layout_marginBottom="3dp"
                 android:textAllCaps="false"
                 android:layout_weight="0.5"
-                android:drawableTop="@drawable/icon_cp_pump_canula"
+                android:drawableTop="@drawable/ic_cp_pump_canula"
                 android:text="@string/omnipod_cmd_reset_pod" />
 
             <TextView
@@ -104,7 +104,7 @@
                 android:layout_marginBottom="3dp"
                 android:textAllCaps="false"
                 android:layout_weight="0.5"
-                android:drawableTop="@drawable/icon_danarhistory"
+                android:drawableTop="@drawable/ic_danarhistory"
                 android:text="@string/omnipod_cmd_pod_history" />
 
 

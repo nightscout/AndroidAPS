@@ -21,8 +21,8 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-				android:drawableLeft="@drawable/icon_cp_age_sensor"
-                android:paddingEnd="5dp"
+				android:drawableLeft="@drawable/ic_cp_age_sensor"
+                android:paddingRight="5dp"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_sensorage_label"
                 android:textSize="14sp" />
@@ -68,8 +68,8 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:drawableLeft="@drawable/icon_cp_age_insulin"
-                android:paddingEnd="5dp"
+                android:drawableLeft="@drawable/ic_cp_age_insulin"
+                android:paddingRight="5dp"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_insulinage_label"
                 android:textSize="14sp" />
@@ -115,8 +115,8 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:drawableLeft="@drawable/icon_cp_age_canula"
-                android:paddingEnd="5dp"
+                android:drawableLeft="@drawable/ic_cp_age_canula"
+                android:paddingRight="5dp"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_canulaage_label"
                 android:textSize="14sp" />
@@ -162,8 +162,8 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:drawableLeft="@drawable/icon_cp_age_battery"
-                android:paddingEnd="5dp"
+                android:drawableLeft="@drawable/ic_cp_age_battery"
+                android:paddingRight="5dp"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_pbage_label"
                 android:textSize="14sp" />

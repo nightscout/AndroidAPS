@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Что верно о длительности работы инсулина DIA?</string>
+    <string name="dia_label_exam">Тема: продолжительность действия инсулина DIA</string>
     <string name="dia_minimumis3h">Минимальное значение 3 часа.</string>
     <string name="dia_minimumis5h">Минимальное значение 5 часов.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
@@ -123,6 +124,7 @@ Context | Edit Context</string>
     <string name="nsclient_looponiphone">Приложения Loop на iPhone.</string>
     <string name="nsclient_spikeiphone">Приложения Spike на iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
+    <string name="isf_label_exam">Тема: Коэффициент чувствительности к инсулину</string>
     <string name="isf_increasingvalue">Более высокие значения ISF приводят к меньшей подаче инсулина, когда AAPS исправляет высокую ГК.</string>
     <string name="isf_decreasingvalue">Более низкие значения ISF приводят к меньшей подаче инсулина, когда AAPS исправляет высокую ГК.</string>
     <string name="isf_noeffect">Изменение значений ISF никак не влияет на количество инсулина, подаваемого AAPS при коррекции высокой ГК.</string>
@@ -130,6 +132,7 @@ Context | Edit Context</string>
     <string name="isf_profile">Изменение значения ISF в профиле достаточно для применения изменений.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
+    <string name="ic_label_exam">Тема: Соотношение инсулин-углеводы IC</string>
     <string name="ic_increasingvalue">Более высокие коэффициенты инсулин-углеводы IC приводят к уменьшению инсулина на данное количество углеводов.</string>
     <string name="ic_decreasingvalue">Более низкие коэффициенты инсулин-углеводы IC приводят к уменьшению инсулина на данное количество углеводов.</string>
     <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение соотношения инсулин-углеводы IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>

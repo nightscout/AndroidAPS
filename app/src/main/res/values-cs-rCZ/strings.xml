@@ -164,7 +164,7 @@
     <string name="filenotfound">Soubor nenalezen</string>
     <string name="nav_export">Exportovat nastavení</string>
     <string name="nav_import">Importovat nastavení</string>
-    <string name="openapsma_maxbasal_title">Maximální povolený bazál [U/h]</string>
+    <string name="openapsma_maxbasal_title">Max. U/h, které lze nastavit pro dočas. bazál</string>
     <string name="openapsma_maxbasal_summary">Tato hodnota je v kontextu OpenAPS nazývána max basal</string>
     <string name="openapsma_maxiob_title">Maximální bazální IOB [U]</string>
     <string name="openapsma_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána max IOB</string>
@@ -300,7 +300,7 @@
     <string name="primefill">Plnění/doplňování</string>
     <string name="fillwarning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
     <string name="othersettings_title">Jiné</string>
-    <string name="fillbolus_title">Hodnoty plnění/doplňování.</string>
+    <string name="fillbolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
     <string name="button3">Tlačítko 3</string>
@@ -359,7 +359,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4 Toto je druhá klíčová hodnota. Říká, že maximální hodnota dočasného bazálu nikdy nebude větší, než čtyřnásobek aktuálního bazálu. Je to proto, aby se lidé nedostali do nebezpečných hodnot dříve, než pochopí jak OpenAPS pracuje. Znovu, výchozí hodnota je 4 a většina lidí ji nikdy nebude muset změnit. Pokud nestačí, obvykle je problém někde jinde.</string>
     <string name="openapsama_autosens_max_summary">Výchozí hodnota: 1.2\nToto je bezpečnostní nastavení pro detekci sensitivity (a brzy autotune). Říká, že autosense může zvýšit bazály, snížit ISF a snížit cílovou hodnotu glykémie o 20 %.</string>
     <string name="openapsama_autosens_min_summary">Výchozí hodnota: 0.7\nToto je bezpečnostní nastavení pro detekci sensitivity. Říká, že autosense může snížit bazály, zvýšit ISF a zvýšit cílovou hodnotu glykémie na 70 %.</string>
-    <string name="openapsama_autosens_adjusttargets">Úprava cílové glykémie pomocí Autosens</string>
+    <string name="openapsama_autosens_adjusttargets">Autosense také upravuje cílovou glykémii</string>
     <string name="openapsama_autosens_adjusttargets_summary">Výchozí hodnota: zapnuto\nToto nastavení říká, že autosens může měnit také cílové hodnoty glykémií.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Výchozí hodnota: 2\nToto nastavení říká, po jakou část z hodnoty DIA smyčka po bolusu čeká a nereaguje na změny glykémií (zde 3DIA/2 = 1,5h).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Výchozí hodnota: 3.0 (AMA) nebo 8.0 (SMB) mg/dl/5min. Tato hodnota definuje minimální část strávených sacharidů za každých 5 min. Tato hodnota ovlivňuje výpočet COB.</string>
@@ -814,9 +814,9 @@
     <string name="low_temptarget_lowers_sensitivity_title">Nízký dočasný cíl sníží senzitivitu</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Nižší senzitivita pro dočasné cíle < 5.5]]></string>
     <string name="resistance_lowers_target_title">Rezistence snižuje cíl</string>
-    <string name="resistance_lowers_target_summary">Je-li zjištěna rezistence, snížit cílovou hladinu glukózy</string>
+    <string name="resistance_lowers_target_summary">Je-li zjištěna rezistence, sníží nastavenou cílovou glykémii</string>
     <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
-    <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší cílovou hladinu glukózy</string>
+    <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší nastavenou cílovou glykémii</string>
     <string name="combo_invalid_setup">Chybné nastavení pumpy. Projděte si dokumentaci a přesvědčete se, že menu Quick Info se jmenuje QUICK INFO, za použití 360 configuration software.</string>
     <string name="custom">Volitelný</string>
     <string name="careportal_removestartedevents">Vyčistit události \"AndroidAPS restartován\"</string>
@@ -1229,6 +1229,7 @@
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="reorder_label">Změna pořadí</string>
     <string name="age">Věk:</string>
+    <string name="weight_label">Hmotnost:</string>
     <string name="id">ID:</string>
     <string name="submit">Odeslat</string>
     <string name="mostcommonprofile">Nejběžnější profil:</string>
