@@ -28,4 +28,29 @@
     <string name="pref_show_phone_battery">Батерия на телефон</string>
     <string name="pref_show_rig_battery">Батерия на устройство</string>
     <string name="pref_show_basal_rate">Покажи базал</string>
+    <string name="pref_low">Ниско</string>
+    <string name="pref_high">Висока</string>
+    <string name="pref_auto">Автом</string>
+    <string name="menu_bolus">Болус</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_status">Статус</string>
+    <string name="menu_prime_fill">Пълнене на сет</string>
+    <string name="action_duration">продължителност</string>
+    <string name="action_target" comment="In temp target menu, single target value">цел</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">ниско</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">висока</string>
+    <string name="action_carbs">вълехидрати</string>
+    <string name="action_percentage">% от профила</string>
+    <string name="action_insulin">инсулин</string>
+    <string name="action_bolus">болус</string>
+    <string name="status_pump">Помпа</string>
+    <string name="status_loop">Режим на APS - Loop</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="unit_mg_dl">мг/дл</string>
+    <string name="unit_mmol_l">ммол/л</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">гр.</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">Е</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">Е/ч</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">д</string>
 </resources>

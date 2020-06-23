@@ -161,7 +161,6 @@
     <string name="filenotfound">Bestand niet gevonden</string>
     <string name="nav_export">Exporteer instellingen</string>
     <string name="nav_import">Importeer instellingen</string>
-    <string name="openapsma_maxbasal_title">Maximale E/uur dat OpenAPS kan toedienen</string>
     <string name="openapsma_maxbasal_summary">Dit is de maximale waarde waarop het basaal door OpenAPS ingesteld kan worden</string>
     <string name="openapsma_maxiob_title">Maximale basaal IOB, dat OpenAPS kan toedienen [E]</string>
     <string name="openapsma_maxiob_summary">Deze waarde wordt de Max IOB genoemd in OpenAPS context\nDit is de maximale insuline hoeveelheid in [E] dat APS in één keer kan toedienen.</string>
@@ -243,7 +242,6 @@
     <string name="primefill">Ontlucht/vul</string>
     <string name="fillwarning">Verzeker u dat de vulhoeveelheid overeenkomt met de infusieset!</string>
     <string name="othersettings_title">Andere</string>
-    <string name="fillbolus_title">Vull standaard hoeveelheid.</string>
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
     <string name="button3">Knop 3</string>
@@ -302,7 +300,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft. Dit is een veiligheidsmaatregel om te voorkomen dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
     <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor voor autosense (en binnenkort autotune) die zorgt dat de autosens ratio maximaal 20%% kan zijn. Dit maximum bepaalt in hoeverre je basaal kan worden verhoogd, en hoeveel je ISF en BG doel verlaagd kunnen worden.</string>
     <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens past de streefwaardes ook aan</string>
     <string name="openapsama_autosens_adjusttargets_summary">Standaardwaarde: waar Dit wordt gebruikt om autosens de bevoegdheid te geven BG doelen aan te passen alsook ISF en basalen</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standaard waarde: 2\nBolus snooze is actief nadat je een maaltijd bolus toegediend hebt, zodat de loop geen tegenvoorstel met een verlaagd tijdelijk basaal doet nadat je gegeten hebt. Het voorbeeld hier van van standaard 2; dus een 3 u DIA betekent dat de bolus snooze gemiddeld 1.5u actief is (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaard koolhydraten absorptie-impact per 5 minuten. De standaard is een verwachte 3mg / dl / 5min. Dit is van invloed op hoe snel COB zijn opgenomen en hoeveel koolhydraten absorptie wordt verwacht, bij het voorspellen van toekomstige BG, wanneer BG meer dan verwacht daalt of niet zoveel stijgt als verwacht.</string>

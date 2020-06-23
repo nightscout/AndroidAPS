@@ -162,7 +162,7 @@
     <string name="waitingforpumpresult">Väntar på resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">\"%dg kolhydrater krävs inom %d minuter</string>
+    <string name="carbsreq">%dg kolhydrater krävs inom %d minuter</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulativ TDD</string>

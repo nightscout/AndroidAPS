@@ -164,7 +164,6 @@
     <string name="filenotfound">Fichier introuvable</string>
     <string name="nav_export">Exporter les paramètres</string>
     <string name="nav_import">Importer les paramètres</string>
-    <string name="openapsma_maxbasal_title">Max U/h pour le débit de Basal Temp</string>
     <string name="openapsma_maxbasal_summary">Cette valeur est appelée Basal Maximum dans le contexte OpenAPS</string>
     <string name="openapsma_maxiob_title">IA Basal max que OpenAPS pourra délivrer [U]</string>
     <string name="openapsma_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nC\'estlle maximum d\'insuline en [U] que APS peut délivrer en une seule fois.</string>
@@ -301,7 +300,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="primefill">Amorcer/Remplir</string>
     <string name="fillwarning">Veuillez à ce que la quantité corresponde aux caractéristiques de votre cathéter !</string>
     <string name="othersettings_title">Autres</string>
-    <string name="fillbolus_title">Valeurs prédéfinies pour remplir&amp;amorcer</string>
     <string name="button1">Bouton 1</string>
     <string name="button2">Bouton 2</string>
     <string name="button3">Bouton 3</string>
@@ -360,7 +358,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
     <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20%% en limite maximale du ratio Autosens. En consequence, ceci dit va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI, ISF), et la valeur minimale de la cible glycémique.</string>
     <string name="openapsama_autosens_min_summary">Valeur par défaut: 0,7\nL\'autre volet des limites de sécurité de l\'autosens, c\'est de définir une limite basse sur l\'ajustement des débits de basal et une limite haute sur l\'ajustement de la SI et des cibles GLY effectués par l\'autosens.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens ajuste aussi les cibles</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valeur par défaut : true\nCeci est utilisé pour autoriser Autosens à ajuster les cibles de glycémie en plus de SI et les basals.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valeur par défaut : 2\nBolus snooze est activé apres votre bolus de repas, la boucle ne réagira pas avec des valeurs basses temporaire quand vous venez juste de manger. L’exemple ici et la valeur par défaut est 2 ; donc avec une Durée d\'Action (DIA) de 3 heures signifie que snooze bolus sera graduellement éliminé après 1,5 heures (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valeur par défaut : 3.0 (AMA) ou 8.0 (SMB). Il s’agit d’un paramètre décrivant l’absorption des glucides par 5 minutes. La valeur par défaut est de 3mg/dl/5min. Cela influe sur la vitesse calculée de disparition des Glucides Actifs (GA), et comment sera estimée la consommation des glucides pour calculer les valeurs futures de glycémies, lorsque la glycémie chute plus que prévu ou n\'augmente pas autant que calculé.</string>

@@ -155,7 +155,6 @@
     <string name="filenotfound">找不到文件</string>
     <string name="nav_export">导出配置</string>
     <string name="nav_import">导入配置</string>
-    <string name="openapsma_maxbasal_title">临时基础率可以设置的最大值 U/小时</string>
     <string name="openapsma_maxbasal_summary">这个值在 OpenAPS被称为最大基础率</string>
     <string name="openapsma_maxiob_title">OpenAPS通过基础率可以输注的IOB活性胰岛素的最大值[U]</string>
     <string name="openapsma_maxiob_summary">这个值在OpenAPS中被成为最大IOB\n这是APS单次可以输注的胰岛素的最大值[U]</string>
@@ -222,7 +221,6 @@
     <string name="primefill">充盈</string>
     <string name="fillwarning">请确保数量和输液器里的药量匹配</string>
     <string name="othersettings_title">其他</string>
-    <string name="fillbolus_title">充盈标准数量的胰岛素</string>
     <string name="button1">按钮1</string>
     <string name="button2">按钮2</string>
     <string name="button3">按钮3</string>
@@ -277,7 +275,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值: 4 这是另一个的关键 OpenAPS 安全阀值, 日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值。这意味着你的基础率, 无论你的泵上的最大基础率设置的多少，也 不能超过你的当前基础率的4倍。这是为了防止人们在了解该算法的工作原理之前进入危险的领域 。同样, 默认值为 4倍; 大多数人将永远不需要调整, 而是更有可能需要调整其他设置,</string>
     <string name="openapsama_autosens_max_summary">默认值: 1.2 \n 这是 autosens 的安全阀值 对 autosens ( 很快autotune) 比率的高值设置最大增加20%% 最大限制, 这反过来决定了 autosens 可以调整的基础率的上限值, 可以调整的胰岛素敏感系数的下限值, 以及它可以设置血糖目标的下限值。</string>
     <string name="openapsama_autosens_min_summary">默认值: 0.7 \n 　这是autosens 的另一个安全阈值, 。这个值决定了 autosens 可以调整的基础率的下限值, 可以调整的胰岛素敏感系数的上限值, 以及它可以设置血糖目标的上限值。</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens 也调整目标血糖</string>
     <string name="openapsama_autosens_adjusttargets_summary">缺省值：是\n　这是用来允许 autosens调整血糖目标，还有 ISF胰岛素敏感系数和基础率这些参数。</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">默认值: 2 \n大剂量snooze是在输注餐时大剂量后开始生效的, 所以在你刚吃完饭的时候, 闭环不会因为你输注了大剂量而减少或停基础。这里的例子和缺省是 2; 因此, 3 小时的DIA(胰岛素持续作用时间) 意味着大剂量snooze将逐步在１. ５小时 (3 DIA/2) 后失效。</string>
     <string name="openapsama_min_5m_carbimpact_summary">默认值: 3.0  (AMA) 或者 8.0 (SMB)。这是默认的每5分钟碳水化合物吸收量。默认值为3毫克/dl/5 分钟。 当血糖的下降超过预期时, 或者不像预期的上升的那么多时，这个值就影响了活性碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量,</string>

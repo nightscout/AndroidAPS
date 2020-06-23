@@ -161,7 +161,6 @@
     <string name="filenotfound">Archivo no encontrado</string>
     <string name="nav_export">Exportar ajustes</string>
     <string name="nav_import">Importar ajustes</string>
-    <string name="openapsma_maxbasal_title">Max U/h para el perfil base</string>
     <string name="openapsma_maxbasal_summary">Este valor es llamado max basal en OpenAPS</string>
     <string name="openapsma_maxiob_title">Max IOB basal que OpenAPs puede emitir [U]</string>
     <string name="openapsma_maxiob_summary">Este valor es llamado Max Iob en el OpenAPS\nEsta es la máxima insulina en [U] que APS puede entregar a la vez.</string>
@@ -273,7 +272,6 @@
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
     <string name="othersettings_title">Otros</string>
-    <string name="fillbolus_title">Llenar/Rellenar cantidad de insulina estándar.</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
     <string name="button3">Botón 3</string>
@@ -332,7 +330,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Ajuste pro defecto: 4 Esto es la otra mitad de los ajustes de seguridad de OpenAPS y la otra mitad de la protección de seguridad de \"3x max diaria, 4x actual\". Esto significa, que tu basal, independientemente de tu máxima basal ajustada en la bomba, no puede ser mas alta que este número de veces el actual nivel de basal. Esto es para evitar que las personas se encuentren en situaciones peligrosas por aumentar mucho la basal sin entender como trabaja el algoritmo. El ajuste por defecto es 4x; la mayoría de las personas nunca tendrá que cambiar estos ajustes, sino que debe modificar otros ajustes en la terapia si se encuentran cerca de este límite de seguridad.</string>
     <string name="openapsama_autosens_max_summary">Valor por defecto: 1.2\nEste es un límite multiplicador para autosens (y pronto autotune) para establecer un límite máximo de 20%% en cuanto puede ser la ratio de autosens, lo que determina a su vez cuán alto puede ajustar las basales autosens, cuán bajo puede ajustar ISF, y cuán bajo puede establecer el objetivo BG.</string>
     <string name="openapsama_autosens_min_summary">Ajuste por defecto: 0.7\nEl otro lado de los límites de seguridad de autosens, limitando a cuanto puede autosens bajar la basal y a cuanto puede subir ISF y objetivo de glucosa en sangre (BG).</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens también ajusta los objetivos</string>
     <string name="openapsama_autosens_adjusttargets_summary">Ajuste por defecto: true\nEsto se usa para permitir a autosens el ajuste de objetivos BG además de ISF y bases.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Ajuste por defecto: 2 \nEl retardo del bolo se realiza después de suministrar un bolo de comida, por lo que el lazo no se contrarrestará con bajas temporales cuando acaba de comer. Con el valor predeterminado de 2 y siendo DIA de 3 horas, el retardo del del bolo se realizará gradualmente durante 1,5 horas (3 DIA / 2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valor por defecto: 3.0 (AMA) o 8.0 (SMB). Este es un escenario de impacto de absorción de carbohidratos por defecto por 5 minutos. El valor predeterminado es un esperado 3mg/dl / 5min. Esto afecta la rapidez con la que los COB decaen, y cuánta absorción de carbohidratos se supone en el cálculo de futuras BG, cuando BG está cayendo más que esperado, o no aumento tanto como esperaba.</string>
