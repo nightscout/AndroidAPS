@@ -147,9 +147,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if ( sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+            if ( !sp.getBoolean("backgroundcolor", false)) window.setBackgroundDrawableResource(R.color.black)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+            if ( !sp.getBoolean("backgroundcolor", false)) window.setBackgroundDrawableResource(R.color.white)
         }
         delegate.applyDayNight()
         setTheme(newTheme)
@@ -172,9 +174,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+            if ( !sp.getBoolean("backgroundcolor", false))  window.setBackgroundDrawableResource(R.color.black)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+            if ( !sp.getBoolean("backgroundcolor", false)) window.setBackgroundDrawableResource(R.color.white)
         }
         delegate.applyDayNight()
         setTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))

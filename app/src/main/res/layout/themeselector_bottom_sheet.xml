@@ -34,11 +34,25 @@
             android:id="@+id/switch_dark_mode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="5"
             android:paddingStart="4dp"
-            android:paddingEnd="8dp"
+            android:paddingEnd="4dp"
             android:text="Dark Mode"
             />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/seperator"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_backgroundimage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="Background"/>
+
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -47,9 +61,9 @@
             style="@style/Text.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:paddingStart="8dp"
-            android:paddingEnd="2dp"
+            android:layout_weight="3"
+            android:paddingStart="6dp"
+            android:paddingEnd="4dp"
             android:text="Selected"/>
         <info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
             android:id="@+id/theme_selected"

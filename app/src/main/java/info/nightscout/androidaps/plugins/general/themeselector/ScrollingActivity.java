@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,6 +62,22 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
 
         // init the bottom sheet behavior
         mBottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+
+        CoordinatorLayout coordinatorLayout = findViewById(R.id.scrollingactivity);
+
+        boolean backGround = sp.getBoolean("backgroundcolor", true);
+        SwitchCompat switchCompatBackground = findViewById(R.id.switch_backgroundimage);
+        switchCompatBackground.setChecked(backGround);
+        switchCompatBackground.setOnCheckedChangeListener((compoundButton, b) -> {
+            sp.putBoolean("backgroundcolor", b);
+            int delayTime = 200;
+            compoundButton.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    changeTheme(sp.getInt("theme", THEME_DARKSIDE));
+                }
+            },delayTime);
+        });
 
         SwitchCompat switchCompat = findViewById(R.id.switch_dark_mode);
         switchCompat.setChecked(nightMode);
