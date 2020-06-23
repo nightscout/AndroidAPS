@@ -12,6 +12,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.close.*
@@ -24,12 +25,14 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     private var time: Long = 0
 
     enum class Mode(val i: Int) {
         RUNNING_PROFILE(1),
-        CUSTOM_PROFILE(2)
+        CUSTOM_PROFILE(2),
+        DB_PROFILE(3)
     }
 
     private var mode: Mode = Mode.RUNNING_PROFILE
@@ -78,6 +81,14 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profileName = customProfileName
                 date = ""
                 profileview_datelayout.visibility = View.GONE
+            }
+
+            Mode.DB_PROFILE      -> {
+                val profileList = databaseHelper.getProfileSwitchData(time, true)
+                profile = if (profileList.isNotEmpty()) profileList[0].profileObject else null
+                profileName = if (profileList.isNotEmpty()) profileList[0].customizedName else null
+                date = if (profileList.isNotEmpty()) dateUtil.dateAndTimeString(profileList[0].date) else null
+                profileview_datelayout.visibility = View.VISIBLE
             }
         }
         profileview_noprofile.visibility = View.VISIBLE

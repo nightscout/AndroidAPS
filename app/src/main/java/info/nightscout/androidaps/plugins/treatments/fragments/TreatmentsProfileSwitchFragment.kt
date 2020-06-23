@@ -166,7 +166,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                     R.id.profileswitch_date, R.id.profileswitch_name -> {
                         val args = Bundle()
                         args.putLong("time", (v.tag as ProfileSwitch).date)
-                        args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                        args.putInt("mode", ProfileViewerDialog.Mode.DB_PROFILE.ordinal)
                         val pvd = ProfileViewerDialog()
                         pvd.arguments = args
                         pvd.show(childFragmentManager, "ProfileViewDialog")

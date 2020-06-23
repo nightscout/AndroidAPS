@@ -1,11 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import com.j256.ormlite.dao.CloseableIterator
-import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.DanaRHistoryRecord
-import info.nightscout.androidaps.db.DbRequest
-import info.nightscout.androidaps.db.TDD
+import info.nightscout.androidaps.db.*
 
 interface DatabaseHelperInterface {
 
@@ -21,4 +17,5 @@ interface DatabaseHelperInterface {
     fun deleteDbRequestbyMongoId(action: String, _id: String)
     fun getDbRequestInterator(): CloseableIterator<DbRequest>
     fun roundDateToSec(date: Long): Long
+    fun getProfileSwitchData(from: Long, ascending: Boolean): List<ProfileSwitch>
 }

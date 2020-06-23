@@ -69,4 +69,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @Override public long roundDateToSec(long date) {
         return MainApp.getDbHelper().roundDateToSec(date);
     }
+
+    @NotNull @Override public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
+        return MainApp.getDbHelper().getProfileSwitchData(from, ascending);
+    }
 }
