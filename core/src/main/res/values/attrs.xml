@@ -39,6 +39,10 @@
     <attr name="dialogTitleIconTint" format="reference" />
     <!-- TDD Stats   -->
     <attr name="backgroundStatsColor" format="reference" />
+    <!---Android Dark ans Light Theme Base colors-->
+    <attr name="backgroundBaseColorDark" format="reference" />
+    <attr name="backgroundBaseColorLight" format="reference" />
+    <attr name="backgroundBaseColor" format="reference" />
 
     <!-- For bluring effect -->
     <declare-styleable name="BlurringView">
