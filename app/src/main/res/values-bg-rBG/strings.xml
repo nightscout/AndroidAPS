@@ -164,6 +164,7 @@
     <string name="filenotfound">Файлът не е намерен</string>
     <string name="nav_export">Експорт настройки</string>
     <string name="nav_import">Импорт настройки</string>
+    <string name="openapsma_maxbasal_title">Максимален временен базал Е/ч</string>
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="openapsma_maxiob_title">Максимален IOB</string>
     <string name="openapsma_maxiob_summary">Този параметър се нарича максимален IOB в OpenAPS и подразбиране е 0. След няколко дни или седмици можете да го увеличите.</string>
@@ -299,6 +300,7 @@
     <string name="primefill">Пълнене на сет</string>
     <string name="fillwarning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
     <string name="othersettings_title">Други</string>
+    <string name="fillbolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>
     <string name="button3">Бутон 3</string>
@@ -357,6 +359,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от \"3x от най-високия дневен; 4x от текущия\". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
     <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максималният множител на autosens (а скоро autotune), за да позволи 20%% максимален лимит на autosens коефициента, който от своя страна настройва базалите, колко може да намали инсулиновата чувствителност, и колко ниско може да свали целевата КЗ.</string>
     <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДругата част от сигурността на autosens, слагайки ограничение на колко ниско може да ограничи базалите, колко да повиши чувствителността (ISF) и целевите КЗ.</string>
+    <string name="openapsama_autosens_adjusttargets">Да променя ли autosens и целевата КЗ</string>
     <string name="openapsama_autosens_adjusttargets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Стойност по подразбиране: 3.0 (АМА) или 8.0 (SMB). Това е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл за 5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
