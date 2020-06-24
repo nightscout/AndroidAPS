@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 
 import dagger.android.DaggerIntentService;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -55,6 +56,7 @@ public class DataService extends DaggerIntentService {
     @Inject XdripPlugin xdripPlugin;
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject ActivePluginProvider activePlugin;
+    @Inject Config config;
 
     public DataService() {
         super("DataService");
@@ -68,7 +70,6 @@ public class DataService extends DaggerIntentService {
 
 
         boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
-        Bundle bundles = intent.getExtras();
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
@@ -234,8 +235,11 @@ public class DataService extends DaggerIntentService {
             String notes = JsonHelper.safeGetString(json, "notes", "");
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
                     && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
-                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
-                rxBus.send(new EventNewNotification(announcement));
+                boolean defaultVal = config.getNSCLIENT();
+                if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
+                    Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
+                    rxBus.send(new EventNewNotification(announcement));
+                }
             }
         }
     }
