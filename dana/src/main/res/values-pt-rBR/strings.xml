@@ -2,4 +2,5 @@
 <resources>
     <string name="processinghistory">Processando ação</string>
     <string name="largetimediff">Grande diferença horária:\n A diferença de hora para a bomba é superior a 1.5h.\nPor favor ajuste manualmente a hora na bomba e certifique-se que a leitura do histórico da bomba não provoca problemas.\nSe possível apague o histórico da bomba antes de modificar a hora ou desabilite o loop durante toda a duração de ação da insulina DIA depois da ultima entrada no histórico da bomba ou mais um DIA desde o momento da correção, qual delas seja a que mantenha o loop aberto durante mais tempo.</string>
+    <string name="danar_disableeasymode">Desativar modo EasyUI na bomba</string>
 </resources>
