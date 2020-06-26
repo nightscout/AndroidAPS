@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pref_on">Lig.</string>
+    <string name="pref_off">Desl.</string>
+    <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
     <string name="pref_units_for_actions">Unidades para Ações</string>
+    <string name="pref_show_date">Mostrar Data</string>
+    <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_delta">Mostrar Delta</string>
+    <string name="pref_show_avgdelta">Mostrar MedDelta</string>
+    <string name="pref_show_phone_battery">Mostrar Bateria Telefone</string>
+    <string name="pref_show_rig_battery">Mostrar Bateria Equipamento</string>
+    <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
+    <string name="pref_show_loop_status">Mostrar Estado Loop</string>
+    <string name="pref_show_bg">Mostrar Glic.</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Escuro</string>
+    <string name="pref_highlight_basals">Destacar Basais</string>
+    <string name="pref_1_hour">1 hora</string>
+    <string name="pref_2_hours">2 horas</string>
+    <string name="pref_3_hours">3 horas</string>
+    <string name="pref_4_hours">4 horas</string>
+    <string name="pref_5_hours">5 horas</string>
+    <string name="pref_input_design">Design de Entrada</string>
+    <string name="pref_default">Padrão</string>
+    <string name="pref_low">Baixo</string>
+    <string name="action_confirm">CONFIRMAR</string>
+    <string name="action_status_pump">ESTADO BOMBA</string>
+    <string name="action_status_loop">ESTADO LOOP</string>
+    <string name="action_timeshift">alteração turno</string>
+    <string name="status_pump">Bomba</string>
 </resources>
