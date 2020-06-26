@@ -164,6 +164,7 @@
     <string name="filenotfound">Arquivo não encontrado</string>
     <string name="nav_export">Exportar configurações</string>
     <string name="nav_import">Importar configurações</string>
+    <string name="openapsma_maxbasal_title">Max U/h em que uma Basal temporária pode ser definida</string>
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode dar de uma vez.</string>
@@ -245,6 +246,7 @@
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
     <string name="othersettings_title">Outro</string>
+    <string name="fillbolus_title">Purgar/Preencher os valores padrões</string>
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
     <string name="button3">Botão 3</string>
@@ -300,9 +302,10 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias muito elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
     <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de ISF e valor alvo de glucose no sangue (BG).</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens também ajusta os alvos</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de ISF e basais.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de ação da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de carboidratos. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos carboidratos terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que o esperado ou não subindo como esperado.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
