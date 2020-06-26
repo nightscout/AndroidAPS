@@ -396,8 +396,8 @@ public class BgGraphBuilder {
         if(singleLine) {
             for (BgWatchData bgReading : bgDataList) {
                 if(bgReading.timestamp > start_time) {
-                    if (bgReading.sgv >= 400) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 400));
+                    if (bgReading.sgv >= 450) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 450));
                     } else if (bgReading.sgv >= highMark) {
                         inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
                     } else if (bgReading.sgv >= lowMark) {
@@ -412,8 +412,8 @@ public class BgGraphBuilder {
         } else {
             for (BgWatchData bgReading : bgDataList) {
                 if (bgReading.timestamp > start_time) {
-                    if (bgReading.sgv >= 400) {
-                        highValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 400));
+                    if (bgReading.sgv >= 450) {
+                        highValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 450));
                     } else if (bgReading.sgv >= highMark) {
                         highValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
                     } else if (bgReading.sgv >= lowMark) {
