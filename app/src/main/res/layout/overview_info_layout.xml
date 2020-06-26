@@ -54,40 +54,54 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="textEnd"
-                    android:text="Δ: "
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                <TextView
-                    android:id="@+id/overview_delta"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="n/a"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="Δ: "
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="textEnd"
-                    android:text="15m Δ: \n40m Δ: "
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="15m Δ: \n40m Δ: "
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-                <TextView
-                    android:id="@+id/overview_avgdelta"
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:text="n/a"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/overview_delta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="n/a"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/overview_avgdelta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="n/a"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
     </LinearLayout>
