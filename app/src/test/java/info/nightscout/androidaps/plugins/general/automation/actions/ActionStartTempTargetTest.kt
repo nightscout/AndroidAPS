@@ -24,7 +24,6 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        PowerMockito.mockStatic(MainApp::class.java)
         `when`(resourceHelper.gs(R.string.starttemptarget)).thenReturn("Start temp target")
 
         sut = ActionStartTempTarget(injector)
