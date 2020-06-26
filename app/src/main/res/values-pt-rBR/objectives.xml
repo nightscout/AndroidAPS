@@ -16,10 +16,12 @@
     <string name="objectives_maxiobzero_gate">Utilizar em close loop com IOB máx = 0 por alguns dias sem muitas situações de Suspensão por Baixa Glicose</string>
     <string name="objectives_maxiob_objective">Ajustar o close loop, aumentar a IOB máximo acima de 0 e reduzir gradualmente os alvos de valor glicêmico</string>
     <string name="objectives_ama_objective">A ativar recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
+    <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_auto_objective">A ativar a automação</string>
     <string name="accomplished">Concluído: %1$s</string>
     <string name="objectives_usage_gate">Executar diferentes ações no AndroidAPS</string>
     <string name="objectives_useactions">No Configurador ative o plugin de Ações, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se tiver pelo menos 3 meses de experiência com Close Loop com outros sistemas, pode-se qualificar para um código para ignorar objetivos. Ver https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
     <string name="codeaccepted">Código aceito</string>
+    <string name="answerdisabledto">Resposta desativada para: %1$s</string>
 </resources>
