@@ -35,7 +35,7 @@
     <string name="description_pump_combo">Integração para bombas Accu-Chek Combo, requer ter o ruffy instalado</string>
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
-    <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
+    <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar um período de tempo no passado. A absorção mínima de carboidratos é calculada a partir do tempo de absorção máxima especificado nas preferências.</string>
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h ou 24h no passado (usando o que é mais sensível). Carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências. O plugin também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
@@ -483,7 +483,7 @@
     <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
-    <string name="rapid_acting_oref">Oref Acção Rápida</string>
+    <string name="rapid_acting_oref">Oref Ação Rápida</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <string name="activate_profile">Activar perfil</string>
@@ -661,7 +661,7 @@
     <string name="autosensdisabledinpreferences">Autosens desabilitado nas preferências</string>
     <string name="smbdisabledinpreferences">SMB desactivado nas configurações</string>
     <string name="uamdisabledinpreferences">UAM desactivado nas configurações</string>
-    <string name="uamdisabledoref1notselected">UAM desactivado porque confia no plugin de sensibilidade Oref1</string>
+    <string name="uamdisabledoref1notselected">UAM desativado porque confia no plugin de sensibilidade Oref1</string>
     <string name="maxbasalmultiplier">multiplicador de basal máx</string>
     <string name="maxdailybasalmultiplier">multiplicador de basal máx diária</string>
     <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
