@@ -279,7 +279,7 @@
     <string name="hypo">Hipo</string>
     <string name="activity">Atividade</string>
     <string name="removerecord">Remover registo</string>
-    <string name="actions_shortname">ACÇ</string>
+    <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="simpleprofile_shortname">PS</string>
@@ -383,6 +383,7 @@
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="activity_shortname">ACT</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
@@ -692,12 +693,12 @@
     <string name="sensitivitysetup">Configurar plugin Sensibilidade</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
+    <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objetivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="bgsourcesetup">Configure a fonte das glicemias</string>
     <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
-    <string name="startobjective">Iniciar primeiro objectivo</string>
+    <string name="startobjective">Iniciar primeiro objetivo</string>
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
     <string name="needlocationpermission">Aplicação requer permissão de localização para pesquisa BT</string>
@@ -1073,6 +1074,10 @@
     <string name="loading">A carregar ...</string>
     <string name="snooze">Silenciar</string>
     <string name="doyouwantswitchprofile">Deseja mudar de perfil e descartar as alterações feitas no perfil atual?</string>
+    <string name="objectives_button_unfinish">Limpeza terminado</string>
+    <string name="objectives_button_unstart">Limpeza iniciado</string>
+    <string name="doyouwantresetstart">Deseja reiniciar o objetivo? Pode perder seu progresso.</string>
+    <string name="saveorresetchangesfirst">Guardar ou repor as alterações atuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil atual?</string>
     <string name="activitymonitor">Monitor de atividade</string>
     <string name="doyouwantresetstats">Quer reiniciar as estatísticas de atividade?</string>
