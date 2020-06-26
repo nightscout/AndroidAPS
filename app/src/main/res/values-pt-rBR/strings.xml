@@ -471,7 +471,7 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Gor</string>
-    <string name="active"><![CDATA[<Activo>]]></string>
+    <string name="active"><![CDATA[<Ativo>]]></string>
     <string name="executingrightnow">Comando será executado agora</string>
     <string name="pump_unreachable">Bomba inacessível</string>
     <string name="missed_bg_readings">Leituras Glic. perdidas</string>
@@ -1034,13 +1034,13 @@
     <string name="medtronic_history_group_all">Tudo</string>
     <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- MDT Pump Status -->
-    <string name="medtronic_pump_status_never_contacted">Nunca contactado</string>
+    <string name="medtronic_pump_status_never_contacted">Nunca contatado</string>
     <string name="medtronic_pump_status_waking_up">A acordar</string>
     <string name="medtronic_pump_status_error_comm">Erro com comunicação</string>
     <string name="medtronic_pump_status_timeout_comm">Tempo limite para comunicação</string>
     <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
     <string name="medtronic_pump_status_invalid_config">Configuração inválida</string>
-    <string name="medtronic_pump_status_active">Activo</string>
+    <string name="medtronic_pump_status_active">Ativo</string>
     <string name="medtronic_pump_status_sleeping">A dormir</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bolus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá obter as alterações, na próxima actualização (em menos de 5 minutos).</string>
@@ -1094,6 +1094,7 @@
     <!-- Omnipod - Dialogs -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_deactivate_pod_deactivate_pod">Desativado Pod</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
 </resources>
