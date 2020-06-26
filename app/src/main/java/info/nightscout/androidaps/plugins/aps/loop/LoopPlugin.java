@@ -108,6 +108,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     private boolean isDisconnected;
 
     private long carbsSuggestionsSuspendedUntil = 0;
+    private int prevCarbsreq = 0;
 
     @Nullable private LastRun lastRun = null;
 
@@ -396,7 +397,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             }
             result.percent = (int) (result.rate / profile.getBasal() * 100);
 
-            // check rate for constrais
+            // check rate for constraints
             final APSResult resultAfterConstraints = result.newAndClone(injector);
             resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
             resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
@@ -412,6 +413,10 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             if (lastBolusTime != 0 && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
                 getAapsLogger().debug(LTag.APS, "SMB requsted but still in 3 min interval");
                 resultAfterConstraints.smb = 0;
+            }
+
+            if (lastRun != null) {
+                prevCarbsreq = lastRun.getConstraintsProcessed().carbsReq;
             }
 
             if (lastRun == null) lastRun = new LastRun();
@@ -494,12 +499,19 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                             mNotificationManager.notify(Constants.notificationID, builder.build());
                             rxBus.send(new EventNewOpenLoopNotification());
 
-                            // Send to Wear
-                            actionStringHandler.get().handleInitiate("changeRequest");
+                            //only send to wear if Native notifications are turned off
+                            if (!sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)) {
+                                // Send to Wear
+                                actionStringHandler.get().handleInitiate("changeRequest");
+                            }
                         }
 
                     } else {
-                        dismissSuggestion();
+                        //If carbs were required previously, but are no longer needed, dismiss notifications
+                        if ( prevCarbsreq > 0 ) {
+                            dismissSuggestion();
+                            rxBus.send(new EventDismissNotification(Notification.CARBS_REQUIRED));
+                        }
                     }
                 }
 
