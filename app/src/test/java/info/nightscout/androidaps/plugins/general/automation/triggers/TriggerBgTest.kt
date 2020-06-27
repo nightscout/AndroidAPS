@@ -90,7 +90,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.icon_cp_bgcheck), TriggerBg(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
     }
 
     private fun generateOneCurrentRecordBgData(): List<BgReading> {

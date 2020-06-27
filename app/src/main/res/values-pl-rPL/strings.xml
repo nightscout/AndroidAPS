@@ -162,7 +162,6 @@
     <string name="filenotfound">Nie znaleziono pliku</string>
     <string name="nav_export">Eksportuj ustawienia</string>
     <string name="nav_import">Importuj ustawienia</string>
-    <string name="openapsma_maxbasal_title">Max U/h Tymczasowa Dawka Bazowa, jaka może być ustawiona</string>
     <string name="openapsma_maxbasal_summary">Wartość określona jako Maksymalna Baza (max basal) w OpenAPS</string>
     <string name="openapsma_maxiob_title">Maksymalna bazowa IOB, którą OpenAPS może dostarczyć [U]</string>
     <string name="openapsma_maxiob_summary">Ta wartość jest nazywana Max IOB w OpenAPS\nTo jest maksymalna wartość insuliny w [U], którą APS może dostarczyć w danej chwili.</string>
@@ -290,7 +289,6 @@
     <string name="primefill">Rozpocznij/Wypełnij</string>
     <string name="fillwarning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
     <string name="othersettings_title">Inne</string>
-    <string name="fillbolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny.</string>
     <string name="button1">Przycisk 1</string>
     <string name="button2">Przycisk 2</string>
     <string name="button3">Przycisk 3</string>
@@ -349,7 +347,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Wartość domyślna: 4 To jest drugi kluczowy współczynnik bezpieczeństwa OpenAPS, i druga wartość z “3x max dzienna; 4x aktualna”. To oznacza, że Twoja dawka bazowa niezależnie od maksymalnej bazy ustawionej na pompie nie może być większa niż ta ustawiona wartość razy twoja aktualna dawka bazowa. To ma na celu przestrzec ludzi przed ustawieniem zbyt wysokiej dawki maksymalnej przed zrozumieniem jak działa algorytm. Ponownie, wartość domyślna to 4x; większość ludzi nie będzie potrzebowała tego zmienić i raczej będą potrzebować dostosować inne ustawienia, jeśli czują, że zbliżają się do współczynnika bezpieczeństwa.</string>
     <string name="openapsama_autosens_max_summary">Wartość domyślna: 1.2\nTo jest mnożnik dla autosens (wkrótce autotune), ustawia 20%% maks. limit dla najwyższej wartości jaką autosens może przyjąć, co z kolei określa jak wysoko autosens może zwiększyć bazę, jak nisko może ustawić współczynnik wrażliwości insuliny ISF, i jak nisko może ustawić docelową wartość glikemii.</string>
     <string name="openapsama_autosens_min_summary">Wartość domyślna: 0.7\nDruga strona limitu bezpieczeństwa dla autosens, ustawia mnożnik minimalny dla wartości, do jakiej autosens może obniżyć bazę, i jak wysoko może ustawić ISF i wartość docelową BG.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens wpływa na wartości docelowe</string>
     <string name="openapsama_autosens_adjusttargets_summary">Domyślnie włączone\nTa funkcja pozwala wpływać na zmianę wartości docelowe BG, wartości bazy i oraz współczynnika wrażliwości na insulinę ISF.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Wartość domyślna: 2\nBolus snooze jest uruchamiany po wykonaniu bolusa posiłkowego, tak by pętla nie przeciwdziałała niskim wartościom tymczasowym zaraz po posiłku. Jako przykład: wartość domyślna ustawiona jest 2; więc 3 godzinne DIA oznacza, że bolus snooze będzie stopniowo wycofany po 1.5 godziny (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Wartość domyślna: 3.0 (AMA) lub 8.0 (SMB). To jest ustawienie domyślnego wpływu wchłaniania węglowodanów w czasie 5 min. Wartością domyślną jest spodziewane 3mg/dl/5min. Ma to wpływ na szybkość zaniku COB, oraz jak duże wchłanianie węglowodanów będzie przyjęte do obliczeń przyszłych przewidywanych wartości BG, jeżeli BG obniża się bardziej niż w założono, lub nie wzrasta tak szybko jak się spodziewano.</string>

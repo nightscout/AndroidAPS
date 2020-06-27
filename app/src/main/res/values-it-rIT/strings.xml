@@ -158,8 +158,8 @@
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout:</string>
     <string name="missing_carbs">Mancanti %1$dg</string>
     <string name="exported">Preferenze esportate</string>
-    <string name="export_to">Esporta impostazioni su</string>
-    <string name="import_from">Importa impostazioni da</string>
+    <string name="export_to">Esportare impostazioni su</string>
+    <string name="import_from">Importare impostazioni da</string>
     <string name="setting_imported">Impostazioni importate</string>
     <string name="filenotfound">File non trovato</string>
     <string name="nav_export">Esporta impostazioni</string>
@@ -300,7 +300,7 @@
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="othersettings_title">Altro</string>
-    <string name="fillbolus_title">Quantità standard di insulina per Carica/Riempi.</string>
+    <string name="fillbolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="button1">Tasto 1</string>
     <string name="button2">Tasto 2</string>
     <string name="button3">Tasto 3</string>

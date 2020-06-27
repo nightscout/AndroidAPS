@@ -84,7 +84,7 @@
     <!--    DateUtil-->
     <string name="minago">vor %1$d Min.</string>
     <string name="hoursago">vor %1$.1f Stunde</string>
-    <string name="shorthour">Std</string>
+    <string name="shorthour">h</string>
     <string name="days">Tage</string>
     <string name="hours">Stunden</string>
     <string name="unit_second">Sekunde</string>
@@ -162,7 +162,7 @@
     <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">\"%dg zusätzliche Kohlenhydrate innerhalb von %d Minuten erforderlich.</string>
+    <string name="carbsreq">Innerhalb der nächsten %d Minuten werden %dg zusätzliche Kohlenhydrate benötigt</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulative TDD</string>

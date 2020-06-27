@@ -156,7 +156,7 @@
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="missing_carbs">Fehlend %1$dg</string>
+    <string name="missing_carbs">Fehlend %1$d g</string>
     <string name="exported">Einstellungen exportiert</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="import_from">Importiere Einstellungen von</string>
@@ -164,7 +164,6 @@
     <string name="filenotfound">Datei nicht gefunden</string>
     <string name="nav_export">Einstellungen exportieren</string>
     <string name="nav_import">Einstellungen importieren</string>
-    <string name="openapsma_maxbasal_title">Max. IE/h, die als TBR gesetzt werden können</string>
     <string name="openapsma_maxbasal_summary">Dieser Wert wird \"max basal\" in OpenAPS genannt.</string>
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von Nicht-Bolus-IOB, die OpenAPS abgeben kann.</string>
@@ -271,8 +270,8 @@
     <string name="smscommunicator_loopdisablereplywithcode">Um den Loop zu deaktivieren, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_tempbasalset">TBR mit %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
     <string name="smscommunicator_extendedset">Der erweiterte Bolus %1$.2f IE/h für %2$d Minuten wurde erfolgreich gestartet</string>
-    <string name="smscommunicator_carbsset">%1$dg Kohlenhydrate erfolgreich erfasst.</string>
-    <string name="smscommunicator_carbsfailed">Eingabe von %1$dg Kohlenhydraten ist fehlgeschlagen.</string>
+    <string name="smscommunicator_carbsset">%1$d g Kohlenhydrate erfolgreich erfasst.</string>
+    <string name="smscommunicator_carbsfailed">Eingabe von %1$d g Kohlenhydraten ist fehlgeschlagen.</string>
     <string name="smscommunicator_tempbasalset_percent">Die temporäre Basalrate wurde erfolgreich für %2$d Minuten auf %1$d%% gesetzt.</string>
     <string name="smscommunicator_tempbasalfailed">Das Starten der TBR ist fehlgeschlagen.</string>
     <string name="smscommunicator_extendedfailed">Die Abgabe des erweiterten Bolus ist fehlgeschlagen.</string>
@@ -300,7 +299,6 @@
     <string name="primefill">Katheterwechsel</string>
     <string name="fillwarning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
     <string name="othersettings_title">Andere</string>
-    <string name="fillbolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="button1">Schaltfläche 1</string>
     <string name="button2">Schaltfläche 2</string>
     <string name="button3">Schaltfläche 3</string>
@@ -359,7 +357,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt das Basal-IOB auf die (im Standardfall) vierfache Menge der aktuellen Basalrate. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
     <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie stark Autosens Basalraten erhöhen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
     <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens passt Zielwerte ebenfalls an</string>
     <string name="openapsama_autosens_adjusttargets_summary">Vorgabe: erlaubt.\nErlaubt Autosens den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standarwert: 2\nBolus snooze (\"Bolus-Schlummer\") bremst den Loop nach einem Mahleiten-Bolus, damit dieser nicht mit niedrigen TBR reagiert, wenn Du gerade gegessen hast. Beispiel: Der Standardwert 2 bewirkt, dass bei einem 3 Stunden DIA der Bolus snooze während 1.5 Stunden nach dem Bolus linear ausläuft (3 h Dia / 2 = 1.5 h Bolus snooze).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0 (AMA) or 8.0 (SMB)\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3 mg/dl/5min (AMA) bzw. 8 mg/dl/5min (SMB). Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
@@ -655,10 +652,10 @@
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
     <string name="overview_cgm">CGM</string>
-    <string name="ignore5m">Ignoriere für 5 Min.</string>
-    <string name="ignore15m">Ignoriere für 15 Min.</string>
-    <string name="ignore30m">Ignoriere für 30 Min.</string>
-    <string name="required">Anfrage</string>
+    <string name="ignore5m">5 Min. ignorieren</string>
+    <string name="ignore15m">15 Min. ignorieren</string>
+    <string name="ignore30m">30 Min. ignorieren</string>
+    <string name="required">angef.</string>
     <string name="nav_historybrowser">Historie</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
@@ -1207,7 +1204,7 @@ Unerwartetes Verhalten.</string>
     <string name="selected_profile">Ausgewählt:</string>
     <string name="unitsnosemicolon">Einheiten</string>
     <string name="doyouwantswitchprofile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
-    <string name="format_carbs">%1$dg</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>

@@ -9,6 +9,7 @@
     <string name="settings_password">Парола за настройки</string>
     <string name="application_password">Парола за приложението</string>
     <string name="bolus_password">Парола за болус</string>
+    <string name="unlock_settings">Отключи настройките</string>
     <string name="biometric">Биометрични данни</string>
     <string name="custom_password">Допълнителна парола</string>
     <string name="noprotection">Няма защита</string>

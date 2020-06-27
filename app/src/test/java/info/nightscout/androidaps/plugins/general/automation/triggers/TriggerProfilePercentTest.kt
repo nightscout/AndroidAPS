@@ -69,7 +69,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.icon_actions_profileswitch), TriggerProfilePercent(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_actions_profileswitch), TriggerProfilePercent(injector).icon())
     }
 
     @Test fun friendlyNameTest() {

@@ -116,6 +116,6 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(R.drawable.icon_actions_profileswitch, sut.icon())
+        Assert.assertEquals(R.drawable.ic_actions_profileswitch, sut.icon())
     }
 }

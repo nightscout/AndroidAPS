@@ -29,6 +29,9 @@
     <string name="batterydischarged">Bateria da Bomba Descarregada</string>
     <string name="occlusion">Oclusão</string>
     <string name="emptyreservoir">Reservatório vazio</string>
+    <string name="checkshaft">Verificar Eixo</string>
+    <string name="basalmax">Máx Basal</string>
+    <string name="dailymax">Máx Diário</string>
     <string name="bloodsugarmeasurementalert">Alerta medição da glicemia</string>
     <string name="remaininsulinalert">Nível de insulina restante</string>
     <string name="missedbolus">Bólus não administrado</string>

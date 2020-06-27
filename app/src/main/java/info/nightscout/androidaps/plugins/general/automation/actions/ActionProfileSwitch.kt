@@ -27,7 +27,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = resourceHelper.gs(R.string.changengetoprofilename, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = R.drawable.icon_actions_profileswitch
+    @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
         val activeProfileName = profileFunction.getProfileName()
