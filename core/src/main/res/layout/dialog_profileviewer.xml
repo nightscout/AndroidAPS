@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/carbs"
-                android:src="@drawable/icon_home_profile" />
+                android:src="@drawable/ic_home_profile" />
 
             <TextView
                 android:id="@+id/profileview_activeprofile"

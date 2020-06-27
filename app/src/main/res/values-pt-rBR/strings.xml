@@ -36,7 +36,7 @@
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
-    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando qualquer um que é mais sensível). Hidratos são cortados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o UAM.</string>
+    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h ou 24h no passado (usando o que é mais sensível). Carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências. O plugin também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
     <string name="description_source_glimp">Receber valores BG do Glimp.</string>
@@ -131,7 +131,7 @@
     <string name="disableloop">Desativar loop</string>
     <string name="enableloop">Ativar loop</string>
     <string name="openloop_newsuggestion">Nova sugestão disponível</string>
-    <string name="carbssuggestion">Sugestão de Hidratos</string>
+    <string name="carbssuggestion">Sugestão de Carbs</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
     <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
@@ -164,7 +164,6 @@
     <string name="filenotfound">Arquivo não encontrado</string>
     <string name="nav_export">Exportar configurações</string>
     <string name="nav_import">Importar configurações</string>
-    <string name="openapsma_maxbasal_title">Max U/hr em que uma Temp Basal pode ser definida</string>
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode dar de uma vez.</string>
@@ -300,7 +299,6 @@
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
     <string name="othersettings_title">Outro</string>
-    <string name="fillbolus_title">Purgar/Preencher os valores standard.</string>
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
     <string name="button3">Botão 3</string>
@@ -328,11 +326,11 @@
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Delta médio curto</string>
     <string name="long_avgdelta">Delta médio longo</string>
-    <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
+    <string name="array_of_elements">Array de %1$d elementos.\nValor atual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usar função Autosens</string>
-    <string name="refresheventsfromnightscout">Actualizar tratamentos do NS</string>
+    <string name="refresheventsfromnightscout">Atualizar tratamentos do NS</string>
     <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
     <string name="eatingsoon">Comer em breve</string>
     <string name="hypo">Hipo</string>
@@ -355,13 +353,12 @@
     <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
     <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como o xDrip.</string>
     <string name="profile">Perfil</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor actual (qual seja menor) como valores máximos.</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor atual (qual seja menor) como valores máximos.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias muito elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
     <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de ISF e valor alvo de glucose no sangue (BG).</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens também ajusta os alvos</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de ISF e basais.</string>
-    <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de acção da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
+    <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de ação da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
@@ -523,7 +520,7 @@
     <string name="openapssmb">SMB OpenAPS</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
-    <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma acção mais rápida</string>
+    <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
     <string name="enableuam_summary">Detecção de refeições não Introduzidas</string>
     <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
@@ -984,7 +981,7 @@
     <string name="every">Todo</string>
     <string name="never">Nunca</string>
     <string name="condition">Condição:</string>
-    <string name="action">Acção:</string>
+    <string name="action">Ação:</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="glucose_u">Glicose [%1$s]:</string>
     <string name="delete_short">APAGAR</string>

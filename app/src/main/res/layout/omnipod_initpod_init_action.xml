@@ -58,7 +58,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:drawableTop="@drawable/icon_actions_refill"
+            android:drawableTop="@drawable/ic_actions_refill"
             android:visibility="gone" />
     </LinearLayout>
 

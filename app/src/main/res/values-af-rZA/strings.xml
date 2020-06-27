@@ -156,7 +156,6 @@
     <string name="filenotfound">Lêer nie gevind nie</string>
     <string name="nav_export">Voer instellings uit na</string>
     <string name="nav_import">Voer instellings in</string>
-    <string name="openapsma_maxbasal_title">Maks U/hr vir \'n Tydelike Basale kan gestel word na</string>
     <string name="openapsma_maxbasal_summary">Die waarde word \"maks basal\" genoem in OpenAPS konteks</string>
     <string name="openapsma_maxiob_title">Maksimum basale IAB wat OpenAPS mag lewer [U]</string>
     <string name="openapsma_maxiob_summary">Hierdie waarde word Maks IAB genoem in OpenAPS konteks\nDit is die maksimum insulien in [U] wat APS op een slag kan lewer.</string>
@@ -223,7 +222,6 @@
     <string name="primefill">Prima/vul</string>
     <string name="fillwarning">Maak asseblief seker dat die hoeveelheid ooreenstem met die spesifikasies van jou infusie stel!</string>
     <string name="othersettings_title">Ander</string>
-    <string name="fillbolus_title">Vul/prima standaard insulien hoeveelhede.</string>
     <string name="button1">Knoppie 1</string>
     <string name="button2">Knoppie 2</string>
     <string name="button3">Knoppie 3</string>
@@ -278,7 +276,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Verstek waarde: 4 dit is die helfte van die sleutel OpenAPS veiligheid limiete, en die ander helfte van \"3 x maks daaglikse; 4 x huidige\"van die veiligheid limiet. Dit beteken jou basale, ongeag max basale stel op jou pomp, kan enige hoër wees as hierdie nommer tye die huidige vlak van jou basale. Dit is om te verhoed dat mense in gevaarlike gebied deur instelling buitensporig hoë max basals voor om te verstaan hoe die algoritme werk. Weer, die verstek is 4 x; die meeste mense sal nooit moet dit aanpas en is eerder meer geneig om te moet aanpas ander instellings as hulle voel hulle \"loop in\" hierdie veiligheid limiet.</string>
     <string name="openapsama_autosens_max_summary">Verstek waarde: 1.2\nThis is \'n vermenigvuldiger plafon vir autosens (en gou autotune) stel \'n 20%% max limiet op hoe hoog die autosens verhouding kan wees, wat op sy beurt bepaal hoe hoog autosens basale kan aanpas, hoe laag dit ISF kan aanpas, en hoe laag dit die BG teiken kan stel.</string>
     <string name="openapsama_autosens_min_summary">Verstek waarde: 0.7\nDie ander kant van die autosens veiligheidsperke, sit \'n limiet op hoe laag autosens basals kan aanpas, en hoe hoog dit ISF en BG teikens kan verstel.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens Verstel doelwitte ook</string>
     <string name="openapsama_autosens_adjusttargets_summary">Verstek waarde: waar\nDit word gebruik om autosens toe te laat om BG teikens aan te pas, benewens ISF en basale.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Verstek waarde: 2\nBolus sluimer is verorden nadat jy \'n maaltyd bolus gedoen het, so die lus sal nie werk met lae tydelike wanneer jy nou net geëet het nie. Die voorbeeld hier se verstek is 2; so \'n 3 uur DIA beteken dat bolus sluimer sal geleidelik uitgefaseer sal word oor 1.5 uur (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Verstek waarde: 3.0 (AMA) of 8.0 (SMB). Dit is \'n instelling vir verstek karb absorpsie impak per 5 minute. Die verstek is \'n verwagte 3mg/dl / 5min. Dit beïnvloed hoe vinnig KOB opgeneem word, en hoeveel karb absorpsie word aanvaar sodat in die berekening van toekomstige BG, voorspel wanneer BG val meer as verwagte, of nie soveel styg as verwag.</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">O que é verdade sobre DIA?</string>
+    <string name="dia_label_exam">Tópico: Duração da Acção de Insulina (DIA)</string>
     <string name="dia_minimumis3h">O valor mínimo é de 3 horas.</string>
     <string name="dia_minimumis5h">O valor mínimo é de 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
@@ -121,6 +122,7 @@
     <string name="nsclient_looponiphone">App de Loop no iPhone.</string>
     <string name="nsclient_spikeiphone">App Spike no iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
+    <string name="isf_label_exam">Tópico: Factor de Sensibilidade de Insulina</string>
     <string name="isf_increasingvalue">Valores elevados de FSI levam a uma administração de menos insulina quando o AAPS corrige Glic alta.</string>
     <string name="isf_decreasingvalue">Valores baixos de FSI levam a uma administração de menos insulina quando o AAPS corrige Glic alta.</string>
     <string name="isf_noeffect">Alterar os valores FSI não tem efeito sobre a quantidade de insulina administrada quando a AAPS corrige Glic alta.</string>
@@ -128,6 +130,7 @@
     <string name="isf_profile">A alteração do valor do FSI no seu perfil é suficiente para aplicar a mudança.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
+    <string name="ic_label_exam">Tópico: Rácio IC</string>
     <string name="ic_increasingvalue">Rácios IC mais altos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
     <string name="ic_decreasingvalue">Rácios IC mais baixos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
     <string name="ic_noeffect">Se tiver 0 COB, alterar o rácio IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da Glic.</string>

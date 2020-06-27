@@ -260,7 +260,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/activate_profile"
-            android:drawableStart="@drawable/icon_local_activate" />
+            android:drawableStart="@drawable/ic_local_activate" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -279,7 +279,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/icon_local_reset"
+                android:drawableStart="@drawable/ic_local_reset"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/reset" />
@@ -295,7 +295,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/icon_local_save"
+                android:drawableStart="@drawable/ic_local_save"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/save" />
