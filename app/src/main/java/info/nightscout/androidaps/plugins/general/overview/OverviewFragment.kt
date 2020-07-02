@@ -760,7 +760,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 carbAnimation.stop()
                 carbAnimation.selectDrawable(0);
             }
-        }
+        } else overview_cob?.text = cobText
 
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
