@@ -736,7 +736,6 @@
     <string name="startobjective">Comienza tu primer objetivo</string>
     <string name="permission">Permiso</string>
     <string name="askforpermission">Pedir permiso</string>
-    <string name="needlocationpermission">La aplicación necesita permiso de localización para el escaneo de BT</string>
     <string name="needstoragepermission">La aplicación necesita permiso para guardar los logs</string>
     <string name="request">Solicitar</string>
     <string name="insulinsourcesetup">Configurar complemento de insulina</string>
