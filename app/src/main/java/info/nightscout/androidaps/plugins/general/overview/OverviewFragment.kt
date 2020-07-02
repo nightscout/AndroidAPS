@@ -600,42 +600,42 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_apsmode?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_superbolus)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_disconnected)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_lgs)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_closed)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_open)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
                     overview_apsmode_text?.text = ""
                 }
 
                 else                                                                    -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_disabled)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
                     overview_apsmode_text?.text = ""
                 }
             }
