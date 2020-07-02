@@ -58,8 +58,7 @@ class DanaRSPlugin @Inject constructor(
     private val danaPump: DanaPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val fabricPrivacy: FabricPrivacy,
-    private val dateUtil: DateUtil,
-    private val config: ConfigInterface
+    private val dateUtil: DateUtil
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(info.nightscout.androidaps.dana.DanaFragment::class.java.name)
