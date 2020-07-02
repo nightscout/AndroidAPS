@@ -221,7 +221,7 @@
                 android:layout_weight="1"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:drawableStart="@drawable/icon_local_reset"
+                android:drawableStart="@drawable/ic_local_reset"
                 android:text="@string/autotune_run" />
 
             <LinearLayout
@@ -241,7 +241,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:drawableStart="@drawable/icon_local_save"
+                    android:drawableStart="@drawable/ic_local_save"
                     android:text="@string/autotune_copy_localprofile_button" />
 
                 <Button
@@ -256,7 +256,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="@string/activate_profile"
-                    android:drawableStart="@drawable/icon_local_activate" />
+                    android:drawableStart="@drawable/ic_local_activate" />
 
             </LinearLayout>
         </LinearLayout>
