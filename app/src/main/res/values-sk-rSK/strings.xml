@@ -792,7 +792,6 @@
     <string name="permission">Povolenie</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
     <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
-    <string name="needlocationpermission">Aplikácia vyžaduje povolenie \"polohy\", aby mohla vyhľadávať BT zariadenia</string>
     <string name="needstoragepermission">Aplikácia vyžaduje prístup k úložisku, aby mohla ukladať logy</string>
     <string name="request">Požiadavka</string>
     <string name="insulinsourcesetup">Nastavenie inzulínového modulu</string>
