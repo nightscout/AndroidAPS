@@ -81,7 +81,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
-    private Long referenceTime = null;
+    Long referenceTime = null;
     private Boolean lastUsed5minCalculation = null; // true if used 5min bucketed data
 
     private volatile List<BgReading> bgReadings = null; // newest at index 0
