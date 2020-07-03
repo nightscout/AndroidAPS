@@ -795,6 +795,7 @@
     <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
     <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
+    <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
     <string name="needstoragepermission">AndroidAPS benötigt Zugriff auf den Speicher, um Log-Dateien speichern zu können.</string>
     <string name="request">Anfordern</string>
     <string name="insulinsourcesetup">Insulin-Plugin konfigurieren</string>
