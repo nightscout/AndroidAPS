@@ -637,7 +637,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="startobjective">İlk hedefinize başlayın</string>
     <string name="permission">Yetki</string>
     <string name="askforpermission">İzin için sorunuz</string>
-    <string name="needlocationpermission">Uygulama Bluetooth taraması için konum izni gerektiriyor</string>
     <string name="needstoragepermission">Uygulama, log dosyalarını depolayabilmek için depolama izni gerektiriyor</string>
     <string name="request">İstek</string>
     <string name="insulinsourcesetup">İnsülin eklentisini yapılandır</string>

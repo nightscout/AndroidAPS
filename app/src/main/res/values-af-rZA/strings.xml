@@ -670,7 +670,6 @@
     <string name="startobjective">Begin jou eerste doelwit</string>
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vra vir toestemming</string>
-    <string name="needlocationpermission">Applikasie benodig ligging toestemming vir BT skandering</string>
     <string name="needstoragepermission">Toepassing benodig stoor toestemming om log leers te skryf</string>
     <string name="request">Versoek</string>
     <string name="insulinsourcesetup">Konfigureer insulien plugin</string>
