@@ -18,7 +18,7 @@ class WarnColors @Inject constructor(val resourceHelper: ResourceHelper) {
 
     private fun getStandardColor(view: TextView?): Int {
         if (view != null) {
-            this.normalColor = view.textColors.defaultColor
+            this.normalColor = Color.GRAY //view.textColors.defaultColor
         }
         return this.normalColor
     }
