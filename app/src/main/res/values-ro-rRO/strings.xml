@@ -674,7 +674,6 @@
     <string name="startobjective">Începeți primul obiectiv</string>
     <string name="permission">Permisiune</string>
     <string name="askforpermission">Solicitați permisiunea</string>
-    <string name="needlocationpermission">Aplicația necesită permisiune de localizare pentru scanarea prin BT</string>
     <string name="needstoragepermission">Aplicația necesită permisiune de acces la mediul de stocare pentru a putea înregistra jurnalele</string>
     <string name="request">Cerință</string>
     <string name="insulinsourcesetup">Configurați plugin insulină</string>

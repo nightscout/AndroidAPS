@@ -746,7 +746,6 @@
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
-    <string name="needlocationpermission">Aplikacijai reikia vietos nustatymo leidimo BT skenavimui atlikti</string>
     <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus</string>
     <string name="request">Užklausa</string>
     <string name="insulinsourcesetup">Konfigūruoti insulino įskiepį</string>

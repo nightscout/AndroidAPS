@@ -164,6 +164,7 @@
     <string name="filenotfound">Datei nicht gefunden</string>
     <string name="nav_export">Einstellungen exportieren</string>
     <string name="nav_import">Einstellungen importieren</string>
+    <string name="openapsma_maxbasal_title">Maximale IE/h, die als TBR gesetzt werden können</string>
     <string name="openapsma_maxbasal_summary">Dieser Wert wird \"max basal\" in OpenAPS genannt.</string>
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von Nicht-Bolus-IOB, die OpenAPS abgeben kann.</string>
@@ -299,6 +300,7 @@
     <string name="primefill">Katheterwechsel</string>
     <string name="fillwarning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
     <string name="othersettings_title">Andere</string>
+    <string name="fillbolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="button1">Schaltfläche 1</string>
     <string name="button2">Schaltfläche 2</string>
     <string name="button3">Schaltfläche 3</string>
@@ -353,10 +355,11 @@
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
     <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle Signalrauschen haben.</string>
     <string name="profile">Profil</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt das maximale Basal-IOB auf die dreifache Menge (im Standardfall) deiner größten Basalrate. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt das Basal-IOB auf die (im Standardfall) vierfache Menge der aktuellen Basalrate. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
     <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie stark Autosens Basalraten erhöhen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
     <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens passt Zielwerte ebenfalls an</string>
     <string name="openapsama_autosens_adjusttargets_summary">Vorgabe: erlaubt.\nErlaubt Autosens den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standarwert: 2\nBolus snooze (\"Bolus-Schlummer\") bremst den Loop nach einem Mahleiten-Bolus, damit dieser nicht mit niedrigen TBR reagiert, wenn Du gerade gegessen hast. Beispiel: Der Standardwert 2 bewirkt, dass bei einem 3 Stunden DIA der Bolus snooze während 1.5 Stunden nach dem Bolus linear ausläuft (3 h Dia / 2 = 1.5 h Bolus snooze).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0 (AMA) or 8.0 (SMB)\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3 mg/dl/5min (AMA) bzw. 8 mg/dl/5min (SMB). Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
@@ -792,7 +795,7 @@
     <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
     <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
-    <string name="needlocationpermission">AndroidAPS benötigt die Standortfreigabe für den BT-Scan.</string>
+    <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
     <string name="needstoragepermission">AndroidAPS benötigt Zugriff auf den Speicher, um Log-Dateien speichern zu können.</string>
     <string name="request">Anfordern</string>
     <string name="insulinsourcesetup">Insulin-Plugin konfigurieren</string>

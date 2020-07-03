@@ -164,6 +164,7 @@
     <string name="filenotfound">Súbor nenájdený</string>
     <string name="nav_export">Exportovať nastavenia</string>
     <string name="nav_import">Importovať nastavenia</string>
+    <string name="openapsma_maxbasal_title">Max. JI/h, ktoré je možné nastaviť pre dočas. bazál</string>
     <string name="openapsma_maxbasal_summary">Táto hodnota je nazývaná v OpenAPS ako \"max basal\"</string>
     <string name="openapsma_maxiob_title">Maximálny bazálny IOB, ktorý OpenAPS môže podať [JI]</string>
     <string name="openapsma_maxiob_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako max IOB, je to maximálne množstvo inzulínu v [JI], ktoré APS môže naraz podať.</string>
@@ -299,6 +300,7 @@
     <string name="primefill">Plnenie/doplňovanie</string>
     <string name="fillwarning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
     <string name="othersettings_title">Iné</string>
+    <string name="fillbolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
     <string name="button1">Tlačidlo 1</string>
     <string name="button2">Tlačidlo 2</string>
     <string name="button3">Tlačidlo 3</string>
@@ -357,6 +359,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4 Toto je druhá kľúčová hodnota. Hovorí, že maximálna hodnota dočasného bazálu nikdy nebude väčšia, ako štvornásobok aktuálneho bazálu. Je to preto, aby se ľudia nedostali do nebezpečných hodnôt skôr, ako pochopia ako OpenAPS pracuje. Znovu, štandardná hodnota je 4 a väčšina ľudí ju nikdy nebude musieť meniť. Pokiaľ nestačí, obvykle je problém niekde inde.</string>
     <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre detekciu citlivosti (a čoskoro autotune). Hovorí, že autosens môže zvýšiť bazály, znížiť ISF a znížiť cieľovú hodnotu glykémie o 20%%.</string>
     <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF a zvýšiť cieľovú hodnotu glykémie na 70%.</string>
+    <string name="openapsama_autosens_adjusttargets">Autosense takisto upravuje cieľovú glykémiu</string>
     <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto nastavenie hovorí, že automatická detekcia citlivosti môže meniť tiež cieľové hodnoty glykémií.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Štandardná hodnota: 2\nToto nastavenie hovorí, po akú časť z hodnoty DIA uzavretý okruh po boluse čaká a nereaguje na zmeny glykémií (tu 3DIA/2 = 1,5h).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
@@ -792,7 +795,7 @@
     <string name="permission">Povolenie</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
     <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
-    <string name="needlocationpermission">Aplikácia vyžaduje povolenie \"polohy\", aby mohla vyhľadávať BT zariadenia</string>
+    <string name="needlocationpermission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
     <string name="needstoragepermission">Aplikácia vyžaduje prístup k úložisku, aby mohla ukladať logy</string>
     <string name="request">Požiadavka</string>
     <string name="insulinsourcesetup">Nastavenie inzulínového modulu</string>

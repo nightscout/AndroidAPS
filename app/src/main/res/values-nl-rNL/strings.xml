@@ -701,7 +701,6 @@
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vragen om toestemming</string>
     <string name="needsystemwindowpermission">Toepassing vereist systeemvenstermachtiging voor meldingen</string>
-    <string name="needlocationpermission">Toepassing heeft toestemming nodig voor bepalen van Locatie (voor BT scan)</string>
     <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te kunnen slaan</string>
     <string name="request">Verzoek</string>
     <string name="insulinsourcesetup">Gevoeligheid plugin configureren</string>
