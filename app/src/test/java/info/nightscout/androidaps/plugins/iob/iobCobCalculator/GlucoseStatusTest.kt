@@ -1,13 +1,10 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculatorPlugin
+package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.json.JSONException
