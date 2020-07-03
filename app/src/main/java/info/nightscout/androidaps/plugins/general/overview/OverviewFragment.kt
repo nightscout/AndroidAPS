@@ -448,6 +448,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
             if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+                aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 val drawable: Drawable = overview_temptarget.background
                 val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
