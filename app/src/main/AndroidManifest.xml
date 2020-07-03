@@ -61,7 +61,7 @@
 
 
         <activity android:name=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="standard">
 
         </activity>
         <activity android:name=".activities.PreferencesActivity"
