@@ -655,6 +655,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
             if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+                aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
