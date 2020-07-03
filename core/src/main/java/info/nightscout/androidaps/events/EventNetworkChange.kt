@@ -11,8 +11,4 @@ class EventNetworkChange : Event() {
     var ssid = ""
     var roaming = false
     var metered = false
-
-    fun connectedSsid(): String {
-        return StringUtils.removeSurroundingQuotes(ssid)
-    }
 }

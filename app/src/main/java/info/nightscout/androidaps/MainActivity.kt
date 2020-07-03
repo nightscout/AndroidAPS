@@ -307,8 +307,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
+        androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            androidPermission.notifyForLocationPermissions(this)
             androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
             androidPermission.notifyForSystemWindowPermissions(this)
         }

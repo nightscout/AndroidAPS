@@ -308,6 +308,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         //preserve carbs
                         if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
                             treatment.carbs = existingTreatment.carbs;
+                        // preserve insulin
+                        } else if (existingTreatment.isValid && existingTreatment.insulin > 0 && treatment.insulin == 0) {
+                            treatment.insulin = existingTreatment.insulin;
                         }
 
                         getDao().delete(existingTreatment); // need to delete/create because date may change too

@@ -18,12 +18,12 @@
             validate:testType="floatNumericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:defaultValue="1.5"
-            android:dialogMessage="@string/openapsma_maxiob_summary"
+            android:defaultValue="3"
+            android:dialogMessage="@string/openapssmb_maxiob_summary"
             android:inputType="numberDecimal"
-            android:key="@string/key_openapsma_max_iob"
-            android:title="@string/openapsma_maxiob_title"
-            validate:floatmaxNumber="12.0"
+            android:key="@string/key_openapssmb_max_iob"
+            android:title="@string/openapssmb_maxiob_title"
+            validate:floatmaxNumber="25.0"
             validate:floatminNumber="0"
             validate:testType="floatNumericRange" />
 

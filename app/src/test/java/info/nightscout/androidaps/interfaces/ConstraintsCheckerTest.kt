@@ -118,7 +118,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
-        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
+        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
