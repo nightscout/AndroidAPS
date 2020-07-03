@@ -795,6 +795,7 @@
     <string name="permission">Разрешение</string>
     <string name="askforpermission">Питане за разрешение</string>
     <string name="needsystemwindowpermission">ААПС изисква разрешение за да може да Ви уведомява</string>
+    <string name="needlocationpermission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
     <string name="needstoragepermission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове</string>
     <string name="request">Искане</string>
     <string name="insulinsourcesetup">Конфигуриране на модула за Инсулин</string>
