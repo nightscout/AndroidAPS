@@ -132,28 +132,40 @@
     <style name="AppTheme.PURPLE" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorPurple</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorPurple</item>
         <item name="colorPrimaryVariant">@color/primaryColorPurpleVariant</item>
         <item name="colorSecondary">@color/colorSecondaryPurple</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariantPurple</item>
         <item name="colorOnPrimary">@color/colorOnPrimaryPurple</item>
         <item name="colorOnSecondary">@color/colorOnSecondaryPurple</item>
+        <item name="colorAccent">@color/secondaryColorPurple</item>
         <item name="colorOnBackground">@color/colorOnBackgroundPurple</item>
         <item name="colorOnSurface">@color/colorOnSurfacePurple</item>
         <item name="colorOnError">@color/colorOnErrorPurple</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColorPurple</item>
-        <item name="colorAccent">@color/secondaryColorPurple</item>
-        <item name="overviewPillColor">@color/overviewPillColorPurple</item>
+        <item name="android:textColorPrimary">@color/primaryTextColorPink</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="overviewPillColor">@color/overviewPillColorPurple</item>
     </style>
 
     <style name="AppTheme.DEEPPURPLE" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorDeepPurple</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorDeepPurple</item>
+        <item name="colorPrimaryVariant">@color/primaryColorPurpleVariant</item>
+        <item name="colorSecondary">@color/secondaryColorDeepPurple</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariantPurple</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryPurple</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryPurple</item>
         <item name="colorAccent">@color/secondaryColorDeepPurple</item>
-        <item name="overviewPillColor">@color/overviewPillColorDeepPurple</item>
+        <item name="colorOnBackground">@color/colorOnBackgroundPurple</item>
+        <item name="colorOnSurface">@color/colorOnSurfacePurple</item>
+        <item name="colorOnError">@color/colorOnErrorPurple</item>
+        <item name="android:textColorPrimary">@color/primaryTextColorPink</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="overviewPillColor">@color/overviewPillColorDeepPurple</item>
     </style>
 
     <style name="AppTheme.INDIGO" parent="AppTheme.NoActionBar">
@@ -200,7 +212,16 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorTeal</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorTeal</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColorTeal</item>
+        <item name="colorSecondary">@color/secondaryColorTeal</item>
         <item name="colorAccent">@color/secondaryColorTeal</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryPurple</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryPurple</item>
+        <item name="colorOnBackground">@color/colorOnBackgroundPurple</item>
+        <item name="colorOnSurface">@color/colorOnSurfacePurple</item>
+        <item name="colorOnError">@color/colorOnErrorPurple</item>
+        <item name="android:textColorPrimary">@color/primaryTextColorPink</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="overviewPillColor">@color/overviewPillColorTeal</item>
         <item name="colorSurface">@color/black_alpha_40</item>
         <item name="android:popupBackground">@color/black_alpha_80</item>
