@@ -181,8 +181,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
         carbAnimation = overview_carbs_icon.background as AnimationDrawable
-        carbAnimation.setEnterFadeDuration(1600)
-        carbAnimation.setExitFadeDuration(1600)
+        carbAnimation!!.setEnterFadeDuration(1600)
+        carbAnimation!!.setExitFadeDuration(1600)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
