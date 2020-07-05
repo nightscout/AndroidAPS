@@ -134,8 +134,8 @@ public class AutotuneFS {
 
     public void exportLogAndZip(Date lastRun, String logString) {
         log("Create " + LOG_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log" + " file in " + AUTOTUNEFOLDER + " folder");
-        zipAutotune(lastRun);
         createAutotunefile(LOG_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log", logString);
+        zipAutotune(lastRun);
     }
 
     private void createAutotunefile(String fileName, String stringFile) {
