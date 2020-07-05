@@ -188,6 +188,8 @@ public class AutotuneCore {
         double totalCR = Round.roundTo(crTotalCarbs / crTotalInsulin,0.001);
         log("crTotalCarbs: "+ crTotalCarbs +" crTotalInsulin: "+ crTotalInsulin +" totalCR: "+totalCR);
 
+
+
 		//autotune-core (lib/autotune/index.js) #170-#209 (already hourly in aaps)
         // convert the basal profile to hourly if it isn't already
         double hourlyBasalProfile[] = basalProfile;

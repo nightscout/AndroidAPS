@@ -326,7 +326,8 @@ public class AutotunePrep {
                     }
 
 
-                    // Go through the remaining time periods and divide them into periods where scheduled basal insulin activity dominates. This would be determined by calculating the BG impact of scheduled basal insulin (for example 1U/hr * 48 mg/dL/U ISF = 48 mg/dL/hr = 5 mg/dL/5m), and comparing that to BGI from bolus and net basal insulin activity.
+                    // Go through the remaining time periods and divide them into periods where scheduled basal insulin activity dominates. This would be determined by calculating the BG impact of scheduled basal insulin
+                    // (for example 1U/hr * 48 mg/dL/U ISF = 48 mg/dL/hr = 5 mg/dL/5m), and comparing that to BGI from bolus and net basal insulin activity.
                     // When BGI is positive (insulin activity is negative), we want to use that data to tune basals
                     // When BGI is smaller than about 1/4 of basalBGI, we want to use that data to tune basals
                     // When BGI is negative and more than about 1/4 of basalBGI, we can use that data to tune ISF,
@@ -368,8 +369,8 @@ public class AutotunePrep {
         if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
             log("Categorizing all UAM data as basal.");
             basalGlucoseData.addAll(uamGlucoseData);
-        } else if (CSFLength > 12) {
-            log("Found at least 1h of carb absorption: assuming all meals were announced, and categorizing UAM data as basal.");
+        } else if (UAMLength < 12) {
+            log("Found less than 1h of UAM: assuming all meals were announced, and categorizing UAM data as basal.");
             basalGlucoseData.addAll(uamGlucoseData);
         } else {
             if (2*basalLength < UAMLength) {
