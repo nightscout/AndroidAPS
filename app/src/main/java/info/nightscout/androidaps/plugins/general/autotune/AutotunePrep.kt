@@ -538,7 +538,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 console.error = consoleError;
             }
         }
-        */return PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData)
+        */
+        return PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData)
 
         // and may be later
         // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);
