@@ -14,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AutotuneCore(val injector: HasAndroidInjector) {
+class AutotuneCore(private val injector: HasAndroidInjector) {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var  sp: SP
     @Inject lateinit var  autotunePlugin: AutotunePlugin
