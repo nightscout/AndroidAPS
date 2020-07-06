@@ -13,6 +13,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -152,7 +153,7 @@ public class ATProfile {
             json.put("carb_ratio", profile.getIc());
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")));
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")));
-            json.put("units",profileFunction.getUnits());
+            json.put("units",Constants.MGDL);
             json.put("timezone", TimeZone.getDefault().getID());
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
@@ -174,6 +175,7 @@ public class ATProfile {
         JSONObject json = profile.getData();
         try{
             json.put("dia",dia);
+            json.put("units", Constants.MGDL);
             json.put("sens",new JSONArray().put(new JSONObject().put("time","00:00").put("timeAsSeconds",0).put("value",isf)));
             json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
             JSONArray basals = new JSONArray();
