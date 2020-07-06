@@ -8,9 +8,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
@@ -62,16 +62,19 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 ToastUtils.showToastInUiThread(this, R.string.invalidweight)
                 return@setOnClickListener
             }
-            val profile = defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-            val args = Bundle()
-            args.putLong("time", DateUtil.now())
-            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-            args.putString("customProfile", profile.data.toString())
-            args.putString("customProfileUnits", profile.units)
-            args.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
-            val pvd = ProfileViewerDialog()
-            pvd.arguments = args
-            pvd.show(supportFragmentManager, "ProfileViewDialog")
+            profileFunction.getProfile()?.let { runningProfile ->
+                val profile = defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
+                ProfileViewerDialog().also { pvd ->
+                    pvd.arguments = Bundle().also {
+                        it.putLong("time", DateUtil.now())
+                        it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
+                        it.putString("customProfile", runningProfile.data.toString())
+                        it.putString("customProfile2", profile.data.toString())
+                        it.putString("customProfileUnits", profile.units)
+                        it.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
+                    }
+                }.show(supportFragmentManager, "ProfileViewDialog")
+            }
         }
 
         survey_submit.setOnClickListener {
