@@ -126,7 +126,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         return res
     }
 
-    fun arrayToJson(b: Array<Double>): JSONArray {
+    private fun arrayToJson(b: Array<Double>): JSONArray {
         val basals = JSONArray()
         for (i in 0..23) {
             val time = String.format(Locale.ENGLISH, "%02d:00", i)
@@ -135,7 +135,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         return basals
     }
 
-    fun singleValueArray(value: Double, sample: Array<Double>): JSONArray {
+    private fun singleValueArray(value: Double, sample: Array<Double>): JSONArray {
         val array = JSONArray()
         array.put(JSONObject().put("time", "00:00").put("value", value + sample[0]))
         array.put(JSONObject().put("time", "06:00").put("value", value + sample[1]))

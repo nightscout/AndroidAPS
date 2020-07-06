@@ -19,7 +19,7 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
-import kotlinx.android.synthetic.main.survey_activity.*
+import kotlinx.android.synthetic.main.activity_survey.*
 import javax.inject.Inject
 
 class SurveyActivity : NoSplashAppCompatActivity() {
@@ -34,7 +34,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.survey_activity)
+        setContentView(R.layout.activity_survey)
 
         survey_id.text = InstanceId.instanceId()
 
