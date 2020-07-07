@@ -75,6 +75,7 @@
     <string name="message">Съобщение</string>
     <string name="ok">ОК</string>
     <string name="cancel">Откажи</string>
+    <string name="dismiss">Разбрах</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
     <string name="ble_not_enabled">Bluetooth не е включен.</string>

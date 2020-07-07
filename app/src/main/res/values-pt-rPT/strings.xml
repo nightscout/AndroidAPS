@@ -795,6 +795,7 @@
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
+    <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
     <string name="needstoragepermission">Aplicação necessita da permissão de armazenamento para ser capaz de armazenar ficheiros de registo</string>
     <string name="request">Pedido</string>
     <string name="insulinsourcesetup">Configurar plugin Insulina</string>

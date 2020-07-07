@@ -796,6 +796,7 @@ Eversense-appen.</string>
     <string name="permission">Behörighet</string>
     <string name="askforpermission">Be om behörighet</string>
     <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
+    <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
     <string name="needstoragepermission">Appen behöver behörighet att använda Lagring för att kunna spara loggfiler</string>
     <string name="request">Begäran</string>
     <string name="insulinsourcesetup">Konfigurera insticksprogram för insulin</string>

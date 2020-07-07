@@ -796,6 +796,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="permission">Autorisation</string>
     <string name="askforpermission">Demande d\'autorisation</string>
     <string name="needsystemwindowpermission">L\'application a besoin de l\'autorisation d\'accès à la fenêtre système pour les notifications</string>
+    <string name="needlocationpermission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
     <string name="needstoragepermission">L\'application requiert une autorisation de stockage de données afin de pouvoir sauvegarder les fichiers journaux</string>
     <string name="request">Demande</string>
     <string name="insulinsourcesetup">Configurer le plugin d\'insuline</string>

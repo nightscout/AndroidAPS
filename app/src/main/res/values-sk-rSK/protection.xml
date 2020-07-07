@@ -15,6 +15,8 @@
     <string name="noprotection">Bez ochrany</string>
     <string name="protection">Ochrana</string>
     <string name="master_password_missing">Hlavné heslo nie je nastavené!\n\nProsím nastavte svoje hlavné heslo v nastaveniach (%1$s &#8594; %2$s)</string>
+    <string name="unsecure_fallback_biometric">Nezabezpečené záložné riešenie</string>
+    <string name="unsecure_fallback_descriotion_biometric">Aby bolo biometrické zabezpečenie účinné, je potrebné pre záložné riešenie nastaviť hlavné heslo.\n\nProsím nastavte hlavné heslo!</string>
     <string name="password_set">Heslo nastavené!</string>
     <string name="password_not_set">Heslo nie je nastavené</string>
     <string name="password_not_changed">Heslo nezmenené</string>
