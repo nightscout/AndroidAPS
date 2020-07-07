@@ -127,7 +127,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
             })
         }
         danar_history_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selected = typeList[position]
                 loadDataFromDB(selected.type)
                 showingType = selected.type

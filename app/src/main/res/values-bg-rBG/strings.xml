@@ -1217,8 +1217,8 @@
     <string name="setupwizard_units_prompt">Изберете единиците, в които искате да работите</string>
     <string name="ns_ploadlocalprofile">Качване на локални промени в НС профила</string>
     <string name="dia_short">DIA</string>
-    <string name="ic_short">IC (Инсулин/въглехидр.):</string>
-    <string name="isf_short">ISF (Инс.чувствителност)</string>
+    <string name="ic_short">И / Въгл</string>
+    <string name="isf_short">Чувств</string>
     <string name="target_short">Цел</string>
     <string name="clone_label">Клонирай</string>
     <string name="saveorresetchangesfirst">Първо запазете или се откажете от промените</string>
