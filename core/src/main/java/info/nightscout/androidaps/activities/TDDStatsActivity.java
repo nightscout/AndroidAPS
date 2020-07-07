@@ -16,7 +16,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -62,10 +64,10 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
+    SwipeRefreshLayout swipeRefresh;
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
-    Button reloadButton;
     LinearLayoutManager llm;
     TableLayout tl, ctl, etl;
     String TBB;
@@ -125,7 +127,6 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         setContentView(R.layout.danar_statsactivity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         statusView = findViewById(R.id.danar_stats_connection_status);
-        reloadButton = findViewById(R.id.danar_statsreload);
         totalBaseBasal = findViewById(R.id.danar_stats_editTotalBaseBasal);
         totalBaseBasal2 = findViewById(R.id.danar_stats_editTotalBaseBasal2);
         statsMessage = findViewById(R.id.danar_stats_Message);
@@ -152,9 +153,6 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
             sp.putString("TBB", TBB);
         }
         totalBaseBasal.setText(TBB);
-
-        if (!activePlugin.getActivePump().getPumpDescription().needsManualTDDLoad)
-            reloadButton.setVisibility(View.GONE);
 
         // stats table
         tl = findViewById(R.id.main_table);
@@ -240,25 +238,44 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
-        reloadButton.setOnClickListener(v -> {
-            runOnUiThread(() -> {
-                reloadButton.setVisibility(View.GONE);
-                statusView.setVisibility(View.VISIBLE);
-                statsMessage.setVisibility(View.VISIBLE);
-                statsMessage.setText(resourceHelper.gs(R.string.warning_Message));
-            });
-            commandQueue.loadTDDs(new Callback() {
+        swipeRefresh = findViewById(R.id.swipeRefreshStats);
+        swipeRefresh.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefresh.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(getResources(), R.color.swipe_background, null));
+
+        if (activePlugin.getActivePump().getPumpDescription().needsManualTDDLoad){
+            this.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
-                public void run() {
-                    loadDataFromDB();
-                    runOnUiThread(() -> {
-                        reloadButton.setVisibility(View.VISIBLE);
-                        statusView.setVisibility(View.GONE);
-                        statsMessage.setVisibility(View.GONE);
+                public void onRefresh() {
+                    //do the refresh of data here
+                    commandQueue.readStatus("User request", new Callback() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(() -> {
+                                statusView.setVisibility(View.VISIBLE);
+                                statsMessage.setVisibility(View.VISIBLE);
+                                statsMessage.setText(resourceHelper.gs(R.string.warning_Message));
+                            });
+                            commandQueue.loadTDDs(new Callback() {
+                                @Override
+                                public void run() {
+                                    loadDataFromDB();
+                                    runOnUiThread(() -> {
+                                        statusView.setVisibility(View.GONE);
+                                        statsMessage.setVisibility(View.GONE);
+                                        swipeRefresh.setRefreshing(false);
+                                    });
+                                }
+                            });
+                            swipeRefresh.setRefreshing(false);
+                        }
                     });
+
                 }
             });
-        });
+        }
+
+
+
 
         totalBaseBasal.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
