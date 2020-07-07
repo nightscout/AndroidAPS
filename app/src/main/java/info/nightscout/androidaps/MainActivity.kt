@@ -884,7 +884,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
                 AlertDialog.Builder(this)
-                    .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION)
+                    .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + "\nNew GUI")
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(resourceHelper.gs(R.string.ok), null)
