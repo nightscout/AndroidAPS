@@ -640,6 +640,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
             }
         } else {
+            overview_apsmode?.visibility = View.GONE
             overview_apsmode_text?.visibility = View.GONE
         }
         val lastRun = loopPlugin.lastRun
