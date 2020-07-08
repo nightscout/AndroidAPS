@@ -656,7 +656,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
-            if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+            if (targetUsed != 0.0 && abs(profile.targetMgdl-targetUsed) > 0.01) {
                 aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
