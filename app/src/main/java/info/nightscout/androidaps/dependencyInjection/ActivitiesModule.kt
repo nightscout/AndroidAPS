@@ -39,6 +39,7 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpActivity(): SmsCommunicatorOtpActivity
     @ContributesAndroidInjector abstract fun contributesStatsActivity(): StatsActivity
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
+    @ContributesAndroidInjector abstract fun contributesDefaultProfileActivity(): ProfileHelperActivity
     @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
     @ContributesAndroidInjector abstract fun contributesScrollingActivity(): ScrollingActivity
 }

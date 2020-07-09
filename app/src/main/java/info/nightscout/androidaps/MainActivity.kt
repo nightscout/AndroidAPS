@@ -31,6 +31,7 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.ms_square.etsyblur.BlurSupport
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
@@ -71,6 +72,11 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.AndroidPermission
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
@@ -918,6 +924,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 */
+            R.id.nav_defaultprofile     -> {
+                startActivity(Intent(this, ProfileHelperActivity::class.java))
+                return true
+            }
+
             R.id.nav_stats              -> {
                 startActivity(Intent(this, StatsActivity::class.java))
                 return true
