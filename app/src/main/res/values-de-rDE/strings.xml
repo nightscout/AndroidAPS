@@ -1407,4 +1407,5 @@ Mache das nur, wenn AAPS nicht mehr mit dem Pod kommunizieren kann. Wenn dies no
     <string name="omnipod_bolus_failed_uncertain">Erfolgreiche Bolusabgabe konnte nicht sicher ermittelt werden. Stelle sicher, dass der Pod Insulin abgibt oder brich den Bolus ab.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="nav_profilehelper">Profil-Helfer</string>
 </resources>

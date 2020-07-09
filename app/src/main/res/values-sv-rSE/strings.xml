@@ -1406,4 +1406,6 @@ Eversense-appen.</string>
     <string name="omnipod_bolus_failed_uncertain">Det går inte att verifiera om bolusen är slutförd. Verifiera att din pod leverarar bolus eller avsluta bolus.</string>
     <string name="omnipod_rl_stats">RL-statistik</string>
     <string name="omnipod_read_pulse_log_short">Pulslogg</string>
+    <string name="comapareprofile">Jämför med aktuell profil</string>
+    <string name="nav_profilehelper">Profilguide</string>
 </resources>
