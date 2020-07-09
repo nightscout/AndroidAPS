@@ -15,6 +15,8 @@
     <string name="boluserrorcode">Solicitado: %1$.2fU Entregado: %2$.2fU Código de error: %3$s</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="danar_setbasalstep001">Ajustar paso basal a 0.01 U/h</string>
+    <string name="resetpairing">¿Restablecer información de emparejamiento?</string>
+    <string name="dana_model">%1$s\nModelo: %2$02X\nProtocol: %3$02X\nCódigo: %4$02X</string>
     <string name="processinghistory">Procesando evento</string>
     <string name="danar_enableextendedbolus">Habilitar bolos extendidos en bomba</string>
     <string name="overview_bolusprogress_delivered">Entregado</string>
@@ -22,14 +24,18 @@
     <string name="unsupportedfirmware">Firmware de la bomba no soportado</string>
     <string name="pumperror">Error de bomba</string>
     <string name="lowbattery">Batería Baja</string>
+    <string name="basalcompare">Entregar menos de la tasa basal preestablecida</string>
     <string name="pumpshutdown">Bomba apagada</string>
     <string name="batterydischarged">Batería de la bomba descargada</string>
     <string name="occlusion">Oclusión</string>
     <string name="emptyreservoir">Reservorio vacío</string>
+    <string name="checkshaft">Comprobar eje</string>
     <string name="basalmax">Basal max</string>
     <string name="dailymax">Máximo diario</string>
     <string name="bloodsugarmeasurementalert">Alerta de control de BG</string>
     <string name="remaininsulinalert">Insulina restante en reservorio</string>
+    <string name="missedbolus">Bolo perdido</string>
+    <string name="invalidpairing">Información de emparejamiento no válida. Solicitando un nuevo emparejamiento</string>
     <string name="gettingpumpstatus">Recibir estado de bomba</string>
     <string name="gettingextendedbolusstatus">Recibiendo estado de bolo extendido</string>
     <string name="gettingbolusstatus">Recibiendo estado bolo</string>
@@ -98,9 +104,19 @@
     <string name="option_on">Activado</string>
     <string name="option_off">Desactivado</string>
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
+    <string name="danars_password_title">Bomba de contraseña (v1 solamente)</string>
     <string name="danar_password_title">Contraseña de la bomba</string>
     <string name="danar_useextended_title">Usar bolos extendidos para &gt;200%%</string>
     <string name="danar_visualizeextendedaspercentage_title">Visualizar bolo extendido como %%</string>
     <string name="bolusspeed">Velocidad bolo</string>
     <string name="selectedpump">Bomba seleccionada</string>
+    <string name="rs_loginsulinchange_title">Registrar cambios de reservorio</string>
+    <string name="rs_loginsulinchange_summary">Añadir evento \"Cambio de Insulina\" al portal de cuidados cuando se detecte en el historial</string>
+    <string name="rs_logcanulachange_title">Registro de cambio de cánula</string>
+    <string name="rs_logcanulachange_summary">Añadir evento \"Cambio de Cánula\" al portal de cuidados cuando se detecte en el historial</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+    <string name="press_ok_on_the_pump">Pulse Aceptar en la bomba\ny entre 2 números visualizados\nMantener la pantalla en la bomba ON pulsando el botón menos hasta que termine de introducir el código.</string>
+    <string name="num1pin">1: (12 dígitos)</string>
+    <string name="num2pin">2: (8 dígitos)</string>
 </resources>

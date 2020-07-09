@@ -1405,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem-sucedido. Por favor, verifique se o Pod está administrar ou cancelar o bólus.</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
     <string name="omnipod_read_pulse_log_short">Registo de Pulse</string>
+    <string name="comapareprofile">Comparar com o perfil atual</string>
+    <string name="nav_profilehelper">Assistente de Perfil</string>
 </resources>

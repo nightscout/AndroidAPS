@@ -1339,7 +1339,10 @@
     <string name="omnipod_driver_error_invalid_message_address">La comunicación ha fallado: se ha recibido un mensaje con una dirección no válida desde el Pod.</string>
     <string name="omnipod_driver_error_message_decoding_failed">La comunicación ha fallado: no se ha podido descodificar el mensaje del Pod.</string>
     <string name="omnipod_driver_error_nonce_resync_failed">La comunicación ha fallado: nonce resync ha fallado.</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Comunicación fallida: nonce no sincronizada.</string>
     <string name="omnipod_driver_error_not_enough_data">La comunicación ha fallado: no se han recibido suficientes datos del Pod.</string>
+    <string name="omnipod_driver_error_pod_fault">Un error de Pod (%1$03d %2$s) se ha detectado. Por favor, desactive su Pod e inicie uno nuevo.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">La comunicación ha fallado: el Pod ha devuelto una respuesta de error.</string>
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_mgmt_title">Administración de Pod</string>
     <string name="omnipod_cmd_init_pod">Iniciar Pod</string>
@@ -1356,22 +1359,29 @@
     <string name="omnipod_cmd_get_pod_info">Obtener información de Pod</string>
     <string name="omnipod_cmd_set_time">Establecer hora</string>
     <string name="omnipod_cmd_configure_alerts">Configurar alertas</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Confirmar Alertas</string>
     <string name="omnipod_cmd_suspend_delivery">Suspender la entrega</string>
     <string name="omnipod_cmd_resume_delivery">Reanudar la entrega</string>
     <string name="omnipod_cmd_unknown_entry">Entrada desconocida</string>
     <string name="omnipod_cmd_bolus_value">%1$.1fU</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, CH=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Tasa: %1$.1f U, Duración: %2$d min</string>
+    <string name="omnipod_cmd_reset_pod_desc">Si pulsa <b>OK</b>, el estado de Pod se restablecerá por la fuerza y ya no podrá comunicarse con el Pod. Hágalo sólo si ya no puede comunicarse con el Pod. Si todavía puede comunicarse con el Pod, utilice la opción <b>Desactivar Pod</b>.</string>
     <string name="omnipod_cmd_pod_history_na">Historial del Pod no disponible en el momento.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Llenar el Pod</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nLlenar el nuevo Pod con suficiente insulina durante 3 días.\n\nEscucha dos pitidos del Pod durante el proceso de llenado. Esto indica que se ha insertado la cantidad mínima de 85U. Asegúrese de vaciar completamente la jeringa, incluso después de escuchar los dos pitidos.\n\nDespués de llenar el Pod, por favor pulse <b>Next</b>.\n\n<b>Nota:</b> no retire el capuchón de la aguja del Pod en este momento.</string>
     <string name="omnipod_init_pod_wizard_step2_title">Cebado</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Intentando emparejar con el nuevo Pod y primarlo.\n\nCuando todos los elementos están marcados, puedes pulsar <b>Siguiente</b>.\n\n<b>Nota:</b> por favor mantenga el Pod muy cerca del RileyLink en este momento.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Adherir el Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPreparar el sitio de infusión. Retire el capuchón de la aguja del Pod y el adhesivo y aplique el Pod al sitio de perfusión.\n\nSi la cánula se queda fuera, por favor presione <b>Cancel</b> y descarte su Pod.\n\nPress <b>Next</b> para insertar la cánula y comenzar la entrega basal.</string>
     <string name="omnipod_init_pod_wizard_step4_title">Insertar cánula</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Intentando establecer la programación basal inicial e insertar la cánula.\n\nCuando todos los elementos están marcados, puede pulsar <b>Siguiente</b>.</string>
     <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
     <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nEl Pod ahora está activo.\n\nSu horario basal ha sido programado y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si usted siente que no lo ha hecho.</string>
     <string name="omnipod_remove_pod_wizard_step1_title">Desactivar Pod</string>
     <string name="omnipod_remove_pod_wizard_step1_desc">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega insulina y desactivará el Pod.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">Desactivando el Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Desactivando el Pod.\n\nCuando se comprueban todos los elementos, puede pulsar <b>Next</b>.\n\n<b>Nota:</b> Si la desactivación falla, por favor pulse <b>Cancelar</b> y utilice la opción <b>Restablecer Pod</b> para restablecer por la fuerza el estado de Pod.</string>
     <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, retire el Pod de su cuerpo y desecharlo.</string>
     <string name="omnipod_init_pod_pair_pod">Emparejar Pod</string>
     <string name="omnipod_init_pod_prime_pod">Llenado de cánula del Pod</string>
@@ -1389,5 +1399,10 @@
     <string name="omnipod_alert_shutdown_imminent">El apagado es inminente</string>
     <string name="omnipod_alert_low_reservoir">Reservorio bajo</string>
     <string name="omnipod_alert_unknown_alert">Alerta desconocida</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">La configuración del perfil basal podría haber fallado. ¡La entrega podría ser suspendida! Por favor, actualiza el estado de Pod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">La configuración de basal temporal podría haber fallado. Si ya se está ejecutando una basal temporal, ¡puede que haya sido cancelada! Por favor, actualice el estado del pod.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Ajuste de la hora puede ser que haya fallado. La entrega puede ser suspendido! Por favor, actualizar estado de Pod.</string>
+    <string name="omnipod_bolus_failed_uncertain">No se puede verificar si el bolo ha sido exitoso. Por favor verifique que su Pod está poniendo bolo o cancele el bolo.</string>
     <string name="omnipod_rl_stats">Estadísticas del RL</string>
+    <string name="omnipod_read_pulse_log_short">Registro de pulso</string>
 </resources>

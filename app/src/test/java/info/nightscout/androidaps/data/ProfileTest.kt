@@ -57,7 +57,7 @@ class ProfileTest : TestBaseWithProfile() {
         JSONAssert.assertEquals(okProfile, p.data, false)
         Assert.assertEquals(3.0, p.dia, 0.01)
         Assert.assertEquals(TimeZone.getTimeZone("UTC"), p.timeZone)
-        Assert.assertEquals("00:30", p.format_HH_MM(30 * 60))
+        Assert.assertEquals("00:30", Profile.format_HH_MM(30 * 60))
         val c = Calendar.getInstance()
         c[Calendar.HOUR_OF_DAY] = 1
         c[Calendar.MINUTE] = 0

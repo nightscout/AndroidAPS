@@ -61,6 +61,7 @@
     <string name="mmol">mmol/l</string>
     <string name="advancedsettings_title">Ajustes avanzados</string>
     <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">Vigilante de BT</string>
     <string name="btwatchdog_summary">Apaga el bluetooth del móvil por un segundo si no hay conexión con la bomba. Esto ayuda con algunos móviles con problemas para establecer conexión bluetooth estable.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
@@ -121,7 +122,6 @@
     <!--    Temptarget-->
     <string name="mins">%1$dmin</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Medir glucosa</string>
     <string name="careportal_announcement">Aviso</string>

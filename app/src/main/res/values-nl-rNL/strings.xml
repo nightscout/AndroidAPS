@@ -1369,6 +1369,40 @@
     <string name="omnipod_cmd_reset_pod_desc">Als je op <b>OK</b> klikt, zal de Pod gedwongen worden gereset en kun je niet meer communiceren met de Pod. Doe dit alleen als je al niet meer met de Pod kunt communiceren. Als je nog wel kunt communiceren met de Pod, gebruik dan de optie <b>Deactiveer Pod</b>.</string>
     <string name="omnipod_cmd_pod_history_na">Pod Historie momenteel niet beschikbaar.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Vul de Pod</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nVul de nieuwe Pod met voldoende insuline voor 3 dagen.\n\nLuister of je twee piepjes hoort tijdens het vullen. Deze geven aan dat de minimum hoeveelheid van 85E is bereikt. Ook als je de twee piepjes hebt gehoord ga je verder met vullen totdat de vulspuit volledig leeg is.\n\nNa het vullen van de Pod druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> verwijder de beschermkap van de Pod naald nog niet!</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Uitvullen</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Probeer te koppelen met de nieuwe Pod en laat de Pod de naald uitvullen.\n\nWanneer alle onderdelen zijn afgerond, druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> Houd de Pod goed dicht bij de RileyLink terwijl je dit doet.</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Plaats de Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nBereid het plaatsen voor. Verwijder de beschermdop van de naald en haal de papiertjes van de sticker.\n\n(Mocht je zien dat de canule uitsteekt, druk dan op <b>Annuleren</b> en begin overnieuw met een andere Pod.)\n\nBevestig de Pod op de huid. Druk op <b>Volgende</b> om de canule te gaan inschieten en de insulinetoediening te laten starten.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Canule inschieten</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">De basaalstand wordt ingesteld en de canule wordt ingeschoten.\n\nWanneer alle onderdelen zijn afgerond, druk je op <b>Volgende</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nDe Pod is nu actief.\n\nJouw basaalprofiel is ingeladen in de Pod en de canule is ingebracht.\n\nControleer of de canule correct is geplaatst en vervang de Pod als je denkt dat er iets is misgegaan.</string>
+    <string name="omnipod_remove_pod_wizard_step1_title">Deactiveer Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nDruk op <b>Volgende</b> om de Pod te deactiveren.\n\n<b>Opmerking:</b> Hiermee wordt de insuline toediening gestopt en wordt de Pod gedeactiveerd.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Deactiveren van de Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactiveren van de Pod.\n\nWanneer alle onderdelen zijn afgerond, druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> Als deactiveren herhaaldelijk niet wil lukken, druk je op <b>Annuleren</b> en gebruik de optie <b>Reset Pod</b> om de Pod-status geforceerd te deactiveren.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod gedeactiveerd.\n\nVerwijder de Pod van je lichaam en gooi hem weg.</string>
+    <string name="omnipod_init_pod_pair_pod">Pod Koppelen</string>
+    <string name="omnipod_init_pod_prime_pod">Pod Uitvullen</string>
+    <string name="omnipod_init_pod_fill_cannula">Canule vullen</string>
+    <string name="omnipod_init_pod_set_basal_profile">Instellen Basaal Profiel</string>
+    <string name="omnipod_deactivate_pod_cancel_delivery">Annuleer toediening</string>
+    <string name="omnipod_deactivate_pod_deactivate_pod">Deactiveer Pod</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod_dash">Pomp integratie voor Omnipod Dash.</string>
+    <string name="omnipod_alert_finish_pairing_reminder">Herinnering koppeling afronden</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
+    <string name="omnipod_alert_expiration">Pod verloopt binnenkort</string>
+    <string name="omnipod_alert_expiration_advisory">Pod verloopt binnenkort</string>
+    <string name="omnipod_alert_shutdown_imminent">Schakelt zeer binnenkort uit</string>
+    <string name="omnipod_alert_low_reservoir">Laag reservoir</string>
+    <string name="omnipod_alert_unknown_alert">Onbekend alarm</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Het instellen van basaal profiel is mogelijk mislukt. De toediening is misschien gestopt! Vernieuw de status van Pod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">Het instellen van tijdelijk basaal is mogelijk mislukt. Als er al een tijdelijk basaal actief was, is dat misschien geannuleerd! Vernieuw de status van de Pod.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Het instellen van de tijd is mogelijk mislukt. De toediening is misschien gestopt! Vernieuw de status van Pod.</string>
+    <string name="omnipod_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer of de Pod de bolus aan het toedienen is of annuleer de bolus.</string>
+    <string name="omnipod_rl_stats">RL Statistieken</string>
+    <string name="omnipod_read_pulse_log_short">Pulsen Log</string>
 </resources>

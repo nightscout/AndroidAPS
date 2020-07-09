@@ -69,7 +69,6 @@
     <string name="zerovalueinprofile">Nieprawidłowy profil: %1$s</string>
     <!--    Temptarget-->
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Baz: <b>%4$.2f</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Sprawdź BG</string>
     <string name="careportal_announcement">Powiadomienie</string>

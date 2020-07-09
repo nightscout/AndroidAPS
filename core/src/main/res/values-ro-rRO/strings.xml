@@ -1,21 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="error">Eroare</string>
+    <string name="connecting">Se conectează</string>
+    <string name="connected">Conectat</string>
+    <string name="disconnected">Deconectat</string>
+    <string name="disconnecting">Se deconectează</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="close">Închide</string>
+    <string name="please_wait">Așteptați…</string>
+    <string name="reload">Reîncărcare</string>
+    <string name="stop">Stop</string>
+    <string name="basal_label">Bazală</string>
+    <string name="target_label">Țintă</string>
+    <string name="initializing">Inițializare...</string>
+    <string name="serialnumber">Număr serial</string>
+    <string name="battery_label">Baterie</string>
+    <string name="lastconnection_label">Ultima conexiune</string>
+    <string name="lastbolus_label">Ultimul bolus</string>
     <!--    Constraints-->
     <!--    Dialogs-->
+    <string name="confirmation">Confirmare</string>
+    <string name="message">Mesaj</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Renunță</string>
     <!--    BlePreCheck-->
     <!--    DateUtil-->
+    <string name="days">zile</string>
+    <string name="hours">ore</string>
+    <string name="unit_second">secundă</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">oră</string>
+    <string name="unit_day">zi</string>
+    <string name="unit_week">săptămână</string>
+    <string name="unit_seconds">secunde</string>
+    <string name="unit_minutes">minute</string>
+    <string name="unit_hours">ore</string>
+    <string name="unit_days">zile</string>
+    <string name="unit_weeks">săptămâni</string>
+    <string name="shortminute">min</string>
+    <string name="shortday">z</string>
     <!--    Profile-->
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <!--    PumpType-->
     <!--    APSResult-->
+    <string name="duration">Durată</string>
+    <string name="reason">Motiv</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="careportal_announcement">Anunț</string>
+    <string name="careportal_note">Notă</string>
+    <string name="careportal_question">Întrebare</string>
+    <string name="careportal_exercise">Activitate fizică</string>
+    <string name="careportal_pumpsitechange">Schimbare loc pompă</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
+    <string name="basalrate">Bazală</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="weight">Greutate</string>
     <!--    Ntp-->
 </resources>
