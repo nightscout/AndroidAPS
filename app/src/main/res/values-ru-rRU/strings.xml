@@ -164,6 +164,7 @@
     <string name="filenotfound">файл не найден</string>
     <string name="nav_export">экспорт настроек</string>
     <string name="nav_import">импорт настроек</string>
+    <string name="openapsma_maxbasal_title">Максимальное значение ед./ч для скорости временного базала</string>
     <string name="openapsma_maxbasal_summary">в контексте OpenAPS называется макс базал</string>
     <string name="openapsma_maxiob_title">макс базал активн инс подаваемый с OpenAPS (ед)</string>
     <string name="openapsma_maxiob_summary">Эта величина называется Max IOB (макс активн инс) в OpenAPS\n. Это макс кол-во инсулина в ед. [U] которое APS может подать единовременно.</string>
@@ -299,6 +300,7 @@
     <string name="primefill">прайм/заполнение</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
     <string name="othersettings_title">другое</string>
+    <string name="fillbolus_title">Заполнить стандартное количество инсулина</string>
     <string name="button1">кнопка 1</string>
     <string name="button2">кнопка 2</string>
     <string name="button3">кнопка 3</string>
@@ -357,6 +359,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
     <string name="openapsama_autosens_max_summary">Значение по умолчанию: 1,2\n Это множитель для autosens ( и вскоре autotune) с лимитом 20%% который определяет лимит верхнего значения autosens, который в свою очередь предопределяет верхнюю границу базала, границы изменения чувствительности к инсулину ISF и нижние границы целевой ГК.</string>
     <string name="openapsama_autosens_min_summary">по умолчанию:0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens тоже подстроит цели</string>
     <string name="openapsama_autosens_adjusttargets_summary">значение по умолчанию : верно. используется чтобы разрешить юстировку целевых СК, а также ISF и базала</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">значение по умолчанию :2 bolus snoose активируется после введения болюса на еду чтобы цикл не взаимодействовал с временными низкими СК сразу после еды. так, трехчасовой DIA при величине 2 означает постыпенное затихание bolus snooze после 1.5 часов (3DIA/2)</string>
     <string name="openapsama_min_5m_carbimpact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Эта настройка на усвоение углеводов за 5 мин. По умолчанию ожидается 3мг/дл/5мин. Влияет на скорость учета поглощения углеводов COB и усвоения в расчетах прогнозируемой гликемии, когда СК падает быстрее или не растет так как ожидается.</string>
@@ -794,6 +797,7 @@ Context | Edit Context</string>
     <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="needsystemwindowpermission">Приложению требуется разрешение системного окна для уведомлений</string>
+    <string name="needlocationpermission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
     <string name="needstoragepermission">Приложение нуждается в разрешении доступа к хранению данных для хранения лог-файлов</string>
     <string name="request">Запрос</string>
     <string name="insulinsourcesetup">Настроить плагин инсулина</string>
