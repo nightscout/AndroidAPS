@@ -370,7 +370,7 @@ public class Profile {
         return lastValue;
     }
 
-    protected String format_HH_MM(Integer timeAsSeconds) {
+    public static String format_HH_MM(Integer timeAsSeconds) {
         String time;
         int hour = timeAsSeconds / 60 / 60;
         int minutes = (timeAsSeconds - hour * 60 * 60) / 60;

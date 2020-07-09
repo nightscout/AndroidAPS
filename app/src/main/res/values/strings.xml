@@ -1708,5 +1708,7 @@
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="comapareprofile">Compare with current profile</string>
+    <string name="nav_profilehelper">Profile helper</string>
 
 </resources>
