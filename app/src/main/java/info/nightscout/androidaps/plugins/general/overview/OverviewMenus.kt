@@ -350,6 +350,7 @@ class OverviewMenus @Inject constructor(
 
             resourceHelper.gs(R.string.careportal_profileswitch) -> {
                 ProfileSwitchDialog().show(manager, "Overview")
+                return true;
             }
 
             resourceHelper.gs(R.string.viewprofile)              -> {
@@ -359,6 +360,7 @@ class OverviewMenus @Inject constructor(
                 val pvd = ProfileViewerDialog()
                 pvd.arguments = args
                 pvd.show(manager, "ProfileViewDialog")
+                return true;
             }
 
             resourceHelper.gs(R.string.eatingsoon)               -> {
@@ -372,6 +374,7 @@ class OverviewMenus @Inject constructor(
                     .low(target)
                     .high(target)
                 activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
+                return true;
             }
 
             resourceHelper.gs(R.string.activity)                                      -> {
@@ -385,6 +388,7 @@ class OverviewMenus @Inject constructor(
                     .low(target)
                     .high(target)
                 activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
+                return true;
             }
 
             resourceHelper.gs(R.string.hypo)                                          -> {
@@ -398,10 +402,12 @@ class OverviewMenus @Inject constructor(
                     .low(target)
                     .high(target)
                 activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
+                return true;
             }
 
             resourceHelper.gs(R.string.custom)                                        -> {
                 TempTargetDialog().show(manager, "Overview")
+                return true;
             }
 
             resourceHelper.gs(R.string.cancel)                                        -> {
@@ -413,6 +419,7 @@ class OverviewMenus @Inject constructor(
                     .low(0.0)
                     .high(0.0)
                 activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
+                return true;
             }
         }
         return false
