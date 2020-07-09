@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,6 +66,9 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
     private CompositeDisposable disposable = new CompositeDisposable();
     SwipeRefreshLayout swipeRefresh;
+
+    Handler handler = new Handler();
+    Runnable runnable = null;
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
@@ -266,10 +270,14 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                                     });
                                 }
                             });
-                            swipeRefresh.setRefreshing(false);
                         }
                     });
-
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            swipeRefresh.setRefreshing(false);
+                        }
+                    }, 3 * 1000); // afterDelay will be executed after (secs*1000) milliseconds.
                 }
             });
         }

@@ -214,7 +214,7 @@
     <string name="amount_days"># Days</string>
     <string name="weight">Weight</string>
     <string name="warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
-    <string name="olddata_Message">Old Data Please Press "RELOAD"</string>
+    <string name="olddata_Message">Old Data Please swipe to reload</string>
     <string name="tbb">Total Base Basal</string>
     <string name="tbb2">TBB * 2</string>
 
