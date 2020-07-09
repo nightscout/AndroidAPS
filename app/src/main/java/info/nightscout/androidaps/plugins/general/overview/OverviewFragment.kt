@@ -284,7 +284,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        overviewMenus.createContextMenu(menu, v)
+        //overviewMenus.createContextMenu(menu, v)   !!! we did it it main activity TODO: seperate menue building
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
