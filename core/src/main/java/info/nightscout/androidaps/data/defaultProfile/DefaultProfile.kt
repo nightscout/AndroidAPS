@@ -17,7 +17,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
     var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
     var eighteenToTwentyfor: TreeMap<Double, Array<Double>> = TreeMap()
 
-    fun profile(age: Double, tdd: Double, weight: Double, units: String): Profile {
+    fun profile(age: Double, tdd: Double, weight: Double, units: String): Profile? {
         val profile = JSONObject()
         if (age >= 1 && age < 6) {
             val _tdd = if (tdd == 0.0) 0.6 * weight else tdd
@@ -41,7 +41,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
             val isf = Round.roundTo(100.0 / _tdd, 0.1)
             profile.put("sens", singleValueArray(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2)))
         } else if (age >= 18) {
-
+            return null
         }
         profile.put("dia", 5.0)
         profile.put("carbs_hr", 20) // not used
