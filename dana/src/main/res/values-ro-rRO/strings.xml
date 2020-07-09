@@ -1,2 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="overview_bolusprogress_delivered">Livrat</string>
+    <string name="overview_bolusprogress_stoped">Oprit</string>
+    <string name="occlusion">Ocluzie</string>
+    <string name="emptyreservoir">Rezervor gol</string>
+    <string name="stoppingtempbasal">Se oprește bazala temporară</string>
+    <string name="stoppingextendedbolus">Se oprește bolusul extins</string>
+    <string name="wrongpassword">Parolă greșită</string>
+    <string name="wrongpumppassword">Parola pompei greșită!</string>
+    <string name="danar_history_alarm">Alarme</string>
+    <string name="danar_history_bolus">Bolusuri</string>
+    <string name="danar_history_carbohydrates">Carbohidrați</string>
+    <string name="danar_history_errors">Erori</string>
+    <string name="danar_history_glucose">Glicemie</string>
+    <string name="danar_history_refill">Reumplere</string>
+    <string name="danar_history_syspend">Suspendare</string>
+    <string name="danar_history_prime">Amorsare</string>
+    <string name="danar_pumpalarm">Alarmă</string>
+    <string name="danar_pumpalarm_sound">Sunet</string>
+    <string name="danar_pumpalarm_vibrate">Vibrație</string>
+    <string name="danar_pumpalarm_both">Ambele</string>
+    <string name="danar_saveuseroptions">Salvați opțiunile în pompă</string>
+    <string name="description_pump_dana_r">Integrare cu pompele DANA Diabcare R</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="danarkoreanpump">DanaR din Coreea</string>
+    <string name="danarpump">DanaR</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="danar_bluetooth_status">Status Bluetooth</string>
+    <string name="danar_iob_label">IOB din pompă</string>
+    <string name="basal_step">Pas bazală</string>
+    <string name="bolus_step">Pas bolus</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="danar_pump_settings">Setări pompă Dana</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="option_on">Pornit</string>
+    <string name="option_off">Oprit</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+    <string name="num1pin">1: (12 cifre)</string>
+    <string name="num2pin">2: (8 cifre)</string>
+</resources>
