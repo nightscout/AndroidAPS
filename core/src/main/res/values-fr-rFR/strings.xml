@@ -122,7 +122,6 @@
     <!--    Temptarget-->
     <string name="mins">%1$dmin</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_announcement">Notification</string>
@@ -162,6 +161,7 @@
     <string name="waitingforpumpresult">Attente de résultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%dg de glucides supplémentaires requis d\'ici %d minutes</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
     <string name="cumulative_tdd">DTI cumulé</string>

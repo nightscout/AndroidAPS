@@ -109,6 +109,8 @@ public class MainApp extends DaggerApplication {
             sp.putBoolean(R.string.key_ns_alarms, config.getNSCLIENT());
         if (!sp.contains(R.string.key_ns_announcements))
             sp.putBoolean(R.string.key_ns_announcements, config.getNSCLIENT());
+        if (!sp.contains(R.string.key_language))
+            sp.putString(R.string.key_language, "default");
     }
 
     @Override

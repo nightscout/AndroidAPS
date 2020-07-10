@@ -109,7 +109,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         danar_history_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
         danar_history_reload.setOnClickListener {
-            val selected = danar_history_spinner.selectedItem as TypeList
+            val selected = danar_history_spinner.selectedItem as TypeList? ?: return@setOnClickListener
             runOnUiThread {
                 danar_history_reload?.visibility = View.GONE
                 danar_history_status?.visibility = View.VISIBLE
@@ -126,8 +126,8 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
             })
         }
         danar_history_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                val selected = danar_history_spinner?.selectedItem as TypeList? ?: return
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selected = typeList[position]
                 loadDataFromDB(selected.type)
                 showingType = selected.type
             }

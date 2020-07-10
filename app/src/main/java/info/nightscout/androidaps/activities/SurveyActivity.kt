@@ -8,9 +8,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
@@ -19,7 +19,7 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
-import kotlinx.android.synthetic.main.survey_activity.*
+import kotlinx.android.synthetic.main.activity_survey.*
 import javax.inject.Inject
 
 class SurveyActivity : NoSplashAppCompatActivity() {
@@ -34,7 +34,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.survey_activity)
+        setContentView(R.layout.activity_survey)
 
         survey_id.text = InstanceId.instanceId()
 
@@ -62,16 +62,19 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 ToastUtils.showToastInUiThread(this, R.string.invalidweight)
                 return@setOnClickListener
             }
-            val profile = defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-            val args = Bundle()
-            args.putLong("time", DateUtil.now())
-            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-            args.putString("customProfile", profile.data.toString())
-            args.putString("customProfileUnits", profile.units)
-            args.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
-            val pvd = ProfileViewerDialog()
-            pvd.arguments = args
-            pvd.show(supportFragmentManager, "ProfileViewDialog")
+            profileFunction.getProfile()?.let { runningProfile ->
+                val profile = defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
+                ProfileViewerDialog().also { pvd ->
+                    pvd.arguments = Bundle().also {
+                        it.putLong("time", DateUtil.now())
+                        it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
+                        it.putString("customProfile", runningProfile.data.toString())
+                        it.putString("customProfile2", profile.data.toString())
+                        it.putString("customProfileUnits", profile.units)
+                        it.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
+                    }
+                }.show(supportFragmentManager, "ProfileViewDialog")
+            }
         }
 
         survey_submit.setOnClickListener {

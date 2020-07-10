@@ -29,6 +29,7 @@
     <string name="batterydischarged">Pomp Batterij Leeg</string>
     <string name="occlusion">Afsluiting</string>
     <string name="emptyreservoir">Reservoir leeg</string>
+    <string name="checkshaft">Controleer aandrijfstang</string>
     <string name="basalmax">Max basaal</string>
     <string name="dailymax">Max per dag</string>
     <string name="bloodsugarmeasurementalert">Bloed glucose meting alarm</string>

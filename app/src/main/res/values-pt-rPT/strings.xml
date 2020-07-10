@@ -795,7 +795,7 @@
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
-    <string name="needlocationpermission">Aplicação requer permissão de localização para pesquisa BT</string>
+    <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
     <string name="needstoragepermission">Aplicação necessita da permissão de armazenamento para ser capaz de armazenar ficheiros de registo</string>
     <string name="request">Pedido</string>
     <string name="insulinsourcesetup">Configurar plugin Insulina</string>
@@ -1405,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem-sucedido. Por favor, verifique se o Pod está administrar ou cancelar o bólus.</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
     <string name="omnipod_read_pulse_log_short">Registo de Pulse</string>
+    <string name="comapareprofile">Comparar com o perfil atual</string>
+    <string name="nav_profilehelper">Assistente de Perfil</string>
 </resources>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.SurveyActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/profilehelper_age_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:labelFor="@+id/profilehelper_age"
+                    android:text="@string/age"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <info.nightscout.androidaps.utils.NumberPicker
+                    android:id="@+id/profilehelper_age"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/profilehelper_weigth_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:labelFor="@+id/profilehelper_weight"
+                    android:text="@string/weight_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <info.nightscout.androidaps.utils.NumberPicker
+                    android:id="@+id/profilehelper_weight"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/profilehelper_tdd_label"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:labelFor="@+id/profilehelper_weight"
+                    android:text="@string/tdd_total"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <info.nightscout.androidaps.utils.NumberPicker
+                    android:id="@+id/profilehelper_tdd"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/profilehelper_tdds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        <Button
+            android:id="@+id/profilehelper_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/comapareprofile" />
+
+
+    </LinearLayout>
+
+</ScrollView>

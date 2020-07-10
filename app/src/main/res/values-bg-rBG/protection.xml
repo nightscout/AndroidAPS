@@ -15,6 +15,8 @@
     <string name="noprotection">Няма защита</string>
     <string name="protection">Защита</string>
     <string name="master_password_missing">Главната парола не е зададена!\n\nМоля, настройте Вашата главна парола в Предпочитания (%1$s &#8594; %2$s)</string>
+    <string name="unsecure_fallback_biometric">Грешка при биометрични данни!</string>
+    <string name="unsecure_fallback_descriotion_biometric">За да бъде ефективна, биометричната защита се нуждае от главна парола.\n\nМоля, въведете главна парола!</string>
     <string name="password_set">Паролата е зададена!</string>
     <string name="password_not_set">Паролата не е зададена</string>
     <string name="password_not_changed">Паролата не е променена</string>

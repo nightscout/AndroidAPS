@@ -701,7 +701,6 @@
     <string name="permission">권한</string>
     <string name="askforpermission">권한 요청하기</string>
     <string name="needsystemwindowpermission">알림에 대한 시스템 창 권한이 필요합니다</string>
-    <string name="needlocationpermission">블루투스 스캔을 위해 위치 권한이 필요로 합니다.</string>
     <string name="needstoragepermission">로그 파일을 저장하기 위해 저장공간 권한이 필요로 합니다.</string>
     <string name="request">요청</string>
     <string name="insulinsourcesetup">인슐린 플러그인 설정하기</string>

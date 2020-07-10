@@ -39,32 +39,37 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
         val activePump: PumpInterface = activePlugin.activePump
 
         aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Date, Time and/or TimeZone changed. [action={}]", action)
-        aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Intent::{}", gson.toJson(intent))
+        try {
+            aapsLogger.debug(LTag.PUMP, "TimeDateOrTZChangeReceiver::Intent::{}", gson.toJson(intent))
+        } catch (ignored : Exception) {}
 
-        if (action == null) {
-            aapsLogger.error(LTag.PUMP,"TimeDateOrTZChangeReceiver::Action is null. Exiting.")
-        } else if (Intent.ACTION_TIMEZONE_CHANGED == action) {
-            aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::Timezone changed. Notifying pump driver.")
-            activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChange)
-        } else if (Intent.ACTION_TIME_CHANGED == action) {
-            val currentDst = calculateDST()
-            if (currentDst == isDST) {
-                aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::Time changed (manual). Notifying pump driver.")
-                activePump.timezoneOrDSTChanged(TimeChangeType.ManualTimeChange)
-            } else {
-                if (currentDst) {
-                    aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::DST started. Notifying pump driver.")
-                    activePump.timezoneOrDSTChanged(TimeChangeType.DST_Started)
-                } else {
-                    aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::DST ended. Notifying pump driver.")
-                    activePump.timezoneOrDSTChanged(TimeChangeType.DST_Ended)
-                }
+        when {
+            action == null                           -> {
+                aapsLogger.error(LTag.PUMP,"TimeDateOrTZChangeReceiver::Action is null. Exiting.")
             }
-            isDST = currentDst
-        } else {
-            aapsLogger.error(LTag.PUMP,"TimeDateOrTZChangeReceiver::Unknown action received [name={}]. Exiting.", action)
+            Intent.ACTION_TIMEZONE_CHANGED == action -> {
+                aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::Timezone changed. Notifying pump driver.")
+                activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChange)
+            }
+            Intent.ACTION_TIME_CHANGED == action     -> {
+                val currentDst = calculateDST()
+                if (currentDst == isDST) {
+                    aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::Time changed (manual). Notifying pump driver.")
+                    activePump.timezoneOrDSTChanged(TimeChangeType.ManualTimeChange)
+                } else {
+                    if (currentDst) {
+                        aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::DST started. Notifying pump driver.")
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Started)
+                    } else {
+                        aapsLogger.info(LTag.PUMP,"TimeDateOrTZChangeReceiver::DST ended. Notifying pump driver.")
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Ended)
+                    }
+                }
+                isDST = currentDst
+            }
+            else                                     -> {
+                aapsLogger.error(LTag.PUMP,"TimeDateOrTZChangeReceiver::Unknown action received [name={}]. Exiting.", action)
+            }
         }
     }
-
-
 }

@@ -23,6 +23,7 @@
     <color name="warningAlertHeaderText">#FF000000</color>
     <color name="errorAlertBackground">#FFFF5555</color>
     <color name="errorAlertHeaderText">#FF000000</color>
+    <color name="examinedProfile">#FFFF5555</color>
 
     <!--    Treatment-->
     <color name="tempbasal">#C803A9F4</color>

@@ -764,7 +764,6 @@
     <string name="permission">Uprawnienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
     <string name="needsystemwindowpermission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
-    <string name="needlocationpermission">Aplikacja wymaga dostępu do lokalizacji, aby przeprowadzić skan BT</string>
     <string name="needstoragepermission">Aplikacja wymaga dostępu do magazynu plików, aby móc przechować pliki logów</string>
     <string name="request">Żądanie</string>
     <string name="insulinsourcesetup">Skonfiguruj wtyczkę insuliny</string>

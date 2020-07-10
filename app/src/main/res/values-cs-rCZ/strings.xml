@@ -795,7 +795,7 @@
     <string name="permission">Povolení</string>
     <string name="askforpermission">Získat povolení</string>
     <string name="needsystemwindowpermission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
-    <string name="needlocationpermission">Aplikace vyžaduje povolení \"umístění\", aby mohla vyhledávat BT zařízení</string>
+    <string name="needlocationpermission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
     <string name="needstoragepermission">Aplikace vyžaduje přístup k úložišti, aby mohla ukládat logy</string>
     <string name="request">Požadavek</string>
     <string name="insulinsourcesetup">Nastavení inzulínu</string>
