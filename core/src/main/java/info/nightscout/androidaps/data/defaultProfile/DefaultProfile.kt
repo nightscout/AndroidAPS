@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.data.defaultProfile
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONArray
@@ -49,6 +50,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         profile.put("timezone", TimeZone.getDefault().getID())
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
+        profile.put("units", units)
         return Profile(injector, profile, units)
     }
 
