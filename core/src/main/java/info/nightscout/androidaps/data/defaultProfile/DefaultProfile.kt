@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.data.defaultProfile
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONArray
