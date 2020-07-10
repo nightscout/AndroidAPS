@@ -375,7 +375,12 @@ class AutotuneIob(
         private fun _NsTreatment(t: TemporaryBasal) {
             _id = t._id
             date = t.date
-            absoluteRate = Round.roundTo(t.absoluteRate, 0.001)
+            if (t.isAbsolute)
+                absoluteRate = Round.roundTo(t.absoluteRate, 0.001)
+            else {
+                val profile = profileFunction?.getProfile(date)
+                absoluteRate = profile!!.getBasal(temporaryBasal!!.date) * temporaryBasal!!.percentRate / 100 ?:0.0
+            }
             isValid = t.isValid
             isEndingEvent = t.isEndingEvent
             eventType = CareportalEvent.TEMPBASAL
@@ -384,7 +389,7 @@ class AutotuneIob(
             percentRate = t.percentRate
             isFakeExtended = t.isFakeExtended
             created_at = DateUtil.toISOString(t.date)
-            isAbsolute = t.isAbsolute
+            isAbsolute = true
         }
 
         fun toJson(): JSONObject {

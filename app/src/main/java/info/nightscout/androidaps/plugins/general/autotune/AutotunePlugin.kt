@@ -92,6 +92,7 @@ class AutotunePlugin @Inject constructor(
         autotunePrep = AutotunePrep(injector)
         autotuneCore = AutotuneCore(injector)
         autotuneIob = AutotuneIob(injector)
+        lastRunSuccess = false
         lastNbDays = "" + daysBack
         atLog("Start Autotune with $daysBack days back")
 
@@ -167,6 +168,7 @@ class AutotunePlugin @Inject constructor(
                 activePlugin.activeTreatments.doProfileSwitch(tunedProfile!!.profileStore, tunedProfile!!.profilename, 0, 100, 0, DateUtil.now())
                 rxBus.send(EventLocalProfileChanged())
             }
+            lastRunSuccess = true
             result
         } else "No Result"
     }
@@ -250,6 +252,7 @@ class AutotunePlugin @Inject constructor(
         @JvmField var lastNbDays = ""
         @JvmField var copyButtonVisibility = 0
         @JvmField var profileSwitchButtonVisibility = 0
+        @JvmField var lastRunSuccess = false
     }
 
 }
