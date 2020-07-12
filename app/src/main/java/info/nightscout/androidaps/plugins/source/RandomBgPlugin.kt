@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
 import android.os.Handler
+import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -12,6 +13,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -31,6 +33,8 @@ class RandomBgPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
+    private val virtualPumpPlugin: VirtualPumpPlugin,
+    private val buildHelper: BuildHelper,
     private val sp: SP,
     private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
@@ -43,7 +47,7 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    private val loopHandler = Handler()
+    private val loopHandler : Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
@@ -72,7 +76,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return true //isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
+        return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
     }
 
     override fun handleNewData(intent: Intent) {

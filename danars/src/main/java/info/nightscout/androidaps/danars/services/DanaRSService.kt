@@ -11,6 +11,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.comm.*
@@ -153,12 +154,17 @@ class DanaRSService : DaggerService() {
                 // initial handshake was not successful
                 // de-initialize pump
                 danaPump.reset()
-                rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
+                rxBus.send(EventDanaRNewStatus())
                 rxBus.send(EventInitializationChanged())
                 return
             }
             aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
-            if (abs(timeDiff) > 3) {
+            // phone timezone
+            val tz = DateTimeZone.getDefault()
+            val instant = DateTime.now().millis
+            val offsetInMilliseconds = tz.getOffset(instant).toLong()
+            val offset = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
+            if (abs(timeDiff) > 3 || danaPump.usingUTC && offset != danaPump.zoneOffset) {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
@@ -171,16 +177,12 @@ class DanaRSService : DaggerService() {
 
                     //de-initialize pump
                     danaPump.reset()
-                    rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
+                    rxBus.send(EventDanaRNewStatus())
                     rxBus.send(EventInitializationChanged())
                     return
                 } else {
                     if (danaPump.usingUTC) {
-                        val tz = DateTimeZone.getDefault()
-                        val instant = DateTime.now().millis
-                        val offsetInMilliseconds = tz.getOffset(instant).toLong()
-                        val hours = TimeUnit.MILLISECONDS.toHours(offsetInMilliseconds).toInt()
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), hours))
+                        sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), offset))
                     } else if (danaPump.protocol >= 6) { // can set seconds
                         sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
                     } else {
@@ -195,7 +197,7 @@ class DanaRSService : DaggerService() {
                 }
             }
             loadEvents()
-            rxBus.send(info.nightscout.androidaps.dana.events.EventDanaRNewStatus())
+            rxBus.send(EventDanaRNewStatus())
             rxBus.send(EventInitializationChanged())
             //NSUpload.uploadDeviceStatus();
             if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {

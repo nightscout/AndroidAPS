@@ -84,7 +84,7 @@
     <!--    DateUtil-->
     <string name="minago">vor %1$d Min.</string>
     <string name="hoursago">vor %1$.1f Stunde</string>
-    <string name="shorthour">Std</string>
+    <string name="shorthour">h</string>
     <string name="days">Tage</string>
     <string name="hours">Stunden</string>
     <string name="unit_second">Sekunde</string>
@@ -122,7 +122,8 @@
     <!--    Temptarget-->
     <string name="mins">%1$d Min.</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU</b> KH: <b>%5$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BZ-Test</string>
     <string name="careportal_announcement">Ankündigung</string>
@@ -162,7 +163,7 @@
     <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">\"%dg zusätzliche Kohlenhydrate innerhalb von %d Minuten erforderlich.</string>
+    <string name="carbsreq">Innerhalb der nächsten %d Minuten werden %dg zusätzliche Kohlenhydrate benötigt</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulative TDD</string>

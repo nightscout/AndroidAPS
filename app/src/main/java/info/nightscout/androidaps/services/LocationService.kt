@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.services
 
 import android.Manifest
+import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -71,19 +72,29 @@ class LocationService : DaggerService() {
         }
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        try {
+            startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: Exception) {
+            startForeground(4711, Notification())
+        }
         return Service.START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        try {
+            startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: Exception) {
+            startForeground(4711, Notification())
+        }
 
         // Get last location once until we get regular update
-        LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {
-            lastLocationDataContainer.lastLocation = it
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {
+                lastLocationDataContainer.lastLocation = it
+            }
         }
 
         initializeLocationManager()

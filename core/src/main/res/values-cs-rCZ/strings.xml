@@ -122,7 +122,6 @@
     <!--    Temptarget-->
     <string name="mins">%1$d minut</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Baz: <b>%4$.2f</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_announcement">Oznámení</string>
@@ -162,6 +161,7 @@
     <string name="waitingforpumpresult">Čekání na výsledek</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">Požadováno %d g dodatečných sacharidů během %d minut</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiky</string>
     <string name="cumulative_tdd">Kumulativní CDD</string>

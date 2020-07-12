@@ -36,6 +36,7 @@
     <string name="description_pump_mdi">Integrare cu pompă virtuală, pentru persoanele ce folosesc terapia cu pen</string>
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
     <string name="description_sensitivity_aaps">Sensibilitatea este calculată la fel ca în algoritmul Oref0, dar se poate specifica un interval de timp în trecut. Absorbția minimă de carbohidrați este calculată din parametrul echivalent, stabilit în preferințe.</string>
+    <string name="description_sensitivity_oref1">Sensibilitatea este calculată folosind datele din ultimele 8 sau 24 ore (se alege cea mai mare din ele), iar carbohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe. Plugin-ul calculează și UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensibilitatea este calculată ca o medie ponderată a deviațiilor. Deviațiile noi au o importanță mai mare. Absorbția minimă de carbohidrați este calculată în funcție de parametrul absorbție maximă de carbohidrați, stabilit în preferințe. Acest algoritm este cel mai rapid atunci când sensibilitatea la insulină este fluctuantă.</string>
     <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
     <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
@@ -73,6 +74,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Date despre masă</string>
     <string name="result">Rezultat</string>
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nu există date despre glicemie</string>
     <string name="openapsma_request_label">Solicită</string>
     <string name="glucose">Glicemie</string>
@@ -109,6 +111,7 @@
     <string name="openapsma_disabled">Modul inactiv</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="treatmentdeliveryerror">Eroare la livrarea bolusului</string>
+    <string name="overview_newtempbasal_basalpercent">Valoare bazală [%]</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -123,10 +126,12 @@
     <string name="apsmode_title">Mod APS</string>
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
+    <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
     <string name="disabledloop">Buclă inactivă</string>
     <string name="disableloop">Dezactivează bucla</string>
     <string name="enableloop">Activează bucla</string>
     <string name="openloop_newsuggestion">O nouă sugestie este disponibilă</string>
+    <string name="carbssuggestion">Sugestie carbohidrați</string>
     <string name="unsupportednsversion">Versiune incompatibilă de Nightscout</string>
     <string name="loopdisabled">BUCLĂ DEZACTIVATĂ DATORITĂ CONSTRÂNGERILOR</string>
     <string name="treatments_wizard_basaliob_label">IOB bazală</string>
@@ -143,6 +148,7 @@
     <string name="careportal_newnstreatment_percent_label">Procent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolut</string>
     <string name="careportal_newnstreatment_notes_label">Note</string>
+    <string name="event_time_label">Ora evenimentului</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_enteredby_title">Introdus de</string>
     <string name="careportal_newnstreatment_glucosetype">Tip glicemie</string>
@@ -158,10 +164,48 @@
     <string name="filenotfound">Nu am găsit fișierul</string>
     <string name="nav_export">Exportă setările</string>
     <string name="nav_import">Importă setările</string>
-    <string name="openapsma_maxbasal_title">Maximul de unități de insulină pe oră poate fi setat la</string>
+    <string name="openapsma_maxbasal_title">Valoarea maximă în U/ora a unei rate bazale temporare poate fi setată la</string>
     <string name="openapsma_maxbasal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
     <string name="openapsma_maxiob_title">Maximul de bazală IOB pe care o poate livra OpenAPS[U]</string>
     <string name="openapsma_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS\nAceastă valoare este implicit nulă (0). După câteva zile sau săptămâni, în funcție de opțiunea dumneavoastră, puteți ajusta acest număr.</string>
+    <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
+    <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
+    <string name="preferences_export_canceled">Exportarea a eșuat! Preferințele NU au fost exportate!</string>
+    <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
+    <string name="preferences_import_list_title">Selectați fișierul pentru import</string>
+    <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
+    <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
+    <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
+    <string name="check_preferences_details_btn">Explicații problemele de import…</string>
+    <string name="check_preferences_details_title">Detalii probleme de import</string>
+    <string name="check_preferences_import_btn">Importă</string>
+    <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
+    <string name="metadata_warning_different_flavour">Preferințele au fost create folosind o alta versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după import verificați și actualizați preferințele.</string>
+    <string name="metadata_warning_different_device">Preferințele au fost create pe un dispozitiv diferit. Este în regulă să le importați de pe un alt telefon, dar asigurați-vă că sunt corecte!</string>
+    <string name="metadata_warning_outdated_format">Folosiți un format neactualizat dintr-o versiune veche de AAPS care nu este securizat! Folosiți acest format în ultima instanța, doar dacă nu aveți un export în formatul curent de JSON.</string>
+    <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
+    <string name="metadata_warning_date_format">Format dată invalid!</string>
+    <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după upgrade, dar verificați după import că preferințele sunt corecte!</string>
+    <string name="metadata_label_format">Formatul fișierului</string>
+    <string name="metadata_label_created_at">Creat la</string>
+    <string name="metadata_label_aaps_version">Versiune AAPS</string>
+    <string name="metadata_label_aaps_flavour">Versiune de build</string>
+    <string name="metadata_label_device_name">Exporta numele dispozitivului pacientului</string>
+    <string name="metadata_label_device_model">Exportarea modelului dispozitivului</string>
+    <string name="metadata_label_encryption">Criptarea fișierului</string>
+    <string name="metadata_format_old">Format vechi de export</string>
+    <string name="metadata_format_new">Format nou criptat</string>
+    <string name="metadata_format_debug">Format nou pentru debug (necriptat)</string>
+    <string name="metadata_format_other">Format de export necunoscut</string>
+    <string name="prefdecrypt_settings_tampered">Fişier de setări modificat</string>
+    <string name="prefdecrypt_settings_secure">Fișierul de setări este securizat</string>
+    <string name="prefdecrypt_settings_unencrypted">Folosirea formatului nesecurizat, necriptat pentru setări</string>
+    <string name="prefdecrypt_wrong_json">Eroare format JSON, lipsește un câmp necesar (format, conținut, metadate sau securitate)</string>
+    <string name="prefdecrypt_wrong_password">Eroare la decriptare, parola dată nu poate decripta fişierul</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Suma de control a fişierului (hash) lipseşte, nu se poate verifica autenticitatea setărilor!</string>
+    <string name="prefdecrypt_issue_modified">Fişierul a fost modificat după export!</string>
+    <string name="prefdecrypt_issue_parsing">Eroare la decriptare, parsarea preferinţelor a eşuat!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Eroare la decriptare, parola furnizată este invalidă sau fişierul de setări a fost modificat! Se poate întâmpla ca fişierul importat să fi fost exportat cu o parolă master diferită.</string>
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
@@ -189,6 +233,8 @@
     <string name="smscommunicator_loopisenabled">Bucla este activată</string>
     <string name="valuelimitedto">%1$.2f este limitată la %2$.2f</string>
     <string name="valueoutofrange">Valoarea %1$s este mai mare decât limita stabilită</string>
+    <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
+    <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus de la distanță nu este disponibil. Încearcă din nou mai târziu.</string>
     <string name="smscommunicator_basalreplywithcode">Pentru a iniția bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
@@ -225,7 +271,6 @@
     <string name="primefill">Pregătire/umplere</string>
     <string name="fillwarning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
     <string name="othersettings_title">Alte</string>
-    <string name="fillbolus_title">Pregătire/umplere cu cantitățile standard de insulină.</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
     <string name="button3">Buton 3</string>
@@ -280,7 +325,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a \"3x max zilnic; 4x curent\" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
     <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20%% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
     <string name="openapsama_autosens_min_summary">Valoare implicită: 0.7\nCealaltă parte a limitelor autosens, care limitează cât de jos poate ajusta bazalele și cât de mult poate mări ISF și țintele de glicemie.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens ajustează țintele la</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valoare implicită: adevărat\nAceasta se folosește pentru a permite autosens să ajusteze țintele de glicemie, pe lângă modificările asupra ISF și bazalelor.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valoare implicită: 2\nAmânarea bolusului este aplicată după ce ați făcut un bolus de masă, astfel încât bucla să nu reacționeze cu ținte bazale temporare scăzute atunci când tocmai ați mâncat. Exemplul de față și valoarea implicită sunt 2; astfel o durată de acțiune a insulinei (DIA) de 3 ore duce la o eliminare treptată a întârzierii setării bazalelor temporare după 1.5 ore (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valoarea implicită: 3.0 (AMA) sau 8.0 (SMB). Aceasta este o setare pentru impactul implicit al carbohidraţilor pe 5 minute. Valoarea implicită este 3mg/dl la 5min. Aceasta influenţează rapiditatea cu care se scade COB şi modul în care se ia în calcul absorbţia carbohidraţilor în calcularea valorilor estimate ale glicemiei, atunci când glicemia este în scădere mai mare decât se aştepta sau nu creşte atât de repede pe cât se aştepta.</string>
@@ -325,6 +369,7 @@
     <string name="adult">Adult</string>
     <string name="resistantadult">Adult rezistent la insulină</string>
     <string name="patientage_summary">Vă rog să selectați vârsta pacientului în vederea stabilirii valorilor maxime admise de siguranță</string>
+    <string name="patient_name">Numele pacientului</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s necesită excluderea din lista de optimizare a bateriei pentru o funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
@@ -677,7 +722,6 @@
     <string name="startobjective">Începeți primul obiectiv</string>
     <string name="permission">Permisiune</string>
     <string name="askforpermission">Solicitați permisiunea</string>
-    <string name="needlocationpermission">Aplicația necesită permisiune de localizare pentru scanarea prin BT</string>
     <string name="needstoragepermission">Aplicația necesită permisiune de acces la mediul de stocare pentru a putea înregistra jurnalele</string>
     <string name="request">Cerință</string>
     <string name="insulinsourcesetup">Configurați plugin insulină</string>
@@ -895,6 +939,8 @@
     <string name="longitude_short">Long:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="name_short">Nume:</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="location_mode">Când </string>
     <string name="lastboluslabel">Ultimul bolus</string>
     <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
@@ -1055,15 +1101,33 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Asistent bolusare</string>
     <string name="unit_minute_short">min</string>
+    <string name="unitsnosemicolon">Unități</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Pornit</string>
+    <string name="common_off">Oprit</string>
+    <string name="deletecurrentprofile">Ştergeţi profilul curent?</string>
+    <string name="age">Vârstă:</string>
+    <string name="weight_label">Greutate:</string>
+    <string name="randombg_short">Glicemie</string>
+    <string name="tools">Instrumente</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
+    <string name="omnipod_pod_mgmt">Pod Mgmt</string>
+    <string name="omnipod_reservoir_left">%1$.2f U rămase</string>
+    <string name="omnipod_reservoir_over50">Peste 50 U</string>
     <!-- Omnipod - Dialogs -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_init_pod">Inițializare Pod</string>
+    <string name="omnipod_cmd_deactivate_pod">Dezactivare Pod</string>
+    <string name="omnipod_cmd_reset_pod">Resetare Pod</string>
+    <string name="omnipod_cmd_pod_history">Istoric Pod</string>
+    <string name="omnipod_cmd_configure_alerts">Configurare alerte</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Confirmare alerte</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Amorsare</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
 </resources>

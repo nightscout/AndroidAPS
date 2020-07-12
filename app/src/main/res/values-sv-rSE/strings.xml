@@ -165,7 +165,7 @@ Eversense-appen.</string>
     <string name="filenotfound">Hittade inte filen</string>
     <string name="nav_export">Exportera inställningar</string>
     <string name="nav_import">Importera inställningar</string>
-    <string name="openapsma_maxbasal_title">Max enheter per timme</string>
+    <string name="openapsma_maxbasal_title">Max enheter per timme som en temp basal kan sättas till</string>
     <string name="openapsma_maxbasal_summary">Detta värde kallas max basal inom OpenAPS</string>
     <string name="openapsma_maxiob_title">Maximal basal IOB som OpenAPS kan ge [E]</string>
     <string name="openapsma_maxiob_summary">Detta värde kallas Max IOB i OpenAPS. Det är ställt till noll från start. Efter flera dagar till veckor, beroende på hur du känner, kan du välja att justera denna.</string>
@@ -301,7 +301,7 @@ Eversense-appen.</string>
     <string name="primefill">Förfyllning</string>
     <string name="fillwarning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
     <string name="othersettings_title">Övrigt</string>
-    <string name="fillbolus_title">Standardvärden för förfyllning av slang och kanyl.</string>
+    <string name="fillbolus_title">Standardvärden för påfyllning/förfyllning </string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
     <string name="button3">Knapp 3</string>
@@ -796,7 +796,7 @@ Eversense-appen.</string>
     <string name="permission">Behörighet</string>
     <string name="askforpermission">Be om behörighet</string>
     <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
-    <string name="needlocationpermission">Appen behöver behörighet att använda Platsinfo för att kunna söka efter Bluetooth-enheter</string>
+    <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
     <string name="needstoragepermission">Appen behöver behörighet att använda Lagring för att kunna spara loggfiler</string>
     <string name="request">Begäran</string>
     <string name="insulinsourcesetup">Konfigurera insticksprogram för insulin</string>
@@ -1230,6 +1230,7 @@ Eversense-appen.</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
     <string name="reorder_label">Ändra ordning</string>
     <string name="age">Ålder:</string>
+    <string name="weight_label">Vikt:</string>
     <string name="id">ID:</string>
     <string name="submit">Spara</string>
     <string name="mostcommonprofile">Den vanligaste profilen:</string>
@@ -1405,4 +1406,6 @@ Eversense-appen.</string>
     <string name="omnipod_bolus_failed_uncertain">Det går inte att verifiera om bolusen är slutförd. Verifiera att din pod leverarar bolus eller avsluta bolus.</string>
     <string name="omnipod_rl_stats">RL-statistik</string>
     <string name="omnipod_read_pulse_log_short">Pulslogg</string>
+    <string name="comapareprofile">Jämför med aktuell profil</string>
+    <string name="nav_profilehelper">Profilguide</string>
 </resources>

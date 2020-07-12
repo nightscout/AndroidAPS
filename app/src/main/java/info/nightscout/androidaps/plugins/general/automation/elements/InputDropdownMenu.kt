@@ -38,7 +38,7 @@ class InputDropdownMenu(injector: HasAndroidInjector) : Element(injector) {
         ).also { it.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4)) }
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 setValue(itemList[position].toString())
             }
 

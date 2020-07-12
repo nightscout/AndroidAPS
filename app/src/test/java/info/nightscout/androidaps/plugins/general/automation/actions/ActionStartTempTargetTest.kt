@@ -24,7 +24,6 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        PowerMockito.mockStatic(MainApp::class.java)
         `when`(resourceHelper.gs(R.string.starttemptarget)).thenReturn("Start temp target")
 
         sut = ActionStartTempTarget(injector)
@@ -42,7 +41,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(R.drawable.icon_cp_cgm_target, sut.icon())
+        Assert.assertEquals(R.drawable.ic_cp_cgm_target, sut.icon())
     }
 
     @Test fun doActionTest() {

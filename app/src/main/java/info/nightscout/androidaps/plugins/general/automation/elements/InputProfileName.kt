@@ -36,7 +36,7 @@ class InputProfileName(injector: HasAndroidInjector) : Element(injector) {
         spinnerParams.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
         spinner.layoutParams = spinnerParams
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 value = profileList[position].toString()
             }
 

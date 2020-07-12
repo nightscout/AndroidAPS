@@ -93,4 +93,9 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @NotNull @Override public List<TDD> getTDDsForLastXDays(int days) {
         return MainApp.getDbHelper().getTDDsForLastXDays(days);
     }
+
+    @NotNull @Override public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
+        return MainApp.getDbHelper().getProfileSwitchData(from, ascending);
+    }
+
 }

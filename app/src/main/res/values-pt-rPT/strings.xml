@@ -164,7 +164,7 @@
     <string name="filenotfound">Ficheiro não encontrado</string>
     <string name="nav_export">Exportar configurações</string>
     <string name="nav_import">Importar configurações</string>
-    <string name="openapsma_maxbasal_title">Max U/hr em que uma Temp Basal pode ser definida</string>
+    <string name="openapsma_maxbasal_title">Max U/h em que uma Temp Basal pode ser definida</string>
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode administrar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode administrar de uma vez.</string>
@@ -300,7 +300,7 @@
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
     <string name="othersettings_title">Outro</string>
-    <string name="fillbolus_title">Valor Padrão Insulina Purgar/Preencher.</string>
+    <string name="fillbolus_title">Valores Padrão Purgar/Preencher Insulina</string>
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
     <string name="button3">Botão 3</string>
@@ -359,7 +359,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
     <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de ISF e valor alvo de glucose no sangue (BG).</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens também ajusta os alvos</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens ajusta os alvos, também</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de ISF e basais.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de acção da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
@@ -575,6 +575,7 @@
     <string name="uamsmbmaxminutes">UAM SMB máx minutos</string>
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
     <string name="carbsReqThreshold">Mínimo De Hidratos Necessários Para Sugestão</string>
+    <string name="carbsReqThreshold_summary">Mínimo de gramas de hidratos de carbono ara exibir um alerta de sugestão de hidratos. As sugestões de hidratos abaixo deste número não activarão uma notificação.</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glic ClienteNS</string>
@@ -662,7 +663,9 @@
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="ns_create_announcements_from_errors_title">Criar anúncios dos erros</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir dos alertas de hidratos necessários</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios Nightscout para alertas de hidratos necessários</string>
     <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>
     <string name="wear_predictions_title">Previsão</string>
     <string name="data_choices">Escolha de Dados</string>
@@ -792,7 +795,7 @@
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
-    <string name="needlocationpermission">Aplicação requer permissão de localização para pesquisa BT</string>
+    <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
     <string name="needstoragepermission">Aplicação necessita da permissão de armazenamento para ser capaz de armazenar ficheiros de registo</string>
     <string name="request">Pedido</string>
     <string name="insulinsourcesetup">Configurar plugin Insulina</string>
@@ -1226,6 +1229,7 @@
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
     <string name="reorder_label">Reordenar</string>
     <string name="age">Idade:</string>
+    <string name="weight_label">Peso:</string>
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil mais comum:</string>
@@ -1401,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem-sucedido. Por favor, verifique se o Pod está administrar ou cancelar o bólus.</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
     <string name="omnipod_read_pulse_log_short">Registo de Pulse</string>
+    <string name="comapareprofile">Comparar com o perfil atual</string>
+    <string name="nav_profilehelper">Assistente de Perfil</string>
 </resources>

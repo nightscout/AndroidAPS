@@ -156,7 +156,7 @@
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="missing_carbs">Fehlend %1$dg</string>
+    <string name="missing_carbs">Fehlend %1$d g</string>
     <string name="exported">Einstellungen exportiert</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="import_from">Importiere Einstellungen von</string>
@@ -164,7 +164,7 @@
     <string name="filenotfound">Datei nicht gefunden</string>
     <string name="nav_export">Einstellungen exportieren</string>
     <string name="nav_import">Einstellungen importieren</string>
-    <string name="openapsma_maxbasal_title">Max. IE/h, die als TBR gesetzt werden können</string>
+    <string name="openapsma_maxbasal_title">Maximale IE/h, die als TBR gesetzt werden können</string>
     <string name="openapsma_maxbasal_summary">Dieser Wert wird \"max basal\" in OpenAPS genannt.</string>
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von Nicht-Bolus-IOB, die OpenAPS abgeben kann.</string>
@@ -271,8 +271,8 @@
     <string name="smscommunicator_loopdisablereplywithcode">Um den Loop zu deaktivieren, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_tempbasalset">TBR mit %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
     <string name="smscommunicator_extendedset">Der erweiterte Bolus %1$.2f IE/h für %2$d Minuten wurde erfolgreich gestartet</string>
-    <string name="smscommunicator_carbsset">%1$dg Kohlenhydrate erfolgreich erfasst.</string>
-    <string name="smscommunicator_carbsfailed">Eingabe von %1$dg Kohlenhydraten ist fehlgeschlagen.</string>
+    <string name="smscommunicator_carbsset">%1$d g Kohlenhydrate erfolgreich erfasst.</string>
+    <string name="smscommunicator_carbsfailed">Eingabe von %1$d g Kohlenhydraten ist fehlgeschlagen.</string>
     <string name="smscommunicator_tempbasalset_percent">Die temporäre Basalrate wurde erfolgreich für %2$d Minuten auf %1$d%% gesetzt.</string>
     <string name="smscommunicator_tempbasalfailed">Das Starten der TBR ist fehlgeschlagen.</string>
     <string name="smscommunicator_extendedfailed">Die Abgabe des erweiterten Bolus ist fehlgeschlagen.</string>
@@ -355,8 +355,8 @@
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
     <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle Signalrauschen haben.</string>
     <string name="profile">Profil</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt das maximale Basal-IOB auf die dreifache Menge (im Standardfall) deiner größten Basalrate. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt das Basal-IOB auf die (im Standardfall) vierfache Menge der aktuellen Basalrate. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
     <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie stark Autosens Basalraten erhöhen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
     <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens passt Zielwerte ebenfalls an</string>
@@ -655,10 +655,10 @@
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
     <string name="overview_cgm">CGM</string>
-    <string name="ignore5m">Ignoriere für 5 Min.</string>
-    <string name="ignore15m">Ignoriere für 15 Min.</string>
-    <string name="ignore30m">Ignoriere für 30 Min.</string>
-    <string name="required">Anfrage</string>
+    <string name="ignore5m">5 Min. ignorieren</string>
+    <string name="ignore15m">15 Min. ignorieren</string>
+    <string name="ignore30m">30 Min. ignorieren</string>
+    <string name="required">angef.</string>
     <string name="nav_historybrowser">Historie</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
@@ -795,7 +795,7 @@
     <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
     <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
-    <string name="needlocationpermission">AndroidAPS benötigt die Standortfreigabe für den BT-Scan.</string>
+    <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
     <string name="needstoragepermission">AndroidAPS benötigt Zugriff auf den Speicher, um Log-Dateien speichern zu können.</string>
     <string name="request">Anfordern</string>
     <string name="insulinsourcesetup">Insulin-Plugin konfigurieren</string>
@@ -1207,7 +1207,7 @@ Unerwartetes Verhalten.</string>
     <string name="selected_profile">Ausgewählt:</string>
     <string name="unitsnosemicolon">Einheiten</string>
     <string name="doyouwantswitchprofile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
-    <string name="format_carbs">%1$dg</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
@@ -1407,4 +1407,5 @@ Mache das nur, wenn AAPS nicht mehr mit dem Pod kommunizieren kann. Wenn dies no
     <string name="omnipod_bolus_failed_uncertain">Erfolgreiche Bolusabgabe konnte nicht sicher ermittelt werden. Stelle sicher, dass der Pod Insulin abgibt oder brich den Bolus ab.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="nav_profilehelper">Profil-Helfer</string>
 </resources>

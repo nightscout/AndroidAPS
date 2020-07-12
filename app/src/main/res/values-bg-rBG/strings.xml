@@ -131,6 +131,7 @@
     <string name="disableloop">Изключи Loop</string>
     <string name="enableloop">Включи Loop</string>
     <string name="openloop_newsuggestion">Има ново предложение</string>
+    <string name="carbssuggestion">Предложение</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
@@ -163,7 +164,7 @@
     <string name="filenotfound">Файлът не е намерен</string>
     <string name="nav_export">Експорт настройки</string>
     <string name="nav_import">Импорт настройки</string>
-    <string name="openapsma_maxbasal_title">Максимално позволен временен базал Е/ч</string>
+    <string name="openapsma_maxbasal_title">Максимален временен базал Е/ч</string>
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="openapsma_maxiob_title">Максимален IOB</string>
     <string name="openapsma_maxiob_summary">Този параметър се нарича максимален IOB в OpenAPS и подразбиране е 0. След няколко дни или седмици можете да го увеличите.</string>
@@ -195,7 +196,7 @@
     <string name="metadata_label_encryption">Криптиране</string>
     <string name="metadata_format_old">Стар формат</string>
     <string name="metadata_format_new">Нов формат</string>
-    <string name="metadata_format_debug">Нов формат (некриптирани)</string>
+    <string name="metadata_format_debug">Нов формат (незащитен)</string>
     <string name="metadata_format_other">Непознат формат</string>
     <string name="prefdecrypt_settings_tampered">Файлът с настройки е преправян</string>
     <string name="prefdecrypt_settings_secure">Файлът с настройки е сигурен</string>
@@ -229,8 +230,8 @@
     <string name="smscommunicator_stoppedsms">Отдалечен SMS контрол е изключен. Можете да го включите от AndroidAPS телефона.</string>
     <string name="smscommunicator_calibrationreplywithcode">За да изпратите калибрация %1$.2f отговорете с код %2$s</string>
     <string name="smscommunicator_bolusfailed">Болус отказан</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Минимален брой минути, в които трябва да мине между един отдалечен болус и следващия</string>
-    <string name="smscommunicator_remotebolusmindistance">Колко най-малко минути трябва да минат два болуса</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Минимално време в минути, което трябва да е изминало след отдалечен болус, преди да може да бъде доставен следващият</string>
+    <string name="smscommunicator_remotebolusmindistance">Колко най-малко минути трябва да минат между доставката на два болуса</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">За вашата сигурност, променете тази настройка, трябва да добавите най-малко 2 телефонни номера.</string>
     <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="bolusrequested">Ще стартира %1$.2fЕ болус</string>
@@ -299,7 +300,7 @@
     <string name="primefill">Пълнене на сет</string>
     <string name="fillwarning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
     <string name="othersettings_title">Други</string>
-    <string name="fillbolus_title">Fill/Prime количества инсулин по подразбиране.</string>
+    <string name="fillbolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>
     <string name="button3">Бутон 3</string>
@@ -450,7 +451,7 @@
     <string name="statuslights_bage_warning">Аларма при възраст на батерия над [часа]</string>
     <string name="statuslights_bage_critical">Праг за критична възраст на батерията над [часа]</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
-    <string name="statuslights_res_critical">Критично ниво на останал инсулин в резервоар [Е]</string>
+    <string name="statuslights_res_critical">Предупреждение за критично ниво на останал инсулин в резервоар [Е]</string>
     <string name="statuslights_bat_warning">Аларма при заряд на батерия под [%]</string>
     <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
     <string name="prediction_shortname">Предв</string>
@@ -512,7 +513,7 @@
     <string name="mdtp_cancel">Откажи</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
-    <string name="ns_localbroadcasts">Включете излъчване към други приложения (като xDrip). Не включвайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
+    <string name="ns_localbroadcasts">Активирайте предаване на данни към други приложения (като xDrip). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="careportal_activity_label">АКТИВНОСТ И ОБРАТНА ВРЪЗКА</string>
     <string name="careportal_carbsandbolus_label">ХРАНА И БОЛУС</string>
@@ -560,6 +561,7 @@
     <string name="enable_missed_bg_readings_alert">Аларма при липса на данни за КЗ</string>
     <string name="enable_pump_unreachable_alert">Аларма при недостъпна помпа</string>
     <string name="pump_unreachable_threshold">Лимит за недостъпна помпа [мин]</string>
+    <string name="enable_carbs_req_alert">Аларма ако трябват въглехидрати</string>
     <string name="urgent_alarm">Спешна аларма</string>
     <string name="info">ИНФО</string>
     <string name="eversense">Eversense приложение(модифицирано)</string>
@@ -568,10 +570,12 @@
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
     <string name="smbinterval_summary">Интервал между SMB в минути</string>
-    <string name="smbmaxminutes">Максимум минути СМБ</string>
+    <string name="smbmaxminutes">Максимум минути SMB</string>
     <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
     <string name="uamsmbmaxminutes">Максимум минути за отчитане на необявени хранения UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
+    <string name="carbsReqThreshold">Минимум въглехидрати, необходими за аларма</string>
+    <string name="carbsReqThreshold_summary">Грама въглехидрати минимум, за да се покаже аларма. Нужни въглехидрати под това число няма да доведат до уведомяване.</string>
     <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
     <string name="nsclientbg">КЗ от NS</string>
@@ -651,11 +655,17 @@
     <string name="insulin_increment_button_message">Количество инсулин за добавяне при натискане на бутона</string>
     <string name="error_starting_cgm">Не може да се стартира CGM приложението. Уверете се, че е инсталирано.</string>
     <string name="overview_cgm">CGM</string>
+    <string name="ignore5m">Игнориране за 5 мин</string>
+    <string name="ignore15m">Игнориране за 15 мин</string>
+    <string name="ignore30m">Игнориране за 30 мин</string>
+    <string name="required">нужн</string>
     <string name="nav_historybrowser">История</string>
     <string name="wear_notifysmb_title">Уведомяване при SMB</string>
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
     <string name="ns_create_announcements_from_errors_title">Създаване на известие при грешки</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Създаване на известия при предупреждения за необходими въглехидрати</string>
     <string name="ns_create_announcements_from_errors_summary">Създаване на Nightscout известие при грешки и локални аларми (също видими в Careportal - Treatments)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Създаване на Nightscout известия при предупреждения за необходими въглехидрати</string>
     <string name="wear_predictions_summary">Показвай прогнозините КЗ на часовника.</string>
     <string name="wear_predictions_title">Прогнозни КЗ</string>
     <string name="data_choices">Избор на данни</string>
@@ -785,7 +795,7 @@
     <string name="permission">Разрешение</string>
     <string name="askforpermission">Питане за разрешение</string>
     <string name="needsystemwindowpermission">ААПС изисква разрешение за да може да Ви уведомява</string>
-    <string name="needlocationpermission">Приложението се нуждае от достъп до вашето местоположение за да активира BT сканиране</string>
+    <string name="needlocationpermission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
     <string name="needstoragepermission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове</string>
     <string name="request">Искане</string>
     <string name="insulinsourcesetup">Конфигуриране на модула за Инсулин</string>
@@ -1207,8 +1217,8 @@
     <string name="setupwizard_units_prompt">Изберете единиците, в които искате да работите</string>
     <string name="ns_ploadlocalprofile">Качване на локални промени в НС профила</string>
     <string name="dia_short">DIA</string>
-    <string name="ic_short">IC (Инсулин/въглехидр.):</string>
-    <string name="isf_short">ISF (Инс.чувствителност)</string>
+    <string name="ic_short">И / Въгл</string>
+    <string name="isf_short">Чувств</string>
     <string name="target_short">Цел</string>
     <string name="clone_label">Клонирай</string>
     <string name="saveorresetchangesfirst">Първо запазете или се откажете от промените</string>
@@ -1219,6 +1229,7 @@
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
     <string name="reorder_label">Подреди</string>
     <string name="age">Възраст:</string>
+    <string name="weight_label">Тегло:</string>
     <string name="id">Номер:</string>
     <string name="submit">Изпрати</string>
     <string name="mostcommonprofile">Най-често използван профил:</string>
@@ -1394,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Не може да се провери статус на болус. Моля, уверете се, че вашият под е стартирал болус или го отменете.</string>
     <string name="omnipod_rl_stats">Статистика на RL</string>
     <string name="omnipod_read_pulse_log_short">Pulse лог</string>
+    <string name="comapareprofile">Сравни с текущия профил</string>
+    <string name="nav_profilehelper">Профил съветник</string>
 </resources>

@@ -83,13 +83,13 @@ class CareDialog : DialogFragmentWithDate() {
         }
 
         actions_care_icon.setImageResource(when (options) {
-            EventType.BGCHECK        -> R.drawable.icon_cp_bgcheck
-            EventType.SENSOR_INSERT  -> R.drawable.icon_cp_cgm_insert
-            EventType.BATTERY_CHANGE -> R.drawable.icon_cp_pump_battery
-            EventType.NOTE           -> R.drawable.icon_cp_note
-            EventType.EXERCISE       -> R.drawable.icon_cp_exercise
-            EventType.QUESTION       -> R.drawable.icon_cp_question
-            EventType.ANNOUNCEMENT   -> R.drawable.icon_cp_announcement
+            EventType.BGCHECK        -> R.drawable.ic_cp_bgcheck
+            EventType.SENSOR_INSERT  -> R.drawable.ic_cp_cgm_insert
+            EventType.BATTERY_CHANGE -> R.drawable.ic_cp_pump_battery
+            EventType.NOTE           -> R.drawable.ic_cp_note
+            EventType.EXERCISE       -> R.drawable.ic_cp_exercise
+            EventType.QUESTION       -> R.drawable.ic_cp_question
+            EventType.ANNOUNCEMENT   -> R.drawable.ic_cp_announcement
         })
         actions_care_title.text = resourceHelper.gs(when (options) {
             EventType.BGCHECK        -> R.string.careportal_bgcheck

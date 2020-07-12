@@ -58,8 +58,8 @@ dependencies {
     //Logger
     implementation 'org.slf4j:slf4j-api:1.7.30'
     //Fabric
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.2'
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
 
     //RxBus
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"

@@ -164,7 +164,7 @@
     <string name="filenotfound">файл не найден</string>
     <string name="nav_export">экспорт настроек</string>
     <string name="nav_import">импорт настроек</string>
-    <string name="openapsma_maxbasal_title">макс разрешенный врем базал Е/ч</string>
+    <string name="openapsma_maxbasal_title">Максимальное значение ед./ч для скорости временного базала</string>
     <string name="openapsma_maxbasal_summary">в контексте OpenAPS называется макс базал</string>
     <string name="openapsma_maxiob_title">макс базал активн инс подаваемый с OpenAPS (ед)</string>
     <string name="openapsma_maxiob_summary">Эта величина называется Max IOB (макс активн инс) в OpenAPS\n. Это макс кол-во инсулина в ед. [U] которое APS может подать единовременно.</string>
@@ -300,7 +300,7 @@
     <string name="primefill">прайм/заполнение</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
     <string name="othersettings_title">другое</string>
-    <string name="fillbolus_title">заполнить стандартное количество инсулина</string>
+    <string name="fillbolus_title">Заполнить стандартное количество инсулина</string>
     <string name="button1">кнопка 1</string>
     <string name="button2">кнопка 2</string>
     <string name="button3">кнопка 3</string>
@@ -797,7 +797,7 @@ Context | Edit Context</string>
     <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="needsystemwindowpermission">Приложению требуется разрешение системного окна для уведомлений</string>
-    <string name="needlocationpermission">Приложение нуждается в разрешении на доступ к определению местоположения для сканирования bluetooth</string>
+    <string name="needlocationpermission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
     <string name="needstoragepermission">Приложение нуждается в разрешении доступа к хранению данных для хранения лог-файлов</string>
     <string name="request">Запрос</string>
     <string name="insulinsourcesetup">Настроить плагин инсулина</string>
@@ -1231,6 +1231,7 @@ Context | Edit Context</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
     <string name="reorder_label">Повторный заказ</string>
     <string name="age">Возраст:</string>
+    <string name="weight_label">Вес:</string>
     <string name="id">Идентификатор:</string>
     <string name="submit">Отправить</string>
     <string name="mostcommonprofile">Наиболее часто применяемый профиль:</string>

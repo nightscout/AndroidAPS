@@ -158,7 +158,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private val secondaryGraphs = ArrayList<GraphView>()
     private val secondaryGraphsLabel = ArrayList<TextView>()
 
-    private lateinit var carbAnimation: AnimationDrawable
+    private var carbAnimation: AnimationDrawable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -190,9 +190,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
         overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
-        carbAnimation = overview_carbs_icon.background as AnimationDrawable
-        carbAnimation.setEnterFadeDuration(1200)
-        carbAnimation.setExitFadeDuration(1200)
+        carbAnimation = overview_carbs_icon?.background as AnimationDrawable?
+        carbAnimation?.setEnterFadeDuration(1200)
+        carbAnimation?.setExitFadeDuration(1200)
 
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
@@ -572,9 +572,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
-                overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_delta?.text = "${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
                 overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\n${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 overview_deltashort?.text = "---"
@@ -600,49 +600,51 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_apsmode?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_superbolus)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_disconnected)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_paused)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_lgs)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_closed)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
                     overview_apsmode_text?.text = ""
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_open)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
                     overview_apsmode_text?.text = ""
                 }
 
                 else                                                                    -> {
-                    overview_apsmode.setImageResource(R.drawable.ic_loop_disabled)
+                    overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
                     overview_apsmode_text?.text = ""
                 }
             }
         } else {
+            overview_apsmode?.visibility = View.GONE
             overview_apsmode_text?.visibility = View.GONE
         }
         val lastRun = loopPlugin.lastRun
+        val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
@@ -654,7 +656,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
-            if (targetUsed != 0.0 && profile.targetMgdl != targetUsed) {
+            if (targetUsed != 0.0 && abs(profile.targetMgdl-targetUsed) > 0.01) {
+                aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 overview_temptarget?.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
@@ -681,9 +684,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
         if (activeTemp != null)
-            overview_basebasal_icon.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.ic_cp_basal_tbr_high else R.drawable.ic_cp_basal_tbr_low)
+            overview_basebasal_icon?.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.ic_cp_basal_tbr_high else R.drawable.ic_cp_basal_tbr_low)
         else
-            overview_basebasal_icon.setImageResource(R.drawable.ic_cp_basal_no_tbr)
+            overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -748,18 +751,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         if (config.APS && lastRun?.constraintsProcessed != null) {
             if (lastRun.constraintsProcessed!!.carbsReq > 0) {
-                overview_cob?.text = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
-                if (!carbAnimation.isRunning)
-                    carbAnimation.start()
+                //only display carbsreq when carbs havnt been entered recently
+                if (treatmentsPlugin.lastCarbTime < lastRun.lastAPSRun) {
+                    cobText = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
+                }
+                overview_cob?.text = cobText
+                if (carbAnimation?.isRunning == false)
+                    carbAnimation?.start()
             } else {
                 overview_cob?.text = cobText
-                if (carbAnimation.isRunning)
-                    carbAnimation.stop()
-                carbAnimation.selectDrawable(0);
+                carbAnimation?.stop()
+                carbAnimation?.selectDrawable(0)
             }
-        }
-
-        val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
+        } else overview_cob?.text = cobText
 
         // pump status from ns
         overview_pump?.text = nsDeviceStatus.pumpStatus
@@ -775,9 +779,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Sensitivity
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
-            overview_sensitivity_icon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
+            overview_sensitivity_icon?.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
         } else {
-            overview_sensitivity_icon.setImageResource(R.drawable.ic_x_swap_vert)
+            overview_sensitivity_icon?.setImageResource(R.drawable.ic_x_swap_vert)
         }
 
         overview_sensitivity?.text =

@@ -53,6 +53,7 @@ public class MainApp extends DaggerApplication {
     @Inject VersionCheckerUtils versionCheckersUtils;
     @Inject SP sp;
     @Inject NSUpload nsUpload;
+    @Inject Config config;
 
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
@@ -103,6 +104,13 @@ public class MainApp extends DaggerApplication {
 
 
     private void doMigrations() {
+        // set values for different builds
+        if (!sp.contains(R.string.key_ns_alarms))
+            sp.putBoolean(R.string.key_ns_alarms, config.getNSCLIENT());
+        if (!sp.contains(R.string.key_ns_announcements))
+            sp.putBoolean(R.string.key_ns_announcements, config.getNSCLIENT());
+        if (!sp.contains(R.string.key_language))
+            sp.putString(R.string.key_language, "default");
     }
 
     @Override

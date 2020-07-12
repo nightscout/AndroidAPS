@@ -29,6 +29,7 @@
     <string name="batterydischarged">Pomp Batterij Leeg</string>
     <string name="occlusion">Afsluiting</string>
     <string name="emptyreservoir">Reservoir leeg</string>
+    <string name="checkshaft">Controleer aandrijfstang</string>
     <string name="basalmax">Max basaal</string>
     <string name="dailymax">Max per dag</string>
     <string name="bloodsugarmeasurementalert">Bloed glucose meting alarm</string>
@@ -62,7 +63,7 @@
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="danar_history_errors">Storing</string>
     <string name="danar_history_glucose">Glucose</string>
-    <string name="danar_history_refill">Reservoirvullen</string>
+    <string name="danar_history_refill">Reservoir vullen</string>
     <string name="danar_history_syspend">Onderbreken</string>
     <string name="danar_history_prime">Vullen</string>
     <string name="danar_useroptions">Gebruikersopties</string>
