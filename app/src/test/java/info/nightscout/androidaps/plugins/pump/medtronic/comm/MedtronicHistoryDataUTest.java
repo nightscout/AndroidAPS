@@ -1,18 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
-import android.util.Log;
-
-import org.junit.Before;
-
-import java.util.List;
-
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
-
-import static org.mockito.Mockito.when;
 //import uk.org.lidalia.slf4jtest.TestLogger;
 //import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 

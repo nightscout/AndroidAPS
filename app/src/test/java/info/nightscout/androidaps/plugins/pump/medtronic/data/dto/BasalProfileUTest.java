@@ -1,20 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
 
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.T;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Created by andy on 6/16/18.

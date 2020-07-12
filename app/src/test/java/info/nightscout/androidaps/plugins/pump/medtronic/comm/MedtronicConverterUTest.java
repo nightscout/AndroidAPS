@@ -1,15 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
-import java.util.Map;
-
 import org.junit.Ignore;
-import org.junit.Test;
-
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
  * Created by andy on 1/30/19.

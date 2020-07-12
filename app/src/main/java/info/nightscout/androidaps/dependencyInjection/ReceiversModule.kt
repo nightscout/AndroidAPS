@@ -16,9 +16,9 @@ abstract class ReceiversModule {
     @ContributesAndroidInjector abstract fun contributesChargingStateReceiver(): ChargingStateReceiver
     @ContributesAndroidInjector abstract fun contributesDataReceiver(): DataReceiver
     @ContributesAndroidInjector abstract fun contributesKeepAliveReceiver(): KeepAliveReceiver
-    @ContributesAndroidInjector abstract fun contributesRileyLinkBluetoothStateReceiver(): RileyLinkBluetoothStateReceiver
+    @ContributesAndroidInjector abstract fun contributesRileyLinkBluetoothStateReceiver(): info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
     @ContributesAndroidInjector abstract fun contributesSmsReceiver(): SmsReceiver
     @ContributesAndroidInjector abstract fun contributesTimeDateOrTZChangeReceiver(): TimeDateOrTZChangeReceiver
     @ContributesAndroidInjector abstract fun contributesCarbSuggestionReceiver(): CarbSuggestionReceiver
-    @ContributesAndroidInjector abstract fun contributesRileyLinkBroadcastReceiver(): RileyLinkBroadcastReceiver
+    @ContributesAndroidInjector abstract fun contributesRileyLinkBroadcastReceiver(): info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
 }

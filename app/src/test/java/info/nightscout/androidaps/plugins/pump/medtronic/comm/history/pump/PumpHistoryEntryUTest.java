@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import java.util.Date;
 
