@@ -331,15 +331,18 @@
     <color name="bottomBarBackgroundLightBlue">#039be5</color>
 
     <!-- CYAN Theme -->
-    <color name="primaryColorCyan">#00acc1</color>
+    <color name="primaryColorCyan">#D900acc1</color>
     <color name="primaryLightColorCyan">#5ddef4</color>
     <color name="primaryDarkColorCyan">#007c91</color>
+    <color name="primaryDarkColorVariantCyan">#0090A5</color>
     <color name="secondaryColorCyan">#f50057</color>
     <color name="secondaryLightColorCyan">#ff5983</color>
     <color name="secondaryDarkColorCyan">#bb002f</color>
     <color name="primaryTextColorCyan">#000000</color>
     <color name="secondaryTextColorCyan">#000000</color>
     <color name="overviewPillColorCyan">#00acc1</color>
+    <color name="PillColorCyanStart">#007c91</color>
+    <color name="PillColorCyanEnd">#00acc1</color>
     <color name="colorOnPrimaryCyan">#5ddef4</color>
     <color name="bottomBarBackgroundCyan">#00acc1</color>
 

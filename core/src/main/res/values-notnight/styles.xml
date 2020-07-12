@@ -193,7 +193,7 @@
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorLightBlue</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
-        <item name="iconColorToolbar">@color/white</item>
+        <item name="iconColorToolbar">@color/sphere_plastic_grey</item>
         <item name="iconColorbottomAppbar">@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
@@ -202,6 +202,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorCyan</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorCyan</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColorCyan</item>
         <item name="colorAccent">@color/secondaryColorCyan</item>
         <item name="overviewPillColor">@color/overviewPillColorCyan</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>

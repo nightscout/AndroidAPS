@@ -16,6 +16,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
     var sixToEleven: TreeMap<Double, Array<Double>> = TreeMap()
     var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
     var eighteenToTwentyfor: TreeMap<Double, Array<Double>> = TreeMap()
+    var tdd = 0;
 
     fun profile(age: Double, tdd: Double, weight: Double, units: String): Profile {
         val profile = JSONObject()
@@ -108,7 +109,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         twelveToSeventeen[35.20] = arrayOf(1.20, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 1.70, 1.50, 1.40, 1.20, 1.10, 1.10, 1.10, 1.40, 1.50, 1.60, 1.40, 1.20, 1.20, 1.30, 1.30, 1.20, 1.20)
         twelveToSeventeen[39.00] = arrayOf(1.30, 1.30, 1.40, 1.60, 1.60, 1.60, 1.90, 1.90, 1.90, 1.50, 1.30, 1.20, 1.20, 1.30, 1.50, 1.60, 1.70, 1.80, 1.50, 1.50, 1.60, 1.60, 1.30, 1.30)
         twelveToSeventeen[42.80] = arrayOf(1.40, 1.40, 1.50, 1.70, 1.80, 1.80, 2.00, 2.00, 2.00, 1.80, 1.80, 1.50, 1.50, 1.50, 1.60, 1.70, 1.80, 1.90, 1.60, 1.60, 1.70, 1.70, 1.50, 1.50)
-        twelveToSeventeen[47.30] = arrayOf(1.50, 1.50, 1.70, 1.70, 2.00, 2.00, 2.20, 2.30, 2.20, 2.00, 1.80, 1.60, 1.60, 1.60, 1.80, 2.00, 2.10, 1.90, 1.80, 1.80, 2.00, 2.00, 1.60, 1.60)
+        twelveToSeventeen[47.30] = arrayOf( 1.50, 1.50, 1.70, 1.70, 2.00, 2.00, 2.20, 2.30, 2.20, 2.00, 1.80, 1.60, 1.60, 1.60, 1.80, 2.00, 2.10, 1.90, 1.80, 1.80, 2.00, 2.00, 1.60, 1.60)
     }
 
     private fun closest(map: TreeMap<Double, Array<Double>>, key: Double): Array<Double>? {

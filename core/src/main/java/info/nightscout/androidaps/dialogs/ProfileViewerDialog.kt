@@ -167,13 +167,13 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun formatColors(label: String, text1: String, text2: String, units: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.white)}'>$label</font>"
+        var s = "<font color='${resourceHelper.gc(R.color.concinnity_grey)}'>$label</font>"
         s += "    "
         s += "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
         s += "    "
         s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.white)}'>$units</font>"
+        s += "<font color='${resourceHelper.gc(R.color.concinnity_grey)}'>$units</font>"
         return s
     }
 

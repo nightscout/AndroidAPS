@@ -48,8 +48,6 @@
         <item name="colorPrimaryDialog">?attr/colorPrimary</item>
         <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
         <item name="colorAccentDialog">?attr/colorAccent</item>
-        <!-- Color of graph background -->
-        <item name="colorGraphBackground">@color/white_alpha_08</item>
         <!-- Top bar icons -->
         <item name="iconSensor">@drawable/ic_dexcom_g6</item>
         <item name="iconReservoir">@drawable/ic_cartridge</item>
@@ -62,6 +60,8 @@
         <item name="iconCgm">@drawable/ic_blooddrop_48</item>
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
+        <!-- Color of graph background -->
+        <item name="colorGraphBackground">@color/white_alpha_08</item>
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
@@ -204,8 +204,23 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorCyan</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorCyan</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColorCyan</item>
+        <item name="colorSecondary">@color/secondaryColorCyan</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryPurple</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryPurple</item>
+        <item name="colorOnBackground">@color/colorOnBackgroundPurple</item>
+        <item name="colorOnSurface">@color/colorOnSurfacePurple</item>
+        <item name="colorOnError">@color/colorOnErrorPurple</item>
         <item name="colorAccent">@color/secondaryColorCyan</item>
         <item name="overviewPillColor">@color/overviewPillColorCyan</item>
+        <!-- Color of pills -->
+        <item name="PillColorStart">@color/PillColorCyanStart</item>
+        <item name="PillColorEnd">@color/PillColorCyanEnd</item>
+        <item name="colorSurface">@color/black_alpha_40</item>
+        <item name="android:popupBackground">@color/black_alpha_80</item>
+        <item name="android:windowBackground">@drawable/tron_legacy01</item>
+        <item name="colorGraphBackground">@color/black_alpha_10</item>
+        <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
     <style name="AppTheme.TEAL" parent="AppTheme.NoActionBar">
