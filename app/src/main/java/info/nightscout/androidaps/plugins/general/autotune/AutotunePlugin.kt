@@ -124,7 +124,11 @@ class AutotunePlugin @Inject constructor(
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
             result = resourceHelper.gs(R.string.autotune_min_days)
+            atLog(result)
             calculationRunning = false
+            Thread(Runnable {
+                rxBus.send(EventAutotuneUpdateResult(result))
+            }).start()
             return result
         } else {
             for (i in 0 until daysBack) {
@@ -143,7 +147,11 @@ class AutotunePlugin @Inject constructor(
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null) {
                     result = resourceHelper.gs(R.string.autotune_error)
+                    atLog(result)
                     calculationRunning = false
+                    Thread(Runnable {
+                        rxBus.send(EventAutotuneUpdateResult(result))
+                    }).start()
                     return result
                 }
                 autotuneFS!!.exportPreppedGlucose(preppedGlucose!!)
@@ -154,7 +162,6 @@ class AutotunePlugin @Inject constructor(
                     atLog("Partial result for day ${i + 1}".trimIndent())
                     Thread(Runnable {
                         result = resourceHelper.gs(R.string.format_autotune_partialresult, i+1, daysBack, showResults(tunedProfile!!, pumpprofile))
-                        //result="day " + (i+1) +" / "+ daysBack + " tuned\n" + showResults(tunedProfile!!, pumpprofile)
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
                 }

@@ -153,6 +153,9 @@ class AutotuneFragment : DaggerFragment() {
             autotune_run.visibility = View.VISIBLE
             tune_warning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             tune_result.text = AutotunePlugin.result
+        } else {
+            tune_result.text = AutotunePlugin.result
+            autotune_run.visibility = View.VISIBLE
         }
         autotune_copylocal.visibility = AutotunePlugin.copyButtonVisibility
         autotune_profileswitch.visibility = AutotunePlugin.profileSwitchButtonVisibility
