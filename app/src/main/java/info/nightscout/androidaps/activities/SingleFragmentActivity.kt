@@ -35,6 +35,13 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        if ( sp.getBoolean("daynight", true)) {
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(info.nightscout.androidaps.core.R.color.background_dark)
+        } else {
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(info.nightscout.androidaps.core.R.color.background_light)
+        }
+
         setContentView(R.layout.activity_single_fragment)
         plugin = pluginStore.plugins[intent.getIntExtra("plugin", -1)]
         title = plugin?.name

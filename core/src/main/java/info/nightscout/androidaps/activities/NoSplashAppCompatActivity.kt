@@ -23,6 +23,11 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        if ( spSplash.getBoolean("daynight", true)) {
+            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_dark)
+        } else {
+            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_light)
+        }
     }
 
     public override fun attachBaseContext(newBase: Context) {
