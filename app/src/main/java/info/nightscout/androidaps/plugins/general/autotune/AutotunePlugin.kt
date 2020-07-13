@@ -11,6 +11,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
+import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
@@ -92,17 +93,20 @@ class AutotunePlugin @Inject constructor(
         autotunePrep = AutotunePrep(injector)
         autotuneCore = AutotuneCore(injector)
         autotuneIob = AutotuneIob(injector)
+        profileSwitchButtonVisibility = View.GONE
+        copyButtonVisibility = View.GONE
         lastRunSuccess = false
+        result = ""
         lastNbDays = "" + daysBack
-        atLog("Start Autotune with $daysBack days back")
+        val now = System.currentTimeMillis()
+        lastRun = Date(System.currentTimeMillis())
 
+        atLog("Start Autotune with $daysBack days back")
         //create autotune subfolder for autotune files if not exists
         autotuneFS!!.createAutotuneFolder()
         logString = ""
         //clean autotune folder before run
         autotuneFS!!.deleteAutotuneFiles()
-        val now = System.currentTimeMillis()
-        lastRun = Date(System.currentTimeMillis())
         // Today at 4 AM
         //Note, I don't find on existing function the equivalent in DateUtil so I created a new function, but if any equivalent function already exists may be we can use it
         var endTime = MidnightTime.calc(now) + autotuneStartHour * 60 * 60 * 1000L
@@ -118,8 +122,6 @@ class AutotunePlugin @Inject constructor(
         autotuneFS!!.exportPumpProfile(pumpprofile)
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
-            profileSwitchButtonVisibility = View.GONE
-            copyButtonVisibility = View.GONE
             result = resourceHelper.gs(R.string.autotune_min_days)
             return result
         } else {
@@ -138,8 +140,6 @@ class AutotunePlugin @Inject constructor(
                 preppedGlucose = autotunePrep!!.categorizeBGDatums(autotuneIob!!, tunedProfile!!, pumpprofile)
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null) {
-                    profileSwitchButtonVisibility = View.GONE
-                    copyButtonVisibility = View.GONE
                     result = resourceHelper.gs(R.string.autotune_error)
                     return result
                 }
@@ -149,12 +149,8 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS!!.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
-                    showResults(tunedProfile!!, pumpprofile)
+                    rxBus.send(EventAutotuneUpdateResult("day " + i +" / "+ daysBack + " tuned\n" + showResults(tunedProfile!!, pumpprofile)))
                 }
-
-                //Todo: if possible add feedback to user between each day
-                // This was a trial to update fragment results between each day (autotune calculation takes about 2 minutes for 30 days...)
-//                autotuneFragment.updateResult("day " + i +" / "+ daysBack + " tuned");
             }
         }
         return if (tunedProfile!!.profile != null) {
@@ -169,6 +165,7 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventLocalProfileChanged())
             }
             lastRunSuccess = true
+            rxBus.send(EventAutotuneUpdateResult(result))
             result
         } else "No Result"
     }
