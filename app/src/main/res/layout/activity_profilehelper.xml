@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activities.SurveyActivity">
 
@@ -84,12 +85,22 @@
             android:layout_marginStart="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/profilehelper_profile"
-            android:layout_width="match_parent"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/comapareprofile" />
-
+            android:minHeight="70dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:text="@string/comapareprofile"
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:layout_gravity="fill_horizontal" />
 
     </LinearLayout>
 
