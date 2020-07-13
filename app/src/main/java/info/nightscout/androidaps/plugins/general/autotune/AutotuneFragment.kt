@@ -25,7 +25,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.extensions.runOnUiThread
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -70,10 +69,10 @@ class AutotuneFragment : DaggerFragment() {
             val daysBack = tune_days.text.toString().toInt()
             if (daysBack > 0) {
                 tempResult = ""
-                log("Start Autotune Calculation")
-                //runOnUiThread (Runnable {tune_result.text = autotunePlugin.aapsAutotune(daysBack, false)})
-                tune_result.text = autotunePlugin.aapsAutotune(daysBack, false)
-                log("After Start Autotune Calculation")
+                AutotunePlugin.calculationRunning = true
+                Thread(Runnable {
+                    autotunePlugin.aapsAutotune(daysBack, false)
+                }).start()
                 lastRunTxt = if (AutotunePlugin.lastRun != null) "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) else ""
                 lastRun = if (AutotunePlugin.lastRun != null) AutotunePlugin.lastRun else Date(0)
                 updateGui()
@@ -146,11 +145,14 @@ class AutotuneFragment : DaggerFragment() {
 
     @Synchronized
     private fun updateGui() {
-        if (AutotunePlugin.lastRunSuccess) {
+        if (AutotunePlugin.calculationRunning) {
+            autotune_run.visibility = View.GONE
+            tune_warning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
+            tune_result.text = AutotunePlugin.result
+        } else if (AutotunePlugin.lastRunSuccess) {
+            autotune_run.visibility = View.VISIBLE
             tune_warning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             tune_result.text = AutotunePlugin.result
-        } else {
-            tune_result.text = tempResult
         }
         autotune_copylocal.visibility = AutotunePlugin.copyButtonVisibility
         autotune_profileswitch.visibility = AutotunePlugin.profileSwitchButtonVisibility

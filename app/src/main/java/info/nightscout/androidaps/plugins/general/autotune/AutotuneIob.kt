@@ -276,8 +276,6 @@ class AutotuneIob(
         val glucoseJson = JSONArray()
         val now = Date(System.currentTimeMillis())
         val utcOffset = ((DateUtil.fromISODateString(DateUtil.toISOString(now, null, null)).time - DateUtil.fromISODateString(DateUtil.toISOString(now)).time) / (60 * 1000)).toInt()
-        val activeBgSource = activePlugin!!.activeBgSource
-        //String device = activeBgSource.getClass().getTypeName();
         try {
             for (bgreading in glucose) {
                 val bgjson = JSONObject()

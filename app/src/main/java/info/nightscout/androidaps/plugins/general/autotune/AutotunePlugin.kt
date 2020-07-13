@@ -96,6 +96,7 @@ class AutotunePlugin @Inject constructor(
         profileSwitchButtonVisibility = View.GONE
         copyButtonVisibility = View.GONE
         lastRunSuccess = false
+        calculationRunning = true
         result = ""
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
@@ -123,6 +124,7 @@ class AutotunePlugin @Inject constructor(
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
             result = resourceHelper.gs(R.string.autotune_min_days)
+            calculationRunning = false
             return result
         } else {
             for (i in 0 until daysBack) {
@@ -133,7 +135,7 @@ class AutotunePlugin @Inject constructor(
 
                 //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 autotuneIob!!.initializeData(from, to)
-                //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS!!.exportEntries(autotuneIob!!)
                 //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                 autotuneFS!!.exportTreatments(autotuneIob!!)
@@ -141,6 +143,7 @@ class AutotunePlugin @Inject constructor(
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null) {
                     result = resourceHelper.gs(R.string.autotune_error)
+                    calculationRunning = false
                     return result
                 }
                 autotuneFS!!.exportPreppedGlucose(preppedGlucose!!)
@@ -149,7 +152,11 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS!!.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
-                    rxBus.send(EventAutotuneUpdateResult("day " + i +" / "+ daysBack + " tuned\n" + showResults(tunedProfile!!, pumpprofile)))
+                    Thread(Runnable {
+                        result = resourceHelper.gs(R.string.format_autotune_partialresult, i+1, daysBack, showResults(tunedProfile!!, pumpprofile))
+                        //result="day " + (i+1) +" / "+ daysBack + " tuned\n" + showResults(tunedProfile!!, pumpprofile)
+                        rxBus.send(EventAutotuneUpdateResult(result))
+                    }).start()
                 }
             }
         }
@@ -165,7 +172,10 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventLocalProfileChanged())
             }
             lastRunSuccess = true
-            rxBus.send(EventAutotuneUpdateResult(result))
+            Thread(Runnable {
+                rxBus.send(EventAutotuneUpdateResult(result))
+            }).start()
+            calculationRunning = false
             result
         } else "No Result"
     }
@@ -245,6 +255,7 @@ class AutotunePlugin @Inject constructor(
         const val autotuneStartHour = 4
         @JvmField var tunedProfile: ATProfile? = null
         @JvmField var result = ""
+        @JvmField var calculationRunning = false
         @JvmField var lastRun: Date? = null
         @JvmField var lastNbDays = ""
         @JvmField var copyButtonVisibility = 0

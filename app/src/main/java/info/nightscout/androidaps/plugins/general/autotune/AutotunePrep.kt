@@ -45,7 +45,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 glucoseData.add(glucose[i])
             }
         }
-        Collections.sort(glucoseData) { o1: BgReading, o2: BgReading -> (o2.date - o1.date).toInt() }
+        glucoseData.sortWith(object: Comparator<BgReading>{ override fun compare(o1: BgReading, o2: BgReading): Int = (o2.date - o1.date).toInt() })
 
         // Bloc below replace bloc between #55 and #71
         // boluses and maxCarbs not used here ?,
@@ -57,8 +57,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             return null
         }
         var csfGlucoseData: MutableList<BGDatum> = ArrayList()
-        var isfGlucoseData: MutableList<BGDatum?> = ArrayList()
-        var basalGlucoseData: MutableList<BGDatum?> = ArrayList()
+        var isfGlucoseData: MutableList<BGDatum> = ArrayList()
+        var basalGlucoseData: MutableList<BGDatum> = ArrayList()
         val uamGlucoseData: MutableList<BGDatum> = ArrayList()
         val crData: MutableList<CRDatum> = ArrayList()
 
@@ -197,7 +197,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
 
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
-                val ci = Math.max(deviation, sp!!.getDouble("openapsama_min_5m_carbimpact", 3.0))
+                val ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
                 val absorbed = ci * tunedprofile.ic / sens
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = Math.max(0.0, mealCOB - absorbed)
@@ -337,7 +337,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         var ISFLength = isfGlucoseData.size
         val UAMLength = uamGlucoseData.size
         var basalLength = basalGlucoseData.size
-        if (sp!!.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
+        if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
             log("Categorizing all UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else if (UAMLength < 12) {
@@ -351,8 +351,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 basalGlucoseData.addAll(uamGlucoseData)
                 //log.debug(basalGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
-                Collections.sort(basalGlucoseData, Comparator<BGDatum?> { o1: BGDatum?, o2: BGDatum? -> (o1!!.deviation - o2!!.deviation).toInt() })
-                val newBasalGlucose: MutableList<BGDatum?> = ArrayList()
+                basalGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })  //deviation rouded to 0.01, so *100 to avoid crash during sort
+                val newBasalGlucose: MutableList<BGDatum> = ArrayList()
                 for (i in 0 until basalGlucoseData.size / 2) {
                     newBasalGlucose.add(basalGlucoseData[i])
                 }
@@ -364,8 +364,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 log("Adding $UAMLength UAM deviations to $ISFLength ISF ones")
                 isfGlucoseData.addAll(uamGlucoseData)
                 // if too much data is excluded as UAM, add in the UAM deviations to ISF, but then discard the highest 50%
-                Collections.sort(isfGlucoseData, Comparator<BGDatum?> { o1: BGDatum?, o2: BGDatum? -> (o1!!.deviation - o2!!.deviation).toInt() })
-                val newISFGlucose: MutableList<BGDatum?> = ArrayList()
+                isfGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })   //deviation rouded to 0.01, so *100 to avoid crash during sort
+                val newISFGlucose: MutableList<BGDatum> = ArrayList()
                 for (i in 0 until isfGlucoseData.size / 2) {
                     newISFGlucose.add(isfGlucoseData[i])
                 }
