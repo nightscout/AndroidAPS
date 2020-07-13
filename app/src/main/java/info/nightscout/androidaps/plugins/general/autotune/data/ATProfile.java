@@ -13,6 +13,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -128,6 +129,8 @@ public class ATProfile {
         // Create a json profile with oref0 format
         // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
         String jsonString = "";
+        int toMgDl = 1;
+        if (profileFunction.getUnits() == "mmol") toMgDl = 18;
         JSONObject json = new JSONObject();
         int basalIncrement = 60 ;
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
@@ -146,7 +149,7 @@ public class ATProfile {
                 basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)));
             };
             json.put("basalprofile", basals);
-            double isfvalue = profile.getIsfMgdl();
+            double isfvalue = profile.getIsfMgdl()/toMgDl;
             json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
             // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
             json.put("carb_ratio", profile.getIc());
@@ -171,10 +174,13 @@ public class ATProfile {
 
     //json profile
     public JSONObject getData() {
+        int toMgDl = 1;
+        if (profileFunction.getUnits() == "mmol") toMgDl = 18;
         JSONObject json = profile.getData();
         try{
             json.put("dia",dia);
-            json.put("sens",new JSONArray().put(new JSONObject().put("time","00:00").put("timeAsSeconds",0).put("value",isf)));
+            json.put("units", profileFunction.getUnits());
+            json.put("sens",new JSONArray().put(new JSONObject().put("time","00:00").put("timeAsSeconds",0).put("value",isf/toMgDl)));
             json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
             JSONArray basals = new JSONArray();
             for (int h = 0; h < 24; h++) {

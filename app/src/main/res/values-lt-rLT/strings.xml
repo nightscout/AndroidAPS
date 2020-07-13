@@ -126,10 +126,12 @@
     <string name="apsmode_title">DKS režimas</string>
     <string name="closedloop">Uždaras Ciklas</string>
     <string name="openloop">Atviras Ciklas</string>
+    <string name="lowglucosesuspend">Sustabdymas esant žemai gliukozei</string>
     <string name="disabledloop">Ciklas išjungtas</string>
     <string name="disableloop">Išjungti Ciklą</string>
     <string name="enableloop">Įjungti Ciklą</string>
     <string name="openloop_newsuggestion">Gautas naujas pasiūlymas</string>
+    <string name="carbssuggestion">Angliavandenių pasiūlymas</string>
     <string name="unsupportednsversion">Nepalaikoma Nightscout versija</string>
     <string name="loopdisabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
@@ -162,6 +164,7 @@
     <string name="filenotfound">Failas nerastas</string>
     <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="nav_import">Importuoti nustatymus</string>
+    <string name="openapsma_maxbasal_title">Maks vv/val skaičius, kuris gali būti nustatytas kaip laikina bazė</string>
     <string name="openapsma_maxbasal_summary">Šis skaičius OpenAPS kontekste vadinamas maks. valandine baze</string>
     <string name="openapsma_maxiob_title">Didžiausias valandinės bazės insulino kiekis, kurį gali suleisti OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Ši vertė OpenAPS kontekste vadinama Maks AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
@@ -169,6 +172,7 @@
     <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas atšifruojant importuotus nustatymus.</string>
     <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
     <string name="preferences_import_canceled">Importas nutrauktas! Nustatymai NE importuoti!</string>
+    <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
     <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
     <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
     <string name="check_preferences_dangerous_import">Nustatymai neturėtų būti importuoti!</string>
@@ -181,6 +185,8 @@
     <string name="metadata_warning_outdated_format">Jūs naudojate pasenusį formatą iš senos AAPS versijos, kuris nėra saugus! Naudokite tik kraštutiniu atveju, jei neturite nustatymų failo dabartiniu, JSON formatu.</string>
     <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>
     <string name="metadata_warning_date_format">Neteisingas datos ir laiko formatas!</string>
+    <string name="metadata_warning_different_version">Parametrai iš kitos palaikomosios programos versijos. Jei importuojate po atnaujinimo, tai yra normalu, bet po importavimo patikrinkite, ar visos nuostatos vis dar teisingos!</string>
+    <string name="metadata_urgent_different_version">Parametrai iš kitos pagrindinės programos versijos. Pagrindinės versijos labai skiriasi ir gali turėti nesuderinamų parametrų! Po importavimo įsitikinkite, kad parametrai vis dar teisingi!</string>
     <string name="metadata_label_format">Failo formatas</string>
     <string name="metadata_label_created_at">Sukurta</string>
     <string name="metadata_label_aaps_version">AAPS versija</string>
@@ -203,6 +209,11 @@
     <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
     <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
+    <string name="exported_today">eksportuota šiandien</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportuota prieš %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
+    <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
+    <string name="in_directory" comment="placeholder is for exported file path">kataloge: %1$s</string>
     <string name="end_user_license_agreement">Licencinė sutartis su vartotoju</string>
     <string name="end_user_license_agreement_text">PROGRAMA NEGALI BŪTI NAUDOJAMA GYDYMO SPRENDIMAMS PRIIMTI. PAGAL GALIOJANČIUS ĮSTATYMUS PROGRAMA NESUTEIKIA JOKIŲ GARANTIJŲ VARTOTOJUI. JEI RAŠTU NENURODYTA KITAIP, PROGRAMOS AUTORINIŲ TEISIŲ TURĖTOJAS IR/AR KITOS ŠALYS PATEIKIA PROGRAMĄ \"KAIP YRA\" BE JOKIŲ GARANTIJŲ, TIEK AKIVAIZDŽIŲ, TIEK NUMANOMŲ, ĮSKAITANT, BET NEAPSIRIBOJANT GALIMYBĘ NAUDOTI PROGRAMĄ KOMERCINIAMS AR KITOKIEMS DALINIAMS TIKSLAMS. RIZIKĄ, KYLANČIĄ NAUDOJANT PROGRAMĄ PRISIIMA PATS VARTOTOJAS. JEI PROGRAMA VEIKIA NETINKAMAI, IŠLAIDOS, SUSIJUSIOS SU PROGRAMOS SERVISU, TAISYMU AR KOREGAVIMU, TENKA VARTOTOJUI.</string>
     <string name="end_user_license_agreement_i_understand">SUPRATAU IR SUTINKU</string>
@@ -242,6 +253,11 @@
     <string name="smscommunicator_loopisenabled">Ciklas įjungtas</string>
     <string name="valuelimitedto">%1$.2f apribotas iki %2$.2f</string>
     <string name="valueoutofrange">Vertė %1$s viršija griežtą limitą</string>
+    <string name="smscommunicator_pumpconnectwithcode">Pompos prijungimui atsakykite su kodu %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Nepavyko prisijungti prie pompos</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Norėdami atjungti pompą %1d min., atsakykite kodu %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Pompa atjungta</string>
+    <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
     <string name="smscommunicator_remotebolusnotallowed">Nuotolinis bolusas negalimas. Bandykite vėliau.</string>
     <string name="smscommunicator_basalreplywithcode">Norėdami aktyvuoti %1$.2fvv/val bazę, kurios trukmė %2$d min, atsakykite kodu %3$s</string>
@@ -250,6 +266,9 @@
     <string name="smscommunicator_carbsreplywithcode">Įvedimui %1$dg %2$s atsakykite kodu %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Norėdami aktyvuoti %1$d%% bazę %2$d min., atsakykite kodu %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Norėdami sustabdyti Ciklą %1$d min., atsakykite kodu %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Ciklo atnaujinimui atsakykite su kodu %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Ciklo įjungimui atsakykite su kodu %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Ciklo išjungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_tempbasalset">%1$.2f vv/val laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
     <string name="smscommunicator_extendedset">%1$.2f vv ištęstas bolusas, kurio trukmė %2$d min., aktyvuotas sėkmingai</string>
     <string name="smscommunicator_carbsset">%1$dg angliavandeniai įrašyti sėkmingai</string>
@@ -281,6 +300,7 @@
     <string name="primefill">Užpildymas</string>
     <string name="fillwarning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
     <string name="othersettings_title">Kita</string>
+    <string name="fillbolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
@@ -339,6 +359,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
     <string name="openapsama_autosens_max_summary">Numatytoji reikšmė: 1.2\nTai daugiklis Autosens (ir netrukus Autotune) funkcijoje, kuris nustato 20%% maksimalią ribą iki kurios Autosens gali padidinti valandinę bazę, sumažinti JIF ir tikslinę gliukozės vertę.</string>
     <string name="openapsama_autosens_min_summary">Numatytoji reikšmė: 0.7\nTai antras daugiklis Autosens funkcijoje, kuris nustato, kad Autosens gali iki minimalios 70 % ribos sumažinti valandinę bazę bei padidinti JIF ir tikslinę gliukozės vertę.</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens nustatomi tikslai, taip pat</string>
     <string name="openapsama_autosens_adjusttargets_summary">Numatytoji reikšmė: true\nTai suteikia Autosens funkcijai leidimą keisti tikslinės gliukozės vertes, JIF ir valandinę bazę.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Numatytoji reikšmė: 2\nBoluso snaudimas aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų LBD iškart po valgio. Pvz.: jei IVT yra 3 val, tai boluso snaudimas pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį kraujo gliukozei kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus kraujo gliukozės kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
@@ -377,6 +398,7 @@
     <string name="wear_detailedIOB_title">Rodyti AIO detaliai</string>
     <string name="wear_detailedIOB_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="nosuccess">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
+    <string name="notavailable">n/a</string>
     <string name="patientage">Paciento amžius</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
@@ -420,12 +442,26 @@
     <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
     <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
+    <string name="statuslights_cage_warning">Kaniulės ribinio laiko įspėjimas [h]</string>
+    <string name="statuslights_cage_critical">Kaniulės kritinio laiko įspėjimas [h]</string>
+    <string name="statuslights_iage_warning">Insulino ribinio laiko įspėjimas [h]</string>
+    <string name="statuslights_iage_critical">Insulino kritinio laiko įspėjimas [h]</string>
+    <string name="statuslights_sage_warning">Jutiklio ribinio laiko įspėjimas [h]</string>
+    <string name="statuslights_sage_critical">Jutiklio kritinio laiko įspėjimas [h]</string>
+    <string name="statuslights_bage_warning">Baterijos ribinio laiko įspėjimas [h]</string>
+    <string name="statuslights_bage_critical">Baterijos kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%]</string>
     <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%]</string>
+    <string name="prediction_shortname">PROGN</string>
     <string name="iob">AIO</string>
     <string name="cob">AAO</string>
+    <string name="basal_shortname">VB</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">VEIKS</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Apie</string>
     <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Trūksta telefono būsenos leidimo</string>
@@ -443,6 +479,8 @@
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="careportal_pbage_label">Baterija</string>
     <string name="ns_alarmoptions">Aliarmų nustatymai</string>
+    <string name="ns_alarms">Sukurti pranešimus iš NS aliarmų</string>
+    <string name="ns_announcements">Sukurkite pranešimus iš NS perspėjimų</string>
     <string name="nsalarm_staledatavalue_label">Seni duomenys, riba [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="openapsama_autosens_period">Autosens intervalas [h]</string>
@@ -523,6 +561,7 @@
     <string name="enable_missed_bg_readings_alert">Perspėjimas apie negautus KG duomenis</string>
     <string name="enable_pump_unreachable_alert">Perspėjimas apie nepasiekiamą pompą</string>
     <string name="pump_unreachable_threshold">Perspėjimo apie nepasiekiamą pompą riba [min]</string>
+    <string name="enable_carbs_req_alert">Perspėti, jei būtini angliavandeniai</string>
     <string name="urgent_alarm">Kritiniai perspėjimai</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense programėlė (modifikuota)</string>
@@ -535,6 +574,8 @@
     <string name="smbmaxminutes_summary">SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
     <string name="uamsmbmaxminutes">NDM SMB maks. min.</string>
     <string name="uamsmbmaxminutes_summary">NDM SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
+    <string name="carbsReqThreshold">Minimali būtinų angliavandenių priminimo riba</string>
+    <string name="carbsReqThreshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nėra pranešami.</string>
     <string name="dexcomg5_xdripupload_title">Siųsti KG duomenis į xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Xdrip+ pasirinkite 640g/Eversense duomenų šaltinį</string>
     <string name="nsclientbg">NSClient KG</string>
@@ -593,6 +634,8 @@
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">prieš</string>
+    <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
+    <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="enablesmbalways">Leisti SMB visada</string>
     <string name="enablesmbalways_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
     <string name="enablesmbaftercarbs">Leisti SMB po angliavandenių įvedimo</string>
@@ -612,11 +655,17 @@
     <string name="insulin_increment_button_message">Paspaudus mygtuką įvedamas nustatytas insulino kiekis</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="overview_cgm">NGJ</string>
+    <string name="ignore5m">Ignoruoti 5 min</string>
+    <string name="ignore15m">Ignoruoti 15 min</string>
+    <string name="ignore30m">Ignoruoti 30 min</string>
+    <string name="required">reikal.</string>
     <string name="nav_historybrowser">Istorija</string>
     <string name="wear_notifysmb_title">Pranešti apie SMB</string>
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
     <string name="ns_create_announcements_from_errors_title">Kurti klaidų pranešimus</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Sukurkite pranešimus apie būtinų angliavandenių įspėjimus</string>
     <string name="ns_create_announcements_from_errors_summary">Sukurti Nightscout pranešimus apie klaidas ir vietinius įspėjimus (taip pat matomi Priežiūroje prie Terapijos)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Sukurkite NS pranešimus apie būtinų angliavandenių įspėjimus</string>
     <string name="wear_predictions_summary">Rodyti prognozes laikrodyje.</string>
     <string name="wear_predictions_title">Prognozė</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
@@ -746,7 +795,7 @@
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
-    <string name="needlocationpermission">Aplikacijai reikia vietos nustatymo leidimo BT skenavimui atlikti</string>
+    <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
     <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus</string>
     <string name="request">Užklausa</string>
     <string name="insulinsourcesetup">Konfigūruoti insulino įskiepį</string>
@@ -767,6 +816,7 @@
     <string name="resistance_lowers_target_title">Rezistencija mažina tikslą</string>
     <string name="resistance_lowers_target_summary">Kai nustatoma rezistencija, tikslinė gliukozės vertė sumažinama</string>
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
+    <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinis gliukozės lygis padidinamas</string>
     <string name="combo_invalid_setup">Netinkami pompos nustatymai, patikrinkite dokumentaciją ir įsitikinkite, kad Quick info meniu yra pavadintas QUICK INFO, naudojant 360 configuration software.</string>
     <string name="custom">Pasirinktinis</string>
     <string name="careportal_removestartedevents">Ištrinti \"AndroidAPS paleista\" įrašus</string>
@@ -775,6 +825,7 @@
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
     <string name="maintenance_email">Gavėjo el. paštas</string>
+    <string name="maintenance_encrypt_exported_prefs">Užšifruoti eksportuotus parametrus</string>
     <string name="maintenance_amount">Siunčiamų įrašų skaičius</string>
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>
@@ -816,6 +867,10 @@
     <string name="log_alerts">Įrašyti įspėjimus</string>
     <string name="enable_tbr_emulation">Aktyvuoti LBD emuliaciją</string>
     <string name="enable_tbr_emulation_summary">Naudoti ištęstinius bolusus vietoj laikinos bazės, kai viršijama 250%% riba</string>
+    <string name="disable_vibration">Išjungti vibracijas rankinio boluso suleidimo metu</string>
+    <string name="disable_vibration_summary">Bolusui ir ištęstam bolusui (tik su Insight programinės įrangos 3.x versija)</string>
+    <string name="disable_vibration_auto">Išjungti vibracijas automatinio boluso suleidimo metu</string>
+    <string name="disable_vibration_auto_summary">SMB ir laikinai valandinei bazei su TBR emuliacija (tik Insight su programinės įrangos versija 3.x)</string>
     <string name="disconnect_delay">Atjungimo vėlavimas [s]</string>
     <string name="serial_number">Serijos numeris</string>
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
@@ -959,6 +1014,8 @@
     <string name="exists">egzistuoja</string>
     <string name="notexists">neegzistuoja</string>
     <string name="temptargetcompared">Laikinas tikslas %1$s</string>
+    <string name="btdevicecompared">Bluetooth ryšys su įrenginiu %1$s %2$s</string>
+    <string name="btdevice">Ryšys su Bluetooth įrenginiu </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1013,6 +1070,7 @@
     <string name="medtronic_pump_battery_alkaline">Šarminė (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_lithium">Ličio (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nizn">Šarminė (išplėstinis vaizdas)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
     <string name="medtronic_bolus_debugging">Boluso/Terapijos Derinimas</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SKENAVIMAS</string>
@@ -1024,6 +1082,7 @@
     <string name="rileylink_scanner_scanning">Skanuojama</string>
     <string name="rileylink_scanner_scanning_finished">Skanavimas baigtas</string>
     <string name="rileylink_scanner_scanning_error">Skanavimo klaida: %1$d</string>
+    <string name="common_never">Niekada</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Parametrai</string>
     <string name="rileylink_settings_tab2">Istorija</string>
@@ -1153,6 +1212,7 @@
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
+    <string name="time_or_timezone_change">Laiko ir/ar laiko zonos pakeitimas pompoje</string>
     <string name="nopumpselected">Pompa nepasirinkta</string>
     <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
     <string name="ns_ploadlocalprofile">Įkelti vietinio profilio pakeitimus į NS</string>
@@ -1169,6 +1229,7 @@
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="age">Amžius:</string>
+    <string name="weight_label">Svoris:</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
     <string name="mostcommonprofile">Dažniausiai naudojamas profilis:</string>
@@ -1202,30 +1263,146 @@
     <string name="loop_tbrexecution_time_label">Laikinos bazės įvykdymo laikas</string>
     <string name="insight_alert_notification_channel">Insight pompos aliarmai</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš tapatybės nustatymo programos: %1$s</string>
+    <string name="smscommunicator_otp_enabled">Įgalinti tapatybės nustatymo funkciją</string>
+    <string name="smscommunicator_otp_enabled_summary">Autentifikuokite komandas naudodami vienkartinius slaptažodžius, sugeneruotus Google Authenticator ar panašiose 2FA programose.</string>
+    <string name="smscommunicator_otp_pin">Papildomas PIN kodas žymeklio gale</string>
+    <string name="smscommunicator_otp_pin_summary">Papildomi skaitmenys, kuriuos reikia atsiminti ir pridėti kiekvieno sugeneruoto slaptažodžio pabaigoje</string>
+    <string name="smscomunicator_tab_otp_label">Autentifikavimo sąrankos nustatymas</string>
+    <string name="smscommunicator_otp_verify_label">OTP tikrinimas:</string>
+    <string name="smscommunicator_otp_reset_btn">Atstatyti tapatybės nustatymą</string>
+    <string name="smscommunicator_otp_reset_title">Atstatyti autentifikatoriaus kodą</string>
+    <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
+    <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Nuskanuoti kodą AndroidAPS OTP kodų nustatymyu</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
+    <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
+    <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">NESIDALINKITE šiuo kodu internete!\nNaudokite tik nustatydami Authenticator programą sekėjų telefonuose.</string>
+    <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Tada turėsite juos vėl nustatyti!</string>
     <string name="onconnect">Sujungimo metu</string>
     <string name="ondisconnect">Išjungimo metu</string>
+    <string name="overview_show_predictions">Prognozė</string>
+    <string name="overview_show_deviationslope">Nukrypimo koeficientas</string>
     <string name="authorizationfailed">Autorizacija nepavyko</string>
     <string name="overview_show_absinsulin">Insulinas absoliučiais vienetais</string>
+    <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginiam šifravimui ir programos saugumo ignoravimui. Atsiminkite jį arba laikykite užsirašę saugioje vietoje.</string>
     <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
     <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
+    <string name="statuslights">Būklės indikatoriai</string>
     <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
     <string name="copyexistingvalues">Kopijuoti NS nustatymus (jei yra)?</string>
     <string name="classic_description">Originali išvaizda</string>
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
+    <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod">Omnipod pompos integracijai reikalingas RileyLink (programinės įrangos versija ne mažiau 2.0).</string>
     <!-- Omnipod Configuration -->
+    <string name="omnipod_config_beep_bolus_enabled">Boluso signalas įjungtas</string>
+    <string name="omnipod_config_beep_basal_enabled">Bazės signalas įjungtas</string>
+    <string name="omnipod_config_beep_smb_enabled">SMB signalas įjungtas</string>
+    <string name="omnipod_config_beep_tbr_enabled">Laikinos bazės signalas įjungtas</string>
+    <string name="omnipod_config_pod_debugging_options_enabled">Įgalintos POD derinimo galimybės</string>
+    <string name="omnipod_config_timechange_enabled">Vasaros laiko/laiko juostos aptikimas įgalintas</string>
     <!-- Omnipod - Fragment -->
+    <string name="omnipod_pod_mgmt">POD valdymas</string>
+    <string name="omnipod_pod_status">POD būklė</string>
     <string name="omnipod_reservoir_left">liko %1$.2f U</string>
     <string name="omnipod_reservoir_over50">Daugiau nei 50 U</string>
+    <string name="omnipod_pod_address">POD adresas</string>
+    <string name="omnipod_pod_expiry">POD laikas pasibaigs</string>
     <string name="omnipod_pod_name_no_info">Nėra informacijos</string>
+    <string name="omnipod_pod_no_pod_connected">POD neprijungta</string>
+    <string name="omnipod_pod_not_initalized">Nepavyko paleisti</string>
+    <string name="omnipod_pod_active_alerts">Aktyvaus POD signalai</string>
+    <string name="omnipod_ack_short">Priimti pranešimus</string>
     <!-- Omnipod - Dialogs -->
+    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operacija negalima.\n\n Pirmiausia turite sukonfigūruoti Omnipod pompą prieš atliekant šią operaciją.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">Operacija negalima.\n\n Jūs turite palaukti kelias minutes, kol AAPS bando nustatyti profilį pirmą kartą.</string>
+    <string name="omnipod_error_illegal_init_action_type">Neteisingas inicijavimo tipas:%1$s</string>
+    <string name="omnipod_error_pod_not_attached">Nėra aktyvaus POD.</string>
+    <string name="omnipod_driver_error_setup_action_verification_failed">Komandos patikra nepavyko.</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Įvyko netikėta klaida. Prašome pranešti! (tipas: %1$s).</string>
+    <string name="omnipod_driver_error_invalid_parameters">Ryšio klaida: gauti neteisingi įvesties parametrai.</string>
+    <string name="omnipod_driver_error_communication_failed_timeout">Ryšio klaida: skirtas laikas baigėsi.</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Ryšio klaida: įvyko netikėta klaida. Prašome pranešti!</string>
+    <string name="omnipod_driver_error_crc_mismatch">Ryšio klaida: pranešimo vientisumo patikra nepavyko.</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Ryšio klaida: netinkami įvesties iš POD parametrai.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Ryšio klaida: Pod būklė yra netinkama.</string>
+    <string name="omnipod_driver_error_invalid_response">Ryšio klaida: gautas netinkamas atsakymas iš POD.</string>
+    <string name="omnipod_driver_error_invalid_message_sequence_number">Ryšio klaida: iš POD gautas pranešimas su negaliojančiu serijos numeriu.</string>
+    <string name="omnipod_driver_error_invalid_message_address">Ryšio klaida: iš POD gautas pranešimas su netinkamu adresu.</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Ryšio klaida: nepavyko iššifruoti pranešimo iš POD.</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Ryšio klaida: nepavyko iš naujo sinchronizuoti Nonce.</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Ryšio klaida: Nonce nebuvo sinchronizuota.</string>
+    <string name="omnipod_driver_error_not_enough_data">Ryšio klaida: nepakankamai duomenų gauta iš POD.</string>
+    <string name="omnipod_driver_error_pod_fault">Aptikta POD klaida (%1$03d %2$s). Išjunkite POD ir pradėkite naują.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">Ryšio klaida: POD pateikė klaidos atsakymą.</string>
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_pod_mgmt_title">POD valdymas</string>
+    <string name="omnipod_cmd_init_pod">Inicijuoti POD</string>
+    <string name="omnipod_cmd_deactivate_pod">Išjungti POD</string>
+    <string name="omnipod_cmd_reset_pod">Atstatyti POD</string>
+    <string name="omnipod_cmd_pod_history">POD istorija</string>
+    <string name="omnipod_cmd_set_bolus">Nustatyti bolusą</string>
+    <string name="omnipod_cmd_cancel_bolus">Atšaukti bolusą</string>
+    <string name="omnipod_cmd_set_tbr">Nustatyti laikiną bazę</string>
+    <string name="omnipod_cmd_cancel_tbr">Atšaukti laikiną bazę (vidinis valdiklis)</string>
+    <string name="omnipod_cmd_cancel_tbr_forced">Atšaukti laikiną bazę (Inicijuota vartotojo)</string>
+    <string name="omnipod_cmd_set_basal_schedule">Nustatyti bazės tvarkaraštį</string>
+    <string name="omnipod_cmd_get_pod_status">Gauti POD būklę</string>
+    <string name="omnipod_cmd_get_pod_info">Gauti POD informaciją</string>
+    <string name="omnipod_cmd_set_time">Nustatyti laiką</string>
+    <string name="omnipod_cmd_configure_alerts">Konfigūruoti perspėjimus</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Patvirtinti perspėjimus</string>
+    <string name="omnipod_cmd_suspend_delivery">Sustabdyti suleidimą</string>
+    <string name="omnipod_cmd_resume_delivery">Atnaujinti suleidimą</string>
+    <string name="omnipod_cmd_unknown_entry">Nežinomas Įrašas</string>
+    <string name="omnipod_cmd_bolus_value">%1$.1f vv</string>
+    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f vv, AV=%2$.1f g</string>
+    <string name="omnipod_cmd_tbr_value">Kiekis: %1$.1f vv, Trukmė: %2$d min</string>
+    <string name="omnipod_cmd_reset_pod_desc">Jei spustelėsite <b>OK</b>, ryšys su POD bus priverstinai nutrauktas ir nebegalėsite prie jo prisijungti. Atlikite tai tik tada, kai AAPS nebegali bendrauti su POD. Jei ryšys su POD vis tiek veikia, naudokite parinktį <b>Išjungti POD</b>.</string>
+    <string name="omnipod_cmd_pod_history_na">POD istorija šiuo metu nėra prieinama.</string>
+    <string name="omnipod_init_pod_wizard_step1_title">Užpildyti POD</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nUžpildykite naują POD insulinu, kurio pakaktų 3 dienas.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš POD, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 85vv. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę POD, spustelėkite <b>Kitas</b>.\n\n <b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite POD adatos apsauginio dangtelio.</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Užpildymas</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Pabandykite suporuoti naują POD ir užpildykite jį.\n\nKai pažymėti visi elemetai, galite spustelėti <b>Kitas</b>.\n\n <b>Pastaba:</b> POD ir RileyLink turi būti būti labai arti vienas kito.</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Prijunkite POD</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nParuoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir užklijuokite POD ant infuzijos vietos.\n\nJei kaniulė atšoks, paspauskite <b>Atšaukti</b> ir pakeiskite POD.\n\nSpauskite <b>Kitas</b>, norėdami įvesti kaniulę ir pradėti leisti insuliną.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Įvedama kaniulė</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Mėginkite nustatyti pradinį bazės profilį ir įvesti kaniulę.\n\nKai visi elementai yra patikrinti, galite paspausti <b>Kitas</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_title">POD informacija</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPOD yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė buvo tinkamai įvesta, ir, jei jaučiate, kad taip nėra, pakeiskite POD.</string>
+    <string name="omnipod_remove_pod_wizard_step1_title">Išjungti POD</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nSpustelėkite<b>Kitas</b>, kad išjungtumėte POD.\n\n<b>Pastaba:</b> Tai sustabdys insulino leidimą ir išjungs POD.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">POD išjungimas</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">POD išjungimas.\n\nJei visi elementai pažymėti, galite paspausti <b>Kitas</b>.\n\n <b>Pastaba:</b> Jei išjungimas vis nepavyksta, paspauskite <b> Atšaukti</b> ir naudokite parinktį <b>Atstatyti POD </b>, kad priverstinai atkurtumėte POD būklę.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">POD išjungtas.\n\nNuimkite POD nuo odos ir jį išmeskite.</string>
+    <string name="omnipod_init_pod_pair_pod">POD suporavimas</string>
+    <string name="omnipod_init_pod_prime_pod">POD užpildymas</string>
+    <string name="omnipod_init_pod_fill_cannula">Kaniulės užpildymas</string>
+    <string name="omnipod_init_pod_set_basal_profile">Nustatyti bazės profilį</string>
+    <string name="omnipod_deactivate_pod_cancel_delivery">Atšauti insulino leidimą</string>
+    <string name="omnipod_deactivate_pod_deactivate_pod">Išjungti POD</string>
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod_dash">Integracija su Omnipod Dash pompa.</string>
+    <string name="omnipod_alert_finish_pairing_reminder">Priminimas apie suporavimo pabaigą</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Priminimas apie sąrankos pabaigą</string>
+    <string name="omnipod_alert_expiration">POD galiojimas greitai baigsis</string>
+    <string name="omnipod_alert_expiration_advisory">POD galiojimas greitai baigsis</string>
+    <string name="omnipod_alert_shutdown_imminent">Išjungimas yra neišvengiamas</string>
+    <string name="omnipod_alert_low_reservoir">Žemas rezervuaro lygis</string>
+    <string name="omnipod_alert_unknown_alert">Nežinomas perspėjimas</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Gali nepavykti nustatyti bazės profilio. Insulino leidimas gali būti sustabdytas! Atkurkite POD būseną.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">Laikinos valandinės bazės nustatymas gali būti nesėkmingas. Jei laikina valandinė bazė iki šiol buvo nustatyta ir galioja, ji gali būti atšaukta! Atnaujinkite POD būseną.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Laiko nustatymas gali būti nesėkmingas. Insulino leidimas gali būti sustabdytas! Atkurkite POD būseną.</string>
+    <string name="omnipod_bolus_failed_uncertain">Neįmanoma patikrinti, ar bolusas suleistas sėkmingai. Patikrinkite, ar jūsų POD leidžia bolusą, arba bolusą atšaukite.</string>
+    <string name="omnipod_rl_stats">RL statistika</string>
+    <string name="omnipod_read_pulse_log_short">Pulse žurnalas</string>
 </resources>

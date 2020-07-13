@@ -15,6 +15,8 @@
     <string name="noprotection">Sem Protecção</string>
     <string name="protection">Protecção</string>
     <string name="master_password_missing">A Senha Mestre não está definida!\n\nPor favor, configure Senha Mestre em Preferências (%1$s &#8594; %2$s)</string>
+    <string name="unsecure_fallback_biometric">Reverter Inseguro</string>
+    <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, a protecção biométrica precisa de uma senha mestre definida para reverter.\n\nPor favor, defina uma senha mestre!</string>
     <string name="password_set">Senha foi definida!</string>
     <string name="password_not_set">Senha não foi definida</string>
     <string name="password_not_changed">Senha não foi alterada</string>

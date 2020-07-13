@@ -15,6 +15,8 @@
     <string name="noprotection">Nessuna protezione</string>
     <string name="protection">Protezione</string>
     <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s &#8594; %2$s)</string>
+    <string name="unsecure_fallback_biometric">Fallback non sicuro</string>
+    <string name="unsecure_fallback_descriotion_biometric">Per essere efficace, la protezione biometrica richiede una password master per impostare un\'alternativa in caso di necessità (fallback).\n\nImposta una password master!</string>
     <string name="password_set">Password impostata!</string>
     <string name="password_not_set">Password non impostata</string>
     <string name="password_not_changed">Password non modificata</string>

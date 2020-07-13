@@ -54,6 +54,7 @@ class TddCalculator @Inject constructor(
             val midnight = MidnightTime.calc(t.date)
             val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
             tdd.bolus += t.insulin
+            tdd.carbs += t.carbs
             result.put(midnight, tdd)
         }
 
@@ -81,10 +82,12 @@ class TddCalculator @Inject constructor(
             totalTdd.basal += tdd.basal
             totalTdd.bolus += tdd.bolus
             totalTdd.total += tdd.total
+            totalTdd.carbs += tdd.carbs
         }
         totalTdd.basal /= tdds.size().toDouble()
         totalTdd.bolus /= tdds.size().toDouble()
         totalTdd.total /= tdds.size().toDouble()
+        totalTdd.carbs /= tdds.size().toDouble()
         return totalTdd
     }
 
@@ -93,16 +96,16 @@ class TddCalculator @Inject constructor(
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
             "<b>" + resourceHelper.gs(R.string.tdd) + ":</b><br>" +
-                toText(tdds) +
+                toText(tdds, true) +
                 "<b>" + resourceHelper.gs(R.string.average) + ":</b><br>" +
-                averageTdd.toText(resourceHelper, tdds.size())
+                averageTdd.toText(resourceHelper, tdds.size(), true)
         )
     }
 
-    private fun toText(tdds: LongSparseArray<TDD>): String {
+    private fun toText(tdds: LongSparseArray<TDD>, includeCarbs: Boolean): String {
         var t = ""
         for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText(resourceHelper, dateUtil)}<br>"
+            t += "${tdds.valueAt(i).toText(resourceHelper, dateUtil, includeCarbs)}<br>"
         }
         return t
     }

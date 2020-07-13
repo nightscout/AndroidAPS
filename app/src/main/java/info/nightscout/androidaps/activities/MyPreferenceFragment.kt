@@ -13,16 +13,20 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
@@ -35,10 +39,6 @@ import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
-import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -207,12 +207,42 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.recreate()
             return
         }
-        if (key == resourceHelper.gs(R.string.key_openapsama_useautosens) && sp.getBoolean(R.string.key_openapsama_useautosens, false))
+        if (key == resourceHelper.gs(R.string.key_openapsama_useautosens) && sp.getBoolean(R.string.key_openapsama_useautosens, false)) {
             activity?.let {
                 show(it, resourceHelper.gs(R.string.configbuilder_sensitivity), resourceHelper.gs(R.string.sensitivity_warning))
             }
+        }
+        checkForBiometricFallback(key)
 
         updatePrefSummary(findPreference(key))
+    }
+
+    private fun checkForBiometricFallback(key: String) {
+        // Biometric protection activated without set master password
+        if ((resourceHelper.gs(R.string.key_settings_protection) == key ||
+                resourceHelper.gs(R.string.key_application_protection) == key ||
+                resourceHelper.gs(R.string.key_bolus_protection) == key) &&
+            sp.getString(R.string.key_master_password, "") == "" &&
+            sp.getInt(key, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+        ) {
+            activity?.let {
+                val title = resourceHelper.gs(R.string.unsecure_fallback_biometric)
+                val message = resourceHelper.gs(R.string.master_password_missing, resourceHelper.gs(R.string.configbuilder_general), resourceHelper.gs(R.string.protection))
+                show(it, title = title, message = message)
+            }
+        }
+
+        // Master password erased with activated Biometric protection
+        val isBiometricActivated = sp.getInt(R.string.key_settings_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_application_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_bolus_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+        if (resourceHelper.gs(R.string.key_master_password) == key && sp.getString(key, "") == "" && isBiometricActivated) {
+            activity?.let {
+                val title = resourceHelper.gs(R.string.unsecure_fallback_biometric)
+                val message = resourceHelper.gs(R.string.unsecure_fallback_descriotion_biometric)
+                show(it, title = title, message = message)
+            }
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -279,7 +309,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
 
         for (plugin in pluginStore.plugins) {
-            pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) }}
+            pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) } }
         }
 
         val hmacPasswords = arrayOf(

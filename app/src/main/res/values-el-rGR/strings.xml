@@ -677,7 +677,6 @@
     <string name="startobjective">Ξεκινήστε τον πρώτο στόχο</string>
     <string name="permission">Άδεια</string>
     <string name="askforpermission">Ζητείστε άδεια</string>
-    <string name="needlocationpermission">Η εφαρμογή απαιτεί άδεια τοποθεσίας για την αναζήτηση συσκευών BT</string>
     <string name="needstoragepermission">Η εφαρμογή απαιτεί πρόσβαση στη μνήμη για την αποθήκευση αρχείων καταγραφής</string>
     <string name="request">Αίτημα</string>
     <string name="insulinsourcesetup">Ρυθμίστε την προσθήκη ινσουλίνης</string>

@@ -29,6 +29,7 @@ public class TDD {
     @DatabaseField
     public double total;
 
+    public double carbs;
 
     public double getTotal() {
         return (total > 0d) ? total : (bolus + basal);
@@ -56,11 +57,17 @@ public class TDD {
                 ']';
     }
 
-    public String toText(ResourceHelper resourceHelper, DateUtil dateUtil) {
-        return resourceHelper.gs(R.string.tddformat, dateUtil.dateStringShort(date), total, bolus, basal);
+    public String toText(ResourceHelper resourceHelper, DateUtil dateUtil, boolean includeCarbs) {
+        if (includeCarbs)
+            return resourceHelper.gs(R.string.tddwithcarbsformat, dateUtil.dateStringShort(date), total, bolus, basal, carbs);
+        else
+            return resourceHelper.gs(R.string.tddformat, dateUtil.dateStringShort(date), total, bolus, basal);
     }
 
-    public String toText(ResourceHelper resourceHelper, int days) {
-        return resourceHelper.gs(R.string.tddformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal);
+    public String toText(ResourceHelper resourceHelper, int days, boolean includeCarbs) {
+        if (includeCarbs)
+            return resourceHelper.gs(R.string.tddwithcarbsformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal, carbs);
+        else
+            return resourceHelper.gs(R.string.tddformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal);
     }
 }
