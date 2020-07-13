@@ -225,7 +225,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), profile1.units)
             val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), profile1.units)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), resourceHelper.gs(R.string.profile_carbs_per_unit)))
+                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), profile1.units + resourceHelper.gs(R.string.profile_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
