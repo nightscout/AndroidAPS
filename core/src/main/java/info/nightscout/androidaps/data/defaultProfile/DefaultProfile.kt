@@ -150,13 +150,13 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
 
     private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: String): JSONArray {
         val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0],units)))
-        array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1],units)))
-        array.put(JSONObject().put("time", "09:00").put("value", Profile.fromMmolToUnits(value + sample[2],units)))
-        array.put(JSONObject().put("time", "11:00").put("value", Profile.fromMmolToUnits(value + sample[3],units)))
-        array.put(JSONObject().put("time", "14:00").put("value", Profile.fromMmolToUnits(value + sample[4],units)))
-        array.put(JSONObject().put("time", "16:00").put("value", Profile.fromMmolToUnits(value + sample[5],units)))
-        array.put(JSONObject().put("time", "19:00").put("value", Profile.fromMmolToUnits(value + sample[6],units)))
+        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0],units)).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1],units)).put("timeAsSeconds", 6 * 3600))
+        array.put(JSONObject().put("time", "09:00").put("value", Profile.fromMmolToUnits(value + sample[2],units)).put("timeAsSeconds", 9 * 3600))
+        array.put(JSONObject().put("time", "11:00").put("value", Profile.fromMmolToUnits(value + sample[3],units)).put("timeAsSeconds", 11 * 3600))
+        array.put(JSONObject().put("time", "14:00").put("value", Profile.fromMmolToUnits(value + sample[4],units)).put("timeAsSeconds", 14 * 3600))
+        array.put(JSONObject().put("time", "16:00").put("value", Profile.fromMmolToUnits(value + sample[5],units)).put("timeAsSeconds", 16 * 3600))
+        array.put(JSONObject().put("time", "19:00").put("value", Profile.fromMmolToUnits(value + sample[6],units)).put("timeAsSeconds", 19 * 3600))
         return array
     }
 }
