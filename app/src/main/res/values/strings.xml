@@ -1710,7 +1710,7 @@
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
     <string name="comapareprofile">Compare profiles</string>
     <string name="nav_profilehelper">Profile helper</string>
-    <string name="motoldefaultprofile">Motol default profile</string>
+    <string name="motoldefaultprofile">Default profile</string>
     <string name="currentprofile">Current profile</string>
     <string name="availableprofile">Available profile</string>
     <string name="profiletype">Profile type</string>
