@@ -122,6 +122,8 @@
     <!--    Temptarget-->
     <string name="mins">%1$dmin</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fE</b> Bol: <b>%3$.2fE</b> Bas: <b>%4$.2fE</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fE</b> Bol: <b>%3$.2fE</b> Bas: <b>%4$.2fE</b> Khd: <b>%5$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Controle</string>
     <string name="careportal_announcement">Mededeling</string>

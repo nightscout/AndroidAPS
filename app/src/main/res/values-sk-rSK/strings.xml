@@ -1405,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Nie je možné overiť, či bolo podávanie bolusu úspešné. Prosím overte, že váš Pod podáva bolus, alebo zrušte bolus.</string>
     <string name="omnipod_rl_stats">Štatistiky RL</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="comapareprofile">Porovnať s aktuálnym profilom</string>
+    <string name="nav_profilehelper">Pomocník s profilom</string>
 </resources>

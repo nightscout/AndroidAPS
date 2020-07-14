@@ -1405,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">No se puede verificar si el bolo ha sido exitoso. Por favor verifique que su Pod está poniendo bolo o cancele el bolo.</string>
     <string name="omnipod_rl_stats">Estadísticas del RL</string>
     <string name="omnipod_read_pulse_log_short">Registro de pulso</string>
+    <string name="comapareprofile">Comparar con el perfil actual</string>
+    <string name="nav_profilehelper">Asistente de perfil</string>
 </resources>

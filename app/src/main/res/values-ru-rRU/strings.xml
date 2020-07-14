@@ -6,8 +6,8 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
-    <string name="treatmentssafety_maxcarbs_title">макс разрешенные углеводы (г)</string>
-    <string name="nav_preferences">опции</string>
+    <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы (г)</string>
+    <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
     <string name="nav_resetdb">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
@@ -1407,4 +1407,6 @@ Context | Edit Context</string>
     <string name="omnipod_bolus_failed_uncertain">Не удалось проверить правильность подачи болюса. Убедитесь, что Pod подает болюс или отмените его.</string>
     <string name="omnipod_rl_stats">Статистика RL</string>
     <string name="omnipod_read_pulse_log_short">Журнал Pulse </string>
+    <string name="comapareprofile">Сравнить с текущим профилем</string>
+    <string name="nav_profilehelper">Помощник профиля</string>
 </resources>

@@ -15,6 +15,8 @@
     <string name="noprotection">Pas de Protection</string>
     <string name="protection">Protection</string>
     <string name="master_password_missing">Le mot de passe principal n\'est pas défini !\n\nVeuillez définir votre mot de passe principal dans les préférences (%1$s &#8594; %2$s)</string>
+    <string name="unsecure_fallback_biometric">Retour arrière non sécurisé</string>
+    <string name="unsecure_fallback_descriotion_biometric">Pour être effective, la protection biométrique nécessite un mot de passe principal pour revenir en arrière.\n\nMerci de définir un mot de passe principal !</string>
     <string name="password_set">Mot de passe défini !</string>
     <string name="password_not_set">Mot de passe non défini</string>
     <string name="password_not_changed">Mot de passe non modifié</string>
