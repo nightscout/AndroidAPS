@@ -232,6 +232,8 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("nbdays", nbDays)
             jsonSettings.put("startdate", startDateString)
             jsonSettings.put("enddate", endDateString)
+            // command to change timezone
+            jsonSettings.put("timezone_command", "sudo ln -sf /usr/share/zoneinfo/" + TimeZone.getDefault().id + " /etc/localtime")
             // oref0_command is for running oref0-autotune on a virtual machine in a dedicated ~/aaps subfolder
             jsonSettings.put("oref0_command", "oref0-autotune -d=~/aaps -n=" + sp.getString(R.string.key_nsclientinternal_url, "") + " -s=" + startDateString + " -e=" + endDateString)
             // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
