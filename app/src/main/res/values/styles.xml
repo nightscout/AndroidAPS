@@ -83,5 +83,5 @@
         <item name="android:dividerHeight">1dp</item>
     </style>
 
-
+    <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
 </resources>

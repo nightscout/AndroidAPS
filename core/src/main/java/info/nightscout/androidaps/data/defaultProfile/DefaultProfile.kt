@@ -130,20 +130,20 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         val basals = JSONArray()
         for (i in 0..23) {
             val time = String.format(Locale.ENGLISH, "%02d:00", i)
-            basals.put(JSONObject().put("time", time).put("value", b[i].toString()))
+            basals.put(JSONObject().put("time", time).put("value", b[i].toString()).put("timeAsSeconds", i * 3600))
         }
         return basals
     }
 
     private fun singleValueArray(value: Double, sample: Array<Double>): JSONArray {
         val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", value + sample[0]))
-        array.put(JSONObject().put("time", "06:00").put("value", value + sample[1]))
-        array.put(JSONObject().put("time", "09:00").put("value", value + sample[2]))
-        array.put(JSONObject().put("time", "11:00").put("value", value + sample[3]))
-        array.put(JSONObject().put("time", "14:00").put("value", value + sample[4]))
-        array.put(JSONObject().put("time", "16:00").put("value", value + sample[5]))
-        array.put(JSONObject().put("time", "19:00").put("value", value + sample[6]))
+        array.put(JSONObject().put("time", "00:00").put("value", value + sample[0]).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "06:00").put("value", value + sample[1]).put("timeAsSeconds", 6 * 3600))
+        array.put(JSONObject().put("time", "09:00").put("value", value + sample[2]).put("timeAsSeconds", 9 * 3600))
+        array.put(JSONObject().put("time", "11:00").put("value", value + sample[3]).put("timeAsSeconds", 11 * 3600))
+        array.put(JSONObject().put("time", "14:00").put("value", value + sample[4]).put("timeAsSeconds", 14 * 3600))
+        array.put(JSONObject().put("time", "16:00").put("value", value + sample[5]).put("timeAsSeconds", 16 * 3600))
+        array.put(JSONObject().put("time", "19:00").put("value", value + sample[6]).put("timeAsSeconds", 19 * 3600))
         return array
     }
 }
