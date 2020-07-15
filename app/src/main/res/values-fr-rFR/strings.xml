@@ -1406,4 +1406,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="omnipod_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Vérifiez que votre Pod délivre le bolus ou annulez le bolus.</string>
     <string name="omnipod_rl_stats">État RL</string>
     <string name="omnipod_read_pulse_log_short">Enreg. Pulse</string>
+    <string name="comapareprofile">Comparer avec le profil actuel</string>
+    <string name="nav_profilehelper">Assistant Profil</string>
 </resources>

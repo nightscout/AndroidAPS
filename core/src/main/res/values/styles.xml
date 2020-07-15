@@ -418,6 +418,14 @@
         <item name="colorAccent">@color/errorAlertBackground</item>
     </style>
 
+    <style name="ButtonSmallFontStyle">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="ButtonMediumFontStyle">
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <!--    Buttons from MaterialDateTimePicker    -->
     <dimen name="mdtp_material_button_height">48dp</dimen>
     <dimen name="mdtp_material_button_textsize">14sp</dimen>
@@ -444,4 +452,6 @@
         <item name="android:textColor">@color/mdtp_button_color</item>
         <item name="android:textAllCaps">true</item>
     </style>
+
+    <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
 </resources>

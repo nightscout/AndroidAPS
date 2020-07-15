@@ -4,13 +4,51 @@
     <string name="label_actions_activity">AAPS</string>
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_warning_sync">Nu există date!</string>
+    <string name="label_warning_old">Date vechi!</string>
     <string name="label_warning_sync_aaps">Sincronizare cu AAPS!</string>
     <string name="pref_on">Pornit</string>
     <string name="pref_off">Oprit</string>
+    <string name="pref_show_date">Arată data</string>
+    <string name="pref_show_iob">Arată IOB</string>
+    <string name="pref_show_cob">Arată COB</string>
+    <string name="pref_show_delta">Arată Delta</string>
+    <string name="pref_show_phone_battery">Arată baterie telefon</string>
+    <string name="pref_show_rig_battery">Arată Baterie Rig</string>
+    <string name="pref_show_basal_rate">Arată rata bazală</string>
+    <string name="pref_show_loop_status">Arată stare buclă închisă</string>
+    <string name="pref_show_bg">Arată glicemia</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Întunecat</string>
+    <string name="pref_highlight_basals">Evidențiere rate bazale</string>
     <string name="pref_1_hour">1 oră</string>
     <string name="pref_2_hours">2 ore</string>
     <string name="pref_3_hours">3 ore</string>
     <string name="pref_4_hours">4 ore</string>
     <string name="pref_5_hours">5 ore</string>
     <string name="pref_default">Implicit</string>
+    <string name="pref_delta_granularity">Granularitate Delta (Steampunk)</string>
+    <string name="pref_version">Versiune:</string>
+    <string name="menu_tempt">ŢintăTemporară</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_settings">Setări</string>
+    <string name="menu_status">Stare</string>
+    <string name="menu_default">Implicit</string>
+    <string name="action_start_min">start [min]</string>
+    <string name="action_confirm">CONFIRMARE</string>
+    <string name="action_status_pump">STARE POMPĂ</string>
+    <string name="action_status_loop">STARE BUCLĂ ÎNCHISĂ</string>
+    <string name="action_bolus">bolus</string>
+    <string name="status_pump">Pompă</string>
+    <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_carb">Carbohidrați</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="unit_mg_dl">mg/dl</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">z</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">s</string>
 </resources>

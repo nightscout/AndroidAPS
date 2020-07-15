@@ -1405,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer of de Pod de bolus aan het toedienen is of annuleer de bolus.</string>
     <string name="omnipod_rl_stats">RL Statistieken</string>
     <string name="omnipod_read_pulse_log_short">Pulsen Log</string>
+    <string name="comapareprofile">Vergelijk met huidig profiel</string>
+    <string name="nav_profilehelper">Profiel hulp</string>
 </resources>

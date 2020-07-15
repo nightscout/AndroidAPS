@@ -1405,4 +1405,6 @@
     <string name="omnipod_bolus_failed_uncertain">Impossibile verificare che il bolo sia riuscito. Verifica che il tuo pod stia erogando il bolo oppure cancellalo.</string>
     <string name="omnipod_rl_stats">Statistiche RL</string>
     <string name="omnipod_read_pulse_log_short">Log impulsi</string>
+    <string name="comapareprofile">Compara col profilo corrente</string>
+    <string name="nav_profilehelper">Assistente profilo</string>
 </resources>

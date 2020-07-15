@@ -80,7 +80,7 @@
         <activity android:name=".activities.SurveyActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.ProfileHelperActivity" 
-            android:theme="@style/AppTheme" />
+           android:theme="@style/ProfileHelperAppTheme" />
         <activity android:name=".activities.StatsActivity"
             android:theme="@style/AppTheme" />
 
