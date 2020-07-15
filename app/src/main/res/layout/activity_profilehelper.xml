@@ -16,20 +16,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            style="@style/Widget.MaterialComponents.TabLayout.Colored"
-            app:tabMode="fixed"
-            app:tabIndicatorAnimationDuration="1400"
-            app:tabIndicatorFullWidth="true"
-            app:tabIndicatorColor="@color/iconColor"
-            app:tabUnboundedRipple="false"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_height="28dp"
-            android:layout_width="match_parent">
-        </com.google.android.material.tabs.TabLayout>
-
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/profilehelper_compareprofile"
             android:layout_width="wrap_content"
@@ -41,6 +27,20 @@
             android:focusable="true"
             android:text="@string/comapareprofile"
             app:icon="@drawable/ic_auto_delta"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
+            app:tabMode="fixed"
+            app:tabIndicatorAnimationDuration="1400"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorColor="@color/iconColor"
+            app:tabUnboundedRipple="false"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_height="28dp"
+            android:layout_width="match_parent">
+        </com.google.android.material.tabs.TabLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
