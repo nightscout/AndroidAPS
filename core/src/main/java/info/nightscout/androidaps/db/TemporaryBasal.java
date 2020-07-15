@@ -395,7 +395,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         if (isFakeExtended) {
             return (int) ((profile.getBasal(time) + netExtendedRate) / profile.getBasal(time)) * 100;
         } else if (isAbsolute) {
-            return (int) (absoluteRate / profile.getBasal(time)) * 100;
+            return (int) (absoluteRate / profile.getBasal(time) * 100);
         } else {
             return percentRate;
         }
