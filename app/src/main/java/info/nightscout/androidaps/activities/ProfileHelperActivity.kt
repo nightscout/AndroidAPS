@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
+import android.view.View
 import android.widget.PopupMenu
+import com.google.android.material.tabs.TabLayout
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
@@ -25,6 +27,8 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import kotlinx.android.synthetic.main.activity_profilehelper.*
+import kotlinx.android.synthetic.main.activity_profilehelper.tabLayout
+import kotlinx.android.synthetic.main.localprofile_fragment.*
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -64,12 +68,21 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profilehelper)
 
-        profilehelper_menu1.setOnClickListener {
-            switchTab(0)
-        }
-        profilehelper_menu2.setOnClickListener {
-            switchTab(1)
-        }
+        tabLayout.addTab(tabLayout.newTab().setText("1"))
+        tabLayout.addTab(tabLayout.newTab().setText("2"))
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if ( tab.text == "1") {
+                    switchTab(0)
+                }
+                if ( tab.text == "2") {
+                    switchTab(1)
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
 
         profilehelper_profiletype.setOnClickListener {
             PopupMenu(this, profilehelper_profiletype).apply {
@@ -213,7 +226,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
     private fun switchTab(tab: Int) {
-        setBackgroundColorOnSelected(tab)
         when (typeSelected[tab]) {
             ProfileType.MOTOL_DEFAULT     -> {
                 ageUsed[tabSelected] = profilehelper_age.value
@@ -265,11 +277,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                     profilehelper_profileswitch_list.setText(profileSwitch[profileSwitchUsed[tabSelected]].customizedName)
             }
         }
-    }
-
-    private fun setBackgroundColorOnSelected(tab: Int) {
-        profilehelper_menu1.setBackgroundColor(resourceHelper.gc(if (tab == 1) R.color.defaultbackground else R.color.tabBgColorSelected))
-        profilehelper_menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.tabBgColorSelected))
     }
 
 }
