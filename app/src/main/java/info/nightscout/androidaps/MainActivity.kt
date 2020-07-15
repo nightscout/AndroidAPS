@@ -150,7 +150,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if ( sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_dark)
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.black)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
@@ -177,7 +177,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            if ( !sp.getBoolean("backgroundcolor", true))  window.setBackgroundDrawableResource(R.color.background_dark)
+            if ( !sp.getBoolean("backgroundcolor", true))  window.setBackgroundDrawableResource(R.color.black)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO

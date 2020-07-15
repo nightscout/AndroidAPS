@@ -147,7 +147,7 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:textColorPrimary">@color/ios_blue_default</item>
         <item name="android:background">@color/transparent</item>
-        <item name="android:backgroundTint">@color/black_alpha_65</item>
+        <item name="android:backgroundTint">@color/black_alpha_70</item>
         <item name="android:backgroundTintMode">multiply</item>
     </style>
 

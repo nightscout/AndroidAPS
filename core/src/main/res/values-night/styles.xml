@@ -218,7 +218,7 @@
         <item name="PillColorEnd">@color/PillColorCyanEnd</item>
         <item name="colorSurface">@color/black_alpha_60</item>
         <item name="android:popupBackground">@color/black_alpha_80</item>
-        <item name="android:windowBackground">@drawable/tron_legacy01</item>
+        <item name="android:windowBackground">@drawable/tron_legacy02</item>
         <item name="colorGraphBackground">@color/black_alpha_10</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>

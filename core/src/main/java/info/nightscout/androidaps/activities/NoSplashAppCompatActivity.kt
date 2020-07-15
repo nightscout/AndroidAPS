@@ -24,7 +24,7 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivity() {
             e.printStackTrace()
         }
         if ( spSplash.getBoolean("daynight", true)) {
-            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_dark)
+            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.black)
         } else {
             if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_light)
         }

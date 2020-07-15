@@ -37,7 +37,7 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
         }
 
         if ( sp.getBoolean("daynight", true)) {
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(info.nightscout.androidaps.core.R.color.background_dark)
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(info.nightscout.androidaps.core.R.color.black)
         } else {
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(info.nightscout.androidaps.core.R.color.background_light)
         }
