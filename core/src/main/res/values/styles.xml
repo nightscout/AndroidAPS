@@ -418,10 +418,6 @@
         <item name="colorAccent">@color/errorAlertBackground</item>
     </style>
 
-    <style name="ButtonSmallFontStyle">
-        <item name="android:textSize">10sp</item>
-    </style>
-
     <style name="ButtonMediumFontStyle">
         <item name="android:textSize">15sp</item>
     </style>
