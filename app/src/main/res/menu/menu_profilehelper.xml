@@ -5,6 +5,9 @@
         android:id="@+id/menu_default"
         android:title="@string/motoldefaultprofile" />
     <item
+        android:id="@+id/menu_default_dpv"
+        android:title="@string/dpvdefaultprofile" />
+    <item
         android:id="@+id/menu_current"
         android:title="@string/currentprofile" />
     <item

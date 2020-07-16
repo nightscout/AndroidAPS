@@ -1480,6 +1480,7 @@
     <string name="nav_survey">Survey</string>
     <string name="invalidage">Invalid age entry</string>
     <string name="invalidweight">Invalid weight entry</string>
+    <string name="invalidpct">Invalid % entry</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Average</string>
     <string name="tir">TIR</string>
@@ -1715,6 +1716,9 @@
     <string name="availableprofile">Available profile</string>
     <string name="profiletype">Profile type</string>
     <string name="formatwithtdd">Age: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% of basal</string>
+    <string name="dpvdefaultprofile">DPV Default profile</string>
 
 </resources>
