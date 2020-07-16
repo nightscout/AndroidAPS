@@ -97,6 +97,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
                 profile2 = Profile(injector, JSONObject(customProfileJson2), customProfileUnits)
                 profileName = customProfileName
+                header_icon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
                 profileview_datelayout.visibility = View.GONE
             }
@@ -117,7 +118,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profile2?.let { profile2 ->
                     profileview_units.text = profile1.units
                     profileview_dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile1.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
-                    profileview_activeprofile.text = profileName
+                    val profileNames =profileName!!.split("\n").toTypedArray()
+                    profileview_activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
                     profileview_date.text = date
                     profileview_ic.text = ics(profile1, profile2)
                     profileview_isf.text = isfs(profile1, profile2)
@@ -174,6 +176,13 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
         s += "    "
         s += "<font color='${resourceHelper.gc(R.color.white)}'>$units</font>"
+        return s
+    }
+
+    private fun formatColors(text1: String, text2: String): String {
+        var s = "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
+        s += "<BR/>"
+        s += "<font color='${resourceHelper.gc(R.color.examinedProfile)}'>$text2</font>"
         return s
     }
 
