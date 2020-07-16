@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventBTChange
@@ -211,6 +212,7 @@ class AutomationPlugin @Inject constructor(
                         }
                     })
                 }
+                SystemClock.sleep(1100)
                 event.lastRun = DateUtil.now()
             }
         }

@@ -34,14 +34,14 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
             val isf = Round.roundTo(170.0 / _tdd, 0.1)
             profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0),units))
-        } else if (age >= 12 && age < 18) {
+        } else if (age >= 12 && age <= 18) {
             val _tdd = if (tdd == 0.0) 1.0 * weight else tdd
             closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(500.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0)))
             val isf = Round.roundTo(100.0 / _tdd, 0.1)
             profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2),units))
-        } else if (age >= 18) {
+        } else if (age > 18) {
             return null
         }
         profile.put("dia", 5.0)

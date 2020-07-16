@@ -9,7 +9,8 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.SurveyActivity"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".activities.ProfileHelperActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -136,6 +137,27 @@
 
                 </TableRow>
 
+                <TableRow
+                    android:id="@+id/profilehelper_basalpctfromtdd_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profilehelper_basalpctfromtdd_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:labelFor="@+id/profilehelper_basalpctfromtdd"
+                        android:text="@string/basalpctfromtdd_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.androidaps.utils.NumberPicker
+                        android:id="@+id/profilehelper_basalpctfromtdd"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp" />
+
+                </TableRow>
+
             </TableLayout>
 
             <TextView
@@ -176,8 +198,6 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:labelFor="@+id/profilehelper_age"
-                android:text="@string/age"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>

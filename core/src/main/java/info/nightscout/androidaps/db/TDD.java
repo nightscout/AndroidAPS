@@ -59,15 +59,15 @@ public class TDD {
 
     public String toText(ResourceHelper resourceHelper, DateUtil dateUtil, boolean includeCarbs) {
         if (includeCarbs)
-            return resourceHelper.gs(R.string.tddwithcarbsformat, dateUtil.dateStringShort(date), total, bolus, basal, carbs);
+            return resourceHelper.gs(R.string.tddwithcarbsformat, dateUtil.dateStringShort(date), total, bolus, basal, basal / total * 100, carbs);
         else
-            return resourceHelper.gs(R.string.tddformat, dateUtil.dateStringShort(date), total, bolus, basal);
+            return resourceHelper.gs(R.string.tddformat, dateUtil.dateStringShort(date), total, bolus, basal, basal / total * 100);
     }
 
     public String toText(ResourceHelper resourceHelper, int days, boolean includeCarbs) {
         if (includeCarbs)
-            return resourceHelper.gs(R.string.tddwithcarbsformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal, carbs);
+            return resourceHelper.gs(R.string.tddwithcarbsformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal, basal / total * 100, carbs);
         else
-            return resourceHelper.gs(R.string.tddformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal);
+            return resourceHelper.gs(R.string.tddformat, String.format(Locale.getDefault(), "%d ", days) + resourceHelper.gs(R.string.days), total, bolus, basal, basal / total * 100);
     }
 }
