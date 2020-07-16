@@ -258,7 +258,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun switchTab(tab: Int, newContent: ProfileType, storeOld: Boolean = true) {
-        setBackgroundColorOnSelected(tab)
         // Store values for selected tab. listBox values are stored on selection change
         if (storeOld) storeValues()
 
