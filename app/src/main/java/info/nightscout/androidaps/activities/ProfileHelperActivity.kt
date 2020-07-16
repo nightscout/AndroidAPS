@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -251,6 +252,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
+        profilehelper_profiletype_title.setDefaultHintTextColor(ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile)))
 
         // show new content
         profilehelper_profiletype.setText(
@@ -281,6 +283,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private fun setBackgroundColorOnSelected(tab: Int) {
         profilehelper_menu1.setBackgroundColor(resourceHelper.gc(if (tab == 1) R.color.defaultbackground else R.color.tabBgColorSelected))
-        profilehelper_menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.tabBgColorSelected))
+        profilehelper_menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
     }
 }
