@@ -150,11 +150,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if ( sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.black)
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( sp.getInt("darkBackgroundColor", R.color.black))
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_light)
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( sp.getInt("lightBackgroundColor", R.color.background_light))
         }
         delegate.applyDayNight()
         setTheme(newTheme)
