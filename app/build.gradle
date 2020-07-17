@@ -351,6 +351,10 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+
+
+    //Color Picker
+    implementation "com.github.skydoves:colorpickerview:2.1.7"
 }
 
 /*

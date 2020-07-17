@@ -2,6 +2,7 @@ package info.nightscout.androidaps.activities
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -37,9 +38,11 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
         }
 
         if ( sp.getBoolean("daynight", true)) {
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( sp.getInt("darkBackgroundColor", R.color.black))
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.black))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( sp.getInt("lightBackgroundColor", R.color.background_light))
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
         }
 
         setContentView(R.layout.activity_single_fragment)

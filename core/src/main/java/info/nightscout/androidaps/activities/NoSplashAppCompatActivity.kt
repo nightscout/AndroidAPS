@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.activities
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -23,10 +25,13 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
         if ( spSplash.getBoolean("daynight", true)) {
-            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( spSplash.getInt("darkBackgroundColor", R.color.black))
+            val cd = ColorDrawable(spSplash.getInt("darkBackgroundColor", R.color.black))
+            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
-            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( spSplash.getInt("lightBackgroundColor", R.color.background_light))
+            val cd = ColorDrawable(spSplash.getInt("lightBackgroundColor", R.color.background_light))
+            if ( !spSplash.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
         }
     }
 

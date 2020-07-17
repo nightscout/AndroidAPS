@@ -73,7 +73,75 @@
             android:layout_alignParentRight="true"
             android:onClick="onClick"/>
 
-    </LinearLayout></androidx.cardview.widget.CardView>
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/select_backgroundcolor"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="0dp"
+            app:cardElevation="4dp"
+            android:background="?android:colorBackground">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/select_backgroundcolordark_label"
+                    style="@style/Text.Body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="4dp"
+                    android:text="Color dark"/>
+
+                <TextView
+                    android:id="@+id/select_backgroundcolordark"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="3"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@color/background_dark"
+                    android:text=""/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/seperator"/>
+
+                <TextView
+                    android:id="@+id/select_backgroundcolorlight_label"
+                    style="@style/Text.Body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="4dp"
+                    android:text="Color light"/>
+
+                <TextView
+                    android:id="@+id/select_backgroundcolorlight"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="3"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@color/background_light"
+                    android:text=""/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/main_activity_content_frame"

@@ -6,8 +6,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
@@ -31,9 +33,9 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.ms_square.etsyblur.BlurSupport
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.activities.StatsActivity
 import info.nightscout.androidaps.data.Profile
@@ -72,8 +74,6 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.AndroidPermission
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
@@ -150,12 +150,15 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if ( sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( sp.getInt("darkBackgroundColor", R.color.black))
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.black))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource( sp.getInt("lightBackgroundColor", R.color.background_light))
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
         }
+
         delegate.applyDayNight()
         setTheme(newTheme)
         ThemeUtil.setActualTheme(newTheme)
@@ -174,14 +177,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
-        if (sp.getBoolean("daynight", true)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            if ( !sp.getBoolean("backgroundcolor", true))  window.setBackgroundDrawableResource(R.color.black)
+        if ( sp.getBoolean("daynight", true)) {
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.black))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawableResource(R.color.background_light)
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
         }
         delegate.applyDayNight()
         setTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))

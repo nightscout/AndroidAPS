@@ -1,18 +1,25 @@
 package info.nightscout.androidaps.plugins.general.themeselector;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.skydoves.colorpickerview.ColorEnvelope;
+import com.skydoves.colorpickerview.ColorPickerDialog;
+import com.skydoves.colorpickerview.ColorPickerView;
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +34,7 @@ import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView;
 
 import static info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE;
 
-import android.util.Log;
+;
 
 public class ScrollingActivity  extends MainActivity implements View.OnClickListener{
 
@@ -42,6 +49,9 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
     private RecyclerView mRecyclerView;
     private ThemeAdapter mAdapter;
     private BottomSheetBehavior mBottomSheetBehavior;
+    TextView selectdarkcolor ;
+    TextView selectlightcolor ;
+    CardView cardView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,17 +73,28 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
         // get the bottom sheet view
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
 
+        cardView =  findViewById(R.id.select_backgroundcolor);
+
         // init the bottom sheet behavior
         mBottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
-
-        CoordinatorLayout coordinatorLayout = findViewById(R.id.scrollingactivity);
-
         boolean backGround = sp.getBoolean("backgroundcolor", true);
+
+        if(backGround == true)
+            cardView.setVisibility(View.GONE);
+        else
+            cardView.setVisibility(View.VISIBLE);
+
         SwitchCompat switchCompatBackground = findViewById(R.id.switch_backgroundimage);
         switchCompatBackground.setChecked(backGround);
         switchCompatBackground.setOnCheckedChangeListener((compoundButton, b) -> {
 
             sp.putBoolean("backgroundcolor", b);
+
+            if(b == true)
+                cardView.setVisibility(View.GONE);
+            else
+                cardView.setVisibility(View.VISIBLE);
+
             int delayTime = 200;
             compoundButton.postDelayed(new Runnable() {
                 @Override
@@ -104,6 +125,20 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
                 }
             },delayTime);
 
+        });
+
+        selectdarkcolor = findViewById(R.id.select_backgroundcolordark);
+        selectlightcolor = findViewById(R.id.select_backgroundcolorlight);
+
+        selectdarkcolor.setBackgroundColor(sp.getInt("darkBackgroundColor", R.color.black));
+        selectlightcolor.setBackgroundColor( sp.getInt("lightBackgroundColor", R.color.background_light));
+
+        selectdarkcolor.setOnClickListener(v -> {
+            selectColor("dark");
+        });
+
+        selectlightcolor.setOnClickListener(v -> {
+            selectColor("light");
         });
 
         mRecyclerView = findViewById(R.id.recyclerView);
@@ -158,5 +193,51 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
         }
     }
 
+    public void selectColor(String lightOrDark) {
+        new ColorPickerDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                .setTitle("Select Background Color")
+                .setPreferenceName("MyColorPickerDialog")
+                .setPositiveButton(getString(R.string.confirm),
+                        new ColorEnvelopeListener() {
+                            @Override
+                            public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+                                //setLayoutColor(envelope);
+                                if(lightOrDark == "light") {
+                                    sp.putInt("lightBackgroundColor", envelope.getColor());
+                                    selectlightcolor.setBackgroundColor(envelope.getColor());
+                                    int delayTime = 200;
+                                    selectlightcolor.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            changeTheme(sp.getInt("theme", THEME_DARKSIDE));
+                                        }
+                                    },delayTime);
+                                } else if (lightOrDark == "dark") {
+                                    sp.putInt("darkBackgroundColor", envelope.getColor());
+                                    selectdarkcolor.setBackgroundColor(envelope.getColor());
+                                    int delayTime = 200;
+                                    selectdarkcolor.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            changeTheme(sp.getInt("theme", THEME_DARKSIDE));
+                                        }
+                                    },delayTime);
+                                }
+
+                            }
+                        })
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                .attachAlphaSlideBar(false) // default is true. If false, do not show the AlphaSlideBar.
+                .attachBrightnessSlideBar(true)  // default is true. If false, do not show the BrightnessSlideBar.
+                .setBottomSpace(12) // set bottom space between the last slidebar and buttons.
+                .show();
+
+    }
 
 }
