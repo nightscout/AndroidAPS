@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -130,8 +131,8 @@ public class ScrollingActivity  extends MainActivity implements View.OnClickList
         selectdarkcolor = findViewById(R.id.select_backgroundcolordark);
         selectlightcolor = findViewById(R.id.select_backgroundcolorlight);
 
-        selectdarkcolor.setBackgroundColor(sp.getInt("darkBackgroundColor", R.color.black));
-        selectlightcolor.setBackgroundColor( sp.getInt("lightBackgroundColor", R.color.background_light));
+        selectdarkcolor.setBackgroundColor(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)));
+        selectlightcolor.setBackgroundColor( sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)));
 
         selectdarkcolor.setOnClickListener(v -> {
             selectColor("dark");

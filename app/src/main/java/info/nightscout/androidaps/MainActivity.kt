@@ -24,6 +24,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
@@ -150,7 +151,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if ( sp.getBoolean("daynight", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.black))
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -178,10 +179,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
         if ( sp.getBoolean("daynight", true)) {
-            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.black))
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         } else {
-            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
         }
         delegate.applyDayNight()
