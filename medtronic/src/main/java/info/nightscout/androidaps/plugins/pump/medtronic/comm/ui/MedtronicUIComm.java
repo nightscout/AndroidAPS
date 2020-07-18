@@ -34,7 +34,7 @@ public class MedtronicUIComm {
 
     public synchronized MedtronicUITask executeCommand(MedtronicCommandType commandType, Object... parameters) {
 
-        aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
+        aapsLogger.info(LTag.PUMP, "Execute Command: " + commandType.name());
 
         MedtronicUITask task = new MedtronicUITask(injector, commandType, parameters);
 

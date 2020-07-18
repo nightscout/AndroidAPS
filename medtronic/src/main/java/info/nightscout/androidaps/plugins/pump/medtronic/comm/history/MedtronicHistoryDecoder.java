@@ -118,7 +118,7 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
             StringUtil.appendToStringBuilder(sb, "" + unknownEntry.getKey(), ", ");
         }
 
-        aapsLogger.error(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE");
+        aapsLogger.info(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE");
 
         if (unknownOpCodes.size() > 0) {
             aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: {}", sb.toString());
@@ -137,9 +137,9 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                aapsLogger.error(LTag.PUMPCOMM, "    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
+                aapsLogger.info(LTag.PUMPCOMM, "    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
             } else {
-                aapsLogger.error(LTag.PUMPCOMM, "    {}             - {}", entry.getKey().name(), entry.getValue().size());
+                aapsLogger.info(LTag.PUMPCOMM, "    {}             - {}", entry.getKey().name(), entry.getValue().size());
             }
         }
     }

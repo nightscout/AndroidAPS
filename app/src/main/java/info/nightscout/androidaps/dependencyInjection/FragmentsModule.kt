@@ -29,6 +29,8 @@ import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
@@ -63,7 +65,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesLocalInsightFragment(): LocalInsightFragment
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
-    @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
+    @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
     @ContributesAndroidInjector abstract fun contributesOmnipodFragment(): OmnipodFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
@@ -106,7 +108,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusGeneral(): info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusHistoryFragment(): info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusDeviceMedtronic(): info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
+    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusGeneral(): RileyLinkStatusGeneralFragment
+    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusHistoryFragment(): RileyLinkStatusHistoryFragment
+    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusDeviceMedtronic(): RileyLinkStatusDeviceMedtronic
 }

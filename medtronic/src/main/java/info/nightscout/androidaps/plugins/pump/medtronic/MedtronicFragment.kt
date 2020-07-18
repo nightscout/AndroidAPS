@@ -123,7 +123,7 @@ class MedtronicFragment : DaggerFragment() {
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                aapsLogger.debug(LTag.PUMP, "onStatusEvent(EventMedtronicDeviceStatusChange): $it")
+                aapsLogger.debug(LTag.PUMP, "onStatusEvent(EventRileyLinkDeviceStatusChange): $it")
                 setDeviceStatus()
             }, { fabricPrivacy.logException(it) })
         disposable += rxBus

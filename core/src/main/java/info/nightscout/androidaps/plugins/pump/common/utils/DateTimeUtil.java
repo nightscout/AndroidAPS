@@ -21,7 +21,6 @@ public class DateTimeUtil {
      * @param atechDateTime
      * @return
      */
-    @Deprecated // use joda instead
     public static LocalDateTime toLocalDateTime(long atechDateTime) {
         int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
@@ -56,7 +55,6 @@ public class DateTimeUtil {
      * @param atechDateTime
      * @return
      */
-    @Deprecated // use joda instead
     public static GregorianCalendar toGregorianCalendar(long atechDateTime) {
         int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;

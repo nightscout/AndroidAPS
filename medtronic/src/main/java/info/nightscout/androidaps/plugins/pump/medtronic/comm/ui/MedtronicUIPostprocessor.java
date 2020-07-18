@@ -161,7 +161,8 @@ public class MedtronicUIPostprocessor {
             // no postprocessing
 
             default:
-                aapsLogger.error(LTag.PUMP, "Post-processing not implemented for {}.", uiTask.commandType.name());
+                break;
+                //aapsLogger.error(LTag.PUMP, "Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
 

@@ -205,36 +205,35 @@ public class DailyTotalsDTO {
         //LOG.debug("523: {}", toString());
     }
 
-
     @Override
     public String toString() {
-        return "DailyTotalsDTO [" +
-                "bgAvg=" + bgAvg +
-                ", bgLow=" + bgLow +
-                ", bgHigh=" + bgHigh +
-                ", bgCount=" + bgCount +
-                ", sensorAvg=" + sensorAvg +
-                ", sensorMin=" + sensorMin +
-                ", sensorMax=" + sensorMax +
-                ", sensorCalcCount=" + sensorCalcCount +
-                ", sensorDataCount=" + sensorDataCount +
-                ", insulinTotal=" + insulinTotal +
-                ", insulinBasal=" + insulinBasal +
-                ", insulinBolus=" + insulinBolus +
-                ", insulinCarbs=" + insulinCarbs +
-                ", bolusTotal=" + bolusTotal +
-                ", bolusFood=" + bolusFood +
-                ", bolusFoodAndCorr=" + bolusFoodAndCorr +
-                ", bolusCorrection=" + bolusCorrection +
-                ", bolusManual=" + bolusManual +
-                ", bolusCount=" + bolusCount +
-                ", bolusCountFoodOrCorr=" + bolusCountFoodOrCorr +
-                ", bolusCountFoodAndCorr=" + bolusCountFoodAndCorr +
-                ", bolusCountManual=" + bolusCountManual +
-                ", bolusCountFood=" + bolusCountFood +
-                ", bolusCountCorr=" + bolusCountCorr +
-                ", entry=" + entry +
-                ']';
+        return new ToStringBuilder(this)
+                .append("bgAvg", bgAvg)
+                .append("bgLow", bgLow)
+                .append("bgHigh", bgHigh)
+                .append("bgCount", bgCount)
+                .append("sensorAvg", sensorAvg)
+                .append("sensorMin", sensorMin)
+                .append("sensorMax", sensorMax)
+                .append("sensorCalcCount", sensorCalcCount)
+                .append("sensorDataCount", sensorDataCount)
+                .append("insulinTotal", insulinTotal)
+                .append("insulinBasal", insulinBasal)
+                .append("insulinBolus", insulinBolus)
+                .append("insulinCarbs", insulinCarbs)
+                .append("bolusTotal", bolusTotal)
+                .append("bolusFood", bolusFood)
+                .append("bolusFoodAndCorr", bolusFoodAndCorr)
+                .append("bolusCorrection", bolusCorrection)
+                .append("bolusManual", bolusManual)
+                .append("bolusCount", bolusCount)
+                .append("bolusCountFoodOrCorr", bolusCountFoodOrCorr)
+                .append("bolusCountFoodAndCorr", bolusCountFoodAndCorr)
+                .append("bolusCountManual", bolusCountManual)
+                .append("bolusCountFood", bolusCountFood)
+                .append("bolusCountCorr", bolusCountCorr)
+                .append("entry", entry)
+                .toString();
     }
 
     public void setTDD(TDD tdd) {

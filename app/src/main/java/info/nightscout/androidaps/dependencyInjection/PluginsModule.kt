@@ -145,7 +145,7 @@ abstract class PluginsModule {
     @PumpDriver
     @IntoMap
     @IntKey(150)
-    abstract fun bindMedtronicPumpPlugin(plugin: info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin): PluginBase
+    abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
 
     @Binds
     @NotNSClient

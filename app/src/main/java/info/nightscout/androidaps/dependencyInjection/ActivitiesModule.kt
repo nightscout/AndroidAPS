@@ -26,7 +26,7 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesInsightPairingInformationActivity(): InsightPairingInformationActivity
     @ContributesAndroidInjector abstract fun contributesLogSettingActivity(): LogSettingActivity
     @ContributesAndroidInjector abstract fun contributeMainActivity(): MainActivity
-    @ContributesAndroidInjector abstract fun contributesMedtronicHistoryActivity(): info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
+    @ContributesAndroidInjector abstract fun contributesMedtronicHistoryActivity(): MedtronicHistoryActivity
     @ContributesAndroidInjector abstract fun contributesPreferencesActivity(): PreferencesActivity
     @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity

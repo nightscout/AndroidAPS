@@ -771,7 +771,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             if ((clock.localDeviceTime.getYear() <= 2015) || (timeDiff <= 24 * 60 * 60)) {
 
-                aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump." + timeDiff);
+                aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump." , timeDiff);
 
                 rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(MedtronicCommandType.SetRealTimeClock);
 
@@ -781,13 +781,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 }
             } else {
                 if ((clock.localDeviceTime.getYear() > 2015)) {
-                    aapsLogger.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff={}]. Doing nothing." + timeDiff);
+                    aapsLogger.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff={} s]. Doing nothing.", timeDiff);
                     medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, getResourceHelper(), rxBus);
                 }
             }
 
         } else {
-            aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Do nothing." + timeDiff);
+            aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Do nothing.", timeDiff);
         }
 
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 0);
@@ -1133,11 +1133,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private void readPumpHistoryLogic() {
 
+        boolean debugHistory = false;
+
         LocalDateTime targetDate = null;
 
         if (lastPumpHistoryEntry == null) {
 
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: null");
+            if (debugHistory)
+                aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: null");
 
             Long lastPumpHistoryEntryTime = getLastPumpEntryTime();
 
@@ -1146,13 +1149,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             medtronicHistoryData.setIsInInit(true);
 
             if (lastPumpHistoryEntryTime == 0L) {
-                aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: 0L - targetDate: "
-                        + targetDate);
+                if (debugHistory)
+                    aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: 0L - targetDate: "
+                            + targetDate);
                 targetDate = timeMinus36h;
             } else {
                 // LocalDateTime lastHistoryRecordTime = DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime);
 
-                aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: " + lastPumpHistoryEntryTime + " - targetDate: " + targetDate);
+                if (debugHistory)
+                    aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: " + lastPumpHistoryEntryTime + " - targetDate: " + targetDate);
 
                 medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntryTime);
 
@@ -1168,30 +1173,35 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 targetDate = (timeMinus36h.isAfter(lastHistoryRecordTime) ? timeMinus36h : lastHistoryRecordTime);
 
-                aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): targetDate: " + targetDate);
+                if (debugHistory)
+                    aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): targetDate: " + targetDate);
             }
         } else {
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - " + medtronicUtil.gsonInstance.toJson(lastPumpHistoryEntry));
+            if (debugHistory)
+                aapsLogger.debug(LTag.PUMP, getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - " + medtronicUtil.gsonInstance.toJson(lastPumpHistoryEntry));
             medtronicHistoryData.setIsInInit(false);
             // medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntry.atechDateTime);
 
             // targetDate = lastPumpHistoryEntry.atechDateTime;
         }
 
-        aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
+        //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
 
         MedtronicUITask responseTask2 = rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(MedtronicCommandType.GetHistoryData,
                 lastPumpHistoryEntry, targetDate);
 
-        aapsLogger.debug(LTag.PUMP, "HST: After task");
+        if (debugHistory)
+            aapsLogger.debug(LTag.PUMP, "HST: After task");
 
         PumpHistoryResult historyResult = (PumpHistoryResult) responseTask2.returnData;
 
-        aapsLogger.debug(LTag.PUMP, "HST: History Result: " + historyResult.toString());
+        if (debugHistory)
+            aapsLogger.debug(LTag.PUMP, "HST: History Result: " + historyResult.toString());
 
         PumpHistoryEntry latestEntry = historyResult.getLatestEntry();
 
-        aapsLogger.debug(LTag.PUMP, getLogPrefix() + "Last entry: " + latestEntry);
+        if (debugHistory)
+            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "Last entry: " + latestEntry);
 
         if (latestEntry == null) // no new history to read
             return;
@@ -1199,7 +1209,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.lastPumpHistoryEntry = latestEntry;
         sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, latestEntry.atechDateTime);
 
-        aapsLogger.debug(LTag.PUMP, "HST: History: valid=" + historyResult.validEntries.size() + ", unprocessed=" + historyResult.unprocessedEntries.size());
+        if (debugHistory)
+            aapsLogger.debug(LTag.PUMP, "HST: History: valid=" + historyResult.validEntries.size() + ", unprocessed=" + historyResult.unprocessedEntries.size());
 
         this.medtronicHistoryData.addNewHistory(historyResult);
         this.medtronicHistoryData.filterNewEntries();
@@ -1221,10 +1232,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // update to last entry
         // - save
         // - determine pump status
-
-        //
-
     }
+
 
     private Long getLastPumpEntryTime() {
         Long lastPumpEntryTime = sp.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, 0L);
