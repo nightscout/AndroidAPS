@@ -6,7 +6,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -18,8 +17,6 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP
-
-    var inputProfileName: InputProfileName = InputProfileName(injector, "")
 
     override fun friendlyName(): Int = R.string.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile, profileFunction.getProfileName())
