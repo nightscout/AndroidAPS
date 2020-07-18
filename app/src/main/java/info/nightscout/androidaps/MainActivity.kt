@@ -321,9 +321,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         // set BG in header are for small display like Unihertz Atom
         //check screen width and choose main dialog
-
-        // set BG in header are for small display like Unihertz Atom
-        //check screen width and choose main dialog
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         val screen_height: Int = dm.heightPixels
@@ -331,7 +328,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         // Special settings for small displays like atom
         if (smallHeight) {
-            overview_bg?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 26F)
+            overview_bg?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 28F)
             overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24F)
             timeago?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
             overview_delta?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
