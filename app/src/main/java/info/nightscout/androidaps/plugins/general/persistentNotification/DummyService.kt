@@ -27,7 +27,7 @@ class DummyService : DaggerService() {
 
     private val disposable = CompositeDisposable()
 
-    override fun onBind(intent: Intent): IBinder? = null
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()

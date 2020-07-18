@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
+import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventBTChange
@@ -39,7 +40,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Singleton
 class AutomationPlugin @Inject constructor(
@@ -71,7 +71,7 @@ class AutomationPlugin @Inject constructor(
     var executionLog: MutableList<String> = ArrayList()
     var btConnects : MutableList<EventBTChange> = ArrayList()
 
-    private val loopHandler = Handler()
+    private val loopHandler : Handler = Handler(HandlerThread(AutomationPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     init {

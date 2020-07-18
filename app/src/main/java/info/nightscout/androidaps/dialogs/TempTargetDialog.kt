@@ -76,7 +76,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             overview_temptarget_reason.adapter = adapterReason
             overview_temptarget_reason.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     val defaultDuration: Double
                     val defaultTarget: Double
                     when (reasonList[position]) {

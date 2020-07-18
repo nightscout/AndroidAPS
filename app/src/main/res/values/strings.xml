@@ -949,7 +949,7 @@
     <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
-    <string name="needlocationpermission">Application needs location permission for BT scan</string>
+    <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
@@ -1265,6 +1265,7 @@
     <string name="autotune_copy_localprofile_button">Copy to local profile</string>
     <string name="autotune_error">Error in input data, try to reduce the number of days</string>
     <string name="autotune_warning_before_run">Autotune calculation could take a long time, be patient</string>
+    <string name="autotune_warning_during_run">Autotune calculation started, please be patient</string>
     <string name="autotune_warning_after_run">Autotune plugin is not validated today, check the results carefully before using it!</string>
     <string name="autotune_min_days">Set at least 1 day!!!</string>
     <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
@@ -1275,6 +1276,7 @@
     <string name="format_autotune_ic" translatable="false">| %1$4.4s |\t%2$3.2f |\t%3$3.2f |\n</string>
     <string name="format_autotune_basal" translatable="false">|\t%1$02.0f\t|\t%2$3.2f |\t%3$3.2f |\t%4$d / %5$.0f%%\n</string>
     <string name="format_autotune_sum_basal"  translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
+    <string name="format_autotune_partialresult">Partial result day %1$d / %2$d tuned\n%3$s</string>
     <string name="format_autotune_ic_warning">Autotune works with only one IC value, your profile has %1$d values. Average value is %2$.2fg/U</string>
     <string name="format_autotune_isf_warning">Autotune works with only one ISF value, your profile has %1$d values. Average value is %2$.1f%3$s/U</string>
     <string name="autotune_profile">Autotune profile %1$s</string>
@@ -1748,5 +1750,7 @@
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="comapareprofile">Compare with current profile</string>
+    <string name="nav_profilehelper">Profile helper</string>
 
 </resources>

@@ -451,9 +451,6 @@ class BLEComm @Inject internal constructor(
             // v3 2nd layer encryption
             v3Encryption = true
             danaPump.v3RSPump = true
-            rxBus.send(EventNewNotification(Notification(Notification.UNSUPPORTED_FIRMWARE, resourceHelper.gs(R.string.unsupportedfirmware), Notification.URGENT)))
-            disconnect("Wrong firmware")
-            /*
             val model = decryptedBuffer[5]
             // val protocol = decryptedBuffer[7]
             if (model == 0x05.toByte()) {
@@ -481,7 +478,6 @@ class BLEComm @Inject internal constructor(
                 val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASYMENU_CHECK, null, null)
                 writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
             }
-            */
             // response PUMP : error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'M'.toByte() && decryptedBuffer[5] == 'P'.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))

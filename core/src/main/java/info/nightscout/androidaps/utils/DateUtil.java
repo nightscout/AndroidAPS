@@ -215,18 +215,14 @@ public class DateUtil {
         return dateString(mills) + " " + timeStringWithSeconds(mills);
     }
 
-    public static String dateAndTimeFullString(long mills) {
-        return dateString(mills) + " " + timeFullString(mills);
-    }
-
     public static String minAgo(ResourceHelper resourceHelper, long time) {
         int mins = (int) ((now() - time) / 1000 / 60);
         return resourceHelper.gs(R.string.minago, mins);
     }
 
     public static String minAgoShort(long time) {
-        Integer mins = (int) ((time - now()) / 1000 / 60);
-        return (mins > 0 ? "+" : "") + mins.toString();
+        int mins = (int) ((time - now()) / 1000 / 60);
+        return (mins > 0 ? "+" : "") + Integer.toString(mins);
     }
 
     public static String hourAgo(long time, ResourceHelper resourceHelper) {

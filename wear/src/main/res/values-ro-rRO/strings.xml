@@ -1,2 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+    <string name="label_xdrip">AAPS</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_warning_sync_aaps">Sincronizare cu AAPS!</string>
+    <string name="pref_on">Pornit</string>
+    <string name="pref_off">Oprit</string>
+    <string name="pref_1_hour">1 oră</string>
+    <string name="pref_2_hours">2 ore</string>
+    <string name="pref_3_hours">3 ore</string>
+    <string name="pref_4_hours">4 ore</string>
+    <string name="pref_5_hours">5 ore</string>
+    <string name="pref_default">Implicit</string>
+</resources>

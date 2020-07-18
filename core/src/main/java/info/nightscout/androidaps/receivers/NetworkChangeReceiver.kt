@@ -12,6 +12,7 @@ import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.StringUtils
 import javax.inject.Inject
 
 class NetworkChangeReceiver : DaggerBroadcastReceiver() {
@@ -39,7 +40,7 @@ class NetworkChangeReceiver : DaggerBroadcastReceiver() {
                 val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 val wifiInfo = wifiManager.connectionInfo
                 if (wifiInfo.supplicantState == SupplicantState.COMPLETED) {
-                    event.ssid = wifiInfo.ssid
+                    event.ssid = StringUtils.removeSurroundingQuotes(wifiInfo.ssid)
                     // aapsLogger.debug(LTag.CORE, "NETCHANGE: Wifi connected. SSID: ${event.connectedSsid()}")
                 }
             }

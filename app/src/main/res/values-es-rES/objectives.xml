@@ -20,7 +20,9 @@
     <string name="objectives_autosens_gate">Una semana con éxito en lazo cerrado durante el día con entrada regular de carbohidratos</string>
     <string name="objectives_ama_objective">Habilitar funciones adicionales para su uso durante el día, como el asistente de comida avanzado</string>
     <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
+    <string name="objectives_auto_objective">Activar automatización</string>
     <string name="objectives_smb_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>
+    <string name="objectives_auto_gate">Lea los documentos sobre cómo funciona la automatización. Configura tus primeras reglas simples. En lugar de acción, deje que AAPS muestre solo notificaciones. Cuando esté seguro de que la automatización se activa en el momento adecuado, reemplace la notificación por acción real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glucosa disponible en NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado de la bomba disponible en NS</string>
     <string name="objectives_manualenacts">Aprobación Manual</string>
@@ -35,6 +37,7 @@
     <string name="objectives_useloop">Mostrar contenido del plugin Loop</string>
     <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
     <string name="objectives_button_enter">Intro</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si tienes al menos 3 meses de experiencia con el lazo cerrado de otros sistemas puedes cualificarte para obtener un código para saltarte los objetivos. Para información detallada (en inglés): https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Código aceptado</string>
     <string name="codeinvalid">Código no válido</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>

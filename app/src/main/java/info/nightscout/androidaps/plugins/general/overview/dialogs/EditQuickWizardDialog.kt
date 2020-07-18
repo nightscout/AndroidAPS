@@ -104,7 +104,7 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
         overview_editquickwizard_usetemptarget_spinner.setSelection(entry.useTempTarget())
 
         overview_editquickwizard_usecob_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) = processCob()
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) = processCob()
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
         processCob()

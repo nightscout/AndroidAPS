@@ -667,7 +667,6 @@
     <string name="startobjective">开始你的第一个目标</string>
     <string name="permission">权限</string>
     <string name="askforpermission">请求权限</string>
-    <string name="needlocationpermission">应用程序需要位置权限用于蓝牙扫描</string>
     <string name="needstoragepermission">应用程序需要存储权限才能存储日志文件</string>
     <string name="request">请求</string>
     <string name="insulinsourcesetup">配置胰岛素插件</string>

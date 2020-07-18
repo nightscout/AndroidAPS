@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -48,6 +50,7 @@ class NsClientReceiverDelegate {
                 ev.isChanged(resourceHelper, R.string.key_ns_allowroaming)
         ) {
             receiverStatusStore.updateNetworkStatus();
+            onStatusEvent(receiverStatusStore.getLastNetworkEvent());
         } else if (ev.isChanged(resourceHelper, R.string.key_ns_chargingonly)) {
             receiverStatusStore.broadcastChargingState();
         }
@@ -92,14 +95,15 @@ class NsClientReceiverDelegate {
 
     boolean calculateStatus(final EventNetworkChange ev) {
         boolean wifiOnly = sp.getBoolean(R.string.key_ns_wifionly, false);
-        String allowedSSIDs = sp.getString(R.string.key_ns_wifi_ssids, "");
+        String allowedSSIDstring = sp.getString(R.string.key_ns_wifi_ssids, "");
+        String[] allowedSSIDs = allowedSSIDstring.split(";");
+        if (allowedSSIDstring.isEmpty()) allowedSSIDs = new String[0];
         boolean allowRoaming = sp.getBoolean(R.string.key_ns_allowroaming, true);
 
         boolean newAllowedState = true;
 
         if (ev.getWifiConnected()) {
-            if (!allowedSSIDs.trim().isEmpty() &&
-                    (!allowedSSIDs.contains(ev.connectedSsid()) && !allowedSSIDs.contains(ev.getSsid()))) {
+            if (allowedSSIDs.length != 0 && !Arrays.asList(allowedSSIDs).contains(ev.getSsid())) {
                 newAllowedState = false;
             }
         } else {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -32,17 +33,23 @@ class DexcomPlugin @Inject constructor(
     private val mainApp: MainApp,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val nsUpload: NSUpload
+    private val nsUpload: NSUpload,
+    config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.dexcom_app_patched)
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
-    .description(R.string.description_source_dexcom)
-    .setDefault(),
+    .description(R.string.description_source_dexcom),
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
+
+    init {
+        if (!config.NSCLIENT) {
+            pluginDescription.setDefault()
+        }
+    }
 
     override fun advancedFilteringSupported(): Boolean {
         return true

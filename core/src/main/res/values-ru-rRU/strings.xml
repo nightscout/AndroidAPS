@@ -122,7 +122,6 @@
     <!--    Temptarget-->
     <string name="mins">%1$d мин</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s</b>∑:<b>%2$.2f</b>Бол:<b>%3$.2f</b>Баз:<b>%4$.2f</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_announcement">Оовещение</string>
@@ -162,6 +161,7 @@
     <string name="waitingforpumpresult">Ожидание результата</string>
     <string name="smb_shortname">Супер микро болюс SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">Необходимы дополнительные углеводы \"%d г в течение %d минут\"</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">накопительные TDD</string>

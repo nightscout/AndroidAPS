@@ -160,7 +160,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         params.weight = 1.0f
         spinner.layoutParams = params
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 setType(Type.values()[position])
             }
 

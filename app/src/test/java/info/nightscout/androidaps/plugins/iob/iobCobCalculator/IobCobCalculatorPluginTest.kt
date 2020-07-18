@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculatorPlugin
+package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -7,7 +7,6 @@ import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -340,6 +339,7 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(BgReading(injector).date(DateUtil.fromISODateString("2018-09-05T03:50:03Z")).value(100.0))
         bgReadingList.add(BgReading(injector).date(DateUtil.fromISODateString("2018-09-05T03:44:57Z")).value(100.0))
         iobCobCalculatorPlugin.bgReadings = bgReadingList
+        iobCobCalculatorPlugin.referenceTime = null
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
         Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T13:34:57Z").time, iobCobCalculatorPlugin.bucketedData[0].timestamp)

@@ -29,13 +29,13 @@ class AlarmSoundService : DaggerService() {
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
 
         player?.let { if (it.isPlaying) it.stop() }
 
         aapsLogger.debug(LTag.CORE, "onStartCommand")
-        if (intent.hasExtra("soundid")) resourceId = intent.getIntExtra("soundid", R.raw.error)
+        if (intent?.hasExtra("soundid") == true) resourceId = intent.getIntExtra("soundid", R.raw.error)
         player = MediaPlayer()
         try {
             val afd = resourceHelper.openRawResourceFd(resourceId) ?: return START_STICKY
