@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -16,6 +15,8 @@ import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
+import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -316,6 +317,30 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (config.PUMPDRIVERS) {
             androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
             androidPermission.notifyForSystemWindowPermissions(this)
+        }
+
+        // set BG in header are for small display like Unihertz Atom
+        //check screen width and choose main dialog
+
+        // set BG in header are for small display like Unihertz Atom
+        //check screen width and choose main dialog
+        val dm = DisplayMetrics()
+        this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
+        val screen_height: Int = dm.heightPixels
+        val smallHeight = screen_height <= Constants.SMALL_HEIGHT
+
+        // Special settings for small displays like atom
+        if (smallHeight) {
+            overview_bg?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 26F)
+            overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24F)
+            timeago?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            overview_delta?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            careportal_sensorage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            careportal_insulinage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            careportal_reservoirlevel?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            careportal_canulaage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            careportal_pbage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
+            careportal_batterylevel?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
         }
     }
 
