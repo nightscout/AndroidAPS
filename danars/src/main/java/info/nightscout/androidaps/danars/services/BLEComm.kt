@@ -554,7 +554,7 @@ class BLEComm @Inject internal constructor(
             val size = decryptedBuffer.size
             var pass: Int = (decryptedBuffer[size - 1].toInt() and 0x000000FF shl 8) + (decryptedBuffer[size - 2].toInt() and 0x000000FF)
             pass = pass xor 3463
-            danaPump.rsPassword = Integer.toHexString(pass)
+            danaPump.rsPassword = String.format("%04X", pass)
             aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
