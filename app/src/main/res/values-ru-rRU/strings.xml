@@ -1239,6 +1239,7 @@ Context | Edit Context</string>
     <string name="nav_survey">Опрос</string>
     <string name="invalidage">Некорректное значение возраст</string>
     <string name="invalidweight">Некорректное значение вес</string>
+    <string name="invalidpct">Некорректный ввод %</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Низкий: <b>%2$02d%%</b> В целевом диапазоне: <b>%3$02d%%</b> Высокий: <b>%4$02d%%</b>]]></string>
     <string name="average">Средний</string>
     <string name="tir">Время в целевом диапазоне TIR</string>
@@ -1407,6 +1408,15 @@ Context | Edit Context</string>
     <string name="omnipod_bolus_failed_uncertain">Не удалось проверить правильность подачи болюса. Убедитесь, что Pod подает болюс или отмените его.</string>
     <string name="omnipod_rl_stats">Статистика RL</string>
     <string name="omnipod_read_pulse_log_short">Журнал Pulse </string>
-    <string name="comapareprofile">Сравнить с текущим профилем</string>
+    <string name="comapareprofile">Сравнить профили</string>
     <string name="nav_profilehelper">Помощник профиля</string>
+    <string name="motoldefaultprofile">Профиль по умолчанию</string>
+    <string name="currentprofile">Текущий профиль</string>
+    <string name="availableprofile">Доступные профили</string>
+    <string name="profiletype">Тип профиля</string>
+    <string name="formatwithtdd">Возраст: %1$.0f Суточная Потребность: %2$.0f ед</string>
+    <string name="formatwittddandpct">Возраст: %1$.0f Суточная Потребность: %2$.0f ед %3$d%%</string>
+    <string name="formatwithweight">Возраст: %1$.0f Вес: %2$.0f кг</string>
+    <string name="basalpctfromtdd_label">% базального</string>
+    <string name="dpvdefaultprofile">Значение для профиля по умолчанию</string>
 </resources>

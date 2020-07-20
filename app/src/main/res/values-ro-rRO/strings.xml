@@ -1330,5 +1330,4 @@
     <string name="omnipod_alert_expiration_advisory">Pod-ul va expira în curând</string>
     <string name="omnipod_alert_shutdown_imminent">Oprirea este iminentă</string>
     <string name="omnipod_alert_unknown_alert">Alertă necunoscută</string>
-    <string name="comapareprofile">Comparați cu profilul curent</string>
 </resources>

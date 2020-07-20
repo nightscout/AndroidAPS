@@ -1223,7 +1223,7 @@
     <string name="clone_label">Klonovat</string>
     <string name="saveorresetchangesfirst">Nejprve uložte nebo resetujte aktuální změny</string>
     <string name="deletecurrentprofile">Odstranit aktuální profil?</string>
-    <string name="copytolocalprofile">Chcete vytvořit nový lokální profil z tohoto přepnutí profilu?</string>
+    <string name="copytolocalprofile">Vytvořit z tohoto profilu nový místní profil?</string>
     <string name="profilenamecontainsdot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
@@ -1237,6 +1237,7 @@
     <string name="nav_survey">Průzkum</string>
     <string name="invalidage">Neplatná položka věku</string>
     <string name="invalidweight">Neplatná položka váhy</string>
+    <string name="invalidpct">Neplatný vstup %</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Průměr</string>
     <string name="tir">Čas v rozsahu</string>
@@ -1405,6 +1406,15 @@
     <string name="omnipod_bolus_failed_uncertain">Nelze ověřit, zda byl bolus úspěšný. Ověřte prosím, zda Váš Pod dodává bolus nebo ho zrušte.</string>
     <string name="omnipod_rl_stats">Statistika RL</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
-    <string name="comapareprofile">Porovnat s aktuálním profilem</string>
+    <string name="comapareprofile">Porovnat profily</string>
     <string name="nav_profilehelper">Pomocník s profilem</string>
+    <string name="motoldefaultprofile">Výchozí profil</string>
+    <string name="currentprofile">Aktuální profil</string>
+    <string name="availableprofile">Dostupný profil</string>
+    <string name="profiletype">Typ profilu</string>
+    <string name="formatwithtdd">Věk: %1$.0f CDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Věk: %1$.0f CDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Věk: %1$.0f Hmotnost: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% bazálu</string>
+    <string name="dpvdefaultprofile">Výchozí profil DPV</string>
 </resources>

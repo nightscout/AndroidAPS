@@ -1223,7 +1223,7 @@
     <string name="clone_label">Clonar</string>
     <string name="saveorresetchangesfirst">Guardar o restablecer los cambios actuales primero</string>
     <string name="deletecurrentprofile">¿Eliminar el perfil actual?</string>
-    <string name="copytolocalprofile">¿Crear un nuevo perfil local a partir de este conmutador de perfil?</string>
+    <string name="copytolocalprofile">¿Crear un perfil local nuevo a partir de este perfil?</string>
     <string name="profilenamecontainsdot">El nombre de perfil contiene puntos.\nEsto no está soportado por NS.\nEl perfil no se carga en NS.</string>
     <string name="low_mark_comment">Valor inferior del área de rango (sólo visualización)</string>
     <string name="high_mark_comment">Valor superior al área de rango (sólo visualización)</string>
@@ -1405,6 +1405,11 @@
     <string name="omnipod_bolus_failed_uncertain">No se puede verificar si el bolo ha sido exitoso. Por favor verifique que su Pod está poniendo bolo o cancele el bolo.</string>
     <string name="omnipod_rl_stats">Estadísticas del RL</string>
     <string name="omnipod_read_pulse_log_short">Registro de pulso</string>
-    <string name="comapareprofile">Comparar con el perfil actual</string>
+    <string name="comapareprofile">Comparar perfiles</string>
     <string name="nav_profilehelper">Asistente de perfil</string>
+    <string name="currentprofile">Perfil actual</string>
+    <string name="availableprofile">Perfil disponible</string>
+    <string name="profiletype">Tipo de perfil</string>
+    <string name="formatwithtdd">Edad: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwithweight">Edad: %1$.0f Peso: %2$.0f kg</string>
 </resources>

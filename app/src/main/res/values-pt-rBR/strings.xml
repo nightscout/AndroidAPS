@@ -1178,7 +1178,6 @@
     <string name="target_short">ALV</string>
     <string name="saveorresetchangesfirst">Guardar ou repor as alterações atuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil atual?</string>
-    <string name="copytolocalprofile">Criar novo perfil local a partir desta troca de perfil?</string>
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não foi enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>

@@ -122,8 +122,8 @@
     <!--    Temptarget-->
     <string name="mins">%1$dmin</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Baz: <b>%4$.2fU</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Baz: <b>%4$.2fU</b> AV: <b>%5$.0fg</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Boluso: <b>%3$.2fU</b> Bazės: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Boluso: <b>%3$.2fU</b> Bazės: <b>%4$.2fU(%5$.0f%%)</b> AV: <b>%6$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">KG testas</string>
     <string name="careportal_announcement">Pranešimas</string>

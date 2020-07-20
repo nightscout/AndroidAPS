@@ -1223,7 +1223,7 @@
     <string name="clone_label">Clona</string>
     <string name="saveorresetchangesfirst">Salva o reimposta prima le modifiche correnti</string>
     <string name="deletecurrentprofile">Rimuovere il profilo corrente?</string>
-    <string name="copytolocalprofile">Creare nuovo profilo locale da questo cambio profilo?</string>
+    <string name="copytolocalprofile">Creare un nuovo profilo locale da questo profilo?</string>
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
@@ -1237,6 +1237,7 @@
     <string name="nav_survey">Sondaggio</string>
     <string name="invalidage">Inserimento età non valido</string>
     <string name="invalidweight">Inserimento peso non valido</string>
+    <string name="invalidpct">Inserimento % non valido</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Basso: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Alto: <b>%4$02d%%</b>]]></string>
     <string name="average">Media</string>
     <string name="tir">TIR</string>
@@ -1405,6 +1406,15 @@
     <string name="omnipod_bolus_failed_uncertain">Impossibile verificare che il bolo sia riuscito. Verifica che il tuo pod stia erogando il bolo oppure cancellalo.</string>
     <string name="omnipod_rl_stats">Statistiche RL</string>
     <string name="omnipod_read_pulse_log_short">Log impulsi</string>
-    <string name="comapareprofile">Compara col profilo corrente</string>
+    <string name="comapareprofile">Compara profili</string>
     <string name="nav_profilehelper">Assistente profilo</string>
+    <string name="motoldefaultprofile">Profilo predefinito</string>
+    <string name="currentprofile">Profilo corrente</string>
+    <string name="availableprofile">Profilo disponibile</string>
+    <string name="profiletype">Tipo profilo</string>
+    <string name="formatwithtdd">Età: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Età: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Età: %1$.0f Peso: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% di basale</string>
+    <string name="dpvdefaultprofile">Profilo DPV predefinito</string>
 </resources>

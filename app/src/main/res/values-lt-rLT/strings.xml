@@ -1237,6 +1237,7 @@
     <string name="nav_survey">Apklausa</string>
     <string name="invalidage">Neteisingas amžiaus įrašas</string>
     <string name="invalidweight">Neteisingas svorio įrašas</string>
+    <string name="invalidpct">Netinkamas % įrašas</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Žemas: <b>%2$02d%%</b> Norma: <b>%3$02d%%</b> Aukštas: <b>%4$02d%%</b>]]></string>
     <string name="average">Vidutinis</string>
     <string name="tir">TIR (Laikas normos ribose)</string>
@@ -1405,4 +1406,15 @@
     <string name="omnipod_bolus_failed_uncertain">Neįmanoma patikrinti, ar bolusas suleistas sėkmingai. Patikrinkite, ar jūsų POD leidžia bolusą, arba bolusą atšaukite.</string>
     <string name="omnipod_rl_stats">RL statistika</string>
     <string name="omnipod_read_pulse_log_short">Pulse žurnalas</string>
+    <string name="comapareprofile">Palyginti profilius</string>
+    <string name="nav_profilehelper">Profilio pagalbininkas</string>
+    <string name="motoldefaultprofile">Numatytasis profilis</string>
+    <string name="currentprofile">Dabartinis profilis</string>
+    <string name="availableprofile">Galimas profilis</string>
+    <string name="profiletype">Profilio tipas</string>
+    <string name="formatwithtdd">Amžius: %1$.0f BPD: %2$.0f U</string>
+    <string name="formatwittddandpct">Amžius: %1$.0f BPD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Amžius: %1$.0f Svoris: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% bazės</string>
+    <string name="dpvdefaultprofile">Numatytasis profilis</string>
 </resources>
