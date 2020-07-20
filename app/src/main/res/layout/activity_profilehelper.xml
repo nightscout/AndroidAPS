@@ -17,7 +17,7 @@
             style="@style/ButtonMediumFontStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_auto_delta"
+            android:drawableStart="@drawable/ic_compare_profiles"
             android:text="@string/comapareprofile" />
 
         <LinearLayout
@@ -51,6 +51,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/profilehelper_profiletype_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profiletype"
