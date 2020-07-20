@@ -3,12 +3,16 @@ package info.nightscout.androidaps.dialogs
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.res.Resources
+import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ms_square.etsyblur.BlurConfig
 import com.ms_square.etsyblur.BlurDialogFragment
@@ -23,6 +27,7 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import kotlinx.android.synthetic.main.datetime.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
+import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import java.util.*
 import javax.inject.Inject
 
@@ -58,6 +63,18 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if ( sp.getBoolean("daynight", true)) {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+        } else {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
 
         context?.let { SmartAsyncPolicy(it) }?.let {
             BlurConfig.Builder()

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -97,6 +99,20 @@ class WizardDialog : BlurDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        if ( sp.getBoolean("daynight", true)) {
+            val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+            dialog?.window?.setBackgroundDrawable(drawable)
+        } else {
+            val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+            dialog?.window?.setBackgroundDrawable(drawable)
+        }
 
        context?.let { SmartAsyncPolicy(it) }?.let {
             BlurConfig.Builder()
