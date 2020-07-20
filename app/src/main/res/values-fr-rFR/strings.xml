@@ -1224,7 +1224,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="clone_label">Dupliquer</string>
     <string name="saveorresetchangesfirst">Sauver ou réinitialiser les modifications actuelles en premier</string>
     <string name="deletecurrentprofile">Supprimer le profil actuel ?</string>
-    <string name="copytolocalprofile">Créer un nouveau profil local à partir de ce changement de profil ?</string>
+    <string name="copytolocalprofile">Créer un nouveau profil local à partir de ce profil ?</string>
     <string name="profilenamecontainsdot">Le nom du profil contient des points.\nCe n\'est pas pris en charge par NS.\nLe profil n\'est pas remonté dans NS.</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
@@ -1238,6 +1238,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="nav_survey">Sondage</string>
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
+    <string name="invalidpct">% saisi invalide</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tir">Cible Gly</string>
@@ -1406,6 +1407,15 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="omnipod_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Vérifiez que votre Pod délivre le bolus ou annulez le bolus.</string>
     <string name="omnipod_rl_stats">État RL</string>
     <string name="omnipod_read_pulse_log_short">Enreg. Pulse</string>
-    <string name="comapareprofile">Comparer avec le profil actuel</string>
+    <string name="comapareprofile">Comparer les profils</string>
     <string name="nav_profilehelper">Assistant Profil</string>
+    <string name="motoldefaultprofile">Profil par défaut</string>
+    <string name="currentprofile">Profil actuel</string>
+    <string name="availableprofile">Profil disponible</string>
+    <string name="profiletype">Type de profil</string>
+    <string name="formatwithtdd">Âge: %1$.0f DTI: %2$.0f U</string>
+    <string name="formatwittddandpct">Âge: %1$.0f DTI: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Âge: %1$.0f Poids: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% de basal</string>
+    <string name="dpvdefaultprofile">Profil par défaut DPV</string>
 </resources>

@@ -1224,7 +1224,7 @@ Unerwartetes Verhalten.</string>
     <string name="clone_label">Klonen</string>
     <string name="saveorresetchangesfirst">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
     <string name="deletecurrentprofile">Aktuelles Profil löschen?</string>
-    <string name="copytolocalprofile">Neues lokales Profil auf Basis dieses Profilwechsels erstellen?</string>
+    <string name="copytolocalprofile">Neues lokales Profil auf Basis dieses Profils erstellen?</string>
     <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
@@ -1238,6 +1238,7 @@ Unerwartetes Verhalten.</string>
     <string name="nav_survey">Umfrage</string>
     <string name="invalidage">Ungültige Altersangabe</string>
     <string name="invalidweight">Ungültige Gewichtsangabe</string>
+    <string name="invalidpct">Ungültige % Eingabe</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Durchschnitt</string>
     <string name="tir">TIR</string>
@@ -1407,5 +1408,15 @@ Mache das nur, wenn AAPS nicht mehr mit dem Pod kommunizieren kann. Wenn dies no
     <string name="omnipod_bolus_failed_uncertain">Erfolgreiche Bolusabgabe konnte nicht sicher ermittelt werden. Stelle sicher, dass der Pod Insulin abgibt oder brich den Bolus ab.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="comapareprofile">Profile vergleichen</string>
     <string name="nav_profilehelper">Profil-Helfer</string>
+    <string name="motoldefaultprofile">Standard-Profil</string>
+    <string name="currentprofile">Aktuelles Profil</string>
+    <string name="availableprofile">Verfügbares Profil</string>
+    <string name="profiletype">Profil-Typ</string>
+    <string name="formatwithtdd">Alter: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Alter: %1$.0f TDD: %2$.0f IE %3$d%%</string>
+    <string name="formatwithweight">Alter: %1$.0f Gewicht: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% der Basalrate</string>
+    <string name="dpvdefaultprofile">DPV-Standard-Profil</string>
 </resources>

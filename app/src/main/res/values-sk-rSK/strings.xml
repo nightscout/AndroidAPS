@@ -1223,7 +1223,7 @@
     <string name="clone_label">Klonovať</string>
     <string name="saveorresetchangesfirst">Najskôr uložte, alebo resetujte aktuálne zmeny</string>
     <string name="deletecurrentprofile">Zmazať aktuálny profil?</string>
-    <string name="copytolocalprofile">Chcete vytvoriť nový lokálny profil z tohto prepnutia profilu?</string>
+    <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový lokálny profil?</string>
     <string name="profilenamecontainsdot">Názov profilu obsahuje bodky.\nToto nie je podporované v NS.\nProfil nebude prenesený do NS.</string>
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
@@ -1405,6 +1405,12 @@
     <string name="omnipod_bolus_failed_uncertain">Nie je možné overiť, či bolo podávanie bolusu úspešné. Prosím overte, že váš Pod podáva bolus, alebo zrušte bolus.</string>
     <string name="omnipod_rl_stats">Štatistiky RL</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
-    <string name="comapareprofile">Porovnať s aktuálnym profilom</string>
+    <string name="comapareprofile">Porovnať profily</string>
     <string name="nav_profilehelper">Pomocník s profilom</string>
+    <string name="motoldefaultprofile">Predvolený profil</string>
+    <string name="currentprofile">Aktuálny profil</string>
+    <string name="availableprofile">Dostupný profil</string>
+    <string name="profiletype">Typ profilu</string>
+    <string name="formatwithtdd">Vek: %1$.0f CDD: %2$.0f U</string>
+    <string name="formatwithweight">Vek: %1$.0f Hmotnosť: %2$.0f kg</string>
 </resources>

@@ -1223,7 +1223,6 @@
     <string name="clone_label">Dupliceren</string>
     <string name="saveorresetchangesfirst">Huidige wijzigingen eerst opslaan of ongedaan maken</string>
     <string name="deletecurrentprofile">Huidige profiel verwijderen?</string>
-    <string name="copytolocalprofile">Nieuw lokaal profiel maken op basis van deze profiel wissel?</string>
     <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
@@ -1405,6 +1404,5 @@
     <string name="omnipod_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer of de Pod de bolus aan het toedienen is of annuleer de bolus.</string>
     <string name="omnipod_rl_stats">RL Statistieken</string>
     <string name="omnipod_read_pulse_log_short">Pulsen Log</string>
-    <string name="comapareprofile">Vergelijk met huidig profiel</string>
     <string name="nav_profilehelper">Profiel hulp</string>
 </resources>
