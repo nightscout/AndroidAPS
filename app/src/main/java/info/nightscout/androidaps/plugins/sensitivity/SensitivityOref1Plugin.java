@@ -208,10 +208,10 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             double basalOff = 0;
 
             if (pSensitive < 0) { // sensitive
-                basalOff = pSensitive * (60.0 / 5) / Profile.toMgdl(sens, profile.getUnits());
+                basalOff = pSensitive * (60.0 / 5) / sens;
                 sensResult += "Excess insulin sensitivity detected";
             } else if (pResistant > 0) { // resistant
-                basalOff = pResistant * (60.0 / 5) / Profile.toMgdl(sens, profile.getUnits());
+                basalOff = pResistant * (60.0 / 5) / sens;
                 sensResult += "Excess insulin resistance detected";
             } else {
                 sensResult += "Sensitivity normal";
