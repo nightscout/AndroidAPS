@@ -26,7 +26,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/comapareprofile"
-            app:icon="@drawable/ic_auto_delta"/>
+            app:icon="@drawable/ic_compare_profiles"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
