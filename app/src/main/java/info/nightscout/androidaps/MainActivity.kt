@@ -910,15 +910,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 message += resourceHelper.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                AlertDialog.Builder(this)
+                val adb: AlertDialog.Builder = AlertDialog.Builder(this)
+                adb
                     .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + "\nNew GUI")
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(resourceHelper.gs(R.string.ok), null)
                     .create().also {
-                        it.show()
-                        (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
-                    }
+                    it.setCanceledOnTouchOutside(false)
+                    it.setOnShowListener { OKDialog.setdrawableBackground(this, it as AlertDialog, sp) }
+                    it.show()
+                    (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
+                }
                 return true
             }
 
