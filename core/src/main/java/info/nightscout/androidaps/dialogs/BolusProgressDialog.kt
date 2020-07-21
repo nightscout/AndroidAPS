@@ -3,6 +3,8 @@ package info.nightscout.androidaps.dialogs
 import android.app.Activity
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -84,6 +86,18 @@ class BolusProgressDialog : BlurDialogFragment() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if ( sp.getBoolean("daynight", true)) {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+        } else {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
 
         context?.let { SimpleAsyncPolicy () }?.let {
             BlurConfig.Builder()
