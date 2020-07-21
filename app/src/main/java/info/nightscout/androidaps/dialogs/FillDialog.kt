@@ -131,11 +131,11 @@ class FillDialog : DialogFragmentWithDate() {
                         aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
                         nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
                     }
-                }, null)
+                }, null, sp)
             }
         } else {
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.primefill), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.primefill), resourceHelper.gs(R.string.no_action_selected), null, sp)
             }
         }
         dismiss()

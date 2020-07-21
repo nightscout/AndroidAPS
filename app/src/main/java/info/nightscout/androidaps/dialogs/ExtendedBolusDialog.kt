@@ -85,7 +85,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                         }
                     }
                 })
-            }, null)
+            }, null, sp)
         }
         return true
     }

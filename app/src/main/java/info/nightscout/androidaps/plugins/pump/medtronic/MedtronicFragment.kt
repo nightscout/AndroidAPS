@@ -45,6 +45,7 @@ import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.medtronic_fragment.*
@@ -64,6 +65,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicUtil: MedtronicUtil
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
+    @Inject lateinit var sp: SP
 
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
@@ -291,7 +293,7 @@ class MedtronicFragment : DaggerFragment() {
     private fun displayNotConfiguredDialog() {
         context?.let {
             OKDialog.show(it, resourceHelper.gs(R.string.combo_warning),
-                resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null)
+                resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null, sp)
         }
     }
 

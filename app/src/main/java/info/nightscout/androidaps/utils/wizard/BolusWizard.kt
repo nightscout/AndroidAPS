@@ -29,6 +29,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -49,6 +50,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var sp: SP
 
     init {
         injector.androidInjector().inject(this)
@@ -377,7 +379,7 @@ class BolusWizard @Inject constructor(
                         activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                     }
                 }
-            })
+            }, null, sp)
         }
     }
 }

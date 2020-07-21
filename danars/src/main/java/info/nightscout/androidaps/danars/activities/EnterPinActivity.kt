@@ -58,7 +58,7 @@ class EnterPinActivity : info.nightscout.androidaps.activities.NoSplashAppCompat
                     bleComm.finishV3Pairing()
                     finish()
                 }
-                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
+                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput), null, sp)
             }
         }
         cancel.setOnClickListener { finish() }

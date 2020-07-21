@@ -30,6 +30,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.dialog_insulin.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
@@ -47,7 +48,6 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var ctx: Context
-
     companion object {
         private const val PLUS1_DEFAULT = 0.5
         private const val PLUS2_DEFAULT = 1.0
@@ -207,11 +207,11 @@ class InsulinDialog : DialogFragmentWithDate() {
                             })
                         }
                     }
-                })
+                }, null, sp)
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.bolus), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.bolus), resourceHelper.gs(R.string.no_action_selected), null, sp)
             }
         return true
     }

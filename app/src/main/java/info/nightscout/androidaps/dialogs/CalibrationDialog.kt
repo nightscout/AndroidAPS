@@ -65,11 +65,11 @@ class CalibrationDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     aapsLogger.debug("USER ENTRY: CALIBRATION $bg")
                     xdripCalibrations.sendIntent(bg)
-                })
+                }, null,sp)
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.overview_calibration), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.overview_calibration), resourceHelper.gs(R.string.no_action_selected), null, sp)
             }
         return true
     }

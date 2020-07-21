@@ -237,11 +237,11 @@ class CarbsDialog : DialogFragmentWithDate() {
                             nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
-                }, null)
+                }, null, sp)
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.carbs), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.carbs), resourceHelper.gs(R.string.no_action_selected),null, sp)
             }
         return true
     }

@@ -75,14 +75,6 @@ class CareDialog : DialogFragmentWithDate() {
                               savedInstanceState: Bundle?): View? {
         onCreateViewGeneral()
 
-        context?.let { SmartAsyncPolicy(it) }?.let {
-            BlurConfig.Builder()
-                .overlayColor(ContextCompat.getColor(requireContext(), info.nightscout.androidaps.core.R.color.white_alpha_40))  // semi-transparent white color
-                .debug(false)
-                .asyncPolicy(it)
-                .build()
-        }
-
         return inflater.inflate(R.layout.dialog_care, container, false)
     }
 
@@ -224,7 +216,7 @@ class CareDialog : DialogFragmentWithDate() {
                 aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 nsUpload.uploadCareportalEntryToNS(json)
-            }, null)
+            }, null, sp)
         }
         return true
     }

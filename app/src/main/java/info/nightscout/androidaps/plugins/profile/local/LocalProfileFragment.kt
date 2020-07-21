@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.profile.local
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,6 +24,7 @@ import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.localprofile_fragment.*
@@ -38,6 +40,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var sp: SP
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -223,7 +226,7 @@ class LocalProfileFragment : DaggerFragment() {
             }
             R.id.fabNewProfile -> {
                 if (localProfilePlugin.isEdited) {
-                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst), null, sp) }
                 } else {
                     localProfilePlugin.addNewProfile()
                     build()
@@ -235,7 +238,7 @@ class LocalProfileFragment : DaggerFragment() {
             }
             R.id.fabCloneProfile          -> {
                 if (localProfilePlugin.isEdited) {
-                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
+                    activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst), null, sp) }
                 } else {
                     localProfilePlugin.cloneProfile()
                     build()
@@ -250,7 +253,7 @@ class LocalProfileFragment : DaggerFragment() {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), Runnable {
                         localProfilePlugin.removeCurrentProfile()
                         build()
-                    }, null)
+                    }, null, sp)
                 }
                 ViewAnimation.showOut(fabNewProfile)
                 ViewAnimation.showOut(fabCloneProfile)

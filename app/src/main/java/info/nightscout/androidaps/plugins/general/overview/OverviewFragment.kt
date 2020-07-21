@@ -310,7 +310,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                                 (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                 actionStringHandler.handleInitiate("cancelChangeRequest")
                                 loopPlugin.acceptChangeRequest()
-                            })
+                            }, null, sp)
                         }
                     }
                 }
@@ -488,7 +488,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             if (activeTemp != null)
                 fullText += "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + activeTemp.toStringFull()
             activity?.let {
-                OKDialog.show(it, resourceHelper.gs(R.string.basal), fullText)
+                OKDialog.show(it, resourceHelper.gs(R.string.basal), fullText, null, sp)
             }
         }
         overview_basebasal?.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
@@ -507,7 +507,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         } else ""
         overview_extendedbolus?.setOnClickListener {
             if (extendedBolus != null) activity?.let {
-                OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString())
+                OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString(), null, sp)
             }
         }
         overview_extended_llayout?.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
@@ -561,7 +561,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 OKDialog.show(it, resourceHelper.gs(R.string.iob),
                     resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + "\n" +
                         resourceHelper.gs(R.string.bolus) + ": " + resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob) + "\n" +
-                        resourceHelper.gs(R.string.basal) + ": " + resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob)
+                        resourceHelper.gs(R.string.basal) + ": " + resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob) , null, sp
                 )
             }
         }
@@ -592,15 +592,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
         // pump status from ns
         overview_pump?.text = nsDeviceStatus.pumpStatus
-        overview_pump?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.pump), nsDeviceStatus.extendedPumpStatus) } }
+        overview_pump?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.pump), nsDeviceStatus.extendedPumpStatus, null, sp) } }
 
         // OpenAPS status from ns
         overview_openaps?.text = nsDeviceStatus.openApsStatus
-        overview_openaps?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.openaps), nsDeviceStatus.extendedOpenApsStatus) } }
+        overview_openaps?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.openaps), nsDeviceStatus.extendedOpenApsStatus, null, sp) } }
 
         // Uploader status from ns
         overview_uploader?.text = nsDeviceStatus.uploaderStatusSpanned
-        overview_uploader?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
+        overview_uploader?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus, null, sp) } }
 
         // Sensitivity
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {

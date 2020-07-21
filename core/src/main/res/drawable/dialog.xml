@@ -14,7 +14,7 @@ android:top="10dp"
         android:left="10dp"
         android:right="10dp"
         />
-    <solid android:color="#FF91908D" />
+    <solid android:color="#303030" />
     <corners android:radius="10dp" />
 </shape>
 </item>

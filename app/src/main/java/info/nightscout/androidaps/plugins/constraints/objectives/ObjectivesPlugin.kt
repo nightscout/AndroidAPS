@@ -139,9 +139,9 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "auto" + "_started", DateUtil.now())
             sp.putLong("Objectives_" + "auto" + "_accomplished", DateUtil.now())
             setupObjectives()
-            OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
+            OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted), null, sp)
         } else {
-            OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
+            OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid), null, sp)
         }
     }
 

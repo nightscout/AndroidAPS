@@ -256,7 +256,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         overview_bg?.setOnClickListener {
             val fullText = avgdelta
             this.let {
-                OKDialog.show(it, "Delta", fullText)
+                OKDialog.show(it, "Delta", fullText, null, sp)
             }
         }
 
@@ -525,7 +525,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
                 it.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                OKDialog.show(it, "", resourceHelper.gs(R.string.error_starting_cgm))
+                OKDialog.show(it, "", resourceHelper.gs(R.string.error_starting_cgm), null, sp)
             }
         }
     }
@@ -543,7 +543,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
                 this.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                        OKDialog.show(it, resourceHelper.gs(R.string.treatmentdeliveryerror), resourceHelper.gs(R.string.constraints_violation) + "\n" + resourceHelper.gs(R.string.changeyourinput))
+                        OKDialog.show(it, resourceHelper.gs(R.string.treatmentdeliveryerror), resourceHelper.gs(R.string.constraints_violation) + "\n" + resourceHelper.gs(R.string.changeyourinput), null, sp)
                         return
                     }
                     wizard.confirmAndExecute(it)
@@ -675,8 +675,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) }),
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) })
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) }),
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) })
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
@@ -831,7 +831,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
                     AndroidPermission.CASE_STORAGE                                                                                                                                        ->                         //show dialog after permission is granted
-                        OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
+                        OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text), null, sp)
 
                     AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY, AndroidPermission.CASE_PHONE_STATE, AndroidPermission.CASE_SYSTEM_WINDOW -> {
                     }

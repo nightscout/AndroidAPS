@@ -193,7 +193,7 @@ class OmnipodFragment : DaggerFragment() {
     private fun displayNotConfiguredDialog() {
         context?.let {
             OKDialog.show(it, resourceHelper.gs(R.string.combo_warning),
-                resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
+                resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null, sp)
         }
     }
 

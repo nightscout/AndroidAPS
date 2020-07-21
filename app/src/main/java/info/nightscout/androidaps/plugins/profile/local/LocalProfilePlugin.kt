@@ -144,7 +144,7 @@ class LocalProfilePlugin @Inject constructor(
             rawProfile?.let { nsUpload.uploadProfileStore(it.data) }
         else
             activity?.let {
-                OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot))
+                OKDialog.show(it, "", resourceHelper.gs(R.string.profilenamecontainsdot), null, sp)
             }
     }
 

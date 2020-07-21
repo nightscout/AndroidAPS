@@ -131,11 +131,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         })
                     } else
                         activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
-                })
+                }, null, sp)
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.no_action_selected),null, sp)
             }
         return true
     }

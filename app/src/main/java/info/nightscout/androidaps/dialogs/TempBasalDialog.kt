@@ -121,7 +121,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     aapsLogger.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
-            })
+            }, null, sp)
         }
         return true
     }

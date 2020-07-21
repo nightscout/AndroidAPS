@@ -13,12 +13,14 @@ import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class BlePreCheck @Inject constructor(
-    val resourceHelper: ResourceHelper
+    val resourceHelper: ResourceHelper,
+    val sp: SP
 ) {
 
     companion object {
@@ -27,7 +29,7 @@ class BlePreCheck @Inject constructor(
 
     fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_supported))
+            OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_supported), null, sp)
             return false
         } else {
             // Use this check to determine whether BLE is supported on the device. Then
@@ -41,7 +43,7 @@ class BlePreCheck @Inject constructor(
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_enabled))
+                OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_enabled), null, sp)
                 return false
             } else {
                 // Will request that GPS be enabled for devices running Marshmallow or newer.

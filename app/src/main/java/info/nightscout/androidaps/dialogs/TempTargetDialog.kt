@@ -151,7 +151,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                     treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                 }
                 if (duration == 10) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
-            })
+            }, null, sp)
         }
         return true
     }
