@@ -63,17 +63,18 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 return@setOnClickListener
             }
             profileFunction.getProfile()?.let { runningProfile ->
-                val profile = defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-                ProfileViewerDialog().also { pvd ->
-                    pvd.arguments = Bundle().also {
-                        it.putLong("time", DateUtil.now())
-                        it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                        it.putString("customProfile", runningProfile.data.toString())
-                        it.putString("customProfile2", profile.data.toString())
-                        it.putString("customProfileUnits", profile.units)
-                        it.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
-                    }
-                }.show(supportFragmentManager, "ProfileViewDialog")
+                defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())?.let { profile ->
+                    ProfileViewerDialog().also { pvd ->
+                        pvd.arguments = Bundle().also {
+                            it.putLong("time", DateUtil.now())
+                            it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
+                            it.putString("customProfile", runningProfile.data.toString())
+                            it.putString("customProfile2", profile.data.toString())
+                            it.putString("customProfileUnits", profile.units)
+                            it.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
+                        }
+                    }.show(supportFragmentManager, "ProfileViewDialog")
+                }
             }
         }
 

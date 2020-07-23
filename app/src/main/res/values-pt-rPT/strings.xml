@@ -1223,7 +1223,7 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Guardar ou repor as alterações actuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil actual?</string>
-    <string name="copytolocalprofile">Criar novo perfil local a partir desta troca de perfil?</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
@@ -1237,6 +1237,7 @@
     <string name="nav_survey">Questionário</string>
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
+    <string name="invalidpct">Entrada % inválida</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Dentro: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Média</string>
     <string name="tir">TIR</string>
@@ -1405,6 +1406,15 @@
     <string name="omnipod_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem-sucedido. Por favor, verifique se o Pod está administrar ou cancelar o bólus.</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
     <string name="omnipod_read_pulse_log_short">Registo de Pulse</string>
-    <string name="comapareprofile">Comparar com o perfil atual</string>
+    <string name="comapareprofile">Comparar Perfis</string>
     <string name="nav_profilehelper">Assistente de Perfil</string>
+    <string name="motoldefaultprofile">Perfil Padrão</string>
+    <string name="currentprofile">Perfil Actual</string>
+    <string name="availableprofile">Perfil Disponível</string>
+    <string name="profiletype">Tipo de Perfil</string>
+    <string name="formatwithtdd">Idade: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Idade: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Idade: %1$.0f Peso: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% de basal</string>
+    <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
 </resources>
