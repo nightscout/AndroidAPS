@@ -242,7 +242,7 @@ class ImportExportPrefs @Inject constructor(
         } catch (e: IllegalArgumentException) {
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
-            ToastUtils.errorToast(activity, "Please go back to main screen and try again.")
+            ToastUtils.errorToast(activity, resourceHelper.gs(R.string.goto_main_try_again))
             log.error(TAG, "Internal android framework exception", e)
         }
     }
@@ -281,7 +281,7 @@ class ImportExportPrefs @Inject constructor(
                         restartAppAfterImport(activity)
                     } else {
                         // for impossible imports it should not be called
-                        ToastUtils.errorToast(activity, "Cannot import preferences!")
+                        ToastUtils.errorToast(activity, resourceHelper.gs(R.string.preferences_import_impossible))
                     }
                 })
 
