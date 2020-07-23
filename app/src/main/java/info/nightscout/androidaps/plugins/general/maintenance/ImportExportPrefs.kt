@@ -215,12 +215,7 @@ class ImportExportPrefs @Inject constructor(
 
     fun importSharedPreferences(fragment: Fragment) {
         fragment.activity?.let { fragmentAct ->
-            val callForPrefFile = fragmentAct.registerForActivityResult(PrefsFileContract()) {
-                it?.let {
-                    importSharedPreferences(fragmentAct, it)
-                }
-            }
-            callForPrefFile.launch(null)
+            importSharedPreferences(fragmentAct)
         }
     }
 
@@ -230,7 +225,15 @@ class ImportExportPrefs @Inject constructor(
                 importSharedPreferences(activity, it)
             }
         }
-        callForPrefFile.launch(null)
+
+        try {
+            callForPrefFile.launch(null)
+        } catch (e: IllegalArgumentException) {
+            // this exception happens on some early implementations of ActivityResult contracts
+            // when registered and called for the second time
+            ToastUtils.errorToast(activity, "Please go back to main screen and try again.")
+            log.error(TAG, "Internal android framework exception", e)
+        }
     }
 
     private fun importSharedPreferences(activity: Activity, importFile: PrefsFile) {
