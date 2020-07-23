@@ -209,6 +209,17 @@ class ImportExportPrefs @Inject constructor(
             } catch (e: IOException) {
                 ToastUtils.errorToast(activity, e.message)
                 log.error(TAG, "Unhandled exception", e)
+            } catch (e: PrefFileNotFoundError) {
+                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
+                    + "\n\n" + resourceHelper.gs(R.string.filenotfound)
+                    + ": " + e.message
+                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission))
+                log.error(TAG, "File system exception", e)
+            } catch (e: PrefIOError) {
+                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
+                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission)
+                    + ": " + e.message)
+                log.error(TAG, "File system exception", e)
             }
         }
     }

@@ -950,7 +950,7 @@
     <string name="askforpermission">Ask for permission</string>
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
     <string name="exit">Exit</string>
