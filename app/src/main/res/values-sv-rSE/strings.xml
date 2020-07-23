@@ -1224,7 +1224,6 @@ Eversense-appen.</string>
     <string name="clone_label">Kopiera</string>
     <string name="saveorresetchangesfirst">Spara eller återställa aktuella ändringar först</string>
     <string name="deletecurrentprofile">Ta bort aktuell profil?</string>
-    <string name="copytolocalprofile">Vill du skapa en ny lokal profil från detta profilbyte?</string>
     <string name="profilenamecontainsdot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
@@ -1406,6 +1405,5 @@ Eversense-appen.</string>
     <string name="omnipod_bolus_failed_uncertain">Det går inte att verifiera om bolusen är slutförd. Verifiera att din pod leverarar bolus eller avsluta bolus.</string>
     <string name="omnipod_rl_stats">RL-statistik</string>
     <string name="omnipod_read_pulse_log_short">Pulslogg</string>
-    <string name="comapareprofile">Jämför med aktuell profil</string>
     <string name="nav_profilehelper">Profilguide</string>
 </resources>

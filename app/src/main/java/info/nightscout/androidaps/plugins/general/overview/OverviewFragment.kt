@@ -656,7 +656,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
-            if (targetUsed != 0.0 && abs(profile.targetMgdl-targetUsed) > 0.01) {
+            if (targetUsed != 0.0 && abs(profile.targetMgdl - targetUsed) > 0.01) {
                 aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
                 overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 overview_temptarget?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
@@ -683,10 +683,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_basebasal?.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
-        if (activeTemp != null)
-            overview_basebasal_icon?.setImageResource(if (activeTemp.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) > 100) R.drawable.ic_cp_basal_tbr_high else R.drawable.ic_cp_basal_tbr_low)
-        else
-            overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
+        overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
+        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) ?:100
+        if (percentRate > 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_high)
+        if (percentRate < 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())

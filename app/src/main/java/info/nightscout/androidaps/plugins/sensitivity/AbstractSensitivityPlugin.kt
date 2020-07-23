@@ -20,8 +20,7 @@ abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper:
-    ResourceHelper,
+    resourceHelper: ResourceHelper,
     val sp: SP
 ) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), SensitivityInterface {
 

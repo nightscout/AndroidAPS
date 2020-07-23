@@ -46,6 +46,10 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="ButtonMediumFontStyle">
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <!--    Buttons from MaterialDateTimePicker    -->
     <dimen name="mdtp_material_button_height">48dp</dimen>
     <dimen name="mdtp_material_button_textsize">14sp</dimen>

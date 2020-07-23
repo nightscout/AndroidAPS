@@ -20,6 +20,7 @@
     <string name="androidaps_start">AndroidAPS uruchomiony</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2fJ/g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min.</string>
     <string name="format_mins_short">%1$dm</string>
@@ -38,10 +39,61 @@
     <string name="noprofileset">NIE USTAWIONO PROFILU</string>
     <string name="date">Data</string>
     <string name="units_label">Jednostki</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Baza</string>
+    <string name="target_label">Cel</string>
+    <string name="initializing">Inicjuje ...</string>
+    <string name="serialnumber">Numer seryjny</string>
+    <string name="battery_label">Bateria</string>
+    <string name="lastconnection_label">Ostatnie połączenie</string>
+    <string name="lastbolus_label">Ostatni bolus</string>
+    <string name="dailyunits">Jednostki dzienne</string>
+    <string name="basebasalrate_label">Podstawowa dawka bazowa</string>
+    <string name="tempbasal_label">Baza tymczasowa</string>
+    <string name="virtualpump_extendedbolus_label">Bolus Przedłużony</string>
+    <string name="reservoir_label">Zbiornik</string>
+    <string name="pumphistory">Historia pompy</string>
+    <string name="viewprofile">Zobacz profil</string>
+    <string name="eventtype">Typ zdarzenia</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Ustawienia zaawansowane</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Wyłącza bluetooth telefonu na jedną sekundę, jeśli nie jest możliwe połączenie z pompą. Może to pomóc w niektórych telefonach, w których blokuje się bluetooth.</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
+    <string name="pumplimit">ograniczenie pompy</string>
+    <string name="limitingpercentrate">Ograniczam maksymalną wartość w procentach do %1$d%% z uwagi na %2$s</string>
+    <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
+    <string name="limitingbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pompa nie zainicjowana, profil nie ustawiony!</string>
     <!--    Dialogs-->
+    <string name="confirmation">Potwierdzenie</string>
+    <string name="message">Wiadomość</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Anuluj</string>
+    <string name="dismiss">ODRZUĆ</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nie jest obsługiwany.</string>
+    <string name="ble_not_enabled">Bluetooth nie jest włączony.</string>
+    <string name="location_not_found_title">Lokalizacja nie jest włączona</string>
+    <string name="location_not_found_message">Aby uruchomić odnajdywanie Bluetooth na nowszych urządzeniach, lokalizacja musi być uruchomiona. AAPS nie śledzi twojej lokalizacji więc po udanym parowaniu urządzenia Bluetooth można wyłączyć lokalizację.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$dmin temu</string>
+    <string name="hoursago">%1$.1fh temu</string>
+    <string name="shorthour">h</string>
+    <string name="days">dni</string>
+    <string name="hours">godzin</string>
+    <string name="unit_second">sekunda</string>
+    <string name="unit_minute">minuta</string>
+    <string name="unit_hour">godzina</string>
+    <string name="unit_day">dzień</string>
+    <string name="unit_week">tydzień</string>
+    <string name="unit_seconds">sekund</string>
+    <string name="unit_minutes">minut</string>
     <string name="unit_hours">godzin</string>
     <string name="unit_days">dni</string>
     <string name="unit_weeks">tygodni</string>
@@ -68,6 +120,7 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Nieprawidłowy profil: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
     <!--    TDD-->
     <!--    Translator-->
     <string name="careportal_bgcheck">Sprawdź BG</string>
@@ -101,7 +154,28 @@
     <string name="enacted">Wykonane</string>
     <string name="comment">Komentarz</string>
     <string name="success">Sukces</string>
+    <string name="percent">Procent</string>
+    <string name="absolute">Całkowity</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="waitingforpumpresult">Oczekiwanie na wynik</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">Zalecane podanie %dg węglowodanów w przeciągu %d minut</string>
     <!--    TDDStatsActivity-->
+    <string name="stats">Statystyki</string>
+    <string name="cumulative_tdd">Kumulatywna TDD (dawka dzienna)</string>
+    <string name="expweight">Ważona wykładniczo TDD</string>
+    <string name="basalrate">Baza</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Stosunek</string>
+    <string name="amount_days"># Dni</string>
+    <string name="weight">Waga</string>
+    <string name="warning_Message">Możliwa niedokładność jeśli używasz bolusów do wypełnień!</string>
+    <string name="olddata_Message">Stare dane, naciśnij \"RELOAD\"</string>
+    <string name="tbb">Suma dzienna bazy (TBB)</string>
+    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
+    <string name="timedetection">Wykrywanie czasu</string>
 </resources>
