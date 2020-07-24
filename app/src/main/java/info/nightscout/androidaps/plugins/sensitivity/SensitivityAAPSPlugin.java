@@ -36,7 +36,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
-    private SP sp;
     private ProfileFunction profileFunction;
     private DateUtil dateUtil;
 
@@ -57,7 +56,6 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
                         .description(R.string.description_sensitivity_aaps),
                 injector, aapsLogger, resourceHelper, sp
         );
-        this.sp = sp;
         this.profileFunction = profileFunction;
         this.dateUtil = dateUtil;
     }
@@ -66,12 +64,12 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
     public AutosensResult detectSensitivity(IobCobCalculatorInterface iobCobCalculatorPlugin, long fromTime, long toTime) {
         LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
-        String age = sp.getString(R.string.key_age, "");
+        String age = getSp().getString(R.string.key_age, "");
         int defaultHours = 24;
         if (age.equals(getResourceHelper().gs(R.string.key_adult))) defaultHours = 24;
         if (age.equals(getResourceHelper().gs(R.string.key_teenage))) defaultHours = 4;
         if (age.equals(getResourceHelper().gs(R.string.key_child))) defaultHours = 4;
-        int hoursForDetection = sp.getInt(R.string.key_openapsama_autosens_period, defaultHours);
+        int hoursForDetection = getSp().getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         Profile profile = profileFunction.getProfile();
 
