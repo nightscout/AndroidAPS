@@ -24,6 +24,11 @@ import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDevic
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
@@ -49,10 +54,10 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var warnColors: WarnColors
-    @Inject lateinit var rileyLinkUtil: info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
+    @Inject lateinit var rileyLinkUtil: RileyLinkUtil
     @Inject lateinit var medtronicUtil: MedtronicUtil
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
-    @Inject lateinit var rileyLinkServiceData: info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
+    @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -75,7 +80,7 @@ class MedtronicFragment : DaggerFragment() {
 
         medtronic_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
-        medtronic_rl_status.text = resourceHelper.gs(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState.NotStarted.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.MedtronicPump))
+        medtronic_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId(RileyLinkTargetDevice.MedtronicPump))
 
         medtronic_pump_status.setTextColor(Color.WHITE)
         medtronic_pump_status.text = "{fa-bed}"
@@ -104,7 +109,7 @@ class MedtronicFragment : DaggerFragment() {
 
         medtronic_stats.setOnClickListener {
             if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity::class.java))
+                startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
             }
@@ -167,11 +172,11 @@ class MedtronicFragment : DaggerFragment() {
 
     @Synchronized
     private fun setDeviceStatus() {
-        val resourceId = rileyLinkServiceData.rileyLinkServiceState.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.MedtronicPump)
+        val resourceId = rileyLinkServiceData.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.MedtronicPump)
         val rileyLinkError = medtronicPumpPlugin.rileyLinkService?.error
         medtronic_rl_status.text =
             when {
-                rileyLinkServiceData.rileyLinkServiceState == info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
                 rileyLinkServiceData.rileyLinkServiceState.isConnecting                                                                                         -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
                 rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError == null                                                                    -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
                 rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null                                                                    -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.MedtronicPump))
@@ -181,7 +186,7 @@ class MedtronicFragment : DaggerFragment() {
 
         medtronic_errors.text =
             rileyLinkServiceData.rileyLinkError?.let {
-                resourceHelper.gs(it.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.MedtronicPump))
+                resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.MedtronicPump))
             } ?: "-"
 
         when (medtronicPumpStatus.pumpDeviceState) {

@@ -21,9 +21,11 @@ abstract class AbstractSensitivityPlugin(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper:
-    ResourceHelper,
-    val sp: SP
+    ResourceHelper //,
+    //var sp: SP
 ) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), SensitivityInterface {
+
+    lateinit var sp: SP
 
     abstract override fun detectSensitivity(plugin: IobCobCalculatorInterface, fromTime: Long, toTime: Long): AutosensResult
 

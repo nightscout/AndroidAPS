@@ -85,7 +85,7 @@ class OmnipodFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_rl_status.text = resourceHelper.gs(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState.NotStarted.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.Omnipod))
+        omnipod_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId(RileyLinkTargetDevice.Omnipod))
 
         omnipod_pod_status.setTextColor(Color.WHITE)
         omnipod_pod_status.text = "{fa-bed}"
@@ -114,7 +114,7 @@ class OmnipodFragment : DaggerFragment() {
 
         omnipod_stats.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity::class.java))
+                startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
             }
@@ -211,12 +211,12 @@ class OmnipodFragment : DaggerFragment() {
 
         aapsLogger.info(LTag.PUMP, "setDeviceStatus: [pumpStatus={}]", omnipodPumpStatus)
 
-        val resourceId = omnipodPumpStatus.rileyLinkServiceState.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.Omnipod)
+        val resourceId = omnipodPumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
         val rileyLinkError = omnipodPumpPlugin.rileyLinkService?.error
 
         omnipod_rl_status.text =
             when {
-                omnipodPumpStatus.rileyLinkServiceState == info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
                 omnipodPumpStatus.rileyLinkServiceState.isConnecting                                                                                         -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
                 omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null                                                                    -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
                 omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null                                                                    -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.MedtronicPump))
@@ -229,7 +229,7 @@ class OmnipodFragment : DaggerFragment() {
 
         omnipod_errors.text =
             omnipodPumpStatus.rileyLinkError?.let {
-                resourceHelper.gs(it.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.Omnipod))
+                resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
             } ?: "-"
 
         val driverState = omnipodUtil.getDriverState();
