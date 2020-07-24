@@ -261,7 +261,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun calculateInsulin() {
         val profileStore = activePlugin.activeProfileInterface.profile
-        if (treatments_wizard_profile.selectedItem == null || profileStore == null)
+        if (treatments_wizard_profile?.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = treatments_wizard_profile.selectedItem.toString()
         val specificProfile: Profile?
