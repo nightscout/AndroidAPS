@@ -293,7 +293,7 @@ class WizardDialog : BlurDialogFragment() {
 
     private fun calculateInsulin() {
         val profileStore = activePlugin.activeProfileInterface.profile
-        if (profileStore == null)
+        if (treatments_wizard_profile?.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = treatments_wizard_profile.text.toString()
         val specificProfile: Profile?

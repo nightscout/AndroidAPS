@@ -124,7 +124,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                     profileview_ic.text = ics(profile1, profile2)
                     profileview_isf.text = isfs(profile1, profile2)
                     profileview_basal.text = basals(profile1, profile2)
-                    profileview_target.text = HtmlHelper.fromHtml(formatColors("", profile1.targetList + "<br>", profile2.targetList, ""))
+                    profileview_target.text = HtmlHelper.fromHtml(formatColors("", profile1.targetList.replace("\n","<br>") + "<br>", profile2.targetList.replace("\n","<br>"), ""))
                     basal_graph.show(profile1, profile2)
                 }
 
