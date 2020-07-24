@@ -190,7 +190,7 @@ abstract class PluginsModule {
     abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase
 
     @Binds
-    @AllConfigs
+    @APS
     @IntoMap
     @IntKey(250)
     abstract fun bindAutomationPlugin(plugin: AutomationPlugin): PluginBase

@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -26,7 +29,8 @@ class OverviewPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBusWrapper,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper
+    resourceHelper: ResourceHelper,
+    private val config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(OverviewFragment::class.qualifiedName)
@@ -63,5 +67,19 @@ class OverviewPlugin @Inject constructor(
     override fun onStop() {
         disposable.clear()
         super.onStop()
+    }
+
+    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
+        super.preprocessPreferences(preferenceFragment)
+        if (config.NSCLIENT) {
+            (preferenceFragment.findPreference(resourceHelper.gs(R.string.key_show_cgm_button)) as SwitchPreference?)?.let {
+                it.isVisible = false
+                it.isEnabled = false
+            }
+            (preferenceFragment.findPreference(resourceHelper.gs(R.string.key_show_calibration_button)) as SwitchPreference?)?.let {
+                it.isVisible = false
+                it.isEnabled = false
+            }
+        }
     }
 }
