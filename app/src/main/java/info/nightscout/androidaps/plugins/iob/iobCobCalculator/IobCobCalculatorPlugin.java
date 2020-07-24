@@ -210,7 +210,10 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         disposable.add(rxBus
                 .toObservable(EventNewHistoryBgData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> newHistoryData(new EventNewHistoryData(event.getTimestamp()), true), fabricPrivacy::logException)
+                .subscribe(event -> {
+                    getAapsLogger().debug("XXXXXX " + event.toString());
+                    newHistoryData(new EventNewHistoryData(event.getTimestamp()), true);
+                }, fabricPrivacy::logException)
         );
     }
 

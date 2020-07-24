@@ -97,6 +97,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService bgWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledBgPost = null;
 
+    private static final ScheduledExecutorService bgHistoryWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledBgHistoryPost = null;
+    private static long oldestBgHistoryChange = 0;
+
     private static final ScheduledExecutorService tempBasalsWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTemBasalsPost = null;
 
@@ -387,8 +391,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 aapsLogger.debug(LTag.DATABASE, "BG: Updating record from: " + from + " New data: " + old.toString());
-                rxBus.send(new EventNewHistoryBgData(old.date)); // trigger cache invalidation
-                scheduleBgChange(bgReading); // trigger new calculation
+                scheduleBgHistoryChange(old.date); // trigger cache invalidation
                 return false;
             }
         } catch (SQLException e) {
@@ -421,6 +424,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         Runnable task = new PostRunnable();
         final int sec = 1;
         scheduledBgPost = bgWorker.schedule(task, sec, TimeUnit.SECONDS);
+
+    }
+
+   private void scheduleBgHistoryChange(@Nullable final long timestamp) {
+        class PostRunnable implements Runnable {
+            public void run() {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg");
+                rxBus.send(new EventNewHistoryBgData(oldestBgHistoryChange));
+                scheduledBgHistoryPost = null;
+                oldestBgHistoryChange = 0;
+            }
+        }
+        // prepare task for execution in 1 sec
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledBgHistoryPost != null)
+            scheduledBgHistoryPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = 3;
+        if (oldestBgHistoryChange == 0 || oldestBgHistoryChange > timestamp) oldestBgHistoryChange = timestamp;
+       scheduledBgHistoryPost = bgHistoryWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
 
