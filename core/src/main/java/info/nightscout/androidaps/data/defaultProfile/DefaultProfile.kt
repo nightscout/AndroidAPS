@@ -17,7 +17,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
     var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
     var eighteenToTwentyfor: TreeMap<Double, Array<Double>> = TreeMap()
 
-    fun profile(age: Double, tdd: Double, weight: Double, units: String): Profile {
+    fun profile(age: Double, tdd: Double, weight: Double, units: String): Profile? {
         val profile = JSONObject()
         if (age >= 1 && age < 6) {
             val _tdd = if (tdd == 0.0) 0.6 * weight else tdd
@@ -25,23 +25,23 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
             val ic = Round.roundTo(250.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0)))
             val isf = Round.roundTo(200.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArray(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0)))
+            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0),units))
         } else if (age >= 6 && age < 12) {
             val _tdd = if (tdd == 0.0) 0.8 * weight else tdd
             closest(sixToEleven, _tdd * 0.4)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(375.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
             val isf = Round.roundTo(170.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArray(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0)))
-        } else if (age >= 12 && age < 17) {
+            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0),units))
+        } else if (age >= 12 && age <= 18) {
             val _tdd = if (tdd == 0.0) 1.0 * weight else tdd
             closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(500.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0)))
             val isf = Round.roundTo(100.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArray(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2)))
-        } else if (age >= 18) {
-
+            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2),units))
+        } else if (age > 18) {
+            return null
         }
         profile.put("dia", 5.0)
         profile.put("carbs_hr", 20) // not used
@@ -49,6 +49,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         profile.put("timezone", TimeZone.getDefault().getID())
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
+        profile.put("units", units)
         return Profile(injector, profile, units)
     }
 
@@ -130,20 +131,32 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         val basals = JSONArray()
         for (i in 0..23) {
             val time = String.format(Locale.ENGLISH, "%02d:00", i)
-            basals.put(JSONObject().put("time", time).put("value", b[i].toString()))
+            basals.put(JSONObject().put("time", time).put("value", b[i].toString()).put("timeAsSeconds", i * 3600))
         }
         return basals
     }
 
     private fun singleValueArray(value: Double, sample: Array<Double>): JSONArray {
         val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", value + sample[0]))
-        array.put(JSONObject().put("time", "06:00").put("value", value + sample[1]))
-        array.put(JSONObject().put("time", "09:00").put("value", value + sample[2]))
-        array.put(JSONObject().put("time", "11:00").put("value", value + sample[3]))
-        array.put(JSONObject().put("time", "14:00").put("value", value + sample[4]))
-        array.put(JSONObject().put("time", "16:00").put("value", value + sample[5]))
-        array.put(JSONObject().put("time", "19:00").put("value", value + sample[6]))
+        array.put(JSONObject().put("time", "00:00").put("value", value + sample[0]).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "06:00").put("value", value + sample[1]).put("timeAsSeconds", 6 * 3600))
+        array.put(JSONObject().put("time", "09:00").put("value", value + sample[2]).put("timeAsSeconds", 9 * 3600))
+        array.put(JSONObject().put("time", "11:00").put("value", value + sample[3]).put("timeAsSeconds", 11 * 3600))
+        array.put(JSONObject().put("time", "14:00").put("value", value + sample[4]).put("timeAsSeconds", 14 * 3600))
+        array.put(JSONObject().put("time", "16:00").put("value", value + sample[5]).put("timeAsSeconds", 16 * 3600))
+        array.put(JSONObject().put("time", "19:00").put("value", value + sample[6]).put("timeAsSeconds", 19 * 3600))
+        return array
+    }
+
+    private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: String): JSONArray {
+        val array = JSONArray()
+        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0],units)).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1],units)).put("timeAsSeconds", 6 * 3600))
+        array.put(JSONObject().put("time", "09:00").put("value", Profile.fromMmolToUnits(value + sample[2],units)).put("timeAsSeconds", 9 * 3600))
+        array.put(JSONObject().put("time", "11:00").put("value", Profile.fromMmolToUnits(value + sample[3],units)).put("timeAsSeconds", 11 * 3600))
+        array.put(JSONObject().put("time", "14:00").put("value", Profile.fromMmolToUnits(value + sample[4],units)).put("timeAsSeconds", 14 * 3600))
+        array.put(JSONObject().put("time", "16:00").put("value", Profile.fromMmolToUnits(value + sample[5],units)).put("timeAsSeconds", 16 * 3600))
+        array.put(JSONObject().put("time", "19:00").put("value", Profile.fromMmolToUnits(value + sample[6],units)).put("timeAsSeconds", 19 * 3600))
         return array
     }
 }

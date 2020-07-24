@@ -1223,7 +1223,7 @@
     <string name="clone_label">Клонирай</string>
     <string name="saveorresetchangesfirst">Първо запазете или се откажете от промените</string>
     <string name="deletecurrentprofile">Изтриване на текущия профил?</string>
-    <string name="copytolocalprofile">Създаване на нов локален профил от това превключване?</string>
+    <string name="copytolocalprofile">Желаете ли да създадете нов локален профил от този профил?</string>
     <string name="profilenamecontainsdot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
@@ -1405,6 +1405,12 @@
     <string name="omnipod_bolus_failed_uncertain">Не може да се провери статус на болус. Моля, уверете се, че вашият под е стартирал болус или го отменете.</string>
     <string name="omnipod_rl_stats">Статистика на RL</string>
     <string name="omnipod_read_pulse_log_short">Pulse лог</string>
-    <string name="comapareprofile">Сравни с текущия профил</string>
+    <string name="comapareprofile">Сравняване на профили</string>
     <string name="nav_profilehelper">Профил съветник</string>
+    <string name="motoldefaultprofile">Профил по подразбиране</string>
+    <string name="currentprofile">Текущ профил</string>
+    <string name="availableprofile">Наличен профил</string>
+    <string name="profiletype">Профил тип</string>
+    <string name="formatwithtdd">Възраст: %1$.0f TDD: %2$.0f Е</string>
+    <string name="formatwithweight">Възраст: %1$.0f Тегло: %2$.0f кг</string>
 </resources>

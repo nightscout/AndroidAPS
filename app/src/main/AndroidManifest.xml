@@ -68,7 +68,8 @@
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
-        <activity android:name=".activities.ProfileHelperActivity" />
+        <activity android:name=".activities.ProfileHelperActivity"
+            android:theme="@style/ProfileHelperAppTheme" />
         <activity android:name=".activities.StatsActivity" />
 
         <!-- Receive new BG readings from other local apps -->

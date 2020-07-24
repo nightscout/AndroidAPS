@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -49,6 +50,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var config: Config
 
     init {
         injector.androidInjector().inject(this)
@@ -293,6 +295,8 @@ class BolusWizard @Inject constructor(
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
             actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarning, resourceHelper.gc(R.color.warning), calculatedTotalInsulin, insulinAfterConstraints))
         }
+        if (config.NSCLIENT)
+            actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.bolusrecordedonly) + "</font>")
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }

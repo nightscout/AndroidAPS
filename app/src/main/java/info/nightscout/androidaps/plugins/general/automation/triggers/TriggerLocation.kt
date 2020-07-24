@@ -21,8 +21,8 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     var lastMode = InputLocationMode.Mode.INSIDE
     private val buttonAction = Runnable {
         locationDataContainer.lastLocation?.let {
-            latitude.value = it.latitude
-            longitude.value = it.longitude
+            latitude.setValue(it.latitude)
+            longitude.setValue(it.longitude)
             aapsLogger.debug(LTag.AUTOMATION, String.format("Grabbed location: %f %f", latitude.value, longitude.value))
         }
     }

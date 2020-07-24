@@ -209,18 +209,24 @@ class ImportExportPrefs @Inject constructor(
             } catch (e: IOException) {
                 ToastUtils.errorToast(activity, e.message)
                 log.error(TAG, "Unhandled exception", e)
+            } catch (e: PrefFileNotFoundError) {
+                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
+                    + "\n\n" + resourceHelper.gs(R.string.filenotfound)
+                    + ": " + e.message
+                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission))
+                log.error(TAG, "File system exception", e)
+            } catch (e: PrefIOError) {
+                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
+                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission)
+                    + ": " + e.message)
+                log.error(TAG, "File system exception", e)
             }
         }
     }
 
     fun importSharedPreferences(fragment: Fragment) {
         fragment.activity?.let { fragmentAct ->
-            val callForPrefFile = fragmentAct.registerForActivityResult(PrefsFileContract()) {
-                it?.let {
-                    importSharedPreferences(fragmentAct, it)
-                }
-            }
-            callForPrefFile.launch(null)
+            importSharedPreferences(fragmentAct)
         }
     }
 
@@ -230,7 +236,15 @@ class ImportExportPrefs @Inject constructor(
                 importSharedPreferences(activity, it)
             }
         }
-        callForPrefFile.launch(null)
+
+        try {
+            callForPrefFile.launch(null)
+        } catch (e: IllegalArgumentException) {
+            // this exception happens on some early implementations of ActivityResult contracts
+            // when registered and called for the second time
+            ToastUtils.errorToast(activity, resourceHelper.gs(R.string.goto_main_try_again))
+            log.error(TAG, "Internal android framework exception", e)
+        }
     }
 
     private fun importSharedPreferences(activity: Activity, importFile: PrefsFile) {
@@ -267,7 +281,7 @@ class ImportExportPrefs @Inject constructor(
                         restartAppAfterImport(activity)
                     } else {
                         // for impossible imports it should not be called
-                        ToastUtils.errorToast(activity, "Cannot import preferences!")
+                        ToastUtils.errorToast(activity, resourceHelper.gs(R.string.preferences_import_impossible))
                     }
                 })
 

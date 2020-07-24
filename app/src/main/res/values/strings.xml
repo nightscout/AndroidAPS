@@ -206,6 +206,8 @@
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
     <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
+    <string name="preferences_import_impossible">Cannot import preferences!</string>
+    <string name="goto_main_try_again">Please go back to main screen and try again.</string>
 
     <string name="preferences_import_list_title">Select file to import</string>
 
@@ -807,7 +809,7 @@
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
-    <string name="bolusrecordedonly">Bolus will be recorded only</string>
+    <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
     <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
     <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
@@ -950,7 +952,7 @@
     <string name="askforpermission">Ask for permission</string>
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
     <string name="exit">Exit</string>
@@ -1298,7 +1300,7 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Save or reset current changes first</string>
     <string name="deletecurrentprofile">Delete current profile?</string>
-    <string name="copytolocalprofile">Create new local profile from this profile switch?</string>
+    <string name="copytolocalprofile">Create new local profile from this profile?</string>
     <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
@@ -1313,6 +1315,7 @@
     <string name="nav_survey">Survey</string>
     <string name="invalidage">Invalid age entry</string>
     <string name="invalidweight">Invalid weight entry</string>
+    <string name="invalidpct">Invalid % entry</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Average</string>
     <string name="tir">TIR</string>
@@ -1552,7 +1555,16 @@
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
-    <string name="comapareprofile">Compare with current profile</string>
+    <string name="comapareprofile">Compare profiles</string>
     <string name="nav_profilehelper">Profile helper</string>
+    <string name="motoldefaultprofile">Default profile</string>
+    <string name="currentprofile">Current profile</string>
+    <string name="availableprofile">Available profile</string>
+    <string name="profiletype">Profile type</string>
+    <string name="formatwithtdd">Age: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% of basal</string>
+    <string name="dpvdefaultprofile">DPV Default profile</string>
 
 </resources>

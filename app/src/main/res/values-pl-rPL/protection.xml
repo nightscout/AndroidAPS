@@ -15,6 +15,8 @@
     <string name="noprotection">Bez ochrony</string>
     <string name="protection">Z ochroną</string>
     <string name="master_password_missing">Hasło główne nie jest ustawione!\n\nProszę ustawić swoje hasło główne w preferencjach (%1$s &#8594; %2$s)</string>
+    <string name="unsecure_fallback_biometric">Niezabezpieczona funkcja fallback</string>
+    <string name="unsecure_fallback_descriotion_biometric">Aby być skuteczna, biometryczna ochrona musi posiadać hasło typu master. \n\n Ustaw hasło typu master!</string>
     <string name="password_set">Hasło ustawione!</string>
     <string name="password_not_set">Hasło nie ustawione</string>
     <string name="password_not_changed">Hasło nie zostało zmienione</string>
