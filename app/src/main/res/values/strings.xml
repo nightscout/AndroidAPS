@@ -206,6 +206,8 @@
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
     <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
+    <string name="preferences_import_impossible">Cannot import preferences!</string>
+    <string name="goto_main_try_again">Please go back to main screen and try again.</string>
 
     <string name="preferences_import_list_title">Select file to import</string>
 
@@ -950,7 +952,7 @@
     <string name="askforpermission">Ask for permission</string>
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
     <string name="exit">Exit</string>
