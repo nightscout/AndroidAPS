@@ -46,7 +46,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     companion object {
         private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
         private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
-        private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
+        private val IOB_UPDATE_FREQUENCY_IN_MINS = 5L
 
         private var lastReadStatus: Long = 0
         private var lastRun: Long = 0
@@ -108,7 +108,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         else if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
             shouldUploadStatus = true
         else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
-        if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
+        if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINS) && shouldUploadStatus) {
             lastIobUpload = DateUtil.now()
             nsUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
         }
