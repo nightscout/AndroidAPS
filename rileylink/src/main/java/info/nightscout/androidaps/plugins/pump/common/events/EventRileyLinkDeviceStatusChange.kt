@@ -2,26 +2,32 @@ package info.nightscout.androidaps.plugins.pump.common.events
 
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 
-class EventRileyLinkDeviceStatusChange : Event {
+open class EventRileyLinkDeviceStatusChange : Event {
 
-    private var rileyLinkServiceState: info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState? = null
-    private var rileyLinkError: info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError? = null
+    var rileyLinkServiceState: RileyLinkServiceState? = null
+    var rileyLinkError: RileyLinkError? = null
 
-    private var pumpDeviceState: info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState? = null
-    private var errorDescription: String? = null
+    var pumpDeviceState: PumpDeviceState? = null
+    var errorDescription: String? = null
+
+    constructor() {
+
+    }
 
 
-    constructor(rileyLinkServiceState: info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState?, rileyLinkError: info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError?) {
+    constructor(rileyLinkServiceState: RileyLinkServiceState?, rileyLinkError: RileyLinkError?) {
         this.rileyLinkServiceState = rileyLinkServiceState
         this.rileyLinkError = rileyLinkError
     }
 
-    constructor(pumpDeviceState: info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState?) {
+    constructor(pumpDeviceState: PumpDeviceState?) {
         this.pumpDeviceState = pumpDeviceState
     }
 
-    constructor(pumpDeviceState: info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState?, errorDescription: String?) {
+    constructor(pumpDeviceState: PumpDeviceState?, errorDescription: String?) {
         this.pumpDeviceState = pumpDeviceState
         this.errorDescription = errorDescription
     }
