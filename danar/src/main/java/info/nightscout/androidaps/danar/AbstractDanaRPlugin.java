@@ -370,7 +370,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public JSONObject getJSONStatus(Profile profile, String profilename, String version) {
         DanaPump pump = danaPump;
         long now = System.currentTimeMillis();
-        if (pump.getLastConnection() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (pump.getLastConnection() + 60 * 60 * 1000L < System.currentTimeMillis()) {
             return new JSONObject();
         }
         JSONObject pumpjson = new JSONObject();
