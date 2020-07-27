@@ -127,7 +127,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     }
 
     @Override
-    public void preprocessPreferences(PreferenceFragmentCompat preferenceFragment) {
+    public void preprocessPreferences(@NotNull PreferenceFragmentCompat preferenceFragment) {
         super.preprocessPreferences(preferenceFragment);
         boolean smbAlwaysEnabled = sp.getBoolean(R.string.key_enableSMB_always, false);
 
