@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.elements
 import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.NumberPicker
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
 class InputInsulin(injector: HasAndroidInjector) : Element(injector) {
