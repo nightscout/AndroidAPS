@@ -180,4 +180,5 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Rilevamento tempo</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
 </resources>

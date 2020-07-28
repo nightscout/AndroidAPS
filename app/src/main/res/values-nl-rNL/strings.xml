@@ -645,7 +645,6 @@
     <string name="enablesmbwithtemptarget">Gebruik SMB met tijdelijke streefdoelen</string>
     <string name="enablesmbwithtemptarget_summary">Gebruik SMB bij een actief tijdelijk streefdoel (eet binnenkort, activiteit)</string>
     <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk streefdoel</string>
-    <string name="enablesmbwithhightemptarget_summary">Gebruik SMB tijdens een verhoogd tijdelijk doel (Inspanningen)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_carbs_label">Koolhydraten</string>
     <string name="overview_buttons_selection">Knoppen</string>
@@ -679,7 +678,6 @@
     <string name="do_not_bolus_record_only">Geen bolus toedienen enkel in behandelingen zetten</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
-    <string name="bolusrecordedonly">Bolus zal enkel opgeslagen worden</string>
     <string name="ns_autobackfill_summary">Automatische onbekende BGs aanvullen van NS</string>
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_activity">Activiteit</string>
@@ -796,7 +794,6 @@
     <string name="askforpermission">Vragen om toestemming</string>
     <string name="needsystemwindowpermission">Toepassing vereist systeemvenstermachtiging voor meldingen</string>
     <string name="needlocationpermission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
-    <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te kunnen slaan</string>
     <string name="request">Verzoek</string>
     <string name="insulinsourcesetup">Gevoeligheid plugin configureren</string>
     <string name="exit">Afsluiten</string>

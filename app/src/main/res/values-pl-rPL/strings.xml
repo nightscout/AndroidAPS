@@ -646,7 +646,6 @@
     <string name="enablesmbwithtemptarget">Włącz SMB z tymczasowym poziomem docelowym (TT)</string>
     <string name="enablesmbwithtemptarget_summary">Włącz SMB gdy tymczasowy poziom docelowy (TT) jest aktywny (TT WkrótcePosiłek, TT ćwiczenia)</string>
     <string name="enablesmbwithhightemptarget">Włącz SMB z wysokim tymczasowym poziomem docelowym</string>
-    <string name="enablesmbwithhightemptarget_summary">Włącz SMB gdy wysoki tymczasowy poziom docelowy jest aktywny (TT ćwiczenia)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_carbs_label">Węglowod.</string>
     <string name="overview_buttons_selection">Przyciski</string>
@@ -680,7 +679,6 @@
     <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
-    <string name="bolusrecordedonly">Bolus zostanie tylko zapisany w rekordach</string>
     <string name="ns_autobackfill_summary">Automatycznie wypełnij brakujące BG z NS</string>
     <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
     <string name="overview_show_activity">Aktywność</string>
@@ -797,7 +795,6 @@
     <string name="askforpermission">Zapytaj o uprawnienia</string>
     <string name="needsystemwindowpermission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
     <string name="needlocationpermission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
-    <string name="needstoragepermission">Aplikacja wymaga dostępu do magazynu plików, aby móc przechować pliki logów</string>
     <string name="request">Żądanie</string>
     <string name="insulinsourcesetup">Skonfiguruj wtyczkę insuliny</string>
     <string name="exit">Wyjście</string>

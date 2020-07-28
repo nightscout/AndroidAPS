@@ -645,7 +645,6 @@
     <string name="enablesmbwithtemptarget">Įjungti SMB su laikinais tikslais</string>
     <string name="enablesmbwithtemptarget_summary">Įjungti SMB, kai laikinas tikslas aktyvuotas (Netrukus valgysiu, Aktyvumas)</string>
     <string name="enablesmbwithhightemptarget">Įjungti SMB su intensyviais laikinais tikslais</string>
-    <string name="enablesmbwithhightemptarget_summary">Įjungti SMB, kai intensyvūs laikini tikslai yra aktyvūs (sportuosite)</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="overview_carbs_label">AV</string>
     <string name="overview_buttons_selection">Mygtukai</string>
@@ -679,7 +678,6 @@
     <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
     <string name="category">Kategorija</string>
     <string name="subcategory">Subkategorija</string>
-    <string name="bolusrecordedonly">Bolusas bus tik įrašytas</string>
     <string name="ns_autobackfill_summary">Automatiškai atstatyti trūkstamus KG duomenis iš NS</string>
     <string name="loop_smbsetbypump_label">SMB nustatyta iš pompos</string>
     <string name="overview_show_activity">Aktyvumas</string>
@@ -796,7 +794,6 @@
     <string name="askforpermission">Prašyti leidimo</string>
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
     <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
-    <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus</string>
     <string name="request">Užklausa</string>
     <string name="insulinsourcesetup">Konfigūruoti insulino įskiepį</string>
     <string name="exit">Išeiti</string>
