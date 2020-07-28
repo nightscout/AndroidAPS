@@ -220,5 +220,6 @@
 
     <!--    Ntp-->
     <string name="timedetection">Time detection</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
 
 </resources>

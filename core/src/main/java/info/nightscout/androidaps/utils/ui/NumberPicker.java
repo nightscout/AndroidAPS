@@ -1,5 +1,6 @@
-package info.nightscout.androidaps.utils;
+package info.nightscout.androidaps.utils.ui;
 
+import android.app.Service;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,6 +24,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.core.R;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by mike on 28.06.2016.
@@ -41,11 +45,13 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     Double minValue = 0d;
     Double maxValue = 1d;
     Double step = 1d;
-    NumberFormat formater;
+    NumberFormat formatter;
     boolean allowZero = false;
     TextWatcher textWatcher = null;
 
     Button okButton = null;
+
+    protected Boolean focused = false;
 
     private Handler mHandler;
     private ScheduledExecutorService mUpdater;
@@ -95,7 +101,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         LayoutInflater.from(context).inflate(R.layout.number_picker_layout, this, true);
     }
 
-    private void initialize(Context context) {
+    protected void initialize(Context context) {
         // set layout view
         inflate(context);
 
@@ -138,7 +144,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
 
             @Override
             public void afterTextChanged(Editable s) {
-                value = SafeParse.stringToDouble(editText.getText().toString());
+                if (focused) value = SafeParse.stringToDouble(editText.getText().toString());
                 callValueChangedListener();
                 if (okButton != null) {
                     if (value > maxValue || value < minValue)
@@ -146,6 +152,13 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
                     else
                         okButton.setVisibility(VISIBLE);
                 }
+            }
+        });
+
+        editText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                focused = hasFocus;
+                updateEditText();
             }
         });
     }
@@ -198,7 +211,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
-        this.formater = formater;
+        this.formatter = formater;
         this.allowZero = allowZero;
         callValueChangedListener();
         this.okButton = okButton;
@@ -256,11 +269,11 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         updateEditText();
     }
 
-    private void updateEditText() {
+    protected void updateEditText() {
         if (value == 0d && !allowZero)
             editText.setText("");
         else
-            editText.setText(formater.format(value));
+            editText.setText(formatter.format(value));
     }
 
     private void callValueChangedListener() {
@@ -288,6 +301,9 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     @Override
     public void onClick(View v) {
         if (mUpdater == null) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Service.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            editText.clearFocus();
             if (v == plusButton) {
                 inc(1);
             } else {

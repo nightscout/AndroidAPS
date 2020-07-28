@@ -65,6 +65,13 @@ class TddCalculator @Inject constructor(
             val profile = profileFunction.getProfile(t) ?: continue
             val absoluteRate = tbr?.tempBasalConvertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basal += absoluteRate / 60.0 * 5.0
+
+            if (!activePlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+                // they are not included in TBRs
+                val eb = getExtendedBolusFromHistory(t)
+                val absoluteEbRate = eb?.absoluteRate() ?: 0.0
+                tdd.bolus += absoluteEbRate / 60.0 * 5.0
+            }
             result.put(midnight, tdd)
         }
         for (i in 0 until result.size()) {
