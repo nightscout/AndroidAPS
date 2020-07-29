@@ -178,4 +178,5 @@
     <string name="tbb2">ОБИ * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Засичане на времето</string>
+    <string name="format_hour_minute">%1$dч:%2$dм</string>
 </resources>

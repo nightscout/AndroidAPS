@@ -172,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
     <string name="preferences_export_canceled">Export annulé ! Les préférences n\'ont PAS été exportées !</string>
     <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>
+    <string name="preferences_import_impossible">Impossible d\'importer les préférences !</string>
+    <string name="goto_main_try_again">Veuillez retourner à l\'écran principal et réessayer.</string>
     <string name="preferences_import_list_title">Sélectionner le fichier à importer</string>
     <string name="check_preferences_before_import">Vérifiez les préférences avant d\'importer :</string>
     <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
@@ -646,7 +648,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmbwithtemptarget">Activer SMB avec les cibles temporaires</string>
     <string name="enablesmbwithtemptarget_summary">Activer SMB lorsqu\'il y a une cible temporaire active (repas imminent, exercise)</string>
     <string name="enablesmbwithhightemptarget">Activer SMB avec cibles temp. hautes</string>
-    <string name="enablesmbwithhightemptarget_summary">Activer SMB lorsqu\'il y a une cible temporaire haute (activités, exercice,..)</string>
+    <string name="enablesmbwithhightemptarget_summary">Activer les SMB quand il y a une cible temp haute active (exercise, au dessus de 100 mg/dl ou 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_carbs_label">Glucides</string>
     <string name="overview_buttons_selection">Boutons</string>
@@ -680,7 +682,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="do_not_bolus_record_only">Ne pas administrer de bolus, enregistrer uniquement</string>
     <string name="category">Catégorie</string>
     <string name="subcategory">Sous-catégorie</string>
-    <string name="bolusrecordedonly">Le bolus sera seulement enregistré</string>
+    <string name="bolusrecordedonly">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="ns_autobackfill_summary">Remplissage automatique des glycémies manquantes en utilisant NS</string>
     <string name="loop_smbsetbypump_label">SMB défini par la pompe</string>
     <string name="overview_show_activity">Activité</string>
@@ -797,7 +799,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="askforpermission">Demande d\'autorisation</string>
     <string name="needsystemwindowpermission">L\'application a besoin de l\'autorisation d\'accès à la fenêtre système pour les notifications</string>
     <string name="needlocationpermission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
-    <string name="needstoragepermission">L\'application requiert une autorisation de stockage de données afin de pouvoir sauvegarder les fichiers journaux</string>
+    <string name="needstoragepermission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>
     <string name="request">Demande</string>
     <string name="insulinsourcesetup">Configurer le plugin d\'insuline</string>
     <string name="exit">Quitter</string>

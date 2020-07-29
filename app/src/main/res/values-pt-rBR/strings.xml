@@ -615,7 +615,6 @@
     <string name="enablesmbwithtemptarget">SMB activo com valores alvo temporários</string>
     <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
-    <string name="enablesmbwithhightemptarget_summary">SMB activo com alvos temporários elevados em curso (exercicio)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_carbs_label">Carbos</string>
     <string name="overview_buttons_selection">Botões</string>
@@ -646,7 +645,6 @@
     <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
-    <string name="bolusrecordedonly">O bolus apenas será gravado</string>
     <string name="ns_autobackfill_summary">Preencher glicemias em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Atividade</string>
@@ -762,7 +760,6 @@
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
-    <string name="needstoragepermission">Aplicação necessita da permissão de armazenamento para ser capaz de armazenar ficheiros de registo</string>
     <string name="request">Pedido</string>
     <string name="insulinsourcesetup">Configurar plugin Insulina</string>
     <string name="exit">Sair</string>

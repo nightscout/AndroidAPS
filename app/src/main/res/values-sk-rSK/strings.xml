@@ -172,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <string name="preferences_export_canceled">Export zrušený! Nastavenia neboli exportované!</string>
     <string name="preferences_import_canceled">Import zrušený! Nastavenia neboli importované!</string>
+    <string name="preferences_import_impossible">Nastavenia sa nedajú importovať!</string>
+    <string name="goto_main_try_again">Prosím, vráťte se späť na hlavnú obrazovku a skúste to znovu.</string>
     <string name="preferences_import_list_title">Vyberte súbor, ktorý chcete importovať</string>
     <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
     <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
@@ -645,7 +647,7 @@
     <string name="enablesmbwithtemptarget">Povoliť SMB s dočasnými cieľmi</string>
     <string name="enablesmbwithtemptarget_summary">Povoliť SMB, pokiaľ je aktívny dočasný cieľ (aktivita, blížiace sa jedlo)</string>
     <string name="enablesmbwithhightemptarget">Povoliť SMB s vysokými dočasnými cieľmi</string>
-    <string name="enablesmbwithhightemptarget_summary">Povoliť SMB, pokiaľ je aktívny vysoký dočasný cieľ (aktivita)</string>
+    <string name="enablesmbwithhightemptarget_summary">Povoliť SMB, ak je aktívny vysoký cieľ (cvičenie, vyšší ako 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="overview_carbs_label">Sacharidy</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
@@ -679,7 +681,7 @@
     <string name="do_not_bolus_record_only">Nepodať bolus, iba zaznamenať</string>
     <string name="category">Kategória</string>
     <string name="subcategory">Podkategória</string>
-    <string name="bolusrecordedonly">Bolus bude iba zaznamenaný</string>
+    <string name="bolusrecordedonly">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
     <string name="ns_autobackfill_summary">Automaticky doplňovať chýbajúcu glykémiu z NS</string>
     <string name="loop_smbsetbypump_label">SMB podané pumpou</string>
     <string name="overview_show_activity">Aktivita</string>
@@ -796,7 +798,7 @@
     <string name="askforpermission">Vyžiadať si povolenie</string>
     <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
     <string name="needlocationpermission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
-    <string name="needstoragepermission">Aplikácia vyžaduje prístup k úložisku, aby mohla ukladať logy</string>
+    <string name="needstoragepermission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
     <string name="request">Požiadavka</string>
     <string name="insulinsourcesetup">Nastavenie inzulínového modulu</string>
     <string name="exit">Koniec</string>
@@ -1237,6 +1239,7 @@
     <string name="nav_survey">Prieskum</string>
     <string name="invalidage">Neplatný záznam veku</string>
     <string name="invalidweight">Neplatný záznam váhy</string>
+    <string name="invalidpct">Neplatný vstup %</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
@@ -1412,5 +1415,8 @@
     <string name="availableprofile">Dostupný profil</string>
     <string name="profiletype">Typ profilu</string>
     <string name="formatwithtdd">Vek: %1$.0f CDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Vek: %1$.0f CDD: %2$.0f JI %3$d%%</string>
     <string name="formatwithweight">Vek: %1$.0f Hmotnosť: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% bazálu</string>
+    <string name="dpvdefaultprofile">Predvolený DPV profil</string>
 </resources>

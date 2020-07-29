@@ -25,7 +25,7 @@
     <string name="objectives_label">Argomento: impostazioni di AndroidAPS</string>
     <string name="objectives_howtosave">Quali sono le migliori pratiche per il backup delle impostazioni?</string>
     <string name="objectives_exportsettings">Esportarle localmente dal menu Manutenzione.</string>
-    <string name="objectives_storeelsewhere">Salvare il file esportato in un altro posto come l\'email, Dropbox, Google drive…</string>
+    <string name="objectives_storeelsewhere">Memorizzare il file esportato in un altro posto come l\'email, Dropbox, Google drive…</string>
     <string name="objectives_doexportonstart">Esportarle subito dopo l\'installazione di AAPS.</string>
     <string name="objectives_doexportafterchange">Esportarle dopo aver fatto modifiche d\'impostazione.</string>
     <string name="objectives_doexportafterobjective">Esportarle dopo il completamento di un obiettivo.</string>
