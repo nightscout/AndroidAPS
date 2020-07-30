@@ -645,7 +645,6 @@
     <string name="enablesmbwithtemptarget">Включить супер микро болюс SMB с временными целями</string>
     <string name="enablesmbwithtemptarget_summary">Включить супер микро болюс SMB при активной временной цели (близкий прием пищи, нагрузка)</string>
     <string name="enablesmbwithhightemptarget">Включить супер микро болюс SMB с высокими значениями временных целей</string>
-    <string name="enablesmbwithhightemptarget_summary">Включить супер микро болюс SMB при высоком значении действующей временной цели (нагрузка)</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="overview_carbs_label">Кол-во углеводов</string>
     <string name="overview_buttons_selection">Кнопки</string>
@@ -679,7 +678,6 @@
     <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
-    <string name="bolusrecordedonly">Болюс будет только записан</string>
     <string name="ns_autobackfill_summary">Заполнять пропущенные данные из NS</string>
     <string name="loop_smbsetbypump_label">Супер микро болюс SMB задан помпой</string>
     <string name="overview_show_activity">Нагрузка</string>
@@ -798,7 +796,6 @@ Context | Edit Context</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="needsystemwindowpermission">Приложению требуется разрешение системного окна для уведомлений</string>
     <string name="needlocationpermission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
-    <string name="needstoragepermission">Приложение нуждается в разрешении доступа к хранению данных для хранения лог-файлов</string>
     <string name="request">Запрос</string>
     <string name="insulinsourcesetup">Настроить плагин инсулина</string>
     <string name="exit">Выход</string>

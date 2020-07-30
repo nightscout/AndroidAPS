@@ -206,6 +206,8 @@
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
     <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
+    <string name="preferences_import_impossible">Cannot import preferences!</string>
+    <string name="goto_main_try_again">Please go back to main screen and try again.</string>
 
     <string name="preferences_import_list_title">Select file to import</string>
 
@@ -759,7 +761,7 @@
     <string name="enablesmbwithtemptarget">Enable SMB with temp targets</string>
     <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
-    <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
+    <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise, above 100 mg/dl or 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_carbs_label">Carbs</string>
     <string name="overview_buttons_selection">Buttons</string>
@@ -807,7 +809,7 @@
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
-    <string name="bolusrecordedonly">Bolus will be recorded only</string>
+    <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
     <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
     <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
@@ -950,7 +952,7 @@
     <string name="askforpermission">Ask for permission</string>
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
     <string name="exit">Exit</string>

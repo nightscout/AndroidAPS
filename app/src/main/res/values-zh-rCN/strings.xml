@@ -525,7 +525,6 @@
     <string name="enablesmbwithtemptarget">启用带有临时目标的SMB</string>
     <string name="enablesmbwithtemptarget_summary">当临时目标处于活动状态时启用 SMB (很快吃饭, 运动)</string>
     <string name="enablesmbwithhightemptarget">启用具有高临时目标的 SMB</string>
-    <string name="enablesmbwithhightemptarget_summary">当临时目标处于活动状态（锻炼）时启用SMB</string>
     <string name="overview_insulin_label">胰岛素</string>
     <string name="overview_carbs_label">碳水</string>
     <string name="overview_buttons_selection">按钮</string>
@@ -553,7 +552,6 @@
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <string name="category">类别</string>
     <string name="subcategory">子类别</string>
-    <string name="bolusrecordedonly">大剂量将仅被记录</string>
     <string name="ns_autobackfill_summary">Autobackfill 现在无法从NS获取血糖</string>
     <string name="loop_smbsetbypump_label">通过泵设置SMB微型大剂量</string>
     <string name="overview_show_activity">活动</string>
@@ -667,7 +665,6 @@
     <string name="startobjective">开始你的第一个目标</string>
     <string name="permission">权限</string>
     <string name="askforpermission">请求权限</string>
-    <string name="needstoragepermission">应用程序需要存储权限才能存储日志文件</string>
     <string name="request">请求</string>
     <string name="insulinsourcesetup">配置胰岛素插件</string>
     <string name="exit">退出</string>

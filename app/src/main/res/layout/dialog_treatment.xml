@@ -76,7 +76,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/overview_treatment_insulin"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -109,7 +109,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/overview_treatment_carbs"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />

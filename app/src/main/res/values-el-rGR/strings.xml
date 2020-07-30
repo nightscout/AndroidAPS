@@ -534,7 +534,6 @@
     <string name="enablesmbwithtemptarget">Ενεργοποίηση SMB με προσωρινούς στόχους</string>
     <string name="enablesmbwithtemptarget_summary">Ενεργοποίηση του SMB όταν υπάρχει ενεργός προσωρινός στόχος (τρώω σύντομα, άσκηση)</string>
     <string name="enablesmbwithhightemptarget">Ενεργοποίηση SMB με υψηλούς προσωρινούς στόχους</string>
-    <string name="enablesmbwithhightemptarget_summary">Ενεργοποίηση SMB όταν υπάρχει ενεργός υψηλός προσωρινός στόχος (άσκηση)</string>
     <string name="overview_insulin_label">Ινσουλίνη</string>
     <string name="overview_carbs_label">Υδατάνθρακες</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
@@ -562,7 +561,6 @@
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <string name="category">Κατηγορία</string>
     <string name="subcategory">Υποκατηγορία</string>
-    <string name="bolusrecordedonly">Το bolus θα εγγραφεί μόνο</string>
     <string name="ns_autobackfill_summary">Συμπληρώνεται αυτόματα η BG που λείπει από το NS</string>
     <string name="loop_smbsetbypump_label">Το SMB ρυθμίστηκε από την αντλία</string>
     <string name="overview_show_activity">Δραστηριότητα</string>
@@ -677,7 +675,6 @@
     <string name="startobjective">Ξεκινήστε τον πρώτο στόχο</string>
     <string name="permission">Άδεια</string>
     <string name="askforpermission">Ζητείστε άδεια</string>
-    <string name="needstoragepermission">Η εφαρμογή απαιτεί πρόσβαση στη μνήμη για την αποθήκευση αρχείων καταγραφής</string>
     <string name="request">Αίτημα</string>
     <string name="insulinsourcesetup">Ρυθμίστε την προσθήκη ινσουλίνης</string>
     <string name="exit">Έξοδος</string>

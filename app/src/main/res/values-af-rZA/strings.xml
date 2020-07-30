@@ -528,7 +528,6 @@
     <string name="enablesmbwithtemptarget">Aktiveer SMB met tydelike doelwitte</string>
     <string name="enablesmbwithtemptarget_summary">Aktiveer SMB wanneer daar tydelike doelwitte aktief is (eetgou, oefen)</string>
     <string name="enablesmbwithhightemptarget">Aktiveer SMB met hoë tydelike doelwitte</string>
-    <string name="enablesmbwithhightemptarget_summary">Aktiveer SMB as daar hoë tydelike doelwitte aktief is (oefening)</string>
     <string name="overview_insulin_label">Insulien</string>
     <string name="overview_carbs_label">Karbs</string>
     <string name="overview_buttons_selection">Knoppies</string>
@@ -556,7 +555,6 @@
     <string name="do_not_bolus_record_only">Moet nie bolus. Rekord alleen</string>
     <string name="category">Kategorie</string>
     <string name="subcategory">Subkategorie</string>
-    <string name="bolusrecordedonly">Bolus sal slegs opgeneem word</string>
     <string name="ns_autobackfill_summary">Autobackfill vermiste BGs vanaf NS</string>
     <string name="loop_smbsetbypump_label">SMB gestel deur pomp</string>
     <string name="overview_show_activity">Aktiwiteit</string>
@@ -670,7 +668,6 @@
     <string name="startobjective">Begin jou eerste doelwit</string>
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vra vir toestemming</string>
-    <string name="needstoragepermission">Toepassing benodig stoor toestemming om log leers te skryf</string>
     <string name="request">Versoek</string>
     <string name="insulinsourcesetup">Konfigureer insulien plugin</string>
     <string name="exit">Uitgang</string>

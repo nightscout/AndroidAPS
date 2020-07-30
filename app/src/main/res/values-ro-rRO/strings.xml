@@ -172,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
     <string name="preferences_export_canceled">Exportarea a eșuat! Preferințele NU au fost exportate!</string>
     <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
+    <string name="preferences_import_impossible">Nu se pot prelua setările!</string>
+    <string name="goto_main_try_again">Mergeți la ecranul principal și încercați din nou.</string>
     <string name="preferences_import_list_title">Selectați fișierul pentru import</string>
     <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
     <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
@@ -300,6 +302,7 @@
     <string name="primefill">Pregătire/umplere</string>
     <string name="fillwarning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
     <string name="othersettings_title">Alte</string>
+    <string name="fillbolus_title">Umplere/Amorsare folosind cantitățile standard de insulină</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
     <string name="button3">Buton 3</string>
@@ -644,7 +647,6 @@
     <string name="enablesmbwithtemptarget">Activează SMB cu ținte temporare</string>
     <string name="enablesmbwithtemptarget_summary">Activează SMB chiar atunci când este o țintă temporară activă (mâncare in curând, exerciții fizice)</string>
     <string name="enablesmbwithhightemptarget">Activează SMB cu ținte temporare mari</string>
-    <string name="enablesmbwithhightemptarget_summary">Activează SMB atunci când există o țintă temporară mare activă (exerciții fizice)</string>
     <string name="overview_insulin_label">Insulină</string>
     <string name="overview_carbs_label">Carbohidrați</string>
     <string name="overview_buttons_selection">Butoane</string>
@@ -678,7 +680,7 @@
     <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
-    <string name="bolusrecordedonly">Bolusul se va înregistra doar</string>
+    <string name="bolusrecordedonly">Bolusul va fi doar consemnat (nu va fi livrat de pompă)</string>
     <string name="ns_autobackfill_summary">Autocompletează valorile glicemiei lipsă din NS</string>
     <string name="loop_smbsetbypump_label">SMB setat de pompă</string>
     <string name="overview_show_activity">Activitate</string>
@@ -795,7 +797,7 @@
     <string name="askforpermission">Solicitați permisiunea</string>
     <string name="needsystemwindowpermission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
     <string name="needlocationpermission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
-    <string name="needstoragepermission">Aplicația necesită permisiune de acces la mediul de stocare pentru a putea înregistra jurnalele</string>
+    <string name="needstoragepermission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
     <string name="request">Cerință</string>
     <string name="insulinsourcesetup">Configurați plugin insulină</string>
     <string name="exit">Ieșire</string>
@@ -823,6 +825,7 @@
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AndroidAPS va copia setările bazalelor din profilurile din aplicație în pompă, suprascriindu-le pe cele existente deja în pompă. Asigurați-vă că aveți setările corecte ale bazalelor în AndroidAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="maintenance_settings">Setări de întreținere</string>
+    <string name="maintenance_email">Destinatar email</string>
     <string name="maintenance_encrypt_exported_prefs">Criptează setările exportate</string>
     <string name="maintenance_amount">Nr de loguri de trimis</string>
     <string name="maintenance">Mentenanță</string>
@@ -868,6 +871,7 @@
     <string name="disable_vibration">Dezactivează vibrațiile la livrarea manuală de bolus</string>
     <string name="disable_vibration_summary">Pentru bolus și bolus extins (valabil doar cu modelul Insight firmware 3.x)</string>
     <string name="disable_vibration_auto">Dezactivați vibrațiile la livrarea automată de bolus</string>
+    <string name="disable_vibration_auto_summary">Pentru SMB şi Bazale Temporare cu emulare de TBR (disponibil doar cu Insight firmware 3.x)</string>
     <string name="disconnect_delay">Întârziere a deconectării [s]</string>
     <string name="serial_number">Număr de serie</string>
     <string name="release_software_version">Versiunea de software</string>
@@ -972,6 +976,8 @@
     <string name="tidepool_upload_tbr">Înregistrează bazalele temporare</string>
     <string name="tidepool_upload_profile">Înregistrează schimbările de profil, țintele temporare</string>
     <string name="tidepool_upload_bg">Înregistrează testările de glicemie</string>
+    <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
+    <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>
     <string name="storage">restricție de stocare internă</string>
     <string name="diskfull">Eliberați cel puțin %1$d MB din spațiunl de stocare al telefonlui! Buclă dezactivată!</string>
     <string name="wrongformat">Format greșit</string>
@@ -994,6 +1000,7 @@
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="old_version">versiune veche</string>
     <string name="very_old_version">versiune foarte veche</string>
+    <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Aplicația Dexcom (modificată)</string>
     <string name="dexcom_short">DXCM</string>
@@ -1008,6 +1015,8 @@
     <string name="exists">există</string>
     <string name="notexists">nu există</string>
     <string name="temptargetcompared">Țintă temporară %1$s</string>
+    <string name="btdevicecompared">Conexiune Bluetooth cu dispozitivul %1$s %2$s</string>
+    <string name="btdevice">Conexiune la dispozitivul Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1022,12 +1031,18 @@
     <string name="name_short">Nume:</string>
     <string name="locationis">%1$s %2$s</string>
     <string name="location_mode">Când </string>
+    <string name="location_inside">Când sunteți în interiorul zonei</string>
+    <string name="location_outside">Când sunteți în afara zonei</string>
+    <string name="location_going_in">Când intrați în zona numită</string>
+    <string name="location_going_out">Când părăsiți zona numită</string>
     <string name="lastboluslabel">Ultimul bolus</string>
     <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Numele acțiunii</string>
     <string name="edit_short">EDITARE</string>
+    <string name="please_choose_an_action_type">Selectați tipul de acțiune</string>
+    <string name="please_choose_a_trigger_type">Selectați un tip de factor declanșator</string>
     <string name="triggers">Declanșatori:</string>
     <string name="remove_label">ȘTERGE</string>
     <string name="preconditions">Condiții pre-existente:</string>
@@ -1057,6 +1072,7 @@
     <string name="medtronic_pump_battery_lithium">Litiu (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Afișare extinsă)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Afișare extinsă)</string>
+    <string name="medtronic_bolus_debugging">Depanare Bolus/Tratamente</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1116,6 +1132,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Frecvența pompei nesuportată.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adresa RileyLink invalidă.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Tipul de pompă detectat nu corespunde cu cel configurat.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Setările de profil/șablon bazale nu sunt activate în pompă. Vă rugăm să le activați din pompă.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Tipul de profil bazal setat în pompă este incorect (trebuie să fie STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Tip incorect de RBT setat în pompă (trebuie să fie Absolut).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Bolus maxim setat incorect în pompă (trebuie să fie %1$.2f).</string>
@@ -1166,6 +1183,7 @@
     <string name="automation_trigger_pump_last_connection_description">Ultima conexiune la pompă [minute în urmă]</string>
     <string name="automation_trigger_pump_last_connection_compared">Ultima conexiune la pompă %1$s %2$s minute în urmă</string>
     <string name="sendsmsactionlabel">Trimite SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Trimite SMS către toate numerele</string>
     <string name="sendsmsactiontext">Trimite SMS cu text</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricție de bolus aplicată: %2$.2fU la %3$.2fU</font>]]></string>
@@ -1188,29 +1206,50 @@
     <string name="profile_name">Nume profil:</string>
     <string name="selected_profile">Selectat:</string>
     <string name="unitsnosemicolon">Unități</string>
+    <string name="doyouwantswitchprofile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">Pornit</string>
     <string name="common_off">Oprit</string>
+    <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>
+    <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
+    <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
+    <string name="time_or_timezone_change">Schimbare oră și/sau fus orar în pompă</string>
     <string name="nopumpselected">Nicio pompă selectată</string>
+    <string name="setupwizard_units_prompt">Selectați unitățile în care doriți să afișați valorile</string>
+    <string name="ns_ploadlocalprofile">Transmiteți modificările profilului local către NS</string>
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
     <string name="clone_label">Clonează</string>
+    <string name="saveorresetchangesfirst">Salvează sau resetează modificările curente mai întâi</string>
     <string name="deletecurrentprofile">Ştergeţi profilul curent?</string>
+    <string name="copytolocalprofile">Creați un profil local nou pe baza acestui profil?</string>
+    <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
+    <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
+    <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
     <string name="reorder_label">Reordonează</string>
     <string name="age">Vârstă:</string>
     <string name="weight_label">Greutate:</string>
     <string name="id">ID:</string>
     <string name="submit">Trimiteți</string>
+    <string name="mostcommonprofile">Cel mai frecvent profil:</string>
+    <string name="survey_comment">Notă: Doar datele vizibile pe acest ecran vor fi încărcate în mod anonim. ID-ul este alocat acestei instalări de AndroidAPS. Puteți trimite date din nou dacă profilul dumneavoastră principal se modifică, dar lăsați-l să ruleze cel puțin o săptămână pentru ca rezultatul să fie vizibil în interval de timp. Ajutorul dvs. este binevenit.</string>
+    <string name="nav_survey">Sondaj</string>
     <string name="invalidage">Valoare vârstă invalidă</string>
     <string name="invalidweight">Valoare greutate invalidă</string>
+    <string name="invalidpct">Intrare % invalidă</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Normal: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Medie</string>
     <string name="tir">Timp în țintă</string>
+    <string name="activitymonitor">Monitorizare activitate</string>
+    <string name="doyouwantresetstats">Doriți să resetați statisticile de activitate?</string>
     <string name="statistics">Statistici</string>
+    <string name="randombg">Glicemie aleatoare</string>
+    <string name="description_source_randombg">Generare glicemie aleator (doar mod Demo)</string>
     <string name="randombg_short">Glicemie</string>
     <string name="tools">Instrumente</string>
+    <string name="show_calculation">Arată calculul</string>
     <string name="automation_event">Eveniment automatizare</string>
     <string name="alreadyset">Deja setat</string>
     <string name="clearqueueconfirm">Ștergeți coada? Toate datele din coadă vor fi pierdute!</string>
@@ -1267,6 +1306,9 @@
     <string name="omnipod_config_beep_bolus_enabled">Bip pentru Bolus Activat</string>
     <string name="omnipod_config_beep_basal_enabled">Bip pentru Bazală Activat</string>
     <string name="omnipod_config_beep_smb_enabled">Bip pentru SMB Activat</string>
+    <string name="omnipod_config_beep_tbr_enabled">Bip pentru TBR Activat</string>
+    <string name="omnipod_config_pod_debugging_options_enabled">Opțiuni de depanare Pod Activate</string>
+    <string name="omnipod_config_timechange_enabled">Detectare DST/fus orar activată</string>
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
     <string name="omnipod_pod_status">Status Pod</string>
@@ -1277,12 +1319,32 @@
     <string name="omnipod_pod_name_no_info">Nu există informații</string>
     <string name="omnipod_pod_no_pod_connected">Niciun Pod conectat</string>
     <string name="omnipod_pod_not_initalized">Neiniţializat</string>
+    <string name="omnipod_pod_active_alerts">Alerte pod active</string>
     <string name="omnipod_ack_short">Alerte de confirmare</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operațiunea nu este posibilă.\n\nTrebuie să configuraţi Omnipod înainte de a putea efectua această operațiune.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">Operaţiunea nu este posibilă.\n\n Trebuie să aşteptaţi câteva minute până când AAPS încearcă să seteze profilul pentru prima dată.</string>
+    <string name="omnipod_error_illegal_init_action_type">Acțiune PodInitActionType ilegala: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Niciun Pod activ.</string>
     <string name="omnipod_driver_error_setup_action_verification_failed">Verificarea comenzii a eşuat.</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">A apărut o eroare neașteptată. Vă rugăm să o raportați! (tip: %1$s).</string>
+    <string name="omnipod_driver_error_invalid_parameters">Comunicarea a eșuat: s-au primit parametri de intrare incorecți.</string>
+    <string name="omnipod_driver_error_communication_failed_timeout">Comunicarea a eșuat: timpul a expirat.</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Comunicarea a eşuat: a apărut o eroare neaşteptată. Vă rugăm să o raportaţi!</string>
+    <string name="omnipod_driver_error_crc_mismatch">Comunicarea a eşuat: verificarea integrităţii mesajului a eşuat.</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Comunicarea a eşuat: a fost primit un pachet invalid de la Pod.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Comunicarea a eșuat: Pod-ul este într-o stare incorectă.</string>
+    <string name="omnipod_driver_error_invalid_response">Comunicarea a eșuat: s-a primit un răspuns incorect de la Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_sequence_number">Comunicarea a eșuat: s-a primit un mesaj cu un număr de secvență invalid de la Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_address">Comunicarea a eșuat: s-a primit un mesaj cu o adresă invalidă de la Pod.</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Comunicarea a eșuat: nu s-a reușit decodarea mesajului de la Pod.</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Comunicarea a eșuat: resincronizarea nonce nu a reușit.</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Comunicarea a eșuat: nonce nu poate fi sincronizată.</string>
+    <string name="omnipod_driver_error_not_enough_data">Comunicarea a eşuat: nu s-au primit suficiente date de la Pod.</string>
+    <string name="omnipod_driver_error_pod_fault">A fost detectată o eroare a Pod-ului (%1$03d %2$s). Vă rugăm să îl dezactivați pe acesta și să porniți unul nou.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">Comunicarea a eșuat: Pod-ul a returnat un răspuns de eroare.</string>
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_mgmt_title">Gestionare Pod</string>
     <string name="omnipod_cmd_init_pod">Inițializare Pod</string>
@@ -1292,6 +1354,9 @@
     <string name="omnipod_cmd_set_bolus">Setează bolusul</string>
     <string name="omnipod_cmd_cancel_bolus">Anulați Bolus</string>
     <string name="omnipod_cmd_set_tbr">Setează bazala temporară</string>
+    <string name="omnipod_cmd_cancel_tbr">Anulați bazală temporară (la nivel intern de către driver)</string>
+    <string name="omnipod_cmd_cancel_tbr_forced">Anulați bazală temporară (impus de către utilizator)</string>
+    <string name="omnipod_cmd_set_basal_schedule">Programați ratele bazale</string>
     <string name="omnipod_cmd_get_pod_status">Obțineți Status Pod</string>
     <string name="omnipod_cmd_get_pod_info">Obțineți Informații Pod</string>
     <string name="omnipod_cmd_set_time">Setare timp</string>
@@ -1316,7 +1381,10 @@
     <string name="omnipod_init_pod_wizard_pod_info_title">Informații Pod</string>
     <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPod-ul este acum activ.\n\nRatele bazale au fost programate și canula a fost introdusă.\n\nVă rugăm să verificați că acul a fost introdus corect. Dacă considerați ca nu, înlocuiți Pod-ul.</string>
     <string name="omnipod_remove_pod_wizard_step1_title">Dezactivare Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nApăsați <b>Următorul</b> pentru a dezactiva Pod-ul.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva Pod-ul.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">Dezactivare Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Dezactivare Pod.\n\nAtunci când toate elementele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Dacă dezactivarea eșuează continuu, vă rugăm să apăsați <b>Anulează</b> și folosiți opțiunea <b>Resetare Pod</b> pentru a forța resetarea Pod-ului.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod dezactivat.\n\nScoateți Pod-ul și aruncați-l.</string>
     <string name="omnipod_init_pod_pair_pod">Împerechere Pod</string>
     <string name="omnipod_init_pod_prime_pod">Amorsare Pod</string>
     <string name="omnipod_init_pod_fill_cannula">Umplere Canulă</string>
@@ -1326,8 +1394,28 @@
     <!-- Omnipod Dash -->
     <!-- Omnipod - Base -->
     <string name="description_pump_omnipod_dash">Integrare cu pompa pentru Omnipod Dash.</string>
+    <string name="omnipod_alert_finish_pairing_reminder">Finalizare memento împerechere</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>
     <string name="omnipod_alert_expiration">Pod-ul va expira în curând</string>
     <string name="omnipod_alert_expiration_advisory">Pod-ul va expira în curând</string>
     <string name="omnipod_alert_shutdown_imminent">Oprirea este iminentă</string>
+    <string name="omnipod_alert_low_reservoir">Nivel rezervor scăzut</string>
     <string name="omnipod_alert_unknown_alert">Alertă necunoscută</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Setarea ratelor bazale s-ar putea să fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reactualizați starea Pod-ului.</string>
+    <string name="omnipod_error_set_temp_basal_failed_uncertain">Setarea ratelor bazale temporare s-ar putea să fi eșuat. Dacă a existat o bazală temporară în livrare, aceasta ar putea fi fost anulată! Vă rugăm să reactualizați starea Pod-ului.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Setarea datei și orei s-ar putea să fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reactualizați starea Pod-ului.</string>
+    <string name="omnipod_bolus_failed_uncertain">Nu se poate verifica dacă bolusul a reușit. Verificați dacă Pod livrează ceva sau anulați bolusul.</string>
+    <string name="omnipod_rl_stats">Statistici RL</string>
+    <string name="omnipod_read_pulse_log_short">Jurnal Puls</string>
+    <string name="comapareprofile">Compară profilurile</string>
+    <string name="nav_profilehelper">Ajutor profil</string>
+    <string name="motoldefaultprofile">Profil implicit</string>
+    <string name="currentprofile">Profil curent</string>
+    <string name="availableprofile">Profil disponibil</string>
+    <string name="profiletype">Tip profil</string>
+    <string name="formatwithtdd">Vârstă: %1$.0f TDD: %2$.0f kg</string>
+    <string name="formatwittddandpct">Vârstă: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Vârstă: %1$.0f Greutate: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% din bazală</string>
+    <string name="dpvdefaultprofile">Profil implicit DPV</string>
 </resources>

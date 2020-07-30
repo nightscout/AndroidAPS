@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -25,6 +26,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import kotlinx.android.synthetic.main.dialog_insulin.*
 import kotlinx.android.synthetic.main.dialog_treatment.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
@@ -38,6 +40,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var ctx: Context
+    @Inject lateinit var config: Config
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -75,6 +78,10 @@ class TreatmentDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (config.NSCLIENT) {
+            overview_treatment_record_only.isChecked = true
+            overview_treatment_record_only.isEnabled = false
+        }
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val pumpDescription = activePlugin.activePump.pumpDescription
