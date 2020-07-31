@@ -645,7 +645,6 @@
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
     <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (TT) activo (ComerPronto, Actividad)</string>
     <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivo Temporal Alto</string>
-    <string name="enablesmbwithhightemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (TT) ALTO  activo (Actividad)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_carbs_label">Carbohidratos</string>
     <string name="overview_buttons_selection">Botones</string>
@@ -679,7 +678,6 @@
     <string name="do_not_bolus_record_only">No administrar Bolo, solo anotar</string>
     <string name="category">Categoría</string>
     <string name="subcategory">Subcategoría</string>
-    <string name="bolusrecordedonly">El Bolo sólo será anotado</string>
     <string name="ns_autobackfill_summary">Rellenar BGs perdidos desde NS</string>
     <string name="loop_smbsetbypump_label">SMB administrado por bomba</string>
     <string name="overview_show_activity">Actividad</string>
@@ -796,7 +794,6 @@
     <string name="askforpermission">Pedir permiso</string>
     <string name="needsystemwindowpermission">La aplicación necesita permiso de ventana del sistema para las notificaciones</string>
     <string name="needlocationpermission">La aplicación necesita permiso de ubicación para la exploración de BT e identificación de WiFi</string>
-    <string name="needstoragepermission">La aplicación necesita permiso para guardar los logs</string>
     <string name="request">Solicitar</string>
     <string name="insulinsourcesetup">Configurar complemento de insulina</string>
     <string name="exit">Salir</string>

@@ -172,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
+    <string name="preferences_import_impossible">Não é possível importar as preferências!</string>
+    <string name="goto_main_try_again">Por favor, volte ao ecrã principal e tente novamente.</string>
     <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
     <string name="check_preferences_before_import">Por favor, verifique as preferências antes da importação:</string>
     <string name="check_preferences_cannot_import">Preferências não podem ser importadas!</string>
@@ -645,7 +647,7 @@
     <string name="enablesmbwithtemptarget">SMB activo com valores alvo temporários</string>
     <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
-    <string name="enablesmbwithhightemptarget_summary">SMB activo com alvos temporários elevados em curso (exercicio)</string>
+    <string name="enablesmbwithhightemptarget_summary">Activar SMB quando há alvo temporário elevado activo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_carbs_label">Hidratos</string>
     <string name="overview_buttons_selection">Botões</string>
@@ -679,7 +681,7 @@
     <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
-    <string name="bolusrecordedonly">O bolus apenas será gravado</string>
+    <string name="bolusrecordedonly">Bólus será registado apenas (não administrado pela bomba)</string>
     <string name="ns_autobackfill_summary">Preencher glicemias em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Actividade</string>
@@ -796,7 +798,7 @@
     <string name="askforpermission">Pedir permissão</string>
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
     <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
-    <string name="needstoragepermission">Aplicação necessita da permissão de armazenamento para ser capaz de armazenar ficheiros de registo</string>
+    <string name="needstoragepermission">Aplicação precisa da permissão de armazenamento para poder armazenar ficheiros de registo e exportar configurações</string>
     <string name="request">Pedido</string>
     <string name="insulinsourcesetup">Configurar plugin Insulina</string>
     <string name="exit">Sair</string>

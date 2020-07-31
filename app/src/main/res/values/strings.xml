@@ -761,7 +761,7 @@
     <string name="enablesmbwithtemptarget">Enable SMB with temp targets</string>
     <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
-    <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
+    <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise, above 100 mg/dl or 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_carbs_label">Carbs</string>
     <string name="overview_buttons_selection">Buttons</string>

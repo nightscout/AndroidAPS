@@ -1,14 +1,17 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
     dependencies {
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        //classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'com.hiya:jacoco-android:0.2'
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
+//apply plugin: 'jacoco-android'
+apply plugin: 'com.hiya.jacoco-android'
 
 jacoco {
     toolVersion = "0.8.3"
@@ -125,7 +128,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.json:json:20200518'
-    testImplementation ("org.mockito:mockito-core:2.8.47") {
+    testImplementation("org.mockito:mockito-core:2.8.47") {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'

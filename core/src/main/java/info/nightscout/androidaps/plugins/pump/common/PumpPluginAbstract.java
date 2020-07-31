@@ -324,7 +324,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
 
-        if ((getPumpStatusData().lastConnection + 5 * 60 * 1000L) < System.currentTimeMillis()) {
+        if ((getPumpStatusData().lastConnection + 60 * 60 * 1000L) < System.currentTimeMillis()) {
             return new JSONObject();
         }
 

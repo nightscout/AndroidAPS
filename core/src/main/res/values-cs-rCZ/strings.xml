@@ -180,4 +180,5 @@
     <string name="tbb2">CZB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detekce času</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
 </resources>
