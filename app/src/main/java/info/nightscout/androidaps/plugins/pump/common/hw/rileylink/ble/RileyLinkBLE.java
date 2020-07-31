@@ -430,7 +430,8 @@ public class RileyLinkBLE {
                     // Catch if the service is not supported by the BLE device
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported");
-                    rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+                    // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
                             .getCharacteristic(charaUUID);
@@ -489,7 +490,8 @@ public class RileyLinkBLE {
                     // e.g. when the user switches from portrait to landscape.
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported");
-                    rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+                    // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
                             .getCharacteristic(charaUUID);
@@ -531,7 +533,8 @@ public class RileyLinkBLE {
                     // Catch if the service is not supported by the BLE device
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported");
-                    rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+                    // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(
                             charaUUID);

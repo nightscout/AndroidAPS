@@ -100,6 +100,8 @@ public class OmnipodUtil {
 
         if (currentCommand != null)
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
+
+        rxBus.send(new EventOmnipodDeviceStatusChange((OmnipodCommandType)null));
     }
 
     public static void displayNotConfiguredDialog(Context context) {

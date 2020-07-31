@@ -37,6 +37,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     jcenter { url "https://jcenter.bintray.com/" }
     mavenCentral()
+    google()
 }
 
 def generateGitBuild = { ->

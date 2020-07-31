@@ -220,6 +220,7 @@ public class OmnipodUITask {
         }
 
         omnipodUtil.setPodDeviceState(PodDeviceState.Sleeping);
+        omnipodUtil.setCurrentCommand(null);
     }
 
 

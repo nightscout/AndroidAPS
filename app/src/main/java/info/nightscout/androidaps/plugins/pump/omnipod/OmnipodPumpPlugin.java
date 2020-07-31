@@ -213,6 +213,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
                     RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
                     rileyLinkOmnipodService = mLocalBinder.getServiceInstance();
+                    rileyLinkOmnipodService.verifyConfiguration();
 
                     new Thread(() -> {
 
