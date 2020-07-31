@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.db;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 
 import java.util.HashMap;

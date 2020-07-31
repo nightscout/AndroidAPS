@@ -17,5 +17,11 @@ interface DatabaseHelperInterface {
     fun deleteDbRequestbyMongoId(action: String, _id: String)
     fun getDbRequestInterator(): CloseableIterator<DbRequest>
     fun roundDateToSec(date: Long): Long
+    fun createOrUpdateTDD(record: TDD)
+    fun createOrUpdate(tempBasal: TemporaryBasal)
+    fun findTempBasalByPumpId(id: Long) : TemporaryBasal
+    fun getTemporaryBasalsDataFromTime(mills: Long, ascending: Boolean) : List<TemporaryBasal>
+    fun getCareportalEventFromTimestamp(timestamp: Long): CareportalEvent
+    fun getTDDsForLastXDays(days: Int): List<TDD>
     fun getProfileSwitchData(from: Long, ascending: Boolean): List<ProfileSwitch>
 }

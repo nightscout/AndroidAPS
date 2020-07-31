@@ -418,6 +418,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         rileyLinkOmnipodService.doTuneUpDevice();
     }
 
+    @Override
+    public void triggerPumpConfigurationChangedEvent() {
+        rxBus.send(new EventOmnipodPumpValuesChanged());
+    }
+
 
     @Override
     public RileyLinkOmnipodService getRileyLinkService() {
