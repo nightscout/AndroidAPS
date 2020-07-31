@@ -174,6 +174,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 aapsLogger.debug(LTag.PUMP, "RileyLinkMedtronicService is connected");
                 RileyLinkMedtronicService.LocalBinder mLocalBinder = (RileyLinkMedtronicService.LocalBinder) service;
                 rileyLinkMedtronicService = mLocalBinder.getServiceInstance();
+                rileyLinkMedtronicService.verifyConfiguration();
 
                 new Thread(() -> {
 
@@ -217,7 +218,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         medtronicPumpStatus.lastDataTime = medtronicPumpStatus.lastConnection;
         medtronicPumpStatus.previousConnection = medtronicPumpStatus.lastConnection;
 
-        if (rileyLinkMedtronicService != null) rileyLinkMedtronicService.verifyConfiguration();
+        //if (rileyLinkMedtronicService != null) rileyLinkMedtronicService.verifyConfiguration();
 
         aapsLogger.debug(LTag.PUMP, "initPumpStatusData: " + this.medtronicPumpStatus);
 

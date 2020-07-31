@@ -16,6 +16,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
@@ -46,7 +47,6 @@ import javax.inject.Inject
 
 class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
-    //@Inject lateinit var mainApp: MainApp
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
@@ -176,11 +176,11 @@ class MedtronicFragment : DaggerFragment() {
         val rileyLinkError = medtronicPumpPlugin.rileyLinkService?.error
         medtronic_rl_status.text =
             when {
-                rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isConnecting                                                                                         -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError == null                                                                    -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null                                                                    -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice.MedtronicPump))
-                else                                                                                                                                            -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted   -> resourceHelper.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isConnecting                          -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError == null     -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null     -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                else                                                                             -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
         medtronic_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
@@ -191,15 +191,15 @@ class MedtronicFragment : DaggerFragment() {
 
         when (medtronicPumpStatus.pumpDeviceState) {
             null,
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.Sleeping             -> medtronic_pump_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.NeverContacted,
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.WakingUp,
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.PumpUnreachable,
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.ErrorWhenCommunicating,
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.TimeoutWhenCommunicating,
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.InvalidConfiguration -> medtronic_pump_status.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
+            PumpDeviceState.Sleeping             -> medtronic_pump_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+            PumpDeviceState.NeverContacted,
+            PumpDeviceState.WakingUp,
+            PumpDeviceState.PumpUnreachable,
+            PumpDeviceState.ErrorWhenCommunicating,
+            PumpDeviceState.TimeoutWhenCommunicating,
+            PumpDeviceState.InvalidConfiguration -> medtronic_pump_status.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
 
-            info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState.Active               -> {
+            PumpDeviceState.Active               -> {
                 val cmd = medtronicUtil.getCurrentCommand()
                 if (cmd == null)
                     medtronic_pump_status.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
@@ -218,7 +218,7 @@ class MedtronicFragment : DaggerFragment() {
                 }
             }
 
-            else                                 -> aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + medtronicPumpStatus.pumpDeviceState)
+            else   -> aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + medtronicPumpStatus.pumpDeviceState)
         }
 
         val status = commandQueue.spannedStatus()
