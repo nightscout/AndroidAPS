@@ -99,6 +99,7 @@ class AutotuneFragment : DaggerFragment() {
                     activePlugin.activeTreatments.doProfileSwitch(AutotunePlugin.tunedProfile!!.profileStore, AutotunePlugin.tunedProfile!!.profilename, 0, 100, 0, DateUtil.now())
                     rxBus.send(EventLocalProfileChanged())
                     AutotunePlugin.profileSwitchButtonVisibility = View.GONE
+                    updateGui()
                 })
             } else log("ProfileStore is null!")
         }
