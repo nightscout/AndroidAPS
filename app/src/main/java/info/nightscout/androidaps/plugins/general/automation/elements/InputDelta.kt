@@ -9,7 +9,7 @@ import android.widget.Spinner
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.NumberPicker
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*

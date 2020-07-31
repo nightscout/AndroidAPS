@@ -163,7 +163,7 @@
     <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Innerhalb der nächsten %d Minuten werden %dg zusätzliche Kohlenhydrate benötigt</string>
+    <string name="carbsreq">%dg Kohlenhydrate sollten innerhalb von %d Minuten aufgenommen werden</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulative TDD</string>

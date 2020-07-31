@@ -188,9 +188,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
         }
         initSummary(preferenceScreen, pluginId != -1)
-        for (plugin in pluginStore.plugins) {
-            plugin.preprocessPreferences(this)
-        }
+        preprocessPreferences()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -215,6 +213,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         checkForBiometricFallback(key)
 
         updatePrefSummary(findPreference(key))
+        preprocessPreferences()
+    }
+
+    private fun preprocessPreferences() {
+        for (plugin in pluginStore.plugins) {
+            plugin.preprocessPreferences(this)
+        }
     }
 
     private fun checkForBiometricFallback(key: String) {

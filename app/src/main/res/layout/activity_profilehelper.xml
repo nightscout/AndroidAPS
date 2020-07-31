@@ -94,7 +94,7 @@
                         android:text="@string/age"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.androidaps.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/profilehelper_age"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
@@ -115,7 +115,7 @@
                         android:text="@string/tdd_total"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.androidaps.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/profilehelper_tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
@@ -136,7 +136,7 @@
                         android:text="@string/weight_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.androidaps.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/profilehelper_weight"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
@@ -157,7 +157,7 @@
                         android:text="@string/basalpctfromtdd_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.androidaps.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/profilehelper_basalpctfromtdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />

@@ -172,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
     <string name="preferences_export_canceled">Експорт неуспешен! Настройките не са експортирани!</string>
     <string name="preferences_import_canceled">Импорт неуспешен! Настройките не са импортирани!</string>
+    <string name="preferences_import_impossible">Импортирането неуспешно!</string>
+    <string name="goto_main_try_again">Моля, върнете се на началния екран и опитайте отново.</string>
     <string name="preferences_import_list_title">Изберете файл</string>
     <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
     <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
@@ -645,7 +647,7 @@
     <string name="enablesmbwithtemptarget">Разреши SMB с временни цели</string>
     <string name="enablesmbwithtemptarget_summary">Разрешава SMB, когато има активна временна цел на КЗ</string>
     <string name="enablesmbwithhightemptarget">Разреши SMB с по-високи временни цели на КЗ</string>
-    <string name="enablesmbwithhightemptarget_summary">Разрешава SMB когато има активна по-висока временна цел </string>
+    <string name="enablesmbwithhightemptarget_summary">Активирайте SMB, когато има висока временна цел (опитайте с над 100 мг/дл или 5,5 ммол/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="overview_carbs_label">Въглехидрати</string>
     <string name="overview_buttons_selection">Бутони</string>
@@ -679,7 +681,7 @@
     <string name="do_not_bolus_record_only">Не стартирай болус, а само запиши в базата данни</string>
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
-    <string name="bolusrecordedonly">Болусът ще бъде само записан</string>
+    <string name="bolusrecordedonly">Болус само ще се запише (няма да се стартира в помпа)</string>
     <string name="ns_autobackfill_summary">Допълни липсващи данни за КЗ от Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB в помпата</string>
     <string name="overview_show_activity">Активност</string>
@@ -796,7 +798,7 @@
     <string name="askforpermission">Питане за разрешение</string>
     <string name="needsystemwindowpermission">ААПС изисква разрешение за да може да Ви уведомява</string>
     <string name="needlocationpermission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
-    <string name="needstoragepermission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове</string>
+    <string name="needstoragepermission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
     <string name="request">Искане</string>
     <string name="insulinsourcesetup">Конфигуриране на модула за Инсулин</string>
     <string name="exit">Изход</string>
@@ -1237,6 +1239,7 @@
     <string name="nav_survey">Проучване</string>
     <string name="invalidage">Невалидна възраст</string>
     <string name="invalidweight">Невалидно тегло</string>
+    <string name="invalidpct">Невалидна стойност в %</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Ниски: <b>%2$02d%%</b> В: <b>%3$02d%%</b> Вис: <b>%4$02d%%</b>]]></string>
     <string name="average">Средно</string>
     <string name="tir">Време в границите</string>
@@ -1412,5 +1415,8 @@
     <string name="availableprofile">Наличен профил</string>
     <string name="profiletype">Профил тип</string>
     <string name="formatwithtdd">Възраст: %1$.0f TDD: %2$.0f Е</string>
+    <string name="formatwittddandpct">Възраст: %1$.0f TDD: %2$.0f Е %3$d%% </string>
     <string name="formatwithweight">Възраст: %1$.0f Тегло: %2$.0f кг</string>
+    <string name="basalpctfromtdd_label">% от базата</string>
+    <string name="dpvdefaultprofile">Профил по подразбиране</string>
 </resources>

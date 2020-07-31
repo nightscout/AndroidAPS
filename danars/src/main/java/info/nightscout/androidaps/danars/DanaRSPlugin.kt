@@ -567,7 +567,7 @@ class DanaRSPlugin @Inject constructor(
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
         val now = System.currentTimeMillis()
-        if (danaPump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (danaPump.lastConnection + 60 * 60 * 1000L < System.currentTimeMillis()) {
             return JSONObject()
         }
         val pumpJson = JSONObject()

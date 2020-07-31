@@ -41,20 +41,6 @@
         <SwitchPreference
             android:defaultValue="false"
             android:dependency="@string/key_use_smb"
-            android:key="@string/key_enableSMB_with_COB"
-            android:summary="@string/enablesmbwithcob_summary"
-            android:title="@string/enablesmbwithcob" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/key_use_smb"
-            android:key="@string/key_enableSMB_with_temptarget"
-            android:summary="@string/enablesmbwithtemptarget_summary"
-            android:title="@string/enablesmbwithtemptarget" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/key_use_smb"
             android:key="@string/key_allowSMB_with_high_temptarget"
             android:summary="@string/enablesmbwithhightemptarget_summary"
             android:title="@string/enablesmbwithhightemptarget" />
@@ -65,6 +51,20 @@
             android:key="@string/key_enableSMB_always"
             android:summary="@string/enablesmbalways_summary"
             android:title="@string/enablesmbalways" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_use_smb"
+            android:key="@string/key_enableSMB_with_COB"
+            android:summary="@string/enablesmbwithcob_summary"
+            android:title="@string/enablesmbwithcob" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_use_smb"
+            android:key="@string/key_enableSMB_with_temptarget"
+            android:summary="@string/enablesmbwithtemptarget_summary"
+            android:title="@string/enablesmbwithtemptarget" />
 
         <SwitchPreference
             android:defaultValue="false"

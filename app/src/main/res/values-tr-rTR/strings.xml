@@ -498,7 +498,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmbwithtemptarget">Geçici hedeflerle SMB\'yi (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmbwithtemptarget_summary">Geçici hedef aktif olduğunda SMB\'yi etkinleştir (yakında yeme, egzersiz)</string>
     <string name="enablesmbwithhightemptarget">Yüksek geçici bazal oran hedefleriyle SMB\'yi etkinleştir</string>
-    <string name="enablesmbwithhightemptarget_summary">Yüksek geçici bazal oran hedef etkin olduğunda SMB\'yi etkinleştirin (egzersiz)</string>
     <string name="overview_insulin_label">İnsülin</string>
     <string name="overview_carbs_label">Karbonhidrat</string>
     <string name="overview_buttons_selection">Tuşlar</string>
@@ -524,7 +523,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Alt kategori</string>
-    <string name="bolusrecordedonly">Bolus sadece kaydedilecek</string>
     <string name="ns_autobackfill_summary">Nightscout\'tan eksik kan şekeri değerlerini otomatik olarak yükleyin</string>
     <string name="loop_smbsetbypump_label">SMB (Supermicroboluses) pompa tarafından verildi</string>
     <string name="overview_show_sensitivity">Duyarlılık</string>
@@ -637,7 +635,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="startobjective">İlk hedefinize başlayın</string>
     <string name="permission">Yetki</string>
     <string name="askforpermission">İzin için sorunuz</string>
-    <string name="needstoragepermission">Uygulama, log dosyalarını depolayabilmek için depolama izni gerektiriyor</string>
     <string name="request">İstek</string>
     <string name="insulinsourcesetup">İnsülin eklentisini yapılandır</string>
     <string name="exit">Çıkış</string>
