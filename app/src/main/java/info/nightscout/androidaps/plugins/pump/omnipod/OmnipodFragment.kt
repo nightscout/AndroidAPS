@@ -264,7 +264,7 @@ class OmnipodFragment : DaggerFragment() {
         } else if (driverState == OmnipodDriverState.Initalized_PodInitializing) {
             omnipod_pod_address.text = omnipodPumpStatus.podSessionState.address.toString()
             omnipod_pod_expiry.text = "-"
-            omnipod_pod_status.text = omnipodPumpStatus.podSessionState.getSetupProgress().name
+            omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_initalizing) + " (" + omnipodPumpStatus.podSessionState.getSetupProgress().name + ")"
             omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == omnipodPumpStatus.podSessionState.address.toString()
         } else {
@@ -279,19 +279,20 @@ class OmnipodFragment : DaggerFragment() {
 
             var podDeviceState = omnipodPumpStatus.podDeviceState
 
+            var stateText : String?
+
             when (podDeviceState) {
                 null,
-                PodDeviceState.Sleeping             -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+                PodDeviceState.Sleeping  -> stateText = "{fa-bed}  " // + pumpStatus.pumpDeviceState.name());
                 PodDeviceState.NeverContacted,
                 PodDeviceState.WakingUp,
                 PodDeviceState.PumpUnreachable,
                 PodDeviceState.ErrorWhenCommunicating,
                 PodDeviceState.TimeoutWhenCommunicating,
-                PodDeviceState.InvalidConfiguration -> omnipod_pod_status.text = " " + resourceHelper.gs(podDeviceState.resourceId)
+                PodDeviceState.InvalidConfiguration -> stateText = " " + resourceHelper.gs(podDeviceState.resourceId)
 
-                PodDeviceState.Active               -> {
-
-                    omnipod_pod_status.text = "Active";
+                PodDeviceState.Active -> {
+                    stateText = resourceHelper.gs(R.string.omnipod_pod_status_active)
 //                val cmd = OmnipodUtil.getCurrentCommand()
 //                if (cmd == null)
 //                    omnipod_pod_status.text = " " + resourceHelper.gs(pumpStatus.pumpDeviceState.resourceId)
@@ -309,44 +310,14 @@ class OmnipodFragment : DaggerFragment() {
 //                    }
 //                }
                 }
-
-                else                                -> aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + omnipodPumpStatus.podDeviceState)
+                else -> {
+                    aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + omnipodPumpStatus.podDeviceState)
+                    stateText = resourceHelper.gs(R.string.omnipod_pod_status_unknown)
+                }
             }
 
+            omnipod_pod_status.text = stateText + " (" + omnipodPumpStatus.podSessionState.getSetupProgress().name + ")"
         }
-
-//        pumpStatus.pumpDeviceState = checkStatusSet(pumpStatus.pumpDeviceState,
-//                OmnipodUtil.getPumpDeviceState()) as PumpDeviceState?
-//
-//        when (pumpStatus.pumpDeviceState) {
-//            null,
-//            PumpDeviceState.Sleeping -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
-//            PumpDeviceState.NeverContacted,
-//            PumpDeviceState.WakingUp,
-//            PumpDeviceState.PumpUnreachable,
-//            PumpDeviceState.ErrorWhenCommunicating,
-//            PumpDeviceState.TimeoutWhenCommunicating,
-//            PumpDeviceState.InvalidConfiguration -> omnipod_pod_status.text = " " + resourceHelper.gs(pumpStatus.pumpDeviceState.resourceId)
-//            PumpDeviceState.Active -> {
-//                val cmd = OmnipodUtil.getCurrentCommand()
-//                if (cmd == null)
-//                    omnipod_pod_status.text = " " + resourceHelper.gs(pumpStatus.pumpDeviceState.resourceId)
-//                else {
-//                    aapsLogger.debug(LTag.PUMP,"Command: " + cmd)
-//                    val cmdResourceId = cmd.resourceId
-//                    if (cmd == MedtronicCommandType.GetHistoryData) {
-//                        omnipod_pod_status.text = OmnipodUtil.frameNumber?.let {
-//                            resourceHelper.gs(cmdResourceId, OmnipodUtil.pageNumber, OmnipodUtil.frameNumber)
-//                        }
-//                                ?: resourceHelper.gs(R.string.medtronic_cmd_desc_get_history_request, OmnipodUtil.pageNumber)
-//                    } else {
-//                        omnipod_pod_status.text = " " + (cmdResourceId?.let { resourceHelper.gs(it) }
-//                                ?: cmd.getCommandDescription())
-//                    }
-//                }
-//            }
-//            else -> aapsLogger.warn(LTag.PUMP,"Unknown pump state: " + pumpStatus.pumpDeviceState)
-//        }
 
         val status = commandQueue.spannedStatus()
         if (status.toString() == "") {
