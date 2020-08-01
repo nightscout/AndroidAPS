@@ -5,7 +5,7 @@ import info.nightscout.androidaps.R;
 /**
  * Created by andy on 4.8.2019
  */
-
+// TODO remove this class and use PumpDeviceState instead
 public enum PodDeviceState {
 
     // FIXME
