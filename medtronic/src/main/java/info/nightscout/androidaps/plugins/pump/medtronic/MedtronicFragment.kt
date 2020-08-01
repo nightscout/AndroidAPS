@@ -17,12 +17,6 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
@@ -294,7 +288,7 @@ class MedtronicFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            OKDialog.show(it, resourceHelper.gs(R.string.combo_warning),
+            OKDialog.show(it, resourceHelper.gs(R.string.medtronic_warning),
                 resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null, sp)
         }
     }
