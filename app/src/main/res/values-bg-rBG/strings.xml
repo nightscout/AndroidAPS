@@ -1047,137 +1047,6 @@
     <string name="triggers">Активиращи условия:</string>
     <string name="remove_label">ИЗТРИИ</string>
     <string name="preconditions">Предварителни условия:</string>
-    <!-- Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Неподдържана операция.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Операцията не се поддържа от помпата (ВСЕ ОЩЕ).</string>
-    <!-- Medtronic (MDT) - Base -->
-    <string name="description_pump_medtronic">Поддръжка на помпи Медтроник (специфични модели), изисква RileyLink устройство</string>
-    <!-- MDT Configuration -->
-    <string name="medtronic_serial_number">Сериен номер на помпа</string>
-    <string name="medtronic_pump_type">Тип помпа</string>
-    <string name="medtronic_pump_frequency">Честота на помпата</string>
-    <string name="medtronic_pump_bolus_delay">Изчакване преди старт на болус (сек)</string>
-    <string name="medtronic_pump_max_bolus">Макс болус в помпата (Е)</string>
-    <string name="medtronic_pump_max_basal">Максимален базал в помпата (Е/ч)</string>
-    <string name="medtronic_pump_encoding">Медтроник коодиране</string>
-    <string name="medtronic_pump_frequency_us_ca">САЩ &amp; Канада (916 Mhz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Останалата част от света (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Софтуерно 4b6b кодиране</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Хардуерно 4b6b кодиране</string>
-    <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
-    <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
-    <string name="medtronic_custom_action_reset_rileylink">Изчисти RileyLink конфигурацията</string>
-    <string name="medtronic_pump_battery_select">Тип батерия (напреднали)</string>
-    <string name="medtronic_pump_battery_no">Не е избрано (общ)</string>
-    <string name="medtronic_pump_battery_alkaline">Алкални</string>
-    <string name="medtronic_pump_battery_lithium">Литиева</string>
-    <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
-    <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
-    <string name="medtronic_bolus_debugging">Болус/Корекция подробно</string>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">СКАНИРАЙ</string>
-    <string name="rileylink_scanner_scan_stop">СТОП</string>
-    <string name="rileylink_scanner_selected_device">Избрано</string>
-    <string name="rileylink_scanner_title">RileyLink скенер</string>
-    <string name="location_yes">Разреши</string>
-    <string name="location_no">Не</string>
-    <string name="rileylink_scanner_scanning">Сканиране</string>
-    <string name="rileylink_scanner_scanning_finished">Завършено сканиране</string>
-    <string name="rileylink_scanner_scanning_error">Грешка при сканиране: %1$d</string>
-    <string name="common_never">Никога</string>
-    <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Настройки</string>
-    <string name="rileylink_settings_tab2">История</string>
-    <string name="rileylink_status">RileyLink статус</string>
-    <string name="medtronic_pump_status">Статус на помпата</string>
-    <string name="title_activity_rileylink_settings">RileyLink настройки</string>
-    <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Конфигуриран адрес</string>
-    <string name="rileylink_connected_device">Свързано устройство</string>
-    <string name="rileylink_connection_status">Състояние на връзката</string>
-    <string name="rileylink_connection_error">Грешка при свързване</string>
-    <string name="rileylink_device">Устройство</string>
-    <string name="rileylink_device_type">Тип на устройството</string>
-    <string name="rileylink_device_model">Модел</string>
-    <string name="rileylink_last_used_frequency">Последна честота</string>
-    <string name="rileylink_last_device_contact">Последно устройство</string>
-    <string name="rileylink_firmware_version">RL Firmware</string>
-    <!-- RL State -->
-    <string name="rileylink_state_bt_init">Bluetooth стартиране…</string>
-    <string name="rileylink_state_bt_error">Bluetooth грешка</string>
-    <string name="rileylink_state_bt_ready">Bluetooth готов</string>
-    <string name="rileylink_state_not_started">Не е стартиран</string>
-    <string name="rileylink_state_rl_init">RileyLink стартиране…</string>
-    <string name="rileylink_state_rl_error">RileyLink грешка</string>
-    <string name="rileylink_state_pc_tune_up">Настройка на RileyLink и помпа</string>
-    <string name="rileylink_state_pc_error">Проблем при връзка с помпата</string>
-    <string name="rileylink_state_connected">Свързан</string>
-    <!-- RL Errors -->
-    <string name="rileylink_error_not_rl">Устройството не е RileyLink</string>
-    <string name="rileylink_error_unreachable">RileyLink недостъпен</string>
-    <string name="rileylink_error_bt_disabled">Bluetooth е изключен</string>
-    <string name="rileylink_error_no_bt_adapter">Няма Bluetooth адаптер</string>
-    <string name="rileylink_error_tuneup_failed">Настройката се провали</string>
-    <string name="rileylink_error_pump_unreachable">Помпата е недостъпна</string>
-    <string name="rileylink_error_pod_unreachable">Pod е недостъпen</string>
-    <!-- RL Target Device -->
-    <string name="rileylink_target_device_medtronic">Medtronic помпа</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <!-- MDT Errors -->
-    <string name="medtronic_errors">Грешки</string>
-    <string name="medtronic_error_serial_not_set">Сериен номер не е зададен.</string>
-    <string name="medtronic_error_serial_invalid">Грешен сериен номер.</string>
-    <string name="medtronic_error_pump_type_not_set">Тип помпа не е зададен.</string>
-    <string name="medtronic_error_pump_type_invalid">Този тип помпа не се поддържа.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Честота на помпата не е зададена.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Честотата не се поддържа.</string>
-    <string name="medtronic_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
-    <string name="medtronic_error_pump_type_set_differs_from_detected">Откритата помпа не е идентична с кокнфигурираната.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Базалните профили/настройки не са позволен в помпата. Включванете го от настройките на помпата.</string>
-    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Базалния профил в помпата е грешен (трябва да е STD).</string>
-    <string name="medtronic_error_pump_wrong_tbr_type_set">Грешен тип TBR в помпата ( трябва да е Absolute).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">Грешен максимален болус в помпата ( трябвба да е %1$.2f).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">Грешен макс мазал в помпата (трябва да е %1$.2f).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">Забранено действие.\n\n Първо трябва да конфигурурате поомпата, преди да използвате тази операция,.</string>
-    <string name="medtronic_error_pump_24h_time_change_requested">Желаната промяна на времето е повече от 24ч.</string>
-    <!-- MDT History -->
-    <string name="medtronic_history_group_basal">Базали</string>
-    <string name="medtronic_history_group_configuration">Конфигурации</string>
-    <string name="medtronic_history_group_notification">Известия</string>
-    <string name="medtronic_history_group_statistic">Статистики</string>
-    <string name="medtronic_history_group_unknown">Неизвестни</string>
-    <string name="medtronic_history_group_all">Всички</string>
-    <string name="medtronic_pump_history">История на помпата</string>
-    <!-- MDT Pump Status -->
-    <string name="medtronic_pump_status_never_contacted">Никога не сме се свързвали</string>
-    <string name="medtronic_pump_status_waking_up">Събуждане</string>
-    <string name="medtronic_pump_status_error_comm">Грешка в комуникацията</string>
-    <string name="medtronic_pump_status_timeout_comm">Изтичане на времето за връзка</string>
-    <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="medtronic_pump_status_invalid_config">Грешна конфигурация</string>
-    <string name="medtronic_pump_status_active">Активна</string>
-    <string name="medtronic_pump_status_sleeping">Спинка си</string>
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Отказали сте болус след като е бил изпратен към помпата. Помпите Медтроник не го поддържат и ще трябва да го направите ръчно. Пуснете Suspend mode и след това Resume (ако оше искате да го откажете). Апликацията ще покаже промените след около 5 мин.</string>
-    <string name="medtronic_cmd_cant_read_tbr">Не може да бъде прочетен вр. базал.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Не може да бъде изключен вр. базал. Операцията е спряна.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">Смяната на профила е невъзможна, поради твърде голям размер: %1$s</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered">Болус не може да бъде стартиран.</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Болусът не може да бъде стартиран понеже в резервоара има %1$.2f Е, а желаният болус е %2$.2f Е.</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">Временен базал не може да бъде стартиран.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr">Не може да бъде изключен вр. базал.</string>
-    <string name="medtronic_cmd_basal_profile_could_not_be_set">Профилът не може да бъде приложен.</string>
-    <string name="medtronic_cmd_basal_profile_not_set_is_same">Профилът е идентичен.</string>
-    <string name="medtronic_cmd_desc_get_history">Вземи история - стр %1$d (%2$d/16)</string>
-    <string name="medtronic_cmd_desc_get_history_request">Вземи история - стр %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Вземи времето на помпата</string>
-    <string name="medtronic_cmd_desc_get_settings">Вземи настройките на помпата</string>
-    <string name="medtronic_cmd_desc_get_model">Вземи модел на помпата</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">Вземи базален профил от помпата</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Приложи базалният профил</string>
-    <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
-    <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
-    <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
     <string name="profilename">Смени профила на</string>
     <string name="changengetoprofilename">Смени профила на %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Последно свързване към помпа</string>
@@ -1300,6 +1169,15 @@
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
+    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
+    <string name="medtronic_pump_status_never_contacted">Никога не сме се свързвали</string>
+    <string name="medtronic_pump_status_waking_up">Събуждане</string>
+    <string name="medtronic_pump_status_error_comm">Грешка в комуникацията</string>
+    <string name="medtronic_pump_status_timeout_comm">Изтичане на времето за връзка</string>
+    <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
+    <string name="medtronic_pump_status_invalid_config">Грешна конфигурация</string>
+    <string name="medtronic_pump_status_active">Активна</string>
+    <string name="medtronic_pump_status_sleeping">Спинка си</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <string name="description_pump_omnipod">Интеграция на помпата Omnipod, изисква RileyLink устройство (с фърмуер минимум 2.0 ) .</string>

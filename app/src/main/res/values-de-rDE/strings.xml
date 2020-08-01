@@ -1048,137 +1048,6 @@ Unerwartetes Verhalten.</string>
     <string name="triggers">Auslöser:</string>
     <string name="remove_label">ENTFERNEN</string>
     <string name="preconditions">Voraussetzung:</string>
-    <!-- Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operation nicht durch Pumpe und/oder Treiber unterstützt.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operation NOCH NICHT von Pumpe unterstützt.</string>
-    <!-- Medtronic (MDT) - Base -->
-    <string name="description_pump_medtronic">Pumpenintegration für Medtronic, benötigt RileyLink und ein spezielles Pumpenmodell</string>
-    <!-- MDT Configuration -->
-    <string name="medtronic_serial_number">Seriennummer der Pumpe</string>
-    <string name="medtronic_pump_type">Pumpentyp</string>
-    <string name="medtronic_pump_frequency">Pumpenfrequenz</string>
-    <string name="medtronic_pump_bolus_delay">Verzögerung vor dem Start des Bolus (sek.)</string>
-    <string name="medtronic_pump_max_bolus">Max Bolus in der Pumpe (IE)</string>
-    <string name="medtronic_pump_max_basal">Max Basal in der Pumpe (IE/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic Enkodierung</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Weltweit (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codierung</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codierung</string>
-    <string name="medtronic_custom_action_wake_and_tune">Aufwachen und anpassen</string>
-    <string name="medtronic_custom_action_clear_bolus_block">Bolus Block löschen</string>
-    <string name="medtronic_custom_action_reset_rileylink">RileyLink-Konfiguration zurücksetzen</string>
-    <string name="medtronic_pump_battery_select">Akkutyp (Power View)</string>
-    <string name="medtronic_pump_battery_no">Nicht ausgewählt (Einfache Ansicht)</string>
-    <string name="medtronic_pump_battery_alkaline">Alkaline Batterie (erweiterte Ansicht)</string>
-    <string name="medtronic_pump_battery_lithium">Lithium Batterie (erweiterte Ansicht)</string>
-    <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
-    <string name="medtronic_pump_battery_nimh">Nickel-Zink-Akku (erweiterte Ansicht)</string>
-    <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SCANNEN</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Ausgewählt</string>
-    <string name="rileylink_scanner_title">RileyLink Scan</string>
-    <string name="location_yes">Aktivieren</string>
-    <string name="location_no">Nein</string>
-    <string name="rileylink_scanner_scanning">Scannt</string>
-    <string name="rileylink_scanner_scanning_finished">Scannen abgeschlossen</string>
-    <string name="rileylink_scanner_scanning_error">Scanfehler: %1$d</string>
-    <string name="common_never">Nie</string>
-    <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Einstellungen</string>
-    <string name="rileylink_settings_tab2">Verlauf</string>
-    <string name="rileylink_status">RileyLink Status</string>
-    <string name="medtronic_pump_status">Pumpen-Status</string>
-    <string name="title_activity_rileylink_settings">RileyLink Einstellungen</string>
-    <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Konfigurierte Adresse</string>
-    <string name="rileylink_connected_device">Verbundenes Gerät</string>
-    <string name="rileylink_connection_status">Verbindungsstatus</string>
-    <string name="rileylink_connection_error">Verbindungsfehler</string>
-    <string name="rileylink_device">Gerät</string>
-    <string name="rileylink_device_type">Geräte-Typ</string>
-    <string name="rileylink_device_model">Gerätemodell</string>
-    <string name="rileylink_last_used_frequency">Zuletzt verwendete Frequenz</string>
-    <string name="rileylink_last_device_contact">Letzter Gerätekontakt</string>
-    <string name="rileylink_firmware_version">RL Firmware</string>
-    <!-- RL State -->
-    <string name="rileylink_state_bt_init">Initialisiere Bluetooth…</string>
-    <string name="rileylink_state_bt_error">Bluetooth-Fehler</string>
-    <string name="rileylink_state_bt_ready">Bluetooth bereit</string>
-    <string name="rileylink_state_not_started">Nicht gestartet</string>
-    <string name="rileylink_state_rl_init">RileyLink Initialisierung…</string>
-    <string name="rileylink_state_rl_error">RileyLink Fehler</string>
-    <string name="rileylink_state_pc_tune_up">RileyLink und Pumpe einstellen</string>
-    <string name="rileylink_state_pc_error">Problem beim Verbinden mit Pumpe</string>
-    <string name="rileylink_state_connected">Verbunden</string>
-    <!-- RL Errors -->
-    <string name="rileylink_error_not_rl">Gerät ist kein RileyLink</string>
-    <string name="rileylink_error_unreachable">RileyLink nicht erreichbar</string>
-    <string name="rileylink_error_bt_disabled">Bluetooth ist deaktiviert</string>
-    <string name="rileylink_error_no_bt_adapter">Kein Bluetooth-Adapter</string>
-    <string name="rileylink_error_tuneup_failed">TuneUp fehlgeschlagen</string>
-    <string name="rileylink_error_pump_unreachable">Pumpe ist nicht erreichbar</string>
-    <string name="rileylink_error_pod_unreachable">Pod nicht erreichbar</string>
-    <!-- RL Target Device -->
-    <string name="rileylink_target_device_medtronic">Medtronic Pumpe</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <!-- MDT Errors -->
-    <string name="medtronic_errors">Fehler</string>
-    <string name="medtronic_error_serial_not_set">Seriennummer nicht angegeben.</string>
-    <string name="medtronic_error_serial_invalid">Seriennummer ungültig.</string>
-    <string name="medtronic_error_pump_type_not_set">Pumpenart nicht angegeben.</string>
-    <string name="medtronic_error_pump_type_invalid">Pumptyp nicht unterstützt.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Pumpen-Frequenz nicht angegeben.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpen-Frequenz nicht unterstützt.</string>
-    <string name="medtronic_error_rileylink_address_invalid">RileyLink Adresse ungültig.</string>
-    <string name="medtronic_error_pump_type_set_differs_from_detected">Erkannter Pumpentyp entspricht nicht dem eingestellen Pumpentyp.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Einstellung für Basalprofile/-muster ist auf der Pumpe nicht aktiviert. Aktiviere es auf der Pumpe.</string>
-    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Das eingestellte Basalprofl der Pumpe ist falsch (muss STD sein).</string>
-    <string name="medtronic_error_pump_wrong_tbr_type_set">Falscher TBR-Typ auf der Pumpe (muss \"Absolut\" sein).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">Falscher Max-Bolus auf Pumpe eingestellt (muss %1$.2f sein).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">Falsche Max-Basal auf Pumpe eingestellt (muss %1$.2f sein).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">Operation ist nicht möglich.\n\n Du musst zuerst die Medtronic Pumpe konfigurieren, bevor Du diese Operation verwenden kannst.</string>
-    <string name="medtronic_error_pump_24h_time_change_requested">Mehr als 24h Zeitänderung wurde eingestellt.</string>
-    <!-- MDT History -->
-    <string name="medtronic_history_group_basal">Basal</string>
-    <string name="medtronic_history_group_configuration">Einstellungen</string>
-    <string name="medtronic_history_group_notification">Benachrichtigungen</string>
-    <string name="medtronic_history_group_statistic">Statistiken</string>
-    <string name="medtronic_history_group_unknown">Unbekannte</string>
-    <string name="medtronic_history_group_all">Alle</string>
-    <string name="medtronic_pump_history">Medtronic Pumpenverlauf</string>
-    <!-- MDT Pump Status -->
-    <string name="medtronic_pump_status_never_contacted">Nie verbunden</string>
-    <string name="medtronic_pump_status_waking_up">Aufwecken</string>
-    <string name="medtronic_pump_status_error_comm">Fehler bei der Kommunikation</string>
-    <string name="medtronic_pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpe ist nicht erreichbar</string>
-    <string name="medtronic_pump_status_invalid_config">Ungültige Einstellung</string>
-    <string name="medtronic_pump_status_active">Aktiv</string>
-    <string name="medtronic_pump_status_sleeping">Schläft</string>
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Du hast den Bolus abgebrochen nachdem er bereits an die Pumpe übermittelt war. Da Medtronic-Pumpen den Abbrechen-Befehl nicht unterstützen, musst du den Bolus manuell abbrechen. Versetze die Pumpe in den Suspend-Modus und gehe dann auf Fortsetzen (wenn Du den Bolus nach wie vor abbrechen möchtest). Die App wird die Änderungen beim nächsten Update (weniger als 5 Minuten) anzeigen.</string>
-    <string name="medtronic_cmd_cant_read_tbr">Aktuelle TBR konnte nicht gelesen werden.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Aktuelle TBR konnte nicht gestoppt werden. Funktion unterbrochen.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">Einstellen des Profils fehlgeschlagen weil folgende Basal-Raten zu hoch sind: %1$s</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus konnte nicht abgegeben werden.</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Der Bolus konnte nicht abgegeben werden, da weniger Insulin zur Verfügung steht (%1$.2f) als für den Bolus benötigt wird (%2$.2f).</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR konnte nicht eingestellt werden.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr">Konnte die aktuelle TBR nicht abbrechen.</string>
-    <string name="medtronic_cmd_basal_profile_could_not_be_set">Basalprofil konnte nicht eingestellt werden.</string>
-    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basalprofil, unverändert wird nicht erneut eingestellt.</string>
-    <string name="medtronic_cmd_desc_get_history">Hole Verlauf - Seite %1$d (%2$d/16)</string>
-    <string name="medtronic_cmd_desc_get_history_request">Hole Verlauf - Seite %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Hole Pumpen-Zeit</string>
-    <string name="medtronic_cmd_desc_get_settings">Hole Einstellungen</string>
-    <string name="medtronic_cmd_desc_get_model">Hole Pumpenmodel</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">Hole Basal-Profil</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Setzte Basal-Profil</string>
-    <string name="medtronic_cmd_desc_get_tbr">Hole Temporäre Basalraten</string>
-    <string name="medtronic_cmd_desc_set_tbr">Setze Temporäre Basalrate</string>
-    <string name="medtronic_cmd_desc_set_bolus">Setze Bolus</string>
     <string name="profilename">Profil wechseln zu</string>
     <string name="changengetoprofilename">Profil wechseln zu %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Letzte Verbindung zur Pumpe</string>
@@ -1301,6 +1170,15 @@ Unerwartetes Verhalten.</string>
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
+    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
+    <string name="medtronic_pump_status_never_contacted">Nie verbunden</string>
+    <string name="medtronic_pump_status_waking_up">Aufwecken</string>
+    <string name="medtronic_pump_status_error_comm">Fehler bei der Kommunikation</string>
+    <string name="medtronic_pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pumpe ist nicht erreichbar</string>
+    <string name="medtronic_pump_status_invalid_config">Ungültige Einstellung</string>
+    <string name="medtronic_pump_status_active">Aktiv</string>
+    <string name="medtronic_pump_status_sleeping">Schläft</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <string name="description_pump_omnipod">Um den Omnipod nutzen zu können, brauchst Du einen RileyLink (mind. Firmware 2.0).</string>

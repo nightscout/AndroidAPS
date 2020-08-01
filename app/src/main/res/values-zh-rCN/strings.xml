@@ -806,19 +806,8 @@
     <string name="dexcom_app_patched">德康app（补丁版）</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">从补丁版的德康APP收到血糖值</string>
-    <!-- Pump Abstract -->
-    <!-- Medtronic (MDT) - Base -->
-    <!-- MDT Configuration -->
-    <!-- RL BLE Scanning -->
-    <!-- RL Status Page -->
-    <!-- RL State -->
-    <!-- RL Errors -->
-    <!-- RL Target Device -->
-    <!-- MDT Errors -->
-    <!-- MDT History -->
-    <!-- MDT Pump Status -->
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <!-- Omnipod Configuration -->
