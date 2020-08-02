@@ -7,18 +7,17 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin.SingleProfile
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -47,8 +46,6 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var nsProfilePlugin: NSProfilePlugin
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
@@ -90,6 +87,23 @@ class AutotuneFragment : DaggerFragment() {
             })
         }
 
+        autotune_compare.setOnClickListener {
+            val currentprofile = AutotunePlugin.currentprofile
+            //log("profile : " + currentprofile?.profilename + "\n" + currentprofile?.data.toString())
+            val tunedprofile = AutotunePlugin.tunedProfile
+            //log("tunedprofile : " + AutotunePlugin.tunedProfile?.profilename + "\n" + tunedprofile?.data.toString())
+            ProfileViewerDialog().also { pvd ->
+                pvd.arguments = Bundle().also {
+                    it.putLong("time", DateUtil.now())
+                    it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
+                    it.putString("customProfile", currentprofile?.data.toString())
+                    it.putString("customProfile2", tunedprofile?.data.toString())
+                    it.putString("customProfileUnits", profileFunction.getUnits())
+                    it.putString("customProfileName", currentprofile?.profilename + "\n" + AutotunePlugin.tunedProfile?.profilename)
+                }
+            }.show(childFragmentManager, "ProfileViewDialog")
+        }
+
         autotune_profileswitch.setOnClickListener{
             val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
             val profileStore = AutotunePlugin.tunedProfile!!.profileStore
@@ -114,6 +128,7 @@ class AutotuneFragment : DaggerFragment() {
             AutotunePlugin.result = ""
             AutotunePlugin.profileSwitchButtonVisibility = View.GONE
             AutotunePlugin.copyButtonVisibility = View.GONE
+            autotune_compare.visibility = View.GONE
         }
         lastRunTxt = if (AutotunePlugin.lastRun != null) dateUtil.dateAndTimeString(AutotunePlugin.lastRun) else ""
         updateGui()
@@ -148,16 +163,20 @@ class AutotuneFragment : DaggerFragment() {
     private fun updateGui() {
         if (AutotunePlugin.calculationRunning) {
             autotune_run.visibility = View.GONE
+            autotune_compare.visibility = View.GONE
             tune_warning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
             tune_result.text = AutotunePlugin.result
         } else if (AutotunePlugin.lastRunSuccess) {
             autotune_run.visibility = View.VISIBLE
             tune_warning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             tune_result.text = AutotunePlugin.result
+            autotune_compare.visibility = View.VISIBLE
         } else {
             tune_result.text = AutotunePlugin.result
             autotune_run.visibility = View.VISIBLE
         }
+        if (AutotunePlugin.tunedProfile == null || AutotunePlugin.currentprofile == null)
+            autotune_compare.visibility = View.GONE
         autotune_copylocal.visibility = AutotunePlugin.copyButtonVisibility
         autotune_profileswitch.visibility = AutotunePlugin.profileSwitchButtonVisibility
         tune_lastrun.text = lastRunTxt

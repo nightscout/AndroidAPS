@@ -26,24 +26,21 @@ import javax.inject.Singleton
 
 /**
  * Initialized by Rumen Georgiev on 1/29/2018.
- * idea is to port Autotune from OpenAPS to java
- * let's start by taking 1 day of data from NS, and comparing it to ideal BG
+ * Update by philoul on 2020 (complete refactor of AutotunePlugin)
  *
- * Update by philoul on 05/2020 (complete refactor of AutotunePlugin)
+ * TODO: detail analysis of iob calculation to understand (and correct if necessary) differences between oaps calculation and aaps calculation
+ * => Today AutotuneCore is full consistent between oaps and aaps module (same results up to 3 digits)
+ * => only gap is in iob calculation, that's why today results even if close, are not exactly the same :-(
  * TODO: build data sets for autotune validation
  * => I work on a new BGsimulatorplugin, it uses a dedicated "reference profile" for BG calculation,
- * the idea is to use this reference profile to simulate a real person (if different of profile used for loop, it's the optimum result of a perfect autotune algorythm...)
+ *      the idea is to use this reference profile to simulate a real person (if different of profile used for loop, it's the optimum result of a perfect autotune algorythm...)
  * => I hope we will be able to validate autotunePlugin with several data set (simulation of several situations)
- * TODO: Check performance in all phones (if necessary add a dedicated thread for calculation)
- * on my Samsung A40 phone duration is about 2s / day (if I select 10 days, calculation is about 20s)
- * add feedback during calculation
  * TODO: Add Constraints for auto Switch (in Objective 11 ?) for safety => see with Milos once autotuneplugin validated
  * => for complete beginners only show results, then add ability to copy to local profile (Obj x?) , then add ability to switch from autotune results (Obj y?), then ability to use autotune from automation...
- * TODO: Add Automation Action for automatic autotune (only calculation or calculation and automatic switch according to settings)
- * TODO: move results presentation to AutotuneFragment with improved layout (see profileviewer_fragment.xml)
+ * TODO: Improve layout (see ProfileViewerDialog and HtmlHelper.fromHtml() function)
+ *      use html table for results presentation
  * TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
- * TODO: add Preference for main settings (may be advanced settings for % of adjustment (default 20%))
- * TODO: convert to Kotlin... (compare with oref0 files probably easier with kotlin)
+ * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
  */
 
 @Singleton
@@ -97,9 +94,11 @@ class AutotunePlugin @Inject constructor(
         copyButtonVisibility = View.GONE
         lastRunSuccess = false
         calculationRunning = true
+        currentprofile = null
         result = ""
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
+        profile = profileFunction.getProfile(now)
         lastRun = Date(System.currentTimeMillis())
 
         atLog("Start Autotune with $daysBack days back")
@@ -109,13 +108,11 @@ class AutotunePlugin @Inject constructor(
         //clean autotune folder before run
         autotuneFS!!.deleteAutotuneFiles()
         // Today at 4 AM
-        //Note, I don't find on existing function the equivalent in DateUtil so I created a new function, but if any equivalent function already exists may be we can use it
         var endTime = MidnightTime.calc(now) + autotuneStartHour * 60 * 60 * 1000L
         // Check if 4 AM is before now
         if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS!!.exportSettings(settings(lastRun, daysBack, Date(starttime), Date(endTime)))
-        profile = profileFunction.getProfile(now)
         tunedProfile = ATProfile(profile)
         tunedProfile!!.profilename = resourceHelper.gs(R.string.autotune_tunedprofile_name)
         val pumpprofile = ATProfile(profile)
@@ -129,6 +126,7 @@ class AutotunePlugin @Inject constructor(
             Thread(Runnable {
                 rxBus.send(EventAutotuneUpdateResult(result))
             }).start()
+            tunedProfile=null
             return result
         } else {
             for (i in 0 until daysBack) {
@@ -152,6 +150,7 @@ class AutotunePlugin @Inject constructor(
                     Thread(Runnable {
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
+                    tunedProfile=null
                     return result
                 }
                 autotuneFS!!.exportPreppedGlucose(preppedGlucose!!)
@@ -183,6 +182,7 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventAutotuneUpdateResult(result))
             }).start()
             calculationRunning = false
+            currentprofile = pumpprofile
             result
         } else "No Result"
     }
@@ -260,6 +260,7 @@ class AutotunePlugin @Inject constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
+        @JvmField var currentprofile: ATProfile? = null
         private var profile: Profile? = null
         const val autotuneStartHour = 4
         @JvmField var tunedProfile: ATProfile? = null

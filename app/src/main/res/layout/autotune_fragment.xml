@@ -210,19 +210,41 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/listdelimiter" />
 
-            <Button
-                android:id="@+id/autotune_run"
-                style="?android:attr/buttonStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:drawableStart="@drawable/ic_local_reset"
-                android:text="@string/autotune_run" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/autotune_run"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableStart="@drawable/ic_local_reset"
+                    android:text="@string/autotune_run" />
+
+                <Button
+                    android:id="@+id/autotune_compare"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableStart="@drawable/ic_compare_profiles"
+                    android:text="@string/compareprofileshort" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -239,8 +261,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:drawableStart="@drawable/ic_local_save"
                     android:text="@string/autotune_copy_localprofile_button" />
 
@@ -253,8 +275,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:text="@string/activate_profile"
                     android:drawableStart="@drawable/ic_local_activate" />
 
