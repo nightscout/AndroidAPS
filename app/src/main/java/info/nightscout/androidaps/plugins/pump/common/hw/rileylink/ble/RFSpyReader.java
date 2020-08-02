@@ -34,7 +34,8 @@ public class RFSpyReader {
 
     RFSpyReader(AAPSLogger aapsLogger, RileyLinkBLE rileyLinkBle) {
         this.aapsLogger = aapsLogger;
-        setRileyLinkBle(rileyLinkBle);
+        // xyz setRileyLinkBle(rileyLinkBle);
+        this.rileyLinkBle = rileyLinkBle;
     }
 
 
