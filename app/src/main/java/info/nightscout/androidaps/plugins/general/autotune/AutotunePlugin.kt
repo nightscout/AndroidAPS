@@ -26,24 +26,21 @@ import javax.inject.Singleton
 
 /**
  * Initialized by Rumen Georgiev on 1/29/2018.
- * idea is to port Autotune from OpenAPS to java
- * let's start by taking 1 day of data from NS, and comparing it to ideal BG
+ * Update by philoul on 2020 (complete refactor of AutotunePlugin)
  *
- * Update by philoul on 05/2020 (complete refactor of AutotunePlugin)
+ * TODO: detail analysis of iob calculation to understand (and correct if necessary) differences between oaps calculation and aaps calculation
+ * => Today AutotuneCore is full consistent between oaps and aaps module (same results up to 3 digits)
+ * => only gap is in iob calculation, that's why today results even if close, are not exactly the same :-(
  * TODO: build data sets for autotune validation
  * => I work on a new BGsimulatorplugin, it uses a dedicated "reference profile" for BG calculation,
- * the idea is to use this reference profile to simulate a real person (if different of profile used for loop, it's the optimum result of a perfect autotune algorythm...)
+ *      the idea is to use this reference profile to simulate a real person (if different of profile used for loop, it's the optimum result of a perfect autotune algorythm...)
  * => I hope we will be able to validate autotunePlugin with several data set (simulation of several situations)
- * TODO: Check performance in all phones (if necessary add a dedicated thread for calculation)
- * on my Samsung A40 phone duration is about 2s / day (if I select 10 days, calculation is about 20s)
- * add feedback during calculation
  * TODO: Add Constraints for auto Switch (in Objective 11 ?) for safety => see with Milos once autotuneplugin validated
  * => for complete beginners only show results, then add ability to copy to local profile (Obj x?) , then add ability to switch from autotune results (Obj y?), then ability to use autotune from automation...
- * TODO: Add Automation Action for automatic autotune (only calculation or calculation and automatic switch according to settings)
- * TODO: move results presentation to AutotuneFragment with improved layout (see profileviewer_fragment.xml)
+ * TODO: Improve layout (see ProfileViewerDialog and HtmlHelper.fromHtml() function)
+ *      use html table for results presentation
  * TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
- * TODO: add Preference for main settings (may be advanced settings for % of adjustment (default 20%))
- * TODO: convert to Kotlin... (compare with oref0 files probably easier with kotlin)
+ * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
  */
 
 @Singleton
