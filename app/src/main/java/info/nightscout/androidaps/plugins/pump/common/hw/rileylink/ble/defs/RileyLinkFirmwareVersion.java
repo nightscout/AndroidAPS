@@ -12,11 +12,12 @@ public enum RileyLinkFirmwareVersion {
     Version_1_0(1, 0, "1.0"), //
     Version_2_0(2, 0, "2.0"), //
     Version_2_2(2, 2, "2.2"), //
-    Version_3_0(3, 0, "3.0"), //
+    Version_3_x(3, 0, "3.x"), //
+    Version_4_x(4, 0, "4.x"), //
     UnknownVersion(0, 0, "???"), //
     Version1(Version_0_0, Version_0_9, Version_1_0), //
     Version2(Version_2_0, Version_2_2), //
-    Version2AndHigher(Version_2_0, Version_2_2, Version_3_0), //
+    Version2AndHigher(Version_2_0, Version_2_2, Version_3_x, Version_4_x), //
     ;
 
     private static final String FIRMWARE_IDENTIFICATION_PREFIX = "subg_rfspy ";

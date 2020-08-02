@@ -46,6 +46,7 @@ public class RFSpyReader {
     }
 
     void setRileyLinkEncodingType(RileyLinkEncodingType encodingType) {
+        aapsLogger.debug("setRileyLinkEncodingType: " + encodingType);
         stopAtNull = !(encodingType == RileyLinkEncodingType.Manchester || //
                 encodingType == RileyLinkEncodingType.FourByteSixByteRileyLink);
     }

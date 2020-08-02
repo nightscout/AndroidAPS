@@ -66,6 +66,7 @@ public class RFSpy {
         injector.androidInjector().inject(this);
         this.injector = injector;
         this.rileyLinkBle = rileyLinkBle;
+        aapsLogger.debug("RileyLinkServiceData:" + aapsLogger);
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
 
