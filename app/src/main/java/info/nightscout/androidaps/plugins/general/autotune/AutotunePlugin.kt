@@ -97,9 +97,11 @@ class AutotunePlugin @Inject constructor(
         copyButtonVisibility = View.GONE
         lastRunSuccess = false
         calculationRunning = true
+        currentprofile = null
         result = ""
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
+        profile = profileFunction.getProfile(now)
         lastRun = Date(System.currentTimeMillis())
 
         atLog("Start Autotune with $daysBack days back")
@@ -109,13 +111,11 @@ class AutotunePlugin @Inject constructor(
         //clean autotune folder before run
         autotuneFS!!.deleteAutotuneFiles()
         // Today at 4 AM
-        //Note, I don't find on existing function the equivalent in DateUtil so I created a new function, but if any equivalent function already exists may be we can use it
         var endTime = MidnightTime.calc(now) + autotuneStartHour * 60 * 60 * 1000L
         // Check if 4 AM is before now
         if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS!!.exportSettings(settings(lastRun, daysBack, Date(starttime), Date(endTime)))
-        profile = profileFunction.getProfile(now)
         tunedProfile = ATProfile(profile)
         tunedProfile!!.profilename = resourceHelper.gs(R.string.autotune_tunedprofile_name)
         val pumpprofile = ATProfile(profile)
@@ -129,6 +129,7 @@ class AutotunePlugin @Inject constructor(
             Thread(Runnable {
                 rxBus.send(EventAutotuneUpdateResult(result))
             }).start()
+            tunedProfile=null
             return result
         } else {
             for (i in 0 until daysBack) {
@@ -152,6 +153,7 @@ class AutotunePlugin @Inject constructor(
                     Thread(Runnable {
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
+                    tunedProfile=null
                     return result
                 }
                 autotuneFS!!.exportPreppedGlucose(preppedGlucose!!)
@@ -183,6 +185,7 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventAutotuneUpdateResult(result))
             }).start()
             calculationRunning = false
+            currentprofile = pumpprofile
             result
         } else "No Result"
     }
@@ -260,6 +263,7 @@ class AutotunePlugin @Inject constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
+        @JvmField var currentprofile: ATProfile? = null
         private var profile: Profile? = null
         const val autotuneStartHour = 4
         @JvmField var tunedProfile: ATProfile? = null
