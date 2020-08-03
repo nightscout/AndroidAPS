@@ -1042,137 +1042,6 @@
     <string name="triggers">Activadores:</string>
     <string name="remove_label">ELIMINAR</string>
     <string name="preconditions">Precondiciones:</string>
-    <!-- Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">Operación no soportada por bomba y/o controlador.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operación no soportada todavía por la bomba.</string>
-    <!-- Medtronic (MDT) - Base -->
-    <string name="description_pump_medtronic">Integración de Bomba para Medtronic, requiere dispositivo RileyLink y modelo específico de Bomba</string>
-    <!-- MDT Configuration -->
-    <string name="medtronic_serial_number">Número de serie de la Infusora</string>
-    <string name="medtronic_pump_type">Tipo de Infusora</string>
-    <string name="medtronic_pump_frequency">Frecuencia de la Infusora Medtronic</string>
-    <string name="medtronic_pump_bolus_delay">Retraso antes de que el bolo se inicie (s)</string>
-    <string name="medtronic_pump_max_bolus">Bolo máximo en infusora (U)</string>
-    <string name="medtronic_pump_max_basal">Máxima Basal en Infusora (U/h)</string>
-    <string name="medtronic_pump_encoding">Codificación de Medtronic</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canadá (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">A nivel mundial (868 Mhz)</string>
-    <string name="medtronic_pump_encoding_4b6b_local">Codificación de software 4b6b</string>
-    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificación de hardware 4b6b</string>
-    <string name="medtronic_custom_action_wake_and_tune">Encender y ajustar</string>
-    <string name="medtronic_custom_action_clear_bolus_block">Borrar el bloque de bolo</string>
-    <string name="medtronic_custom_action_reset_rileylink">Restablecer configuración de RileyLink</string>
-    <string name="medtronic_pump_battery_select">Tipo de batería (Vista de energía)</string>
-    <string name="medtronic_pump_battery_no">No seleccionado (Vista simple)</string>
-    <string name="medtronic_pump_battery_alkaline">Alcalina (vista extendida)</string>
-    <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
-    <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
-    <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
-    <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">ESCANEAR</string>
-    <string name="rileylink_scanner_scan_stop">DETENER</string>
-    <string name="rileylink_scanner_selected_device">Seleccionado</string>
-    <string name="rileylink_scanner_title">Escaneo de RileyLink</string>
-    <string name="location_yes">Habilitar</string>
-    <string name="location_no">No</string>
-    <string name="rileylink_scanner_scanning">Buscando</string>
-    <string name="rileylink_scanner_scanning_finished">Búsqueda Finalizada</string>
-    <string name="rileylink_scanner_scanning_error">Error de escaneo: %1$d</string>
-    <string name="common_never">Nunca</string>
-    <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Configuración</string>
-    <string name="rileylink_settings_tab2">Historico</string>
-    <string name="rileylink_status">Estado RileyLink</string>
-    <string name="medtronic_pump_status">Estado de Infusora</string>
-    <string name="title_activity_rileylink_settings">Ajustes de RileyLink</string>
-    <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Dirección configurada</string>
-    <string name="rileylink_connected_device">Dispositivo conectado</string>
-    <string name="rileylink_connection_status">Estado de la conexión</string>
-    <string name="rileylink_connection_error">Error de conexión</string>
-    <string name="rileylink_device">Dispositivo</string>
-    <string name="rileylink_device_type">Tipo de dispositivo</string>
-    <string name="rileylink_device_model">Modelo del dispositivo</string>
-    <string name="rileylink_last_used_frequency">Última frecuencia usada</string>
-    <string name="rileylink_last_device_contact">Último contacto del dispositivo</string>
-    <string name="rileylink_firmware_version">Firmware RL</string>
-    <!-- RL State -->
-    <string name="rileylink_state_bt_init">Inicializando Bluetooth…</string>
-    <string name="rileylink_state_bt_error">Error Bluetooth</string>
-    <string name="rileylink_state_bt_ready">Bluetooth listo</string>
-    <string name="rileylink_state_not_started">No iniciado</string>
-    <string name="rileylink_state_rl_init">Inicialización de RileyLink…</string>
-    <string name="rileylink_state_rl_error">Error de RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">Configurando RileyLink y la bomba</string>
-    <string name="rileylink_state_pc_error">Problema al conectar con la infusora</string>
-    <string name="rileylink_state_connected">Conectado</string>
-    <!-- RL Errors -->
-    <string name="rileylink_error_not_rl">El dispositivo no es un RileyLink</string>
-    <string name="rileylink_error_unreachable">RileyLink no accesible</string>
-    <string name="rileylink_error_bt_disabled">Bluetooth está desactivado</string>
-    <string name="rileylink_error_no_bt_adapter">No hay adaptador Bluetooth</string>
-    <string name="rileylink_error_tuneup_failed">Error al configurar</string>
-    <string name="rileylink_error_pump_unreachable">Infusora no alcanzable</string>
-    <string name="rileylink_error_pod_unreachable">Infusora no alcanzable</string>
-    <!-- RL Target Device -->
-    <string name="rileylink_target_device_medtronic">Infusora Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <!-- MDT Errors -->
-    <string name="medtronic_errors">Errores</string>
-    <string name="medtronic_error_serial_not_set">Nº serie no establecido.</string>
-    <string name="medtronic_error_serial_invalid">Número de serie no válido.</string>
-    <string name="medtronic_error_pump_type_not_set">Tipo de infusora no establecido.</string>
-    <string name="medtronic_error_pump_type_invalid">Tipo de infusora no soportado.</string>
-    <string name="medtronic_error_pump_frequency_not_set">No se ha establecido la frecuencia de la infusora.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frecuencia de la infusora no soportada.</string>
-    <string name="medtronic_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
-    <string name="medtronic_error_pump_type_set_differs_from_detected">El tipo de infusora detectado no es el mismo que el tipo configurado.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Los perfiles de basal/valor de los patrones no están activados en la bomba. Actívalos en la bomba.</string>
-    <string name="medtronic_error_pump_incorrect_basal_profile_selected">El perfil basal establecido en la infusora es incorrecto (debe ser estándar).</string>
-    <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo incorrecto de basal temporal en la infusora (debe ser Absoluto).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">Valor máximo incorrecto configurado en la infusora (debe ser %1$.2f).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">Error en el valor máximo de basal configurado en la infusora (debe ser %1$.2f).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">La operación no es posible.\n\n Necesitas configurar primero la infusora Medtronic, antes de poder usar esta operación.</string>
-    <string name="medtronic_error_pump_24h_time_change_requested">Se ha solicitado un cambio de hora de más de 24h.</string>
-    <!-- MDT History -->
-    <string name="medtronic_history_group_basal">Dosis Basales</string>
-    <string name="medtronic_history_group_configuration">Ajustes</string>
-    <string name="medtronic_history_group_notification">Notificaciones</string>
-    <string name="medtronic_history_group_statistic">Estadísticas</string>
-    <string name="medtronic_history_group_unknown">Desconocido/a</string>
-    <string name="medtronic_history_group_all">Todos</string>
-    <string name="medtronic_pump_history">Historial de la infusora Medtronic</string>
-    <!-- MDT Pump Status -->
-    <string name="medtronic_pump_status_never_contacted">Nunca conectados</string>
-    <string name="medtronic_pump_status_waking_up">En fase de inicio</string>
-    <string name="medtronic_pump_status_error_comm">Error con la comunicación</string>
-    <string name="medtronic_pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
-    <string name="medtronic_pump_status_pump_unreachable">Infusora no alcanzable</string>
-    <string name="medtronic_pump_status_invalid_config">Configuración no válida</string>
-    <string name="medtronic_pump_status_active">Activo</string>
-    <string name="medtronic_pump_status_sleeping">Suspendida</string>
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Has cancelado el bolo después de que ya estaba enviado a la infusora. Debido a que la infusora Medtronic no soporta comando cancelar, tendrás que cancelarlo manualmente. Pon la infusora en modo suspender y luego reinicia (si todavía quieres cancelar). La aplicación recogerá los cambios en la próxima actualización (en menos de 5 minutos).</string>
-    <string name="medtronic_cmd_cant_read_tbr">No se pudo leer la basal temporal actual.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">No se pudo cancelar la basal temporal actual. Detener la operación.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">El perfil no se pudo activar debido a que los siguientes patrones tienen una basal demasiado grande: %1$s</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered">No se pudo entregar el bolo.</string>
-    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">El bolo no pudo ser entregado porque la cantidad de insulina disponible (%1$.2f) es inferior al bolo solicitado (%2$.2f).</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">La basal temporal no se ha podido activar.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr">No se pudo cancelar la basal temporal actual.</string>
-    <string name="medtronic_cmd_basal_profile_could_not_be_set">No se pudo establecer el perfil de basal.</string>
-    <string name="medtronic_cmd_basal_profile_not_set_is_same">El perfil basal es el mismo, por lo que no será establecido de nuevo.</string>
-    <string name="medtronic_cmd_desc_get_history">Recuperar el historial - Página %1$d (%2$d/16)</string>
-    <string name="medtronic_cmd_desc_get_history_request">Recuperar el historial - Página %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Obtener la hora de la infusora</string>
-    <string name="medtronic_cmd_desc_get_settings">Obtener la configuración</string>
-    <string name="medtronic_cmd_desc_get_model">Obtener el modelo de la infusora</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">Obtener el perfil basal</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Establecer el perfil basal</string>
-    <string name="medtronic_cmd_desc_get_tbr">Obtener la basal temporal</string>
-    <string name="medtronic_cmd_desc_set_tbr">Establecer la basal temporal</string>
-    <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
     <string name="profilename">Cambiar perfil a</string>
     <string name="changengetoprofilename">Cambiar perfil a %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Última conexión con la bomba</string>
@@ -1294,6 +1163,15 @@
     <string name="buttonson_description">Los botones siempre se muestran en la parte inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grande</string>
     <string name="skin">Tema</string>
+    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
+    <string name="medtronic_pump_status_never_contacted">Nunca conectados</string>
+    <string name="medtronic_pump_status_waking_up">En fase de inicio</string>
+    <string name="medtronic_pump_status_error_comm">Error con la comunicación</string>
+    <string name="medtronic_pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
+    <string name="medtronic_pump_status_pump_unreachable">Infusora no alcanzable</string>
+    <string name="medtronic_pump_status_invalid_config">Configuración no válida</string>
+    <string name="medtronic_pump_status_active">Activo</string>
+    <string name="medtronic_pump_status_sleeping">Suspendida</string>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <string name="description_pump_omnipod">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
