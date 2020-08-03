@@ -48,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Журнал событий помпы Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Вы отменили болюс после того как он был задан на помпе. Поскольку помпа Medtronic не поддерживает отмену, нужно отменить его вручную. Переведите помпу в режим приостановки и затем сделайте Resume (если все еще хотите отменить). Приложение примет изменения при следующем обновлении (менее чем через 5 минут).</string>
     <string name="medtronic_cmd_cant_read_tbr">Не удалось прочитать текущий врем. базал TBR.</string>
@@ -69,8 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Получить временный базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Установить временный базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Настроить болюс</string>
+    <string name="medtronic_pump_status_pump_unreachable">Помпа недоступна</string>
+    <string name="medtronic_warning">Внимание</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Сейчас</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">тому назад</string>
+    <string name="medtronic_notification_check_time_date">Необходимо обновить часы помпы</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Вкл.</string>
+    <string name="common_off">Выкл.</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
 </resources>

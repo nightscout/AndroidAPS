@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Erros</string>
     <string name="medtronic_error_serial_not_set">Núm. Série não definido.</string>
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de Bomba não definido.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bolus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá obter as alterações, na próxima actualização (em menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler o DBT actual.</string>
@@ -68,8 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Obter Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_tbr">Definir Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
+    <string name="medtronic_warning">Aviso</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Agora</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">atrás</string>
+    <string name="medtronic_notification_check_time_date">Necesário actualizar relógio da bomba</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Ligado</string>
+    <string name="common_off">Desligado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
 </resources>

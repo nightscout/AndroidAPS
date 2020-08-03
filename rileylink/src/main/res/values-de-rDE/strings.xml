@@ -6,9 +6,11 @@
     <string name="rileylink_scanner_selected_device">Ausgewählt</string>
     <string name="rileylink_scanner_title">RileyLink Scan</string>
     <string name="location_yes">Aktivieren</string>
+    <string name="location_no">Nein</string>
     <string name="rileylink_scanner_scanning">Scannt</string>
     <string name="rileylink_scanner_scanning_finished">Scannen abgeschlossen</string>
     <string name="rileylink_scanner_scanning_error">Scanfehler: %1$d</string>
+    <string name="common_never">Nie</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Einstellungen</string>
     <string name="rileylink_settings_tab2">Verlauf</string>
@@ -35,18 +37,29 @@
     <string name="rileylink_state_rl_error">RileyLink Fehler</string>
     <string name="rileylink_state_pc_tune_up">RileyLink und Pumpe einstellen</string>
     <string name="rileylink_state_pc_error">Problem beim Verbinden mit Pumpe</string>
+    <string name="rileylink_state_connected">Verbunden</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Gerät ist kein RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink nicht erreichbar</string>
     <string name="rileylink_error_bt_disabled">Bluetooth ist deaktiviert</string>
     <string name="rileylink_error_no_bt_adapter">Kein Bluetooth-Adapter</string>
     <string name="rileylink_error_tuneup_failed">TuneUp fehlgeschlagen</string>
+    <string name="rileylink_error_pump_unreachable">Pumpe nicht erreichbar</string>
     <string name="rileylink_error_pod_unreachable">Pod nicht erreichbar</string>
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic Pumpe</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Weltweit (868 Mhz)</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d Stunde</item>
+        <item quantity="other">%1$d Stunden</item>
+    </plurals>
     <!--    <plurals name="objective_minutes">-->
     <!--        <item quantity="one">%1$d minute</item>-->
     <!--        <item quantity="other">%1$d minutes</item>-->

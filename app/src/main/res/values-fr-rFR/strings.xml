@@ -805,7 +805,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="exit">Quitter</string>
     <string name="open_navigation">Ouvrir navigation</string>
     <string name="close_navigation">Fermer navigation</string>
-    <string name="nav_plugin_preferences">Préférences des plugins</string>
+    <string name="nav_plugin_preferences">Préférences du plugin</string>
     <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
     <string name="time_elapsed">Temps écoulé</string>

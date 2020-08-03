@@ -172,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Вам будет предложено ввести главный пароль, необходимый для расшифровки импортированных настроек.</string>
     <string name="preferences_export_canceled">Экспорт отменен! Настройки НЕ экспортированы!</string>
     <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>
+    <string name="preferences_import_impossible">Не удается импортировать настройки!</string>
+    <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
     <string name="preferences_import_list_title">Выберите файл для импорта</string>
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
@@ -645,6 +647,7 @@
     <string name="enablesmbwithtemptarget">Включить супер микро болюс SMB с временными целями</string>
     <string name="enablesmbwithtemptarget_summary">Включить супер микро болюс SMB при активной временной цели (близкий прием пищи, нагрузка)</string>
     <string name="enablesmbwithhightemptarget">Включить супер микро болюс SMB с высокими значениями временных целей</string>
+    <string name="enablesmbwithhightemptarget_summary">Включить микроболюс SMB, когда активна высока временная цель (нагрузка, выше 100 мг/дл или 5,5 ммоль/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="overview_carbs_label">Кол-во углеводов</string>
     <string name="overview_buttons_selection">Кнопки</string>
@@ -678,6 +681,7 @@
     <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
+    <string name="bolusrecordedonly">Болюс будет только протоколироваться (не подаваться помпой)</string>
     <string name="ns_autobackfill_summary">Заполнять пропущенные данные из NS</string>
     <string name="loop_smbsetbypump_label">Супер микро болюс SMB задан помпой</string>
     <string name="overview_show_activity">Нагрузка</string>
@@ -796,6 +800,7 @@ Context | Edit Context</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="needsystemwindowpermission">Приложению требуется разрешение системного окна для уведомлений</string>
     <string name="needlocationpermission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
+    <string name="needstoragepermission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
     <string name="request">Запрос</string>
     <string name="insulinsourcesetup">Настроить плагин инсулина</string>
     <string name="exit">Выход</string>
