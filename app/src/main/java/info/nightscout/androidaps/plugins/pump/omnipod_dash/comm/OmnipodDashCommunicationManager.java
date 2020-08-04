@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
  * Created by andy on 4.8.2019
