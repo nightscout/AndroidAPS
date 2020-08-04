@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (vue Étendue)</string>
     <string name="medtronic_bolus_debugging">Débogage de Bolus/Traitements</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Erreurs</string>
     <string name="medtronic_error_serial_not_set">Numéro de série non défini.</string>
     <string name="medtronic_error_serial_invalid">Numéro de série invalide.</string>
     <string name="medtronic_error_pump_type_not_set">Type de pompe non défini.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Historique de la pompe Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Vous avez annulé le Bolus, après avoir déjà été envoyé vers la pompe. Puisque la pompe Medtronic n\'accepte pas d\'annulation, vous devrez l\'annuler manuellement. Mettez la pompe en mode Suspendre et puis faites le Reprendre (si vous voulez encore annuler). L\'application va récupérer ces modifications à la prochaine mise à jour (en moins de 5 minutes).</string>
     <string name="medtronic_cmd_cant_read_tbr">Impossible de lire le DBT (TBR) actuel.</string>
@@ -68,9 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Obtenir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_tbr">Définir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_bolus">Définir le Bolus</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pompe hors de portée</string>
+    <string name="medtronic_warning">Attention</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Maintenant</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">passé(e)s</string>
+    <string name="medtronic_notification_check_time_date">Mise à jour nécessaire de l\'heure de la pompe</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Activé</string>
     <string name="common_off">Off</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
 </resources>

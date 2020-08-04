@@ -214,12 +214,10 @@ public enum PumpHistoryEntryType // implements CodeEnum
         Bolus.addSpecialRuleHead(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8));
         // BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
         //ChangeBolusWizardSetup.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137)); // V5:
-        // 522
-        // has
-        // old
-        // form
+        // 522 has old form
         BolusWizard.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15));
         BolusReminder.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 2));
+        ChangeSensorSetup2.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 34));
     }
 
 

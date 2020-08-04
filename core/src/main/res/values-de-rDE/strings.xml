@@ -181,9 +181,29 @@
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Aktion von Pumpe und/oder Treiber nicht unterstützt.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation NOCH NICHT von Pumpe unterstützt.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nie verbunden</string>
+    <string name="pump_status_waking_up">Aufwecken</string>
+    <string name="pump_status_error_comm">Fehler bei der Kommunikation</string>
+    <string name="pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
+    <string name="pump_status_pump_unreachable">Pumpe nicht erreichbar</string>
+    <string name="pump_status_invalid_config">Ungültige Einstellung</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_sleeping">Schlafen</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basal</string>
+    <string name="history_group_configuration">Konfigurationen</string>
+    <string name="history_group_notification">Benachrichtigungen</string>
+    <string name="history_group_statistic">Statistiken</string>
+    <string name="history_group_unknown">Unbekannte</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Boli</string>
+    <string name="history_group_prime">Füllen</string>
+    <string name="history_group_alarm">Alarme</string>
+    <string name="history_group_glucose">Glukose</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

@@ -180,10 +180,31 @@
     <string name="tbb2">DTB*2</string>
     <!--    Ntp-->
     <string name="timedetection">Détection de temps</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Opération non prise en charge par la pompe et/ou le pilote.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Opération non ENCORE supportée par la pompe.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Jamais contacté</string>
+    <string name="pump_status_waking_up">Réveil en cours</string>
+    <string name="pump_status_error_comm">Erreur de communication</string>
+    <string name="pump_status_timeout_comm">Expiration du délai d\'attente en communication</string>
+    <string name="pump_status_pump_unreachable">Pompe hors de portée</string>
+    <string name="pump_status_invalid_config">Configuration non valable</string>
+    <string name="pump_status_active">Activé</string>
+    <string name="pump_status_sleeping">En veille</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basals</string>
+    <string name="history_group_configuration">Configurations</string>
+    <string name="history_group_notification">Notifications</string>
+    <string name="history_group_statistic">Statistiques</string>
+    <string name="history_group_unknown">Inconnus</string>
+    <string name="history_group_all">Tous</string>
+    <string name="history_group_bolus">Bolus</string>
+    <string name="history_group_prime">Amorcer</string>
+    <string name="history_group_alarm">Alarmes</string>
+    <string name="history_group_glucose">Glucose</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

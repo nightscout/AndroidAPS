@@ -626,7 +626,7 @@
     <string name="combo_reservoir_empty">Vuoto</string>
     <string name="combo_reservoir_normal">Normale</string>
     <string name="combo_notification_check_time_date">Necessario aggiornare orologio micro</string>
-    <string name="combo_warning">Attenzione</string>
+    <string name="combo_warning">Avviso</string>
     <string name="combo_pump_tbr_cancelled_warrning">Avviso TBR CANCELLATO: confermato</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Il micro potrebbe non essere raggiungibile. Nessun bolo erogato</string>
     <string name="combo_error_no_bolus_delivered">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
