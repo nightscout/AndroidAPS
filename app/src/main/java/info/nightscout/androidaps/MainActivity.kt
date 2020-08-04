@@ -147,7 +147,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
-        if (viewPager.currentItem > 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
+        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {

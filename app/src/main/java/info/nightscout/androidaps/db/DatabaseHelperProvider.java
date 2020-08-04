@@ -70,7 +70,32 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.getDbHelper().roundDateToSec(date);
     }
 
+    @Override public void createOrUpdateTDD(@NotNull TDD record) {
+        MainApp.getDbHelper().createOrUpdateTDD(record);
+    }
+
+    @Override public void createOrUpdate(@NotNull TemporaryBasal tempBasal) {
+        MainApp.getDbHelper().createOrUpdate(tempBasal);
+    }
+
+    @NotNull @Override public TemporaryBasal findTempBasalByPumpId(long id) {
+        return MainApp.getDbHelper().findTempBasalByPumpId(id);
+    }
+
+    @NotNull @Override public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
+        return MainApp.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
+    }
+
+    @NotNull @Override public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
+        return MainApp.getDbHelper().getCareportalEventFromTimestamp(timestamp);
+    }
+
+    @NotNull @Override public List<TDD> getTDDsForLastXDays(int days) {
+        return MainApp.getDbHelper().getTDDsForLastXDays(days);
+    }
+
     @NotNull @Override public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
         return MainApp.getDbHelper().getProfileSwitchData(from, ascending);
     }
+
 }

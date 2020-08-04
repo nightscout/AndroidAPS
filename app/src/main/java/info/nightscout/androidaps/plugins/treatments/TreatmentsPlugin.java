@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -603,6 +602,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 nsUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
         }
         return newRecordCreated;
+    }
+
+    public TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
+        TreatmentService.UpdateReturn resultRecord = getService().createOrUpdateMedtronic(treatment, fromNightScout);
+
+        return new TreatmentUpdateReturn(resultRecord.success, resultRecord.newRecord);
     }
 
     // return true if new record is created

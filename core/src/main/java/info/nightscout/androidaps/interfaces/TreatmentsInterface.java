@@ -14,6 +14,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentUpdateReturn;
 
 /**
  * Created by mike on 14.06.2016.
@@ -83,5 +84,7 @@ public interface TreatmentsInterface {
     void doProfileSwitch(final int duration, final int percentage, final int timeShift);
 
     long oldestDataAvailable();
+
+    TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout);
 
 }

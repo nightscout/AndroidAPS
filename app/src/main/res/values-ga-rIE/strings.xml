@@ -16,19 +16,8 @@
     <string name="cob">COB</string>
     <string name="careportal_pbage_label_short">PBAGE</string>
     <string name="openaps_short">OAPS</string>
-    <!-- Pump Abstract -->
-    <!-- Medtronic (MDT) - Base -->
-    <!-- MDT Configuration -->
-    <!-- RL BLE Scanning -->
-    <!-- RL Status Page -->
-    <!-- RL State -->
-    <!-- RL Errors -->
-    <!-- RL Target Device -->
-    <!-- MDT Errors -->
-    <!-- MDT History -->
-    <!-- MDT Pump Status -->
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <!-- Omnipod Configuration -->

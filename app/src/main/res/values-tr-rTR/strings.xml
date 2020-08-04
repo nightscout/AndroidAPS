@@ -681,19 +681,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <!-- Pump Abstract -->
-    <!-- Medtronic (MDT) - Base -->
-    <!-- MDT Configuration -->
-    <!-- RL BLE Scanning -->
-    <!-- RL Status Page -->
-    <!-- RL State -->
-    <!-- RL Errors -->
-    <!-- RL Target Device -->
-    <!-- MDT Errors -->
-    <!-- MDT History -->
-    <!-- MDT Pump Status -->
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
     <!-- Omnipod Configuration -->
