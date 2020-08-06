@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
@@ -316,7 +317,17 @@ class OmnipodFragment : DaggerFragment() {
                 }
             }
 
-            omnipod_pod_status.text = stateText + " (" + omnipodPumpStatus.podSessionState.getSetupProgress().name + ")"
+            if (SetupProgress.COMPLETED.equals(omnipodPumpStatus.podSessionState.getSetupProgress())) {
+                if(omnipodPumpStatus.podSessionState.lastDeliveryStatus != null) {
+                    stateText += " (last delivery status: " + omnipodPumpStatus.podSessionState.lastDeliveryStatus.name + ")"
+                }
+            } else {
+                if(omnipodPumpStatus.podSessionState.setupProgress != null) {
+                    stateText += " (setup progress: " + omnipodPumpStatus.podSessionState.setupProgress.name + ")"
+                }
+            }
+
+            omnipod_pod_status.text = stateText
         }
 
         val status = commandQueue.spannedStatus()
