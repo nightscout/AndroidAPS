@@ -101,7 +101,7 @@ public class OmnipodUtil {
         if (currentCommand != null)
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
 
-        rxBus.send(new EventOmnipodDeviceStatusChange((OmnipodCommandType)null));
+        rxBus.send(new EventOmnipodDeviceStatusChange((OmnipodCommandType) null));
     }
 
     public static void displayNotConfiguredDialog(Context context) {
@@ -233,18 +233,23 @@ public class OmnipodUtil {
     }
 
     public PodSessionState loadSessionState() {
-        String podState = sp.getString(OmnipodConst.Prefs.PodState, "");
+        PodSessionState podSessionState = null;
 
-        aapsLogger.info(LTag.PUMP, "PodSessionState-SP: loaded from SharedPreferences: " + podState);
-
-        if (StringUtils.isNotEmpty(podState)) {
-            PodSessionState podSessionState = gsonInstance.fromJson(podState, PodSessionState.class);
-            podSessionState.injectDaggerClass(injector);
-            setPodSessionState(podSessionState);
-
-            return podSessionState;
+        String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
+        if (StringUtils.isEmpty(storedPodState)) {
+            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: no PodSessionState present in SharedPreferences");
+        } else {
+            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
+            try {
+                podSessionState = gsonInstance.fromJson(storedPodState, PodSessionState.class);
+                podSessionState.injectDaggerClass(injector);
+            } catch (Exception ex) {
+                aapsLogger.error(LTag.PUMPCOMM, "Could not deserialize Pod state", ex);
+            }
         }
 
-        return null;
+        setPodSessionState(podSessionState);
+
+        return podSessionState;
     }
 }

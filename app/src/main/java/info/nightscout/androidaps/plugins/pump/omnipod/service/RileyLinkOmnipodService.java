@@ -1,12 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.service;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.IBinder;
-
-import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,8 +20,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIComm;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
@@ -112,18 +107,10 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     private void initializeErosOmnipodManager() {
         if (AapsOmnipodManager.getInstance() == null) {
-            PodSessionState podState = null;
-            if (sp.contains(OmnipodConst.Prefs.PodState) && omnipodUtil.getPodSessionState() == null) {
-                try {
-                    omnipodUtil.loadSessionState();
-                } catch (Exception ex) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Could not deserialize Pod state", ex);
-                }
-            }
+            PodSessionState podState = omnipodUtil.loadSessionState();
             OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
             //omnipodCommunicationService.setPumpStatus(omnipodPumpStatus);
             this.omnipodCommunicationManager = omnipodCommunicationService;
-
 
             this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
                     omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
