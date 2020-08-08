@@ -42,7 +42,7 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
 
     @Override
     public StatusResponse execute(OmnipodCommunicationManager communicationService) {
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
+        if (!podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podStateManager.getSetupProgress());
         }
 
