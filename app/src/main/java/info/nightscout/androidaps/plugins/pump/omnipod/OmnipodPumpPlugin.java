@@ -487,17 +487,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isSuspended() {
 
         return (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-                (omnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && omnipodUtil.getPodStateManager().isSuspended());
+                (omnipodUtil.getPodStateManager().hasState() && omnipodUtil.getPodStateManager().isSuspended());
 
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
+//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
 //
 // TODO ddd
 //        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-//                (OmnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
+//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
 //
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
+//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
     }
 
     @Override
@@ -579,6 +579,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
         //driverState = OmnipodDriverState.Initalized_PodAvailable;
+        // FIXME this does not seem to make sense
         omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
         // we would probably need to read Basal Profile here too
     }
@@ -621,20 +622,19 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        PodStateManager podStateManager = omnipodUtil.getPodStateManager();
-
-        if (podStateManager != null) {
-            if (!isRefresh) {
-                pumpState = PumpDriverState.Initialized;
-            }
-
-            // TODO handle if session state too old
-            getPodPumpStatus();
-
-        } else {
-            aapsLogger.error(LTag.PUMP, "No PodStateManager found");
+        try {
+            PodStateManager podStateManager = omnipodUtil.getPodStateManager();
+        } catch(Exception ex) {
             omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
+            throw ex;
         }
+
+        if (!isRefresh) {
+            pumpState = PumpDriverState.Initialized;
+        }
+
+        // TODO handle if pod state too old
+        getPodPumpStatus();
 
         finishAction("Omnipod Pump");
 

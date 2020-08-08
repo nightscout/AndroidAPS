@@ -173,6 +173,7 @@ public class OmnipodUtil {
 
     public PodStateManager getPodStateManager() {
         if (omnipodPumpStatus.podStateManager == null) {
+            aapsLogger.error("OmnipodUtil.getPodStateManager was called, but podStateManager is null");
             throw new IllegalStateException("Pod state manager is null");
         }
         return omnipodPumpStatus.podStateManager;

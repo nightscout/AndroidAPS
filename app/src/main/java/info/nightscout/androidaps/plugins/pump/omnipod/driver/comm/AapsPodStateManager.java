@@ -56,6 +56,7 @@ public class AapsPodStateManager implements PodStateManager {
     @Override public void removeState() {
         this.podState = null;
         persistPodState();
+        notifyPodStateChanged();
     }
 
     @Override
@@ -65,6 +66,7 @@ public class AapsPodStateManager implements PodStateManager {
         }
         podState = new PodState(address);
         persistPodState();
+        notifyPodStateChanged();
     }
 
     @Override public boolean isPaired() {

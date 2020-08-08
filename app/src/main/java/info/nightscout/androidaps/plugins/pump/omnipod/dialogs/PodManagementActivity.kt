@@ -99,7 +99,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
         val podStateManager = omnipodUtil.getPodStateManager()
-        val isFullInit = podStateManager == null || !podStateManager.isPaired || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
+        val isFullInit = !podStateManager.isPaired || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
         if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
         } else {
@@ -150,13 +150,11 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     fun refreshButtons() {
-        initpod_init_pod.isEnabled = omnipodUtil.podStateManager == null || !omnipodUtil.podStateManager.isPaired() ||
+        initpod_init_pod.isEnabled = !omnipodUtil.podStateManager.isPaired() ||
             omnipodUtil.getPodStateManager().getSetupProgress().isBefore(SetupProgress.COMPLETED)
 
-        val isPodSessionActive = omnipodUtil.podStateManager != null && omnipodUtil.podStateManager.hasState()
-
-        initpod_remove_pod.isEnabled = isPodSessionActive && omnipodUtil.podStateManager.isPaired
-        initpod_reset_pod.isEnabled = isPodSessionActive
+        initpod_remove_pod.isEnabled = omnipodUtil.podStateManager.hasState() && omnipodUtil.podStateManager.isPaired
+        initpod_reset_pod.isEnabled = omnipodUtil.podStateManager.hasState()
 
         if (omnipodUtil.getDriverState() == OmnipodDriverState.NotInitalized) {
             // if rileylink is not running we disable all operations
