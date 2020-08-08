@@ -138,10 +138,16 @@ public class OmnipodUtil {
         return gsonBuilder.create();
     }
 
-
     public void setPodStateManager(PodStateManager podStateManager) {
+        if (podStateManager == null) {
+            throw new IllegalArgumentException("Pod state manager can not be null");
+        }
         omnipodPumpStatus.podStateManager = podStateManager;
-        rxBus.send(new EventOmnipodDeviceStatusChange(podStateManager));
+        notifyDeviceStatusChanged();
+    }
+
+    public void notifyDeviceStatusChanged() {
+        rxBus.send(new EventOmnipodDeviceStatusChange(omnipodPumpStatus.podStateManager));
     }
 
 
@@ -166,6 +172,9 @@ public class OmnipodUtil {
 
 
     public PodStateManager getPodStateManager() {
+        if (omnipodPumpStatus.podStateManager == null) {
+            throw new IllegalStateException("Pod state manager is null");
+        }
         return omnipodPumpStatus.podStateManager;
     }
 

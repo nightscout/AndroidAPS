@@ -128,11 +128,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         podStateManager.setStateChangedHandler(manager -> {
             // Handle pod state changes
-            // FIXME only set once (?) (before instantiating AapsOmnipodManager)
-            //   Maybe not, it seems to not only set something, but also fire an event
-            omnipodUtil.setPodStateManager(manager);
-
             updatePumpStatus(manager);
+            omnipodUtil.notifyDeviceStatusChanged();
         });
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);

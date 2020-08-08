@@ -122,8 +122,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUtil, omnipodUIPostprocessor, aapsOmnipodManager);
 
         } else {
-            aapsOmnipodManager = instance;
             omnipodUtil.setPodStateManager(instance.getPodStateManager());
+            aapsOmnipodManager = instance;
         }
     }
 
