@@ -125,6 +125,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             omnipodUtil.setPodStateManager(instance.getPodStateManager());
             aapsOmnipodManager = instance;
         }
+        omnipodUtil.notifyDeviceStatusChanged();
     }
 
 

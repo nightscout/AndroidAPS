@@ -49,7 +49,6 @@ public class AssignAddressAction implements OmnipodAction<VersionResponse> {
 
         podStateManager.setPairingParameters(assignAddressResponse.getLot(), assignAddressResponse.getTid(), //
                 assignAddressResponse.getPiVersion(), assignAddressResponse.getPmVersion(), DateTimeZone.getDefault());
-        podStateManager.setMessageNumber(0x00);
 
         return assignAddressResponse;
     }

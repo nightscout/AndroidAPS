@@ -128,11 +128,11 @@ public class AapsPodStateManager implements PodStateManager {
     }
 
     @Override public void increaseMessageNumber() {
-        setAndStore(() -> podState.setMessageNumber(podState.getMessageNumber() + 1));
+        setAndStore(() -> podState.setMessageNumber((podState.getMessageNumber() + 1) & 0b1111));
     }
 
     @Override public void increasePacketNumber() {
-        setAndStore(() -> podState.setPacketNumber(podState.getPacketNumber() + 1));
+        setAndStore(() -> podState.setPacketNumber((podState.getPacketNumber() + 1) & 0b11111));
     }
 
     @Override public synchronized void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
