@@ -487,17 +487,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isSuspended() {
 
         return (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-                (omnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().isSuspended());
+                (omnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && omnipodUtil.getPodStateManager().isSuspended());
 
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodStateManager() != null && OmnipodUtil.getPodStateManager().isSuspended());
+//                (OmnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
 //
 // TODO ddd
 //        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-//                (OmnipodUtil.getPodStateManager() != null && OmnipodUtil.getPodStateManager().isSuspended());
+//                (OmnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
 //
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodStateManager() != null && OmnipodUtil.getPodStateManager().isSuspended());
+//                (OmnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
     }
 
     @Override

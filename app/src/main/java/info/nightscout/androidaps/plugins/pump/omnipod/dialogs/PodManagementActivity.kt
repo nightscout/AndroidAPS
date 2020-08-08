@@ -99,7 +99,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
         val podStateManager = omnipodUtil.getPodStateManager()
-        val isFullInit = podStateManager == null || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
+        val isFullInit = podStateManager == null || !podStateManager.isPaired || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
         if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
         } else {

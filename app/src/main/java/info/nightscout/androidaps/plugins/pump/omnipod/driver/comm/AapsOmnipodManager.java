@@ -84,6 +84,7 @@ import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
 
+    private final PodStateManager podStateManager;
     private OmnipodUtil omnipodUtil;
     private AAPSLogger aapsLogger;
     private RxBusWrapper rxBus;
@@ -113,6 +114,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                               ResourceHelper resourceHelper,
                               HasAndroidInjector injector,
                               ActivePluginProvider activePlugin) {
+        if (podStateManager == null) {
+            throw new IllegalArgumentException("Pod state manager can not be null");
+        }
+        this.podStateManager = podStateManager;
         this.omnipodUtil = omnipodUtil;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -135,7 +140,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public PodStateManager getPodStateManager() {
-        return delegate.getPodStateManager();
+        return podStateManager;
     }
 
     private void updatePumpStatus(PodStateManager podStateManager) {
@@ -368,8 +373,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
 
-        if (delegate.getPodStateManager().hasFaultEvent()) {
-            showPodFaultErrorDialog(delegate.getPodStateManager().getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
+        if (podStateManager.hasFaultEvent()) {
+            showPodFaultErrorDialog(podStateManager.getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
         }
 
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -468,7 +473,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public void setPumpStatus(OmnipodPumpStatus pumpStatus) {
         this.pumpStatus = pumpStatus;
-        updatePumpStatus(delegate.getPodStateManager());
+        updatePumpStatus(podStateManager);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -553,7 +558,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public String getPodStateAsString() {
-        return delegate.getPodStateAsString();
+        return podStateManager.toString();
     }
 
     private void reportImplicitlyCanceledTbr() {

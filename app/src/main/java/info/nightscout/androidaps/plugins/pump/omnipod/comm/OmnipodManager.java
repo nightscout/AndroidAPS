@@ -81,7 +81,7 @@ public class OmnipodManager {
         logStartingCommandExecution("pairAndPrime");
 
         try {
-            if (!podStateManager.hasState() || !podStateManager.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
+            if (!podStateManager.hasState() || !podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
                 // Always send both 0x07 and 0x03 on retries
                 communicationService.executeAction(
                         new AssignAddressAction(podStateManager));
@@ -105,7 +105,7 @@ public class OmnipodManager {
     }
 
     public synchronized Single<SetupActionResult> insertCannula(BasalSchedule basalSchedule) {
-        if (!podStateManager.hasState() || podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
+        if (!podStateManager.hasState() || !podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, !podStateManager.hasState() ? null : podStateManager.getSetupProgress());
         } else if (podStateManager.getSetupProgress().isAfter(SetupProgress.CANNULA_INSERTING)) {
             throw new IllegalSetupProgressException(SetupProgress.CANNULA_INSERTING, podStateManager.getSetupProgress());
@@ -453,14 +453,6 @@ public class OmnipodManager {
         synchronized (bolusDataMutex) {
             return activeBolusData != null;
         }
-    }
-
-    public PodStateManager getPodStateManager() {
-        return this.podStateManager;
-    }
-
-    public String getPodStateAsString() {
-        return podStateManager.hasState() ? podStateManager.toString() : "null";
     }
 
     // Only works for commands with nonce resyncable message blocks
