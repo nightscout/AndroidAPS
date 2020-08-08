@@ -237,7 +237,6 @@ object OKDialog {
     fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null, sp: SP? = null) {
         var okClicked = false
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(context)
-        adb
         AlertDialogHelper.Builder(context)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
