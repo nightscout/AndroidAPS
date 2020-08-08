@@ -58,7 +58,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     @Override
     public void execute() {
         if (actionType == PodActionType.InitPod) {
-            if (omnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
+            if (omnipodUtil.getPodStateManager().getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
                 omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodInitializing);
             } else {
                 omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);

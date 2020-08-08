@@ -20,21 +20,25 @@ public interface PodStateManager {
 
     void removeState();
 
+    void initState(int address);
+
     boolean isPaired();
 
-    public int getAddress();
+    void setPairingParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone);
 
-    public int getMessageNumber();
+    int getAddress();
 
-    public void setMessageNumber(int messageNumber);
+    int getMessageNumber();
 
-    public int getPacketNumber();
+    void setMessageNumber(int messageNumber);
 
-    public void setPacketNumber(int packetNumber);
+    int getPacketNumber();
 
-    public void increaseMessageNumber();
+    void setPacketNumber(int packetNumber);
 
-    public void increasePacketNumber();
+    void increaseMessageNumber();
+
+    void increasePacketNumber();
 
     void resyncNonce(int syncWord, int sentNonce, int sequenceNumber);
 
@@ -42,11 +46,11 @@ public interface PodStateManager {
 
     void advanceToNextNonce();
 
-    public boolean hasFaultEvent();
+    boolean hasFaultEvent();
 
-    public PodInfoFaultEvent getFaultEvent();
+    PodInfoFaultEvent getFaultEvent();
 
-    public void setFaultEvent(PodInfoFaultEvent faultEvent);
+    void setFaultEvent(PodInfoFaultEvent faultEvent);
 
     AlertType getConfiguredAlertType(AlertSlot alertSlot);
 
@@ -95,4 +99,6 @@ public interface PodStateManager {
     DeliveryStatus getLastDeliveryStatus();
 
     void updateFromStatusResponse(StatusResponse statusResponse);
+
+    void setStateChangedHandler(PodStateChangedHandler handler);
 }

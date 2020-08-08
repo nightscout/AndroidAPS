@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 
 /**
  * Created by andy on 4.8.2019
@@ -15,7 +15,7 @@ class EventOmnipodDeviceStatusChange : Event {
 
     var rileyLinkServiceState: RileyLinkServiceState? = null
     var rileyLinkError: RileyLinkError? = null
-    var podSessionState: PodSessionState? = null
+    var podStateManager: PodStateManager? = null
     var errorDescription: String? = null
     var podDeviceState: PodDeviceState? = null
     var pumpDeviceState: PumpDeviceState? = null
@@ -32,8 +32,8 @@ class EventOmnipodDeviceStatusChange : Event {
     }
 
 
-    constructor(podSessionState: PodSessionState?) {
-        this.podSessionState = podSessionState
+    constructor(podStateManager: PodStateManager?) {
+        this.podStateManager = podStateManager
     }
 
     constructor(errorDescription: String?) {
@@ -58,7 +58,7 @@ class EventOmnipodDeviceStatusChange : Event {
         return ("EventOmnipodDeviceStatusChange [" //
             + "rileyLinkServiceState=" + rileyLinkServiceState
             + ", rileyLinkError=" + rileyLinkError //
-            + ", podSessionState=" + podSessionState //
+            + ", podStateManager=" + podStateManager //
             + ", podDeviceState=" + podDeviceState + "]")
     }
 }

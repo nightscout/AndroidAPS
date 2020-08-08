@@ -23,9 +23,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
@@ -106,19 +107,23 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        if (AapsOmnipodManager.getInstance() == null) {
-            PodSessionState podState = omnipodUtil.loadSessionState();
+        AapsOmnipodManager instance = AapsOmnipodManager.getInstance();
+        if (instance == null) {
+            PodStateManager podStateManager = new AapsPodStateManager(injector);
+            omnipodUtil.setPodStateManager(podStateManager);
+
             OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
             //omnipodCommunicationService.setPumpStatus(omnipodPumpStatus);
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
-            this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
+            aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
                     omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
 
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUtil, omnipodUIPostprocessor, aapsOmnipodManager);
 
         } else {
-            aapsOmnipodManager = AapsOmnipodManager.getInstance();
+            aapsOmnipodManager = instance;
+            omnipodUtil.setPodStateManager(instance.getPodStateManager());
         }
     }
 

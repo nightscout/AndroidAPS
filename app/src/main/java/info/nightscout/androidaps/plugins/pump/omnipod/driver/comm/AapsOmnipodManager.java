@@ -60,6 +60,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturne
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
@@ -69,7 +70,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
@@ -103,7 +104,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public AapsOmnipodManager(OmnipodCommunicationManager communicationService,
-                              PodSessionState podState,
+                              PodStateManager podStateManager,
                               OmnipodPumpStatus _pumpStatus,
                               OmnipodUtil omnipodUtil,
                               AAPSLogger aapsLogger,
@@ -120,17 +121,26 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         this.activePlugin = activePlugin;
         this.pumpStatus = _pumpStatus;
 
-        delegate = new OmnipodManager(aapsLogger, sp, communicationService, podState, podSessionState -> {
+        podStateManager.setStateChangedHandler(manager -> {
             // Handle pod state changes
-            omnipodUtil.setPodSessionState(podSessionState);
-            updatePumpStatus(podSessionState);
+            // FIXME only set once (?) (before instantiating AapsOmnipodManager)
+            //   Maybe not, it seems to not only set something, but also fire an event
+            omnipodUtil.setPodStateManager(manager);
+
+            updatePumpStatus(manager);
         });
+
+        delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
         instance = this;
     }
 
-    private void updatePumpStatus(PodSessionState podSessionState) {
+    public PodStateManager getPodStateManager() {
+        return delegate.getPodStateManager();
+    }
+
+    private void updatePumpStatus(PodStateManager podStateManager) {
         if (pumpStatus != null) {
-            if (podSessionState == null) {
+            if (!podStateManager.hasState()) {
                 pumpStatus.ackAlertsText = null;
                 pumpStatus.ackAlertsAvailable = false;
                 pumpStatus.lastBolusTime = null;
@@ -142,8 +152,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 sendEvent(new EventRefreshOverview("Omnipod Pump", false));
             } else {
                 // Update active alerts
-                if (podSessionState.hasActiveAlerts()) {
-                    List<String> alerts = translateActiveAlerts(podSessionState);
+                if (podStateManager.hasActiveAlerts()) {
+                    List<String> alerts = translateActiveAlerts(podStateManager);
                     String alertsText = TextUtils.join("\n", alerts);
 
                     if (!pumpStatus.ackAlertsAvailable || !alertsText.equals(pumpStatus.ackAlertsText)) {
@@ -163,15 +173,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 // Update other info: last bolus, units remaining, suspended
                 if (!Objects.equals(lastBolusTime, pumpStatus.lastBolusTime) //
                         || !Objects.equals(lastBolusUnits, pumpStatus.lastBolusAmount) //
-                        || !isReservoirStatusUpToDate(pumpStatus, podSessionState.getReservoirLevel())
-                        || podSessionState.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
+                        || !isReservoirStatusUpToDate(pumpStatus, podStateManager.getReservoirLevel())
+                        || podStateManager.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
                     pumpStatus.lastBolusTime = lastBolusTime;
                     pumpStatus.lastBolusAmount = lastBolusUnits;
-                    pumpStatus.reservoirRemainingUnits = podSessionState.getReservoirLevel() == null ? 75.0 : podSessionState.getReservoirLevel();
-                    pumpStatus.pumpStatusType = podSessionState.isSuspended() ? PumpStatusType.Suspended : PumpStatusType.Running;
+                    pumpStatus.reservoirRemainingUnits = podStateManager.getReservoirLevel() == null ? 75.0 : podStateManager.getReservoirLevel();
+                    pumpStatus.pumpStatusType = podStateManager.isSuspended() ? PumpStatusType.Suspended : PumpStatusType.Running;
                     sendEvent(new EventOmnipodPumpValuesChanged());
 
-                    if (podSessionState.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
+                    if (podStateManager.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
                         sendEvent(new EventRefreshOverview("Omnipod Pump", false));
                     }
                 }
@@ -179,17 +189,21 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
     }
 
+    private List<String> translateActiveAlerts(PodStateManager podStateManager) {
+        List<String> translatedAlerts = new ArrayList<>();
+        AlertSet activeAlerts = podStateManager.getActiveAlerts();
+        if (activeAlerts == null) {
+            return translatedAlerts;
+        }
+        for (AlertSlot alertSlot : activeAlerts.getAlertSlots()) {
+            translatedAlerts.add(translateAlertType(podStateManager.getConfiguredAlertType(alertSlot)));
+        }
+        return translatedAlerts;
+    }
+
     private static boolean isReservoirStatusUpToDate(OmnipodPumpStatus pumpStatus, Double unitsRemaining) {
         double expectedUnitsRemaining = unitsRemaining == null ? 75.0 : unitsRemaining;
         return Math.abs(expectedUnitsRemaining - pumpStatus.reservoirRemainingUnits) < 0.000001;
-    }
-
-    private List<String> translateActiveAlerts(PodSessionState podSessionState) {
-        List<String> alerts = new ArrayList<>();
-        for (AlertSlot alertSlot : podSessionState.getActiveAlerts().getAlertSlots()) {
-            alerts.add(translateAlertType(podSessionState.getConfiguredAlertType(alertSlot)));
-        }
-        return alerts;
     }
 
     @Override
@@ -197,12 +211,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
-                int address = obtainNextPodAddress();
-
-                Disposable disposable = delegate.pairAndPrime(address).subscribe(res -> //
+                Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
-
-                removeNextPodAddress();
 
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
@@ -265,8 +275,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, true, null);
 
-        this.omnipodUtil.setPodSessionState(null);
-
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
@@ -302,12 +310,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult resetPodStatus() {
-        delegate.resetPodState(true);
+        getPodStateManager().removeState();
 
         reportImplicitlyCanceledTbr();
-
-        this.omnipodUtil.setPodSessionState(null);
-        this.omnipodUtil.removeNextPodAddress();
 
         addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.ResetPodState, null);
 
@@ -363,8 +368,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
 
-        if (delegate.getPodState().hasFaultEvent()) {
-            showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
+        if (delegate.getPodStateManager().hasFaultEvent()) {
+            showPodFaultErrorDialog(delegate.getPodStateManager().getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
         }
 
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -463,7 +468,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public void setPumpStatus(OmnipodPumpStatus pumpStatus) {
         this.pumpStatus = pumpStatus;
-        updatePumpStatus(delegate.getPodState());
+        updatePumpStatus(delegate.getPodStateManager());
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -596,20 +601,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         MainApp.getDbHelper().createOrUpdate(podHistory);
 
         return podHistory.getPumpId();
-    }
-
-    private int obtainNextPodAddress() {
-        Integer nextPodAddress = this.omnipodUtil.getNextPodAddress();
-        if (nextPodAddress == null) {
-            nextPodAddress = OmnipodManager.generateRandomAddress();
-            this.omnipodUtil.setNextPodAddress(nextPodAddress);
-        }
-
-        return nextPodAddress;
-    }
-
-    private void removeNextPodAddress() {
-        this.omnipodUtil.removeNextPodAddress();
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {

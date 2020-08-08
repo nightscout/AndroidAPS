@@ -45,7 +45,6 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
 
     private var initPodChanged = false
-    private var podSessionFullyInitalized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,8 +98,8 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        val podSessionState = omnipodUtil.getPodSessionState()
-        val isFullInit = podSessionState == null || podSessionState.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
+        val podStateManager = omnipodUtil.getPodStateManager()
+        val isFullInit = podStateManager == null || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
         if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
         } else {
@@ -151,13 +150,13 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     fun refreshButtons() {
-        initpod_init_pod.isEnabled = (omnipodUtil.getPodSessionState() == null ||
-            omnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
+        initpod_init_pod.isEnabled = omnipodUtil.podStateManager == null || !omnipodUtil.podStateManager.isPaired() ||
+            omnipodUtil.getPodStateManager().getSetupProgress().isBefore(SetupProgress.COMPLETED)
 
-        val isPodSessionActive = (omnipodUtil.getPodSessionState() != null)
+        val isPodSessionActive = omnipodUtil.podStateManager != null && omnipodUtil.podStateManager.hasState()
 
-        initpod_remove_pod.isEnabled = isPodSessionActive
-        initpod_reset_pod.isEnabled = isPodSessionActive || omnipodUtil.hasNextPodAddress()
+        initpod_remove_pod.isEnabled = isPodSessionActive && omnipodUtil.podStateManager.isPaired
+        initpod_reset_pod.isEnabled = isPodSessionActive
 
         if (omnipodUtil.getDriverState() == OmnipodDriverState.NotInitalized) {
             // if rileylink is not running we disable all operations

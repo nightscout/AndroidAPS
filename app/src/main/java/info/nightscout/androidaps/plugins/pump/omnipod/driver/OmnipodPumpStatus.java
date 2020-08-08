@@ -15,9 +15,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -47,7 +46,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public Double tempBasalAmount = 0.0d;
     public Integer tempBasalLength;
     public long tempBasalPumpId;
-    public PodSessionState podSessionState;
+    public PodStateManager podStateManager;
     public PumpType pumpType;
 
     public String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
@@ -142,7 +141,7 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", tempBasalEnd=" + tempBasalEnd +
                 ", tempBasalAmount=" + tempBasalAmount +
                 ", tempBasalLength=" + tempBasalLength +
-                ", podSessionState=" + podSessionState +
+                ", podStateManager=" + podStateManager +
                 ", regexMac='" + regexMac + '\'' +
                 ", podNumber='" + podNumber + '\'' +
                 ", podDeviceState=" + podDeviceState +

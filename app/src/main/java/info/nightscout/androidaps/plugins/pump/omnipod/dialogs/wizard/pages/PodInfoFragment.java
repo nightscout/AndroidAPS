@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 
@@ -85,27 +85,26 @@ public class PodInfoFragment extends DaggerFragment {
 
     private boolean createDataOfPod() {
 
-        PodSessionState podSessionState = omnipodUtil.getPodSessionState();
+        PodStateManager podStateManager = omnipodUtil.getPodStateManager();
 
-//        PodSessionState podSessionState = new PodSessionState(DateTimeZone.UTC,
-//                483748738,
-//                new DateTime(),
-//                new FirmwareVersion(1,0,0),
-//                new FirmwareVersion(1,0,0),
-//                574875,
-//                5487584,
-//                1,
-//                1
-//        );
-
-        if (podSessionState == null)
+        if (podStateManager == null)
             return false;
 
         mCurrentReviewItems = new ArrayList<>();
-        mCurrentReviewItems.add(new ReviewItem("Pod Address", "" + podSessionState.getAddress(), "33"));
-        mCurrentReviewItems.add(new ReviewItem("Activated At", podSessionState.getActivatedAt().toString("dd.MM.yyyy HH:mm:ss"), "34"));
-        mCurrentReviewItems.add(new ReviewItem("Firmware Version", podSessionState.getPiVersion().toString(), "35"));
-        mCurrentReviewItems.add(new ReviewItem("LOT", "" + podSessionState.getLot(), "36"));
+        mCurrentReviewItems.add(new ReviewItem("Pod Address", "" + podStateManager.getAddress(), "33"));
+        mCurrentReviewItems.add(new ReviewItem("Activated At", podStateManager.getActivatedAt() == null ? "Not activated yet" : podStateManager.getActivatedAt().toString("dd.MM.yyyy HH:mm:ss"), "34"));
+        if (podStateManager.getLot() != null) {
+            mCurrentReviewItems.add(new ReviewItem("LOT", "" + podStateManager.getLot(), "35"));
+        }
+        if(podStateManager.getTid() != null) {
+            mCurrentReviewItems.add(new ReviewItem("TID", "" + podStateManager.getLot(), "36"));
+        }
+        if (podStateManager.getPiVersion() != null) {
+            mCurrentReviewItems.add(new ReviewItem("Pi Version", podStateManager.getPiVersion().toString(), "37"));
+        }
+        if (podStateManager.getPmVersion() != null) {
+            mCurrentReviewItems.add(new ReviewItem("Pm Version", podStateManager.getPmVersion().toString(), "38"));
+        }
 
         return true;
     }

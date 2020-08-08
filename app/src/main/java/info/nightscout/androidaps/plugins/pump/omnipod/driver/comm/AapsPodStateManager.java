@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
@@ -34,11 +35,12 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class AapsPodStateManager implements PodStateManager {
 
-    @Inject private AAPSLogger aapsLogger;
-    @Inject private SP sp;
-    @Inject private OmnipodUtil omnipodUtil;
+    @Inject protected AAPSLogger aapsLogger;
+    @Inject protected SP sp;
+    @Inject protected OmnipodUtil omnipodUtil;
 
     private PodState podState;
+    private PodStateChangedHandler stateChangedHandler;
 
     public AapsPodStateManager(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
@@ -56,6 +58,15 @@ public class AapsPodStateManager implements PodStateManager {
         persistPodState();
     }
 
+    @Override
+    public void initState(int address) {
+        if (hasState()) {
+            throw new IllegalStateException("Can not init a new pod state: podState <> null");
+        }
+        podState = new PodState(address);
+        persistPodState();
+    }
+
     @Override public boolean isPaired() {
         return hasState() //
                 && podState.getLot() != null && podState.getTid() != null //
@@ -64,6 +75,7 @@ public class AapsPodStateManager implements PodStateManager {
                 && podState.getSetupProgress() != null;
     }
 
+    @Override
     public void setPairingParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone) {
         if (!hasState()) {
             throw new IllegalStateException("Cannot set pairing parameters: podState is null");
@@ -81,13 +93,16 @@ public class AapsPodStateManager implements PodStateManager {
             throw new IllegalArgumentException("Cannot set pairing parameters: timeZone can not be null");
         }
 
-        podState.setLot(lot);
-        podState.setTid(tid);
-        podState.setPiVersion(piVersion);
-        podState.setPmVersion(pmVersion);
-        podState.setTimeZone(timeZone);
-        podState.setNonceState(new NonceState(lot, tid));
-        podState.setSetupProgress(SetupProgress.ADDRESS_ASSIGNED);
+        setAndStore(() -> {
+            podState.setLot(lot);
+            podState.setTid(tid);
+            podState.setPiVersion(piVersion);
+            podState.setPmVersion(pmVersion);
+            podState.setTimeZone(timeZone);
+            podState.setNonceState(new NonceState(lot, tid));
+            podState.setSetupProgress(SetupProgress.ADDRESS_ASSIGNED);
+            podState.getConfiguredAlerts().put(AlertSlot.SLOT7, AlertType.FINISH_SETUP_REMINDER);
+        });
     }
 
     @Override public int getAddress() {
@@ -118,7 +133,7 @@ public class AapsPodStateManager implements PodStateManager {
         setAndStore(() -> podState.setPacketNumber(podState.getPacketNumber() + 1));
     }
 
-    @Override public void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
+    @Override public synchronized void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
         if (!isPaired()) {
             throw new IllegalStateException("Cannot resync nonce: Pod is not paired yet");
         }
@@ -133,14 +148,14 @@ public class AapsPodStateManager implements PodStateManager {
         setAndStore(() -> podState.setNonceState(nonceState));
     }
 
-    @Override public int getCurrentNonce() {
+    @Override public synchronized int getCurrentNonce() {
         if (!isPaired()) {
             throw new IllegalStateException("Cannot get current nonce: Pod is not paired yet");
         }
         return podState.getNonceState().getCurrentNonce();
     }
 
-    @Override public void advanceToNextNonce() {
+    @Override public synchronized void advanceToNextNonce() {
         if (!isPaired()) {
             throw new IllegalStateException("Cannot advance to next nonce: Pod is not paired yet");
         }
@@ -292,12 +307,35 @@ public class AapsPodStateManager implements PodStateManager {
         });
     }
 
+    @Override
+    public void setStateChangedHandler(PodStateChangedHandler handler) {
+        // FIXME this is an ugly workaround for not being able to serialize the PodStateChangedHandler
+        if (stateChangedHandler != null) {
+            throw new IllegalStateException("A PodStateChangedHandler has already been already registered");
+        }
+        stateChangedHandler = handler;
+    }
+
     private void setAndStore(Runnable runnable) {
         if (!hasState()) {
             throw new IllegalStateException("Cannot mutate PodState: podState is null");
         }
         runnable.run();
         persistPodState();
+        notifyPodStateChanged();
+    }
+
+    private void persistPodState() {
+        Gson gson = omnipodUtil.getGsonInstance();
+        String gsonValue = gson.toJson(podState);
+        aapsLogger.info(LTag.PUMPCOMM, "PodState-SP: Saved PodState to SharedPreferences: " + gsonValue);
+        sp.putString(OmnipodConst.Prefs.PodState, gsonValue);
+    }
+
+    private void notifyPodStateChanged() {
+        if (stateChangedHandler != null) {
+            stateChangedHandler.handle(this);
+        }
     }
 
     // Not actually "safe" as it throws an Exception, but it prevents NPEs
@@ -306,13 +344,6 @@ public class AapsPodStateManager implements PodStateManager {
             throw new IllegalStateException("Cannot read from PodState: podState is null");
         }
         return supplier.get();
-    }
-
-    private void persistPodState() {
-        Gson gson = omnipodUtil.getGsonInstance();
-        String gsonValue = gson.toJson(podState);
-        aapsLogger.info(LTag.PUMPCOMM, "PodState-SP: Saved PodState to SharedPreferences: " + gsonValue);
-        sp.putString(OmnipodConst.Prefs.PodState, gsonValue);
     }
 
     private void loadPodState() {
@@ -330,6 +361,14 @@ public class AapsPodStateManager implements PodStateManager {
                 aapsLogger.error(LTag.PUMPCOMM, "PodState-SP: could not deserialize PodState", ex);
             }
         }
+
+        notifyPodStateChanged();
+    }
+
+    @Override public String toString() {
+        return "AapsPodStateManager{" +
+                "podState=" + podState +
+                '}';
     }
 
     private static class PodState {
@@ -505,6 +544,30 @@ public class AapsPodStateManager implements PodStateManager {
 
         public Map<AlertSlot, AlertType> getConfiguredAlerts() {
             return configuredAlerts;
+        }
+
+        @Override public String toString() {
+            return "PodState{" +
+                    "address=" + address +
+                    ", lot=" + lot +
+                    ", tid=" + tid +
+                    ", piVersion=" + piVersion +
+                    ", pmVersion=" + pmVersion +
+                    ", packetNumber=" + packetNumber +
+                    ", messageNumber=" + messageNumber +
+                    ", timeZone=" + timeZone +
+                    ", activatedAt=" + activatedAt +
+                    ", expiresAt=" + expiresAt +
+                    ", faultEvent=" + faultEvent +
+                    ", reservoirLevel=" + reservoirLevel +
+                    ", suspended=" + suspended +
+                    ", nonceState=" + nonceState +
+                    ", setupProgress=" + setupProgress +
+                    ", lastDeliveryStatus=" + lastDeliveryStatus +
+                    ", activeAlerts=" + activeAlerts +
+                    ", basalSchedule=" + basalSchedule +
+                    ", configuredAlerts=" + configuredAlerts +
+                    '}';
         }
     }
 

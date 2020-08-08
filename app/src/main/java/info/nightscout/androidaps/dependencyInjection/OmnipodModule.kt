@@ -3,7 +3,7 @@ package info.nightscout.androidaps.dependencyInjection
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitActionFragment
@@ -35,7 +35,7 @@ abstract class OmnipodModule {
     // Data
     @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): OmnipodUITask
     @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
-    @ContributesAndroidInjector abstract fun podSessionState(): PodSessionState
+    @ContributesAndroidInjector abstract fun podStateManager(): PodStateManager
     @ContributesAndroidInjector abstract fun initPodTask() : InitPodTask
 
     @ContributesAndroidInjector abstract fun initAapsPodStateManager() : AapsPodStateManager

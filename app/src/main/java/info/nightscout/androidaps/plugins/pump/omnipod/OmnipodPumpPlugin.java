@@ -49,7 +49,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -64,7 +63,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
@@ -488,17 +487,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isSuspended() {
 
         return (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-                (omnipodUtil.getPodSessionState() != null && omnipodUtil.getPodSessionState().isSuspended());
+                (omnipodUtil.getPodStateManager() != null && omnipodUtil.getPodStateManager().isSuspended());
 
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//                (OmnipodUtil.getPodStateManager() != null && OmnipodUtil.getPodStateManager().isSuspended());
 //
 // TODO ddd
 //        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//                (OmnipodUtil.getPodStateManager() != null && OmnipodUtil.getPodStateManager().isSuspended());
 //
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//                (OmnipodUtil.getPodStateManager() != null && OmnipodUtil.getPodStateManager().isSuspended());
     }
 
     @Override
@@ -622,18 +621,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        PodSessionState podSessionState = null;
+        PodStateManager podStateManager = omnipodUtil.getPodStateManager();
 
-        if (omnipodUtil.getPodSessionState() != null) {
-            podSessionState = omnipodUtil.getPodSessionState();
-        } else {
-            podSessionState = omnipodUtil.loadSessionState();
-        }
-
-
-        if (podSessionState != null) {
-            aapsLogger.debug(LTag.PUMP, "PodSessionState (saved): " + podSessionState);
-
+        if (podStateManager != null) {
             if (!isRefresh) {
                 pumpState = PumpDriverState.Initialized;
             }
@@ -642,7 +632,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             getPodPumpStatus();
 
         } else {
-            aapsLogger.debug(LTag.PUMP, "No PodSessionState found. Pod probably not running.");
+            aapsLogger.error(LTag.PUMP, "No PodStateManager found");
             omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 
