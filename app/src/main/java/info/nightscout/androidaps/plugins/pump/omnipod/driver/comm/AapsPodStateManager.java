@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
@@ -31,17 +34,14 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class AapsPodStateManager implements PodStateManager {
 
-    private final AAPSLogger aapsLogger;
-    private final SP sp;
-    private final OmnipodUtil omnipodUtil;
+    @Inject private AAPSLogger aapsLogger;
+    @Inject private SP sp;
+    @Inject private OmnipodUtil omnipodUtil;
 
     private PodState podState;
 
-    // TODO dagger
-    public AapsPodStateManager(AAPSLogger aapsLogger, SP sp, OmnipodUtil omnipodUtil) {
-        this.aapsLogger = aapsLogger;
-        this.sp = sp;
-        this.omnipodUtil = omnipodUtil;
+    public AapsPodStateManager(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
 
         // TODO is there something like @PostConstruct in Dagger? if so, we should probably move loading the pod state there
         loadPodState();
