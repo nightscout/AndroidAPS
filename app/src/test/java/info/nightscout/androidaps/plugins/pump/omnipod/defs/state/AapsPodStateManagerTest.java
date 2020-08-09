@@ -5,21 +5,30 @@ import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(PowerMockRunner.class)
 public class AapsPodStateManagerTest {
-    @Mock HasAndroidInjector hasAndroidInjector;
+    @Mock AAPSLogger aapsLogger;
+    @Mock SP sp;
+    @Mock OmnipodPumpStatus omnipodPumpStatus;
+    RxBusWrapper rxBus = new RxBusWrapper();
+    @Mock ResourceHelper resourceHelper;
 
     @Test
-    @Ignore("Not Dagger compliant") // FIXME
     public void times() {
         DateTimeZone timeZone = DateTimeZone.UTC;
         DateTimeZone.setDefault(timeZone);
@@ -28,7 +37,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(hasAndroidInjector);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
         podStateManager.initState(0x0);
         podStateManager.setPairingParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone);
@@ -38,7 +47,6 @@ public class AapsPodStateManagerTest {
     }
 
     @Test
-    @Ignore("Not Dagger compliant") // FIXME
     public void changeSystemTimeZoneWithoutChangingPodTimeZone() {
         DateTimeZone timeZone = DateTimeZone.UTC;
         DateTimeZone.setDefault(timeZone);
@@ -47,7 +55,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(hasAndroidInjector);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
         podStateManager.initState(0x0);
         podStateManager.setPairingParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone);
@@ -62,7 +70,6 @@ public class AapsPodStateManagerTest {
     }
 
     @Test
-    @Ignore("Not Dagger compliant") // FIXME
     public void changeSystemTimeZoneAndChangePodTimeZone() {
         DateTimeZone timeZone = DateTimeZone.UTC;
         DateTimeZone.setDefault(timeZone);
@@ -71,7 +78,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(hasAndroidInjector);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
         podStateManager.initState(0x0);
         podStateManager.setPairingParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone);
