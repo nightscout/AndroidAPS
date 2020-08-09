@@ -167,7 +167,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (smallWidth) overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35f)
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
         overview_notifications?.setHasFixedSize(false)
@@ -679,7 +678,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 graphData.addNowLine(now)
 
                 // ------------------ 2nd graph
-                for (g in 0 until secondaryGraphs.size) {
+                for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
                     val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
                     var useABSForScale = false
                     var useIobForScale = false
@@ -714,7 +713,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until secondaryGraphsData.size) {
+            for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
                 secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
                     overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
