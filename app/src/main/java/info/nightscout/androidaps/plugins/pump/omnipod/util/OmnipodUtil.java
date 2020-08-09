@@ -52,13 +52,13 @@ public class OmnipodUtil {
     private OmnipodPodType omnipodPodType;
     private OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
-
     @Inject
     public OmnipodUtil(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil,
             OmnipodPumpStatus omnipodPumpStatus,
+            PodStateManager podStateManager,
             SP sp,
             ActivePluginProvider activePlugins
     ) {
@@ -70,21 +70,17 @@ public class OmnipodUtil {
         this.activePlugins = activePlugins;
     }
 
-
     public boolean isLowLevelDebug() {
         return lowLevelDebug;
     }
-
 
     public void setLowLevelDebug(boolean lowLevelDebug) {
         this.lowLevelDebug = lowLevelDebug;
     }
 
-
     public OmnipodCommandType getCurrentCommand() {
         return currentCommand;
     }
-
 
     public void setCurrentCommand(OmnipodCommandType currentCommand) {
         this.currentCommand = currentCommand;
@@ -100,11 +96,9 @@ public class OmnipodUtil {
                 MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), (Runnable) null);
     }
 
-
     public OmnipodDriverState getDriverState() {
         return driverState;
     }
-
 
     public void setDriverState(OmnipodDriverState state) {
         if (driverState == state)
@@ -123,7 +117,6 @@ public class OmnipodUtil {
 //        }
     }
 
-
     private Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeAdapter(DateTime.class, (JsonSerializer<DateTime>) (dateTime, typeOfSrc, context) ->
@@ -138,16 +131,8 @@ public class OmnipodUtil {
         return gsonBuilder.create();
     }
 
-    public void setPodStateManager(PodStateManager podStateManager) {
-        if (podStateManager == null) {
-            throw new IllegalArgumentException("Pod state manager can not be null");
-        }
-        omnipodPumpStatus.podStateManager = podStateManager;
-        notifyDeviceStatusChanged();
-    }
-
     public void notifyDeviceStatusChanged() {
-        rxBus.send(new EventOmnipodDeviceStatusChange(omnipodPumpStatus.podStateManager));
+
     }
 
 
@@ -155,40 +140,25 @@ public class OmnipodUtil {
         omnipodPumpStatus.podDeviceState = podDeviceState;
     }
 
-
     public void setOmnipodPodType(OmnipodPodType omnipodPodType) {
         this.omnipodPodType = omnipodPodType;
     }
-
 
     public OmnipodPodType getOmnipodPodType() {
         return this.omnipodPodType;
     }
 
-
     public PodDeviceState getPodDeviceState() {
         return omnipodPumpStatus.podDeviceState;
     }
-
-
-    public PodStateManager getPodStateManager() {
-        if (omnipodPumpStatus.podStateManager == null) {
-            aapsLogger.error("OmnipodUtil.getPodStateManager was called, but podStateManager is null");
-            throw new IllegalStateException("Pod state manager is null");
-        }
-        return omnipodPumpStatus.podStateManager;
-    }
-
 
     public boolean isOmnipodEros() {
         return this.activePlugins.getActivePump().model() == PumpType.Insulet_Omnipod;
     }
 
-
     public boolean isOmnipodDash() {
         return this.activePlugins.getActivePump().model() == PumpType.Insulet_Omnipod_Dash;
     }
-
 
     public void setPumpType(PumpType pumpType_) {
         omnipodPumpStatus.pumpType = pumpType_;
@@ -197,7 +167,6 @@ public class OmnipodUtil {
     public PumpType getPumpType() {
         return omnipodPumpStatus.pumpType;
     }
-
 
     public Gson getGsonInstance() {
         return this.gsonInstance;

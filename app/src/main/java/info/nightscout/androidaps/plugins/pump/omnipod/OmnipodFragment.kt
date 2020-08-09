@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
@@ -60,6 +61,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var omnipodPumpStatus: OmnipodPumpStatus
+    @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: OmnipodUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
@@ -264,27 +266,27 @@ class OmnipodFragment : DaggerFragment() {
             omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == null
         } else if (driverState == OmnipodDriverState.Initalized_PodInitializing) {
-            omnipod_pod_address.text = omnipodPumpStatus.podStateManager.address.toString()
+            omnipod_pod_address.text = podStateManager.address.toString()
             omnipod_pod_lot.text = "-"
             omnipod_pod_tid.text = "-"
             omnipod_pod_fw_version.text = "-"
             omnipod_pod_expiry.text = "-"
-            omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_initalizing) + " (" + omnipodPumpStatus.podStateManager.getSetupProgress().name + ")"
+            omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_initalizing) + " (" + podStateManager.getSetupProgress().name + ")"
             omnipodPumpStatus.podAvailable = false
-            omnipodPumpStatus.podNumber == omnipodPumpStatus.podStateManager.address.toString()
+            omnipodPumpStatus.podNumber == podStateManager.address.toString()
         } else {
-            omnipodPumpStatus.podLotNumber = "" + omnipodPumpStatus.podStateManager.lot
+            omnipodPumpStatus.podLotNumber = "" + podStateManager.lot
             omnipodPumpStatus.podAvailable = true
-            omnipod_pod_address.text = omnipodPumpStatus.podStateManager.address.toString()
-            omnipod_pod_lot.text = if (omnipodPumpStatus.podStateManager.lot == null) "" else omnipodPumpStatus.podStateManager.lot.toString()
-            omnipod_pod_tid.text = if (omnipodPumpStatus.podStateManager.tid == null) "" else omnipodPumpStatus.podStateManager.tid.toString()
-            if (omnipodPumpStatus.podStateManager.pmVersion == null || omnipodPumpStatus.podStateManager.piVersion == null) {
+            omnipod_pod_address.text = podStateManager.address.toString()
+            omnipod_pod_lot.text = if (podStateManager.lot == null) "" else podStateManager.lot.toString()
+            omnipod_pod_tid.text = if (podStateManager.tid == null) "" else podStateManager.tid.toString()
+            if (podStateManager.pmVersion == null || podStateManager.piVersion == null) {
                 omnipod_pod_fw_version.text = ""
             } else {
-                omnipod_pod_fw_version.text = omnipodPumpStatus.podStateManager.pmVersion.toString() + " / " + omnipodPumpStatus.podStateManager.piVersion.toString()
+                omnipod_pod_fw_version.text = podStateManager.pmVersion.toString() + " / " + podStateManager.piVersion.toString()
             }
-            omnipod_pod_expiry.text = omnipodPumpStatus.podStateManager.expiryDateAsString
-            omnipodPumpStatus.podNumber = omnipodPumpStatus.podStateManager.address.toString()
+            omnipod_pod_expiry.text = podStateManager.expiryDateAsString
+            omnipodPumpStatus.podNumber = podStateManager.address.toString()
 
             var podDeviceState = omnipodPumpStatus.podDeviceState
 
@@ -327,13 +329,13 @@ class OmnipodFragment : DaggerFragment() {
                 }
             }
 
-            if (omnipodPumpStatus.podStateManager.isSetupCompleted) {
-                if (omnipodPumpStatus.podStateManager.lastDeliveryStatus != null) {
-                    stateText += " (last delivery status: " + omnipodPumpStatus.podStateManager.lastDeliveryStatus.name + ")"
+            if (podStateManager.isSetupCompleted) {
+                if (podStateManager.lastDeliveryStatus != null) {
+                    stateText += " (last delivery status: " + podStateManager.lastDeliveryStatus.name + ")"
                 }
             } else {
-                if (omnipodPumpStatus.podStateManager.isPaired) {
-                    stateText += " (setup progress: " + omnipodPumpStatus.podStateManager.setupProgress.name + ")"
+                if (podStateManager.isPaired) {
+                    stateText += " (setup progress: " + podStateManager.setupProgress.name + ")"
                 }
             }
 

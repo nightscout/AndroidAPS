@@ -90,6 +90,7 @@ import io.reactivex.schedulers.Schedulers;
 public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface, RileyLinkPumpDevice {
 
     // TODO Dagger (maybe done)
+    @Inject protected PodStateManager podStateManager;
     private static OmnipodPumpPlugin plugin = null;
     private RileyLinkServiceData rileyLinkServiceData;
     private ServiceTaskExecutor serviceTaskExecutor;
@@ -149,6 +150,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 PumpType.Insulet_Omnipod,
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
+        injector.androidInjector().inject(this);
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
 
@@ -196,6 +198,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //        // TODO ccc
 
         if (isOmnipodEros) {
+
+            // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
+            // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
+            podStateManager.loadPodState();
 
             serviceConnection = new ServiceConnection() {
 
@@ -486,8 +492,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public boolean isSuspended() {
 
-        return (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-                (omnipodUtil.getPodStateManager().hasState() && omnipodUtil.getPodStateManager().isSuspended());
+        return omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod ||
+                !podStateManager.isSetupCompleted() || podStateManager.isSuspended();
 
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
 //                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
@@ -613,8 +619,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
     private void initializePump(boolean realInit) {
-
-
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
         // TODO ccc
@@ -622,7 +626,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        PodStateManager podStateManager = omnipodUtil.getPodStateManager();
         if (podStateManager.isPaired()) {
             aapsLogger.debug(LTag.PUMP, "PodStateManager (saved): " + podStateManager);
 

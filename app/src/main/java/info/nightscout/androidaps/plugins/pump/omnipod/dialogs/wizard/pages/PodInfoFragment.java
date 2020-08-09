@@ -30,6 +30,7 @@ public class PodInfoFragment extends DaggerFragment {
     private static final String ARG_KEY = "key";
 
     @Inject OmnipodUtil omnipodUtil;
+    @Inject PodStateManager podStateManager;
 
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
@@ -84,9 +85,6 @@ public class PodInfoFragment extends DaggerFragment {
     }
 
     private boolean createDataOfPod() {
-
-        PodStateManager podStateManager = omnipodUtil.getPodStateManager();
-
         if (podStateManager == null)
             return false;
 
@@ -96,7 +94,7 @@ public class PodInfoFragment extends DaggerFragment {
         if (podStateManager.getLot() != null) {
             mCurrentReviewItems.add(new ReviewItem("LOT", "" + podStateManager.getLot(), "35"));
         }
-        if(podStateManager.getTid() != null) {
+        if (podStateManager.getTid() != null) {
             mCurrentReviewItems.add(new ReviewItem("TID", "" + podStateManager.getLot(), "36"));
         }
         if (podStateManager.getPiVersion() != null) {

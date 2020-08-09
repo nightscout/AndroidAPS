@@ -7,6 +7,8 @@ import android.os.IBinder;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDateTime;
+
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
@@ -26,9 +28,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -43,6 +45,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodPumpStatus omnipodPumpStatus;
     @Inject OmnipodUtil omnipodUtil;
     @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
+    @Inject PodStateManager podStateManager;
 
     private static RileyLinkOmnipodService instance;
 
@@ -60,11 +63,9 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         instance = this;
     }
 
-
     public static RileyLinkOmnipodService getInstance() {
         return instance;
     }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -109,12 +110,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private void initializeErosOmnipodManager() {
         AapsOmnipodManager instance = AapsOmnipodManager.getInstance();
         if (instance == null) {
-            PodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodUtil, omnipodPumpStatus, rxBus, resourceHelper);
-            podStateManager.loadPodState();
-            omnipodUtil.setPodStateManager(podStateManager);
-
             OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
-            //omnipodCommunicationService.setPumpStatus(omnipodPumpStatus);
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
             aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
@@ -123,10 +119,9 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUtil, omnipodUIPostprocessor, aapsOmnipodManager);
 
         } else {
-            omnipodUtil.setPodStateManager(instance.getPodStateManager());
             aapsOmnipodManager = instance;
         }
-        omnipodUtil.notifyDeviceStatusChanged();
+        rxBus.send(new EventOmnipodDeviceStatusChange(podStateManager));
     }
 
 

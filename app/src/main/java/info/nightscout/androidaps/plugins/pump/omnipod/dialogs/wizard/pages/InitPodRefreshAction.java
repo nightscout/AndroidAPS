@@ -16,6 +16,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
@@ -33,6 +34,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     private PodActionType actionType;
 
     @Inject OmnipodUtil omnipodUtil;
+    @Inject PodStateManager podStateManager;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
 
@@ -58,7 +60,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     @Override
     public void execute() {
         if (actionType == PodActionType.InitPod) {
-            if (omnipodUtil.getPodStateManager().getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
+            if (podStateManager.getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
                 omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodInitializing);
             } else {
                 omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
