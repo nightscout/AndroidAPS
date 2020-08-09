@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
@@ -255,7 +254,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_not_initalized)
             omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == null
-        } else if (driverState == OmnipodDriverState.Initalized_NoPod) {
+        } else if (driverState == OmnipodDriverState.Initalized_NoPod || !omnipodPumpStatus.podStateManager.hasState()) {
             omnipod_pod_address.text = resourceHelper.gs(R.string.omnipod_pod_name_no_info)
             omnipod_pod_lot.text = "-"
             omnipod_pod_tid.text = "-"
