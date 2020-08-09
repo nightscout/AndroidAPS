@@ -67,11 +67,9 @@ public class RileyLinkServiceData {
         return workWithServiceState(null, null, false);
     }
 
-
     public void setServiceState(RileyLinkServiceState newState, RileyLinkError errorCode) {
         workWithServiceState(newState, errorCode, true);
     }
-
 
     private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState, RileyLinkError errorCode, boolean set) {
 
