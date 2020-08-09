@@ -329,7 +329,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         // Special settings for small displays like atom
         if (smallHeight) {
             overview_bg?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 28F)
-            overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24F)
+           // overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24F)
             timeago?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
             overview_delta?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
             careportal_sensorage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
@@ -573,8 +573,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
             overview_bg?.text = lastBG.valueToUnitsToString(units)
             overview_bg?.setTextColor(color)
-            overview_arrow?.text = lastBG.directionToSymbol(databaseHelper)
-            overview_arrow?.setTextColor(color)
+            overview_bg?.text = lastBG.valueToUnitsToString(units)
+            overview_bg?.setTextColor(color)
+            overview_arrow?.setImageResource(lastBG.directionToIcon(databaseHelper))
+            overview_arrow?.setColorFilter(color)
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {

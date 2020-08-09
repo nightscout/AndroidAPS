@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
+            android:layout_weight="1.8"
             android:layout_marginStart="2dp"
             android:orientation="vertical">
 
@@ -24,53 +24,45 @@
 
                 <TextView
                     android:id="@+id/overview_bg"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="start|top"
                     android:layout_marginTop="-8dp"
                     android:textSize="40sp"
+                    android:layout_weight="3"
                     android:textStyle="bold" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/overview_delta"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="-10dp"
-                    android:ellipsize="marquee"
-                    android:paddingStart="2dp"
-                    android:paddingEnd="2dp"
-                    android:layout_weight="1"
-                    android:textSize="14sp" />
-
-                <TextView
+                <ImageView
                     android:id="@+id/overview_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="top"
-                    android:layout_marginTop="-8dp"
-                    android:layout_marginEnd="0dp"
                     android:paddingStart="-2dp"
                     android:paddingEnd="0dp"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_flat"
+                    android:contentDescription="overview_arrow" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/overview_delta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="-8dp"
+                android:ellipsize="marquee"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/timeago"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
-                android:layout_marginTop="-6dp"
+                android:layout_marginTop="-4dp"
                 android:ellipsize="marquee"
                 android:paddingStart="2dp"
-                android:layout_weight="1"
                 android:textSize="14sp" />
 
         </LinearLayout>
