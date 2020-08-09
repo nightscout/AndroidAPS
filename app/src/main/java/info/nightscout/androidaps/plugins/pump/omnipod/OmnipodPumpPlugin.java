@@ -622,19 +622,20 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        try {
-            PodStateManager podStateManager = omnipodUtil.getPodStateManager();
-        } catch(Exception ex) {
+        PodStateManager podStateManager = omnipodUtil.getPodStateManager();
+        if (podStateManager.isPaired()) {
+            aapsLogger.debug(LTag.PUMP, "PodStateManager (saved): " + podStateManager);
+
+            if (!isRefresh) {
+                pumpState = PumpDriverState.Initialized;
+            }
+
+            // TODO handle if session state too old
+            getPodPumpStatus();
+        } else {
+            aapsLogger.debug(LTag.PUMP, "No Pod running");
             omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
-            throw ex;
         }
-
-        if (!isRefresh) {
-            pumpState = PumpDriverState.Initialized;
-        }
-
-        // TODO handle if pod state too old
-        getPodPumpStatus();
 
         finishAction("Omnipod Pump");
 
