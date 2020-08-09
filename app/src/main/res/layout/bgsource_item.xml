@@ -35,13 +35,12 @@
                 android:text="Name"
                 android:textStyle="bold" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/bgsource_direction"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="10dp"
-                android:text="-" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_flat" />
 
             <TextView
                 android:id="@+id/ns_sign"

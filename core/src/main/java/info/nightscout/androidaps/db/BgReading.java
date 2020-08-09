@@ -113,6 +113,32 @@ public class BgReading implements DataPointWithLabelInterface {
         return symbol;
     }
 
+
+    public int directionToIcon(DatabaseHelperInterface databaseHelper) {
+        int symbol = 0;
+        if (direction == null)
+            direction = calculateDirection(databaseHelper);
+
+        if (direction.compareTo("DoubleDown") == 0) {
+            symbol = R.drawable.ic_doubledown;
+        } else if (direction.compareTo("SingleDown") == 0) {
+            symbol = R.drawable.ic_singledown;
+        } else if (direction.compareTo("FortyFiveDown") == 0) {
+            symbol = R.drawable.ic_fortyfivedown;;
+        } else if (direction.compareTo("Flat") == 0) {
+            symbol = R.drawable.ic_flat;;
+        } else if (direction.compareTo("FortyFiveUp") == 0) {
+            symbol = R.drawable.ic_fortyfiveup;
+        } else if (direction.compareTo("SingleUp") == 0) {
+            symbol = R.drawable.ic_singleup;
+        } else if (direction.compareTo("DoubleUp") == 0) {
+            symbol = R.drawable.ic_doubleup;
+        } else if (isSlopeNameInvalid(direction)) {
+            symbol = R.drawable.ic_invalid;
+        }
+        return symbol;
+    }
+
     private static boolean isSlopeNameInvalid(String direction) {
         return direction.compareTo("NOT_COMPUTABLE") == 0 ||
                 direction.compareTo("NOT COMPUTABLE") == 0 ||
