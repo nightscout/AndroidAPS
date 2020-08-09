@@ -15,6 +15,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.FullInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.RemovePodWizardModel
@@ -42,10 +43,10 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var omnipodUtil: OmnipodUtil
+    @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var injector: HasAndroidInjector
 
     private var initPodChanged = false
-    private var podSessionFullyInitalized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,8 +100,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        val podSessionState = omnipodUtil.getPodSessionState()
-        val isFullInit = podSessionState == null || podSessionState.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
+        val isFullInit = !podStateManager.isPaired || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
         if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
         } else {
@@ -151,13 +151,11 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     fun refreshButtons() {
-        initpod_init_pod.isEnabled = (omnipodUtil.getPodSessionState() == null ||
-            omnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
+        initpod_init_pod.isEnabled = !podStateManager.isPaired() ||
+            podStateManager.getSetupProgress().isBefore(SetupProgress.COMPLETED)
 
-        val isPodSessionActive = (omnipodUtil.getPodSessionState() != null)
-
-        initpod_remove_pod.isEnabled = isPodSessionActive
-        initpod_reset_pod.isEnabled = isPodSessionActive || omnipodUtil.hasNextPodAddress()
+        initpod_remove_pod.isEnabled = podStateManager.hasState() && podStateManager.isPaired
+        initpod_reset_pod.isEnabled = podStateManager.hasState()
 
         if (omnipodUtil.getDriverState() == OmnipodDriverState.NotInitalized) {
             // if rileylink is not running we disable all operations

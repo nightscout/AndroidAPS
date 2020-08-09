@@ -7,6 +7,8 @@ import android.os.IBinder;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDateTime;
+
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
@@ -23,11 +25,12 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -42,6 +45,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodPumpStatus omnipodPumpStatus;
     @Inject OmnipodUtil omnipodUtil;
     @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
+    @Inject PodStateManager podStateManager;
 
     private static RileyLinkOmnipodService instance;
 
@@ -59,11 +63,9 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         instance = this;
     }
 
-
     public static RileyLinkOmnipodService getInstance() {
         return instance;
     }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -106,20 +108,20 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        if (AapsOmnipodManager.getInstance() == null) {
-            PodSessionState podState = omnipodUtil.loadSessionState();
+        AapsOmnipodManager instance = AapsOmnipodManager.getInstance();
+        if (instance == null) {
             OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
-            //omnipodCommunicationService.setPumpStatus(omnipodPumpStatus);
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
-            this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
+            aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
                     omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
 
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUtil, omnipodUIPostprocessor, aapsOmnipodManager);
 
         } else {
-            aapsOmnipodManager = AapsOmnipodManager.getInstance();
+            aapsOmnipodManager = instance;
         }
+        rxBus.send(new EventOmnipodDeviceStatusChange(podStateManager));
     }
 
 

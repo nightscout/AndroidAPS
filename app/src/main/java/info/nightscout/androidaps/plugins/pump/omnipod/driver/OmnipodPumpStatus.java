@@ -15,9 +15,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -47,13 +45,13 @@ public class OmnipodPumpStatus extends PumpStatus {
     public Double tempBasalAmount = 0.0d;
     public Integer tempBasalLength;
     public long tempBasalPumpId;
-    public PodSessionState podSessionState;
     public PumpType pumpType;
 
     public String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
+    // FIXME replace with method calls on PodStateManager
     public boolean podAvailable = false;
     public boolean podAvailibityChecked = false;
     public boolean ackAlertsAvailable = false;
@@ -142,7 +140,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", tempBasalEnd=" + tempBasalEnd +
                 ", tempBasalAmount=" + tempBasalAmount +
                 ", tempBasalLength=" + tempBasalLength +
-                ", podSessionState=" + podSessionState +
                 ", regexMac='" + regexMac + '\'' +
                 ", podNumber='" + podNumber + '\'' +
                 ", podDeviceState=" + podDeviceState +

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
@@ -34,7 +34,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 //                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
 
-    private PodSessionState getPodSessionState() {
+    private PodStateManager getPodStateManager() {
         return null;
     }
 
@@ -112,11 +112,6 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     @Override
     public PumpEnactResult setTime() {
         return null;
-    }
-
-    @Override
-    public void setPumpStatus(OmnipodPumpStatus pumpStatusLocal) {
-
     }
 
     @Override

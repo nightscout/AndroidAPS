@@ -18,9 +18,10 @@ public class SetPreamble extends RileyLinkCommand {
 
     private int preamble;
 
-
     public SetPreamble(HasAndroidInjector injector, int preamble) throws Exception {
         super();
+
+        injector.androidInjector().inject(this);
 
         // this command was not supported before 2.0
         if (!rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {

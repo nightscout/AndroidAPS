@@ -49,7 +49,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -64,7 +63,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
@@ -91,6 +90,7 @@ import io.reactivex.schedulers.Schedulers;
 public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface, RileyLinkPumpDevice {
 
     // TODO Dagger (maybe done)
+    @Inject protected PodStateManager podStateManager;
     private static OmnipodPumpPlugin plugin = null;
     private RileyLinkServiceData rileyLinkServiceData;
     private ServiceTaskExecutor serviceTaskExecutor;
@@ -150,6 +150,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 PumpType.Insulet_Omnipod,
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
+        injector.androidInjector().inject(this);
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
 
@@ -197,6 +198,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //        // TODO ccc
 
         if (isOmnipodEros) {
+
+            // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
+            // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
+            podStateManager.loadPodState();
 
             serviceConnection = new ServiceConnection() {
 
@@ -487,18 +492,18 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public boolean isSuspended() {
 
-        return (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-                (omnipodUtil.getPodSessionState() != null && omnipodUtil.getPodSessionState().isSuspended());
+        return omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod ||
+                !podStateManager.isSetupCompleted() || podStateManager.isSuspended();
 
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
 //
 // TODO ddd
 //        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
 //
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
     }
 
     @Override
@@ -580,6 +585,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
         //driverState = OmnipodDriverState.Initalized_PodAvailable;
+        // FIXME this does not seem to make sense
         omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
         // we would probably need to read Basal Profile here too
     }
@@ -613,8 +619,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
     private void initializePump(boolean realInit) {
-
-
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
         // TODO ccc
@@ -622,17 +626,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        PodSessionState podSessionState = null;
-
-        if (omnipodUtil.getPodSessionState() != null) {
-            podSessionState = omnipodUtil.getPodSessionState();
-        } else {
-            podSessionState = omnipodUtil.loadSessionState();
-        }
-
-
-        if (podSessionState != null) {
-            aapsLogger.debug(LTag.PUMP, "PodSessionState (saved): " + podSessionState);
+        if (podStateManager.isPaired()) {
+            aapsLogger.debug(LTag.PUMP, "PodStateManager (saved): " + podStateManager);
 
             if (!isRefresh) {
                 pumpState = PumpDriverState.Initialized;
@@ -640,9 +635,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
             // TODO handle if session state too old
             getPodPumpStatus();
-
         } else {
-            aapsLogger.debug(LTag.PUMP, "No PodSessionState found. Pod probably not running.");
+            aapsLogger.debug(LTag.PUMP, "No Pod running");
             omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 

@@ -38,9 +38,6 @@ public class RileyLinkUtil {
     private RileyLinkEncodingType encoding;
     private Encoding4b6b encoding4b6b;
 
-    // TODO maybe not needed
-    private RileyLinkTargetFrequency rileyLinkTargetFrequency;
-
     @Inject
     public RileyLinkUtil() {
     }
@@ -157,9 +154,5 @@ public class RileyLinkUtil {
 
     public Encoding4b6b getEncoding4b6b() {
         return encoding4b6b;
-    }
-
-    public void setRileyLinkTargetFrequency(RileyLinkTargetFrequency rileyLinkTargetFrequency_) {
-        this.rileyLinkTargetFrequency = rileyLinkTargetFrequency_;
     }
 }

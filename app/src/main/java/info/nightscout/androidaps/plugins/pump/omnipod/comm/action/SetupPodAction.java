@@ -16,35 +16,38 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Ver
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class SetupPodAction implements OmnipodAction<VersionResponse> {
-    private final PodSessionState podState;
+    private final PodStateManager podStateManager;
 
-    public SetupPodAction(PodSessionState podState) {
-        this.podState = podState;
+    public SetupPodAction(PodStateManager podStateManager) {
+        if(podStateManager == null) {
+            throw new IllegalArgumentException("Pod state manager can not be null");
+        }
+        this.podStateManager = podStateManager;
     }
 
     @Override
     public VersionResponse execute(OmnipodCommunicationManager communicationService) {
-        if (!podState.getSetupProgress().equals(SetupProgress.ADDRESS_ASSIGNED)) {
-            throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podState.getSetupProgress());
+        if (!podStateManager.getSetupProgress().equals(SetupProgress.ADDRESS_ASSIGNED)) {
+            throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podStateManager.getSetupProgress());
         }
-        DateTime activationDate = DateTime.now(podState.getTimeZone());
+        DateTime activationDate = DateTime.now(podStateManager.getTimeZone());
 
-        SetupPodCommand setupPodCommand = new SetupPodCommand(podState.getAddress(), activationDate,
-                podState.getLot(), podState.getTid());
+        SetupPodCommand setupPodCommand = new SetupPodCommand(podStateManager.getAddress(), activationDate,
+                podStateManager.getLot(), podStateManager.getTid());
         OmnipodMessage message = new OmnipodMessage(OmnipodConst.DEFAULT_ADDRESS,
-                Collections.singletonList(setupPodCommand), podState.getMessageNumber());
+                Collections.singletonList(setupPodCommand), podStateManager.getMessageNumber());
         VersionResponse setupPodResponse;
         try {
-            setupPodResponse = communicationService.exchangeMessages(VersionResponse.class, podState,
-                    message, OmnipodConst.DEFAULT_ADDRESS, podState.getAddress());
+            setupPodResponse = communicationService.exchangeMessages(VersionResponse.class, podStateManager,
+                    message, OmnipodConst.DEFAULT_ADDRESS, podStateManager.getAddress());
         } catch (IllegalPacketTypeException ex) {
             if (PacketType.ACK.equals(ex.getActual())) {
                 // Pod is already configured
-                podState.setSetupProgress(SetupProgress.POD_CONFIGURED);
+                podStateManager.setSetupProgress(SetupProgress.POD_CONFIGURED);
                 return null;
             }
             throw ex;
@@ -53,14 +56,14 @@ public class SetupPodAction implements OmnipodAction<VersionResponse> {
         if (!setupPodResponse.isSetupPodVersionResponse()) {
             throw new IllegalVersionResponseTypeException("setupPod", "assignAddress");
         }
-        if (setupPodResponse.getAddress() != podState.getAddress()) {
-            throw new IllegalMessageAddressException(podState.getAddress(), setupPodResponse.getAddress());
+        if (setupPodResponse.getAddress() != podStateManager.getAddress()) {
+            throw new IllegalMessageAddressException(podStateManager.getAddress(), setupPodResponse.getAddress());
         }
         if (setupPodResponse.getPodProgressStatus() != PodProgressStatus.PAIRING_COMPLETED) {
             throw new IllegalPodProgressException(PodProgressStatus.PAIRING_COMPLETED, setupPodResponse.getPodProgressStatus());
         }
 
-        podState.setSetupProgress(SetupProgress.POD_CONFIGURED);
+        podStateManager.setSetupProgress(SetupProgress.POD_CONFIGURED);
 
         return setupPodResponse;
     }

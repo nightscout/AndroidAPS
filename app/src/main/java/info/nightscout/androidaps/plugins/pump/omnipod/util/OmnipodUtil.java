@@ -8,7 +8,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -16,21 +15,18 @@ import org.joda.time.format.ISODateTimeFormat;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
@@ -49,16 +45,12 @@ public class OmnipodUtil {
     private final OmnipodPumpStatus omnipodPumpStatus;
     private final ActivePluginProvider activePlugins;
     private final SP sp;
-    private final HasAndroidInjector injector;
 
     private boolean lowLevelDebug = true;
     private OmnipodCommandType currentCommand;
     private Gson gsonInstance = createGson();
-    //private static PodSessionState podSessionState;
-    //private static PodDeviceState podDeviceState;
     private OmnipodPodType omnipodPodType;
     private OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
-
 
     @Inject
     public OmnipodUtil(
@@ -66,9 +58,9 @@ public class OmnipodUtil {
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil,
             OmnipodPumpStatus omnipodPumpStatus,
+            PodStateManager podStateManager,
             SP sp,
-            ActivePluginProvider activePlugins,
-            HasAndroidInjector injector
+            ActivePluginProvider activePlugins
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -76,24 +68,19 @@ public class OmnipodUtil {
         this.omnipodPumpStatus = omnipodPumpStatus;
         this.sp = sp;
         this.activePlugins = activePlugins;
-        this.injector = injector;
     }
-
 
     public boolean isLowLevelDebug() {
         return lowLevelDebug;
     }
 
-
     public void setLowLevelDebug(boolean lowLevelDebug) {
         this.lowLevelDebug = lowLevelDebug;
     }
 
-
     public OmnipodCommandType getCurrentCommand() {
         return currentCommand;
     }
-
 
     public void setCurrentCommand(OmnipodCommandType currentCommand) {
         this.currentCommand = currentCommand;
@@ -109,11 +96,9 @@ public class OmnipodUtil {
                 MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), (Runnable) null);
     }
 
-
     public OmnipodDriverState getDriverState() {
         return driverState;
     }
-
 
     public void setDriverState(OmnipodDriverState state) {
         if (driverState == state)
@@ -132,7 +117,6 @@ public class OmnipodUtil {
 //        }
     }
 
-
     private Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeAdapter(DateTime.class, (JsonSerializer<DateTime>) (dateTime, typeOfSrc, context) ->
@@ -147,10 +131,8 @@ public class OmnipodUtil {
         return gsonBuilder.create();
     }
 
+    public void notifyDeviceStatusChanged() {
 
-    public void setPodSessionState(PodSessionState podSessionState) {
-        omnipodPumpStatus.podSessionState = podSessionState;
-        rxBus.send(new EventOmnipodDeviceStatusChange(podSessionState));
     }
 
 
@@ -158,36 +140,25 @@ public class OmnipodUtil {
         omnipodPumpStatus.podDeviceState = podDeviceState;
     }
 
-
     public void setOmnipodPodType(OmnipodPodType omnipodPodType) {
         this.omnipodPodType = omnipodPodType;
     }
-
 
     public OmnipodPodType getOmnipodPodType() {
         return this.omnipodPodType;
     }
 
-
     public PodDeviceState getPodDeviceState() {
         return omnipodPumpStatus.podDeviceState;
     }
-
-
-    public PodSessionState getPodSessionState() {
-        return omnipodPumpStatus.podSessionState;
-    }
-
 
     public boolean isOmnipodEros() {
         return this.activePlugins.getActivePump().model() == PumpType.Insulet_Omnipod;
     }
 
-
     public boolean isOmnipodDash() {
         return this.activePlugins.getActivePump().model() == PumpType.Insulet_Omnipod_Dash;
     }
-
 
     public void setPumpType(PumpType pumpType_) {
         omnipodPumpStatus.pumpType = pumpType_;
@@ -197,31 +168,8 @@ public class OmnipodUtil {
         return omnipodPumpStatus.pumpType;
     }
 
-
     public Gson getGsonInstance() {
         return this.gsonInstance;
-    }
-
-    public Integer getNextPodAddress() {
-        if (sp.contains(OmnipodConst.Prefs.NextPodAddress)) {
-            int nextPodAddress = sp.getInt(OmnipodConst.Prefs.NextPodAddress, 0);
-            if (OmnipodManager.isValidAddress(nextPodAddress)) {
-                return nextPodAddress;
-            }
-        }
-        return null;
-    }
-
-    public boolean hasNextPodAddress() {
-        return getNextPodAddress() != null;
-    }
-
-    public void setNextPodAddress(int address) {
-        sp.putInt(OmnipodConst.Prefs.NextPodAddress, address);
-    }
-
-    public void removeNextPodAddress() {
-        sp.remove(OmnipodConst.Prefs.NextPodAddress);
     }
 
     public AAPSLogger getAapsLogger() {
@@ -230,26 +178,5 @@ public class OmnipodUtil {
 
     public SP getSp() {
         return this.sp;
-    }
-
-    public PodSessionState loadSessionState() {
-        PodSessionState podSessionState = null;
-
-        String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
-        if (StringUtils.isEmpty(storedPodState)) {
-            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: no PodSessionState present in SharedPreferences");
-        } else {
-            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
-            try {
-                podSessionState = gsonInstance.fromJson(storedPodState, PodSessionState.class);
-                podSessionState.injectDaggerClass(injector);
-            } catch (Exception ex) {
-                aapsLogger.error(LTag.PUMPCOMM, "Could not deserialize Pod state", ex);
-            }
-        }
-
-        setPodSessionState(podSessionState);
-
-        return podSessionState;
     }
 }

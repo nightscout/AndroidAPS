@@ -5,7 +5,6 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -40,8 +39,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -55,49 +53,45 @@ import io.reactivex.subjects.SingleSubject;
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
 
-    protected final OmnipodCommunicationManager communicationService;
-    private final PodStateChangedHandler podStateChangedHandler;
-    protected PodSessionState podState;
+    private final OmnipodCommunicationManager communicationService;
+    private PodStateManager podStateManager;
 
     private ActiveBolusData activeBolusData;
     private final Object bolusDataMutex = new Object();
 
     private AAPSLogger aapsLogger;
-    private SP sp;
 
     public OmnipodManager(AAPSLogger aapsLogger,
                           SP sp,
                           OmnipodCommunicationManager communicationService,
-                          PodSessionState podState,
-                          PodStateChangedHandler podStateChangedHandler) {
+                          PodStateManager podStateManager) {
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
-        this.aapsLogger = aapsLogger;
-        this.sp = sp;
-        this.communicationService = communicationService;
-        if (podState != null) {
-            podState.setStateChangedHandler(podStateChangedHandler);
+        if (podStateManager == null) {
+            throw new IllegalArgumentException("Pod State Manager can not be null");
         }
-        this.podState = podState;
-        this.podStateChangedHandler = podStateChangedHandler;
+        this.aapsLogger = aapsLogger;
+        this.communicationService = communicationService;
+
+        this.podStateManager = podStateManager;
     }
 
-    public synchronized Single<SetupActionResult> pairAndPrime(int address) {
+    public synchronized Single<SetupActionResult> pairAndPrime() {
         logStartingCommandExecution("pairAndPrime");
 
         try {
-            if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
+            if (!podStateManager.hasState() || !podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
                 // Always send both 0x07 and 0x03 on retries
-                podState = communicationService.executeAction(
-                        new AssignAddressAction(podStateChangedHandler, address));
+                communicationService.executeAction(
+                        new AssignAddressAction(podStateManager));
 
-                communicationService.executeAction(new SetupPodAction(podState));
-            } else if (SetupProgress.PRIMING.isBefore(podState.getSetupProgress())) {
-                throw new IllegalSetupProgressException(SetupProgress.POD_CONFIGURED, podState.getSetupProgress());
+                communicationService.executeAction(new SetupPodAction(podStateManager));
+            } else if (SetupProgress.PRIMING.isBefore(podStateManager.getSetupProgress())) {
+                throw new IllegalSetupProgressException(SetupProgress.POD_CONFIGURED, podStateManager.getSetupProgress());
             }
 
-            communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
+            communicationService.executeAction(new PrimeAction(new PrimeService(), podStateManager));
         } finally {
             logCommandExecutionFinished("pairAndPrime");
         }
@@ -106,21 +100,21 @@ public class OmnipodManager {
 
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
                 .map(o -> verifySetupAction(statusResponse ->
-                        PrimeAction.updatePrimingStatus(podState, statusResponse, aapsLogger), SetupProgress.PRIMING_FINISHED)) //
+                        PrimeAction.updatePrimingStatus(podStateManager, statusResponse, aapsLogger), SetupProgress.PRIMING_FINISHED)) //
                 .observeOn(Schedulers.io());
     }
 
     public synchronized Single<SetupActionResult> insertCannula(BasalSchedule basalSchedule) {
-        if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
-            throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podState == null ? null : podState.getSetupProgress());
-        } else if (podState.getSetupProgress().isAfter(SetupProgress.CANNULA_INSERTING)) {
-            throw new IllegalSetupProgressException(SetupProgress.CANNULA_INSERTING, podState.getSetupProgress());
+        if (!podStateManager.hasState() || !podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
+            throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, !podStateManager.hasState() ? null : podStateManager.getSetupProgress());
+        } else if (podStateManager.getSetupProgress().isAfter(SetupProgress.CANNULA_INSERTING)) {
+            throw new IllegalSetupProgressException(SetupProgress.CANNULA_INSERTING, podStateManager.getSetupProgress());
         }
 
         logStartingCommandExecution("insertCannula [basalSchedule=" + basalSchedule + "]");
 
         try {
-            communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podState, basalSchedule));
+            communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podStateManager, basalSchedule));
         } finally {
             logCommandExecutionFinished("insertCannula");
         }
@@ -129,19 +123,19 @@ public class OmnipodManager {
 
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
                 .map(o -> verifySetupAction(statusResponse ->
-                        InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse, aapsLogger), SetupProgress.COMPLETED)) //
+                        InsertCannulaAction.updateCannulaInsertionStatus(podStateManager, statusResponse, aapsLogger), SetupProgress.COMPLETED)) //
                 .observeOn(Schedulers.io());
     }
 
     public synchronized StatusResponse getPodStatus() {
-        if (podState == null) {
+        if (!podStateManager.hasState()) {
             throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, null);
         }
 
         logStartingCommandExecution("getPodStatus");
 
         try {
-            return communicationService.executeAction(new GetStatusAction(podState));
+            return communicationService.executeAction(new GetStatusAction(podStateManager));
         } finally {
             logCommandExecutionFinished("getPodStatus");
         }
@@ -153,7 +147,7 @@ public class OmnipodManager {
         logStartingCommandExecution("getPodInfo");
 
         try {
-            return communicationService.executeAction(new GetPodInfoAction(podState, podInfoType));
+            return communicationService.executeAction(new GetPodInfoAction(podStateManager, podInfoType));
         } finally {
             logCommandExecutionFinished("getPodInfo");
         }
@@ -165,7 +159,7 @@ public class OmnipodManager {
         logStartingCommandExecution("acknowledgeAlerts");
 
         try {
-            return executeAndVerify(() -> communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts())));
+            return executeAndVerify(() -> communicationService.executeAction(new AcknowledgeAlertsAction(podStateManager, podStateManager.getActiveAlerts())));
         } finally {
             logCommandExecutionFinished("acknowledgeAlerts");
         }
@@ -187,8 +181,8 @@ public class OmnipodManager {
 
         try {
             try {
-                return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
-                        false, podState.getScheduleOffset(), acknowledgementBeep)));
+                return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
+                        false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
             } catch (OmnipodException ex) {
                 // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
                 // Setting this to an uncertain failure will enable for the user to get an appropriate warning
@@ -214,9 +208,10 @@ public class OmnipodManager {
         }
 
         try {
-            return executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
-                    podState, rate, duration,
+            StatusResponse statusResponse = executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
+                    podStateManager, rate, duration,
                     acknowledgementBeep, completionBeep)));
+            return statusResponse;
         } catch (OmnipodException ex) {
             // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
             // Setting this to an uncertain failure will enable for the user to get an appropriate warning
@@ -238,7 +233,7 @@ public class OmnipodManager {
 
         try {
             return executeAndVerify(() -> {
-                StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep));
+                StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podStateManager, deliveryTypes, acknowledgementBeep));
                 aapsLogger.info(LTag.PUMPBTCOMM, "Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
                 return statusResponse;
             });
@@ -258,7 +253,7 @@ public class OmnipodManager {
         CommandDeliveryStatus commandDeliveryStatus = CommandDeliveryStatus.SUCCESS;
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new BolusAction(podState, units, acknowledgementBeep, completionBeep)));
+            executeAndVerify(() -> communicationService.executeAction(new BolusAction(podStateManager, units, acknowledgementBeep, completionBeep)));
         } catch (OmnipodException ex) {
             if (ex.isCertainFailure()) {
                 throw ex;
@@ -272,6 +267,7 @@ public class OmnipodManager {
         }
 
         DateTime startDate = DateTime.now().minus(OmnipodConst.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        podStateManager.setLastBolus(startDate, units);
 
         CompositeDisposable disposables = new CompositeDisposable();
         Duration bolusDuration = calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE);
@@ -339,7 +335,7 @@ public class OmnipodManager {
 
         synchronized (bolusDataMutex) {
             if (activeBolusData == null) {
-                throw new IllegalDeliveryStatusException(DeliveryStatus.BOLUS_IN_PROGRESS, podState.getLastDeliveryStatus());
+                throw new IllegalDeliveryStatusException(DeliveryStatus.BOLUS_IN_PROGRESS, podStateManager.getLastDeliveryStatus());
             }
 
             logStartingCommandExecution("cancelBolus [acknowledgementBeep=" + acknowledgementBeep + "]");
@@ -358,8 +354,10 @@ public class OmnipodManager {
 
     private void discardActiveBolusData(double unitsNotDelivered) {
         synchronized (bolusDataMutex) {
+            double unitsDelivered = activeBolusData.getUnits() - unitsNotDelivered;
+            podStateManager.setLastBolus(activeBolusData.getStartDate(), unitsDelivered);
             activeBolusData.getDisposables().dispose();
-            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.getUnits() - unitsNotDelivered));
+            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(unitsDelivered));
             activeBolusData = null;
         }
     }
@@ -374,8 +372,8 @@ public class OmnipodManager {
         logStartingCommandExecution("resumeDelivery");
 
         try {
-            return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                    false, podState.getScheduleOffset(), acknowledgementBeep)));
+            return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, podStateManager.getBasalSchedule(),
+                    false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
         } finally {
             logCommandExecutionFinished("resumeDelivery");
         }
@@ -395,18 +393,18 @@ public class OmnipodManager {
             throw ex;
         }
 
-        DateTimeZone oldTimeZone = podState.getTimeZone();
+        DateTimeZone oldTimeZone = podStateManager.getTimeZone();
 
         try {
             // Joda seems to cache the default time zone, so we use the JVM's
             DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
-            podState.setTimeZone(DateTimeZone.getDefault());
+            podStateManager.setTimeZone(DateTimeZone.getDefault());
 
-            setBasalSchedule(podState.getBasalSchedule(), acknowledgementBeeps);
+            setBasalSchedule(podStateManager.getBasalSchedule(), acknowledgementBeeps);
         } catch (OmnipodException ex) {
             // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
             // Setting this to an uncertain failure will enable for the user to get an appropriate warning
-            podState.setTimeZone(oldTimeZone);
+            podStateManager.setTimeZone(oldTimeZone);
             ex.setCertainFailure(false);
             throw ex;
         } finally {
@@ -415,7 +413,7 @@ public class OmnipodManager {
     }
 
     public synchronized void deactivatePod() {
-        if (podState == null) {
+        if (!podStateManager.isPaired()) {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
@@ -424,7 +422,7 @@ public class OmnipodManager {
         // Try to get pulse log for diagnostics
         // FIXME replace by storing to file
         try {
-            PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_PULSE_LOG));
+            PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podStateManager, PodInfoType.RECENT_PULSE_LOG));
             PodInfoRecentPulseLog pulseLogInfo = podInfoResponse.getPodInfo();
             aapsLogger.info(LTag.PUMPBTCOMM, "Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
         } catch (Exception ex) {
@@ -433,20 +431,14 @@ public class OmnipodManager {
 
         try {
             // Always send acknowledgement beeps here. Matches the PDM's behavior
-            communicationService.executeAction(new DeactivatePodAction(podState, true));
+            communicationService.executeAction(new DeactivatePodAction(podStateManager, true));
         } catch (PodFaultException ex) {
             aapsLogger.info(LTag.PUMPBTCOMM, "Ignoring PodFaultException in deactivatePod", ex);
         } finally {
             logCommandExecutionFinished("deactivatePod");
         }
 
-        resetPodState(false);
-    }
-
-    public void resetPodState(boolean forcedByUser) {
-        aapsLogger.warn(LTag.PUMPBTCOMM, "resetPodState has been called. forcedByUser={}", forcedByUser);
-        podState = null;
-        sp.remove(OmnipodConst.Prefs.PodState);
+        podStateManager.removeState();
     }
 
     public OmnipodCommunicationManager getCommunicationService() {
@@ -454,26 +446,17 @@ public class OmnipodManager {
     }
 
     public DateTime getTime() {
-        return podState.getTime();
+        return podStateManager.getTime();
     }
 
     public boolean isReadyForDelivery() {
-        return podState != null && podState.getSetupProgress() == SetupProgress.COMPLETED;
+        return podStateManager.isSetupCompleted();
     }
 
     public boolean hasActiveBolus() {
         synchronized (bolusDataMutex) {
             return activeBolusData != null;
         }
-    }
-
-    // FIXME this is dirty, we should not expose the original pod state
-    public PodSessionState getPodState() {
-        return this.podState;
-    }
-
-    public String getPodStateAsString() {
-        return podState == null ? "null" : podState.toString();
     }
 
     // Only works for commands with nonce resyncable message blocks
@@ -489,8 +472,8 @@ public class OmnipodManager {
 
                 try {
                     logStartingCommandExecution("verifyCommand");
-                    StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
-                            new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
+                    StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podStateManager,
+                            new CancelDeliveryCommand(podStateManager.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
                     aapsLogger.info(LTag.PUMPBTCOMM, "Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);
 
                     return statusResponse;
@@ -517,7 +500,7 @@ public class OmnipodManager {
 
     private void assertReadyForDelivery() {
         if (!isReadyForDelivery()) {
-            throw new IllegalSetupProgressException(SetupProgress.COMPLETED, podState == null ? null : podState.getSetupProgress());
+            throw new IllegalSetupProgressException(SetupProgress.COMPLETED, !podStateManager.hasState() ? null : podStateManager.getSetupProgress());
         }
     }
 
@@ -525,15 +508,15 @@ public class OmnipodManager {
         SetupActionResult result = null;
         for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
             try {
-                StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
+                StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podStateManager));
                 setupActionResponseHandler.accept(delayedStatusResponse);
 
-                if (podState.getSetupProgress().equals(expectedSetupProgress)) {
+                if (podStateManager.getSetupProgress().equals(expectedSetupProgress)) {
                     result = new SetupActionResult(SetupActionResult.ResultType.SUCCESS);
                     break;
                 } else {
                     result = new SetupActionResult(SetupActionResult.ResultType.FAILURE) //
-                            .setupProgress(podState.getSetupProgress());
+                            .setupProgress(podStateManager.getSetupProgress());
                     break;
                 }
             } catch (Exception ex) {
@@ -562,15 +545,6 @@ public class OmnipodManager {
 
     public static boolean isCertainFailure(Exception ex) {
         return ex instanceof OmnipodException && ((OmnipodException) ex).isCertainFailure();
-    }
-
-    public static int generateRandomAddress() {
-        // Create random address with 20 bits to match PDM, could easily use 24 bits instead
-        return 0x1f000000 | (new Random().nextInt() & 0x000fffff);
-    }
-
-    public static boolean isValidAddress(int address) {
-        return (0x1f000000 | (address & 0x000fffff)) == address;
     }
 
     public static class BolusCommandResult {

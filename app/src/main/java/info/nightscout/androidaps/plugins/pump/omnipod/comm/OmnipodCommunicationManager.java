@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
+import org.joda.time.DateTime;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -16,11 +18,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
@@ -43,7 +42,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
@@ -103,13 +102,13 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
         this.omnipodPumpStatus.setPumpDeviceState(pumpDeviceState);
     }
 
-    public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodState podState, MessageBlock command) {
-        return sendCommand(responseClass, podState, command, true);
+    public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodStateManager podStateManager, MessageBlock command) {
+        return sendCommand(responseClass, podStateManager, command, true);
     }
 
-    public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodState podState, MessageBlock command, boolean automaticallyResyncNone) {
-        OmnipodMessage message = new OmnipodMessage(podState.getAddress(), Collections.singletonList(command), podState.getMessageNumber());
-        return exchangeMessages(responseClass, podState, message, automaticallyResyncNone);
+    public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodStateManager podStateManager, MessageBlock command, boolean automaticallyResyncNone) {
+        OmnipodMessage message = new OmnipodMessage(podStateManager.getAddress(), Collections.singletonList(command), podStateManager.getMessageNumber());
+        return exchangeMessages(responseClass, podStateManager, message, automaticallyResyncNone);
     }
 
     // Convenience method
@@ -117,70 +116,76 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
         return action.execute(this);
     }
 
-    public <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message) {
-        return exchangeMessages(responseClass, podState, message, true);
+    public <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message) {
+        return exchangeMessages(responseClass, podStateManager, message, true);
     }
 
-    public <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, boolean automaticallyResyncNonce) {
-        return exchangeMessages(responseClass, podState, message, null, null, automaticallyResyncNonce);
+    public <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message, boolean automaticallyResyncNonce) {
+        return exchangeMessages(responseClass, podStateManager, message, null, null, automaticallyResyncNonce);
     }
 
-    public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
-        return exchangeMessages(responseClass, podState, message, addressOverride, ackAddressOverride, true);
+    public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
+        return exchangeMessages(responseClass, podStateManager, message, addressOverride, ackAddressOverride, true);
     }
 
-    public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
+    public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
 
-        aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage [responseClass={}, podState={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
-                responseClass.getSimpleName(), podState, message, addressOverride, ackAddressOverride, automaticallyResyncNonce, message);
+        aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage [responseClass={}, podStateManager={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
+                responseClass.getSimpleName(), podStateManager, message, addressOverride, ackAddressOverride, automaticallyResyncNonce, message);
 
         for (int i = 0; 2 > i; i++) {
 
-            if (podState.hasNonceState() && message.isNonceResyncable()) {
-                podState.advanceToNextNonce();
+            if (podStateManager.isPaired() && message.isNonceResyncable()) {
+                podStateManager.advanceToNextNonce();
             }
 
-            MessageBlock responseMessageBlock = transportMessages(podState, message, addressOverride, ackAddressOverride);
+            MessageBlock responseMessageBlock = transportMessages(podStateManager, message, addressOverride, ackAddressOverride);
 
             if (responseMessageBlock instanceof StatusResponse) {
-                podState.updateFromStatusResponse((StatusResponse) responseMessageBlock);
+                podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
             }
 
             if (responseClass.isInstance(responseMessageBlock)) {
+                podStateManager.setLastSuccessfulCommunication(DateTime.now());
                 return (T) responseMessageBlock;
             } else {
                 if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
                     ErrorResponse error = (ErrorResponse) responseMessageBlock;
                     if (error.getErrorResponseCode() == ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE) {
-                        podState.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
+                        podStateManager.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
                         if (automaticallyResyncNonce) {
-                            message.resyncNonce(podState.getCurrentNonce());
+                            message.resyncNonce(podStateManager.getCurrentNonce());
                         } else {
+                            podStateManager.setLastFailedCommunication(DateTime.now());
                             throw new NonceOutOfSyncException();
                         }
                     } else {
+                        podStateManager.setLastFailedCommunication(DateTime.now());
                         throw new PodReturnedErrorResponseException(error);
                     }
                 } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
                     PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
-                    podState.setFaultEvent(faultEvent);
+                    podStateManager.setFaultEvent(faultEvent);
+                    podStateManager.setLastFailedCommunication(DateTime.now());
                     throw new PodFaultException(faultEvent);
                 } else {
+                    podStateManager.setLastFailedCommunication(DateTime.now());
                     throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
                 }
             }
         }
 
+        podStateManager.setLastFailedCommunication(DateTime.now());
         throw new NonceResyncException();
     }
 
-    private MessageBlock transportMessages(PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
-        int packetAddress = podState.getAddress();
+    private MessageBlock transportMessages(PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
+        int packetAddress = podStateManager.getAddress();
         if (addressOverride != null) {
             packetAddress = addressOverride;
         }
 
-        podState.increaseMessageNumber();
+        podStateManager.increaseMessageNumber();
 
         boolean firstPacket = true;
         byte[] encodedMessage;
@@ -203,7 +208,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
         OmnipodPacket response = null;
         while (encodedMessage.length > 0) {
             PacketType packetType = firstPacket ? PacketType.PDM : PacketType.CON;
-            OmnipodPacket packet = new OmnipodPacket(packetAddress, packetType, podState.getPacketNumber(), encodedMessage);
+            OmnipodPacket packet = new OmnipodPacket(packetAddress, packetType, podStateManager.getPacketNumber(), encodedMessage);
             byte[] encodedMessageInPacket = packet.getEncodedMessage();
 
             // getting the data remaining to be sent
@@ -212,7 +217,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
             try {
                 // We actually ignore previous (ack) responses if it was not last packet to send
-                response = exchangePackets(podState, packet);
+                response = exchangePackets(podStateManager, packet);
             } catch (Exception ex) {
                 OmnipodException newException;
                 if (ex instanceof OmnipodException) {
@@ -245,15 +250,15 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                 if (receivedMessage.getAddress() != message.getAddress()) {
                     throw new IllegalMessageAddressException(message.getAddress(), receivedMessage.getAddress());
                 }
-                if (receivedMessage.getSequenceNumber() != podState.getMessageNumber()) {
-                    throw new IllegalMessageSequenceNumberException(podState.getMessageNumber(), receivedMessage.getSequenceNumber());
+                if (receivedMessage.getSequenceNumber() != podStateManager.getMessageNumber()) {
+                    throw new IllegalMessageSequenceNumberException(podStateManager.getMessageNumber(), receivedMessage.getSequenceNumber());
                 }
             } catch (NotEnoughDataException ex) {
                 // Message is (probably) not complete yet
-                OmnipodPacket ackForCon = createAckPacket(podState, packetAddress, ackAddressOverride);
+                OmnipodPacket ackForCon = createAckPacket(podStateManager, packetAddress, ackAddressOverride);
 
                 try {
-                    OmnipodPacket conPacket = exchangePackets(podState, ackForCon, 3, 40);
+                    OmnipodPacket conPacket = exchangePackets(podStateManager, ackForCon, 3, 40);
                     if (conPacket.getPacketType() != PacketType.CON) {
                         throw new IllegalPacketTypeException(PacketType.CON, conPacket.getPacketType());
                     }
@@ -267,7 +272,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             }
         }
 
-        ackUntilQuiet(podState, packetAddress, ackAddressOverride);
+        ackUntilQuiet(podStateManager, packetAddress, ackAddressOverride);
 
         List<MessageBlock> messageBlocks = receivedMessage.getMessageBlocks();
 
@@ -281,24 +286,24 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
         MessageBlock messageBlock = messageBlocks.get(0);
 
         if (messageBlock.getType() != MessageBlockType.ERROR_RESPONSE) {
-            podState.increaseMessageNumber();
+            podStateManager.increaseMessageNumber();
         }
 
         return messageBlock;
     }
 
-    private OmnipodPacket createAckPacket(PodState podState, Integer packetAddress, Integer messageAddress) {
+    private OmnipodPacket createAckPacket(PodStateManager podStateManager, Integer packetAddress, Integer messageAddress) {
         if (packetAddress == null) {
-            packetAddress = podState.getAddress();
+            packetAddress = podStateManager.getAddress();
         }
         if (messageAddress == null) {
-            messageAddress = podState.getAddress();
+            messageAddress = podStateManager.getAddress();
         }
-        return new OmnipodPacket(packetAddress, PacketType.ACK, podState.getPacketNumber(), ByteUtil.getBytesFromInt(messageAddress));
+        return new OmnipodPacket(packetAddress, PacketType.ACK, podStateManager.getPacketNumber(), ByteUtil.getBytesFromInt(messageAddress));
     }
 
-    private void ackUntilQuiet(PodState podState, Integer packetAddress, Integer messageAddress) {
-        OmnipodPacket ack = createAckPacket(podState, packetAddress, messageAddress);
+    private void ackUntilQuiet(PodStateManager podStateManager, Integer packetAddress, Integer messageAddress) {
+        OmnipodPacket ack = createAckPacket(podStateManager, packetAddress, messageAddress);
         boolean quiet = false;
         while (!quiet) try {
             sendAndListen(ack, 300, 1, 0, 40, OmnipodPacket.class);
@@ -314,21 +319,21 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
         }
 
-        podState.increasePacketNumber();
+        podStateManager.increasePacketNumber();
     }
 
-    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet) {
-        return exchangePackets(podState, packet, 0, 333, 9000, 127);
+    private OmnipodPacket exchangePackets(PodStateManager podStateManager, OmnipodPacket packet) {
+        return exchangePackets(podStateManager, packet, 0, 333, 9000, 127);
     }
 
-    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int preambleExtensionMilliseconds) {
-        return exchangePackets(podState, packet, repeatCount, 333, 9000, preambleExtensionMilliseconds);
+    private OmnipodPacket exchangePackets(PodStateManager podStateManager, OmnipodPacket packet, int repeatCount, int preambleExtensionMilliseconds) {
+        return exchangePackets(podStateManager, packet, repeatCount, 333, 9000, preambleExtensionMilliseconds);
     }
 
-    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int responseTimeoutMilliseconds, int exchangeTimeoutMilliseconds, int preambleExtensionMilliseconds) {
+    private OmnipodPacket exchangePackets(PodStateManager podStateManager, OmnipodPacket packet, int repeatCount, int responseTimeoutMilliseconds, int exchangeTimeoutMilliseconds, int preambleExtensionMilliseconds) {
         long timeoutTime = System.currentTimeMillis() + exchangeTimeoutMilliseconds;
 
-        podState.increasePacketNumber();
+        podStateManager.increasePacketNumber();
 
         while (System.currentTimeMillis() < timeoutTime) {
             OmnipodPacket response = null;
@@ -353,13 +358,13 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                 continue;
             }
 
-            if (response.getSequenceNumber() != podState.getPacketNumber()) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Packet sequence number " + response.getSequenceNumber() + " does not match " + podState.getPacketNumber());
+            if (response.getSequenceNumber() != podStateManager.getPacketNumber()) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Packet sequence number " + response.getSequenceNumber() + " does not match " + podStateManager.getPacketNumber());
                 continue;
             }
 
             // Once we have verification that the POD heard us, we can increment our counters
-            podState.increasePacketNumber();
+            podStateManager.increasePacketNumber();
 
             return response;
         }

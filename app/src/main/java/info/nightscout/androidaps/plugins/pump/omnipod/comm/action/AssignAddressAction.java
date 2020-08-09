@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 import org.joda.time.DateTimeZone;
 
 import java.util.Collections;
+import java.util.Random;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
@@ -10,45 +11,51 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVer
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.AssignAddressCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSetupState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
-public class AssignAddressAction implements OmnipodAction<PodSessionState> {
-    private final int address;
-    private final PodStateChangedHandler podStateChangedHandler;
+public class AssignAddressAction implements OmnipodAction<VersionResponse> {
+    private final PodStateManager podStateManager;
 
-    public AssignAddressAction(PodStateChangedHandler podStateChangedHandler, int address) {
-        this.address = address;
-        this.podStateChangedHandler = podStateChangedHandler;
+    public AssignAddressAction(PodStateManager podStateManager) {
+        if (podStateManager == null) {
+            throw new IllegalArgumentException("podStateManager can not be null");
+        }
+        this.podStateManager = podStateManager;
     }
 
     @Override
-    public PodSessionState execute(OmnipodCommunicationManager communicationService) {
-        PodSetupState setupState = new PodSetupState(address, 0x00, 0x00);
+    public VersionResponse execute(OmnipodCommunicationManager communicationService) {
+        if (!podStateManager.hasState()) {
+            podStateManager.initState(generateRandomAddress());
+        }
+        if (podStateManager.isPaired()) {
+            throw new IllegalStateException("podStateManager already has a paired Pod");
+        }
 
-        AssignAddressCommand assignAddress = new AssignAddressCommand(setupState.getAddress());
+        AssignAddressCommand assignAddress = new AssignAddressCommand(podStateManager.getAddress());
         OmnipodMessage assignAddressMessage = new OmnipodMessage(OmnipodConst.DEFAULT_ADDRESS,
-                Collections.singletonList(assignAddress), setupState.getMessageNumber());
+                Collections.singletonList(assignAddress), podStateManager.getMessageNumber());
 
-        VersionResponse assignAddressResponse = communicationService.exchangeMessages(VersionResponse.class, setupState, assignAddressMessage,
-                OmnipodConst.DEFAULT_ADDRESS, setupState.getAddress());
+        VersionResponse assignAddressResponse = communicationService.exchangeMessages(VersionResponse.class, podStateManager, assignAddressMessage,
+                OmnipodConst.DEFAULT_ADDRESS, podStateManager.getAddress());
 
         if (!assignAddressResponse.isAssignAddressVersionResponse()) {
             throw new IllegalVersionResponseTypeException("assignAddress", "setupPod");
         }
-        if (assignAddressResponse.getAddress() != address) {
-            throw new IllegalMessageAddressException(address, assignAddressResponse.getAddress());
+        if (assignAddressResponse.getAddress() != podStateManager.getAddress()) {
+            throw new IllegalMessageAddressException(podStateManager.getAddress(), assignAddressResponse.getAddress());
         }
 
-        DateTimeZone timeZone = DateTimeZone.getDefault();
+        podStateManager.setPairingParameters(assignAddressResponse.getLot(), assignAddressResponse.getTid(), //
+                assignAddressResponse.getPiVersion(), assignAddressResponse.getPmVersion(), DateTimeZone.getDefault());
 
-        PodSessionState podState = new PodSessionState(timeZone, address, assignAddressResponse.getPiVersion(),
-                assignAddressResponse.getPmVersion(), assignAddressResponse.getLot(), assignAddressResponse.getTid(),
-                setupState.getPacketNumber(), 0x00, communicationService.injector); // At this point, for an unknown reason, the pod starts counting messages from 0 again
+        return assignAddressResponse;
+    }
 
-        podState.setStateChangedHandler(podStateChangedHandler);
-        return podState;
+
+    private static int generateRandomAddress() {
+        // Create random address with 20 bits to match PDM, could easily use 24 bits instead
+        return 0x1f000000 | (new Random().nextInt() & 0x000fffff);
     }
 }

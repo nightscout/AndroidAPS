@@ -14,21 +14,21 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertConfigurationFactory;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class InsertCannulaService {
     public StatusResponse programInitialBasalSchedule(OmnipodCommunicationManager communicationService,
-                                                      PodSessionState podState, BasalSchedule basalSchedule) {
-        return communicationService.executeAction(new SetBasalScheduleAction(podState, basalSchedule,
-                true, podState.getScheduleOffset(), false));
+                                                      PodStateManager podStateManager, BasalSchedule basalSchedule) {
+        return communicationService.executeAction(new SetBasalScheduleAction(podStateManager, basalSchedule,
+                true, podStateManager.getScheduleOffset(), false));
     }
 
     public StatusResponse executeExpirationRemindersAlertCommand(OmnipodCommunicationManager communicationService,
-                                                                 PodSessionState podState) {
+                                                                 PodStateManager podStateManager) {
         AlertConfiguration lowReservoirAlertConfiguration = AlertConfigurationFactory.createLowReservoirAlertConfiguration(OmnipodConst.LOW_RESERVOIR_ALERT);
 
-        DateTime endOfServiceTime = podState.getActivatedAt().plus(OmnipodConst.SERVICE_DURATION);
+        DateTime endOfServiceTime = podStateManager.getActivatedAt().plus(OmnipodConst.SERVICE_DURATION);
 
         Duration timeUntilExpirationAdvisoryAlarm = new Duration(DateTime.now(),
                 endOfServiceTime.minus(OmnipodConst.EXPIRATION_ADVISORY_WINDOW));
@@ -49,11 +49,11 @@ public class InsertCannulaService {
                 autoOffAlertConfiguration //
         );
 
-        return new ConfigureAlertsAction(podState, alertConfigurations).execute(communicationService);
+        return new ConfigureAlertsAction(podStateManager, alertConfigurations).execute(communicationService);
     }
 
-    public StatusResponse executeInsertionBolusCommand(OmnipodCommunicationManager communicationService, PodSessionState podState) {
-        return communicationService.executeAction(new BolusAction(podState, OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS,
+    public StatusResponse executeInsertionBolusCommand(OmnipodCommunicationManager communicationService, PodStateManager podStateManager) {
+        return communicationService.executeAction(new BolusAction(podStateManager, OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS,
                 Duration.standardSeconds(1), false, false));
     }
 }

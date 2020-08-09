@@ -387,7 +387,7 @@ public class RFSpy {
         try {
             resp = writeToData(new SetPreamble(injector, preamble), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
         } catch (Exception e) {
-            e.toString();
+            aapsLogger.error("Failed to set preamble", e);
         }
         return resp;
     }

@@ -3,36 +3,36 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 import java.util.EnumSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.DeactivatePodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 
 public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
-    private final PodSessionState podState;
+    private final PodStateManager podStateManager;
     private final boolean acknowledgementBeep;
 
-    public DeactivatePodAction(PodSessionState podState, boolean acknowledgementBeep) {
-        if (podState == null) {
-            throw new ActionInitializationException("Pod state cannot be null");
+    public DeactivatePodAction(PodStateManager podStateManager, boolean acknowledgementBeep) {
+        if (podStateManager == null) {
+            throw new ActionInitializationException("Pod state manager cannot be null");
         }
-        this.podState = podState;
+        this.podStateManager = podStateManager;
         this.acknowledgementBeep = acknowledgementBeep;
     }
 
     @Override
     public StatusResponse execute(OmnipodCommunicationManager communicationService) {
-        if (!podState.isSuspended() && !podState.hasFaultEvent()) {
+        if (!podStateManager.isSuspended() && !podStateManager.hasFaultEvent()) {
             try {
-                communicationService.executeAction(new CancelDeliveryAction(podState,
+                communicationService.executeAction(new CancelDeliveryAction(podStateManager,
                         EnumSet.allOf(DeliveryType.class), acknowledgementBeep));
-            } catch(PodFaultException ex) {
+            } catch (PodFaultException ex) {
                 // Ignore
             }
         }
 
-        return communicationService.sendCommand(StatusResponse.class, podState, new DeactivatePodCommand(podState.getCurrentNonce()));
+        return communicationService.sendCommand(StatusResponse.class, podStateManager, new DeactivatePodCommand(podStateManager.getCurrentNonce()));
     }
 }
