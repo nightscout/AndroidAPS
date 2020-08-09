@@ -1863,9 +1863,11 @@
     <string name="omnipod_reservoir_over50">Over 50 U</string>
     <string name="omnipod_pod_address">Pod Address</string>
     <string name="omnipod_pod_expiry">Pod Expires</string>
-    <string name="omnipod_pod_name_no_info">No info</string>
-    <string name="omnipod_pod_no_pod_connected">No Pod connected</string>
-    <string name="omnipod_pod_not_initalized">Not initialized</string>
+    <string name="omnipod_pod_status_no_pod_connected">No Pod connected</string>
+    <string name="omnipod_pod_setup_in_progress">Pod setup in progress</string>
+    <string name="omnipod_pod_status_not_initalized">Pod not initialized</string>
+    <string name="omnipod_pod_status_pod_fault">!!! Pod Fault</string>
+    <string name="omnipod_pod_status_pod_running">Pod running</string>
     <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_ack_short">Ack Alerts</string>
     <string name="omnipod_last_bolus" translatable="false">%1$.2f %2$s (%3$s)</string>

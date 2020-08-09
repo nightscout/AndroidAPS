@@ -51,6 +51,7 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
+    // FIXME replace with method calls on PodStateManager
     public boolean podAvailable = false;
     public boolean podAvailibityChecked = false;
     public boolean ackAlertsAvailable = false;
