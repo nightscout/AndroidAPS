@@ -208,9 +208,10 @@ public class OmnipodManager {
         }
 
         try {
-            return executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
+            StatusResponse statusResponse = executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
                     podStateManager, rate, duration,
                     acknowledgementBeep, completionBeep)));
+            return statusResponse;
         } catch (OmnipodException ex) {
             // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
             // Setting this to an uncertain failure will enable for the user to get an appropriate warning
@@ -266,6 +267,7 @@ public class OmnipodManager {
         }
 
         DateTime startDate = DateTime.now().minus(OmnipodConst.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        podStateManager.setLastBolus(startDate, units);
 
         CompositeDisposable disposables = new CompositeDisposable();
         Duration bolusDuration = calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE);
@@ -352,8 +354,10 @@ public class OmnipodManager {
 
     private void discardActiveBolusData(double unitsNotDelivered) {
         synchronized (bolusDataMutex) {
+            double unitsDelivered = activeBolusData.getUnits() - unitsNotDelivered;
+            podStateManager.setLastBolus(activeBolusData.getStartDate(), unitsDelivered);
             activeBolusData.getDisposables().dispose();
-            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.getUnits() - unitsNotDelivered));
+            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(unitsDelivered));
             activeBolusData = null;
         }
     }
@@ -446,7 +450,7 @@ public class OmnipodManager {
     }
 
     public boolean isReadyForDelivery() {
-        return podStateManager.isPaired() && podStateManager.getSetupProgress() == SetupProgress.COMPLETED;
+        return podStateManager.isSetupCompleted();
     }
 
     public boolean hasActiveBolus() {

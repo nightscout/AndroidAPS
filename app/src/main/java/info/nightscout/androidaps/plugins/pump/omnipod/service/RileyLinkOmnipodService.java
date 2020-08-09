@@ -109,7 +109,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private void initializeErosOmnipodManager() {
         AapsOmnipodManager instance = AapsOmnipodManager.getInstance();
         if (instance == null) {
-            PodStateManager podStateManager = new AapsPodStateManager(injector);
+            PodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodUtil, omnipodPumpStatus, rxBus, resourceHelper);
             omnipodUtil.setPodStateManager(podStateManager);
 
             OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);

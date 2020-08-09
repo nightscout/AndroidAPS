@@ -1,9 +1,23 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs.state;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
+import org.joda.time.format.ISODateTimeFormat;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
@@ -13,92 +27,726 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
+import info.nightscout.androidaps.utils.DateUtil;
 
-public interface PodStateManager {
+public abstract class PodStateManager {
 
-    boolean hasState();
+    private final AAPSLogger aapsLogger;
+    private final Gson gsonInstance;
+    private PodState podState;
 
-    void removeState();
+    public PodStateManager(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
+        this.gsonInstance = createGson();
+    }
 
-    void initState(int address);
+    public final boolean hasState() {
+        return podState != null;
+    }
 
-    boolean isPaired();
+    public final void removeState() {
+        this.podState = null;
+        storePodState();
+        notifyPodStateChanged();
+    }
 
-    void setPairingParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone);
+    public final void initState(int address) {
+        if (hasState()) {
+            throw new IllegalStateException("Can not init a new pod state: podState <> null");
+        }
+        podState = new PodState(address);
+        storePodState();
+        notifyPodStateChanged();
+    }
 
-    int getAddress();
+    public final boolean isPaired() {
+        return hasState() //
+                && podState.getLot() != null && podState.getTid() != null //
+                && podState.getPiVersion() != null && podState.getPmVersion() != null //
+                && podState.getTimeZone() != null //
+                && podState.getSetupProgress() != null;
+    }
 
-    int getMessageNumber();
+    public final boolean isSetupCompleted() {
+        return isPaired() && SetupProgress.COMPLETED.equals(podState.getSetupProgress());
+    }
 
-    void setMessageNumber(int messageNumber);
+    public final void setPairingParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone) {
+        if (!hasState()) {
+            throw new IllegalStateException("Cannot set pairing parameters: podState is null");
+        }
+        if (isPaired()) {
+            throw new IllegalStateException("Cannot set pairing parameters: pairing parameters have already been set");
+        }
+        if (piVersion == null) {
+            throw new IllegalArgumentException("Cannot set pairing parameters: piVersion can not be null");
+        }
+        if (pmVersion == null) {
+            throw new IllegalArgumentException("Cannot set pairing parameters: pmVersion can not be null");
+        }
+        if (timeZone == null) {
+            throw new IllegalArgumentException("Cannot set pairing parameters: timeZone can not be null");
+        }
 
-    int getPacketNumber();
+        setAndStore(() -> {
+            podState.setLot(lot);
+            podState.setTid(tid);
+            podState.setPiVersion(piVersion);
+            podState.setPmVersion(pmVersion);
+            podState.setTimeZone(timeZone);
+            podState.setNonceState(new NonceState(lot, tid));
+            podState.setSetupProgress(SetupProgress.ADDRESS_ASSIGNED);
+            podState.getConfiguredAlerts().put(AlertSlot.SLOT7, AlertType.FINISH_SETUP_REMINDER);
+        });
+    }
 
-    void setPacketNumber(int packetNumber);
+    public final int getAddress() {
+        return getSafe(() -> podState.getAddress());
+    }
 
-    void increaseMessageNumber();
+    public final int getMessageNumber() {
+        return getSafe(() -> podState.getMessageNumber());
+    }
 
-    void increasePacketNumber();
+    public final void setMessageNumber(int messageNumber) {
+        setAndStore(() -> podState.setMessageNumber(messageNumber));
+    }
 
-    void resyncNonce(int syncWord, int sentNonce, int sequenceNumber);
+    public final int getPacketNumber() {
+        return getSafe(() -> podState.getPacketNumber());
+    }
 
-    int getCurrentNonce();
+    public final void setPacketNumber(int packetNumber) {
+        setAndStore(() -> podState.setPacketNumber(packetNumber));
+    }
 
-    void advanceToNextNonce();
+    public final void increaseMessageNumber() {
+        setAndStore(() -> podState.setMessageNumber((podState.getMessageNumber() + 1) & 0b1111));
+    }
 
-    boolean hasFaultEvent();
+    public final void increasePacketNumber() {
+        setAndStore(() -> podState.setPacketNumber((podState.getPacketNumber() + 1) & 0b11111));
+    }
 
-    PodInfoFaultEvent getFaultEvent();
+    public final synchronized void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
+        if (!isPaired()) {
+            throw new IllegalStateException("Cannot resync nonce: Pod is not paired yet");
+        }
 
-    void setFaultEvent(PodInfoFaultEvent faultEvent);
+        int sum = (sentNonce & 0xFFFF)
+                + OmniCRC.crc16lookup[sequenceNumber]
+                + (podState.getLot() & 0xFFFF)
+                + (podState.getTid() & 0xFFFF);
+        int seed = ((sum & 0xFFFF) ^ syncWord);
+        NonceState nonceState = new NonceState(podState.getLot(), podState.getTid(), (byte) (seed & 0xFF));
 
-    AlertType getConfiguredAlertType(AlertSlot alertSlot);
+        setAndStore(() -> podState.setNonceState(nonceState));
+    }
 
-    void putConfiguredAlert(AlertSlot alertSlot, AlertType alertType);
+    public final synchronized int getCurrentNonce() {
+        if (!isPaired()) {
+            throw new IllegalStateException("Cannot get current nonce: Pod is not paired yet");
+        }
+        return podState.getNonceState().getCurrentNonce();
+    }
 
-    void removeConfiguredAlert(AlertSlot alertSlot);
+    public final synchronized void advanceToNextNonce() {
+        if (!isPaired()) {
+            throw new IllegalStateException("Cannot advance to next nonce: Pod is not paired yet");
+        }
+        setAndStore(() -> podState.getNonceState().advanceToNextNonce());
+    }
 
-    boolean hasActiveAlerts();
+    public final DateTime getLastSuccessfulCommunication() {
+        return getSafe(() -> podState.getLastSuccessfulCommunication());
+    }
 
-    AlertSet getActiveAlerts();
+    public final void setLastSuccessfulCommunication(DateTime dateTime) {
+        setAndStore(() -> podState.setLastSuccessfulCommunication(dateTime));
+    }
 
-    Integer getLot();
+    public final DateTime getLastFailedCommunication() {
+        return getSafe(() -> podState.getLastFailedCommunication());
+    }
 
-    Integer getTid();
+    public final void setLastFailedCommunication(DateTime dateTime) {
+        setAndStore(() -> podState.setLastFailedCommunication(dateTime));
+    }
 
-    FirmwareVersion getPiVersion();
+    public final boolean hasFaultEvent() {
+        return getSafe(() -> podState.getFaultEvent()) != null;
+    }
 
-    FirmwareVersion getPmVersion();
+    public final PodInfoFaultEvent getFaultEvent() {
+        return getSafe(() -> podState.getFaultEvent());
+    }
 
-    DateTimeZone getTimeZone();
+    public final void setFaultEvent(PodInfoFaultEvent faultEvent) {
+        setAndStore(() -> podState.setFaultEvent(faultEvent));
+    }
 
-    void setTimeZone(DateTimeZone timeZone);
+    public final AlertType getConfiguredAlertType(AlertSlot alertSlot) {
+        return getSafe(() -> podState.getConfiguredAlerts().get(alertSlot));
+    }
 
-    DateTime getTime();
+    public final void putConfiguredAlert(AlertSlot alertSlot, AlertType alertType) {
+        setAndStore(() -> podState.getConfiguredAlerts().put(alertSlot, alertType));
+    }
 
-    DateTime getActivatedAt();
+    public final void removeConfiguredAlert(AlertSlot alertSlot) {
+        setAndStore(() -> podState.getConfiguredAlerts().remove(alertSlot));
+    }
 
-    DateTime getExpiresAt();
+    public final boolean hasActiveAlerts() {
+        AlertSet activeAlerts = podState.getActiveAlerts();
+        return activeAlerts != null && activeAlerts.size() > 0;
+    }
 
-    String getExpiryDateAsString();
+    public final AlertSet getActiveAlerts() {
+        return new AlertSet(getSafe(() -> podState.getActiveAlerts()));
+    }
 
-    SetupProgress getSetupProgress();
+    public final Integer getLot() {
+        return getSafe(() -> podState.getLot());
+    }
 
-    void setSetupProgress(SetupProgress setupProgress);
+    public final Integer getTid() {
+        return getSafe(() -> podState.getTid());
+    }
 
-    boolean isSuspended();
+    public final FirmwareVersion getPiVersion() {
+        return getSafe(() -> podState.getPiVersion());
+    }
 
-    Double getReservoirLevel();
+    public final FirmwareVersion getPmVersion() {
+        return getSafe(() -> podState.getPmVersion());
+    }
 
-    Duration getScheduleOffset();
+    public final DateTimeZone getTimeZone() {
+        return getSafe(() -> podState.getTimeZone());
+    }
 
-    BasalSchedule getBasalSchedule();
+    public final void setTimeZone(DateTimeZone timeZone) {
+        if (timeZone == null) {
+            throw new IllegalArgumentException("Time zone can not be null");
+        }
+        setAndStore(() -> podState.setTimeZone(timeZone));
+    }
 
-    void setBasalSchedule(BasalSchedule basalSchedule);
+    public final DateTime getTime() {
+        DateTime now = DateTime.now();
+        return now.withZone(getSafe(() -> podState.getTimeZone()));
+    }
 
-    DeliveryStatus getLastDeliveryStatus();
+    public final DateTime getActivatedAt() {
+        DateTime activatedAt = getSafe(() -> podState.getActivatedAt());
+        return activatedAt == null ? null : activatedAt.withZone(getSafe(() -> podState.getTimeZone()));
+    }
 
-    void updateFromStatusResponse(StatusResponse statusResponse);
+    public final DateTime getExpiresAt() {
+        DateTime expiresAt = getSafe(() -> podState.getExpiresAt());
+        return expiresAt == null ? null : expiresAt.withZone(getSafe(() -> podState.getTimeZone()));
+    }
 
-    void setStateChangedHandler(PodStateChangedHandler handler);
+    // TODO doesn't belong here
+    public final String getExpiryDateAsString() {
+        DateTime expiresAt = getExpiresAt();
+        return expiresAt == null ? "???" : DateUtil.dateAndTimeString(expiresAt.toDate());
+    }
+
+    public final SetupProgress getSetupProgress() {
+        return getSafe(() -> podState.getSetupProgress());
+    }
+
+    public final void setSetupProgress(SetupProgress setupProgress) {
+        if (setupProgress == null) {
+            throw new IllegalArgumentException("Setup progress can not be null");
+        }
+        setAndStore(() -> podState.setSetupProgress(setupProgress));
+    }
+
+    public final boolean isSuspended() {
+        return getSafe(() -> podState.isSuspended());
+    }
+
+    public final Double getReservoirLevel() {
+        return getSafe(() -> podState.getReservoirLevel());
+    }
+
+    public final Duration getScheduleOffset() {
+        DateTime now = getTime();
+        DateTime startOfDay = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(),
+                0, 0, 0, getSafe(() -> podState.getTimeZone()));
+        return new Duration(startOfDay, now);
+    }
+
+    public final BasalSchedule getBasalSchedule() {
+        return getSafe(() -> podState.getBasalSchedule());
+    }
+
+    public final void setBasalSchedule(BasalSchedule basalSchedule) {
+        setAndStore(() -> podState.setBasalSchedule(basalSchedule));
+    }
+
+    public final DateTime getLastBolusStartTime() {
+        return getSafe(() -> podState.getLastBolusStartTime());
+    }
+
+    public final Double getLastBolusAmount() {
+        return getSafe(() -> podState.getLastBolusAmount());
+    }
+
+    public final void setLastBolus(DateTime startTime, double amount) {
+        setAndStore(() -> {
+            podState.setLastBolusStartTime(startTime);
+            podState.setLastBolusAmount(amount);
+        });
+    }
+
+    public final DateTime getLastTempBasalStartTime() {
+        return getSafe(() -> podState.getLastTempBasalStartTime());
+    }
+
+    public final Double getLastTempBasalAmount() {
+        return getSafe(() -> podState.getLastTempBasalAmount());
+    }
+
+    public final Duration getLastTempBasalDuration() {
+        return getSafe(() -> podState.getLastTempBasalDuration());
+    }
+
+    public final void setLastTempBasal(DateTime startTime, Double amount, Duration duration) {
+        setAndStore(() -> {
+            podState.setLastTempBasalStartTime(startTime);
+            podState.setLastTempBasalAmount(amount);
+            podState.setLastTempBasalDuration(duration);
+        });
+    }
+
+    public final DeliveryStatus getLastDeliveryStatus() {
+        return getSafe(() -> podState.getLastDeliveryStatus());
+    }
+
+    public final void updateFromStatusResponse(StatusResponse statusResponse) {
+        if (!hasState()) {
+            throw new IllegalStateException("Cannot update from status response: podState is null");
+        }
+        setAndStore(() -> {
+            if (podState.getActivatedAt() == null) {
+                DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
+                podState.setActivatedAt(activatedAtCalculated);
+            }
+            DateTime expiresAt = podState.getExpiresAt();
+            DateTime expiresAtCalculated = podState.getActivatedAt().plus(OmnipodConst.NOMINAL_POD_LIFE);
+            if (expiresAt == null || expiresAtCalculated.isBefore(expiresAt) || expiresAtCalculated.isAfter(expiresAt.plusMinutes(1))) {
+                podState.setExpiresAt(expiresAtCalculated);
+            }
+
+            boolean newSuspendedState = statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED;
+            if (podState.isSuspended() != newSuspendedState) {
+                aapsLogger.info(LTag.PUMPCOMM, "Updating pod suspended state in updateFromStatusResponse. newSuspendedState={}, statusResponse={}", newSuspendedState, statusResponse.toString());
+                podState.setSuspended(newSuspendedState);
+            }
+            podState.setActiveAlerts(statusResponse.getAlerts());
+            podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
+            podState.setReservoirLevel(statusResponse.getReservoirLevel());
+        });
+    }
+
+    private void setAndStore(Runnable runnable) {
+        if (!hasState()) {
+            throw new IllegalStateException("Cannot mutate PodState: podState is null");
+        }
+        runnable.run();
+        storePodState();
+        notifyPodStateChanged();
+    }
+
+    private void storePodState() {
+        String podState = gsonInstance.toJson(this.podState);
+        aapsLogger.info(LTag.PUMP, "storePodState: storing podState: " + podState);
+        storePodState(podState);
+    }
+
+    protected abstract void storePodState(String podState);
+
+    protected abstract String readPodState();
+
+    // Should be called after initializing the object
+    public final void loadPodState() {
+        podState = null;
+
+        String storedPodState = readPodState();
+
+        if (StringUtils.isEmpty(storedPodState)) {
+            aapsLogger.info(LTag.PUMP, "loadPodState: no Pod state was provided");
+        } else {
+            aapsLogger.info(LTag.PUMP, "loadPodState: serialized Pod state was provided: " + storedPodState);
+            try {
+                podState = gsonInstance.fromJson(storedPodState, PodState.class);
+            } catch (Exception ex) {
+                aapsLogger.error(LTag.PUMP, "loadPodState: could not deserialize PodState: " + storedPodState, ex);
+            }
+        }
+
+        notifyPodStateChanged();
+    }
+
+    protected abstract void notifyPodStateChanged();
+
+    // Not actually "safe" as it throws an Exception, but it prevents NPEs
+    private <T> T getSafe(Supplier<T> supplier) {
+        if (!hasState()) {
+            throw new IllegalStateException("Cannot read from PodState: podState is null");
+        }
+        return supplier.get();
+    }
+
+    private static Gson createGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapter(DateTime.class, (JsonSerializer<DateTime>) (dateTime, typeOfSrc, context) ->
+                        new JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)))
+                .registerTypeAdapter(DateTime.class, (JsonDeserializer<DateTime>) (json, typeOfT, context) ->
+                        ISODateTimeFormat.dateTime().parseDateTime(json.getAsString()))
+                .registerTypeAdapter(DateTimeZone.class, (JsonSerializer<DateTimeZone>) (timeZone, typeOfSrc, context) ->
+                        new JsonPrimitive(timeZone.getID()))
+                .registerTypeAdapter(DateTimeZone.class, (JsonDeserializer<DateTimeZone>) (json, typeOfT, context) ->
+                        DateTimeZone.forID(json.getAsString()));
+
+        return gsonBuilder.create();
+    }
+
+    @Override public String toString() {
+        return "AapsPodStateManager{" +
+                "podState=" + podState +
+                '}';
+    }
+
+    private static final class PodState {
+        private final int address;
+        private Integer lot;
+        private Integer tid;
+        private FirmwareVersion piVersion;
+        private FirmwareVersion pmVersion;
+        private int packetNumber;
+        private int messageNumber;
+        private DateTime lastSuccessfulCommunication;
+        private DateTime lastFailedCommunication;
+        private DateTimeZone timeZone;
+        private DateTime activatedAt;
+        private DateTime expiresAt;
+        private PodInfoFaultEvent faultEvent;
+        private Double reservoirLevel;
+        private boolean suspended;
+        private NonceState nonceState;
+        private SetupProgress setupProgress;
+        private DeliveryStatus lastDeliveryStatus;
+        private AlertSet activeAlerts;
+        private BasalSchedule basalSchedule;
+        private DateTime lastBolusStartTime;
+        private Double lastBolusAmount;
+        private Double lastTempBasalAmount;
+        private DateTime lastTempBasalStartTime;
+        private Duration lastTempBasalDuration;
+        private final Map<AlertSlot, AlertType> configuredAlerts = new HashMap<>();
+
+        private PodState(int address) {
+            this.address = address;
+        }
+
+        int getAddress() {
+            return address;
+        }
+
+        Integer getLot() {
+            return lot;
+        }
+
+        void setLot(int lot) {
+            this.lot = lot;
+        }
+
+        Integer getTid() {
+            return tid;
+        }
+
+        void setTid(int tid) {
+            this.tid = tid;
+        }
+
+        FirmwareVersion getPiVersion() {
+            return piVersion;
+        }
+
+        void setPiVersion(FirmwareVersion piVersion) {
+            if (this.piVersion != null) {
+                throw new IllegalStateException("piVersion has already been set");
+            }
+            if (piVersion == null) {
+                throw new IllegalArgumentException("piVersion can not be null");
+            }
+            this.piVersion = piVersion;
+        }
+
+        FirmwareVersion getPmVersion() {
+            return pmVersion;
+        }
+
+        void setPmVersion(FirmwareVersion pmVersion) {
+            this.pmVersion = pmVersion;
+        }
+
+        int getPacketNumber() {
+            return packetNumber;
+        }
+
+        void setPacketNumber(int packetNumber) {
+            this.packetNumber = packetNumber;
+        }
+
+        int getMessageNumber() {
+            return messageNumber;
+        }
+
+        void setMessageNumber(int messageNumber) {
+            this.messageNumber = messageNumber;
+        }
+
+        DateTime getLastSuccessfulCommunication() {
+            return lastSuccessfulCommunication;
+        }
+
+        void setLastSuccessfulCommunication(DateTime lastSuccessfulCommunication) {
+            this.lastSuccessfulCommunication = lastSuccessfulCommunication;
+        }
+
+        DateTime getLastFailedCommunication() {
+            return lastFailedCommunication;
+        }
+
+        void setLastFailedCommunication(DateTime lastFailedCommunication) {
+            this.lastFailedCommunication = lastFailedCommunication;
+        }
+
+        DateTimeZone getTimeZone() {
+            return timeZone;
+        }
+
+        void setTimeZone(DateTimeZone timeZone) {
+            this.timeZone = timeZone;
+        }
+
+        DateTime getActivatedAt() {
+            return activatedAt;
+        }
+
+        void setActivatedAt(DateTime activatedAt) {
+            this.activatedAt = activatedAt;
+        }
+
+        DateTime getExpiresAt() {
+            return expiresAt;
+        }
+
+        void setExpiresAt(DateTime expiresAt) {
+            this.expiresAt = expiresAt;
+        }
+
+        PodInfoFaultEvent getFaultEvent() {
+            return faultEvent;
+        }
+
+        void setFaultEvent(PodInfoFaultEvent faultEvent) {
+            this.faultEvent = faultEvent;
+        }
+
+        Double getReservoirLevel() {
+            return reservoirLevel;
+        }
+
+        void setReservoirLevel(Double reservoirLevel) {
+            this.reservoirLevel = reservoirLevel;
+        }
+
+        public boolean isSuspended() {
+            return suspended;
+        }
+
+        void setSuspended(boolean suspended) {
+            this.suspended = suspended;
+        }
+
+        NonceState getNonceState() {
+            return nonceState;
+        }
+
+        void setNonceState(NonceState nonceState) {
+            this.nonceState = nonceState;
+        }
+
+        public SetupProgress getSetupProgress() {
+            return setupProgress;
+        }
+
+        void setSetupProgress(SetupProgress setupProgress) {
+            this.setupProgress = setupProgress;
+        }
+
+        DeliveryStatus getLastDeliveryStatus() {
+            return lastDeliveryStatus;
+        }
+
+        void setLastDeliveryStatus(DeliveryStatus lastDeliveryStatus) {
+            this.lastDeliveryStatus = lastDeliveryStatus;
+        }
+
+        AlertSet getActiveAlerts() {
+            return activeAlerts;
+        }
+
+        void setActiveAlerts(AlertSet activeAlerts) {
+            this.activeAlerts = activeAlerts;
+        }
+
+        BasalSchedule getBasalSchedule() {
+            return basalSchedule;
+        }
+
+        void setBasalSchedule(BasalSchedule basalSchedule) {
+            this.basalSchedule = basalSchedule;
+        }
+
+        public DateTime getLastBolusStartTime() {
+            return lastBolusStartTime;
+        }
+
+        void setLastBolusStartTime(DateTime lastBolusStartTime) {
+            this.lastBolusStartTime = lastBolusStartTime;
+        }
+
+        Double getLastBolusAmount() {
+            return lastBolusAmount;
+        }
+
+        void setLastBolusAmount(Double lastBolusAmount) {
+            this.lastBolusAmount = lastBolusAmount;
+        }
+
+        Double getLastTempBasalAmount() {
+            return lastTempBasalAmount;
+        }
+
+        void setLastTempBasalAmount(Double lastTempBasalAmount) {
+            this.lastTempBasalAmount = lastTempBasalAmount;
+        }
+
+        DateTime getLastTempBasalStartTime() {
+            return lastTempBasalStartTime;
+        }
+
+        void setLastTempBasalStartTime(DateTime lastTempBasalStartTime) {
+            this.lastTempBasalStartTime = lastTempBasalStartTime;
+        }
+
+        Duration getLastTempBasalDuration() {
+            return lastTempBasalDuration;
+        }
+
+        void setLastTempBasalDuration(Duration lastTempBasalDuration) {
+            this.lastTempBasalDuration = lastTempBasalDuration;
+        }
+
+        Map<AlertSlot, AlertType> getConfiguredAlerts() {
+            return configuredAlerts;
+        }
+
+        @Override public String toString() {
+            return "PodState{" +
+                    "address=" + address +
+                    ", lot=" + lot +
+                    ", tid=" + tid +
+                    ", piVersion=" + piVersion +
+                    ", pmVersion=" + pmVersion +
+                    ", packetNumber=" + packetNumber +
+                    ", messageNumber=" + messageNumber +
+                    ", lastSuccessfulCommunication=" + lastSuccessfulCommunication +
+                    ", lastFailedCommunication=" + lastFailedCommunication +
+                    ", timeZone=" + timeZone +
+                    ", activatedAt=" + activatedAt +
+                    ", expiresAt=" + expiresAt +
+                    ", faultEvent=" + faultEvent +
+                    ", reservoirLevel=" + reservoirLevel +
+                    ", suspended=" + suspended +
+                    ", nonceState=" + nonceState +
+                    ", setupProgress=" + setupProgress +
+                    ", lastDeliveryStatus=" + lastDeliveryStatus +
+                    ", activeAlerts=" + activeAlerts +
+                    ", basalSchedule=" + basalSchedule +
+                    ", lastBolusStartTime=" + lastBolusStartTime +
+                    ", lastBolusAmount=" + lastBolusAmount +
+                    ", lastTempBasalAmount=" + lastTempBasalAmount +
+                    ", lastTempBasalStartTime=" + lastTempBasalStartTime +
+                    ", lastTempBasalDuration=" + lastTempBasalDuration +
+                    ", configuredAlerts=" + configuredAlerts +
+                    '}';
+        }
+    }
+
+    private static class NonceState {
+        private final long[] table = new long[21];
+        private int index;
+
+        private NonceState(int lot, int tid) {
+            initializeTable(lot, tid, (byte) 0x00);
+        }
+
+        private NonceState(int lot, int tid, byte seed) {
+            initializeTable(lot, tid, seed);
+        }
+
+        private void initializeTable(int lot, int tid, byte seed) {
+            table[0] = (long) (lot & 0xFFFF) + 0x55543DC3L + (((long) (lot) & 0xFFFFFFFFL) >> 16);
+            table[0] = table[0] & 0xFFFFFFFFL;
+            table[1] = (tid & 0xFFFF) + 0xAAAAE44EL + (((long) (tid) & 0xFFFFFFFFL) >> 16);
+            table[1] = table[1] & 0xFFFFFFFFL;
+            index = 0;
+            table[0] += seed;
+            for (int i = 0; i < 16; i++) {
+                table[2 + i] = generateEntry();
+            }
+            index = (int) ((table[0] + table[1]) & 0X0F);
+        }
+
+        private int generateEntry() {
+            table[0] = (((table[0] >> 16) + (table[0] & 0xFFFF) * 0x5D7FL) & 0xFFFFFFFFL);
+            table[1] = (((table[1] >> 16) + (table[1] & 0xFFFF) * 0x8CA0L) & 0xFFFFFFFFL);
+            return (int) ((table[1] + (table[0] << 16)) & 0xFFFFFFFFL);
+        }
+
+        public int getCurrentNonce() {
+            return (int) table[(2 + index)];
+        }
+
+        void advanceToNextNonce() {
+            int nonce = getCurrentNonce();
+            table[(2 + index)] = generateEntry();
+            index = (nonce & 0x0F);
+        }
+
+        @Override
+        public String toString() {
+            return "NonceState{" +
+                    "table=" + Arrays.toString(table) +
+                    ", index=" + index +
+                    '}';
+        }
+    }
+
+    // TODO replace with java.util.function.Supplier<T> when min API level >= 24
+    @FunctionalInterface
+    private interface Supplier<T> {
+        T get();
+    }
 }

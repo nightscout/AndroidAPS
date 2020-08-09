@@ -50,7 +50,11 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
                     acknowledgementBeep && deliveryTypes.size() == 1 ? BeepType.BEEP : BeepType.NO_BEEP, deliveryTypes));
         }
 
-        return communicationService.exchangeMessages(StatusResponse.class, podStateManager,
+        StatusResponse statusResponse = communicationService.exchangeMessages(StatusResponse.class, podStateManager,
                 new OmnipodMessage(podStateManager.getAddress(), messageBlocks, podStateManager.getMessageNumber()));
+        if (deliveryTypes.contains(DeliveryType.TEMP_BASAL)) {
+            podStateManager.setLastTempBasal(null, null, null);
+        }
+        return statusResponse;
     }
 }

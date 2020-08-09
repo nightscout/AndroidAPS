@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
+import org.joda.time.DateTime;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -144,6 +146,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             }
 
             if (responseClass.isInstance(responseMessageBlock)) {
+                podStateManager.setLastSuccessfulCommunication(DateTime.now());
                 return (T) responseMessageBlock;
             } else {
                 if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
@@ -153,21 +156,26 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                         if (automaticallyResyncNonce) {
                             message.resyncNonce(podStateManager.getCurrentNonce());
                         } else {
+                            podStateManager.setLastFailedCommunication(DateTime.now());
                             throw new NonceOutOfSyncException();
                         }
                     } else {
+                        podStateManager.setLastFailedCommunication(DateTime.now());
                         throw new PodReturnedErrorResponseException(error);
                     }
                 } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
                     PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
                     podStateManager.setFaultEvent(faultEvent);
+                    podStateManager.setLastFailedCommunication(DateTime.now());
                     throw new PodFaultException(faultEvent);
                 } else {
+                    podStateManager.setLastFailedCommunication(DateTime.now());
                     throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
                 }
             }
         }
 
+        podStateManager.setLastFailedCommunication(DateTime.now());
         throw new NonceResyncException();
     }
 

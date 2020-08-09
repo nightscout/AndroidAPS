@@ -1982,5 +1982,8 @@
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
+    <string name="omnipod_pod_lot">LOT</string>
+    <string name="omnipod_pod_tid">TID</string>
+    <string name="omnipod_pod_fw_version">PM / PI version</string>
 
 </resources>

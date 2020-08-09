@@ -15,8 +15,12 @@ public class AlertSet {
         }
     }
 
+    public AlertSet(AlertSet alertSet) {
+        this(alertSet == null ? new ArrayList<>() : alertSet.getAlertSlots());
+    }
+
     public AlertSet(List<AlertSlot> alertSlots) {
-        this.alertSlots = alertSlots;
+        this.alertSlots = alertSlots == null ? new ArrayList<>() : new ArrayList<>(alertSlots);
     }
 
     public List<AlertSlot> getAlertSlots() {

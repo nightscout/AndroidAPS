@@ -207,15 +207,9 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     @Synchronized
-    private fun setDeviceStatus(event : EventOmnipodDeviceStatusChange) {
-
-
+    private fun setDeviceStatus(event: EventOmnipodDeviceStatusChange) {
 
     }
-
-
-
-
 
     @Synchronized
     private fun setDeviceStatus() {
@@ -250,20 +244,31 @@ class OmnipodFragment : DaggerFragment() {
 
         aapsLogger.info(LTag.PUMP, "getDriverState: [driverState={}]", driverState)
 
+        // FIXME for displaying pod info, we should look at PodStateManager instead of this driverState,
+        //  because that way, we can also show the Pod info when the RL isn't initialized yet
         if (driverState == OmnipodDriverState.NotInitalized) {
             omnipod_pod_address.text = resourceHelper.gs(R.string.omnipod_pod_name_no_info)
+            omnipod_pod_lot.text = "-"
+            omnipod_pod_tid.text = "-"
+            omnipod_pod_fw_version.text = "-"
             omnipod_pod_expiry.text = "-"
             omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_not_initalized)
             omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == null
         } else if (driverState == OmnipodDriverState.Initalized_NoPod) {
             omnipod_pod_address.text = resourceHelper.gs(R.string.omnipod_pod_name_no_info)
+            omnipod_pod_lot.text = "-"
+            omnipod_pod_tid.text = "-"
+            omnipod_pod_fw_version.text = "-"
             omnipod_pod_expiry.text = "-"
             omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_no_pod_connected)
             omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == null
         } else if (driverState == OmnipodDriverState.Initalized_PodInitializing) {
             omnipod_pod_address.text = omnipodPumpStatus.podStateManager.address.toString()
+            omnipod_pod_lot.text = "-"
+            omnipod_pod_tid.text = "-"
+            omnipod_pod_fw_version.text = "-"
             omnipod_pod_expiry.text = "-"
             omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_initalizing) + " (" + omnipodPumpStatus.podStateManager.getSetupProgress().name + ")"
             omnipodPumpStatus.podAvailable = false
@@ -272,16 +277,24 @@ class OmnipodFragment : DaggerFragment() {
             omnipodPumpStatus.podLotNumber = "" + omnipodPumpStatus.podStateManager.lot
             omnipodPumpStatus.podAvailable = true
             omnipod_pod_address.text = omnipodPumpStatus.podStateManager.address.toString()
+            omnipod_pod_lot.text = if (omnipodPumpStatus.podStateManager.lot == null) "" else omnipodPumpStatus.podStateManager.lot.toString()
+            omnipod_pod_tid.text = if (omnipodPumpStatus.podStateManager.tid == null) "" else omnipodPumpStatus.podStateManager.tid.toString()
+            if (omnipodPumpStatus.podStateManager.pmVersion == null || omnipodPumpStatus.podStateManager.piVersion == null) {
+                omnipod_pod_fw_version.text = ""
+            } else {
+                omnipod_pod_fw_version.text = omnipodPumpStatus.podStateManager.pmVersion.toString() + " / " + omnipodPumpStatus.podStateManager.piVersion.toString()
+            }
             omnipod_pod_expiry.text = omnipodPumpStatus.podStateManager.expiryDateAsString
             omnipodPumpStatus.podNumber = omnipodPumpStatus.podStateManager.address.toString()
 
             var podDeviceState = omnipodPumpStatus.podDeviceState
 
-            var stateText : String?
+            var stateText: String?
 
+            // FIXME this PodDeviceState doesn't make much sense. We should use info from PodStateManager
             when (podDeviceState) {
                 null,
-                PodDeviceState.Sleeping  -> stateText = "{fa-bed}  " // + pumpStatus.pumpDeviceState.name());
+                PodDeviceState.Sleeping             -> stateText = "{fa-bed}  " // + pumpStatus.pumpDeviceState.name());
                 PodDeviceState.NeverContacted,
                 PodDeviceState.WakingUp,
                 PodDeviceState.PumpUnreachable,
@@ -289,7 +302,7 @@ class OmnipodFragment : DaggerFragment() {
                 PodDeviceState.TimeoutWhenCommunicating,
                 PodDeviceState.InvalidConfiguration -> stateText = " " + resourceHelper.gs(podDeviceState.resourceId)
 
-                PodDeviceState.Active -> {
+                PodDeviceState.Active               -> {
                     stateText = resourceHelper.gs(R.string.omnipod_pod_status_active)
 //                val cmd = OmnipodUtil.getCurrentCommand()
 //                if (cmd == null)
@@ -308,18 +321,19 @@ class OmnipodFragment : DaggerFragment() {
 //                    }
 //                }
                 }
-                else -> {
+
+                else                                -> {
                     aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + omnipodPumpStatus.podDeviceState)
                     stateText = resourceHelper.gs(R.string.omnipod_pod_status_unknown)
                 }
             }
 
-            if (SetupProgress.COMPLETED.equals(omnipodPumpStatus.podStateManager.getSetupProgress())) {
-                if(omnipodPumpStatus.podStateManager.lastDeliveryStatus != null) {
+            if (omnipodPumpStatus.podStateManager.isSetupCompleted) {
+                if (omnipodPumpStatus.podStateManager.lastDeliveryStatus != null) {
                     stateText += " (last delivery status: " + omnipodPumpStatus.podStateManager.lastDeliveryStatus.name + ")"
                 }
             } else {
-                if(omnipodPumpStatus.podStateManager.setupProgress != null) {
+                if (omnipodPumpStatus.podStateManager.isPaired) {
                     stateText += " (setup progress: " + omnipodPumpStatus.podStateManager.setupProgress.name + ")"
                 }
             }

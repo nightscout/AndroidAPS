@@ -26,8 +26,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingBottom="5dp"
                     android:paddingTop="2dp"
+                    android:paddingBottom="5dp"
                     android:visibility="gone">
 
                     <TextView
@@ -45,10 +45,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -70,8 +70,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -93,10 +93,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <!-- Pod Address -->
@@ -119,8 +119,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -133,12 +133,118 @@
                         android:paddingLeft="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
+                </LinearLayout>
 
+                <!-- Pod Lot -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/omnipod_pod_lot"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_pod_lot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Pod Tid -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/omnipod_pod_tid"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_pod_tid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Pod fw version -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/omnipod_pod_fw_version"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_pod_fw_version"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
 
-                <!-- Pod Address -->
+                <!-- Pod Expires -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -158,8 +264,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -175,7 +281,7 @@
 
                 </LinearLayout>
 
-
+                <!-- Pod Status -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -195,8 +301,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -212,7 +318,6 @@
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
-
                 </LinearLayout>
 
                 <TextView
@@ -225,10 +330,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -250,8 +355,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -270,10 +375,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -295,8 +400,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -316,10 +421,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -341,8 +446,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -361,10 +466,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -386,8 +491,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -406,10 +511,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
 
@@ -432,8 +537,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -453,10 +558,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -478,8 +583,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -498,10 +603,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
                 <LinearLayout
@@ -523,8 +628,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
                         android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         android:text=":"
                         android:textSize="14sp" />
 
@@ -543,10 +648,10 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
 
@@ -621,8 +726,7 @@
                     android:drawableTop="@drawable/icon_cp_bolus_correction"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/omnipod_read_pulse_log_short"
-                    />
+                    android:text="@string/omnipod_read_pulse_log_short" />
 
             </LinearLayout>
 

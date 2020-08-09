@@ -115,11 +115,6 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
     @Override
-    public void setPumpStatus(OmnipodPumpStatus pumpStatusLocal) {
-
-    }
-
-    @Override
     public PodInfoRecentPulseLog readPulseLog() {
         return null;
     }
