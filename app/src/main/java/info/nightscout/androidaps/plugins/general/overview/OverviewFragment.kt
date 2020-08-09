@@ -179,7 +179,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (smallWidth) overview_arrow?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35f)
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
         overview_notifications?.setHasFixedSize(false)
@@ -567,8 +566,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             overview_bg?.text = lastBG.valueToUnitsToString(units)
             overview_bg?.setTextColor(color)
-            overview_arrow?.text = lastBG.directionToSymbol(databaseHelper)
-            overview_arrow?.setTextColor(color)
+            overview_arrow?.setImageResource(lastBG.directionToIcon(databaseHelper))
+            overview_arrow?.setColorFilter(color)
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
@@ -854,7 +853,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addNowLine(now)
 
                 // ------------------ 2nd graph
-                for (g in 0 until secondaryGraphs.size) {
+                for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
                     val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
                     var useABSForScale = false
                     var useIobForScale = false
@@ -889,7 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until secondaryGraphsData.size) {
+            for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
                 secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
                     overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
