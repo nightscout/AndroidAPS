@@ -853,7 +853,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addNowLine(now)
 
                 // ------------------ 2nd graph
-                for (g in 0 until secondaryGraphs.size) {
+                for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
                     val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
                     var useABSForScale = false
                     var useIobForScale = false
@@ -888,7 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until secondaryGraphsData.size) {
+            for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
                 secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
                     overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
