@@ -17,21 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+
+    <ImageView
         android:id="@+id/overview_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:paddingStart="-2dp"
-        android:paddingEnd="0dp"
-        android:text="→"
-        android:textSize="42sp"
-        android:textStyle="bold"
+        android:layout_gravity="center_vertical"
         app:layout_constraintEnd_toStartOf="@+id/overview_deltas_llayout"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/overview_bg"
-        app:layout_constraintTop_toTopOf="@+id/overview_bg" />
-
+        app:layout_constraintTop_toTopOf="@+id/overview_bg"
+        android:paddingTop="18dp"
+        android:src="@drawable/ic_flat" />
 
     <LinearLayout
         android:id="@+id/overview_deltas_llayout"

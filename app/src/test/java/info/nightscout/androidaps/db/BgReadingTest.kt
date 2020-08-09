@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -75,6 +76,28 @@ class BgReadingTest : TestBase() {
         bgReading.direction = "OUT OF RANGE"
         Assert.assertEquals("??", bgReading.directionToSymbol(databaseHelper))
     }
+
+    @Test
+    fun directionToIcon() {
+        val bgReading = BgReading(injector)
+        bgReading.direction = "DoubleDown"
+        Assert.assertEquals(R.drawable.ic_doubledown, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "SingleDown"
+        Assert.assertEquals(R.drawable.ic_singledown, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "FortyFiveDown"
+        Assert.assertEquals(R.drawable.ic_fortyfivedown, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "Flat"
+        Assert.assertEquals(R.drawable.ic_flat, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "FortyFiveUp"
+        Assert.assertEquals(R.drawable.ic_fortyfiveup, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "SingleUp"
+        Assert.assertEquals(R.drawable.ic_singleup, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "DoubleUp"
+        Assert.assertEquals(R.drawable.ic_doubleup, bgReading.directionToIcon(databaseHelper))
+        bgReading.direction = "OUT OF RANGE"
+        Assert.assertEquals(R.drawable.ic_invalid, bgReading.directionToIcon(databaseHelper))
+    }
+
 
     @Test fun dateTest() {
         val bgReading = BgReading(injector)
