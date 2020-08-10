@@ -6,8 +6,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -79,7 +77,7 @@ public abstract class PodStateManager {
         if (!hasState()) {
             throw new IllegalStateException("Cannot set pairing parameters: podState is null");
         }
-        if (isPaired()) {
+        if (isPaired() && getSetupProgress().isAfter(SetupProgress.ADDRESS_ASSIGNED)) {
             throw new IllegalStateException("Cannot set pairing parameters: pairing parameters have already been set");
         }
         if (piVersion == null) {
@@ -125,11 +123,11 @@ public abstract class PodStateManager {
     }
 
     public final void increaseMessageNumber() {
-        setAndStore(() -> podState.setMessageNumber((podState.getMessageNumber() + 1) & 0b1111));
+        setAndStore(() -> podState.setMessageNumber((podState.getMessageNumber() + 1) & 0b1111), false);
     }
 
     public final void increasePacketNumber() {
-        setAndStore(() -> podState.setPacketNumber((podState.getPacketNumber() + 1) & 0b11111));
+        setAndStore(() -> podState.setPacketNumber((podState.getPacketNumber() + 1) & 0b11111), false);
     }
 
     public final synchronized void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
@@ -144,7 +142,7 @@ public abstract class PodStateManager {
         int seed = ((sum & 0xFFFF) ^ syncWord);
         NonceState nonceState = new NonceState(podState.getLot(), podState.getTid(), (byte) (seed & 0xFF));
 
-        setAndStore(() -> podState.setNonceState(nonceState));
+        setAndStore(() -> podState.setNonceState(nonceState), false);
     }
 
     public final synchronized int getCurrentNonce() {
@@ -158,7 +156,7 @@ public abstract class PodStateManager {
         if (!isPaired()) {
             throw new IllegalStateException("Cannot advance to next nonce: Pod is not paired yet");
         }
-        setAndStore(() -> podState.getNonceState().advanceToNextNonce());
+        setAndStore(() -> podState.getNonceState().advanceToNextNonce(), false);
     }
 
     public final DateTime getLastSuccessfulCommunication() {
@@ -178,7 +176,7 @@ public abstract class PodStateManager {
     }
 
     public final boolean hasFaultEvent() {
-        return getSafe(() -> podState.getFaultEvent()) != null;
+        return podState != null && podState.getFaultEvent() != null;
     }
 
     public final PodInfoFaultEvent getFaultEvent() {
@@ -202,6 +200,9 @@ public abstract class PodStateManager {
     }
 
     public final boolean hasActiveAlerts() {
+        if (podState == null) {
+            return false;
+        }
         AlertSet activeAlerts = podState.getActiveAlerts();
         return activeAlerts != null && activeAlerts.size() > 0;
     }
@@ -358,12 +359,18 @@ public abstract class PodStateManager {
     }
 
     private void setAndStore(Runnable runnable) {
+        setAndStore(runnable, true);
+    }
+
+    private void setAndStore(Runnable runnable, boolean notifyPodStateChanged) {
         if (!hasState()) {
             throw new IllegalStateException("Cannot mutate PodState: podState is null");
         }
         runnable.run();
         storePodState();
-        notifyPodStateChanged();
+        if (notifyPodStateChanged) {
+            notifyPodStateChanged();
+        }
     }
 
     private void storePodState() {

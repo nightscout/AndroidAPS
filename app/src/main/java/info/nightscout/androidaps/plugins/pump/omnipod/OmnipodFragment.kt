@@ -45,6 +45,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.omnipod_fragment.*
+import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
 class OmnipodFragment : DaggerFragment() {
@@ -86,11 +87,6 @@ class OmnipodFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        omnipod_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId(RileyLinkTargetDevice.Omnipod))
-
-        omnipod_pod_status.setTextColor(Color.WHITE)
-        omnipod_pod_status.text = "{fa-bed}"
 
         omnipod_pod_mgmt.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
@@ -147,10 +143,6 @@ class OmnipodFragment : DaggerFragment() {
         }
 
         omnipod_lastconnection.setTextColor(Color.WHITE)
-
-        setVisibilityOfPodDebugButton()
-
-        updateGUI()
     }
 
     override fun onResume() {
@@ -181,6 +173,7 @@ class OmnipodFragment : DaggerFragment() {
             .subscribe({
                 setVisibilityOfPodDebugButton()
             }, { fabricPrivacy.logException(it) })
+        updateGUI()
     }
 
     fun setVisibilityOfPodDebugButton() {
@@ -212,11 +205,9 @@ class OmnipodFragment : DaggerFragment() {
 
     @Synchronized
     private fun setDeviceStatus() {
-        //val omnipodPumpStatus: OmnipodPumpStatus = OmnipodUtil.getPumpStatus()
-        // omnipodPumpStatus.rileyLinkServiceState = checkStatusSet(omnipodPumpStatus.rileyLinkServiceState,
-        //         RileyLinkUtil.getServiceState()) as RileyLinkServiceState?
-
         aapsLogger.info(LTag.PUMP, "setDeviceStatus: [pumpStatus={}]", omnipodPumpStatus)
+
+        val errors = ArrayList<String>();
 
         val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
 
@@ -228,22 +219,18 @@ class OmnipodFragment : DaggerFragment() {
                 rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
                 rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
                 rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
                 else                                                      -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
-        omnipod_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
+        omnipod_rl_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
 
-        // omnipodPumpStatus.rileyLinkError = checkStatusSet(omnipodPumpStatus.rileyLinkError,
-        //     RileyLinkUtil.getError()) as RileyLinkError?
-
-        omnipod_errors.text =
-            rileyLinkError?.let {
-                resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
-            } ?: "-"
-
-        val driverState = omnipodUtil.getDriverState();
-
-        aapsLogger.info(LTag.PUMP, "getDriverState: [driverState={}]", driverState)
+        if (rileyLinkError != null) {
+            errors.add(resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod)))
+        }
+        val rileyLinkErrorInfo = omnipodPumpStatus.errorInfo
+        if (rileyLinkErrorInfo != null) {
+            errors.add(rileyLinkErrorInfo)
+        }
 
         if (!podStateManager.hasState() || !podStateManager.isPaired) {
             if (podStateManager.hasState()) {
@@ -262,7 +249,6 @@ class OmnipodFragment : DaggerFragment() {
             }
             omnipodPumpStatus.podNumber == null
         } else {
-            omnipodPumpStatus.podLotNumber = "" + podStateManager.lot
             omnipod_pod_address.text = podStateManager.address.toString()
             omnipod_pod_lot.text = podStateManager.lot.toString()
             omnipod_pod_tid.text = podStateManager.tid.toString()
@@ -270,23 +256,29 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_expiry.text = podStateManager.expiryDateAsString
             omnipodPumpStatus.podNumber = podStateManager.address.toString()
 
-            var stateText: String?
+            val stateText: String
 
-            if (podStateManager.hasFaultEvent()) {
-                val faultEventCode = podStateManager.faultEvent.faultEventCode
-                stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault) + " (" + faultEventCode.value + " " + faultEventCode.name + ")"
-            } else if (podStateManager.isSetupCompleted) {
-                stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_running)
-                if (podStateManager.lastDeliveryStatus != null) {
-                    stateText += " (last delivery status: " + podStateManager.lastDeliveryStatus.name + ")"
+            when {
+                podStateManager.hasFaultEvent()  -> {
+                    val faultEventCode = podStateManager.faultEvent.faultEventCode
+                    stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault)
+                    errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
                 }
-            } else {
-                stateText = resourceHelper.gs(R.string.omnipod_pod_setup_in_progress)
-                stateText += " (setup progress: " + podStateManager.setupProgress.name + ")"
+
+                podStateManager.isSetupCompleted -> {
+                    stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_running, if (podStateManager.lastDeliveryStatus == null) null else podStateManager.lastDeliveryStatus.name)
+                }
+
+                else                             -> {
+                    stateText = resourceHelper.gs(R.string.omnipod_pod_setup_in_progress, podStateManager.setupProgress.name)
+                }
             }
 
             omnipod_pod_status.text = stateText
         }
+
+        omnipod_pod_status.setTextColor(if (podStateManager.hasFaultEvent()) Color.RED else Color.WHITE)
+        omnipod_errors.text = if (errors.size == 0) "-" else StringUtils.join(errors, System.lineSeparator())
 
         val status = commandQueue.spannedStatus()
         if (status.toString() == "") {
@@ -397,9 +389,9 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_lastconnection.setTextColor(Color.WHITE)
         }
 
-        omnipod_errors.text = omnipodPumpStatus.errorInfo
-
         updateAcknowledgeAlerts()
+
+        setVisibilityOfPodDebugButton()
 
         omnipod_refresh.isEnabled = podStateManager.isPaired
     }

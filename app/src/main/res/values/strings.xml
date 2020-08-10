@@ -1864,10 +1864,11 @@
     <string name="omnipod_pod_address">Pod Address</string>
     <string name="omnipod_pod_expiry">Pod Expires</string>
     <string name="omnipod_pod_status_no_pod_connected">No Pod connected</string>
-    <string name="omnipod_pod_setup_in_progress">Pod setup in progress</string>
+    <string name="omnipod_pod_setup_in_progress">Pod setup in progress (setup progress: %1$s)</string>
     <string name="omnipod_pod_status_not_initalized">Pod not initialized</string>
-    <string name="omnipod_pod_status_pod_fault">!!! Pod Fault</string>
-    <string name="omnipod_pod_status_pod_running">Pod running</string>
+    <string name="omnipod_pod_status_pod_fault">Pod Fault</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod Fault: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_running">Pod running (last delivery status: %1$s)</string>
     <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_ack_short">Ack Alerts</string>
     <string name="omnipod_last_bolus" translatable="false">%1$.2f %2$s (%3$s)</string>
@@ -1881,6 +1882,7 @@
 
 
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_rileylink_address_invalid">RileyLink Address invalid.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\nYou need to configure Omnipod first, before you can use this operation.</string>
     <string name="omnipod_error_operation_not_possible_no_profile">Operation is not possible.\n\n You need to wait few minutes, until AAPS tries to set profile for first time.</string>
     <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
@@ -1987,5 +1989,6 @@
     <string name="omnipod_pod_lot">LOT</string>
     <string name="omnipod_pod_tid">TID</string>
     <string name="omnipod_pod_fw_version">PM / PI version</string>
+    <string name="omnipod_errors">Errors</string>
 
 </resources>

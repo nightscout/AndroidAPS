@@ -11,8 +11,6 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
@@ -27,13 +25,14 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class OmnipodPumpStatus extends PumpStatus {
     // TODO remove all fields that can also be obtained via PodStateManager
+    //  We can probably get rid of this class altogether
 
     private final ResourceHelper resourceHelper;
     private final SP sp;
     private final RileyLinkUtil rileyLinkUtil;
     private final RxBusWrapper rxBus;
 
-    public String errorDescription = null;
+    public String rileyLinkErrorDescription = null;
     public String rileyLinkAddress = null;
     public boolean inPreInit = true;
 
@@ -58,7 +57,6 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean beepSMBEnabled = true;
     public boolean beepTBREnabled = true;
     public boolean podDebuggingOptionsEnabled = false;
-    public String podLotNumber = "???";
     public boolean timeChangeEventEnabled = true;
 
     public OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
@@ -77,7 +75,6 @@ public class OmnipodPumpStatus extends PumpStatus {
         initSettings();
     }
 
-
     @Override
     public void initSettings() {
         this.activeProfileName = "";
@@ -87,11 +84,10 @@ public class OmnipodPumpStatus extends PumpStatus {
         this.pumpType = PumpType.Insulet_Omnipod;
     }
 
-
+    // For Omnipod, this method only returns a RileyLink error description
+    @Override
     public String getErrorInfo() {
-        //verifyConfiguration();
-
-        return (this.errorDescription == null) ? "-" : this.errorDescription;
+        return this.rileyLinkErrorDescription;
     }
 
 
@@ -124,7 +120,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     @Override
     public String toString() {
         return "OmnipodPumpStatus{" +
-                "errorDescription='" + errorDescription + '\'' +
+                "rileyLinkErrorDescription='" + rileyLinkErrorDescription + '\'' +
                 ", rileyLinkAddress='" + rileyLinkAddress + '\'' +
                 ", inPreInit=" + inPreInit +
                 ", currentBasal=" + currentBasal +

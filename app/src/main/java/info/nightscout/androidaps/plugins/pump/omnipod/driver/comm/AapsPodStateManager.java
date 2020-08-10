@@ -23,8 +23,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -85,8 +83,6 @@ public class AapsPodStateManager extends PodStateManager {
             omnipodPumpStatus.lastBolusAmount = null;
             omnipodPumpStatus.reservoirRemainingUnits = 0.0;
             omnipodPumpStatus.pumpStatusType = PumpStatusType.Suspended;
-            sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
-            sendEvent(new EventOmnipodPumpValuesChanged());
             sendEvent(new EventRefreshOverview("Omnipod Pump", false));
         } else {
             // Update active alerts
@@ -97,14 +93,11 @@ public class AapsPodStateManager extends PodStateManager {
                 if (!omnipodPumpStatus.ackAlertsAvailable || !alertsText.equals(omnipodPumpStatus.ackAlertsText)) {
                     omnipodPumpStatus.ackAlertsAvailable = true;
                     omnipodPumpStatus.ackAlertsText = TextUtils.join("\n", alerts);
-
-                    sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                 }
             } else {
                 if (omnipodPumpStatus.ackAlertsAvailable || StringUtils.isNotEmpty(omnipodPumpStatus.ackAlertsText)) {
                     omnipodPumpStatus.ackAlertsText = null;
                     omnipodPumpStatus.ackAlertsAvailable = false;
-                    sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                 }
             }
 
@@ -119,15 +112,15 @@ public class AapsPodStateManager extends PodStateManager {
                 omnipodPumpStatus.lastBolusTime = lastBolusStartTime;
                 omnipodPumpStatus.lastBolusAmount = lastBolusAmount;
                 omnipodPumpStatus.reservoirRemainingUnits = getReservoirLevel() == null ? 75.0 : getReservoirLevel();
+                boolean sendRefreshOverviewEvent = isSuspended() != PumpStatusType.Suspended.equals(omnipodPumpStatus.pumpStatusType);
                 omnipodPumpStatus.pumpStatusType = isSuspended() ? PumpStatusType.Suspended : PumpStatusType.Running;
-                sendEvent(new EventOmnipodPumpValuesChanged());
 
-                if (isSuspended() != PumpStatusType.Suspended.equals(omnipodPumpStatus.pumpStatusType)) {
+                if (sendRefreshOverviewEvent) {
                     sendEvent(new EventRefreshOverview("Omnipod Pump", false));
                 }
             }
         }
-        rxBus.send(new EventOmnipodDeviceStatusChange(this));
+        sendEvent(new EventOmnipodPumpValuesChanged());
     }
 
     private List<String> getTranslatedActiveAlerts() {

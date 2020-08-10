@@ -605,6 +605,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
 
+    // FIXME do we actually need this? If a user presses refresh during an action,
+    //  I suppose the GetStatusCommand would just be queued?
     private void setRefreshButtonEnabled(boolean enabled) {
         rxBus.send(new EventOmnipodRefreshButtonState(enabled));
     }

@@ -7,8 +7,6 @@ import android.os.IBinder;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDateTime;
-
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
@@ -164,17 +162,17 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     public boolean verifyConfiguration() {
         try {
-            omnipodPumpStatus.errorDescription = "-";
+            omnipodPumpStatus.rileyLinkErrorDescription = null;
 
             String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
                 aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: no address");
-                omnipodPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid);
+                omnipodPumpStatus.rileyLinkErrorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                 return false;
             } else {
                 if (!rileyLinkAddress.matches(omnipodPumpStatus.regexMac)) {
-                    omnipodPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid);
+                    omnipodPumpStatus.rileyLinkErrorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                     aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
                     if (!rileyLinkAddress.equals(this.omnipodPumpStatus.rileyLinkAddress)) {
@@ -199,7 +197,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             return true;
 
         } catch (Exception ex) {
-            this.omnipodPumpStatus.errorDescription = ex.getMessage();
+            this.omnipodPumpStatus.rileyLinkErrorDescription = ex.getMessage();
             aapsLogger.error(LTag.PUMPCOMM, "Error on Verification: " + ex.getMessage(), ex);
             return false;
         }
