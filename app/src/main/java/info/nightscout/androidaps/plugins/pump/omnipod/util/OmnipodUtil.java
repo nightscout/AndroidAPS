@@ -131,11 +131,6 @@ public class OmnipodUtil {
         return gsonBuilder.create();
     }
 
-    public void notifyDeviceStatusChanged() {
-
-    }
-
-
     public void setPodDeviceState(PodDeviceState podDeviceState) {
         omnipodPumpStatus.podDeviceState = podDeviceState;
     }

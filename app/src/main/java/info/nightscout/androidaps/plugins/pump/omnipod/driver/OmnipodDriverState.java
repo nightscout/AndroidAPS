@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver;
 
+// TODO replace with method calls on PodStateManager
 public enum OmnipodDriverState {
 
     NotInitalized, // when we start

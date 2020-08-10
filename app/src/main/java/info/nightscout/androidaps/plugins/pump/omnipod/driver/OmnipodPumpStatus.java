@@ -11,8 +11,6 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
@@ -26,19 +24,19 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 @Singleton
 public class OmnipodPumpStatus extends PumpStatus {
+    // TODO remove all fields that can also be obtained via PodStateManager
+    //  We can probably get rid of this class altogether
 
     private final ResourceHelper resourceHelper;
     private final SP sp;
     private final RileyLinkUtil rileyLinkUtil;
     private final RxBusWrapper rxBus;
 
-    public String errorDescription = null;
+    public String rileyLinkErrorDescription = null;
     public String rileyLinkAddress = null;
     public boolean inPreInit = true;
 
     // statuses
-    public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
-    public RileyLinkError rileyLinkError;
     public double currentBasal = 0;
     public long tempBasalStart;
     public long tempBasalEnd;
@@ -51,9 +49,6 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
-    // FIXME replace with method calls on PodStateManager
-    public boolean podAvailable = false;
-    public boolean podAvailibityChecked = false;
     public boolean ackAlertsAvailable = false;
     public String ackAlertsText = null;
 
@@ -62,7 +57,6 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean beepSMBEnabled = true;
     public boolean beepTBREnabled = true;
     public boolean podDebuggingOptionsEnabled = false;
-    public String podLotNumber = "???";
     public boolean timeChangeEventEnabled = true;
 
     public OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
@@ -81,23 +75,19 @@ public class OmnipodPumpStatus extends PumpStatus {
         initSettings();
     }
 
-
     @Override
     public void initSettings() {
         this.activeProfileName = "";
         this.reservoirRemainingUnits = 75d;
         this.batteryRemaining = 75;
         this.lastConnection = sp.getLong(OmnipodConst.Statistics.LastGoodPumpCommunicationTime, 0L);
-        this.lastDataTime = this.lastConnection;
         this.pumpType = PumpType.Insulet_Omnipod;
-        this.podAvailable = false;
     }
 
-
+    // For Omnipod, this method only returns a RileyLink error description
+    @Override
     public String getErrorInfo() {
-        //verifyConfiguration();
-
-        return (this.errorDescription == null) ? "-" : this.errorDescription;
+        return this.rileyLinkErrorDescription;
     }
 
 
@@ -130,11 +120,9 @@ public class OmnipodPumpStatus extends PumpStatus {
     @Override
     public String toString() {
         return "OmnipodPumpStatus{" +
-                "errorDescription='" + errorDescription + '\'' +
+                "rileyLinkErrorDescription='" + rileyLinkErrorDescription + '\'' +
                 ", rileyLinkAddress='" + rileyLinkAddress + '\'' +
                 ", inPreInit=" + inPreInit +
-                ", rileyLinkServiceState=" + rileyLinkServiceState +
-                ", rileyLinkError=" + rileyLinkError +
                 ", currentBasal=" + currentBasal +
                 ", tempBasalStart=" + tempBasalStart +
                 ", tempBasalEnd=" + tempBasalEnd +
@@ -143,7 +131,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", regexMac='" + regexMac + '\'' +
                 ", podNumber='" + podNumber + '\'' +
                 ", podDeviceState=" + podDeviceState +
-                ", podAvailable=" + podAvailable +
                 ", ackAlertsAvailable=" + ackAlertsAvailable +
                 ", ackAlertsText='" + ackAlertsText + '\'' +
                 ", lastDataTime=" + lastDataTime +

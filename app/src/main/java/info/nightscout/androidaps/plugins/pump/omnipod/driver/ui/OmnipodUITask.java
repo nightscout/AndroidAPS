@@ -191,6 +191,7 @@ public class OmnipodUITask {
     }
 
 
+    // FIXME a lot of this is not needed anymore since introducing PodStateManager
     public void postProcess(OmnipodUIPostprocessor postprocessor) {
 
         EventOmnipodDeviceStatusChange statusChange;
