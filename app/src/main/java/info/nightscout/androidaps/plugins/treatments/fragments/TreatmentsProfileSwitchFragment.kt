@@ -26,11 +26,11 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.extensions.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.treatments_profileswitch_fragment.*
@@ -128,7 +128,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         }
 
         inner class ProfileSwitchViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-            var cv: CardView = itemView.findViewById<View>(R.id.profileswitch_cardview) as CardView
             var date: TextView = itemView.findViewById<View>(R.id.profileswitch_date) as TextView
             var duration: TextView = itemView.findViewById<View>(R.id.profileswitch_duration) as TextView
             var name: TextView = itemView.findViewById<View>(R.id.profileswitch_name) as TextView
@@ -157,7 +156,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                                 profileSwitch.profileObject?.let {
                                     val nonCustomized = it.convertToNonCustomizedProfile()
-                                    localProfilePlugin.addProfile(LocalProfilePlugin.SingleProfile().copyFrom(localProfilePlugin.rawProfile, nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
+                                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
                                     rxBus.send(EventLocalProfileChanged())
                                 }
                             })

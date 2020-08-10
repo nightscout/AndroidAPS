@@ -282,9 +282,9 @@ class BolusWizard @Inject constructor(
         if (carbs > 0) {
             var timeShift = ""
             if (carbTime > 0) {
-                timeShift += " ( +" + resourceHelper.gs(R.string.mins, carbTime) + " )"
+                timeShift += " (+" + resourceHelper.gs(R.string.mins, carbTime) + ")"
             } else if (carbTime < 0) {
-                timeShift += " ( -" + resourceHelper.gs(R.string.mins, carbTime) + " )"
+                timeShift += " (-" + resourceHelper.gs(R.string.mins, carbTime) + ")"
             }
             actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.gc(R.color.carbs) + "'>" + carbs + "g" + timeShift + "</font>")
         }
