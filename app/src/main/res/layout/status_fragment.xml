@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.8"
+            android:layout_weight="2"
             android:layout_marginStart="2dp"
             android:orientation="vertical">
 
@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start|top"
                     android:layout_marginTop="-8dp"
-                    android:textSize="40sp"
+                    android:textSize="38sp"
                     android:layout_weight="3"
                     android:textStyle="bold" />
 
