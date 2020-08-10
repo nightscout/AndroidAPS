@@ -31,6 +31,8 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
@@ -167,10 +169,11 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
                 this.pumpFrequency.setText(resourceHelper.gs(R.string.omnipod_frequency));
 
+                // TODO needs improvement
                 if (omnipodPumpStatus != null) {
-
-                    if (omnipodPumpStatus.podAvailable) {
-                        this.serialNumber.setText(omnipodPumpStatus.podLotNumber);
+                    PodStateManager podStateManager = ((OmnipodPumpPlugin) pumpPlugin).getPodStateManager();
+                    if (podStateManager.isPaired()) {
+                        this.serialNumber.setText(podStateManager.getLot());
                         this.connectedDevice.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
                     } else {
                         this.serialNumber.setText("??");

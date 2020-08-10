@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 /**
  * Created by andy on 6/29/18.
  */
+// TODO make singleton
 public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject public AAPSLogger aapsLogger;
@@ -58,6 +59,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
     //@Inject RileyLinkServiceData rileyLinkServiceData;
     //@Inject ServiceTaskExecutor serviceTaskExecutor;
 
+    @Inject
     public OmnipodCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         super(injector, rfspy);
         omnipodPumpStatus.previousConnection = sp.getLong(

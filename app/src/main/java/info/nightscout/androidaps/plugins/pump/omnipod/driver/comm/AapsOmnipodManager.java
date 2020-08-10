@@ -72,6 +72,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.Disposable;
 
+// TODO make singleton
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
 
     private final PodStateManager podStateManager;

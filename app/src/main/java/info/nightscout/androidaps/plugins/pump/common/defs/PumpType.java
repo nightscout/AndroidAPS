@@ -102,13 +102,13 @@ public enum PumpType {
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, //
-            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true, true),
+            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true),
 
     Insulet_Omnipod_Dash("Insulet Omnipod Dash", ManufacturerType.Insulet, "Omnipod Dash", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // 
-            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true, true), // TODO just copied OmniPod for now
+            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true), // TODO just copied OmniPod for now
 
     // Medtronic
     Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.1d, null, //
@@ -163,7 +163,6 @@ public enum PumpType {
     private double baseBasalStep; //
     private DoseStepSize baseBasalSpecialSteps; //
     private PumpCapability pumpCapability;
-    private boolean hasFixedUnreachableAlert;
     private boolean hasCustomUnreachableAlertCheck;
 
     private PumpType parent;
@@ -231,7 +230,7 @@ public enum PumpType {
              PumpCapability pumpCapability) {
         this(description, manufacturer, model, bolusSize, specialBolusSize, extendedBolusSettings, pumpTempBasalType,
                 tbrSettings, specialBasalDurations, baseBasalMinValue, null, baseBasalStep,
-                baseBasalSpecialSteps, pumpCapability, false, false);
+                baseBasalSpecialSteps, pumpCapability, false);
     }
 
 
@@ -249,7 +248,6 @@ public enum PumpType {
              double baseBasalStep,
              DoseStepSize baseBasalSpecialSteps, //
              PumpCapability pumpCapability,
-             boolean hasFixedUnreachableAlert,
              boolean hasCustomUnreachableAlertCheck) {
         this.description = description;
         this.manufacturer = manufacturer;
@@ -265,17 +263,11 @@ public enum PumpType {
         this.baseBasalStep = baseBasalStep;
         this.baseBasalSpecialSteps = baseBasalSpecialSteps;
         this.pumpCapability = pumpCapability;
-        this.hasFixedUnreachableAlert = hasFixedUnreachableAlert;
         this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck;
     }
 
-
-    public boolean getHasFixedUnreachableAlert() {
-        return hasFixedUnreachableAlert;
-    }
-
     public boolean getHasCustomUnreachableAlertCheck() {
-        return hasFixedUnreachableAlert;
+        return hasCustomUnreachableAlertCheck;
     }
 
     public String getDescription() {

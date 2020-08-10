@@ -218,16 +218,18 @@ class OmnipodFragment : DaggerFragment() {
 
         aapsLogger.info(LTag.PUMP, "setDeviceStatus: [pumpStatus={}]", omnipodPumpStatus)
 
-        val resourceId = rileyLinkServiceData.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
+        val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
+
+        val resourceId = rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
         val rileyLinkError = rileyLinkServiceData.rileyLinkError
 
         omnipod_rl_status.text =
             when {
-                omnipodPumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
-                omnipodPumpStatus.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
-                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
-                else                                                                        -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
+                rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                else                                                      -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
         omnipod_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
@@ -235,7 +237,7 @@ class OmnipodFragment : DaggerFragment() {
         //     RileyLinkUtil.getError()) as RileyLinkError?
 
         omnipod_errors.text =
-            omnipodPumpStatus.rileyLinkError?.let {
+            rileyLinkError?.let {
                 resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
             } ?: "-"
 
@@ -258,11 +260,9 @@ class OmnipodFragment : DaggerFragment() {
             } else {
                 omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_no_pod_connected)
             }
-            omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == null
         } else {
             omnipodPumpStatus.podLotNumber = "" + podStateManager.lot
-            omnipodPumpStatus.podAvailable = podStateManager.isSetupCompleted
             omnipod_pod_address.text = podStateManager.address.toString()
             omnipod_pod_lot.text = podStateManager.lot.toString()
             omnipod_pod_tid.text = podStateManager.tid.toString()
@@ -270,13 +270,11 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_expiry.text = podStateManager.expiryDateAsString
             omnipodPumpStatus.podNumber = podStateManager.address.toString()
 
-            var podDeviceState = omnipodPumpStatus.podDeviceState
-
             var stateText: String?
 
-            if(podStateManager.hasFaultEvent()) {
+            if (podStateManager.hasFaultEvent()) {
                 val faultEventCode = podStateManager.faultEvent.faultEventCode
-                stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault) + " ("+ faultEventCode.value +" "+ faultEventCode.name +")"
+                stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault) + " (" + faultEventCode.value + " " + faultEventCode.name + ")"
             } else if (podStateManager.isSetupCompleted) {
                 stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_running)
                 if (podStateManager.lastDeliveryStatus != null) {
@@ -323,8 +321,9 @@ class OmnipodFragment : DaggerFragment() {
 
         setDeviceStatus()
 
-        if (omnipodPumpStatus.podAvailable) {
+        if (podStateManager.isPaired) {
             // last connection
+            // TODO replace with podStateManager.getLastSuccessfulCommunication
             if (omnipodPumpStatus.lastConnection != 0L) {
                 //val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
                 val min = (System.currentTimeMillis() - omnipodPumpStatus.lastConnection) / 1000 / 60
@@ -355,9 +354,10 @@ class OmnipodFragment : DaggerFragment() {
             }
 
             // last bolus
+            // TODO replace with podStateManager.getLastBolus
             val bolus = omnipodPumpStatus.lastBolusAmount
             val bolusTime = omnipodPumpStatus.lastBolusTime
-            if (bolus != null && bolusTime != null && omnipodPumpStatus.podAvailable) {
+            if (bolus != null && bolusTime != null) {
                 val agoMsc = System.currentTimeMillis() - omnipodPumpStatus.lastBolusTime.time
                 val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
                 val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
@@ -401,8 +401,7 @@ class OmnipodFragment : DaggerFragment() {
 
         updateAcknowledgeAlerts()
 
-        omnipod_refresh.isEnabled = omnipodPumpStatus.podAvailable
-
+        omnipod_refresh.isEnabled = podStateManager.isPaired
     }
 
     private fun updateAcknowledgeAlerts() {

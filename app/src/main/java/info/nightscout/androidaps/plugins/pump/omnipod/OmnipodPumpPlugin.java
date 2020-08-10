@@ -88,9 +88,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 @Singleton
 public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface, RileyLinkPumpDevice {
-
-    // TODO Dagger (maybe done)
-    @Inject protected PodStateManager podStateManager;
+    protected PodStateManager podStateManager;
     private static OmnipodPumpPlugin plugin = null;
     private RileyLinkServiceData rileyLinkServiceData;
     private ServiceTaskExecutor serviceTaskExecutor;
@@ -110,6 +108,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private boolean isInitialized = false;
     protected OmnipodCommunicationManagerInterface omnipodCommunicationManager;
 
+    // TODO make non-static just inject the Singleton and use a getter)
     public static boolean isBusy = false;
     protected List<Long> busyTimestamps = new ArrayList<>();
     protected boolean sentIdToFirebase = false;
@@ -135,6 +134,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             SP sp,
             OmnipodUtil omnipodUtil,
             OmnipodPumpStatus omnipodPumpStatus,
+            PodStateManager podStateManager,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
@@ -150,7 +150,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 PumpType.Insulet_Omnipod,
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
-        injector.androidInjector().inject(this);
+        this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
 
@@ -182,6 +182,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return plugin;
     }
 
+    public PodStateManager getPodStateManager() {
+        return podStateManager;
+    }
 
     @Override
     protected void onStart() {
@@ -402,7 +405,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (isServiceSet()) {
 
-            if (isBusy || !omnipodPumpStatus.podAvailable)
+            if (isBusy || !podStateManager.isSetupCompleted())
                 return true;
 
             if (busyTimestamps.size() > 0) {
@@ -491,19 +494,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isSuspended() {
-
         return omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod ||
                 !podStateManager.isSetupCompleted() || podStateManager.isSuspended();
-
-//        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
-//
-// TODO ddd
-//        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
-//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
-//
-//        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-//                (omnipodUtil.getPodStateManager().hasState() && OmnipodUtil.getPodStateManager().isSuspended());
     }
 
     @Override
@@ -1001,9 +993,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
-        if (omnipodPumpStatus.lastConnection != 0 || omnipodPumpStatus.lastErrorConnection != 0) {
-            if (omnipodPumpStatus.lastConnection + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
-                if (omnipodPumpStatus.lastErrorConnection > omnipodPumpStatus.lastConnection) {
+        if (podStateManager.isSetupCompleted() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
+            if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
+                if (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) {
                     // We exceeded the alert threshold, and our last connection failed
                     // We should show an alert
                     return true;

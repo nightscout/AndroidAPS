@@ -26,6 +26,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 @Singleton
 public class OmnipodPumpStatus extends PumpStatus {
+    // TODO remove all fields that can also be obtained via PodStateManager
 
     private final ResourceHelper resourceHelper;
     private final SP sp;
@@ -37,8 +38,6 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean inPreInit = true;
 
     // statuses
-    public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
-    public RileyLinkError rileyLinkError;
     public double currentBasal = 0;
     public long tempBasalStart;
     public long tempBasalEnd;
@@ -51,9 +50,6 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
-    // FIXME replace with method calls on PodStateManager
-    public boolean podAvailable = false;
-    public boolean podAvailibityChecked = false;
     public boolean ackAlertsAvailable = false;
     public String ackAlertsText = null;
 
@@ -88,9 +84,7 @@ public class OmnipodPumpStatus extends PumpStatus {
         this.reservoirRemainingUnits = 75d;
         this.batteryRemaining = 75;
         this.lastConnection = sp.getLong(OmnipodConst.Statistics.LastGoodPumpCommunicationTime, 0L);
-        this.lastDataTime = this.lastConnection;
         this.pumpType = PumpType.Insulet_Omnipod;
-        this.podAvailable = false;
     }
 
 
@@ -133,8 +127,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 "errorDescription='" + errorDescription + '\'' +
                 ", rileyLinkAddress='" + rileyLinkAddress + '\'' +
                 ", inPreInit=" + inPreInit +
-                ", rileyLinkServiceState=" + rileyLinkServiceState +
-                ", rileyLinkError=" + rileyLinkError +
                 ", currentBasal=" + currentBasal +
                 ", tempBasalStart=" + tempBasalStart +
                 ", tempBasalEnd=" + tempBasalEnd +
@@ -143,7 +135,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", regexMac='" + regexMac + '\'' +
                 ", podNumber='" + podNumber + '\'' +
                 ", podDeviceState=" + podDeviceState +
-                ", podAvailable=" + podAvailable +
                 ", ackAlertsAvailable=" + ackAlertsAvailable +
                 ", ackAlertsText='" + ackAlertsText + '\'' +
                 ", lastDataTime=" + lastDataTime +
