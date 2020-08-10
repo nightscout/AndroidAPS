@@ -490,12 +490,6 @@ public abstract class PodStateManager {
         }
 
         void setPiVersion(FirmwareVersion piVersion) {
-            if (this.piVersion != null) {
-                throw new IllegalStateException("piVersion has already been set");
-            }
-            if (piVersion == null) {
-                throw new IllegalArgumentException("piVersion can not be null");
-            }
             this.piVersion = piVersion;
         }
 
