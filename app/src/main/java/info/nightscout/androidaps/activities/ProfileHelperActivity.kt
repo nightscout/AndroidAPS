@@ -136,7 +136,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile), Runnable {
-                    localProfilePlugin.addProfile(LocalProfilePlugin.SingleProfile().copyFrom(localProfilePlugin.rawProfile, it, "DefaultProfile" + dateUtil.dateAndTimeAndSecondsString(dateUtil._now())))
+                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(it, "DefaultProfile" + dateUtil.dateAndTimeAndSecondsString(dateUtil._now())))
                     rxBus.send(EventLocalProfileChanged())
                 })
             }
@@ -252,7 +252,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        profilehelper_profiletype_title.setDefaultHintTextColor(ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile)))
+        profilehelper_profiletype_title.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
 
         // show new content
         profilehelper_profiletype.setText(
