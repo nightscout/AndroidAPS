@@ -33,6 +33,7 @@ public class RileyLinkServiceData {
     boolean tuneUpDone = false;
     public RileyLinkError rileyLinkError;
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
+    private long lastServiceStateChange = 0L;
     public RileyLinkFirmwareVersion firmwareVersion;
     public RileyLinkTargetFrequency rileyLinkTargetFrequency; // TODO this might not be correct place
 
@@ -52,7 +53,8 @@ public class RileyLinkServiceData {
     public byte[] pumpIDBytes;
 
     @Inject
-    public RileyLinkServiceData() {}
+    public RileyLinkServiceData() {
+    }
 
     public void setPumpID(String pumpId, byte[] pumpIdBytes) {
         this.pumpID = pumpId;
@@ -71,17 +73,22 @@ public class RileyLinkServiceData {
         workWithServiceState(newState, errorCode, true);
     }
 
+    public long getLastServiceStateChange() {
+        return lastServiceStateChange;
+    }
+
     private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState, RileyLinkError errorCode, boolean set) {
 
         if (set) {
 
             rileyLinkServiceState = newState;
+            lastServiceStateChange = System.currentTimeMillis();
             this.rileyLinkError = errorCode;
 
             aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: " + errorCode.name());
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
-            if (activePlugin.getActivePump().manufacturer()== ManufacturerType.Medtronic)
+            if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Medtronic)
                 rxBus.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
             else {
                 rxBus.send(new EventOmnipodDeviceStatusChange(newState, errorCode));

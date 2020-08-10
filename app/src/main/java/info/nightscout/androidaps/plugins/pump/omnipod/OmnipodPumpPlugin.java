@@ -995,15 +995,19 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
+        long rileyLinkInitializationTimeout = 3 * 60 * 1000L; // 3 minutes
         if (podStateManager.isSetupCompleted() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
             if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
-                if (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) {
-                    // We exceeded the alert threshold, and our last connection failed
+                if ((podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
+                        rileyLinkServiceData.rileyLinkServiceState.isError() ||
+                        // The below clause is a hack for working around the RL service state forever staying in connecting state on startup if the RL is switched off / unreachable
+                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + rileyLinkInitializationTimeout < System.currentTimeMillis())) {
+                    // We exceeded the alert threshold, and either our last command failed or we cannot reach the RL
                     // We should show an alert
                     return true;
                 }
 
-                // Don't trigger an alert when we exceeded the thresholds, but the last communication was successful
+                // Don't trigger an alert when we exceeded the thresholds, but the last communication was successful & the RL is reachable
                 // This happens when we simply didn't need to send any commands to the pump
             }
         }

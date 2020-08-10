@@ -224,9 +224,6 @@ class OmnipodFragment : DaggerFragment() {
             }
         omnipod_rl_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
 
-        if (rileyLinkError != null) {
-            errors.add(resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod)))
-        }
         val rileyLinkErrorInfo = omnipodPumpStatus.errorInfo
         if (rileyLinkErrorInfo != null) {
             errors.add(rileyLinkErrorInfo)
