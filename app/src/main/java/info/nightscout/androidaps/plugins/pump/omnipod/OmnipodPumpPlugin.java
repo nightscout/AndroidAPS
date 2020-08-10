@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
@@ -642,13 +644,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         finishAction("Omnipod Pump");
 
-//        if (!sentIdToFirebase) {
-//            Bundle params = new Bundle();
-//            params.putString("version", BuildConfig.VERSION);
-//            MainApp.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
-//
-//            sentIdToFirebase = true;
-//        }
+        if (!sentIdToFirebase) {
+            Bundle params = new Bundle();
+            params.putString("version", BuildConfig.VERSION);
+
+            getFabricPrivacy().getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
+
+            sentIdToFirebase = true;
+        }
 
         isInitialized = true;
 
