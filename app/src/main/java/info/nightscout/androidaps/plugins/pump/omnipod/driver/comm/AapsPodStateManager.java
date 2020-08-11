@@ -105,15 +105,16 @@ public class AapsPodStateManager extends PodStateManager {
             Double lastBolusAmount = getLastBolusAmount();
 
             // Update other info: last bolus, units remaining, suspended
+            boolean suspended = isSuspended() || !isSetupCompleted() || hasFaultEvent();
             if (Objects.equals(lastBolusStartTime, omnipodPumpStatus.lastBolusTime) //
                     || !Objects.equals(lastBolusAmount, omnipodPumpStatus.lastBolusAmount) //
                     || !isReservoirStatusUpToDate(omnipodPumpStatus, getReservoirLevel())
-                    || isSuspended() != PumpStatusType.Suspended.equals(omnipodPumpStatus.pumpStatusType)) {
+                    || suspended != PumpStatusType.Suspended.equals(omnipodPumpStatus.pumpStatusType)) {
                 omnipodPumpStatus.lastBolusTime = lastBolusStartTime;
                 omnipodPumpStatus.lastBolusAmount = lastBolusAmount;
                 omnipodPumpStatus.reservoirRemainingUnits = getReservoirLevel() == null ? 75.0 : getReservoirLevel();
-                boolean sendRefreshOverviewEvent = isSuspended() != PumpStatusType.Suspended.equals(omnipodPumpStatus.pumpStatusType);
-                omnipodPumpStatus.pumpStatusType = isSuspended() ? PumpStatusType.Suspended : PumpStatusType.Running;
+                boolean sendRefreshOverviewEvent = suspended != PumpStatusType.Suspended.equals(omnipodPumpStatus.pumpStatusType);
+                omnipodPumpStatus.pumpStatusType = suspended ? PumpStatusType.Suspended : PumpStatusType.Running;
 
                 if (sendRefreshOverviewEvent) {
                     sendEvent(new EventRefreshOverview("Omnipod Pump", false));

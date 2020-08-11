@@ -407,7 +407,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (isServiceSet()) {
 
-            if (isBusy || !podStateManager.isSetupCompleted())
+            if (isBusy || !podStateManager.isSetupCompleted() || podStateManager.hasFaultEvent())
                 return true;
 
             if (busyTimestamps.size() > 0) {
