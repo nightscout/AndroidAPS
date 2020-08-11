@@ -141,7 +141,15 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                 podStateManager.advanceToNextNonce();
             }
 
-            MessageBlock responseMessageBlock = transportMessages(podStateManager, message, addressOverride, ackAddressOverride);
+            MessageBlock responseMessageBlock;
+            try {
+                responseMessageBlock = transportMessages(podStateManager, message, addressOverride, ackAddressOverride);
+            } catch (Exception ex) {
+                podStateManager.setLastFailedCommunication(DateTime.now());
+                throw ex;
+            }
+
+            aapsLogger.debug(LTag.PUMPCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
             if (responseMessageBlock instanceof StatusResponse) {
                 podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
