@@ -164,8 +164,10 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                     if (error.getErrorResponseCode() == ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE) {
                         podStateManager.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
                         if (automaticallyResyncNonce) {
+                            aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Resyncing nonce and retrying to send message as automaticallyResyncNonce=true");
                             message.resyncNonce(podStateManager.getCurrentNonce());
                         } else {
+                            aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Not resyncing nonce as automaticallyResyncNonce=true");
                             podStateManager.setLastFailedCommunication(DateTime.now());
                             throw new NonceOutOfSyncException();
                         }
@@ -193,6 +195,11 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
         int packetAddress = podStateManager.getAddress();
         if (addressOverride != null) {
             packetAddress = addressOverride;
+        }
+
+        if (podStateManager.getMessageNumber() != message.getSequenceNumber()) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Message number in Pod State [{}] does not match message sequence number [{}]. Setting message number in Pod State to {}", podStateManager.getMessageNumber(), message.getSequenceNumber(), message.getSequenceNumber());
+            podStateManager.setMessageNumber(message.getSequenceNumber());
         }
 
         podStateManager.increaseMessageNumber();
@@ -295,9 +302,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
         MessageBlock messageBlock = messageBlocks.get(0);
 
-        if (messageBlock.getType() != MessageBlockType.ERROR_RESPONSE) {
-            podStateManager.increaseMessageNumber();
-        }
+        podStateManager.increaseMessageNumber();
 
         return messageBlock;
     }
