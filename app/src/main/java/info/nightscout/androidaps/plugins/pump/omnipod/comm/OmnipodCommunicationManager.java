@@ -133,7 +133,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
     public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
 
         aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage [responseClass={}, podStateManager={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
-                responseClass.getSimpleName(), podStateManager, message, addressOverride, ackAddressOverride, automaticallyResyncNonce, message);
+                responseClass.getSimpleName(), podStateManager, message, addressOverride, ackAddressOverride, automaticallyResyncNonce);
 
         for (int i = 0; 2 > i; i++) {
 
