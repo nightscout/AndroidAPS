@@ -496,7 +496,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
 
         podHistory.setSuccess(success);
-        podHistory.setPodSerial(pumpStatus.podNumber);
+        podHistory.setPodSerial(podStateManager.hasState() ? String.valueOf(podStateManager.getAddress()) : "None");
 
         MainApp.getDbHelper().createOrUpdate(podHistory);
 

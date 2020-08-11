@@ -156,7 +156,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     // PumpInterface - REMOVE
 
     public boolean isInitialized() {
-        return RileyLinkServiceState.isReady(rileyLinkServiceData.rileyLinkServiceState);
+        return rileyLinkServiceData.rileyLinkServiceState.isReady();
     }
 
 

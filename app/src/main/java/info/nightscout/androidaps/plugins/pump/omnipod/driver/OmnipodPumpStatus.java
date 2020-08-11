@@ -47,7 +47,6 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
-    public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
     public boolean ackAlertsAvailable = false;
     public String ackAlertsText = null;
@@ -129,10 +128,7 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", tempBasalAmount=" + tempBasalAmount +
                 ", tempBasalLength=" + tempBasalLength +
                 ", regexMac='" + regexMac + '\'' +
-                ", podNumber='" + podNumber + '\'' +
                 ", podDeviceState=" + podDeviceState +
-                ", ackAlertsAvailable=" + ackAlertsAvailable +
-                ", ackAlertsText='" + ackAlertsText + '\'' +
                 ", lastDataTime=" + lastDataTime +
                 ", lastConnection=" + lastConnection +
                 ", previousConnection=" + previousConnection +

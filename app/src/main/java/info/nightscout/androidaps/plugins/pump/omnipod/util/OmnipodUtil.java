@@ -12,6 +12,9 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,6 +26,9 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
@@ -31,6 +37,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -43,6 +50,7 @@ public class OmnipodUtil {
     private final RxBusWrapper rxBus;
     private final RileyLinkUtil rileyLinkUtil;
     private final OmnipodPumpStatus omnipodPumpStatus;
+    private final ResourceHelper resourceHelper;
     private final ActivePluginProvider activePlugins;
     private final SP sp;
 
@@ -58,8 +66,8 @@ public class OmnipodUtil {
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil,
             OmnipodPumpStatus omnipodPumpStatus,
-            PodStateManager podStateManager,
             SP sp,
+            ResourceHelper resourceHelper,
             ActivePluginProvider activePlugins
     ) {
         this.aapsLogger = aapsLogger;
@@ -67,6 +75,7 @@ public class OmnipodUtil {
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
         this.sp = sp;
+        this.resourceHelper = resourceHelper;
         this.activePlugins = activePlugins;
     }
 
@@ -173,5 +182,37 @@ public class OmnipodUtil {
 
     public SP getSp() {
         return this.sp;
+    }
+
+    public List<String> getTranslatedActiveAlerts(PodStateManager podStateManager) {
+        List<String> translatedAlerts = new ArrayList<>();
+        AlertSet activeAlerts = podStateManager.getActiveAlerts();
+
+        for (AlertSlot alertSlot : activeAlerts.getAlertSlots()) {
+            translatedAlerts.add(translateAlertType(podStateManager.getConfiguredAlertType(alertSlot)));
+        }
+        return translatedAlerts;
+    }
+
+    private String translateAlertType(AlertType alertType) {
+        if (alertType == null) {
+            return resourceHelper.gs(R.string.omnipod_alert_unknown_alert);
+        }
+        switch (alertType) {
+            case FINISH_PAIRING_REMINDER:
+                return resourceHelper.gs(R.string.omnipod_alert_finish_pairing_reminder);
+            case FINISH_SETUP_REMINDER:
+                return resourceHelper.gs(R.string.omnipod_alert_finish_setup_reminder_reminder);
+            case EXPIRATION_ALERT:
+                return resourceHelper.gs(R.string.omnipod_alert_expiration);
+            case EXPIRATION_ADVISORY_ALERT:
+                return resourceHelper.gs(R.string.omnipod_alert_expiration_advisory);
+            case SHUTDOWN_IMMINENT_ALARM:
+                return resourceHelper.gs(R.string.omnipod_alert_shutdown_imminent);
+            case LOW_RESERVOIR_ALERT:
+                return resourceHelper.gs(R.string.omnipod_alert_low_reservoir);
+            default:
+                return alertType.name();
+        }
     }
 }

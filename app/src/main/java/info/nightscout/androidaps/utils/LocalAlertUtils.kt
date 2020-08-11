@@ -36,7 +36,7 @@ class LocalAlertUtils @Inject constructor(
         return T.mins(sp.getInt(resourceHelper.gs(R.string.key_missed_bg_readings_threshold), 30).toLong()).msecs()
     }
 
-    private fun pumpUnreachableThreshold(): Long {
+    fun pumpUnreachableThreshold(): Long {
         return T.mins(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold), 30).toLong()).msecs()
     }
 

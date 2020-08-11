@@ -280,9 +280,7 @@ public abstract class PodStateManager {
 
     public final Duration getScheduleOffset() {
         DateTime now = getTime();
-        DateTime startOfDay = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(),
-                0, 0, 0, getSafe(() -> podState.getTimeZone()));
-        return new Duration(startOfDay, now);
+        return new Duration(now.withTimeAtStartOfDay(), now);
     }
 
     public final BasalSchedule getBasalSchedule() {
