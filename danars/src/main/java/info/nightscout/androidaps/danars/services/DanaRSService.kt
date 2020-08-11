@@ -116,19 +116,17 @@ class DanaRSService : DaggerService() {
         try {
             val now = System.currentTimeMillis()
             val pump = activePlugin.activePump
-            if (danaPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized) {
-                rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
-                sendMessage(DanaRS_Packet_General_Get_Shipping_Information(injector)) // serial no
-                sendMessage(DanaRS_Packet_General_Get_Pump_Check(injector)) // firmware
-                sendMessage(DanaRS_Packet_Basal_Get_Profile_Number(injector))
-                sendMessage(DanaRS_Packet_Bolus_Get_Bolus_Option(injector)) // isExtendedEnabled
-                sendMessage(DanaRS_Packet_Basal_Get_Basal_Rate(injector)) // basal profile, basalStep, maxBasal
-                sendMessage(DanaRS_Packet_Bolus_Get_Calculation_Information(injector)) // target
-                if (danaPump.profile24) sendMessage(DanaRS_Packet_Bolus_Get_24_CIR_CF_Array(injector))
-                else sendMessage(DanaRS_Packet_Bolus_Get_CIR_CF_Array(injector))
-                sendMessage(DanaRS_Packet_Option_Get_User_Option(injector)) // Getting user options
-                danaPump.lastSettingsRead = now
-            }
+            rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
+            sendMessage(DanaRS_Packet_Etc_Keep_Connection(injector)) // test encryption for v3
+            sendMessage(DanaRS_Packet_General_Get_Shipping_Information(injector)) // serial no
+            sendMessage(DanaRS_Packet_General_Get_Pump_Check(injector)) // firmware
+            sendMessage(DanaRS_Packet_Basal_Get_Profile_Number(injector))
+            sendMessage(DanaRS_Packet_Bolus_Get_Bolus_Option(injector)) // isExtendedEnabled
+            sendMessage(DanaRS_Packet_Basal_Get_Basal_Rate(injector)) // basal profile, basalStep, maxBasal
+            sendMessage(DanaRS_Packet_Bolus_Get_Calculation_Information(injector)) // target
+            if (danaPump.profile24) sendMessage(DanaRS_Packet_Bolus_Get_24_CIR_CF_Array(injector))
+            else sendMessage(DanaRS_Packet_Bolus_Get_CIR_CF_Array(injector))
+            sendMessage(DanaRS_Packet_Option_Get_User_Option(injector)) // Getting user options
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpstatus)))
             sendMessage(DanaRS_Packet_General_Initial_Screen_Information(injector))
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingextendedbolusstatus)))
@@ -414,7 +412,6 @@ class DanaRSService : DaggerService() {
         sendMessage(msgSet)
         val msgActivate = DanaRS_Packet_Basal_Set_Profile_Number(injector, 0)
         sendMessage(msgActivate)
-        danaPump.lastSettingsRead = 0 // force read full settings
         readPumpStatus()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
         return true
