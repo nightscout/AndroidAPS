@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.Inser
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalDeliveryStatusException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
@@ -36,6 +37,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
@@ -83,8 +85,17 @@ public class OmnipodManager {
         try {
             if (!podStateManager.hasState() || !podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
                 // Always send both 0x07 and 0x03 on retries
-                communicationService.executeAction(
-                        new AssignAddressAction(podStateManager));
+                try {
+                    communicationService.executeAction(
+                            new AssignAddressAction(podStateManager));
+                } catch (IllegalPacketTypeException ex) {
+                    if (ex.getActual() == PacketType.ACK && podStateManager.isPaired()) {
+                        // When we already assigned the address before, it's possible to only get an ACK here
+                        aapsLogger.debug("Received ACK instead of response. Ignoring because we already assigned the address successfully");
+                    } else {
+                        throw ex;
+                    }
+                }
 
                 communicationService.executeAction(new SetupPodAction(podStateManager));
             } else if (SetupProgress.PRIMING.isBefore(podStateManager.getSetupProgress())) {
