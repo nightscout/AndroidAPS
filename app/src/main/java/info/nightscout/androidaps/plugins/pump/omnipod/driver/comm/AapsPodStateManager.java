@@ -1,26 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
-import android.text.TextUtils;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
@@ -77,30 +67,12 @@ public class AapsPodStateManager extends PodStateManager {
     @Override
     protected void notifyPodStateChanged() {
         if (!hasState()) {
-            omnipodPumpStatus.ackAlertsText = null;
-            omnipodPumpStatus.ackAlertsAvailable = false;
             omnipodPumpStatus.lastBolusTime = null;
             omnipodPumpStatus.lastBolusAmount = null;
             omnipodPumpStatus.reservoirRemainingUnits = 0.0;
             omnipodPumpStatus.pumpStatusType = PumpStatusType.Suspended;
             sendEvent(new EventRefreshOverview("Omnipod Pump", false));
         } else {
-            // Update active alerts
-            if (hasActiveAlerts()) {
-                List<String> alerts = getTranslatedActiveAlerts();
-                String alertsText = TextUtils.join("\n", alerts);
-
-                if (!omnipodPumpStatus.ackAlertsAvailable || !alertsText.equals(omnipodPumpStatus.ackAlertsText)) {
-                    omnipodPumpStatus.ackAlertsAvailable = true;
-                    omnipodPumpStatus.ackAlertsText = TextUtils.join("\n", alerts);
-                }
-            } else {
-                if (omnipodPumpStatus.ackAlertsAvailable || StringUtils.isNotEmpty(omnipodPumpStatus.ackAlertsText)) {
-                    omnipodPumpStatus.ackAlertsText = null;
-                    omnipodPumpStatus.ackAlertsAvailable = false;
-                }
-            }
-
             Date lastBolusStartTime = getLastBolusStartTime() == null ? null : getLastBolusStartTime().toDate();
             Double lastBolusAmount = getLastBolusAmount();
 
@@ -122,43 +94,6 @@ public class AapsPodStateManager extends PodStateManager {
             }
         }
         sendEvent(new EventOmnipodPumpValuesChanged());
-    }
-
-    private List<String> getTranslatedActiveAlerts() {
-        List<String> translatedAlerts = new ArrayList<>();
-        AlertSet activeAlerts = getActiveAlerts();
-
-        for (AlertSlot alertSlot : activeAlerts.getAlertSlots()) {
-            translatedAlerts.add(translateAlertType(getConfiguredAlertType(alertSlot)));
-        }
-        return translatedAlerts;
-    }
-
-
-    private String translateAlertType(AlertType alertType) {
-        if (alertType == null) {
-            return getStringResource(R.string.omnipod_alert_unknown_alert);
-        }
-        switch (alertType) {
-            case FINISH_PAIRING_REMINDER:
-                return getStringResource(R.string.omnipod_alert_finish_pairing_reminder);
-            case FINISH_SETUP_REMINDER:
-                return getStringResource(R.string.omnipod_alert_finish_setup_reminder_reminder);
-            case EXPIRATION_ALERT:
-                return getStringResource(R.string.omnipod_alert_expiration);
-            case EXPIRATION_ADVISORY_ALERT:
-                return getStringResource(R.string.omnipod_alert_expiration_advisory);
-            case SHUTDOWN_IMMINENT_ALARM:
-                return getStringResource(R.string.omnipod_alert_shutdown_imminent);
-            case LOW_RESERVOIR_ALERT:
-                return getStringResource(R.string.omnipod_alert_low_reservoir);
-            default:
-                return alertType.name();
-        }
-    }
-
-    private String getStringResource(int id, Object... args) {
-        return resourceHelper.gs(id, args);
     }
 
     private static boolean isReservoirStatusUpToDate(OmnipodPumpStatus pumpStatus, Double unitsRemaining) {

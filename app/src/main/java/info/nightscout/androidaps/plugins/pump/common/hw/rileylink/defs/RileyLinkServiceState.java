@@ -57,8 +57,8 @@ public enum RileyLinkServiceState {
     }
 
 
-    public static boolean isReady(RileyLinkServiceState serviceState) {
-        return (/* serviceState == RileyLinkReady || */serviceState == PumpConnectorReady);
+    public boolean isReady() {
+        return (this == PumpConnectorReady);
     }
 
 

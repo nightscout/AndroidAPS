@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
@@ -270,6 +271,17 @@ public abstract class PodStateManager {
         setAndStore(() -> podState.setSetupProgress(setupProgress));
     }
 
+    public final PodProgressStatus getPodProgressStatus() {
+        return getSafe(() -> podState.getPodProgressStatus());
+    }
+
+    public final void setPodProgressStatus(PodProgressStatus podProgressStatus) {
+        if (podProgressStatus == null) {
+            throw new IllegalArgumentException("Pod progress status can not be null");
+        }
+        setAndStore(() -> podState.setPodProgressStatus(podProgressStatus));
+    }
+
     public final boolean isSuspended() {
         return getSafe(() -> podState.isSuspended());
     }
@@ -280,9 +292,7 @@ public abstract class PodStateManager {
 
     public final Duration getScheduleOffset() {
         DateTime now = getTime();
-        DateTime startOfDay = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(),
-                0, 0, 0, getSafe(() -> podState.getTimeZone()));
-        return new Duration(startOfDay, now);
+        return new Duration(now.withTimeAtStartOfDay(), now);
     }
 
     public final BasalSchedule getBasalSchedule() {
@@ -355,6 +365,7 @@ public abstract class PodStateManager {
             podState.setActiveAlerts(statusResponse.getAlerts());
             podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
+            podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
         });
     }
 
@@ -451,6 +462,7 @@ public abstract class PodStateManager {
         private boolean suspended;
         private NonceState nonceState;
         private SetupProgress setupProgress;
+        private PodProgressStatus podProgressStatus;
         private DeliveryStatus lastDeliveryStatus;
         private AlertSet activeAlerts;
         private BasalSchedule basalSchedule;
@@ -595,6 +607,14 @@ public abstract class PodStateManager {
 
         void setSetupProgress(SetupProgress setupProgress) {
             this.setupProgress = setupProgress;
+        }
+
+        public PodProgressStatus getPodProgressStatus() {
+            return podProgressStatus;
+        }
+
+        void setPodProgressStatus(PodProgressStatus podProgressStatus) {
+            this.podProgressStatus = podProgressStatus;
         }
 
         DeliveryStatus getLastDeliveryStatus() {

@@ -173,7 +173,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                 if (omnipodPumpStatus != null) {
                     PodStateManager podStateManager = ((OmnipodPumpPlugin) pumpPlugin).getPodStateManager();
                     if (podStateManager.isPaired()) {
-                        this.serialNumber.setText(podStateManager.getLot());
+                        this.serialNumber.setText(String.valueOf(podStateManager.getLot()));
                         this.connectedDevice.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
                     } else {
                         this.serialNumber.setText("??");

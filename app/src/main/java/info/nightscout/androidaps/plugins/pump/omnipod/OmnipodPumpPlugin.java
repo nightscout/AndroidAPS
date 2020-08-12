@@ -903,8 +903,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @NotNull
     @Override
     public String serialNumber() {
-        return StringUtils.isNotBlank(omnipodPumpStatus.podNumber) ?
-                omnipodPumpStatus.podNumber : "None";
+        return podStateManager.hasState() ? String.valueOf(podStateManager.getAddress()) : "None";
     }
 
     @NotNull
