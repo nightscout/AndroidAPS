@@ -15,27 +15,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.In
  * Created by andy on 29/11/2019
  */
 public class RemoveActionFragment extends InitActionFragment implements PodInitReceiver {
-    private static final String ARG_KEY = "key";
-
     public static RemoveActionFragment create(String key, PodInitActionType podInitActionType) {
         Bundle args = new Bundle();
-        args.putString(ARG_KEY, key);
+        args.putString(InitActionFragment.ARG_KEY, key);
+        args.putSerializable(InitActionFragment.ARG_POD_INIT_ACTION_TYPE, podInitActionType);
 
         RemoveActionFragment fragment = new RemoveActionFragment();
         fragment.setArguments(args);
-        fragment.setPodInitActionType(podInitActionType);
         return fragment;
     }
 
-    public RemoveActionFragment() {
-        this.instance = this;
-    }
-
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
     public void actionOnReceiveResponse(String result) {
         System.out.println("ACTION: actionOnReceiveResponse: " + result);
 
@@ -67,6 +57,4 @@ public class RemoveActionFragment extends InitActionFragment implements PodInitR
             setCheckBox(podInitActionType, isSuccess);
         }
     }
-
-
 }

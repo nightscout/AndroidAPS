@@ -15,7 +15,6 @@ public abstract class InitPodWizardModel extends AbstractWizardModel {
 
     @Override
     public Fragment getReviewFragment() {
-        PodInfoFragment.isInitPod = true;
-        return new PodInfoFragment();
+        return PodInfoFragment.create("initPodInfoFragment", true);
     }
 }

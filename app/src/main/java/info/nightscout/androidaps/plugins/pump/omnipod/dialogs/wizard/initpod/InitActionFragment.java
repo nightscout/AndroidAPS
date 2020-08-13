@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.atech.android.library.wizardpager.util.WizardPagesUtil;
 import com.tech.freak.wizardpager.model.Page;
@@ -30,7 +32,6 @@ import dagger.android.HasAndroidInjector;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 
@@ -38,7 +39,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
  * Created by andy on 12/11/2019
  */
 public class InitActionFragment extends DaggerFragment implements PodInitReceiver {
-    private static final String ARG_KEY = "key";
+    protected static final String ARG_KEY = "key";
+    protected static final String ARG_POD_INIT_ACTION_TYPE = "podInitActionType";
+
+    private static boolean isFirstView;
 
     protected PageFragmentCallbacks mCallbacks;
     protected String mKey;
@@ -51,39 +55,42 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
     protected PodInitActionType podInitActionType;
     protected List<PodInitActionType> children;
     protected Map<PodInitActionType, CheckBox> mapCheckBoxes;
-    protected InitActionFragment instance;
 
     protected PumpEnactResult callResult;
 
     @Inject HasAndroidInjector injector;
 
-
     public static InitActionFragment create(String key, PodInitActionType podInitActionType) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
+        args.putSerializable(ARG_POD_INIT_ACTION_TYPE, podInitActionType);
 
         InitActionFragment fragment = new InitActionFragment();
         fragment.setArguments(args);
-        fragment.setPodInitActionType(podInitActionType);
         return fragment;
     }
 
-    public InitActionFragment() {
-        this.instance = this;
-    }
-
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            isFirstView = true;
+        }
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Bundle args = getArguments();
         mKey = args.getString(ARG_KEY);
+        podInitActionType = (PodInitActionType) args.getSerializable(ARG_POD_INIT_ACTION_TYPE);
         mPage = (InitActionPage) mCallbacks.onGetPage(mKey);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         View rootView = inflater.inflate(R.layout.omnipod_initpod_init_action, container, false);
         WizardPagesUtil.setTitle(mPage, rootView);
 
@@ -98,7 +105,6 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
         mapCheckBoxes = new HashMap<>();
 
         for (PodInitActionType child : children) {
-
             CheckBox checkBox1 = new CheckBox(getContext());
             checkBox1.setText(child.getResourceId());
             checkBox1.setClickable(false);
@@ -129,15 +135,17 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
                 }
             });
 
-            new InitPodTask(injector, instance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new InitPodTask(injector, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         });
 
         return rootView;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        FragmentActivity activity = getActivity();
 
         if (!(activity instanceof PageFragmentCallbacks)) {
             throw new ClassCastException("Activity must implement PageFragmentCallbacks");
@@ -152,46 +160,16 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
         mCallbacks = null;
     }
 
-
-    public PodInitActionType getPodInitActionType() {
-        return podInitActionType;
-    }
-
-
-    public void setPodInitActionType(PodInitActionType podInitActionType) {
-        this.podInitActionType = podInitActionType;
-    }
-
-
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        //System.out.println("ACTION: setUserVisibleHint="+ isVisibleToUser);
-        if (isVisibleToUser) {
-            //System.out.println("ACTION: Visible");
+    public void onResume() {
+        super.onResume();
+        if (isFirstView) {
+            isFirstView = false;
             new InitPodTask(injector, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        } else {
-            System.out.println("ACTION: Not visible");
         }
     }
 
     public void actionOnReceiveResponse(String result) {
-//        System.out.println("ACTION: actionOnReceiveResponse: " + result);
-//
-//        boolean isOk = callResult.success;
-//
-//        progressBar.setVisibility(View.GONE);
-//
-//        if (!isOk) {
-//            errorView.setVisibility(View.VISIBLE);
-//            errorView.setText(callResult.comment);
-//        }
-//
-//        mPage.setActionCompleted(isOk);
-//
-//        mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
-//        mPage.notifyDataChanged();
     }
 
     @Override
@@ -209,37 +187,37 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
         }
     }
 
-
     private void processOnFinishedActions(boolean isOk, String errorMessage) {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(() -> {
+                progressBar.setVisibility(View.GONE);
 
-        getActivity().runOnUiThread(() -> {
+                if (!isOk) {
+                    errorView.setVisibility(View.VISIBLE);
+                    errorView.setText(errorMessage);
 
-            progressBar.setVisibility(View.GONE);
+                    retryButton.setVisibility(View.VISIBLE);
+                }
 
-            if (!isOk) {
-                errorView.setVisibility(View.VISIBLE);
-                errorView.setText(errorMessage);
+                mPage.setActionCompleted(isOk);
 
-                retryButton.setVisibility(View.VISIBLE);
-            }
+                mPage.getData().putString(Page.SIMPLE_DATA_KEY, UUID.randomUUID().toString());
+                mPage.notifyDataChanged();
 
-            mPage.setActionCompleted(isOk);
-
-            mPage.getData().putString(Page.SIMPLE_DATA_KEY, UUID.randomUUID().toString());
-            mPage.notifyDataChanged();
-
-        });
-
+            });
+        }
     }
-
 
     public void setCheckBox(PodInitActionType podInitActionType, boolean isSuccess) {
-        getActivity().runOnUiThread(() -> {
-            mapCheckBoxes.get(podInitActionType).setChecked(isSuccess);
-            mapCheckBoxes.get(podInitActionType).setTextColor(isSuccess ? Color.rgb(34, 135, 91) :
-                    Color.rgb(168, 36, 15));
-        });
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(() -> {
+                mapCheckBoxes.get(podInitActionType).setChecked(isSuccess);
+                mapCheckBoxes.get(podInitActionType).setTextColor(isSuccess ? Color.rgb(34, 135, 91) :
+                        Color.rgb(168, 36, 15));
+            });
+        }
     }
-
 
 }

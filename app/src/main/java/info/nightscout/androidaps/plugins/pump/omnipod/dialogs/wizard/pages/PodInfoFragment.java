@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.tech.freak.wizardpager.model.ReviewItem;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
@@ -28,32 +31,35 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
  */
 public class PodInfoFragment extends DaggerFragment {
     private static final String ARG_KEY = "key";
+    private static final String ARG_INIT_POD = "initPod";
 
     @Inject OmnipodUtil omnipodUtil;
     @Inject PodStateManager podStateManager;
 
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
-    private PodInfoPage mPage;
-    public static boolean isInitPod = false;
+    public boolean isInitPod;
     private ArrayList<ReviewItem> mCurrentReviewItems;
 
     public static PodInfoFragment create(String key, boolean initPod) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
-        isInitPod = initPod;
+        args.putBoolean(ARG_INIT_POD, initPod);
 
         PodInfoFragment fragment = new PodInfoFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public PodInfoFragment() {
-    }
-
-    @Override
+    @SuppressLint("SourceLockedOrientationActivity") @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        Bundle args = getArguments();
+        mKey = args.getString(ARG_KEY);
+        isInitPod = args.getBoolean(ARG_INIT_POD);
     }
 
     @Override
@@ -61,7 +67,7 @@ public class PodInfoFragment extends DaggerFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.omnipod_initpod_pod_info, container, false);
 
-        TextView titleView = (TextView) rootView.findViewById(R.id.podInfoTitle);
+        TextView titleView = rootView.findViewById(R.id.podInfoTitle);
         titleView.setText(R.string.omnipod_init_pod_wizard_pod_info_title);
         titleView.setTextColor(getResources().getColor(com.tech.freak.wizardpager.R.color.review_green));
 
@@ -69,7 +75,6 @@ public class PodInfoFragment extends DaggerFragment {
         headerText.setText(isInitPod ? //
                 R.string.omnipod_init_pod_wizard_pod_info_init_pod_description : //
                 R.string.omnipod_init_pod_wizard_pod_info_remove_pod_description);
-
 
         if (isInitPod) {
             if (createDataOfPod()) {
@@ -79,7 +84,6 @@ public class PodInfoFragment extends DaggerFragment {
                 listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
             }
         }
-
 
         return rootView;
     }
@@ -108,8 +112,10 @@ public class PodInfoFragment extends DaggerFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        FragmentActivity activity = getActivity();
 
         if (!(activity instanceof PageFragmentCallbacks)) {
             throw new ClassCastException("Activity must implement PageFragmentCallbacks");
@@ -123,12 +129,6 @@ public class PodInfoFragment extends DaggerFragment {
         super.onDetach();
         mCallbacks = null;
     }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
 
     private class PodInfoAdapter extends ArrayAdapter<ReviewItem> {
 

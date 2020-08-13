@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dialogs
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.atech.android.library.wizardpager.WizardPagerActivity
 import com.atech.android.library.wizardpager.WizardPagerContext
 import com.atech.android.library.wizardpager.data.WizardPagerSettings
@@ -97,6 +98,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         pagerSettings.setBackStringResourceId(R.string.cancel)
         pagerSettings.cancelAction = refreshAction
         pagerSettings.finishAction = refreshAction
+        pagerSettings.pagerAdapterBehavior = FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 
         val wizardPagerContext = WizardPagerContext.getInstance()
 
@@ -124,6 +126,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         pagerSettings.setBackStringResourceId(R.string.cancel)
         pagerSettings.cancelAction = refreshAction
         pagerSettings.finishAction = refreshAction
+        pagerSettings.pagerAdapterBehavior = FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 
         val wizardPagerContext = WizardPagerContext.getInstance();
 

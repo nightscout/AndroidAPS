@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod;
 
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.view.View;
 
 import javax.inject.Inject;
@@ -24,7 +23,9 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
         this.initActionFragment = initActionFragment;
     }
 
+    @Override
     protected void onPreExecute() {
+        super.onPreExecute();
         initActionFragment.progressBar.setVisibility(View.VISIBLE);
         initActionFragment.errorView.setVisibility(View.GONE);
         initActionFragment.retryButton.setVisibility(View.GONE);
@@ -32,21 +33,20 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-
         if (initActionFragment.podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
             initActionFragment.callResult = AapsOmnipodManager.getInstance().initPod(
                     initActionFragment.podInitActionType,
-                    initActionFragment.instance,
+                    initActionFragment,
                     null
             );
         } else if (initActionFragment.podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
             initActionFragment.callResult = AapsOmnipodManager.getInstance().initPod(
                     initActionFragment.podInitActionType,
-                    initActionFragment.instance,
+                    initActionFragment,
                     profileFunction.getProfile()
             );
         } else if (initActionFragment.podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
-            initActionFragment.callResult = AapsOmnipodManager.getInstance().deactivatePod(initActionFragment.instance);
+            initActionFragment.callResult = AapsOmnipodManager.getInstance().deactivatePod(initActionFragment);
         }
 
         return "OK";
@@ -58,6 +58,5 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
 
         initActionFragment.actionOnReceiveResponse(result);
     }
-
 
 }

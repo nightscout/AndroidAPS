@@ -40,9 +40,7 @@ public class RemovePodWizardModel extends AbstractWizardModel {
 
     @Override
     protected PageList onNewRootPageList() {
-
         return new PageList(
-
                 new DisplayTextPage(this,
                         R.string.omnipod_remove_pod_wizard_step1_title,
                         R.string.omnipod_remove_pod_wizard_step1_desc,
@@ -56,11 +54,8 @@ public class RemovePodWizardModel extends AbstractWizardModel {
         );
     }
 
-
     public Fragment getReviewFragment() {
-        PodInfoFragment.isInitPod = false;
-        return new PodInfoFragment();
+        return PodInfoFragment.create("removePodInfoFragment", false);
     }
-
 
 }
