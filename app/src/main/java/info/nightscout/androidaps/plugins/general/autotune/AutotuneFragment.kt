@@ -80,7 +80,7 @@ class AutotuneFragment : DaggerFragment() {
             val localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(AutotunePlugin.lastRun)
             showConfirmation(requireContext(), resourceHelper.gs(R.string.autotune_copy_localprofile_button), resourceHelper.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(lastRun),
                 Runnable {
-                    localProfilePlugin.addProfile(SingleProfile().copyFrom(localProfilePlugin.createProfileStore(), AutotunePlugin.tunedProfile!!.getProfile(), localName))
+                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(AutotunePlugin.tunedProfile!!.getProfile(), localName))
                     rxBus.send(EventLocalProfileChanged())
                     AutotunePlugin.copyButtonVisibility = View.GONE
                     updateGui()
