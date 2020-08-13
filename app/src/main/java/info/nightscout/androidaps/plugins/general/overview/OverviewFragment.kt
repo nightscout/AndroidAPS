@@ -11,7 +11,6 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.util.TypedValue
 import android.view.ContextMenu
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.LayoutInflater
@@ -314,58 +313,62 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
         if (childFragmentManager.isStateSaved) return
-        activity?.let { activity ->
-            when (v.id) {
-                R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
-                R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(childFragmentManager, "Overview") }))
+        try {
+            activity?.let { activity ->
+                when (v.id) {
+                    R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
+                    R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
+                    R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
+                    R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
+                    R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(childFragmentManager, "Overview") }))
 
-                R.id.overview_cgmbutton         -> {
-                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
-                        openCgmApp("com.eveningoutpost.dexdrip")
-                    else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        dexcomPlugin.findDexcomPackageName()?.let {
-                            openCgmApp(it)
-                        }
-                            ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
-                    }
-                }
-
-                R.id.overview_calibrationbutton -> {
-                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
-                    } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        try {
+                    R.id.overview_cgmbutton         -> {
+                        if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
+                            openCgmApp("com.eveningoutpost.dexdrip")
+                        else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
                             dexcomPlugin.findDexcomPackageName()?.let {
-                                startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
+                                openCgmApp(it)
                             }
                                 ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
-                        } catch (e: ActivityNotFoundException) {
-                            ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.g5appnotdetected))
                         }
                     }
-                }
 
-                R.id.overview_accepttempbutton  -> {
-                    profileFunction.getProfile() ?: return
-                    if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                        val lastRun = loopPlugin.lastRun
-                        loopPlugin.invoke("Accept temp button", false)
-                        if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                ?: "".toSpanned(), Runnable {
-                                aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
-                                overview_accepttempbutton?.visibility = View.GONE
-                                (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                actionStringHandler.handleInitiate("cancelChangeRequest")
-                                loopPlugin.acceptChangeRequest()
-                            })
+                    R.id.overview_calibrationbutton -> {
+                        if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
+                            CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
+                        } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
+                            try {
+                                dexcomPlugin.findDexcomPackageName()?.let {
+                                    startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
+                                }
+                                    ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
+                            } catch (e: ActivityNotFoundException) {
+                                ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.g5appnotdetected))
+                            }
+                        }
+                    }
+
+                    R.id.overview_accepttempbutton  -> {
+                        profileFunction.getProfile() ?: return
+                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                            val lastRun = loopPlugin.lastRun
+                            loopPlugin.invoke("Accept temp button", false)
+                            if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
+                                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                    ?: "".toSpanned(), Runnable {
+                                    aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
+                                    overview_accepttempbutton?.visibility = View.GONE
+                                    (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+                                    actionStringHandler.handleInitiate("cancelChangeRequest")
+                                    loopPlugin.acceptChangeRequest()
+                                })
+                            }
                         }
                     }
                 }
             }
+        } catch (ignored: IllegalStateException) {
+            // ignore Can not perform this action after onSaveInstanceState
         }
     }
 
@@ -571,7 +574,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
-                overview_delta?.text = "${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_delta?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                 overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                 overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\n${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
@@ -683,7 +686,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
         overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
-        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) ?:100
+        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile)
+            ?: 100
         if (percentRate > 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_high)
         if (percentRate < 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
@@ -750,7 +754,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         if (config.APS && lastRun?.constraintsProcessed != null) {
             if (lastRun.constraintsProcessed!!.carbsReq > 0) {
-                //only display carbsreq when carbs havnt been entered recently
+                //only display carbsreq when carbs have not been entered recently
                 if (treatmentsPlugin.lastCarbTime < lastRun.lastAPSRun) {
                     cobText = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
                 }
@@ -809,13 +813,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val endTime: Long
                 val apsResult = if (config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
                 if (predictionsAvailable && apsResult != null && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
-                    var predHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
-                    predHours = min(2, predHours)
-                    predHours = max(0, predHours)
-                    hoursToFetch = rangeToDisplay - predHours
+                    var predictionHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
+                    predictionHours = min(2, predictionHours)
+                    predictionHours = max(0, predictionHours)
+                    hoursToFetch = rangeToDisplay - predictionHours
                     toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
                     fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
-                    endTime = toTime + T.hours(predHours.toLong()).msecs()
+                    endTime = toTime + T.hours(predictionHours.toLong()).msecs()
                 } else {
                     hoursToFetch = rangeToDisplay
                     toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific

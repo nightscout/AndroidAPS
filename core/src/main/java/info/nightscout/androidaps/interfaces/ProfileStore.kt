@@ -31,8 +31,8 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject) {
     fun getDefaultProfile(): Profile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
 
     fun getDefaultProfileName(): String? {
-        val defaultProfileName = data.getString("defaultProfile")
-        return getStore()?.has(defaultProfileName)?.let { defaultProfileName }
+        val defaultProfileName = data.optString("defaultProfile")
+        return if (defaultProfileName.isNotEmpty()) getStore()?.has(defaultProfileName)?.let { defaultProfileName } else null
     }
 
     fun getProfileList(): ArrayList<CharSequence> {
