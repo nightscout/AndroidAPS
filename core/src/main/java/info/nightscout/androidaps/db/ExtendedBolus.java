@@ -65,6 +65,9 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     @DatabaseField
     public int insulinInterfaceID = InsulinInterface.OREF_RAPID_ACTING;
 
+    @DatabaseField
+    public double dia = Constants.defaultDIA;
+
     @Deprecated
     public ExtendedBolus() {
         injector = StaticInjector.Companion.getInstance();
