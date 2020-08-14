@@ -11,7 +11,6 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.util.TypedValue
 import android.view.ContextMenu
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.LayoutInflater
@@ -314,6 +313,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                     }
                 }
             }
+        } catch (ignored: IllegalStateException) {
+            // ignore Can not perform this action after onSaveInstanceState
         }
     }
 
@@ -494,7 +495,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
         overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
-        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) ?:100
+        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile)
+            ?: 100
         if (percentRate > 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_high)
         if (percentRate < 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
@@ -575,7 +577,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
         if (config.APS && lastRun?.constraintsProcessed != null) {
             if (lastRun.constraintsProcessed!!.carbsReq > 0) {
-                //only display carbsreq when carbs havnt been entered recently
+                //only display carbsreq when carbs have not been entered recently
                 if (treatmentsPlugin.lastCarbTime < lastRun.lastAPSRun) {
                     cobText = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
                 }
@@ -634,13 +636,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 val endTime: Long
                 val apsResult = if (config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
                 if (predictionsAvailable && apsResult != null && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
-                    var predHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
-                    predHours = min(2, predHours)
-                    predHours = max(0, predHours)
-                    hoursToFetch = rangeToDisplay - predHours
+                    var predictionHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
+                    predictionHours = min(2, predictionHours)
+                    predictionHours = max(0, predictionHours)
+                    hoursToFetch = rangeToDisplay - predictionHours
                     toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
                     fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
-                    endTime = toTime + T.hours(predHours.toLong()).msecs()
+                    endTime = toTime + T.hours(predictionHours.toLong()).msecs()
                 } else {
                     hoursToFetch = rangeToDisplay
                     toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
