@@ -19,6 +19,7 @@ import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -42,6 +43,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -77,16 +79,16 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 @SuppressLint("SetTextI18n")
                 if (extendedBolus.isInProgress) holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
                 else holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
-
+                val profile = profileFunction.getProfile(extendedBolus.date)
                 holder.duration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.durationInMinutes)
                 holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulin)
                 holder.realDuration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.realDuration)
-                val iob = extendedBolus.iobCalc(System.currentTimeMillis())
+                val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile)
                 holder.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
                 holder.insulinSoFar.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulinSoFar())
                 holder.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
                 if (extendedBolus.isInProgress) holder.date.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.date.setTextColor(holder.insulin.currentTextColor)
-                if (extendedBolus.iobCalc(System.currentTimeMillis()).iob != 0.0) holder.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.iob.setTextColor(holder.insulin.currentTextColor)
+                if (iob.iob != 0.0) holder.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.iob.setTextColor(holder.insulin.currentTextColor)
             }
             holder.remove.tag = extendedBolus
         }
