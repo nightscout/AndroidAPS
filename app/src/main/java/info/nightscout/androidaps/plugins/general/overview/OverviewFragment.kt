@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.ContextMenu
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.LayoutInflater
@@ -313,8 +314,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                     }
                 }
             }
-        } catch (ignored: IllegalStateException) {
-            // ignore Can not perform this action after onSaveInstanceState
         }
     }
 
@@ -495,8 +494,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
         overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_no_tbr)
-        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile)
-            ?: 100
+        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile) ?:100
         if (percentRate > 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_high)
         if (percentRate < 100) overview_basebasal_icon?.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
