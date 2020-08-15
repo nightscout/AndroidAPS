@@ -1,13 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.InsertCannulaService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 
@@ -32,40 +30,26 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
         this.initialBasalSchedule = initialBasalSchedule;
     }
 
-    public static void updateCannulaInsertionStatus(PodStateManager podStateManager, StatusResponse statusResponse, AAPSLogger aapsLogger) {
-        if (podStateManager.getSetupProgress().equals(SetupProgress.CANNULA_INSERTING) &&
-                statusResponse.getPodProgressStatus().isReadyForDelivery()) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Updating SetupProgress from CANNULA_INSERTING to COMPLETED");
-            podStateManager.setSetupProgress(SetupProgress.COMPLETED);
-        }
-    }
-
     @Override
     public StatusResponse execute(OmnipodCommunicationManager communicationService) {
-        if (!podStateManager.isPaired() || podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
-            throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podStateManager.getSetupProgress());
+        if (!podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
+            throw new IllegalPodProgressException(PodProgressStatus.PRIMING_COMPLETED, podStateManager.isPodInitialized() ? podStateManager.getPodProgressStatus() : null);
         }
 
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.INITIAL_BASAL_SCHEDULE_SET)) {
+        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.BASAL_INITIALIZED)) {
             service.programInitialBasalSchedule(communicationService, podStateManager, initialBasalSchedule);
-            podStateManager.setSetupProgress(SetupProgress.INITIAL_BASAL_SCHEDULE_SET);
         }
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.STARTING_INSERT_CANNULA)) {
-            service.executeExpirationRemindersAlertCommand(communicationService, podStateManager);
-            podStateManager.setSetupProgress(SetupProgress.STARTING_INSERT_CANNULA);
+        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.INSERTING_CANNULA)) {
         }
 
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.CANNULA_INSERTING)) {
-            StatusResponse statusResponse = service.executeInsertionBolusCommand(communicationService, podStateManager);
-            podStateManager.setSetupProgress(SetupProgress.CANNULA_INSERTING);
-            return statusResponse;
-        } else if (podStateManager.getSetupProgress().equals(SetupProgress.CANNULA_INSERTING)) {
+        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.INSERTING_CANNULA)) {
+            service.executeExpirationRemindersAlertCommand(communicationService, podStateManager);
+            return service.executeInsertionBolusCommand(communicationService, podStateManager);
+        } else if (podStateManager.getPodProgressStatus().equals(PodProgressStatus.INSERTING_CANNULA)) {
             // Check status
-            StatusResponse statusResponse = communicationService.executeAction(new GetStatusAction(podStateManager));
-            updateCannulaInsertionStatus(podStateManager, statusResponse, communicationService.aapsLogger);
-            return statusResponse;
+            return communicationService.executeAction(new GetStatusAction(podStateManager));
         } else {
-            throw new IllegalSetupProgressException(null, podStateManager.getSetupProgress());
+            throw new IllegalPodProgressException(null, podStateManager.getPodProgressStatus());
         }
     }
 }

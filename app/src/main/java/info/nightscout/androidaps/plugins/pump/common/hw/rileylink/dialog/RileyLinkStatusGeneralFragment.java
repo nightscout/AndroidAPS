@@ -13,22 +13,17 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
@@ -172,7 +167,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                 // TODO needs improvement
                 if (omnipodPumpStatus != null) {
                     PodStateManager podStateManager = ((OmnipodPumpPlugin) pumpPlugin).getPodStateManager();
-                    if (podStateManager.isPaired()) {
+                    if (podStateManager.isPodInitialized()) {
                         this.serialNumber.setText(String.valueOf(podStateManager.getLot()));
                         this.connectedDevice.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
                     } else {

@@ -16,7 +16,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.FullInitPodWizardModel
@@ -104,7 +104,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        val isFullInit = !podStateManager.isPaired || podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
+        val isFullInit = !podStateManager.isPodInitialized || podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)
         if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
         } else {
@@ -156,16 +156,16 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     fun refreshButtons() {
-        initpod_init_pod.isEnabled = !podStateManager.isPaired() ||
-            podStateManager.setupProgress.isBefore(SetupProgress.COMPLETED)
+        initpod_init_pod.isEnabled = !podStateManager.isPodRunning()
 
-        initpod_remove_pod.isEnabled = podStateManager.hasState() && podStateManager.isPaired
-        initpod_reset_pod.isEnabled = podStateManager.hasState()
+        initpod_remove_pod.isEnabled = podStateManager.isPodInitialized
+        initpod_reset_pod.isEnabled = podStateManager.hasPodState()
 
         if (!rileyLinkServiceData.rileyLinkServiceState.isReady) {
             // if rileylink is not running we disable all operations that require a RL connection
             initpod_init_pod.isEnabled = false
             initpod_remove_pod.isEnabled = false
+            initpod_reset_pod.isEnabled = false
         }
     }
 

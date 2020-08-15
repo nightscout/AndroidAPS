@@ -44,7 +44,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMes
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
@@ -453,7 +452,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public boolean isInitialized() {
-        return delegate.isReadyForDelivery();
+        return delegate.isPodRunning();
     }
 
     private void reportImplicitlyCanceledTbr() {
@@ -496,7 +495,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
 
         podHistory.setSuccess(success);
-        podHistory.setPodSerial(podStateManager.hasState() ? String.valueOf(podStateManager.getAddress()) : "None");
+        podHistory.setPodSerial(podStateManager.hasPodState() ? String.valueOf(podStateManager.getAddress()) : "None");
 
         MainApp.getDbHelper().createOrUpdate(podHistory);
 
@@ -507,8 +506,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         String comment = null;
         switch (res.getResultType()) {
             case FAILURE: {
-                aapsLogger.error(LTag.PUMP, "Setup action failed: illegal setup progress: {}", res.getSetupProgress());
-                comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getSetupProgress());
+                aapsLogger.error(LTag.PUMP, "Setup action failed: illegal setup progress: {}", res.getPodProgressStatus());
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getPodProgressStatus());
             }
             break;
             case VERIFICATION_FAILURE: {
@@ -543,8 +542,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_crc_mismatch);
             } else if (ex instanceof IllegalPacketTypeException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_packet_type);
-            } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalSetupProgressException
-                    || ex instanceof IllegalDeliveryStatusException) {
+            } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalDeliveryStatusException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state);
             } else if (ex instanceof IllegalVersionResponseTypeException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_response);

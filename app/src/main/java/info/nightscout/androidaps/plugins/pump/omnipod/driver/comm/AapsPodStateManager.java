@@ -66,7 +66,7 @@ public class AapsPodStateManager extends PodStateManager {
 
     @Override
     protected void notifyPodStateChanged() {
-        if (!hasState()) {
+        if (!hasPodState()) {
             omnipodPumpStatus.lastBolusTime = null;
             omnipodPumpStatus.lastBolusAmount = null;
             omnipodPumpStatus.reservoirRemainingUnits = 0.0;
@@ -77,7 +77,7 @@ public class AapsPodStateManager extends PodStateManager {
             Double lastBolusAmount = getLastBolusAmount();
 
             // Update other info: last bolus, units remaining, suspended
-            boolean suspended = isSuspended() || !isSetupCompleted() || hasFaultEvent();
+            boolean suspended = isSuspended() || !isPodRunning() || hasFaultEvent();
             if (Objects.equals(lastBolusStartTime, omnipodPumpStatus.lastBolusTime) //
                     || !Objects.equals(lastBolusAmount, omnipodPumpStatus.lastBolusAmount) //
                     || !isReservoirStatusUpToDate(omnipodPumpStatus, getReservoirLevel())

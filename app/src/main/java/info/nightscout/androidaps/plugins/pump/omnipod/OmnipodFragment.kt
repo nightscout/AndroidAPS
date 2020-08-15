@@ -226,8 +226,8 @@ class OmnipodFragment : DaggerFragment() {
             errors.add(rileyLinkErrorInfo)
         }
 
-        if (!podStateManager.hasState() || !podStateManager.isPaired) {
-            if (podStateManager.hasState()) {
+        if (!podStateManager.hasPodState() || !podStateManager.isPodInitialized) {
+            if (podStateManager.hasPodState()) {
                 omnipod_pod_address.text = podStateManager.address.toString()
             } else {
                 omnipod_pod_address.text = "-"
@@ -236,7 +236,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_tid.text = "-"
             omnipod_pod_fw_version.text = "-"
             omnipod_pod_expiry.text = "-"
-            if (podStateManager.hasState()) {
+            if (podStateManager.hasPodState()) {
                 omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_not_initalized)
             } else {
                 omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_no_pod_connected)
@@ -251,18 +251,18 @@ class OmnipodFragment : DaggerFragment() {
             val stateText: String
 
             when {
-                podStateManager.hasFaultEvent()  -> {
+                podStateManager.hasFaultEvent() -> {
                     val faultEventCode = podStateManager.faultEvent.faultEventCode
                     stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault)
                     errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
                 }
 
-                podStateManager.isSetupCompleted -> {
+                podStateManager.isPodRunning    -> {
                     stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_running, if (podStateManager.lastDeliveryStatus == null) null else podStateManager.lastDeliveryStatus.name)
                 }
 
-                else                             -> {
-                    stateText = resourceHelper.gs(R.string.omnipod_pod_setup_in_progress, podStateManager.setupProgress.name)
+                else                            -> {
+                    stateText = resourceHelper.gs(R.string.omnipod_pod_setup_in_progress, podStateManager.podProgressStatus.name)
                 }
             }
 
@@ -285,7 +285,7 @@ class OmnipodFragment : DaggerFragment() {
     fun updateGUI() {
         setDeviceStatus()
 
-        if (podStateManager.isSetupCompleted) {
+        if (podStateManager.isPodRunning) {
             updateLastConnection()
 
             // last bolus
@@ -323,11 +323,11 @@ class OmnipodFragment : DaggerFragment() {
 
         setVisibilityOfPodDebugButton()
 
-        omnipod_refresh.isEnabled = podStateManager.isPaired
+        omnipod_refresh.isEnabled = podStateManager.isPodInitialized
     }
 
     private fun updateLastConnection() {
-        if (podStateManager.isSetupCompleted && podStateManager.lastSuccessfulCommunication != null) { // Null check for backwards compatibility
+        if (podStateManager.isPodRunning && podStateManager.lastSuccessfulCommunication != null) { // Null check for backwards compatibility
             omnipod_lastconnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             if (omnipodPumpPlugin.isUnreachableAlertTimeoutExceeded(localAlertUtils.pumpUnreachableThreshold())) {
                 omnipod_lastconnection.setTextColor(Color.RED)
@@ -336,7 +336,7 @@ class OmnipodFragment : DaggerFragment() {
             }
         } else {
             omnipod_lastconnection.setTextColor(Color.WHITE)
-            if (podStateManager.hasState() && podStateManager.lastSuccessfulCommunication != null) {
+            if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
                 omnipod_lastconnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             } else {
                 omnipod_lastconnection.text = "-"
@@ -369,7 +369,7 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun updateAcknowledgeAlerts() {
-        if (podStateManager.hasState() && podStateManager.hasActiveAlerts()) {
+        if (podStateManager.hasPodState() && podStateManager.hasActiveAlerts()) {
             omnipod_pod_active_alerts_ack.isEnabled = true
             omnipod_pod_active_alerts.text = TextUtils.join(System.lineSeparator(), omnipodUtil.getTranslatedActiveAlerts(podStateManager))
         } else {

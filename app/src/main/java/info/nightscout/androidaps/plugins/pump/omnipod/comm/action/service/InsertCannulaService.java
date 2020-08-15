@@ -49,7 +49,7 @@ public class InsertCannulaService {
                 autoOffAlertConfiguration //
         );
 
-        return new ConfigureAlertsAction(podStateManager, alertConfigurations).execute(communicationService);
+        return communicationService.executeAction(new ConfigureAlertsAction(podStateManager, alertConfigurations));
     }
 
     public StatusResponse executeInsertionBolusCommand(OmnipodCommunicationManager communicationService, PodStateManager podStateManager) {

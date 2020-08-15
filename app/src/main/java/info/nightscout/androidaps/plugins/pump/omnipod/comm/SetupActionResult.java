@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 
 public class SetupActionResult {
     private final ResultType resultType;
     private String message;
     private Exception exception;
-    private SetupProgress setupProgress;
+    private PodProgressStatus podProgressStatus;
 
     public SetupActionResult(ResultType resultType) {
         this.resultType = resultType;
@@ -22,8 +22,8 @@ public class SetupActionResult {
         return this;
     }
 
-    public SetupActionResult setupProgress(SetupProgress setupProgress) {
-        this.setupProgress = setupProgress;
+    public SetupActionResult podProgressStatus(PodProgressStatus podProgressStatus) {
+        this.podProgressStatus = podProgressStatus;
         return this;
     }
 
@@ -39,8 +39,8 @@ public class SetupActionResult {
         return exception;
     }
 
-    public SetupProgress getSetupProgress() {
-        return setupProgress;
+    public PodProgressStatus getPodProgressStatus() {
+        return podProgressStatus;
     }
 
     public enum ResultType {

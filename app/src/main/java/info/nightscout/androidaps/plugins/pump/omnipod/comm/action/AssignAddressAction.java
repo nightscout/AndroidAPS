@@ -7,12 +7,12 @@ import java.util.Random;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.AssignAddressCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
@@ -28,11 +28,11 @@ public class AssignAddressAction implements OmnipodAction<VersionResponse> {
 
     @Override
     public VersionResponse execute(OmnipodCommunicationManager communicationService) {
-        if (!podStateManager.hasState()) {
+        if (!podStateManager.hasPodState()) {
             podStateManager.initState(generateRandomAddress());
         }
-        if (podStateManager.isPaired() && podStateManager.getSetupProgress().isAfter(SetupProgress.ADDRESS_ASSIGNED)) {
-            throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podStateManager.getSetupProgress());
+        if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAfter(PodProgressStatus.REMINDER_INITIALIZED)) {
+            throw new IllegalPodProgressException(PodProgressStatus.REMINDER_INITIALIZED, podStateManager.getPodProgressStatus());
         }
 
         AssignAddressCommand assignAddress = new AssignAddressCommand(podStateManager.getAddress());
@@ -49,8 +49,8 @@ public class AssignAddressAction implements OmnipodAction<VersionResponse> {
             throw new IllegalMessageAddressException(podStateManager.getAddress(), assignAddressResponse.getAddress());
         }
 
-        podStateManager.setPairingParameters(assignAddressResponse.getLot(), assignAddressResponse.getTid(), //
-                assignAddressResponse.getPiVersion(), assignAddressResponse.getPmVersion(), DateTimeZone.getDefault());
+        podStateManager.setInitializationParameters(assignAddressResponse.getLot(), assignAddressResponse.getTid(), //
+                assignAddressResponse.getPiVersion(), assignAddressResponse.getPmVersion(), DateTimeZone.getDefault(), assignAddressResponse.getPodProgressStatus());
 
         return assignAddressResponse;
     }

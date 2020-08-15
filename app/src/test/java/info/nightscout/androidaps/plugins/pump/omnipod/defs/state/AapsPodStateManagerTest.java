@@ -13,6 +13,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -39,8 +40,8 @@ public class AapsPodStateManagerTest {
 
         AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
         podStateManager.initState(0x0);
-        podStateManager.setPairingParameters(0, 0, new FirmwareVersion(1, 1, 1),
-                new FirmwareVersion(2, 2, 2), timeZone);
+        podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
+                new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
 
         assertEquals(now, podStateManager.getTime());
         assertEquals(Duration.standardHours(1).plus(Duration.standardMinutes(2).plus(Duration.standardSeconds(3))), podStateManager.getScheduleOffset());
@@ -57,8 +58,8 @@ public class AapsPodStateManagerTest {
 
         AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
         podStateManager.initState(0x0);
-        podStateManager.setPairingParameters(0, 0, new FirmwareVersion(1, 1, 1),
-                new FirmwareVersion(2, 2, 2), timeZone);
+        podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
+                new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
 
         DateTimeZone newTimeZone = DateTimeZone.forOffsetHours(2);
         DateTimeZone.setDefault(newTimeZone);
@@ -80,8 +81,8 @@ public class AapsPodStateManagerTest {
 
         AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
         podStateManager.initState(0x0);
-        podStateManager.setPairingParameters(0, 0, new FirmwareVersion(1, 1, 1),
-                new FirmwareVersion(2, 2, 2), timeZone);
+        podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
+                new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
 
         DateTimeZone newTimeZone = DateTimeZone.forOffsetHours(2);
         DateTimeZone.setDefault(newTimeZone);

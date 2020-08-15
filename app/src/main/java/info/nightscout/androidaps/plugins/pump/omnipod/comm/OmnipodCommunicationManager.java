@@ -137,7 +137,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
         for (int i = 0; 2 > i; i++) {
 
-            if (podStateManager.isPaired() && message.isNonceResyncable()) {
+            if (podStateManager.isPodInitialized() && message.isNonceResyncable()) {
                 podStateManager.advanceToNextNonce();
             }
 

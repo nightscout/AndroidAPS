@@ -1866,7 +1866,7 @@
     <string name="omnipod_pod_address">Pod Address</string>
     <string name="omnipod_pod_expiry">Pod Expires</string>
     <string name="omnipod_pod_status_no_pod_connected">No Pod connected</string>
-    <string name="omnipod_pod_setup_in_progress">Pod setup in progress (setup progress: %1$s)</string>
+    <string name="omnipod_pod_setup_in_progress">Pod setup in progress (Pod progress status: %1$s)</string>
     <string name="omnipod_pod_status_not_initalized">Pod not initialized</string>
     <string name="omnipod_pod_status_pod_fault">Pod Fault</string>
     <string name="omnipod_pod_status_pod_fault_description">Pod Fault: %1$s %2$s</string>

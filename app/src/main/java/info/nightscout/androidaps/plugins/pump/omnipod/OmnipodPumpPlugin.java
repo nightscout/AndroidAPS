@@ -10,7 +10,6 @@ import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -407,7 +406,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (isServiceSet()) {
 
-            if (isBusy || !podStateManager.isSetupCompleted() || podStateManager.hasFaultEvent())
+            if (isBusy || !podStateManager.isPodRunning() || podStateManager.hasFaultEvent())
                 return true;
 
             if (busyTimestamps.size() > 0) {
@@ -497,7 +496,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public boolean isSuspended() {
         return omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod ||
-                !podStateManager.isSetupCompleted() || podStateManager.isSuspended();
+                !podStateManager.isPodRunning() || podStateManager.isSuspended();
     }
 
     @Override
@@ -622,7 +621,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        if (podStateManager.isPaired()) {
+        if (podStateManager.isPodInitialized()) {
             aapsLogger.debug(LTag.PUMP, "PodStateManager (saved): " + podStateManager);
 
             if (!isRefresh) {
@@ -903,7 +902,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @NotNull
     @Override
     public String serialNumber() {
-        return podStateManager.hasState() ? String.valueOf(podStateManager.getAddress()) : "None";
+        return podStateManager.hasPodState() ? String.valueOf(podStateManager.getAddress()) : "None";
     }
 
     @NotNull
@@ -998,7 +997,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
         long rileyLinkInitializationTimeout = 3 * 60 * 1000L; // 3 minutes
-        if (podStateManager.isSetupCompleted() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
+        if (podStateManager.isPodRunning() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
             if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
                 if ((podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
                         rileyLinkServiceData.rileyLinkServiceState.isError() ||

@@ -37,7 +37,32 @@ public enum PodProgressStatus {
         return value;
     }
 
-    public boolean isReadyForDelivery() {
+    public boolean isAddressAssigned() {
+        return this.isAtLeast(REMINDER_INITIALIZED);
+    }
+
+    public boolean isRunning() {
         return this == ABOVE_FIFTY_UNITS || this == FIFTY_OR_LESS_UNITS;
+    }
+
+    // TODO there must be a better name for this... but I can't think of it
+    public boolean isDead() {
+        return this.isAtLeast(FAULT_EVENT_OCCURRED);
+    }
+
+    public boolean isAtMost(PodProgressStatus other) {
+        return value <= other.value;
+    }
+
+    public boolean isBefore(PodProgressStatus other) {
+        return value < other.value;
+    }
+
+    public boolean isAtLeast(PodProgressStatus other) {
+        return this.ordinal() >= other.ordinal();
+    }
+
+    public boolean isAfter(PodProgressStatus other) {
+        return this.ordinal() > other.ordinal();
     }
 }
