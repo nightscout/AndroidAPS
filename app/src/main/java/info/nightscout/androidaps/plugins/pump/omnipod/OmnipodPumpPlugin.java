@@ -111,6 +111,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     // TODO make non-static just inject the Singleton and use a getter)
     public static boolean isBusy = false;
+    // TODO it seems that we never add anything to this list?
+    //  I Wouldn't know why we need it anyway
     protected List<Long> busyTimestamps = new ArrayList<>();
     protected boolean sentIdToFirebase = false;
     protected boolean hasTimeDateOrTimeZoneChanged = false;
@@ -406,7 +408,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (isServiceSet()) {
 
-            if (isBusy || !podStateManager.isPodRunning() || podStateManager.hasFaultEvent())
+            if (isBusy || !podStateManager.isPodRunning())
                 return true;
 
             if (busyTimestamps.size() > 0) {

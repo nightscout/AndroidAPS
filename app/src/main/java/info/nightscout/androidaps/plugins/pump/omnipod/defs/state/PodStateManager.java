@@ -368,11 +368,7 @@ public abstract class PodStateManager {
                 podState.setExpiresAt(expiresAtCalculated);
             }
 
-            boolean newSuspendedState = statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED;
-            if (podState.isSuspended() != newSuspendedState) {
-                aapsLogger.info(LTag.PUMPCOMM, "Updating pod suspended state in updateFromStatusResponse. newSuspendedState={}, statusResponse={}", newSuspendedState, statusResponse.toString());
-                podState.setSuspended(newSuspendedState);
-            }
+            podState.setSuspended(statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
             podState.setActiveAlerts(statusResponse.getAlerts());
             podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
