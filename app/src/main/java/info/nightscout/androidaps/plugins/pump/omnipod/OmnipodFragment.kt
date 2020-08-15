@@ -37,8 +37,10 @@ import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -66,6 +68,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var omnipodUtil: OmnipodUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var localAlertUtils: LocalAlertUtils
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -92,7 +95,12 @@ class OmnipodFragment : DaggerFragment() {
 
         omnipod_pod_mgmt.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, PodManagementActivity::class.java))
+                activity?.let { activity ->
+                    protectionCheck.queryProtection(
+                        activity,ProtectionCheck.Protection.PREFERENCES,
+                        UIRunnable(Runnable{startActivity(Intent(context, PodManagementActivity::class.java))})
+                    )
+                }
             } else {
                 displayNotConfiguredDialog()
             }
