@@ -64,6 +64,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     @DatabaseField
     public int insulinInterfaceID = InsulinInterface.OREF_RAPID_ACTING;
+
     @DatabaseField
     public double dia = Constants.defaultDIA;
 
@@ -229,13 +230,14 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         return absoluteRate() * getRealDuration() / 60d;
     }
 
-    public IobTotal iobCalc(long time) {
+    public IobTotal iobCalc(long time, Profile profile) {
         IobTotal result = new IobTotal(time);
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
 
         if (realDuration > 0) {
+            double dia = profile.getDia();
             double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double spacing = realDuration / aboutFiveMinIntervals;
@@ -280,6 +282,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
         if (realDuration > 0) {
             double netBasalRate;
+            double dia = profile.getDia();
             double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double spacing = realDuration / aboutFiveMinIntervals;

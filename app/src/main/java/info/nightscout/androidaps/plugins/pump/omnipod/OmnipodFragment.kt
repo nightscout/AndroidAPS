@@ -217,10 +217,10 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_rl_status.text =
             when {
                 omnipodPumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
-                omnipodPumpStatus.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
-                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
-                else                                                                        -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState.isConnecting                             -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null        -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null        -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                else                                                                             -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
         omnipod_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 

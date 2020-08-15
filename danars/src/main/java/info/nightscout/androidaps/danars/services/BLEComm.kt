@@ -21,6 +21,7 @@ import info.nightscout.androidaps.danars.activities.EnterPinActivity
 import info.nightscout.androidaps.danars.activities.PairingHelperActivity
 import info.nightscout.androidaps.danars.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.danars.comm.DanaRS_Packet
+import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.utils.T
@@ -131,6 +132,7 @@ class BLEComm @Inject internal constructor(
         if (!encryptedDataRead && encryptedCommandSent && v3Encryption) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
+            aapsLogger.error("Clearing pairing keys !!!")
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
@@ -705,6 +707,9 @@ class BLEComm @Inject internal constructor(
             aapsLogger.warn(LTag.PUMPBTCOMM, "Reply not received " + message.friendlyName)
             message.handleMessageNotReceived()
         }
+        // verify encryption for v3
+        if (message is DanaRS_Packet_Etc_Keep_Connection)
+            if (!message.isReceived) disconnect("KeepAlive not received")
     }
 
     // process common packet response

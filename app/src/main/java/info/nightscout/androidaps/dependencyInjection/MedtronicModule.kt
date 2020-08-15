@@ -2,10 +2,6 @@ package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
-import info.nightscout.androidaps.plugins.general.automation.actions.*
-import info.nightscout.androidaps.plugins.general.automation.elements.*
-import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
@@ -16,8 +12,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
-import info.nightscout.androidaps.queue.CommandQueue
-import info.nightscout.androidaps.queue.commands.*
 
 @Module
 @Suppress("unused")

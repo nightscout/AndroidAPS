@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -86,7 +87,7 @@ class BGSourceFragment : DaggerFragment() {
             holder.invalid.visibility = if (!bgReading.isValid) View.VISIBLE else View.GONE
             holder.date.text = dateUtil.dateAndTimeString(bgReading.date)
             holder.value.text = bgReading.valueToUnitsToString(profileFunction.getUnits())
-            holder.direction.text = bgReading.directionToSymbol(databaseHelper)
+            holder.direction.setImageResource(bgReading.directionToIcon(databaseHelper))
             holder.remove.tag = bgReading
         }
 
@@ -97,7 +98,7 @@ class BGSourceFragment : DaggerFragment() {
         inner class BgReadingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var date: TextView = itemView.findViewById(R.id.bgsource_date)
             var value: TextView = itemView.findViewById(R.id.bgsource_value)
-            var direction: TextView = itemView.findViewById(R.id.bgsource_direction)
+            var direction: ImageView = itemView.findViewById(R.id.bgsource_direction)
             var invalid: TextView = itemView.findViewById(R.id.invalid_sign)
             var ns: TextView = itemView.findViewById(R.id.ns_sign)
             var remove: TextView = itemView.findViewById(R.id.bgsource_remove)
