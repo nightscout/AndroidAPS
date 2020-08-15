@@ -219,7 +219,7 @@ class AutotuneIob(
         if (!pumpInterface.isFakingTempsByExtendedBoluses) for (pos in 0 until extendedBoluses.size()) {
             val e = extendedBoluses[pos]
             if (e.date > time) continue
-            val calc = e.iobCalc(time)
+            val calc = e.iobCalc(time,profile)
             total.plus(calc)
         }
         return total
@@ -255,9 +255,9 @@ class AutotuneIob(
                     val dummyExt = ExtendedBolus(injector)
                     dummyExt.copyFrom(e)
                     dummyExt.cutEndTo(truncateTime)
-                    dummyExt.iobCalc(time)
+                    dummyExt.iobCalc(time,profile)
                 } else {
-                    e.iobCalc(time)
+                    e.iobCalc(time,profile)
                 }
                 totalExt.plus(calc)
             }

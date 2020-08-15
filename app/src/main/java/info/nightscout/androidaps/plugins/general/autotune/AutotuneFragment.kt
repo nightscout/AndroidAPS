@@ -126,6 +126,7 @@ class AutotuneFragment : DaggerFragment() {
             tune_warning.text = addWarnings()
             tune_days.setText(sp!!.getString(R.string.key_autotune_default_tune_days, "5"))
             AutotunePlugin.result = ""
+            AutotunePlugin.tunedProfile = null
             AutotunePlugin.profileSwitchButtonVisibility = View.GONE
             AutotunePlugin.copyButtonVisibility = View.GONE
             autotune_compare.visibility = View.GONE
