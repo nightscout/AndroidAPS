@@ -85,7 +85,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         tbrs.add(TemporaryBasal(injector).date(now - T.hours(30).msecs()).duration(10000).percent(90))
         sot.initializeData(T.hours(30).msecs())
         val iob90pct = sot.getAbsoluteIOBTempBasals(now)
-        Assert.assertTrue(iob100pct.iob > iob90pct.iob)
+        Assert.assertTrue(iob100pct.basaliob > iob90pct.basaliob)
     }
 
     @Test
@@ -99,6 +99,6 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         tbrs.add(TemporaryBasal(injector).date(now - T.hours(30).msecs()).duration(10000).percent(110))
         sot.initializeData(T.hours(30).msecs())
         val iob110pct = sot.getAbsoluteIOBTempBasals(now)
-        Assert.assertEquals(1.1, iob110pct.iob / iob100pct.iob, 0.0001)
+        Assert.assertEquals(1.1, iob110pct.basaliob / iob100pct.basaliob, 0.0001)
     }
 }
