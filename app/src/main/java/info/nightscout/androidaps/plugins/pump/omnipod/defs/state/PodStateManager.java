@@ -15,6 +15,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -776,11 +777,5 @@ public abstract class PodStateManager {
                     ", index=" + index +
                     '}';
         }
-    }
-
-    // TODO replace with java.util.function.Supplier<T> when min API level >= 24
-    @FunctionalInterface
-    private interface Supplier<T> {
-        T get();
     }
 }

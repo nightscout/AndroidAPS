@@ -7,6 +7,8 @@ import org.joda.time.Duration;
 import java.util.EnumSet;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -270,7 +272,7 @@ public class OmnipodManager {
     // Returns a SingleSubject that returns when the bolus has finished.
     // When a bolus is cancelled, it will return after cancellation and report the estimated units delivered
     // Only throws OmnipodException[certainFailure=false]
-    public synchronized BolusCommandResult bolus(Double units, boolean acknowledgementBeep, boolean completionBeep, BolusProgressIndicationConsumer progressIndicationConsumer) {
+    public synchronized BolusCommandResult bolus(Double units, boolean acknowledgementBeep, boolean completionBeep, BiConsumer<Double, Integer> progressIndicationConsumer) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("bolus [units=" + units + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
@@ -486,9 +488,9 @@ public class OmnipodManager {
 
     // Only works for commands with nonce resyncable message blocks
     // FIXME method is too big, needs refactoring
-    private StatusResponse executeAndVerify(VerifiableAction runnable) {
+    private StatusResponse executeAndVerify(Supplier<StatusResponse> supplier) {
         try {
-            return runnable.run();
+            return supplier.get();
         } catch (Exception originalException) {
             if (isCertainFailure(originalException)) {
                 throw originalException;
@@ -609,12 +611,6 @@ public class OmnipodManager {
         UNCERTAIN_FAILURE
     }
 
-    // TODO replace with Consumer when our min API level >= 24
-    @FunctionalInterface
-    private interface StatusResponseConsumer {
-        void accept(StatusResponse statusResponse);
-    }
-
     private static class ActiveBolusData {
         private final double units;
         private volatile DateTime startDate;
@@ -653,11 +649,5 @@ public class OmnipodManager {
             int roundingDivisor = (int) (1 / OmnipodConst.POD_PULSE_SIZE);
             return (double) Math.round(estimatedUnits * roundingDivisor) / roundingDivisor;
         }
-    }
-
-    // Could be replaced with Supplier<StatusResponse> when min API level >= 24
-    @FunctionalInterface
-    private interface VerifiableAction {
-        StatusResponse run();
     }
 }
