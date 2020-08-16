@@ -190,15 +190,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         localprofile_reset.setOnClickListener {
             localProfilePlugin.loadSettings()
-            @Suppress("SetTextI18n")
-            localprofile_units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
-            localprofile_dia.setParams(currentProfile.dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
-            localprofile_dia.tag = "LP_DIA"
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.ic_label) + ":", currentProfile.ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.isf_label) + ":", currentProfile.isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
-            basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_basal, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_target, "TARGET", resourceHelper.gs(R.string.target_label) + ":", currentProfile.targetLow, currentProfile.targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
-            updateGUI()
+            build()
         }
 
         localprofile_save.setOnClickListener {

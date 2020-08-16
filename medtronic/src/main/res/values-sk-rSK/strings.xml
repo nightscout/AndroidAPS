@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (Rozšírené zobrazenie)</string>
     <string name="medtronic_bolus_debugging">Bolus/Ošetrenia ladenie</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Chyby</string>
     <string name="medtronic_error_serial_not_set">Sériové číslo nenastavené.</string>
     <string name="medtronic_error_serial_invalid">Sériové číslo neplatné.</string>
     <string name="medtronic_error_pump_type_not_set">Nenastavený typ pumpy.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">História Medtronic pumpy</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Zrušili ste bolus po tom, čo bol nastavený na pumpe. Pretože Medtronic nepodporuje zrušenie bolusu, musíte ho zrušiť ručne. Pozastavte pumpu a znovu spustite (pokiaľ naďalej trváte na zrušení). Aplikácia prevezme zmeny pri ďalšom pripojení (do 5 min).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nie je možné načítať aktuálny dočasný bazál.</string>
@@ -68,8 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Načítanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_tbr">Nastavovanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_bolus">Nastavovanie bolusu</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pumpa nedostupná</string>
+    <string name="medtronic_warning">Upozornenie</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Teraz</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">pred</string>
+    <string name="medtronic_notification_check_time_date">Je vyžadovaná aktualizácia času v pumpe</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">ZAP</string>
+    <string name="common_off">VYP</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
 </resources>
