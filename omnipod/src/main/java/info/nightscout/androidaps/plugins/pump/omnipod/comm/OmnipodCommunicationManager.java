@@ -62,6 +62,11 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
     @Inject
     public OmnipodCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         super(injector, rfspy);
+    }
+
+    @Inject
+    public void onInit() {
+        // this cannot be done in the constructor, as sp is not populated at that time
         omnipodPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
