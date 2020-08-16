@@ -173,6 +173,8 @@ Eversense-appen.</string>
     <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
     <string name="preferences_export_canceled">Exporten avbröts. Inställningarna har INTE exporterats!</string>
     <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>
+    <string name="preferences_import_impossible">Kan inte importera inställningar!</string>
+    <string name="goto_main_try_again">Vänligen gå tillbaka till huvudskärmen och försök igen.</string>
     <string name="preferences_import_list_title">Välj fil att importera</string>
     <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
     <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
@@ -646,6 +648,7 @@ Eversense-appen.</string>
     <string name="enablesmbwithtemptarget">Använd SMB vid temp målvärde</string>
     <string name="enablesmbwithtemptarget_summary">Använd SMB när temp mål är satt, t ex Äta snart eller Träning</string>
     <string name="enablesmbwithhightemptarget">Använd SMB vid högt målvärde</string>
+    <string name="enablesmbwithhightemptarget_summary">Aktivera SMB när det finns högt temp mål aktivt (träning, över 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_carbs_label">Kolhydrater</string>
     <string name="overview_buttons_selection">Knappar</string>
@@ -679,6 +682,7 @@ Eversense-appen.</string>
     <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
+    <string name="bolusrecordedonly">Bolus kommer bara att loggas. Inte levereras av pumpen</string>
     <string name="ns_autobackfill_summary">Hämta saknad BG-data från Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB satt i pump</string>
     <string name="overview_show_activity">Insulinaktivitet (5m)</string>
@@ -795,6 +799,7 @@ Eversense-appen.</string>
     <string name="askforpermission">Be om behörighet</string>
     <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
     <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
+    <string name="needstoragepermission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
     <string name="request">Begäran</string>
     <string name="insulinsourcesetup">Konfigurera insticksprogram för insulin</string>
     <string name="exit">Avsluta</string>
@@ -1090,6 +1095,7 @@ Eversense-appen.</string>
     <string name="clone_label">Kopiera</string>
     <string name="saveorresetchangesfirst">Spara eller återställa aktuella ändringar först</string>
     <string name="deletecurrentprofile">Ta bort aktuell profil?</string>
+    <string name="copytolocalprofile">Skapa ny lokal profil av denna?</string>
     <string name="profilenamecontainsdot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
@@ -1103,6 +1109,7 @@ Eversense-appen.</string>
     <string name="nav_survey">Enkät</string>
     <string name="invalidage">Ogiltig inmatning (ålder)</string>
     <string name="invalidweight">Ogiltig inmatning (vikt)</string>
+    <string name="invalidpct">Ogiltig %-inmatning</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Låg: <b>%2$02d%%</b> Mål: <b>%3$02d%%</b> Hög: <b>%4$02d%%</b>]]></string>
     <string name="average">Medel</string>
     <string name="tir">TIR</string>
@@ -1280,5 +1287,15 @@ Eversense-appen.</string>
     <string name="omnipod_bolus_failed_uncertain">Det går inte att verifiera om bolusen är slutförd. Verifiera att din pod leverarar bolus eller avsluta bolus.</string>
     <string name="omnipod_rl_stats">RL-statistik</string>
     <string name="omnipod_read_pulse_log_short">Pulslogg</string>
+    <string name="comapareprofile">Jämför profiler</string>
     <string name="nav_profilehelper">Profilguide</string>
+    <string name="motoldefaultprofile">Standardprofil</string>
+    <string name="currentprofile">Nuvarande profil</string>
+    <string name="availableprofile">Tillgänglig profil</string>
+    <string name="profiletype">Profiltyp</string>
+    <string name="formatwithtdd">Ålder: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Ålder: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Ålder: %1$.0f Vikt: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% av basal</string>
+    <string name="dpvdefaultprofile">DPV-standardprofil</string>
 </resources>

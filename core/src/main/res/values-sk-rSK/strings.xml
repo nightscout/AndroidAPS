@@ -182,9 +182,29 @@
     <string name="timedetection">Detekcia času</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operácia nie je podporovaná pumpou a/alebo ovladačom.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operácia zatiaľ nepodporovaná pumpou.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nikdy nepripojené</string>
+    <string name="pump_status_waking_up">Prebúdzanie</string>
+    <string name="pump_status_error_comm">Chyba komunikácie</string>
+    <string name="pump_status_timeout_comm">Uplynul časový limit komunikácie</string>
+    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
+    <string name="pump_status_invalid_config">Neplatná konfigurácia</string>
+    <string name="pump_status_active">Aktívna</string>
+    <string name="pump_status_sleeping">Spiaca</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazály</string>
+    <string name="history_group_configuration">Konfigurácie</string>
+    <string name="history_group_notification">Notifikácie</string>
+    <string name="history_group_statistic">Štatistika</string>
+    <string name="history_group_unknown">Neznáme</string>
+    <string name="history_group_all">Všetko</string>
+    <string name="history_group_bolus">Bolusy</string>
+    <string name="history_group_prime">Plnenie</string>
+    <string name="history_group_alarm">Alarmy</string>
+    <string name="history_group_glucose">Glykémia</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
