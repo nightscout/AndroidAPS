@@ -23,7 +23,7 @@
     <string name="pump_basebasalrate">%1$.2fU/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="format_mins_short">%1$dm</string>
+    <string name="format_mins_short">%1$d m</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
     <string name="youareonallowedlimit">Dosaženo limitu</string>

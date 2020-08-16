@@ -8,7 +8,7 @@
     <string name="master_password">Master-Passwort</string>
     <string name="settings_password">Passwort für Einstellungen</string>
     <string name="application_password">Anwendungspasswort</string>
-    <string name="bolus_password">Passwort für Boli</string>
+    <string name="bolus_password">Passwort für Bolus</string>
     <string name="unlock_settings">Einstellungen freischalten</string>
     <string name="biometric">Biometrisch</string>
     <string name="custom_password">Benutzerdefiniertes Passwort</string>

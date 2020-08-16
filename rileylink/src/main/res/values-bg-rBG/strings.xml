@@ -6,9 +6,11 @@
     <string name="rileylink_scanner_selected_device">Избрано</string>
     <string name="rileylink_scanner_title">RileyLink скенер</string>
     <string name="location_yes">Разреши</string>
+    <string name="location_no">Не</string>
     <string name="rileylink_scanner_scanning">Сканиране</string>
     <string name="rileylink_scanner_scanning_finished">Завършено сканиране</string>
     <string name="rileylink_scanner_scanning_error">Грешка при сканиране: %1$d</string>
+    <string name="common_never">Никога</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
@@ -42,10 +44,12 @@
     <string name="rileylink_error_bt_disabled">Bluetooth е изключен</string>
     <string name="rileylink_error_no_bt_adapter">Няма Bluetooth адаптер</string>
     <string name="rileylink_error_tuneup_failed">Настройката се провали</string>
+    <string name="rileylink_error_pump_unreachable">Помпата е недостъпна</string>
     <string name="rileylink_error_pod_unreachable">Pod е недостъпen</string>
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic помпа</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <string name="medtronic_pump_frequency_us_ca">САЩ &amp; Канада (916 Mhz)</string>
     <string name="medtronic_pump_frequency_worldwide">Останалата част от света (868 Mhz)</string>
     <!--    <plurals name="objective_minutes">-->
