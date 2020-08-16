@@ -56,7 +56,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
@@ -73,7 +73,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.Disposable;
 
 // TODO make singleton
-public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
+public class AapsOmnipodManager implements IOmnipodManager {
 
     private final PodStateManager podStateManager;
     private final OmnipodUtil omnipodUtil;

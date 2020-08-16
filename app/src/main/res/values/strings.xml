@@ -1543,8 +1543,6 @@
     <string name="omnipod_deactivate_pod_deactivate_pod">Deactivate Pod</string>
 
 
-    <!-- Omnipod Dash -->
-
     <!-- Omnipod - Base -->
     <string name="omnipod_dash_name" translatable="false">Omnipod Dash</string>
     <string name="omnipod_dash_name_short" translatable="false">DASH</string>

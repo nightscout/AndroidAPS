@@ -50,7 +50,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 /**
  * Created by andy on 6/29/18.
  */
-// TODO make singleton
+// TODO make singleton and rename to OmnipodRileyLinkCommunicationManager
 public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject public AAPSLogger aapsLogger;

@@ -27,7 +27,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
@@ -51,7 +50,6 @@ public class OmnipodUtil {
     private boolean lowLevelDebug = true;
     private OmnipodCommandType currentCommand;
     private Gson gsonInstance = createGson();
-    private OmnipodPodType omnipodPodType;
     private OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     @Inject
@@ -131,24 +129,8 @@ public class OmnipodUtil {
         omnipodPumpStatus.podDeviceState = podDeviceState;
     }
 
-    public void setOmnipodPodType(OmnipodPodType omnipodPodType) {
-        this.omnipodPodType = omnipodPodType;
-    }
-
-    public OmnipodPodType getOmnipodPodType() {
-        return this.omnipodPodType;
-    }
-
     public PodDeviceState getPodDeviceState() {
         return omnipodPumpStatus.podDeviceState;
-    }
-
-    public boolean isOmnipodEros() {
-        return this.activePlugins.getActivePump().model() == PumpType.Insulet_Omnipod;
-    }
-
-    public boolean isOmnipodDash() {
-        return this.activePlugins.getActivePump().model() == PumpType.Insulet_Omnipod_Dash;
     }
 
     public void setPumpType(PumpType pumpType_) {

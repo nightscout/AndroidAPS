@@ -5,7 +5,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 /**
@@ -16,7 +16,7 @@ public class OmnipodUIComm implements DeviceCommandExecutor {
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final OmnipodUtil omnipodUtil;
-    private final OmnipodCommunicationManagerInterface omnipodCommunicationManager;
+    private final IOmnipodManager omnipodCommunicationManager;
     private final OmnipodUIPostprocessor omnipodUIPostprocessor;
 
     public OmnipodUIComm(
@@ -24,7 +24,7 @@ public class OmnipodUIComm implements DeviceCommandExecutor {
             AAPSLogger aapsLogger,
             OmnipodUtil omnipodUtil,
             OmnipodUIPostprocessor omnipodUIPostprocessor,
-            OmnipodCommunicationManagerInterface omnipodCommunicationManager
+            IOmnipodManager omnipodCommunicationManager
     ) {
         this.injector = injector;
         this.aapsLogger = aapsLogger;

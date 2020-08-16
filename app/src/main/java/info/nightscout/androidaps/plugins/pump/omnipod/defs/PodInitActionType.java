@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import info.nightscout.androidaps.R;
 
@@ -18,31 +17,22 @@ public enum PodInitActionType {
 
     DeactivatePodWizardStep(), //
     CancelDelivery(R.string.omnipod_deactivate_pod_cancel_delivery, DeactivatePodWizardStep), //
-    DeactivatePod(R.string.omnipod_deactivate_pod_deactivate_pod, DeactivatePodWizardStep) //
-    ;
-
-
+    DeactivatePod(R.string.omnipod_deactivate_pod_deactivate_pod, DeactivatePodWizardStep);
 
     private int resourceId;
     private PodInitActionType parent;
-
-    private static Map<PodInitActionType, List<PodInitActionType>> stepsForWizardStep;
-
 
     PodInitActionType(int resourceId, PodInitActionType parent) {
         this.resourceId = resourceId;
         this.parent = parent;
     }
 
-
     PodInitActionType() {
     }
-
 
     public boolean isParent() {
         return this.parent == null;
     }
-
 
     public List<PodInitActionType> getChildren() {
 
@@ -56,30 +46,6 @@ public enum PodInitActionType {
 
         return outList;
     }
-
-
-    public static List<PodInitActionType> getAvailableWizardSteps(OmnipodPodType podType) {
-        List<PodInitActionType> outList = new ArrayList<>();
-
-        if (podType == OmnipodPodType.Eros) {
-            outList.add(PodInitActionType.PairAndPrimeWizardStep);
-            outList.add(PodInitActionType.FillCannulaSetBasalProfileWizardStep);
-        } else {
-            // TODO we might have different wizard steps, with different handling for Dash
-        }
-
-        return outList;
-    }
-
-
-    public static List<PodInitActionType> getAvailableActionsForWizardSteps(PodInitActionType wizardStep) {
-        if (stepsForWizardStep.containsKey(wizardStep)) {
-            return stepsForWizardStep.get(wizardStep);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
 
     public int getResourceId() {
         return resourceId;

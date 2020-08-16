@@ -119,14 +119,10 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
                 rileyLinkPump.triggerPumpConfigurationChangedEvent();
 
             } else if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Insulet) {
-                if (activePump.model() == PumpType.Insulet_Omnipod_Dash) {
-                    aapsLogger.error("Omnipod Dash not yet implemented.");
-                } else {
-                    RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePump;
-                    rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
+                RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePump;
+                rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
 
-                    rileyLinkPump.triggerPumpConfigurationChangedEvent();
-                }
+                rileyLinkPump.triggerPumpConfigurationChangedEvent();
             }
 
             finish();

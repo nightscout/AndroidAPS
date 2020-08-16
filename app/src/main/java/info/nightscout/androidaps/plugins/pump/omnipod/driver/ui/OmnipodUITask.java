@@ -11,7 +11,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
@@ -57,7 +57,7 @@ public class OmnipodUITask {
     }
 
 
-    public void execute(OmnipodCommunicationManagerInterface communicationManager) {
+    public void execute(IOmnipodManager communicationManager) {
 
 
         aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ In execute. {}", commandType);

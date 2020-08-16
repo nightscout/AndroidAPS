@@ -6,9 +6,9 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 
-public interface OmnipodCommunicationManagerInterface {
-
-    // TODO add methods that can be used by OmniPod Eros and Omnipod Dash
+// TODO remove?
+//  We only have this interface for possible Omnipod Dash implementation
+public interface IOmnipodManager {
 
     /**
      * Initialize Pod

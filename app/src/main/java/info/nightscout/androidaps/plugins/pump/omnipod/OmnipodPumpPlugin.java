@@ -59,7 +59,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
@@ -107,7 +107,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private boolean isBasalProfileInvalid = false;
     private boolean basalProfileChanged = false;
     private boolean isInitialized = false;
-    protected OmnipodCommunicationManagerInterface omnipodCommunicationManager;
+    protected IOmnipodManager omnipodCommunicationManager;
 
     // TODO make non-static just inject the Singleton and use a getter)
     public static boolean isBusy = false;

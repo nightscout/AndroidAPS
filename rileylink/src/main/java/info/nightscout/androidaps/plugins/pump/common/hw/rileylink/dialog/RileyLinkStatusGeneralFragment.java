@@ -122,9 +122,9 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         }
 
-        PumpPluginAbstract pumpPlugin = (PumpPluginAbstract)activePlugin.getActivePump();
+        PumpPluginAbstract pumpPlugin = (PumpPluginAbstract) activePlugin.getActivePump();
 
-        if (pumpPlugin.manufacturer()== ManufacturerType.Medtronic) {
+        if (pumpPlugin.manufacturer() == ManufacturerType.Medtronic) {
             //MedtronicPumpStatus medtronicPumpStatus = (MedtronicPumpStatus)pumpPlugin.getPumpStatusData();
 
             PumpStatus pumpStatusData = pumpPlugin.getPumpStatusData();
@@ -154,19 +154,13 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
             PumpStatus pumpStatusData = pumpPlugin.getPumpStatusData();
 
             this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.Omnipod.getResourceId()));
-            this.deviceModel.setText(pumpPlugin.getPumpType() == PumpType.Insulet_Omnipod ? "Eros" : "Dash");
+            this.deviceModel.setText("Eros");
 
-            if (pumpPlugin.getPumpType()== PumpType.Insulet_Omnipod_Dash) {
-                aapsLogger.error("Omnipod Dash not yet supported !!!");
+            this.pumpFrequency.setText(resourceHelper.gs(R.string.omnipod_frequency));
 
-                this.pumpFrequency.setText("-");
-            } else {
+            if (pumpStatusData != null) {
 
-                this.pumpFrequency.setText(resourceHelper.gs(R.string.omnipod_frequency));
-
-                if (pumpStatusData != null) {
-
-                    // TODO show info about active Pod
+                // TODO show info about active Pod
                     /*
                     if (pumpStatusData.getCustomData("POD_AVAILABLE", Boolean.class)) {
                         this.serialNumber.setText(pumpStatusData.getCustomDataAsString("POD_LOT_NUMBER"));
@@ -177,16 +171,15 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                     }
                     */
 
-                    if (rileyLinkServiceData.lastGoodFrequency != null)
-                        this.lastUsedFrequency.setText(String.format(Locale.ENGLISH, "%.2f MHz",
-                                rileyLinkServiceData.lastGoodFrequency));
+                if (rileyLinkServiceData.lastGoodFrequency != null)
+                    this.lastUsedFrequency.setText(String.format(Locale.ENGLISH, "%.2f MHz",
+                            rileyLinkServiceData.lastGoodFrequency));
 
-                    if (pumpStatusData.lastConnection != 0)
-                        this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(
-                                pumpStatusData.lastDataTime)));
-                    else
-                        this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));
-                }
+                if (pumpStatusData.lastConnection != 0)
+                    this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(
+                            pumpStatusData.lastDataTime)));
+                else
+                    this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));
             }
         }
     }
