@@ -344,7 +344,7 @@ abstract class PluginsModule {
     @PumpDriver
     @IntoMap
     @IntKey(490)
-    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodPumpPlugin): PluginBase
+    abstract fun bindOmnipodPumpPlugin(plugin: info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

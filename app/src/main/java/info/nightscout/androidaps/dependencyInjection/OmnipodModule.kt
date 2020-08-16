@@ -30,31 +30,31 @@ abstract class OmnipodModule {
 
     // Activities
     @ContributesAndroidInjector
-    abstract fun contributesPodManagementActivity(): PodManagementActivity
-    @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): PodHistoryActivity
+    abstract fun contributesPodManagementActivity(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
+    @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodHistoryActivity
 
     // Fragments
-    @ContributesAndroidInjector abstract fun initActionFragment(): InitActionFragment
-    @ContributesAndroidInjector abstract fun removeActionFragment(): RemoveActionFragment
-    @ContributesAndroidInjector abstract fun podInfoFragment(): PodInfoFragment
+    @ContributesAndroidInjector abstract fun initActionFragment(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitActionFragment
+    @ContributesAndroidInjector abstract fun removeActionFragment(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemoveActionFragment
+    @ContributesAndroidInjector abstract fun podInfoFragment(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment
 
     // Service
     @ContributesAndroidInjector
-    abstract fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
-    @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
+    abstract fun omnipodCommunicationManagerProvider(): info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager
+    @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 
     // Data
-    @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): OmnipodUITask
-    @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
-    @ContributesAndroidInjector abstract fun podStateManager(): PodStateManager
-    @ContributesAndroidInjector abstract fun initPodTask(): InitPodTask
-    @ContributesAndroidInjector abstract fun omnipodPumpPlugin(): OmnipodPumpPlugin
+    @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
+    @ContributesAndroidInjector abstract fun initPodRefreshAction(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
+    @ContributesAndroidInjector abstract fun podStateManager(): info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
+    @ContributesAndroidInjector abstract fun initPodTask(): info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodTask
+    @ContributesAndroidInjector abstract fun omnipodPumpPlugin(): info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 
     companion object {
         @Provides
         @Singleton
-        fun podStateManagerProvider(aapsLogger: AAPSLogger, sp: SP, omnipodPumpStatus: OmnipodPumpStatus,
-                                    rxBus: RxBusWrapper, resourceHelper: ResourceHelper, dateUtil: DateUtil): PodStateManager =
-            AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper, dateUtil)
+        fun podStateManagerProvider(aapsLogger: AAPSLogger, sp: SP, omnipodPumpStatus: info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus,
+                                    rxBus: RxBusWrapper, resourceHelper: ResourceHelper, dateUtil: DateUtil): info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager =
+            info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper, dateUtil)
     }
 }

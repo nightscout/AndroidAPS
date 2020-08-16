@@ -66,7 +66,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
-    @ContributesAndroidInjector abstract fun contributesOmnipodFragment(): OmnipodFragment
+    @ContributesAndroidInjector abstract fun contributesOmnipodFragment(): info.nightscout.androidaps.plugins.pump.omnipod.OmnipodFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment

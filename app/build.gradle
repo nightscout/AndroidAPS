@@ -134,11 +134,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
-        // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
-        buildConfigField "String", "DEV_VERSION", '"2.6.7-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"65c8cc98804cfc366239ad2bedb2dd98e3e4f3c2"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"16.8.2020"' // 16th of August
-
         ndk {
             moduleName "BleCommandUtil"
         }
@@ -250,6 +245,7 @@ dependencies {
     implementation project(':danar')
     implementation project(':rileylink')
     implementation project(':medtronic')
+    implementation project(':omnipod')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
@@ -285,8 +281,6 @@ dependencies {
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
-    // Omnipod wizard
-    implementation(name: "com.atech-software.android.library.wizardpager-1.1.4", ext: "aar")
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
     }

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.po
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.junit.Assert;
 import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -19,10 +20,10 @@ public class PodInfoFaultAndInitializationTimeTest {
         assertTrue(Duration.standardMinutes(1).isEqual(podInfoFaultAndInitializationTime.getTimeFaultEvent()));
 
         DateTime dateTime = podInfoFaultAndInitializationTime.getInitializationTime();
-        assertEquals(2018, dateTime.getYear());
-        assertEquals(9, dateTime.getMonthOfYear());
-        assertEquals(25, dateTime.getDayOfMonth());
-        assertEquals(23, dateTime.getHourOfDay());
-        assertEquals(14, dateTime.getMinuteOfHour());
+        Assert.assertEquals(2018, dateTime.getYear());
+        Assert.assertEquals(9, dateTime.getMonthOfYear());
+        Assert.assertEquals(25, dateTime.getDayOfMonth());
+        Assert.assertEquals(23, dateTime.getHourOfDay());
+        Assert.assertEquals(14, dateTime.getMinuteOfHour());
     }
 }

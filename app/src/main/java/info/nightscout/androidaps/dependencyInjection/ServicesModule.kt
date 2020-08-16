@@ -30,5 +30,5 @@ abstract class ServicesModule {
     @ContributesAndroidInjector abstract fun contributesInsightConnectionService(): InsightConnectionService
     @ContributesAndroidInjector abstract fun contributesRileyLinkService(): RileyLinkService
     @ContributesAndroidInjector abstract fun contributesRileyLinkMedtronicService(): RileyLinkMedtronicService
-    @ContributesAndroidInjector abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
+    @ContributesAndroidInjector abstract fun contributesRileyLinkOmnipodService(): info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService
 }

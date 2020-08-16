@@ -17,8 +17,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.In
 public class RemoveActionFragment extends InitActionFragment implements PodInitReceiver {
     public static RemoveActionFragment create(String key, PodInitActionType podInitActionType) {
         Bundle args = new Bundle();
-        args.putString(InitActionFragment.ARG_KEY, key);
-        args.putSerializable(InitActionFragment.ARG_POD_INIT_ACTION_TYPE, podInitActionType);
+        args.putString(ARG_KEY, key);
+        args.putSerializable(ARG_POD_INIT_ACTION_TYPE, podInitActionType);
 
         RemoveActionFragment fragment = new RemoveActionFragment();
         fragment.setArguments(args);
