@@ -354,7 +354,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     private void doPodCheck() {
         if (System.currentTimeMillis() > this.nextPodCheck) {
-            if (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) {
+            if (!podStateManager.isPodRunning()) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, resourceHelper.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 rxBus.send(new EventNewNotification(notification));
             } else {
@@ -498,8 +498,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isSuspended() {
-        return omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod ||
-                !podStateManager.isPodRunning() || podStateManager.isSuspended();
+        return !podStateManager.isPodRunning() || podStateManager.isSuspended();
     }
 
     @Override

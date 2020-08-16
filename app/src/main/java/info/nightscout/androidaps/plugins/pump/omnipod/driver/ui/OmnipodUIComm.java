@@ -4,9 +4,8 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 
 /**
  * Created by andy on 4.8.2019
@@ -15,20 +14,17 @@ public class OmnipodUIComm implements DeviceCommandExecutor {
 
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
-    private final OmnipodUtil omnipodUtil;
     private final IOmnipodManager omnipodCommunicationManager;
     private final OmnipodUIPostprocessor omnipodUIPostprocessor;
 
     public OmnipodUIComm(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
-            OmnipodUtil omnipodUtil,
             OmnipodUIPostprocessor omnipodUIPostprocessor,
             IOmnipodManager omnipodCommunicationManager
     ) {
         this.injector = injector;
         this.aapsLogger = aapsLogger;
-        this.omnipodUtil = omnipodUtil;
         this.omnipodUIPostprocessor = omnipodUIPostprocessor;
         this.omnipodCommunicationManager = omnipodCommunicationManager;
     }
@@ -39,8 +35,6 @@ public class OmnipodUIComm implements DeviceCommandExecutor {
         aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
 
         OmnipodUITask task = new OmnipodUITask(injector, commandType, parameters);
-
-        omnipodUtil.setCurrentCommand(commandType);
 
         // new Thread(() -> {
         // LOG.warn("@@@ Start Thread");

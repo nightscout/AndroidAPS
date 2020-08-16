@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -113,12 +113,12 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
                     omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this);
 
-            omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUtil, omnipodUIPostprocessor, aapsOmnipodManager);
+            omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUIPostprocessor, aapsOmnipodManager);
 
         } else {
             aapsOmnipodManager = instance;
         }
-        rxBus.send(new EventOmnipodDeviceStatusChange(podStateManager));
+        rxBus.send(new EventOmnipodPumpValuesChanged());
     }
 
 

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 /**
  * Created by andy on 4.8.2019
  */
+// TODO remove once OmnipodPumpStatus has been removed
 @Singleton
 public class OmnipodUIPostprocessor {
 
@@ -35,7 +36,6 @@ public class OmnipodUIPostprocessor {
         this.omnipodPumpPlugin = plugin;
         this.rxBus = plugin.getRxBus();
     }
-
 
     // this is mostly intended for command that return certain statuses (Remaining Insulin, ...), and
     // where responses won't be directly used

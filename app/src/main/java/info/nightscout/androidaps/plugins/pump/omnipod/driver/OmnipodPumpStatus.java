@@ -14,7 +14,6 @@ import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDevic
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -23,6 +22,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by andy on 4.8.2019
  */
 @Singleton
+@Deprecated
 public class OmnipodPumpStatus extends PumpStatus {
     // TODO remove all fields that can also be obtained via PodStateManager
     //  We can probably get rid of this class altogether
@@ -47,7 +47,6 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
-    public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
     public boolean ackAlertsAvailable = false;
     public String ackAlertsText = null;
 
@@ -146,7 +145,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", tempBasalAmount=" + tempBasalAmount +
                 ", tempBasalLength=" + tempBasalLength +
                 ", regexMac='" + regexMac + '\'' +
-                ", podDeviceState=" + podDeviceState +
                 ", lastDataTime=" + lastDataTime +
                 ", lastConnection=" + lastConnection +
                 ", previousConnection=" + previousConnection +

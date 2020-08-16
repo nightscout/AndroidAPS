@@ -10,15 +10,12 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 /**
@@ -191,10 +188,8 @@ public class OmnipodUITask {
     }
 
 
-    // FIXME a lot of this is not needed anymore since introducing PodStateManager
+    // FIXME remove once OmnipodPumpStatus has been removed
     public void postProcess(OmnipodUIPostprocessor postprocessor) {
-
-        EventOmnipodDeviceStatusChange statusChange;
 
         aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. {}", commandType);
         aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. responseType={}", responseType);
@@ -206,22 +201,12 @@ public class OmnipodUITask {
         aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Invalid) {
-            statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
-                    "Unsupported command in OmnipodUITask");
             omnipodPumpStatus.setLastFailedCommunicationToNow();
-            rxBus.send(statusChange);
         } else if (responseType == PodResponseType.Error) {
-            statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
-                    errorDescription);
             omnipodPumpStatus.setLastFailedCommunicationToNow();
-            rxBus.send(statusChange);
         } else {
             omnipodPumpStatus.setLastCommunicationToNow();
-            rxBus.send(new EventOmnipodPumpValuesChanged());
         }
-
-        omnipodUtil.setPodDeviceState(PodDeviceState.Sleeping);
-        omnipodUtil.setCurrentCommand(null);
     }
 
 

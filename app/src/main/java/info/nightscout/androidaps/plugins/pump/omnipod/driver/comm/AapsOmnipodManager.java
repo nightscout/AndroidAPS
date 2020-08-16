@@ -25,6 +25,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -151,6 +152,9 @@ public class AapsOmnipodManager implements IOmnipodManager {
                 }
                 Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, profile));
+
+                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
