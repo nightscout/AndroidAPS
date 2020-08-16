@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.themeselector
 
 import android.R.attr
 import android.app.AlertDialog
-import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -17,9 +16,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.ColorPickerView
+import com.skydoves.colorpickerview.flag.FlagMode
+import com.skydoves.colorpickerview.flag.FlagView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.plugins.general.colorpicker.CustomFlag
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.RecyclerViewClickListener
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.ThemeAdapter
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme
@@ -30,6 +33,7 @@ import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
 import kotlinx.android.synthetic.main.themeselector_bottom_sheet.*
 import kotlinx.android.synthetic.main.themeselector_scrolling_fragment.*
 import java.util.*
+import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent.builder as builder1
 
 class ScrollingActivity : MainActivity(), View.OnClickListener {
     companion object {
@@ -158,8 +162,8 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         }
     }
 
-    fun selectColor(lightOrDark: String) {
-        ColorPickerDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+    private fun selectColor(lightOrDark: String) {
+        val colorPickerDialog = ColorPickerDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
             .setTitle("Select Background Color")
             .setPreferenceName("MyColorPickerDialog")
             .setPositiveButton(getString(R.string.confirm),
@@ -181,7 +185,10 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
             .attachAlphaSlideBar(false) // default is true. If false, do not show the AlphaSlideBar.
             .attachBrightnessSlideBar(true) // default is true. If false, do not show the BrightnessSlideBar.
             .setBottomSpace(12) // set bottom space between the last slidebar and buttons.
-            .show()
+
+        val colorPickerView: ColorPickerView = colorPickerDialog.colorPickerView
+        colorPickerView.setFlagView(CustomFlag(this, R.layout.colorpicker_flagview)) // sets a custom flagView
+        colorPickerDialog.show()
 
         setBackground()
     }
