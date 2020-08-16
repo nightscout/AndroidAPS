@@ -43,11 +43,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
     @Inject PodStateManager podStateManager;
     @Inject DatabaseHelperInterface databaseHelper;
-
-    private static RileyLinkOmnipodService instance;
-
-    private OmnipodCommunicationManager omnipodCommunicationManager;
-    private AapsOmnipodManager aapsOmnipodManager;
+    @Inject AapsOmnipodManager aapsOmnipodManager;
+    @Inject OmnipodCommunicationManager omnipodCommunicationManager;
 
     private IBinder mBinder = new LocalBinder();
     private boolean rileyLinkAddressChanged = false;
@@ -57,11 +54,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     public RileyLinkOmnipodService() {
         super();
-        instance = this;
-    }
-
-    public static RileyLinkOmnipodService getInstance() {
-        return instance;
     }
 
     @Override
@@ -101,18 +93,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        AapsOmnipodManager instance = AapsOmnipodManager.getInstance();
-        if (instance == null) {
-            OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
-            this.omnipodCommunicationManager = omnipodCommunicationService;
-
-            aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
-                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this, databaseHelper);
-
+        if (omnipodUIComm == null) {
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUIPostprocessor, aapsOmnipodManager, rileyLinkUtil);
-
-        } else {
-            aapsOmnipodManager = instance;
         }
         rxBus.send(new EventOmnipodPumpValuesChanged());
     }

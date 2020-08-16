@@ -47,6 +47,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
+    @Inject lateinit var aapsOmnipodManager: AapsOmnipodManager
 
     private var initPodChanged = false
 
@@ -141,7 +142,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     fun resetPodAction() {
         OKDialog.showConfirmation(this,
             resourceHelper.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
-            AapsOmnipodManager.getInstance().resetPodStatus()
+            aapsOmnipodManager.resetPodStatus()
             refreshButtons()
         })
     }
