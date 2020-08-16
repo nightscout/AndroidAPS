@@ -40,6 +40,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject RFSpy rfSpy;
 
     private MedtronicUIComm medtronicUIComm;
     private MedtronicCommunicationManager medtronicCommunicationManager;
@@ -99,8 +100,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
-        rileyLinkBLE = new RileyLinkBLE(injector, this); // or this
-        rfspy = new RFSpy(injector, rileyLinkBLE);
         rfspy.startReader();
 
         // init rileyLinkCommunicationManager
