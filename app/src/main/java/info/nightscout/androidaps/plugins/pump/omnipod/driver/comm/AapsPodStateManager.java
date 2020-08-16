@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManage
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -28,8 +29,8 @@ public class AapsPodStateManager extends PodStateManager {
 
     @Inject
     public AapsPodStateManager(AAPSLogger aapsLogger, SP sp, OmnipodPumpStatus omnipodPumpStatus,
-                               RxBusWrapper rxBus, ResourceHelper resourceHelper) {
-        super(aapsLogger);
+                               RxBusWrapper rxBus, ResourceHelper resourceHelper, DateUtil dateUtil) {
+        super(aapsLogger, dateUtil);
 
         if (aapsLogger == null) {
             throw new IllegalArgumentException("aapsLogger can not be null");

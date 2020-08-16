@@ -18,9 +18,9 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
@@ -54,6 +54,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -143,6 +144,12 @@ class ActionsFragment : DaggerFragment() {
         actions_exercise.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(childFragmentManager, "Actions")
         }
+        actions_question.setOnClickListener {
+            CareDialog().setOptions(CareDialog.EventType.QUESTION, R.string.careportal_question).show(childFragmentManager, "Actions")
+        }
+        actions_announcement.setOnClickListener {
+            CareDialog().setOptions(CareDialog.EventType.ANNOUNCEMENT, R.string.careportal_announcement).show(childFragmentManager, "Actions")
+        }
 
         sp.putBoolean(R.string.key_objectiveuseactions, true)
     }
@@ -185,23 +192,15 @@ class ActionsFragment : DaggerFragment() {
 
     @Synchronized
     fun updateGui() {
-        actions_profileswitch?.visibility = (activePlugin.activeProfileInterface.profile != null).toVisibility()
 
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
 
-        actions_temptarget?.visibility = (profile != null).toVisibility()
-        actions_canceltempbasal.visibility = (profile == null).toVisibility()
-        actions_settempbasal.visibility = (profile == null).toVisibility()
-        actions_fill.visibility = (profile == null).toVisibility()
-        actions_extendedbolus.visibility = (profile == null).toVisibility()
-        actions_extendedbolus_cancel.visibility = (profile == null).toVisibility()
-        actions_historybrowser.visibility = (profile == null).toVisibility()
-        actions_tddstats.visibility = (profile == null).toVisibility()
-
-        val basalProfileEnabled = buildHelper.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
-
-        actions_profileswitch?.visibility = if (!basalProfileEnabled || !pump.isInitialized || pump.isSuspended) View.GONE else View.VISIBLE
+        actions_profileswitch?.visibility = (
+            activePlugin.activeProfileInterface.profile != null &&
+                pump.pumpDescription.isSetBasalProfileCapable &&
+                pump.isInitialized &&
+                !pump.isSuspended).toVisibility()
 
         if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized || pump.isSuspended || pump.isFakingTempsByExtendedBoluses) {
             actions_extendedbolus?.visibility = View.GONE
@@ -235,12 +234,11 @@ class ActionsFragment : DaggerFragment() {
             }
         }
 
-        actions_fill?.visibility =
-            if (!pump.pumpDescription.isRefillingCapable || !pump.isInitialized || pump.isSuspended) View.GONE
-            else View.VISIBLE
-
-        actions_temptarget?.visibility = Config.APS.toVisibility()
+        actions_historybrowser.visibility = (profile != null).toVisibility()
+        actions_fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized && !pump.isSuspended).toVisibility()
+        actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+
         statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
         checkPumpCustomActions()
     }

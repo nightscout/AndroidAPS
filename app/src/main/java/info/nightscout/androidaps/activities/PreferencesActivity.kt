@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.LocaleHelper
+import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 

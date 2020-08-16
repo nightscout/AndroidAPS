@@ -24,7 +24,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -261,7 +261,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun calculateInsulin() {
         val profileStore = activePlugin.activeProfileInterface.profile
-        if (treatments_wizard_profile.selectedItem == null || profileStore == null)
+        if (treatments_wizard_profile?.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = treatments_wizard_profile.selectedItem.toString()
         val specificProfile: Profile?

@@ -2,13 +2,12 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import android.os.Bundle
-import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.fabric.sdk.android.Fabric
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,21 +26,9 @@ class FabricPrivacy @Inject constructor(
     var firebaseAnalytics: FirebaseAnalytics
 
     init {
-        instance = this
         firebaseAnalytics = FirebaseAnalytics.getInstance(context)
         firebaseAnalytics.setAnalyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
-
-        if (fabricEnabled()) {
-            Fabric.with(context, Crashlytics())
-        }
-    }
-
-    companion object {
-        private lateinit var instance: FabricPrivacy
-
-        @JvmStatic
-        @Deprecated("Use Dagger")
-        fun getInstance(): FabricPrivacy = instance
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
     }
 
     // Analytics logCustom
@@ -76,38 +63,8 @@ class FabricPrivacy @Inject constructor(
 
     // Crashlytics logException
     fun logException(throwable: Throwable) {
-        try {
-            val crashlytics = Crashlytics.getInstance()
-            crashlytics.core.logException(throwable)
-        } catch (e: NullPointerException) {
-            aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $throwable")
-        } catch (e: IllegalStateException) {
-            aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $throwable")
-        }
-    }
-
-    // Crashlytics log
-    fun log(msg: String) {
-        try {
-            val crashlytics = Crashlytics.getInstance()
-            crashlytics.core.log(msg)
-        } catch (e: NullPointerException) {
-            aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $msg")
-        } catch (e: IllegalStateException) {
-            aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $msg")
-        }
-    }
-
-    // Crashlytics log
-    fun log(priority: Int, tag: String?, msg: String) {
-        try {
-            val crashlytics = Crashlytics.getInstance()
-            crashlytics.core.log(priority, tag, msg)
-        } catch (e: NullPointerException) {
-            aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $msg")
-        } catch (e: IllegalStateException) {
-            aapsLogger.debug(LTag.CORE, "Ignoring opted out non-initialized log: $msg")
-        }
+        FirebaseCrashlytics.getInstance().recordException(throwable)
+        aapsLogger.debug(LTag.CORE, "Exception: ", throwable)
     }
 
     fun fabricEnabled(): Boolean {

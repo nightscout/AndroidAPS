@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientN
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -33,6 +34,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
+    @Inject UploadQueue uploadQueue;
     @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -119,13 +121,13 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
                 break;
             case R.id.nsclientinternal_clearqueue:
                 OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.clearqueueconfirm), () -> {
-                    UploadQueue.clearQueue();
+                    uploadQueue.clearQueue();
                     updateGui();
                     fabricPrivacy.logCustom("NSClientClearQueue");
                 });
                 break;
             case R.id.nsclientinternal_showqueue:
-                rxBus.send(new EventNSClientNewLog("QUEUE", nsClientPlugin.queue().textList()));
+                rxBus.send(new EventNSClientNewLog("QUEUE", uploadQueue.textList()));
                 break;
         }
     }
@@ -154,7 +156,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
             logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
         }
         urlTextView.setText(nsClientPlugin.url());
-        Spanned queuetext = Html.fromHtml(resourceHelper.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
+        Spanned queuetext = HtmlHelper.INSTANCE.fromHtml(resourceHelper.gs(R.string.queue) + " <b>" + uploadQueue.size() + "</b>");
         queueTextView.setText(queuetext);
         statusTextView.setText(nsClientPlugin.status);
     }

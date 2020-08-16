@@ -27,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
+import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
@@ -49,10 +50,10 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicato
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.LocaleHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
+import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -85,6 +86,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
+    @Inject lateinit var config: Config
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -137,15 +139,15 @@ class MainActivity : NoSplashAppCompatActivity() {
         }
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
-        if (Config.PUMPDRIVERS) {
-            androidPermission.notifyForLocationPermissions(this)
+        androidPermission.notifyForLocationPermissions(this)
+        if (config.PUMPDRIVERS) {
             androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
             androidPermission.notifyForSystemWindowPermissions(this)
         }
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
-        pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
+        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -173,6 +175,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
         if (ev.isChanged(resourceHelper, R.string.key_keep_screen_on)) setWakeLock()
+        if (ev.isChanged(resourceHelper, R.string.key_skin)) recreate()
     }
 
     private fun setupViews() {
@@ -322,6 +325,11 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 */
+            R.id.nav_defaultprofile     -> {
+                startActivity(Intent(this, ProfileHelperActivity::class.java))
+                return true
+            }
+
             R.id.nav_stats              -> {
                 startActivity(Intent(this, StatsActivity::class.java))
                 return true
@@ -352,7 +360,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.firebaseAnalytics.setUserProperty("Hash", hashes[0])
         activePlugin.activePump.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
-        if (!Config.NSCLIENT && !Config.PUMPCONTROL)
+        if (!config.NSCLIENT && !config.PUMPCONTROL)
             activePlugin.activeAPS.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
         fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)

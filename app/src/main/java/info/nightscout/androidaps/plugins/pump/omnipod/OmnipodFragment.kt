@@ -100,7 +100,7 @@ class OmnipodFragment : DaggerFragment() {
 
         omnipod_refresh.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
-                OmnipodUtil.displayNotConfiguredDialog(context)
+                displayNotConfiguredDialog()
             } else {
                 omnipod_refresh.isEnabled = false
                 omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequest.GetPodState);

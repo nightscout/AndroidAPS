@@ -22,6 +22,7 @@
     </string-array>
 
     <string-array name="languagesArray">
+        <item>@string/default_lang</item>
         <item>@string/en_lang</item>
         <item>@string/af_lang</item>
         <item>@string/bg_lang</item>
@@ -45,6 +46,7 @@
         <item>@string/zh_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
+        <item>default</item>
         <item>en</item>
         <item>af</item>
         <item>bg</item>
@@ -79,17 +81,6 @@
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
         <item>@string/key_resistantadult</item>
-    </string-array>
-
-    <string-array name="danaSpeedArray">
-        <item>12 s/U</item>
-        <item>30 s/U</item>
-        <item>60 s/U</item>
-    </string-array>
-    <string-array name="danaSpeedValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
     </string-array>
 
     <string-array name="quickWizardYesNo">

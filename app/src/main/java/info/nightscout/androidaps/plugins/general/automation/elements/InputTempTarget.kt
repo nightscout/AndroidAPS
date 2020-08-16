@@ -4,14 +4,18 @@ import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.NumberPicker
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
+import javax.inject.Inject
 
 class InputTempTarget(injector: HasAndroidInjector) : Element(injector) {
     var units = Constants.MGDL
     var value = 0.0
+    @Inject lateinit var profileFunction: ProfileFunction
 
     init {
+        units = profileFunction.getUnits()
         value = if (units == Constants.MMOL) 6.0 else 110.0
     }
 

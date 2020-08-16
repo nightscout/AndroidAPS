@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -31,17 +32,24 @@ class DexcomPlugin @Inject constructor(
     private val sp: SP,
     private val mainApp: MainApp,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val nsUpload: NSUpload,
+    config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.dexcom_app_patched)
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
-    .description(R.string.description_source_dexcom)
-    .setDefault(),
+    .description(R.string.description_source_dexcom),
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
+
+    init {
+        if (!config.NSCLIENT) {
+            pluginDescription.setDefault()
+        }
+    }
 
     override fun advancedFilteringSupported(): Boolean {
         return true
@@ -78,10 +86,10 @@ class DexcomPlugin @Inject constructor(
                     bgReading.raw = 0.0
                     if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            NSUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
+                            nsUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
                         }
                         if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                            NSUpload.sendToXdrip(bgReading)
+                            nsUpload.sendToXdrip(bgReading)
                         }
                     }
                 }
@@ -108,7 +116,7 @@ class DexcomPlugin @Inject constructor(
                             careportalEvent.eventType = CareportalEvent.BGCHECK
                             careportalEvent.json = jsonObject.toString()
                             MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                            NSUpload.uploadCareportalEntryToNS(jsonObject)
+                            nsUpload.uploadCareportalEntryToNS(jsonObject)
                         }
                 }
             }
@@ -128,7 +136,7 @@ class DexcomPlugin @Inject constructor(
                             careportalEvent.eventType = CareportalEvent.SENSORCHANGE
                             careportalEvent.json = jsonObject.toString()
                             MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                            NSUpload.uploadCareportalEntryToNS(jsonObject)
+                            nsUpload.uploadCareportalEntryToNS(jsonObject)
                         }
                 }
             }

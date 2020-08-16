@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
-                android:src="@drawable/icon_calculator" />
+                android:src="@drawable/ic_calculator" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.androidaps.utils.NumberPicker
+                <info.nightscout.androidaps.utils.ui.NumberPicker
                     android:id="@+id/treatments_wizard_bg_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp" />
@@ -95,7 +95,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.androidaps.utils.NumberPicker
+                <info.nightscout.androidaps.utils.ui.NumberPicker
                     android:id="@+id/treatments_wizard_carbs_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -126,7 +126,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.androidaps.utils.NumberPicker
+                <info.nightscout.androidaps.utils.ui.NumberPicker
                     android:id="@+id/treatments_wizard_correction_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -156,7 +156,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.androidaps.utils.NumberPicker
+                <info.nightscout.androidaps.utils.ui.NumberPicker
                     android:id="@+id/treatments_wizard_carb_time_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"

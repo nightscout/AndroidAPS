@@ -27,7 +27,7 @@ class BlePreCheck @Inject constructor(
 
     fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.rileylink_scanner_ble_not_supported))
+            OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_supported))
             return false
         } else {
             // Use this check to determine whether BLE is supported on the device. Then
@@ -41,7 +41,7 @@ class BlePreCheck @Inject constructor(
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.rileylink_scanner_ble_not_enabled))
+                OKDialog.show(activity, resourceHelper.gs(R.string.message), resourceHelper.gs(R.string.ble_not_enabled))
                 return false
             } else {
                 // Will request that GPS be enabled for devices running Marshmallow or newer.

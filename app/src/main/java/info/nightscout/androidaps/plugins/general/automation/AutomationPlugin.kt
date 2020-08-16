@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
+import android.os.HandlerThread
+import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventBTChange
@@ -37,10 +39,8 @@ import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Singleton
 class AutomationPlugin @Inject constructor(
@@ -52,7 +52,8 @@ class AutomationPlugin @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val rxBus: RxBusWrapper,
     private val constraintChecker: ConstraintChecker,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutomationFragment::class.qualifiedName)
@@ -71,7 +72,7 @@ class AutomationPlugin @Inject constructor(
     var executionLog: MutableList<String> = ArrayList()
     var btConnects : MutableList<EventBTChange> = ArrayList()
 
-    private val loopHandler = Handler()
+    private val loopHandler : Handler = Handler(HandlerThread(AutomationPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     init {
@@ -177,10 +178,9 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     private fun processActions() {
-        if (!isEnabled(PluginType.GENERAL))
-            return
-        if (loopPlugin.isSuspended || !loopPlugin.isEnabled(PluginType.LOOP)) {
+        if (loopPlugin.isSuspended || !loopPlugin.isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
+            executionLog.add(resourceHelper.gs(R.string.smscommunicator_loopisdisabled))
             return
         }
         val enabled = constraintChecker.isAutomationEnabled()
@@ -197,7 +197,7 @@ class AutomationPlugin @Inject constructor(
                     action.doAction(object : Callback() {
                         override fun run() {
                             val sb = StringBuilder()
-                            sb.append(DateUtil.timeString(DateUtil.now()))
+                            sb.append(dateUtil.timeString(DateUtil.now()))
                             sb.append(" ")
                             sb.append(if (result.success) "☺" else "▼")
                             sb.append(" <b>")
@@ -212,6 +212,7 @@ class AutomationPlugin @Inject constructor(
                         }
                     })
                 }
+                SystemClock.sleep(1100)
                 event.lastRun = DateUtil.now()
             }
         }

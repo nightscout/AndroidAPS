@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpVa
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.comm.OmnipodDashCommunicationManager;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -49,7 +50,6 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     // TODO Dagger
     //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
-    protected static OmnipodDashPumpPlugin plugin = null;
     //private RileyLinkOmnipodService omnipodService;
     //private OmnipodPumpStatus pumpStatusLocal = null;
 
@@ -76,7 +76,9 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
                                  ActivePluginProvider activePlugin,
                                  SP sp,
                                  CommandQueueProvider commandQueue,
-                                 FabricPrivacy fabricPrivacy) {
+                                 FabricPrivacy fabricPrivacy,
+                                 DateUtil dateUtil
+    ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodFragment.class.getName()) //
@@ -85,7 +87,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
                         .preferencesId(R.xml.pref_omnipod) //
                         .description(R.string.description_pump_omnipod_dash), //
                 PumpType.Insulet_Omnipod_Dash,
-                injector, aapsLogger, rxBus, context, resourceHelper, activePlugin, sp, commandQueue, fabricPrivacy
+                injector, aapsLogger, rxBus, context, resourceHelper, activePlugin, sp, commandQueue, fabricPrivacy, dateUtil
         );
 
         displayConnectionMessages = false;
@@ -133,14 +135,6 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 //        };
     }
 
-    @Deprecated
-    public static OmnipodDashPumpPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Plugin not injected jet");
-        return plugin;
-    }
-
-
     private String getLogPrefix() {
         return "OmnipodPlugin::";
     }
@@ -154,7 +148,6 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     @Override
     public void onStart() {
-        this.isOmnipodEros = false;
         super.onStart();
     }
 

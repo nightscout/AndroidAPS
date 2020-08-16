@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -25,11 +24,11 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.extensions.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.treatments_profileswitch_fragment.*
@@ -43,6 +42,9 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -95,7 +97,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             val profileSwitch = profileSwitchList[position]
             holder.ph.visibility = (profileSwitch.source == Source.PUMP).toVisibility()
             holder.ns.visibility = NSUpload.isIdValid(profileSwitch._id).toVisibility()
-            holder.date.text = DateUtil.dateAndTimeString(profileSwitch.date)
+            holder.date.text = dateUtil.dateAndTimeString(profileSwitch.date)
             if (!profileSwitch.isEndingEvent) {
                 holder.duration.text = resourceHelper.gs(R.string.format_mins, profileSwitch.durationInMinutes)
             } else {
@@ -115,7 +117,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         }
 
         inner class ProfileSwitchViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-            var cv: CardView = itemView.findViewById<View>(R.id.profileswitch_cardview) as CardView
             var date: TextView = itemView.findViewById<View>(R.id.profileswitch_date) as TextView
             var duration: TextView = itemView.findViewById<View>(R.id.profileswitch_duration) as TextView
             var name: TextView = itemView.findViewById<View>(R.id.profileswitch_name) as TextView
@@ -132,19 +133,19 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         activity?.let { activity ->
                             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord),
                                 resourceHelper.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
-                                    "\n" + resourceHelper.gs(R.string.date) + ": " + DateUtil.dateAndTimeString(profileSwitch.date), Runnable {
+                                    "\n" + resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                                 val id = profileSwitch._id
-                                if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)
-                                else UploadQueue.removeID("dbAdd", id)
+                                if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
+                                else uploadQueue.removeID("dbAdd", id)
                                 MainApp.getDbHelper().delete(profileSwitch)
                             })
                         }
                     R.id.profileswitch_clone                         ->
                         activity?.let { activity ->
-                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + DateUtil.dateAndTimeString(profileSwitch.date), Runnable {
+                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                                 profileSwitch.profileObject?.let {
                                     val nonCustomized = it.convertToNonCustomizedProfile()
-                                    localProfilePlugin.addProfile(LocalProfilePlugin.SingleProfile().copyFrom(localProfilePlugin.rawProfile, nonCustomized, profileSwitch.customizedName + " " + DateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
+                                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
                                     rxBus.send(EventLocalProfileChanged())
                                 }
                             })
@@ -153,7 +154,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                     R.id.profileswitch_date, R.id.profileswitch_name -> {
                         val args = Bundle()
                         args.putLong("time", (v.tag as ProfileSwitch).date)
-                        args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                        args.putInt("mode", ProfileViewerDialog.Mode.DB_PROFILE.ordinal)
                         val pvd = ProfileViewerDialog()
                         pvd.arguments = args
                         pvd.show(childFragmentManager, "ProfileViewDialog")

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pairing">Sujungiama</string>
+    <!--    General-->
+    <string name="error">Klaida</string>
+    <string name="not_set_short">Nenustatyta</string>
+    <string name="failedupdatebasalprofile">Nepavyko atnaujinti bazės profilio</string>
+    <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
+    <string name="invalidinput">Neteisingai įvesti duomenys</string>
+    <string name="tempbasaldeliveryerror">Laikinos bazės suleidimo klaida</string>
+    <string name="goingtodeliver">Bus suleista %1$.2fvv</string>
+    <string name="waitingforpump">Laukiama ryšio su pompa</string>
+    <string name="connectingfor">Jungiamasi %1$d s</string>
+    <string name="bolusdelivering">Leidžiama %1$.2fvv</string>
+    <string name="handshaking">Ryšio užmezgimas</string>
+    <string name="connecting">Jungiamasi</string>
+    <string name="connected">Prisijungta</string>
+    <string name="disconnected">Atsijungta</string>
+    <string name="disconnecting">Atsijungiama</string>
+    <string name="androidaps_start">AndroidAPS paleista</string>
+    <string name="formatinsulinunits">%1$.2fvv</string>
+    <string name="reservoirvalue">%1$.0f / %2$d vv</string>
+    <string name="pump_basebasalrate">%1$.2fvv/val</string>
+    <string name="format_hours">%1$.2f val.</string>
+    <string name="format_mins">%1$d min.</string>
+    <string name="format_mins_short">%1$dm</string>
+    <string name="pumpbusy">Pompa šiuo metu veikia</string>
+    <string name="connectionerror">Pompos prisijungimo klaida</string>
+    <string name="youareonallowedlimit">Pasiekėte leistiną ribą</string>
+    <string name="objectives">Tikslai</string>
+    <string name="close">Uždaryti</string>
+    <string name="please_wait">Palaukite…</string>
+    <string name="mute">Nutildyti</string>
+    <string name="reload">Atnaujinti</string>
+    <string name="stoppressed">Paspausta STOP</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">AV</string>
+    <string name="invalidprofile">Netinkamas profilis!!!</string>
+    <string name="noprofileset">Nenustatytas profilis</string>
+    <string name="date">Data</string>
+    <string name="units_label">Vienetai</string>
+    <string name="dia_label">IVT</string>
+    <string name="ic_label">IA</string>
+    <string name="isf_label">JIF</string>
+    <string name="basal_label">VB</string>
+    <string name="target_label">Tikslas</string>
+    <string name="initializing">Inicijuojama ...</string>
+    <string name="serialnumber">Serijos numeris</string>
+    <string name="battery_label">Baterija</string>
+    <string name="lastconnection_label">Paskutinis prisijungimas</string>
+    <string name="lastbolus_label">Paskutinis bolusas</string>
+    <string name="dailyunits">Paros insulinas</string>
+    <string name="basebasalrate_label">Pagrindinis bazės dydis</string>
+    <string name="tempbasal_label">Laikina bazė</string>
+    <string name="virtualpump_extendedbolus_label">Ištęstas bolusas</string>
+    <string name="reservoir_label">Rezervuaras</string>
+    <string name="pumphistory">Pompos istorija</string>
+    <string name="viewprofile">Peržiūrėti profilį</string>
+    <string name="eventtype">Įvykio tipas</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Papildomi nustatymai</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Vienai sekundei išjungia telefono bluetooth, jei ryšys su pompa nutrūksta. Gali būti veiksminga kai kuriems telefonų modeliams, turintiems BT problemų.</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
+    <string name="pumplimit">pompos limitas</string>
+    <string name="limitingpercentrate">Ribojamas maks procentų skaičius %1$d%%, nes %2$s</string>
+    <string name="itmustbepositivevalue">reikšmė turi būti teigiama</string>
+    <string name="limitingbolus">Bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pompa neprijungta, profilis nepasirinktas!</string>
+    <!--    Dialogs-->
+    <string name="confirmation">Patvirtinimas</string>
+    <string name="message">Pranešimas</string>
+    <string name="ok">Gerai</string>
+    <string name="cancel">Atšaukti</string>
+    <string name="dismiss">ATMESTI</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
+    <string name="ble_not_enabled">Bluetooth neįjungta.</string>
+    <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
+    <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
+    <!--    DateUtil-->
+    <string name="minago">prieš %1$d min</string>
+    <string name="hoursago">Prieš %1$.1f val.</string>
+    <string name="shorthour">val</string>
+    <string name="days">d.</string>
+    <string name="hours">val.</string>
+    <string name="unit_second">sek.</string>
+    <string name="unit_minute">min.</string>
+    <string name="unit_hour">val.</string>
+    <string name="unit_day">d.</string>
+    <string name="unit_week">savaitė</string>
+    <string name="unit_seconds">sekundės</string>
+    <string name="unit_minutes"> min.</string>
+    <string name="unit_hours">val.</string>
+    <string name="unit_days">d.</string>
+    <string name="unit_weeks">savaičių</string>
+    <string name="shortminute">min.</string>
+    <string name="shortday">d</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valandinė bazė pakeista mažiausia palaikoma verte: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valandinė bazė pakeista didžiausia palaikoma verte: %1$s</string>
+    <string name="profile_per_unit">/vv</string>
+    <string name="profile_ins_units_per_hour">Vv/val</string>
+    <string name="profile_carbs_per_unit">g/vv</string>
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">Nepasirinktas profilis</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">Atšaukti laikiną bazę</string>
+    <string name="let_temp_basal_run">Paleisti laikinąją bazę</string>
+    <string name="rate">Vertė</string>
+    <string name="duration">Trukmė</string>
+    <string name="reason">Priežastis</string>
+    <string name="nochangerequested">Pakeitimai nereikalingi</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Netinkamas profilis: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Boluso: <b>%3$.2fU</b> Bazės: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Boluso: <b>%3$.2fU</b> Bazės: <b>%4$.2fU(%5$.0f%%)</b> AV: <b>%6$.0fg</b>]]></string>
+    <!--    Translator-->
+    <string name="careportal_bgcheck">KG testas</string>
+    <string name="careportal_announcement">Pranešimas</string>
+    <string name="careportal_note">Pastaba</string>
+    <string name="careportal_question">Klausimas</string>
+    <string name="careportal_exercise">Aktyvumas</string>
+    <string name="careportal_pumpsitechange">Kateterio keitimas</string>
+    <string name="careportal_cgmsensorinsert">NGJ įvedimas</string>
+    <string name="careportal_cgmsensorstart">NGJ paleidimas</string>
+    <string name="careportal_insulincartridgechange">Rezervuaro keitimas</string>
+    <string name="careportal_profileswitch">Profilio keitimas</string>
+    <string name="careportal_snackbolus">Bolusas užkandžiui</string>
+    <string name="careportal_mealbolus">Bolusas valgiui</string>
+    <string name="careportal_correctionbolus">Bolusas korekcijai</string>
+    <string name="careportal_combobolus">Kombinuotas bolusas</string>
+    <string name="careportal_tempbasalstart">Pradėta laikina bazė</string>
+    <string name="careportal_tempbasalend">Užbaigta laikina bazė</string>
+    <string name="careportal_carbscorrection">AV korekcijai</string>
+    <string name="careportal_openapsoffline">OpenAPS neprisijungus</string>
+    <string name="careportal_pumpbatterychange">Baterijos keitimas</string>
+    <string name="careportal_temporarytarget">Laikinas tikslas</string>
+    <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
+    <string name="glucosetype_finger">Iš piršto</string>
+    <string name="glucosetype_sensor">Iš sensoriaus</string>
+    <string name="manual">Rankiniu būdu</string>
+    <string name="unknown">nežinoma</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Prijungimo laikas baigėsi</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Vykdoma</string>
+    <string name="comment">Komentaras</string>
+    <string name="success">Atlikta</string>
+    <string name="percent">Procentai</string>
+    <string name="absolute">Absoliutus</string>
+    <string name="configbuilder_insulin">Insulinas</string>
+    <string name="insulin_unit_shortname">vv</string>
+    <string name="waitingforpumpresult">Laukiama rezultato</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">Būtini %dg papildomų AV per %d min</string>
+    <!--    TDDStatsActivity-->
+    <string name="stats">Statistika</string>
+    <string name="cumulative_tdd">BPD viso</string>
+    <string name="expweight">Eksponentiškai svertinė BPD</string>
+    <string name="basalrate">Valandinė bazė</string>
+    <string name="bolus">Bolusas</string>
+    <string name="tdd">BPD</string>
+    <string name="ratio">Vertė</string>
+    <string name="amount_days"># d.</string>
+    <string name="weight">Svoris</string>
+    <string name="warning_Message">Duomenys netikslūs, jei bolusai naudojami kateterių užpildymui!</string>
+    <string name="olddata_Message">Duomenys seni, spauskite \"ATNAUJINTI\"</string>
+    <string name="tbb">Pagrindinė bazė (PB)</string>
+    <string name="tbb2">PB * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Laiko nustatymas</string>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_yet_supported_by_pump">Pompa dar nepalaiko operacijos.</string>
+    <!-- PumoCommon - Pump Status -->
+    <!-- PumpCommon - History Group -->
+    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
+    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
+    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
+    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
+    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
+    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
+    <!--    <string name="medtronic_pump_status_active">Active</string>-->
+    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
+    <!--    <string name="danar_history_alarm">Alarms</string>-->
+    <!--    <string name="danar_history_glucose">Glucose</string>-->
+    <!--    All(R.string.medtronic_history_group_all), //-->
+    <!--    Bolus(R.string.danar_history_bolus), //-->
+    <!--    Basal(R.string.medtronic_history_group_basal), //-->
+    <!--    Prime(R.string.danar_history_prime), //-->
+    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
+    <!--    Alarm(R.string.danar_history_alarm), //-->
+    <!--    Glucose(R.string.danar_history_glucose), //-->
+    <!--    Notification(R.string.medtronic_history_group_notification), //-->
+    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
+    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+</resources>

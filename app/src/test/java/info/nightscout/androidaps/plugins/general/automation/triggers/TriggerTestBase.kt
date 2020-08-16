@@ -4,11 +4,13 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
+import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -52,6 +54,15 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction
             }
+            if (it is TriggerTime) {
+                it.dateUtil = dateUtil
+            }
+            if (it is TriggerTimeRange) {
+                it.dateUtil = dateUtil
+            }
+            if (it is TriggerRecurringTime) {
+                it.dateUtil = dateUtil
+            }
             if (it is TriggerBTDevice) {
                 it.context = context
                 it.automationPlugin = automationPlugin
@@ -62,12 +73,18 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is InputBg) {
                 it.profileFunction = profileFunction
             }
+           if (it is InputTempTarget) {
+                it.profileFunction = profileFunction
+            }
             if (it is GlucoseStatus) {
                 it.aapsLogger = aapsLogger
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
             }
             if (it is StaticLabel) {
                 it.resourceHelper = resourceHelper
+            }
+            if (it is BgReading) {
+                it.dateUtil = dateUtil
             }
         }
     }

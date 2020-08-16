@@ -27,6 +27,11 @@
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_enable_carbs_required_alert_local"
+            android:title="@string/enable_carbs_req_alert" />
+
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dependency="@string/key_enable_pump_unreachable_alert"

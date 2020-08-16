@@ -14,9 +14,8 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -77,7 +76,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             overview_temptarget_reason.adapter = adapterReason
             overview_temptarget_reason.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     val defaultDuration: Double
                     val defaultTarget: Double
                     when (reasonList[position]) {
@@ -123,13 +122,13 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val duration = overview_temptarget_duration.value.toInt()
         if (target != 0.0 && duration != 0) {
             actions.add(resourceHelper.gs(R.string.reason) + ": " + reason)
-            actions.add(resourceHelper.gs(R.string.nsprofileview_target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + resourceHelper.gs(unitResId))
+            actions.add(resourceHelper.gs(R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + resourceHelper.gs(unitResId))
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
         } else {
             actions.add(resourceHelper.gs(R.string.stoptemptarget))
         }
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {

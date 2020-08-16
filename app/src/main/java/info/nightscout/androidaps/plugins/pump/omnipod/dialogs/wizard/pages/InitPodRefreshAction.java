@@ -36,6 +36,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     @Inject PodStateManager podStateManager;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
+    @Inject NSUpload nsUpload;
 
     public InitPodRefreshAction(HasAndroidInjector injector, PodManagementActivity podManagementActivity, PodActionType actionType) {
         injector.androidInjector().inject(this);
@@ -87,7 +88,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMPCOMM, "Unhandled exception when uploading SiteChange event.", e);
         }

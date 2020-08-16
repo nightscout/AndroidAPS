@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Singleton
@@ -53,7 +54,7 @@ abstract class OmnipodModule {
         @Provides
         @Singleton
         fun podStateManagerProvider(aapsLogger: AAPSLogger, sp: SP, omnipodPumpStatus: OmnipodPumpStatus,
-                                    rxBus: RxBusWrapper, resourceHelper: ResourceHelper): PodStateManager =
-            AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper)
+                                    rxBus: RxBusWrapper, resourceHelper: ResourceHelper, dateUtil: DateUtil): PodStateManager =
+            AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper, dateUtil)
     }
 }

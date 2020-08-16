@@ -9,9 +9,9 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.setupwizard.SWNumberValidator
-import info.nightscout.androidaps.utils.NumberPicker
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import info.nightscout.androidaps.utils.SafeParse
 import java.text.DecimalFormat
 import javax.inject.Inject

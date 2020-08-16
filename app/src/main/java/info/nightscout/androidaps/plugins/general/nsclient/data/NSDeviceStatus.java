@@ -20,6 +20,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -158,7 +159,7 @@ public class NSDeviceStatus {
     public Spanned getExtendedPumpStatus() {
         if (deviceStatusPumpData != null && deviceStatusPumpData.extended != null)
             return deviceStatusPumpData.extended;
-        return Html.fromHtml("");
+        return HtmlHelper.INSTANCE.fromHtml("");
     }
 
     public Spanned getPumpStatus() {
@@ -170,7 +171,7 @@ public class NSDeviceStatus {
         string.append(": </span>");
 
         if (deviceStatusPumpData == null)
-            return Html.fromHtml("");
+            return HtmlHelper.INSTANCE.fromHtml("");
 
         // test warning level
         int level = Levels.INFO;
@@ -225,7 +226,7 @@ public class NSDeviceStatus {
 
         string.append("</span>"); // color
 
-        return Html.fromHtml(string.toString());
+        return HtmlHelper.INSTANCE.fromHtml(string.toString());
     }
 
     static class DeviceStatusPumpData {
@@ -273,7 +274,7 @@ public class NSDeviceStatus {
                     String value = extendedJson.getString(key);
                     exteneded.append("<b>").append(key).append(":</b> ").append(value).append("<br>");
                 }
-                deviceStatusPumpData.extended = Html.fromHtml(exteneded.toString());
+                deviceStatusPumpData.extended = HtmlHelper.INSTANCE.fromHtml(exteneded.toString());
             }
         } catch (Exception e) {
             aapsLogger.error("Unhandled exception", e);
@@ -330,7 +331,7 @@ public class NSDeviceStatus {
         // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
-        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_urgent_staledatavalue, 16) * 60 * 1000L < now)
+        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_urgent_staledatavalue, 31) * 60 * 1000L < now)
             level = Levels.URGENT;
         else if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_staledatavalue, 16) * 60 * 1000L < now)
             level = Levels.WARN;
@@ -345,7 +346,7 @@ public class NSDeviceStatus {
         }
         string.append("</span>"); // color
 
-        return Html.fromHtml(string.toString());
+        return HtmlHelper.INSTANCE.fromHtml(string.toString());
     }
 
     public static long getOpenApsTimestamp() {
@@ -365,11 +366,11 @@ public class NSDeviceStatus {
                 string.append("<b>").append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted.getString("reason")).append("<br>");
             if (deviceStatusOpenAPSData.suggested != null)
                 string.append("<b>").append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested.getString("reason")).append("<br>");
-            return Html.fromHtml(string.toString());
+            return HtmlHelper.INSTANCE.fromHtml(string.toString());
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
-        return Html.fromHtml("");
+        return HtmlHelper.INSTANCE.fromHtml("");
     }
 
     // ********* Uploader data ***********
@@ -441,7 +442,7 @@ public class NSDeviceStatus {
 
         string.append(minBattery);
         string.append("%");
-        return Html.fromHtml(string.toString());
+        return HtmlHelper.INSTANCE.fromHtml(string.toString());
     }
 
     public Spanned getExtendedUploaderStatus() {
@@ -455,7 +456,7 @@ public class NSDeviceStatus {
             string.append("<b>").append(device).append(":</b> ").append(uploader.battery).append("%<br>");
         }
 
-        return Html.fromHtml(string.toString());
+        return HtmlHelper.INSTANCE.fromHtml(string.toString());
     }
 
     public static APSResult getAPSResult(HasAndroidInjector injector) {

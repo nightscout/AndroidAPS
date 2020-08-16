@@ -34,11 +34,13 @@ import info.nightscout.androidaps.utils.DateUtil;
 public abstract class PodStateManager {
 
     private final AAPSLogger aapsLogger;
+    private DateUtil dateUtil;
     private final Gson gsonInstance;
     private PodState podState;
 
-    public PodStateManager(AAPSLogger aapsLogger) {
+    public PodStateManager(AAPSLogger aapsLogger, DateUtil dateUtil) {
         this.aapsLogger = aapsLogger;
+        this.dateUtil = dateUtil;
         this.gsonInstance = createGson();
     }
 
@@ -279,7 +281,7 @@ public abstract class PodStateManager {
     // TODO doesn't belong here
     public final String getExpiryDateAsString() {
         DateTime expiresAt = getExpiresAt();
-        return expiresAt == null ? "???" : DateUtil.dateAndTimeString(expiresAt.toDate());
+        return expiresAt == null ? "???" : dateUtil.dateAndTimeString(expiresAt.toDate());
     }
 
     public final PodProgressStatus getPodProgressStatus() {

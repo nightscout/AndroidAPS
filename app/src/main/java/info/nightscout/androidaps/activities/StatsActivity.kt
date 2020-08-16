@@ -3,6 +3,7 @@ package info.nightscout.androidaps.activities
 import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.ActivityMonitor
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator

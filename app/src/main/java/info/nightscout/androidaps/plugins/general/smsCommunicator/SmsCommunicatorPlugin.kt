@@ -23,7 +23,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -61,7 +61,9 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val xdripCalibrations: XdripCalibrations,
-    private var otp: OneTimePassword
+    private var otp: OneTimePassword,
+    private val config: Config,
+    private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -83,7 +85,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS\nLOOP SUSPEND 20",
         "TREATMENTS" to "TREATMENTS REFRESH",
         "NSCLIENT" to "NSCLIENT RESTART",
-        "PUMP" to "PUMP",
+        "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
         "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
         "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL",
         "EXTENDED" to "EXTENDED STOP/CANCEL\nEXTENDED 2 120",
@@ -226,7 +228,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                     if (splitted.size == 2) processNSCLIENT(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "PUMP"       ->
-                    if (splitted.size == 1) processPUMP(receivedSms)
+                    if (!remoteCommandsAllowed && splitted.size > 1) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
+                    else if (splitted.size <= 3) processPUMP(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "PROFILE"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
@@ -306,13 +309,20 @@ class SmsCommunicatorPlugin @Inject constructor(
         when (splitted[1].toUpperCase(Locale.getDefault())) {
             "DISABLE", "STOP" -> {
                 if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                    loopPlugin.setPluginEnabled(PluginType.LOOP, false)
-                    commandQueue.cancelTempBasal(true, object : Callback() {
+                    val passCode = generatePasscode()
+                    val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopdisablereplywithcode), passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                         override fun run() {
-                            rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
-                            val replyText = resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled) + " " +
-                                resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
-                            sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                            loopPlugin.setPluginEnabled(PluginType.LOOP, false)
+                            commandQueue.cancelTempBasal(true, object : Callback() {
+                                override fun run() {
+                                    rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
+                                    val replyText = resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled) + " " +
+                                        resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
+                                    sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                }
+                            })
                         }
                     })
                 } else
@@ -322,9 +332,16 @@ class SmsCommunicatorPlugin @Inject constructor(
 
             "ENABLE", "START" -> {
                 if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-                    loopPlugin.setPluginEnabled(PluginType.LOOP, true)
-                    sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)))
-                    rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
+                    val passCode = generatePasscode()
+                    val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopenablereplywithcode), passCode)
+                    receivedSms.processed = true
+                    messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                        override fun run() {
+                            loopPlugin.setPluginEnabled(PluginType.LOOP, true)
+                            sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)))
+                            rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
+                        }
+                    })
                 } else
                     sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopisenabled)))
                 receivedSms.processed = true
@@ -341,9 +358,16 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "RESUME"          -> {
-                rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
-                loopPlugin.createOfflineEvent(0)
-                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopresumed)))
+                val passCode = generatePasscode()
+                val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopresumereplywithcode), passCode)
+                receivedSms.processed = true
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                    override fun run() {
+                        rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
+                        loopPlugin.createOfflineEvent(0)
+                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopresumed)))
+                    }
+                })
             }
 
             "SUSPEND"         -> {
@@ -418,20 +442,66 @@ class SmsCommunicatorPlugin @Inject constructor(
             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
-    private fun processPUMP(receivedSms: Sms) {
-        commandQueue.readStatus("SMS", object : Callback() {
-            override fun run() {
-                val pump = activePlugin.activePump
-                if (result.success) {
-                    val reply = pump.shortStatus(true)
-                    sendSMS(Sms(receivedSms.phoneNumber, reply))
-                } else {
-                    val reply = resourceHelper.gs(R.string.readstatusfailed)
-                    sendSMS(Sms(receivedSms.phoneNumber, reply))
+    private fun processPUMP(splitted: Array<String>, receivedSms: Sms) {
+        if (splitted.size == 1) {
+            commandQueue.readStatus("SMS", object : Callback() {
+                override fun run() {
+                    val pump = activePlugin.activePump
+                    if (result.success) {
+                        val reply = pump.shortStatus(true)
+                        sendSMS(Sms(receivedSms.phoneNumber, reply))
+                    } else {
+                        val reply = resourceHelper.gs(R.string.readstatusfailed)
+                        sendSMS(Sms(receivedSms.phoneNumber, reply))
+                    }
                 }
+            })
+            receivedSms.processed = true
+        } else if ((splitted.size == 2) && (splitted[1].equals("CONNECT", ignoreCase = true))) {
+            val passCode = generatePasscode()
+            val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpconnectwithcode), passCode)
+            receivedSms.processed = true
+            messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                override fun run() {
+                    commandQueue.cancelTempBasal(true, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpconnectfail)))
+                            } else {
+                                loopPlugin.suspendTo(0L)
+                                sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_reconnect)))
+                                rxBus.send(EventRefreshOverview("SMS_PUMP_START"))
+                                loopPlugin.createOfflineEvent(0)
+                            }
+                        }
+                    })
+                }
+            })
+        } else if ((splitted.size == 3) && (splitted[1].equals("DISCONNECT", ignoreCase = true))) {
+            var duration = SafeParse.stringToInt(splitted[2])
+            duration = Math.max(0, duration)
+            duration = Math.min(120, duration)
+            if (duration == 0) {
+                receivedSms.processed = true
+                sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_wrongduration)))
+                return
+            } else {
+                val passCode = generatePasscode()
+                val reply = String.format(resourceHelper.gs(R.string.smscommunicator_pumpdisconnectwithcode), duration, passCode)
+                receivedSms.processed = true
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
+                    override fun run() {
+                        val profile = profileFunction.getProfile()
+                        loopPlugin.disconnectPump(duration, profile)
+                        rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
+                        sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)))
+                    }
+                })
             }
-        })
-        receivedSms.processed = true
+        } else {
+            sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
+            return
+        }
     }
 
     private fun processPROFILE(splitted: Array<String>, receivedSms: Sms) { // load profiles
@@ -612,7 +682,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                             override fun run() {
                                 if (result.success) {
                                     var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_extendedset), aDouble, duration)
-                                    if (Config.APS) replyText += "\n" + resourceHelper.gs(R.string.loopsuspended)
+                                    if (config.APS) replyText += "\n" + resourceHelper.gs(R.string.loopsuspended)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
@@ -713,7 +783,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
         else {
             val passCode = generatePasscode()
-            val reply = String.format(resourceHelper.gs(R.string.smscommunicator_carbsreplywithcode), grams, DateUtil.timeString(time), passCode)
+            val reply = String.format(resourceHelper.gs(R.string.smscommunicator_carbsreplywithcode), grams, dateUtil.timeString(time), passCode)
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(grams, time) {
                 override fun run() {

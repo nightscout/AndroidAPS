@@ -20,7 +20,9 @@
     <string name="objectives_autosens_gate">O săptămână de buclă închisă încheiată cu succes în condițiile introducerii regulate a carbohidraților</string>
     <string name="objectives_ama_objective">Activarea unor facilități adiționale pentru funcționarea în timpul zilei, cum ar fi advanced meal assist</string>
     <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
+    <string name="objectives_auto_objective">Activarea automatizării</string>
     <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
+    <string name="objectives_auto_gate">Citiți documentația despre cum funcționează automatizarea. Setați primele reguli simple. În loc de a acționa, lăsați AAPS doar să afișeze notificări. Când sunteți siguri ca automatizarea acționează la momentul potrivit, înlocuiți notificările cu acțiuni reale.(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicemie disponibilă în NS</string>
     <string name="objectives_pumpstatusavailableinns">Starea pompei disponibilă în NS</string>
     <string name="objectives_manualenacts">Acțiuni manuale</string>
@@ -35,10 +37,12 @@
     <string name="objectives_useloop">Afișați conținutul facilității Buclă</string>
     <string name="objectives_usescale">Folosiți funcția scală prin apăsarea prelungă a graficului glicemiei</string>
     <string name="objectives_button_enter">Introduceţi</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Dacă aveți cel puțin 3 luni de experiență cu un sistem în bucla închisă, puteți beneficia de un cod pentru a sări peste obiective. Pentru mai multe detalii vezi: https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Cod acceptat</string>
     <string name="codeinvalid">Cod invalid</string>
     <string name="objectives_exam_objective">Dovediți-vă cunoștințele</string>
     <string name="objectives_exam_gate">Studiați și răspundeți corect la întrebări</string>
+    <string name="answerdisabledto">Posibilitatea de a răspunde este dezactivată până la: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>

@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/primefill"
-                android:src="@drawable/icon_cp_pump_canula" />
+                android:src="@drawable/ic_cp_pump_canula" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                 android:text="@string/overview_insulin_label"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/fill_insulinamount"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"

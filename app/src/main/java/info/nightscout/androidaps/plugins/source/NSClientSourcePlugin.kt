@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
@@ -26,7 +27,8 @@ class NSClientSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP
+    private val sp: SP,
+    config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -37,6 +39,14 @@ class NSClientSourcePlugin @Inject constructor(
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false
+
+    init {
+        if (config.NSCLIENT) {
+            pluginDescription
+                .alwaysEnabled(true)
+                .setDefault()
+        }
+    }
 
     override fun advancedFilteringSupported(): Boolean {
         return isAdvancedFilteringEnabled
@@ -70,7 +80,7 @@ class NSClientSourcePlugin @Inject constructor(
 
     private fun storeSgv(sgvJson: JSONObject) {
         val nsSgv = NSSgv(sgvJson)
-        val bgReading = BgReading(nsSgv)
+        val bgReading = BgReading(injector, nsSgv)
         MainApp.getDbHelper().createIfNotExists(bgReading, "NS")
         detectSource(safeGetString(sgvJson, "device", "none"), safeGetLong(sgvJson, "mills"))
     }

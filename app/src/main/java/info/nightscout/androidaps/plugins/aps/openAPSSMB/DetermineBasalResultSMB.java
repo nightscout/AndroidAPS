@@ -3,13 +3,17 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class DetermineBasalResultSMB extends APSResult {
+    @Inject SP sp;
 
     private double eventualBG;
     private double snoozeBG;
@@ -33,7 +37,10 @@ public class DetermineBasalResultSMB extends APSResult {
             if (result.has("eventualBG")) eventualBG = result.getDouble("eventualBG");
             if (result.has("snoozeBG")) snoozeBG = result.getDouble("snoozeBG");
             //if (result.has("insulinReq")) insulinReq = result.getDouble("insulinReq");
-            //if (result.has("carbsReq")) carbsReq = result.getDouble("carbsReq");
+
+            if (result.has("carbsReq")) carbsReq = result.getInt("carbsReq");
+            if (result.has("carbsReqWithin")) carbsReqWithin = result.getInt("carbsReqWithin");
+            
 
             if (result.has("rate") && result.has("duration")) {
                 tempBasalRequested = true;
@@ -50,6 +57,9 @@ public class DetermineBasalResultSMB extends APSResult {
                 smb = result.getDouble("units");
             } else {
                 smb = 0d;
+            }
+            if (result.has("targetBG")) {
+                targetBG = result.getDouble("targetBG");
             }
 
             if (result.has("deliverAt")) {

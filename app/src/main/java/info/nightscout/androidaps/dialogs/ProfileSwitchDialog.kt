@@ -9,7 +9,7 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -28,6 +28,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
 
+    var profileIndex: Int? = null
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("overview_profileswitch_duration", overview_profileswitch_duration.value)
@@ -38,6 +40,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateViewGeneral()
+        arguments?.let { bundle ->
+            profileIndex = bundle.getInt("profileIndex", 0)
+        }
         return inflater.inflate(R.layout.dialog_profileswitch, container, false)
     }
 
@@ -59,9 +64,12 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
             overview_profileswitch_profile.adapter = adapter
             // set selected to actual profile
-            for (p in profileList.indices)
-                if (profileList[p] == profileFunction.getProfileName(false))
-                    overview_profileswitch_profile.setSelection(p)
+            if (profileIndex != null)
+                overview_profileswitch_profile.setSelection(profileIndex as Int)
+            else
+                for (p in profileList.indices)
+                    if (profileList[p] == profileFunction.getProfileName(false))
+                        overview_profileswitch_profile.setSelection(p)
         } ?: return
 
         treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
@@ -98,7 +106,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {

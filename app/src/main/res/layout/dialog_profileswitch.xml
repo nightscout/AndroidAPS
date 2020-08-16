@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_profileswitch"
-                android:src="@drawable/icon_actions_profileswitch" />
+                android:src="@drawable/ic_actions_profileswitch" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/overview_profileswitch_duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -154,7 +154,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/overview_profileswitch_percentage"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -187,7 +187,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/overview_profileswitch_timeshift"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />

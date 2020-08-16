@@ -5,8 +5,9 @@ import info.nightscout.androidaps.R;
 /**
  * Created by andy on 4.8.2019
  */
-
-// FIXME remove
+// TODO remove this class and use PumpDeviceState instead
+//  BS: Actually, don't use PumpDeviceState in Omnipod driver at all; use PodStateManager
+//  If PumpDeviceState is Omnipod specific; also remove that
 public enum PodDeviceState {
 
     // FIXME

@@ -16,12 +16,12 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin.LastRun
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -34,15 +34,19 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class GraphData(injector: HasAndroidInjector, private val graph: GraphView, private val iobCobCalculatorPlugin: IobCobCalculatorPlugin) {
+class GraphData(
+    injector: HasAndroidInjector,
+    private val graph: GraphView,
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val treatmentsPlugin: TreatmentsInterface
+
+) {
 
     // IobCobCalculatorPlugin  Cannot be injected: HistoryBrowser
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
-
-    private val treatmentsPlugin: TreatmentsInterface
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
@@ -53,7 +57,6 @@ class GraphData(injector: HasAndroidInjector, private val graph: GraphView, priv
     init {
         injector.androidInjector().inject(this)
         units = profileFunction.getUnits()
-        treatmentsPlugin = activePlugin.activeTreatments
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -197,7 +200,7 @@ class GraphData(injector: HasAndroidInjector, private val graph: GraphView, priv
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound)
     }
 
-    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LastRun?) {
+    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LoopInterface.LastRun?) {
         var toTime = toTimeParam
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
         var lastTarget = -1.0

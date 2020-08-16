@@ -2,6 +2,9 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
 import android.content.Context;
 
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
@@ -30,8 +33,8 @@ import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -42,6 +45,7 @@ import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 @Singleton
 public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
@@ -56,6 +60,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     private final HardLimits hardLimits;
     private final Profiler profiler;
     private final FabricPrivacy fabricPrivacy;
+    private final SP sp;
 
     // last values
     DetermineBasalAdapterSMBJS lastDetermineBasalAdapterSMBJS = null;
@@ -77,7 +82,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             IobCobCalculatorPlugin iobCobCalculatorPlugin,
             HardLimits hardLimits,
             Profiler profiler,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            SP sp
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
@@ -100,6 +106,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         this.hardLimits = hardLimits;
         this.profiler = profiler;
         this.fabricPrivacy = fabricPrivacy;
+        this.sp = sp;
     }
 
     @Override
@@ -117,6 +124,25 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     public boolean specialShowInListCondition() {
         PumpInterface pump = activePlugin.getActivePump();
         return pump.getPumpDescription().isTempBasalCapable;
+    }
+
+    @Override
+    public void preprocessPreferences(@NotNull PreferenceFragmentCompat preferenceFragment) {
+        super.preprocessPreferences(preferenceFragment);
+        boolean smbAlwaysEnabled = sp.getBoolean(R.string.key_enableSMB_always, false);
+
+        SwitchPreference withCOB = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_enableSMB_with_COB));
+        if (withCOB != null) {
+            withCOB.setVisible(!smbAlwaysEnabled);
+        }
+        SwitchPreference withTempTarget = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_enableSMB_with_temptarget));
+        if (withTempTarget != null) {
+            withTempTarget.setVisible(!smbAlwaysEnabled);
+        }
+        SwitchPreference afterCarbs = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_enableSMB_after_carbs));
+        if (afterCarbs != null) {
+            afterCarbs.setVisible(!smbAlwaysEnabled);
+        }
     }
 
     @Override
@@ -174,7 +200,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         long startPart = System.currentTimeMillis();
 
         MealData mealData = iobCobCalculatorPlugin.getMealData();
-       profiler.log(LTag.APS, "getMealData()", startPart);
+        profiler.log(LTag.APS, "getMealData()", startPart);
 
         Constraint<Double> maxIOBAllowedConstraint = constraintChecker.getMaxIOBAllowed();
         inputConstraints.copyReasons(maxIOBAllowedConstraint);
@@ -219,7 +245,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         }
 
         IobTotal[] iobArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
-       profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart);
+        profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();
         Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
@@ -234,8 +260,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         constraintChecker.isUAMEnabled(uam);
         inputConstraints.copyReasons(uam);
 
-       profiler.log(LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
-       profiler.log(LTag.APS, "SMB data gathering", start);
+        profiler.log(LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
+        profiler.log(LTag.APS, "SMB data gathering", start);
 
         start = System.currentTimeMillis();
         try {
@@ -254,7 +280,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         long now = System.currentTimeMillis();
 
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
-       profiler.log(LTag.APS, "SMB calculation", start);
+        profiler.log(LTag.APS, "SMB calculation", start);
         if (determineBasalResultSMB == null) {
             getAapsLogger().error(LTag.APS, "SMB calculation returned null");
             lastDetermineBasalAdapterSMBJS = null;

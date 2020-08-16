@@ -33,16 +33,19 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
 import io.reactivex.disposables.CompositeDisposable;
@@ -59,6 +62,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject FabricPrivacy fabricPrivacy;
     @Inject RxBusWrapper rxBus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject DatabaseHelperInterface databaseHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -288,7 +292,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
         try {
             Treatment old;
-            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            treatment.date = databaseHelper.roundDateToSec(treatment.date);
 
             if (treatment.source == Source.PUMP) {
                 // check for changed from pump change in NS
@@ -304,6 +308,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         //preserve carbs
                         if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
                             treatment.carbs = existingTreatment.carbs;
+                        // preserve insulin
+                        } else if (existingTreatment.isValid && existingTreatment.insulin > 0 && treatment.insulin == 0) {
+                            treatment.insulin = existingTreatment.insulin;
                         }
 
                         getDao().delete(existingTreatment); // need to delete/create because date may change too
@@ -411,7 +418,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
 
         try {
-            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            treatment.date = databaseHelper.roundDateToSec(treatment.date);
 
             Treatment existingTreatment = getRecord(treatment.pumpId, treatment.date);
 
@@ -538,37 +545,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return (Math.abs(diff) <= 0.00001);
     }
 
-    @Deprecated
-    private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
-
-        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
-
-
-        if (fromNightScout) {
-            long pumpId_old = oldTreatment.pumpId;
-            boolean isSMB = (oldTreatment.isSMB || newTreatment.isSMB);
-
-            oldTreatment.copyFrom(newTreatment);
-
-            if (pumpId_old != 0) {
-                oldTreatment.pumpId = pumpId_old;
-            }
-
-            if (oldTreatment.pumpId != 0 && oldTreatment.source != Source.PUMP) {
-                oldTreatment.source = Source.PUMP;
-            }
-
-            oldTreatment.isSMB = isSMB;
-
-        } else {
-            oldTreatment.copyFrom(newTreatment);
-        }
-
-        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [newAfterChange={}]", oldTreatment.toString());
-
-    }
-
-
     public Treatment getRecord(long pumpId, long date) {
 
         Treatment record = null;
@@ -610,6 +586,53 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 return null;
             if (result.size() > 1)
                 aapsLogger.warn(LTag.DATATREATMENTS, "Multiple records with the same pump id found (returning first one): " + result.toString());
+            return result.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Returns the newest record with insulin > 0
+     */
+    @Nullable
+    public Treatment getLastBolus(boolean excludeSMB) {
+        try {
+            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
+            Where where = queryBuilder.where();
+            where.gt("insulin", 0);
+            where.and().le("date", DateUtil.now());
+            where.and().eq("isValid", true);
+            if (excludeSMB) where.and().eq("isSMB", false);
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(1L);
+
+            List<Treatment> result = getDao().query(queryBuilder.prepare());
+            if (result.isEmpty())
+                return null;
+            return result.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Returns the newest record with carbs > 0
+     */
+    @Nullable
+    public Treatment getLastCarb() {
+        try {
+            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
+            Where where = queryBuilder.where();
+            where.gt("carbs", 0);
+            where.and().le("date", DateUtil.now());
+            where.and().eq("isValid", true);
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(1L);
+
+            List<Treatment> result = getDao().query(queryBuilder.prepare());
+            if (result.isEmpty())
+                return null;
             return result.get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);

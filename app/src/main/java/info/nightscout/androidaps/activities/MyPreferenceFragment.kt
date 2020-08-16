@@ -13,19 +13,22 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
@@ -35,13 +38,8 @@ import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -67,19 +65,18 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var config: Config
 
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var careportalPlugin: CareportalPlugin
     @Inject lateinit var comboPlugin: ComboPlugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
-    @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
@@ -102,6 +99,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
 
+    // TODO why?
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
@@ -161,22 +159,20 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(careportalPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, Config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, Config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, Config.APS)
+            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
-            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(omnipodPumpPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !Config.NSCLIENT)
+            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !config.NSCLIENT)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
@@ -189,9 +185,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
         }
         initSummary(preferenceScreen, pluginId != -1)
-        for (plugin in pluginStore.plugins) {
-            plugin.preprocessPreferences(this)
-        }
+        preprocessPreferences()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -208,12 +202,49 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.recreate()
             return
         }
-        if (key == resourceHelper.gs(R.string.key_openapsama_useautosens) && sp.getBoolean(R.string.key_openapsama_useautosens, false))
+        if (key == resourceHelper.gs(R.string.key_openapsama_useautosens) && sp.getBoolean(R.string.key_openapsama_useautosens, false)) {
             activity?.let {
                 show(it, resourceHelper.gs(R.string.configbuilder_sensitivity), resourceHelper.gs(R.string.sensitivity_warning))
             }
+        }
+        checkForBiometricFallback(key)
 
         updatePrefSummary(findPreference(key))
+        preprocessPreferences()
+    }
+
+    private fun preprocessPreferences() {
+        for (plugin in pluginStore.plugins) {
+            plugin.preprocessPreferences(this)
+        }
+    }
+
+    private fun checkForBiometricFallback(key: String) {
+        // Biometric protection activated without set master password
+        if ((resourceHelper.gs(R.string.key_settings_protection) == key ||
+                resourceHelper.gs(R.string.key_application_protection) == key ||
+                resourceHelper.gs(R.string.key_bolus_protection) == key) &&
+            sp.getString(R.string.key_master_password, "") == "" &&
+            sp.getInt(key, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+        ) {
+            activity?.let {
+                val title = resourceHelper.gs(R.string.unsecure_fallback_biometric)
+                val message = resourceHelper.gs(R.string.master_password_missing, resourceHelper.gs(R.string.configbuilder_general), resourceHelper.gs(R.string.protection))
+                show(it, title = title, message = message)
+            }
+        }
+
+        // Master password erased with activated Biometric protection
+        val isBiometricActivated = sp.getInt(R.string.key_settings_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_application_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_bolus_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+        if (resourceHelper.gs(R.string.key_master_password) == key && sp.getString(key, "") == "" && isBiometricActivated) {
+            activity?.let {
+                val title = resourceHelper.gs(R.string.unsecure_fallback_biometric)
+                val message = resourceHelper.gs(R.string.unsecure_fallback_descriotion_biometric)
+                show(it, title = title, message = message)
+            }
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -242,11 +273,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             resourceHelper.gs(R.string.key_high_mark),
             resourceHelper.gs(R.string.key_low_mark)
         )
-        if (listOf(*unitDependent).contains(pref.key)) {
-            val editTextPref = pref as EditTextPreference
-            val converted = Profile.toCurrentUnitsString(profileFunction, SafeParse.stringToDouble(editTextPref.text))
-            editTextPref.summary = converted
-            editTextPref.text = converted
+        if (unitDependent.toList().contains(pref.key) && pref is EditTextPreference) {
+            val converted = Profile.toCurrentUnits(profileFunction, SafeParse.stringToDouble(pref.text))
+            pref.summary = converted.toString()
         }
     }
 
@@ -282,7 +311,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
 
         for (plugin in pluginStore.plugins) {
-            pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) }}
+            pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) } }
         }
 
         val hmacPasswords = arrayOf(

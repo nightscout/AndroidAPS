@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +30,8 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -50,7 +50,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -74,7 +74,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
+    private final NSUpload nsUpload;
     private final FabricPrivacy fabricPrivacy;
+    private final DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -99,7 +101,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             SP sp,
             ProfileFunction profileFunction,
             ActivePluginProvider activePlugin,
-            FabricPrivacy fabricPrivacy
+            NSUpload nsUpload,
+            FabricPrivacy fabricPrivacy,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
@@ -118,6 +122,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
         this.fabricPrivacy = fabricPrivacy;
+        this.dateUtil = dateUtil;
+        this.nsUpload = nsUpload;
     }
 
     @Override
@@ -171,7 +177,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         return this.service;
     }
 
-    private long range() {
+    protected long range() {
         double dia = Constants.defaultDIA;
         if (profileFunction.getProfile() != null)
             dia = profileFunction.getProfile().getDia();
@@ -267,7 +273,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 for (int pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
-                    IobTotal calc = e.iobCalc(time);
+                    IobTotal calc = e.iobCalc(time, profile);
                     total.plus(calc);
                 }
             }
@@ -289,7 +295,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     /**
      * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
-     * map "Fill Canulla" entries to history (and not to add double bolus for it)
+     * map "Fill Canula" entries to history (and not to add double bolus for it)
      *
      * @param fromTimestamp
      * @return
@@ -300,13 +306,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         long time = System.currentTimeMillis();
         synchronized (treatments) {
-            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: AllTreatmentsInDb: " + new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(treatments));
+//            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: AllTreatmentsInDb: " + new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(treatments));
 
             for (Treatment t : treatments) {
                 if (t.date <= time && t.date >= fromTimestamp)
                     in5minback.add(t);
             }
-            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={} " + fromTimestamp + " " + new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(in5minback));
+//            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={} " + fromTimestamp + " " + new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(in5minback));
             return in5minback;
         }
     }
@@ -328,34 +334,41 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public long getLastBolusTime() {
-        long now = System.currentTimeMillis();
-        long last = 0;
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date > last && t.insulin > 0 && t.date <= now)
-                    last = t.date;
-            }
+        Treatment last = getService().getLastBolus(false);
+        if (last == null) {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: NOTHING FOUND");
+            return 0;
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + DateUtil.dateAndTimeString(last));
-        return last;
+        else {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + dateUtil.dateAndTimeString(last.date));
+            return last.date;
+        }
     }
 
-    public long getLastBolusTime(boolean isSMB) {
-        long now = System.currentTimeMillis();
-        long last = 0;
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date > last && t.insulin > 0 && t.date <= now && isSMB == t.isSMB)
-                    last = t.date;
-            }
+    public long getLastBolusTime(boolean excludeSMB) {
+        Treatment last = getService().getLastBolus(excludeSMB);
+        if (last == null) {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: NOTHING FOUND");
+            return 0;
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + DateUtil.dateAndTimeString(last));
-        return last;
+        else {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + dateUtil.dateAndTimeString(last.date));
+            return last.date;
+        }
     }
+
+    public long getLastCarbTime() {
+        Treatment last = getService().getLastCarb();
+        if (last == null) {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last Carb time: NOTHING FOUND");
+            return 0;
+        }
+        else {
+            getAapsLogger().debug(LTag.DATATREATMENTS, "Last Carb time: " + dateUtil.dateAndTimeString(last.date));
+            return last.date;
+        }
+    }
+
 
     @Override
     public boolean isInHistoryRealTempBasalInProgress() {
@@ -426,9 +439,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                         ExtendedBolus dummyExt = new ExtendedBolus(getInjector());
                         dummyExt.copyFrom(e);
                         dummyExt.cutEndTo(truncateTime);
-                        calc = dummyExt.iobCalc(time);
+                        calc = dummyExt.iobCalc(time, profile);
                     } else {
-                        calc = e.iobCalc(time);
+                        calc = e.iobCalc(time, profile);
                     }
                     totalExt.plus(calc);
                 }
@@ -457,8 +470,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             Treatment treatment = new Treatment(getInjector());
             treatment.date = i;
             treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
-            Iob iob = treatment.iobCalc(i, profile.getDia());
-            total.iob += iob.iobContrib;
+            Iob iob = treatment.iobCalc(time, profile.getDia());
+            total.basaliob += iob.iobContrib;
             total.activity += iob.activityContrib;
         }
         return total;
@@ -549,13 +562,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (newRecordCreated) {
             if (extendedBolus.durationInMinutes == 0) {
                 if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
-                    NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
+                    nsUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
                 else
-                    NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
+                    nsUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
             } else if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
-                NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
+                nsUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
             else
-                NSUpload.uploadExtendedBolus(extendedBolus);
+                nsUpload.uploadExtendedBolus(extendedBolus);
         }
         return newRecordCreated;
     }
@@ -582,13 +595,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(tempBasal);
         if (newRecordCreated) {
             if (tempBasal.durationInMinutes == 0)
-                NSUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
+                nsUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
             else if (tempBasal.isAbsolute)
-                NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
+                nsUpload.uploadTempBasalStartAbsolute(tempBasal, null);
             else
-                NSUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
+                nsUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
         }
         return newRecordCreated;
+    }
+
+    public TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
+        TreatmentService.UpdateReturn resultRecord = getService().createOrUpdateMedtronic(treatment, fromNightScout);
+
+        return new TreatmentUpdateReturn(resultRecord.success, resultRecord.newRecord);
     }
 
     // return true if new record is created
@@ -637,12 +656,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
         if (newRecordCreated && detailedBolusInfo.isValid)
-            NSUpload.uploadTreatmentRecord(detailedBolusInfo);
+            nsUpload.uploadTreatmentRecord(detailedBolusInfo);
 
         if (!allowUpdate && !creatOrUpdateResult.success) {
             getAapsLogger().error("Treatment could not be added to DB", new Exception());
 
-            String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
+            String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, dateUtil.dateAndTimeString(treatment.date));
 
             Intent i = new Intent(context, ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);
@@ -706,7 +725,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public void addToHistoryTempTarget(TempTarget tempTarget) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         MainApp.getDbHelper().createOrUpdate(tempTarget);
-        NSUpload.uploadTempTarget(tempTarget, profileFunction);
+        nsUpload.uploadTempTarget(tempTarget, profileFunction);
     }
 
     @Override
@@ -729,7 +748,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
-        NSUpload.uploadProfileSwitch(profileSwitch);
+        nsUpload.uploadProfileSwitch(profileSwitch);
     }
 
     @Override

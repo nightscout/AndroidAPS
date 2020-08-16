@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import com.google.common.base.Optional
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
@@ -110,7 +110,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.`as`), TriggerAutosensValue(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.`ic_as`), TriggerAutosensValue(injector).icon())
     }
 
     @Before

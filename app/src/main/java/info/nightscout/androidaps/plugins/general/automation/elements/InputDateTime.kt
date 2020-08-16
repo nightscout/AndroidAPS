@@ -18,6 +18,7 @@ import javax.inject.Inject
 class InputDateTime(injector: HasAndroidInjector) : Element(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var context: Context
+    @Inject lateinit var dateUtil: DateUtil
 
     var value: Long = DateUtil.now()
 
@@ -30,7 +31,7 @@ class InputDateTime(injector: HasAndroidInjector) : Element(injector) {
         val dateButton = TextView(root.context)
         val timeButton = TextView(root.context)
         dateButton.text = DateUtil.dateString(value)
-        timeButton.text = DateUtil.timeString(value)
+        timeButton.text = dateUtil.timeString(value)
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -63,7 +64,7 @@ class InputDateTime(injector: HasAndroidInjector) : Element(injector) {
             cal.set(Calendar.MINUTE, minute)
             cal.set(Calendar.SECOND, 0) // randomize seconds to prevent creating record of the same time, if user choose time manually
             value = cal.timeInMillis
-            timeButton.text = DateUtil.timeString(value)
+            timeButton.text = dateUtil.timeString(value)
         }
 
         timeButton.setOnClickListener {

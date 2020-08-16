@@ -14,6 +14,7 @@ public class DeliverBolusMessage extends AppLayerMessage {
     private double extendedAmount;
     private int duration;
     private int bolusId;
+    private boolean disableVibration = false;
 
     public DeliverBolusMessage() {
         super(MessagePriority.NORMAL, true, true, Service.REMOTE_CONTROL);
@@ -22,7 +23,11 @@ public class DeliverBolusMessage extends AppLayerMessage {
     @Override
     protected ByteBuf getData() {
         ByteBuf byteBuf = new ByteBuf(22);
-        byteBuf.putUInt16LE(805);
+        // 805 => Old value with vibration (2.6.1 and earlier), 252 => new value without vibrations for firmware 3.x
+        if (disableVibration)
+            byteBuf.putUInt16LE(252);
+        else
+            byteBuf.putUInt16LE(805);
         byteBuf.putUInt16LE(BolusTypeIDs.IDS.getID(bolusType));
         byteBuf.putUInt16LE(31);
         byteBuf.putUInt16LE(0);
@@ -56,6 +61,8 @@ public class DeliverBolusMessage extends AppLayerMessage {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+    public void setVibration(boolean disableVibration) { this.disableVibration = disableVibration;}
 
     public int getBolusId() {
         return bolusId;

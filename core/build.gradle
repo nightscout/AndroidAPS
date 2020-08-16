@@ -7,7 +7,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -46,6 +46,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.1.1"
     implementation "androidx.activity:activity:${activityVersion}"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
+    implementation 'com.google.android.material:material:1.1.0'
 
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
@@ -57,13 +58,25 @@ dependencies {
     //Logger
     implementation 'org.slf4j:slf4j-api:1.7.30'
     //Fabric
-    implementation 'com.google.firebase:firebase-core:17.4.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
-        transitive = true;
-    }
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+
     //RxBus
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
     implementation 'org.apache.commons:commons-lang3:3.10'
+
+    // Graphview cannot be upgraded
+    implementation "com.jjoe64:graphview:4.0.1"
+
+    //DateUtil
+    implementation 'net.danlew:android.joda:2.10.6'
+
+    //db
+    implementation "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
+    implementation "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
+
+    // pumpCommon
+    implementation "com.google.code.gson:gson:2.8.6"
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

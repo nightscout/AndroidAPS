@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_calibration"
-                android:src="@drawable/icon_calibration" />
+                android:src="@drawable/ic_calibration" />
 
             <TextView
                 android:id="@+id/actions_care_title"
@@ -66,7 +66,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/overview_calibration_bg"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />

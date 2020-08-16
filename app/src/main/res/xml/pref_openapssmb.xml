@@ -18,12 +18,12 @@
             validate:testType="floatNumericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:defaultValue="1.5"
-            android:dialogMessage="@string/openapsma_maxiob_summary"
+            android:defaultValue="3"
+            android:dialogMessage="@string/openapssmb_maxiob_summary"
             android:inputType="numberDecimal"
-            android:key="@string/key_openapsma_max_iob"
-            android:title="@string/openapsma_maxiob_title"
-            validate:floatmaxNumber="12.0"
+            android:key="@string/key_openapssmb_max_iob"
+            android:title="@string/openapssmb_maxiob_title"
+            validate:floatmaxNumber="25.0"
             validate:floatminNumber="0"
             validate:testType="floatNumericRange" />
 
@@ -37,20 +37,6 @@
             android:key="@string/key_use_smb"
             android:summary="@string/enablesmb_summary"
             android:title="@string/enablesmb" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/key_use_smb"
-            android:key="@string/key_enableSMB_with_COB"
-            android:summary="@string/enablesmbwithcob_summary"
-            android:title="@string/enablesmbwithcob" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:dependency="@string/key_use_smb"
-            android:key="@string/key_enableSMB_with_temptarget"
-            android:summary="@string/enablesmbwithtemptarget_summary"
-            android:title="@string/enablesmbwithtemptarget" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -69,6 +55,20 @@
         <SwitchPreference
             android:defaultValue="false"
             android:dependency="@string/key_use_smb"
+            android:key="@string/key_enableSMB_with_COB"
+            android:summary="@string/enablesmbwithcob_summary"
+            android:title="@string/enablesmbwithcob" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_use_smb"
+            android:key="@string/key_enableSMB_with_temptarget"
+            android:summary="@string/enablesmbwithtemptarget_summary"
+            android:title="@string/enablesmbwithtemptarget" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_use_smb"
             android:key="@string/key_enableSMB_after_carbs"
             android:summary="@string/enablesmbaftercarbs_summary"
             android:title="@string/enablesmbaftercarbs" />
@@ -77,13 +77,13 @@
             android:defaultValue="3"
             android:digits="0123456789"
             android:inputType="number"
-            android:key="key_smbinterval"
+            android:key="@string/key_smbinterval"
             android:maxLines="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/smbinterval_summary"
             validate:maxNumber="10"
-            validate:minNumber="1"
+            validate:minNumber="3"
             validate:testType="numericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
@@ -142,10 +142,11 @@
             android:key="@string/key_low_temptarget_lowers_sensitivity"
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
-
+            
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_carbsReqThreshold"
             android:title="@string/carbsReqThreshold"
+            android:summary="@string/carbsReqThreshold_summary"
             android:defaultValue="1"
             android:dialogMessage="@string/carbsReqThreshold_summary"
             android:digits="0123456789"

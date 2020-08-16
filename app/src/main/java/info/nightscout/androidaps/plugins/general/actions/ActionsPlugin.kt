@@ -15,12 +15,13 @@ import javax.inject.Singleton
 class ActionsPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper
+    resourceHelper: ResourceHelper,
+    config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ActionsFragment::class.qualifiedName)
-    .enableByDefault(Config.APS || Config.PUMPCONTROL)
-    .visibleByDefault(Config.APS || Config.PUMPCONTROL)
+    .enableByDefault(config.APS || config.PUMPCONTROL)
+    .visibleByDefault(config.APS || config.PUMPCONTROL)
     .pluginName(R.string.actions)
     .shortName(R.string.actions_shortname)
     .description(R.string.description_actions),

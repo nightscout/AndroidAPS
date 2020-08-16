@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.hexStringToByteArray
+import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
+import info.nightscout.androidaps.utils.extensions.toHex
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
-import info.nightscout.androidaps.utils.toHex
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
@@ -55,13 +55,13 @@ class EncryptedPrefsFormat @Inject constructor(
 
             for ((metaKey, metaEntry) in prefs.metadata) {
                 if (metaKey == PrefsMetadataKey.FILE_FORMAT)
-                    continue;
+                    continue
                 if (metaKey == PrefsMetadataKey.ENCRYPTION)
-                    continue;
+                    continue
                 meta.put(metaKey.key, metaEntry.value)
             }
 
-            container.put(PrefsMetadataKey.FILE_FORMAT.key, if (encrypted) FORMAT_KEY_ENC else FORMAT_KEY_NOENC);
+            container.put(PrefsMetadataKey.FILE_FORMAT.key, if (encrypted) FORMAT_KEY_ENC else FORMAT_KEY_NOENC)
             container.put("metadata", meta)
 
             val security = JSONObject()

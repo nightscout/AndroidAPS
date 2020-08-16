@@ -17,21 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+
+    <ImageView
         android:id="@+id/overview_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:paddingStart="-2dp"
-        android:paddingEnd="0dp"
-        android:text="→"
-        android:textSize="42sp"
-        android:textStyle="bold"
+        android:layout_gravity="center_vertical"
         app:layout_constraintEnd_toStartOf="@+id/overview_deltas_llayout"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/overview_bg"
-        app:layout_constraintTop_toTopOf="@+id/overview_bg" />
-
+        app:layout_constraintTop_toTopOf="@+id/overview_bg"
+        android:paddingTop="18dp"
+        android:src="@drawable/ic_flat" />
 
     <LinearLayout
         android:id="@+id/overview_deltas_llayout"
@@ -46,23 +43,64 @@
             android:id="@+id/overview_timeago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-        <TextView
-            android:id="@+id/overview_delta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="n/a"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/overview_avgdelta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="n/a"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="Δ: "
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="15m Δ: \n40m Δ: "
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/overview_delta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="n/a"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/overview_avgdelta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textAlignment="textEnd"
+                        android:text="n/a"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
     </LinearLayout>
 
@@ -83,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="-4dp"
-            android:src="@drawable/loop_closed" />
+            android:src="@drawable/ic_loop_closed" />
 
         <TextView
             android:id="@+id/overview_apsmode_text"
@@ -112,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_bolus" />
+            android:src="@drawable/ic_bolus" />
 
         <TextView
             android:id="@+id/overview_iob"
@@ -140,7 +178,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_cp_bolus_carbs" />
+            android:id="@+id/overview_carbs_icon"
+            android:background="@drawable/anim_carbs" />
 
         <TextView
             android:id="@+id/overview_cob"
@@ -169,7 +208,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_cp_basal_start" />
+            android:src="@drawable/ic_cp_basal_no_tbr" />
 
         <TextView
             android:id="@+id/overview_basebasal"
@@ -197,7 +236,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_actions_startextbolus" />
+            android:src="@drawable/ic_actions_startextbolus" />
 
         <TextView
             android:id="@+id/overview_extendedbolus"
@@ -222,6 +261,7 @@
         app:layout_constraintTop_toBottomOf="@+id/overview_bg">
 
         <ImageView
+            android:id="@+id/overview_sensitivity_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

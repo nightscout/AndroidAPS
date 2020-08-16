@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -39,6 +38,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -46,6 +46,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
@@ -53,7 +54,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -132,7 +132,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -149,7 +148,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final SP sp;
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
+    private final NSUpload nsUpload;
     private final Context context;
+    private final UploadQueue uploadQueue;
+    private final DateUtil dateUtil;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -208,7 +210,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
-            Context context
+            NSUpload nsUpload,
+            Context context,
+            UploadQueue uploadQueue,
+            Config config,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .pluginName(R.string.insight_local)
@@ -216,7 +222,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                         .mainType(PluginType.PUMP)
                         .description(R.string.description_pump_insight_local)
                         .fragmentClass(LocalInsightFragment.class.getName())
-                        .preferencesId(Config.APS ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
+                        .preferencesId(config.getAPS() ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
                 injector, aapsLogger, resourceHelper, commandQueue
 
         );
@@ -227,7 +233,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.profileFunction = profileFunction;
+        this.nsUpload = nsUpload;
         this.context = context;
+        this.uploadQueue = uploadQueue;
+        this.dateUtil = dateUtil;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
@@ -588,6 +597,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.isSMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration ,false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -711,7 +721,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
                     if (cancelTBRResult.success) {
                         PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
-                                * ((double) durationInMinutes), durationInMinutes);
+                                * ((double) durationInMinutes), durationInMinutes,
+                                sp.getBoolean(R.string.key_disable_vibration_auto,false));
                         if (ebResult.success) {
                             result.success = true;
                             result.enacted = true;
@@ -789,7 +800,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolusOnly();
-        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes);
+        if (result.success) result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration,false));
         try {
             fetchStatus();
             readHistory();
@@ -803,7 +814,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         return result;
     }
 
-    public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes) {
+    public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes, boolean disableVibration) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
@@ -811,6 +822,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             bolusMessage.setDuration(durationInMinutes);
             bolusMessage.setExtendedAmount(insulin);
             bolusMessage.setImmediateAmount(0);
+            bolusMessage.setVibration(disableVibration);
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
             InsightBolusID insightBolusID = new InsightBolusID();
             insightBolusID.bolusID = bolusID;
@@ -925,8 +937,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                             if (extendedBolus.durationInMinutes <= 0) {
                                 final String _id = extendedBolus._id;
                                 if (NSUpload.isIdValid(_id))
-                                    NSUpload.removeCareportalEntryFromNS(_id);
-                                else UploadQueue.removeID("dbAdd", _id);
+                                    nsUpload.removeCareportalEntryFromNS(_id);
+                                else uploadQueue.removeID("dbAdd", _id);
                                 MainApp.getDbHelper().delete(extendedBolus);
                             } else
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
@@ -974,7 +986,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName) {
+    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
         long now = System.currentTimeMillis();
         if (connectionService == null) return null;
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
@@ -987,7 +999,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         final JSONObject extended = new JSONObject();
         try {
             status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
@@ -995,13 +1007,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
             ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
@@ -1379,7 +1391,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         temporaryBasal.durationInMinutes = 0;
         temporaryBasal.source = Source.PUMP;
         temporaryBasal.pumpId = pumpID.id;
-        temporaryBasal.date = timestamp;
+        temporaryBasal.date = timestamp - 1500L;
         temporaryBasals.add(temporaryBasal);
     }
 
@@ -1447,8 +1459,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 ExtendedBolus extendedBolus = MainApp.getDbHelper().getExtendedBolusByPumpId(bolusID.id);
                 if (extendedBolus != null) {
                     final String _id = extendedBolus._id;
-                    if (NSUpload.isIdValid(_id)) NSUpload.removeCareportalEntryFromNS(_id);
-                    else UploadQueue.removeID("dbAdd", _id);
+                    if (NSUpload.isIdValid(_id)) nsUpload.removeCareportalEntryFromNS(_id);
+                    else uploadQueue.removeID("dbAdd", _id);
                     MainApp.getDbHelper().delete(extendedBolus);
                 }
             } else {
@@ -1579,7 +1591,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.eventType = CareportalEvent.NOTE;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1613,7 +1625,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

@@ -14,12 +14,12 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventTreatmentChange
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.dialogs.WizardInfoDialog
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment.RecyclerViewAdapter.TreatmentsViewHolder
@@ -42,6 +42,9 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -67,9 +70,9 @@ class TreatmentsBolusFragment : DaggerFragment() {
                     val futureTreatments = treatmentsPlugin.service.getTreatmentDataFromTime(DateUtil.now() + 1000, true)
                     for (treatment in futureTreatments) {
                         if (NSUpload.isIdValid(treatment._id))
-                            NSUpload.removeCareportalEntryFromNS(treatment._id)
+                            nsUpload.removeCareportalEntryFromNS(treatment._id)
                         else
-                            UploadQueue.removeID("dbAdd", treatment._id)
+                            uploadQueue.removeID("dbAdd", treatment._id)
                         treatmentsPlugin.service.delete(treatment)
                     }
                     updateGui()
@@ -109,7 +112,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: TreatmentsViewHolder, position: Int) {
             val profile = profileFunction.getProfile() ?: return
             val t = treatments[position]
-            holder.date.text = DateUtil.dateAndTimeString(t.date)
+            holder.date.text = dateUtil.dateAndTimeString(t.date)
             holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, t.insulin)
             holder.carbs.text = resourceHelper.gs(R.string.format_carbs, t.carbs.toInt())
             val iob = t.iobCalc(System.currentTimeMillis(), profile.dia)
@@ -158,16 +161,16 @@ class TreatmentsBolusFragment : DaggerFragment() {
                         val text = resourceHelper.gs(R.string.configbuilder_insulin) + ": " +
                             resourceHelper.gs(R.string.formatinsulinunits, treatment.insulin) + "\n" +
                             resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, treatment.carbs.toInt()) + "\n" +
-                            resourceHelper.gs(R.string.date) + ": " + DateUtil.dateAndTimeString(treatment.date)
+                            resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(treatment.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             if (treatment.source == Source.PUMP) {
                                 treatment.isValid = false
                                 treatmentsPlugin.service.update(treatment)
                             } else {
                                 if (NSUpload.isIdValid(treatment._id))
-                                    NSUpload.removeCareportalEntryFromNS(treatment._id)
+                                    nsUpload.removeCareportalEntryFromNS(treatment._id)
                                 else
-                                    UploadQueue.removeID("dbAdd", treatment._id)
+                                    uploadQueue.removeID("dbAdd", treatment._id)
                                 treatmentsPlugin.service.delete(treatment)
                             }
                             updateGui()

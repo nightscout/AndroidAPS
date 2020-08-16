@@ -20,7 +20,10 @@
     <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius</string>
     <string name="objectives_ama_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip pažangioji maisto skaičiuoklė (AMA Advanced Meal Assist)</string>
     <string name="objectives_smb_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip SMB (Super Mikro Bolusas)</string>
+    <string name="objectives_auto_objective">Automatizavimo įjungimas</string>
     <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti max AIO! Pradžiai patartina skaičiuoti taip: maxAIO=(didžiausia valandinė bazė x 3) + vidutinis bolusas</string>
+    <string name="objectives_auto_gate">Perskaitykite automatizavimo dokumentaciją. Nustatykite pirmąsias paprastas taisykles. Užuot įjungę veiksmus, leiskite AAPS tik rodyti pranešimus. Kai būsite tikri, kad automatizavimas prasidės tinkamu laiku, pakeiskite pranešimą realiu veiksmu.
+(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">KG matoma NS</string>
     <string name="objectives_pumpstatusavailableinns">NS matomas pompos statusas</string>
     <string name="objectives_manualenacts">Įvesti rankiniu būdu</string>

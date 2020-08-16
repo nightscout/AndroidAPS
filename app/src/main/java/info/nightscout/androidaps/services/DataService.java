@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 
 import dagger.android.DaggerIntentService;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -20,6 +21,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -42,6 +44,7 @@ public class DataService extends DaggerIntentService {
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
+    @Inject NSUpload nsUpload;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject DexcomPlugin dexcomPlugin;
     @Inject EversensePlugin eversensePlugin;
@@ -53,6 +56,7 @@ public class DataService extends DaggerIntentService {
     @Inject XdripPlugin xdripPlugin;
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject ActivePluginProvider activePlugin;
+    @Inject Config config;
 
     public DataService() {
         super("DataService");
@@ -66,7 +70,6 @@ public class DataService extends DaggerIntentService {
 
 
         boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
-        Bundle bundles = intent.getExtras();
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
@@ -210,7 +213,7 @@ public class DataService extends DaggerIntentService {
         } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
             MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
-            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePlugin, json);
+            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePlugin, nsUpload, json);
         } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
                 eventType.equals(CareportalEvent.INSULINCHANGE) ||
                 eventType.equals(CareportalEvent.SENSORCHANGE) ||
@@ -232,8 +235,11 @@ public class DataService extends DaggerIntentService {
             String notes = JsonHelper.safeGetString(json, "notes", "");
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
                     && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
-                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
-                rxBus.send(new EventNewNotification(announcement));
+                boolean defaultVal = config.getNSCLIENT();
+                if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
+                    Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
+                    rxBus.send(new EventNewNotification(announcement));
+                }
             }
         }
     }

@@ -4,8 +4,8 @@ import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.utils.NumberPicker
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 import javax.inject.Inject
 

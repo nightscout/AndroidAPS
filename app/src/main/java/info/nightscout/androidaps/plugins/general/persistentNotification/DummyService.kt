@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.persistentNotification
 
+import android.app.Notification
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -26,13 +27,17 @@ class DummyService : DaggerService() {
 
     private val disposable = CompositeDisposable()
 
-    override fun onBind(intent: Intent): IBinder? = null
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
         // As onCreate() is not called every time a service is started, copied to onStartCommand().
-        startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        try {
+            startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: Exception) {
+            startForeground(4711, Notification())
+        }
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(Schedulers.io())
@@ -50,9 +55,13 @@ class DummyService : DaggerService() {
         stopForeground(true)
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        try {
+            startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: Exception) {
+            startForeground(4711, Notification())
+        }
         return Service.START_STICKY
     }
 }

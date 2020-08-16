@@ -42,13 +42,13 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -72,6 +72,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public TreatmentsPlugin treatmentsPlugin;
     @Inject public ActionStringHandler actionStringHandler;
     @Inject ReceiverStatusStore receiverStatusStore;
+    @Inject Config config;
 
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
@@ -151,7 +152,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         if (wearIntegration()) {
             handler.post(() -> {
-                if (googleApiClient.isConnected()) {
+                if (googleApiClient != null && googleApiClient.isConnected()) {
                     if (ACTION_RESEND.equals(action)) {
                         resendData();
                     } else if (ACTION_OPEN_SETTINGS.equals(action)) {
@@ -179,7 +180,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                         sendData();
                     }
                 } else {
-                    googleApiClient.connect();
+                    if (googleApiClient != null) googleApiClient.connect();
                 }
             });
         }
@@ -297,9 +298,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
         String units = profileFunction.getUnits();
-
-        double lowLine = defaultValueHelper.determineLowLine();
-        double highLine = defaultValueHelper.determineHighLine();
+        double convert2MGDL = 1.0;
+        if (units.equals(Constants.MMOL))
+            convert2MGDL = Constants.MMOLL_TO_MGDL;
+        double lowLine = defaultValueHelper.determineLowLine()*convert2MGDL;
+        double highLine = defaultValueHelper.determineHighLine()*convert2MGDL;
 
         long sgvLevel = 0L;
         if (lastBG.value > highLine) {
@@ -530,11 +533,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         }
 
-        final LoopPlugin.LastRun finalLastRun = loopPlugin.lastRun;
-        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null) {
-            List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
+        final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
+        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().hasPredictions && finalLastRun.getConstraintsProcessed() != null) {
+            List<BgReading> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
 
             if (!predArray.isEmpty()) {
+                final String units = profileFunction.getUnits();
                 for (BgReading bg : predArray) {
                     if (bg.value < 40) continue;
                     predictions.add(predictionMap(bg.date, bg.value, bg.getPredectionColor()));
@@ -590,7 +594,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
     private void sendNotification() {
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(OPEN_SETTINGS_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
@@ -604,7 +608,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void sendBolusProgress(int progresspercent, String status) {
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BOLUS_PROGRESS_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
@@ -620,7 +624,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void sendActionConfirmationRequest(String title, String message, String actionstring) {
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(ACTION_CONFIRMATION_REQUEST_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
@@ -640,7 +644,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void sendChangeConfirmationRequest(String title, String message, String actionstring) {
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(ACTION_CHANGECONFIRMATION_REQUEST_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
@@ -660,7 +664,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void sendCancelNotificationRequest(String actionstring) {
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(ACTION_CANCELNOTIFICATION_REQUEST_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
@@ -679,7 +683,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
     private void sendStatus() {
 
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             Profile profile = profileFunction.getProfile();
             String status = resourceHelper.gs(R.string.noprofile);
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
@@ -712,9 +716,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
             long openApsStatus;
             //OpenAPS status
-            if (Config.APS) {
+            if (config.getAPS()) {
                 //we are AndroidAPS
-                openApsStatus = loopPlugin.lastRun != null && loopPlugin.lastRun.lastTBREnact != 0 ? loopPlugin.lastRun.lastTBREnact : -1;
+                openApsStatus = loopPlugin.getLastRun() != null && loopPlugin.getLastRun().getLastTBREnact() != 0 ? loopPlugin.getLastRun().getLastTBREnact() : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
@@ -743,7 +747,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void sendPreferences() {
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
 
             boolean wearcontrol = sp.getBoolean("wearcontrol", false);
 

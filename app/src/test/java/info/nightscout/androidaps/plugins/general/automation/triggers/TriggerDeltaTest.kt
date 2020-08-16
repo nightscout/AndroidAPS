@@ -4,7 +4,7 @@ import com.google.common.base.Optional
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta.DeltaType
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
@@ -93,7 +93,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.icon_auto_delta), TriggerDelta(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_auto_delta), TriggerDelta(injector).icon())
     }
 
     @Test fun initializerTest() {
@@ -103,14 +103,14 @@ class TriggerDeltaTest : TriggerTestBase() {
 
     private fun generateValidBgData(): List<BgReading> {
         val list: MutableList<BgReading> = ArrayList()
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}")))) // +2
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":219,\"mills\":1514766300000,\"direction\":\"Flat\"}")))) // +3
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":223,\"mills\":1514766000000,\"direction\":\"Flat\"}")))) // +4
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":222,\"mills\":1514765700000,\"direction\":\"Flat\"}"))))
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":224,\"mills\":1514765400000,\"direction\":\"Flat\"}"))))
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":226,\"mills\":1514765100000,\"direction\":\"Flat\"}"))))
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))))
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}")))) // +2
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":219,\"mills\":1514766300000,\"direction\":\"Flat\"}")))) // +3
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":223,\"mills\":1514766000000,\"direction\":\"Flat\"}")))) // +4
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":222,\"mills\":1514765700000,\"direction\":\"Flat\"}"))))
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":224,\"mills\":1514765400000,\"direction\":\"Flat\"}"))))
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":226,\"mills\":1514765100000,\"direction\":\"Flat\"}"))))
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))))
         return list
     }
 }

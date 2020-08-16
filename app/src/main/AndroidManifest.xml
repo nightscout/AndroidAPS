@@ -58,15 +58,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
-        <activity
-            android:name=".activities.BolusProgressHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity
-            android:name=".activities.ErrorHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
-        <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
@@ -74,17 +65,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.BLEScanActivity">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
+        <activity android:name=".activities.ProfileHelperActivity"
+            android:theme="@style/ProfileHelperAppTheme" />
         <activity android:name=".activities.StatsActivity" />
 
         <!-- Receive new BG readings from other local apps -->
@@ -122,6 +107,9 @@
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
+        <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
+        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver"></receiver>
+
         <!-- Auto start -->
         <receiver
             android:name=".receivers.AutoStartReceiver"
@@ -149,22 +137,6 @@
         <service
             android:name=".services.LocationService"
             android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRKorean.services.DanaRKoreanExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRv2.services.DanaRv2ExecutionService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".plugins.pump.danaRS.services.DanaRSService"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -286,16 +258,7 @@
             android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
             android:exported="true" />
-        <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
-            android:label="@string/title_activity_rileylink_settings"
-            android:theme="@style/Theme.AppCompat.NoTitle" />
+
         <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>

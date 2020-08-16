@@ -9,7 +9,7 @@ import android.widget.Spinner
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.NumberPicker
+import info.nightscout.androidaps.utils.ui.NumberPicker
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*
@@ -76,7 +76,7 @@ class InputDelta(injector: HasAndroidInjector) : Element(injector) {
         spinnerParams.setMargins(0, resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4))
         spinner.layoutParams = spinnerParams
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 deltaType = DeltaType.values()[position]
             }
 

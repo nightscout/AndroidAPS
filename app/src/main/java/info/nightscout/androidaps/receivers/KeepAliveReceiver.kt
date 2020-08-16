@@ -8,15 +8,16 @@ import android.content.Intent
 import android.os.PowerManager
 import android.os.SystemClock
 import dagger.android.DaggerBroadcastReceiver
+import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -38,12 +39,14 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
-
+    @Inject lateinit var config: Config
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var dateUtil: DateUtil
 
     companion object {
         private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
         private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
-        private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
+        private val IOB_UPDATE_FREQUENCY_IN_MINS = 5L
 
         private var lastReadStatus: Long = 0
         private var lastRun: Long = 0
@@ -100,14 +103,14 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     // IOB displayed in NS
     private fun checkAPS() {
         var shouldUploadStatus = false
-        if (Config.NSCLIENT) return
-        if (Config.PUMPCONTROL) shouldUploadStatus = true
+        if (config.NSCLIENT) return
+        if (config.PUMPCONTROL) shouldUploadStatus = true
         else if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
             shouldUploadStatus = true
         else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
-        if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
+        if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINS) && shouldUploadStatus) {
             lastIobUpload = DateUtil.now()
-            NSUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore)
+            nsUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
         }
     }
 
@@ -117,7 +120,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         val lastConnection = pump.lastDataTime()
         val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
         val isBasalOutdated = abs(profile.basal - pump.baseBasalRate) > pump.pumpDescription.basalStep
-        aapsLogger.debug(LTag.CORE, "Last connection: " + DateUtil.dateAndTimeString(lastConnection))
+        aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
         // sometimes keep alive broadcast stops
         // as as workaround test if readStatus was requested before an alarm is generated
         if (lastReadStatus != 0L && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {

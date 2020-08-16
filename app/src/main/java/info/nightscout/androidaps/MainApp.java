@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
-import androidx.annotation.StringRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -21,6 +20,7 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -37,7 +37,7 @@ import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
-import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.locale.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class MainApp extends DaggerApplication {
@@ -52,10 +52,14 @@ public class MainApp extends DaggerApplication {
     @Inject ActivityMonitor activityMonitor;
     @Inject VersionCheckerUtils versionCheckersUtils;
     @Inject SP sp;
+    @Inject NSUpload nsUpload;
+    @Inject Config config;
 
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
     @Inject List<PluginBase> plugins;
+
+    @Inject StaticInjector staticInjector; // TODO avoid , here fake only to initialize
 
     @Override
     public void onCreate() {
@@ -66,7 +70,7 @@ public class MainApp extends DaggerApplication {
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
-
+/*
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
             if (ex instanceof InternalError) {
                 // usually the app trying to spawn a thread while being killed
@@ -74,7 +78,7 @@ public class MainApp extends DaggerApplication {
             }
             aapsLogger.error("Uncaught exception crashing app", ex);
         });
-
+*/
         registerActivityLifecycleCallbacks(activityMonitor);
 
         JodaTimeAndroid.init(this);
@@ -92,7 +96,7 @@ public class MainApp extends DaggerApplication {
         pluginStore.setPlugins(plugins);
         configBuilderPlugin.initialize();
 
-        NSUpload.uploadAppStart();
+        nsUpload.uploadAppStart();
 
         new Thread(() -> keepAliveManager.setAlarm(this)).start();
         doMigrations();
@@ -100,7 +104,13 @@ public class MainApp extends DaggerApplication {
 
 
     private void doMigrations() {
-
+        // set values for different builds
+        if (!sp.contains(R.string.key_ns_alarms))
+            sp.putBoolean(R.string.key_ns_alarms, config.getNSCLIENT());
+        if (!sp.contains(R.string.key_ns_announcements))
+            sp.putBoolean(R.string.key_ns_announcements, config.getNSCLIENT());
+        if (!sp.contains(R.string.key_language))
+            sp.putString(R.string.key_language, "default");
     }
 
     @Override
@@ -111,6 +121,7 @@ public class MainApp extends DaggerApplication {
                 .build();
     }
 
+    @SuppressWarnings("deprecation")
     private void registerLocalBroadcastReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_TREATMENT);
@@ -143,16 +154,6 @@ public class MainApp extends DaggerApplication {
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(new BTReceiver(), filter);
-    }
-
-    @Deprecated
-    public static String gs(@StringRes int id) {
-        return sResources.getString(id);
-    }
-
-    @Deprecated
-    public static MainApp instance() {
-        return sInstance;
     }
 
     public static DatabaseHelper getDbHelper() {

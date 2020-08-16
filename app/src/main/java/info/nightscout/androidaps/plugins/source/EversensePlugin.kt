@@ -28,7 +28,9 @@ class EversensePlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil,
+    private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -50,7 +52,7 @@ class EversensePlugin @Inject constructor(
         if (bundle.containsKey("placementModeInProgress")) aapsLogger.debug(LTag.BGSOURCE, "placementModeInProgress: " + bundle.getBoolean("placementModeInProgress"))
         if (bundle.containsKey("glucoseLevel")) aapsLogger.debug(LTag.BGSOURCE, "glucoseLevel: " + bundle.getInt("glucoseLevel"))
         if (bundle.containsKey("glucoseTrendDirection")) aapsLogger.debug(LTag.BGSOURCE, "glucoseTrendDirection: " + bundle.getString("glucoseTrendDirection"))
-        if (bundle.containsKey("glucoseTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamp: " + DateUtil.dateAndTimeString(bundle.getLong("glucoseTimestamp")))
+        if (bundle.containsKey("glucoseTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamp: " + dateUtil.dateAndTimeString(bundle.getLong("glucoseTimestamp")))
         if (bundle.containsKey("batteryLevel")) aapsLogger.debug(LTag.BGSOURCE, "batteryLevel: " + bundle.getString("batteryLevel"))
         if (bundle.containsKey("signalStrength")) aapsLogger.debug(LTag.BGSOURCE, "signalStrength: " + bundle.getString("signalStrength"))
         if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
@@ -58,7 +60,7 @@ class EversensePlugin @Inject constructor(
         if (bundle.containsKey("transmitterModelNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterModelNumber: " + bundle.getString("transmitterModelNumber"))
         if (bundle.containsKey("transmitterSerialNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterSerialNumber: " + bundle.getString("transmitterSerialNumber"))
         if (bundle.containsKey("transmitterAddress")) aapsLogger.debug(LTag.BGSOURCE, "transmitterAddress: " + bundle.getString("transmitterAddress"))
-        if (bundle.containsKey("sensorInsertionTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "sensorInsertionTimestamp: " + DateUtil.dateAndTimeString(bundle.getLong("sensorInsertionTimestamp")))
+        if (bundle.containsKey("sensorInsertionTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "sensorInsertionTimestamp: " + dateUtil.dateAndTimeString(bundle.getLong("sensorInsertionTimestamp")))
         if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
         if (bundle.containsKey("transmitterConnectionState")) aapsLogger.debug(LTag.BGSOURCE, "transmitterConnectionState: " + bundle.getString("transmitterConnectionState"))
         if (bundle.containsKey("glucoseLevels")) {
@@ -76,10 +78,10 @@ class EversensePlugin @Inject constructor(
                     bgReading.raw = 0.0
                     val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Eversense")
                     if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                        NSUpload.uploadBg(bgReading, "AndroidAPS-Eversense")
+                        nsUpload.uploadBg(bgReading, "AndroidAPS-Eversense")
                     }
                     if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                        NSUpload.sendToXdrip(bgReading)
+                        nsUpload.sendToXdrip(bgReading)
                     }
                 }
             }
@@ -102,7 +104,7 @@ class EversensePlugin @Inject constructor(
                             data.put("glucoseType", "Finger")
                             data.put("glucose", calibrationGlucoseLevels[i])
                             data.put("units", Constants.MGDL)
-                            NSUpload.uploadCareportalEntryToNS(data)
+                            nsUpload.uploadCareportalEntryToNS(data)
                         }
                     } catch (e: JSONException) {
                         aapsLogger.error("Unhandled exception", e)

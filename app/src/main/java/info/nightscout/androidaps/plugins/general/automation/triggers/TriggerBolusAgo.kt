@@ -35,7 +35,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val lastBolusTime = treatmentsPlugin.getLastBolusTime(false)
+        val lastBolusTime = treatmentsPlugin.getLastBolusTime(true)
         if (lastBolusTime == 0L)
             return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
@@ -77,7 +77,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         resourceHelper.gs(R.string.lastboluscompared, resourceHelper.gs(comparator.value.stringRes), minutesAgo.getMinutes())
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.icon_bolus)
+    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_bolus)
 
     override fun duplicate(): Trigger = TriggerBolusAgo(injector, this)
 

@@ -24,8 +24,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/pump_tempbasal_label"
-                android:src="@drawable/icon_cp_basal_start" />
+                android:contentDescription="@string/tempbasal_label"
+                android:src="@drawable/ic_cp_basal_start" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/pump_tempbasal_label"
+                android:text="@string/tempbasal_label"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </RelativeLayout>
@@ -62,7 +62,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/actions_tempbasal_basalpercentinput"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -96,7 +96,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/actions_tempbasal_basalabsoluteinput"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -129,7 +129,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/actions_tempbasal_duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />

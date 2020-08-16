@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseActionDialog
@@ -18,8 +17,6 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTrigg
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTriggerDialog
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
@@ -34,7 +31,6 @@ import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRFragment
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
@@ -54,13 +50,11 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
-    @ContributesAndroidInjector abstract fun contributesCareportalFragment(): CareportalFragment
     @ContributesAndroidInjector abstract fun contributesComboFragment(): ComboFragment
 
     @ContributesAndroidInjector
     abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
-    @ContributesAndroidInjector abstract fun contributesDanaRFragment(): DanaRFragment
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
     @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
@@ -89,7 +83,6 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
-    @ContributesAndroidInjector abstract fun contributesBolusProgressDialog(): BolusProgressDialog
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
@@ -100,17 +93,13 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector
     abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 
-    @ContributesAndroidInjector abstract fun contributesErrorDialog(): ErrorDialog
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
     @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
     @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
-    @ContributesAndroidInjector abstract fun contributesNewNSTreatmentDialog(): NewNSTreatmentDialog
-    @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
     @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
-    @ContributesAndroidInjector abstract fun contributesProfileViewerDialog(): ProfileViewerDialog
     @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
     @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog

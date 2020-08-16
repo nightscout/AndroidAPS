@@ -30,18 +30,21 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryBgData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -55,7 +58,7 @@ import io.reactivex.schedulers.Schedulers;
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
 @Singleton
-public class IobCobCalculatorPlugin extends PluginBase {
+public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculatorInterface {
     private final HasAndroidInjector injector;
     private final SP sp;
     private final RxBusWrapper rxBus;
@@ -67,6 +70,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private final SensitivityAAPSPlugin sensitivityAAPSPlugin;
     private final SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
     private final FabricPrivacy fabricPrivacy;
+    private final DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -75,8 +79,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private LongSparseArray<AutosensData> autosensDataTable = new LongSparseArray<>(); // oldest at index 0
     private LongSparseArray<BasalData> basalDataTable = new LongSparseArray<>(); // oldest at index 0
 
+    // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
+    // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
+    Long referenceTime = null;
+    private Boolean lastUsed5minCalculation = null; // true if used 5min bucketed data
+
     private volatile List<BgReading> bgReadings = null; // newest at index 0
-    private volatile List<BgReading> bucketed_data = null;
+    private volatile List<InMemoryGlucoseValue> bucketed_data = null;
 
     private final Object dataLock = new Object();
 
@@ -96,7 +105,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
             SensitivityOref1Plugin sensitivityOref1Plugin,
             SensitivityAAPSPlugin sensitivityAAPSPlugin,
             SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -117,6 +127,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         this.sensitivityAAPSPlugin = sensitivityAAPSPlugin;
         this.sensitivityWeightedAveragePlugin = sensitivityWeightedAveragePlugin;
         this.fabricPrivacy = fabricPrivacy;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -129,9 +140,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 .subscribe(event -> {
                     stopCalculation("onEventConfigBuilderChange");
                     synchronized (dataLock) {
-                        getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
-                        iobTable = new LongSparseArray<>();
-                        autosensDataTable = new LongSparseArray<>();
+                        getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data because of configuration change.");
+                        resetData();
                     }
                     runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, event);
                 }, fabricPrivacy::logException)
@@ -146,15 +156,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     }
                     stopCalculation("onNewProfile");
                     synchronized (dataLock) {
-                        getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
-                        iobTable = new LongSparseArray<>();
-                        autosensDataTable = new LongSparseArray<>();
-                        basalDataTable = new LongSparseArray<>();
+                        getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data because of new profile.");
+                        resetData();
                     }
                     runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
                 }, fabricPrivacy::logException)
         );
-        // EventNewBG
+        // EventNewBG .... cannot be used for invalidating because only event with last BG is fired
         disposable.add(rxBus
                 .toObservable(EventNewBG.class)
                 .observeOn(Schedulers.io())
@@ -179,10 +187,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     ) {
                         stopCalculation("onEventPreferenceChange");
                         synchronized (dataLock) {
-                            getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records" + " BasalData: " + basalDataTable.size() + " records");
-                            iobTable = new LongSparseArray<>();
-                            autosensDataTable = new LongSparseArray<>();
-                            basalDataTable = new LongSparseArray<>();
+                            getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data because of preference change.");
+                            resetData();
                         }
                         runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, event);
                     }
@@ -198,7 +204,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
         disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::newHistoryData, fabricPrivacy::logException)
+                .subscribe(event -> newHistoryData(event, false), fabricPrivacy::logException)
+        );
+        // EventNewHistoryBgData
+        disposable.add(rxBus
+                .toObservable(EventNewHistoryBgData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> newHistoryData(new EventNewHistoryData(event.getTimestamp()), true), fabricPrivacy::logException)
         );
     }
 
@@ -220,7 +232,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         this.bgReadings = bgReadings;
     }
 
-    public List<BgReading> getBucketedData() {
+    public List<InMemoryGlucoseValue> getBucketedData() {
         return bucketed_data;
     }
 
@@ -236,6 +248,19 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return rounded;
     }
 
+    long adjustToReferenceTime(long someTime) {
+        if (referenceTime == null) {
+            referenceTime = someTime;
+            return someTime;
+        }
+        long diff = Math.abs(someTime - referenceTime);
+        diff %= T.mins(5).msecs();
+        if (diff > T.mins(2).plus(T.secs(30)).msecs())
+            diff = diff - T.mins(5).msecs();
+        long newTime = someTime + diff;
+        return newTime;
+    }
+
     void loadBgData(long to) {
         Profile profile = profileFunction.getProfile(to);
         double dia = Constants.defaultDIA;
@@ -245,10 +270,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
             // if close to now expect there can be some readings with time in close future (caused by wrong time setting)
             // so read all records
             bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, false);
-            getAapsLogger().debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start));
+            getAapsLogger().debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size() + " Start date: " + dateUtil.dateAndTimeString(start));
         } else {
             bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, to, false);
-            getAapsLogger().debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start) + " End date: " + DateUtil.dateAndTimeString(to));
+            getAapsLogger().debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size() + " Start date: " + dateUtil.dateAndTimeString(start) + " End date: " + dateUtil.dateAndTimeString(to));
         }
     }
 
@@ -279,7 +304,23 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
+    private void resetData() {
+        synchronized (dataLock) {
+            iobTable = new LongSparseArray<>();
+            autosensDataTable = new LongSparseArray<>();
+            basalDataTable = new LongSparseArray<>();
+            absIobTable = new LongSparseArray<>();
+        }
+    }
+
     public void createBucketedData() {
+        boolean fiveMinData = isAbout5minData();
+        if (lastUsed5minCalculation != null && lastUsed5minCalculation != fiveMinData) {
+            // changing mode => clear cache
+            getAapsLogger().debug("Invalidating cached data because of changed mode.");
+            resetData();
+        }
+        lastUsed5minCalculation = fiveMinData;
         if (isAbout5minData())
             createBucketedData5min();
         else
@@ -320,6 +361,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
         bucketed_data = new ArrayList<>();
         long currentTime = bgReadings.get(0).date - bgReadings.get(0).date % T.mins(5).msecs();
+        currentTime = adjustToReferenceTime(currentTime);
+        getAapsLogger().debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime));
         //log.debug("First reading: " + new Date(currentTime).toLocaleString());
 
         while (true) {
@@ -330,15 +373,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 break;
 
             if (older.date == newer.date) { // direct hit
-                bucketed_data.add(newer);
+                bucketed_data.add(new InMemoryGlucoseValue(newer));
             } else {
                 double bgDelta = newer.value - older.value;
                 long timeDiffToNew = newer.date - currentTime;
 
                 double currentBg = newer.value - (double) timeDiffToNew / (newer.date - older.date) * bgDelta;
-                BgReading newBgreading = new BgReading(injector);
-                newBgreading.date = currentTime;
-                newBgreading.value = Math.round(currentBg);
+                InMemoryGlucoseValue newBgreading = new InMemoryGlucoseValue(currentTime, Math.round(currentBg), true);
                 bucketed_data.add(newBgreading);
                 //log.debug("BG: " + newBgreading.value + " (" + new Date(newBgreading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
             }
@@ -355,7 +396,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
 
         bucketed_data = new ArrayList<>();
-        bucketed_data.add(bgReadings.get(0));
+        bucketed_data.add(new InMemoryGlucoseValue(bgReadings.get(0)));
         getAapsLogger().debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgReadings.get(0).date) + " lastbgTime: " + "none-first-value" + " " + bgReadings.get(0).toString());
         int j = 0;
         for (int i = 1; i < bgReadings.size(); ++i) {
@@ -376,12 +417,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 while (elapsed_minutes > 5) {
                     nextbgTime = lastbgTime - 5 * 60 * 1000;
                     j++;
-                    BgReading newBgreading = new BgReading(injector);
-                    newBgreading.date = nextbgTime;
                     double gapDelta = bgReadings.get(i).value - lastbg;
                     //console.error(gapDelta, lastbg, elapsed_minutes);
                     double nextbg = lastbg + (5d / elapsed_minutes * gapDelta);
-                    newBgreading.value = Math.round(nextbg);
+                    InMemoryGlucoseValue newBgreading = new InMemoryGlucoseValue(nextbgTime, Math.round(nextbg), true);
                     //console.error("Interpolated", bucketed_data[j]);
                     bucketed_data.add(newBgreading);
                     getAapsLogger().debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
@@ -391,38 +430,37 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     lastbgTime = nextbgTime;
                 }
                 j++;
-                BgReading newBgreading = new BgReading(injector);
-                newBgreading.value = bgReadings.get(i).value;
-                newBgreading.date = bgTime;
+                InMemoryGlucoseValue newBgreading = new InMemoryGlucoseValue(bgTime, bgReadings.get(i).value);
                 bucketed_data.add(newBgreading);
                 getAapsLogger().debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else if (Math.abs(elapsed_minutes) > 2) {
                 j++;
-                BgReading newBgreading = new BgReading(injector);
-                newBgreading.value = bgReadings.get(i).value;
-                newBgreading.date = bgTime;
+                InMemoryGlucoseValue newBgreading = new InMemoryGlucoseValue(bgTime, bgReadings.get(i).value);
                 bucketed_data.add(newBgreading);
                 getAapsLogger().debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else {
-                bucketed_data.get(j).value = (bucketed_data.get(j).value + bgReadings.get(i).value) / 2;
+                bucketed_data.get(j).setValue((bucketed_data.get(j).getValue() + bgReadings.get(i).value) / 2);
                 //log.error("***** Average");
             }
         }
 
         // Normalize bucketed data
+        InMemoryGlucoseValue oldest = bucketed_data.get(bucketed_data.size() - 1);
+        oldest.setTimestamp(adjustToReferenceTime(oldest.getTimestamp()));
+        getAapsLogger().debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(oldest.getTimestamp()));
         for (int i = bucketed_data.size() - 2; i >= 0; i--) {
-            BgReading current = bucketed_data.get(i);
-            BgReading previous = bucketed_data.get(i + 1);
-            long msecDiff = current.date - previous.date;
+            InMemoryGlucoseValue current = bucketed_data.get(i);
+            InMemoryGlucoseValue previous = bucketed_data.get(i + 1);
+            long msecDiff = current.getTimestamp() - previous.getTimestamp();
             long adjusted = (msecDiff - T.mins(5).msecs()) / 1000;
-            getAapsLogger().debug(LTag.AUTOSENS, "Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
+            getAapsLogger().debug(LTag.AUTOSENS, "Adjusting bucketed data time. Current: " + dateUtil.dateAndTimeAndSecondsString(current.getTimestamp()) + " to: " + dateUtil.dateAndTimeAndSecondsString(previous.getTimestamp() + T.mins(5).msecs()) + " by " + adjusted + " sec");
             if (Math.abs(adjusted) > 90) {
                 // too big adjustment, fallback to non 5 min data
                 getAapsLogger().debug(LTag.AUTOSENS, "Fallback to non 5 min data");
                 createBucketedDataRecalculated();
                 return;
             }
-            current.date = previous.date + T.mins(5).msecs();
+            current.setTimestamp(previous.getTimestamp() + T.mins(5).msecs());
         }
 
         getAapsLogger().debug(LTag.AUTOSENS, "Bucketed data created. Size: " + bucketed_data.size());
@@ -438,7 +476,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         if (limitDataToOldestAvailable) {
             getBGDataFrom = Math.max(oldestDataAvailable, (long) (from - T.hours(1).msecs() * (24 + dia)));
             if (getBGDataFrom == oldestDataAvailable)
-                getAapsLogger().debug(LTag.AUTOSENS, "Limiting data to oldest available temps: " + DateUtil.dateAndTimeString(oldestDataAvailable));
+                getAapsLogger().debug(LTag.AUTOSENS, "Limiting data to oldest available temps: " + dateUtil.dateAndTimeAndSecondsString(oldestDataAvailable));
         } else
             getBGDataFrom = (long) (from - T.hours(1).msecs() * (24 + dia));
         return getBGDataFrom;
@@ -539,8 +577,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
         if (bucketed_data == null)
             return null;
         for (int index = 0; index < bucketed_data.size(); index++) {
-            if (bucketed_data.get(index).date <= time)
-                return bucketed_data.get(index).date;
+            if (bucketed_data.get(index).getTimestamp() <= time)
+                return bucketed_data.get(index).getTimestamp();
         }
         return null;
     }
@@ -673,7 +711,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             return null;
         }
         if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
-            getAapsLogger().debug(LTag.AUTOSENS, "AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastdata=" + DateUtil.dateAndTimeString(data.time));
+            getAapsLogger().debug(LTag.AUTOSENS, "AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastdata=" + dateUtil.dateAndTimeAndSecondsString(data.time));
             return null;
         } else {
             getAapsLogger().debug(LTag.AUTOSENS, "AUTOSENSDATA (" + reason + ") " + data.toString());
@@ -681,9 +719,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
+    @Override
     public String lastDataTime() {
         if (autosensDataTable.size() > 0)
-            return DateUtil.dateAndTimeString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time);
+            return dateUtil.dateAndTimeAndSecondsString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time);
         else
             return "autosensDataTable empty";
     }
@@ -716,7 +755,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     result.boluses += treatment.insulin;
                 }
             }
-
             if (t > absorptionTime_ago && t <= now) {
                 if (treatment.carbs >= 1) {
                     result.carbs += treatment.carbs;
@@ -805,27 +843,27 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     public void runCalculation(String from, long end, boolean bgDataReload, boolean limitDataToOldestAvailable, Event cause) {
-        getAapsLogger().debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + DateUtil.dateAndTimeString(end));
+        getAapsLogger().debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + dateUtil.dateAndTimeAndSecondsString(end));
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             if (sensitivityOref1Plugin.isEnabled())
-                thread = new IobCobOref1Thread(injector, from, end, bgDataReload, limitDataToOldestAvailable, cause);
+                thread = new IobCobOref1Thread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             else
-                thread = new IobCobThread(injector, from, end, bgDataReload, limitDataToOldestAvailable, cause);
+                thread = new IobCobThread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             thread.start();
         }
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
-    private void newHistoryData(EventNewHistoryData ev) {
+    private void newHistoryData(EventNewHistoryData ev, boolean bgDataReload) {
         //log.debug("Locking onNewHistoryData");
         stopCalculation("onEventNewHistoryData");
         synchronized (dataLock) {
             // clear up 5 min back for proper COB calculation
             long time = ev.getTime() - 5 * 60 * 1000L;
-            getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data to: " + DateUtil.dateAndTimeString(time));
+            getAapsLogger().debug(LTag.AUTOSENS, "Invalidating cached data to: " + dateUtil.dateAndTimeAndSecondsString(time));
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
-                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from iobTable: " + DateUtil.dateAndTimeString(iobTable.keyAt(index)));
+                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from iobTable: " + dateUtil.dateAndTimeAndSecondsString(iobTable.keyAt(index)));
                     iobTable.removeAt(index);
                 } else {
                     break;
@@ -833,7 +871,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             }
             for (int index = absIobTable.size() - 1; index >= 0; index--) {
                 if (absIobTable.keyAt(index) > time) {
-                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from absIobTable: " + DateUtil.dateAndTimeString(absIobTable.keyAt(index)));
+                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from absIobTable: " + dateUtil.dateAndTimeAndSecondsString(absIobTable.keyAt(index)));
                     absIobTable.removeAt(index);
                 } else {
                     break;
@@ -841,7 +879,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             }
             for (int index = autosensDataTable.size() - 1; index >= 0; index--) {
                 if (autosensDataTable.keyAt(index) > time) {
-                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from autosensDataTable: " + DateUtil.dateAndTimeString(autosensDataTable.keyAt(index)));
+                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from autosensDataTable: " + dateUtil.dateAndTimeAndSecondsString(autosensDataTable.keyAt(index)));
                     autosensDataTable.removeAt(index);
                 } else {
                     break;
@@ -849,14 +887,14 @@ public class IobCobCalculatorPlugin extends PluginBase {
             }
             for (int index = basalDataTable.size() - 1; index >= 0; index--) {
                 if (basalDataTable.keyAt(index) > time) {
-                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from basalDataTable: " + DateUtil.dateAndTimeString(basalDataTable.keyAt(index)));
+                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from basalDataTable: " + dateUtil.dateAndTimeAndSecondsString(basalDataTable.keyAt(index)));
                     basalDataTable.removeAt(index);
                 } else {
                     break;
                 }
             }
         }
-        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), false, true, ev);
+        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), bgDataReload, true, ev);
         //log.debug("Releasing onNewHistoryData");
     }
 

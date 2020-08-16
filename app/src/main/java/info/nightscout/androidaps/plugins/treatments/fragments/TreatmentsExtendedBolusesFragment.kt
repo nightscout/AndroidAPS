@@ -19,6 +19,7 @@ import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -40,6 +41,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -63,7 +68,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.ph.visibility = if (extendedBolus.source == Source.PUMP) View.VISIBLE else View.GONE
             holder.ns.visibility = if (NSUpload.isIdValid(extendedBolus._id)) View.VISIBLE else View.GONE
             if (extendedBolus.isEndingEvent) {
-                holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date)
+                holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
                 holder.duration.text = resourceHelper.gs(R.string.cancel)
                 holder.insulin.text = ""
                 holder.realDuration.text = ""
@@ -72,18 +77,18 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 holder.ratio.text = ""
             } else {
                 @SuppressLint("SetTextI18n")
-                if (extendedBolus.isInProgress) holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date)
-                else holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date) + " - " + DateUtil.timeString(extendedBolus.end())
-
+                if (extendedBolus.isInProgress) holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
+                else holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
+                val profile = profileFunction.getProfile(extendedBolus.date)
                 holder.duration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.durationInMinutes)
                 holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulin)
                 holder.realDuration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.realDuration)
-                val iob = extendedBolus.iobCalc(System.currentTimeMillis())
+                val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile)
                 holder.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
                 holder.insulinSoFar.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulinSoFar())
                 holder.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
                 if (extendedBolus.isInProgress) holder.date.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.date.setTextColor(holder.insulin.currentTextColor)
-                if (extendedBolus.iobCalc(System.currentTimeMillis()).iob != 0.0) holder.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.iob.setTextColor(holder.insulin.currentTextColor)
+                if (iob.iob != 0.0) holder.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.iob.setTextColor(holder.insulin.currentTextColor)
             }
             holder.remove.tag = extendedBolus
         }
@@ -112,11 +117,11 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                         showConfirmation(it, resourceHelper.gs(R.string.removerecord),
                             """
                 ${resourceHelper.gs(R.string.extended_bolus)}
-                ${resourceHelper.gs(R.string.date)}: ${DateUtil.dateAndTimeString(extendedBolus.date)}
+                ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.date)}
                 """.trimIndent(), DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
                             val id = extendedBolus._id
-                            if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)
-                            else UploadQueue.removeID("dbAdd", id)
+                            if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
+                            else uploadQueue.removeID("dbAdd", id)
                             MainApp.getDbHelper().delete(extendedBolus)
                         }, null)
                     }

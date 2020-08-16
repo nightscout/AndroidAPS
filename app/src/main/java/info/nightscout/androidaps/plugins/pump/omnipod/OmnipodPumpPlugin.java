@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -74,6 +73,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -120,10 +120,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     private Profile currentProfile;
 
-    //boolean omnipodServiceRunning = false;
+    boolean omnipodServiceRunning = false;
 
     private long nextPodCheck = 0L;
-    protected boolean isOmnipodEros = true;
     //OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     @Inject
@@ -141,7 +140,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
-            ServiceTaskExecutor serviceTaskExecutor) {
+            ServiceTaskExecutor serviceTaskExecutor,
+            DateUtil dateUtil
+    ) {
 
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -151,46 +152,15 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         .preferencesId(R.xml.pref_omnipod) //
                         .description(R.string.description_pump_omnipod), //
                 PumpType.Insulet_Omnipod,
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil
         );
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
 
         displayConnectionMessages = false;
-        OmnipodPumpPlugin.plugin = this;
         this.omnipodUtil = omnipodUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
-
-        this.isOmnipodEros = true;
-    }
-
-    protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType,
-                                HasAndroidInjector injector,
-                                AAPSLogger aapsLogger,
-                                RxBusWrapper rxBus,
-                                Context context,
-                                ResourceHelper resourceHelper,
-                                ActivePluginProvider activePlugin,
-                                info.nightscout.androidaps.utils.sharedPreferences.SP sp,
-                                CommandQueueProvider commandQueue,
-                                FabricPrivacy fabricPrivacy) {
-        super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy);
-    }
-
-    @Deprecated
-    public static OmnipodPumpPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Plugin not injected jet");
-        return plugin;
-    }
-
-    public PodStateManager getPodStateManager() {
-        return podStateManager;
-    }
-
-    @Override
-    protected void onStart() {
 
         //OmnipodUtil.setDriverState();
 
@@ -203,39 +173,33 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 //        // TODO ccc
 
-        if (isOmnipodEros) {
+        serviceConnection = new ServiceConnection() {
 
-            // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
-            // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
-            podStateManager.loadPodState();
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
 
-            serviceConnection = new ServiceConnection() {
+                aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
+                rileyLinkOmnipodService = null;
+            }
 
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
 
-                    aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
-                    rileyLinkOmnipodService = null;
-                }
+                aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
+                RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
+                rileyLinkOmnipodService = mLocalBinder.getServiceInstance();
+                rileyLinkOmnipodService.verifyConfiguration();
 
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
+                new Thread(() -> {
 
-                    aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
-                    RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
-                    rileyLinkOmnipodService = mLocalBinder.getServiceInstance();
-                    rileyLinkOmnipodService.verifyConfiguration();
+                    for (int i = 0; i < 20; i++) {
+                        SystemClock.sleep(5000);
 
-                    new Thread(() -> {
-
-                        for (int i = 0; i < 20; i++) {
-                            SystemClock.sleep(5000);
-
-                            aapsLogger.debug(LTag.PUMP, "Starting Omnipod-RileyLink service");
-                            if (rileyLinkOmnipodService.setNotInPreInit()) {
-                                break;
-                            }
+                        aapsLogger.debug(LTag.PUMP, "Starting Omnipod-RileyLink service");
+                        if (rileyLinkOmnipodService.setNotInPreInit()) {
+                            break;
                         }
+                    }
 
 
 //                        if (OmnipodPumpPlugin.this.omnipodPumpStatus != null) {
@@ -259,12 +223,45 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //                        }
 //
 //                        SystemClock.sleep(5000);
-                        //}
-                    }).start();
-                }
-            };
-        }
+                    //}
+                }).start();
+            }
+        };
 
+    }
+
+    protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType,
+                                HasAndroidInjector injector,
+                                AAPSLogger aapsLogger,
+                                RxBusWrapper rxBus,
+                                Context context,
+                                ResourceHelper resourceHelper,
+                                ActivePluginProvider activePlugin,
+                                info.nightscout.androidaps.utils.sharedPreferences.SP sp,
+                                CommandQueueProvider commandQueue,
+                                FabricPrivacy fabricPrivacy,
+                                DateUtil dateUtil) {
+        super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil);
+
+//        this.rileyLinkUtil = rileyLinkUtil;
+//        this.medtronicUtil = medtronicUtil;
+//        this.sp = sp;
+//        this.medtronicPumpStatus = medtronicPumpStatus;
+//        this.medtronicHistoryData = medtronicHistoryData;
+//        this.rileyLinkServiceData = rileyLinkServiceData;
+//        this.serviceTaskExecutor = serviceTaskExecutor;
+    }
+
+    public PodStateManager getPodStateManager() {
+        return podStateManager;
+    }
+
+    @Override
+    protected void onStart() {
+        // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
+        // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
+        // TODO either find a more elegant solution, or at least make sure this is the right place to do this
+        podStateManager.loadPodState();
 
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
@@ -440,13 +437,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         //rileyLinkOmnipodService.doTuneUpDevice();
     }
 
+    @Override
+    public void triggerPumpConfigurationChangedEvent() {
+        rxBus.send(new EventOmnipodPumpValuesChanged());
+    }
+
 
     @Override
     public RileyLinkOmnipodService getRileyLinkService() {
         return rileyLinkOmnipodService;
     }
 
-    @Override
     public OmnipodUIComm getDeviceCommandExecutor() {
         return rileyLinkOmnipodService.getDeviceCommandExecutor();
     }
@@ -522,13 +523,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     } else {
                         aapsLogger.warn(LTag.PUMP, "Result was NOT null.");
 
-                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", 0);
                         i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
                         i.putExtra("title", resourceHelper.gs(R.string.combo_warning));
                         i.putExtra("clipboardContent", result.toString());
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        MainApp.instance().startActivity(i);
+                        context.startActivity(i);
 
 //                        OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.action),
 //                                "Pulse Log:\n" + result.toString(), null);
