@@ -143,7 +143,7 @@ class BlurringView @JvmOverloads constructor(context: Context?, attrs: Attribute
                     return false
                 }
             }
-            blurringCanvas = Canvas(bitmapToBlur)
+            blurringCanvas = Canvas(bitmapToBlur as Bitmap)
             blurringCanvas!!.scale(1f / downScaleFactor, 1f / downScaleFactor)
         }
         return true
