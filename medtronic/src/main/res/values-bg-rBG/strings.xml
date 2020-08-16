@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
     <string name="medtronic_bolus_debugging">Болус/Корекция подробно</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Грешки</string>
     <string name="medtronic_error_serial_not_set">Сериен номер не е зададен.</string>
     <string name="medtronic_error_serial_invalid">Грешен сериен номер.</string>
     <string name="medtronic_error_pump_type_not_set">Тип помпа не е зададен.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">История на помпата</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Отказали сте болус след като е бил изпратен към помпата. Помпите Медтроник не го поддържат и ще трябва да го направите ръчно. Пуснете Suspend mode и след това Resume (ако оше искате да го откажете). Апликацията ще покаже промените след около 5 мин.</string>
     <string name="medtronic_cmd_cant_read_tbr">Не може да бъде прочетен вр. базал.</string>
@@ -68,8 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
+    <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
+    <string name="medtronic_warning">Внимание</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Сега</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">преди</string>
+    <string name="medtronic_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Вкл</string>
+    <string name="common_off">Изкл</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
 </resources>
