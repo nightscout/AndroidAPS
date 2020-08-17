@@ -470,7 +470,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", 0);
                         i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
-                        i.putExtra("title", resourceHelper.gs(R.string.combo_warning));
+                        i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
                         i.putExtra("clipboardContent", result.toString());
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
@@ -496,7 +496,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
                 Notification notification = new Notification(
                         Notification.TIME_OR_TIMEZONE_CHANGE,
-                        resourceHelper.gs(R.string.time_or_timezone_change),
+                        resourceHelper.gs(R.string.omnipod_time_or_timezone_change),
                         Notification.INFO, 60);
                 rxBus.send(new EventNewNotification(notification));
 

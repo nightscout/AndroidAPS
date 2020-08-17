@@ -143,5 +143,6 @@
     <string name="omnipod_errors">Errors</string>
     <string name="omnipod_cmd_basal_profile_not_set_is_same">Basal profile is the same, so it will not be set again.</string>
     <string name="omnipod_custom_action_reset_rileylink">Reset RileyLink Config</string>
+    <string name="omnipod_time_or_timezone_change">Time and/or Timezone change on pump</string>
 
 </resources>

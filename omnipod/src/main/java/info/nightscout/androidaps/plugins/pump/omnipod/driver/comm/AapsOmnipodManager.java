@@ -618,7 +618,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         Intent intent = new Intent(context, ErrorHelperActivity.class);
         intent.putExtra("soundid", sound);
         intent.putExtra("status", message);
-        intent.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror));
+        intent.putExtra("title", resourceHelper.gs(R.string.error));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

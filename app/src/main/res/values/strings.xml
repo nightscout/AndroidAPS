@@ -1284,7 +1284,6 @@
     <string name="objectives_button_unfinish">Clear finished</string>
     <string name="objectives_button_unstart">Clear started</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
-    <string name="time_or_timezone_change">Time and/or Timezone change on pump</string>
     <string name="nopumpselected">No pump selected</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="ns_ploadlocalprofile">Upload local profile changes to NS</string>
