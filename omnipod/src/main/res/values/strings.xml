@@ -139,7 +139,8 @@
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
     <string name="omnipod_pod_lot">LOT</string>
     <string name="omnipod_pod_tid">TID</string>
-    <string name="omnipod_pod_fw_version">PM / PI version</string>
+    <string name="omnipod_pod_firmware_version">Firmware version</string>
+    <string name="omnipod_pod_firmware_version_value" translatable="false">PM %1$s / PI %2$s</string>
     <string name="omnipod_errors">Errors</string>
     <string name="omnipod_cmd_basal_profile_not_set_is_same">Basal profile is the same, so it will not be set again.</string>
     <string name="omnipod_custom_action_reset_rileylink">Reset RileyLink Config</string>

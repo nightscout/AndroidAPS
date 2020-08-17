@@ -248,7 +248,7 @@ class OmnipodFragment : DaggerFragment() {
             }
             omnipod_pod_lot.text = "-"
             omnipod_pod_tid.text = "-"
-            omnipod_pod_fw_version.text = "-"
+            omnipod_pod_firmware_version.text = "-"
             omnipod_pod_expiry.text = "-"
             omnipod_basabasalrate.text = "-"
             omnipod_reservoir.text = "-"
@@ -264,7 +264,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_address.text = podStateManager.address.toString()
             omnipod_pod_lot.text = podStateManager.lot.toString()
             omnipod_pod_tid.text = podStateManager.tid.toString()
-            omnipod_pod_fw_version.text = podStateManager.pmVersion.toString() + " / " + podStateManager.piVersion.toString()
+            omnipod_pod_firmware_version.text = resourceHelper.gs(R.string.omnipod_pod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
             omnipod_pod_expiry.text = podStateManager.expiryDateAsString
 
             val stateText: String

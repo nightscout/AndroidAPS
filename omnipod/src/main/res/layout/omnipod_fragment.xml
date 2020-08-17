@@ -219,7 +219,7 @@
                         android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/omnipod_pod_fw_version"
+                        android:text="@string/omnipod_pod_firmware_version"
                         android:textSize="14sp" />
 
                     <TextView
@@ -233,7 +233,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_pod_fw_version"
+                        android:id="@+id/omnipod_pod_firmware_version"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
