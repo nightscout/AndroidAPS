@@ -358,19 +358,33 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun readableDuration(dateTime: DateTime): String {
-        val minutes = Duration(dateTime, DateTime.now()).standardMinutes
+        val minutes = Duration(dateTime, DateTime.now()).standardMinutes.toInt()
         when {
-            minutes == 0L -> {
-                return resourceHelper.gs(R.string.omnipod_connected_now)
+            minutes == 0   -> {
+                return resourceHelper.gs(R.string.omnipod_moments_ago)
             }
 
-            minutes < 60  -> {
-                return resourceHelper.gs(R.string.minago, minutes)
+            minutes < 60   -> {
+                return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_minutes, minutes, minutes))
             }
 
-            else          -> {
-                val hours = (minutes / 60).toInt()
-                return resourceHelper.gs(R.string.hoursago, hours)
+            minutes < 1440 -> {
+                val hours = minutes / 60
+                val minutesLeft = minutes % 60
+                if (minutesLeft > 0)
+                    return resourceHelper.gs(R.string.omnipod_time_ago,
+                        resourceHelper.gs(R.string.omnipod_composite_time, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_minutes, minutesLeft, minutesLeft)))
+                return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours))
+            }
+
+            else           -> {
+                val hours = minutes / 60
+                val days = hours / 24
+                val hoursLeft = hours % 24
+                if (hoursLeft > 0)
+                    return resourceHelper.gs(R.string.omnipod_time_ago,
+                        resourceHelper.gs(R.string.omnipod_composite_time, resourceHelper.gq(R.plurals.omnipod_days, days, days), resourceHelper.gq(R.plurals.omnipod_hours, hoursLeft, hoursLeft)))
+                return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_days, days, days))
             }
         }
     }
