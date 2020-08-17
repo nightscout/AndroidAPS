@@ -15,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -27,7 +26,6 @@ public class OmnipodPumpStatus extends PumpStatus {
     // TODO remove all fields that can also be obtained via PodStateManager
     //  We can probably get rid of this class altogether
 
-    private final ResourceHelper resourceHelper;
     private final SP sp;
     private final RileyLinkUtil rileyLinkUtil;
     private final RxBusWrapper rxBus;
@@ -47,9 +45,6 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
-    public boolean ackAlertsAvailable = false;
-    public String ackAlertsText = null;
-
     public boolean beepBolusEnabled = true;
     public boolean beepBasalEnabled = true;
     public boolean beepSMBEnabled = true;
@@ -57,16 +52,13 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean podDebuggingOptionsEnabled = false;
     public boolean timeChangeEventEnabled = true;
 
-    public OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
     private PumpDeviceState pumpDeviceState;
 
     @Inject
-    public OmnipodPumpStatus(ResourceHelper resourceHelper,
-                             info.nightscout.androidaps.utils.sharedPreferences.SP sp,
+    public OmnipodPumpStatus(SP sp,
                              RxBusWrapper rxBus,
                              RileyLinkUtil rileyLinkUtil) {
         super(PumpType.Insulet_Omnipod);
-        this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
@@ -139,7 +131,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 "rileyLinkErrorDescription='" + rileyLinkErrorDescription + '\'' +
                 ", rileyLinkAddress='" + rileyLinkAddress + '\'' +
                 ", inPreInit=" + inPreInit +
-                ", currentBasal=" + currentBasal +
                 ", tempBasalStart=" + tempBasalStart +
                 ", tempBasalEnd=" + tempBasalEnd +
                 ", tempBasalAmount=" + tempBasalAmount +

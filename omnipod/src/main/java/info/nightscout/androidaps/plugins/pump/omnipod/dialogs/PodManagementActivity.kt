@@ -8,7 +8,6 @@ import com.atech.android.library.wizardpager.WizardPagerContext
 import com.atech.android.library.wizardpager.data.WizardPagerSettings
 import com.atech.android.library.wizardpager.defs.WizardStepsWayType
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -16,6 +15,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
+import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType
@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.Full
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.ShortInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
@@ -143,7 +142,6 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         OKDialog.showConfirmation(this,
             resourceHelper.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             AapsOmnipodManager.getInstance().resetPodStatus()
-            omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod)
             refreshButtons()
         })
     }

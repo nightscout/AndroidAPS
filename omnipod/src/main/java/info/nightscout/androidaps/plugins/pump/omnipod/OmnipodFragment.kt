@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -34,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -55,7 +52,6 @@ import javax.inject.Inject
 class OmnipodFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var mainApp: MainApp
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
@@ -68,7 +64,9 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: OmnipodUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
-    @Inject lateinit var localAlertUtils: LocalAlertUtils
+
+    // TODO somehow obtain the pumpUnreachableThreshold in order to display last connection time red or white
+    // @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -98,8 +96,8 @@ class OmnipodFragment : DaggerFragment() {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 activity?.let { activity ->
                     protectionCheck.queryProtection(
-                        activity,ProtectionCheck.Protection.PREFERENCES,
-                        UIRunnable(Runnable{startActivity(Intent(context, PodManagementActivity::class.java))})
+                        activity, ProtectionCheck.Protection.PREFERENCES,
+                        UIRunnable(Runnable { startActivity(Intent(context, PodManagementActivity::class.java)) })
                     )
                 }
             } else {
@@ -330,11 +328,15 @@ class OmnipodFragment : DaggerFragment() {
     private fun updateLastConnectionUiElements() {
         if (podStateManager.isPodInitialized && podStateManager.lastSuccessfulCommunication != null) { // Null check for backwards compatibility
             omnipod_lastconnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
+            omnipod_lastconnection.setTextColor(Color.WHITE)
+            /*
+            // TODO
             if (omnipodPumpPlugin.isUnreachableAlertTimeoutExceeded(localAlertUtils.pumpUnreachableThreshold())) {
                 omnipod_lastconnection.setTextColor(Color.RED)
             } else {
                 omnipod_lastconnection.setTextColor(Color.WHITE)
             }
+             */
         } else {
             omnipod_lastconnection.setTextColor(Color.WHITE)
             if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
@@ -356,25 +358,19 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun readableDuration(dateTime: DateTime): String {
-        val min = Duration(dateTime, DateTime.now()).standardMinutes
+        val minutes = Duration(dateTime, DateTime.now()).standardMinutes
         when {
-            min == 0L  -> {
+            minutes == 0L -> {
                 return resourceHelper.gs(R.string.omnipod_connected_now)
             }
 
-            min < 60   -> {
-                return resourceHelper.gs(R.string.minago, min)
+            minutes < 60  -> {
+                return resourceHelper.gs(R.string.minago, minutes)
             }
 
-            min < 1440 -> {
-                val h = (min / 60).toInt()
-                return resourceHelper.gq(R.plurals.objective_hours, h, h) + " " + resourceHelper.gs(R.string.ago)
-            }
-
-            else       -> {
-                val h = (min / 60).toInt()
-                val d = h / 24
-                return resourceHelper.gq(R.plurals.objective_days, d, d) + " " + resourceHelper.gs(R.string.ago)
+            else          -> {
+                val hours = (minutes / 60).toInt()
+                return resourceHelper.gs(R.string.hoursago, hours)
             }
         }
     }

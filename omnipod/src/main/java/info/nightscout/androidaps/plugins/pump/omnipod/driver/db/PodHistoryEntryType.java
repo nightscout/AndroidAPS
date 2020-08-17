@@ -5,8 +5,8 @@ import androidx.annotation.StringRes;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
 
 /**
  * Created by andy on 24.11.2019
@@ -37,8 +37,7 @@ public enum PodHistoryEntryType {
     SuspendDelivery(60, R.string.omnipod_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),
     ResumeDelivery(61, R.string.omnipod_cmd_resume_delivery, PumpHistoryEntryGroup.Basal),
 
-    UnknownEntryType(99, R.string.omnipod_cmd_unknown_entry)
-    ;
+    UnknownEntryType(99, R.string.omnipod_cmd_unknown_entry);
 
     private int code;
     private static Map<Integer, PodHistoryEntryType> instanceMap;
@@ -48,7 +47,6 @@ public enum PodHistoryEntryType {
 
     private PumpHistoryEntryGroup group;
 
-
     static {
         instanceMap = new HashMap<>();
 
@@ -56,7 +54,6 @@ public enum PodHistoryEntryType {
             instanceMap.put(value.code, value);
         }
     }
-
 
     PodHistoryEntryType(int code, @StringRes int resourceId) {
         this.code = code;
@@ -77,6 +74,9 @@ public enum PodHistoryEntryType {
         return this.group;
     }
 
+    public static PodHistoryEntryType getByCode(long code) {
+        return getByCode((int) code);
+    }
 
     public static PodHistoryEntryType getByCode(int code) {
         if (instanceMap.containsKey(code)) {

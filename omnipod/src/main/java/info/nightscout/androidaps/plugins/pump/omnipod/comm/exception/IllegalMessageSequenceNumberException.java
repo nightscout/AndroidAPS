@@ -7,7 +7,7 @@ public class IllegalMessageSequenceNumberException extends OmnipodException {
     private final int actual;
 
     public IllegalMessageSequenceNumberException(int expected, int actual) {
-        super("Invalid message sequence number. Expected="+ expected +", actual="+ actual, false);
+        super("Invalid message sequence number. Expected=" + expected + ", actual=" + actual, false);
         this.expected = expected;
         this.actual = actual;
     }

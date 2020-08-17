@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 

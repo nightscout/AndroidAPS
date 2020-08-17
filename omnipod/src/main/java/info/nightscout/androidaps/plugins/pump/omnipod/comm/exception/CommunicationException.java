@@ -11,7 +11,7 @@ public class CommunicationException extends OmnipodException {
     }
 
     public CommunicationException(Type type, Throwable cause) {
-        super(type.getDescription() + ": "+ cause, cause, false);
+        super(type.getDescription() + ": " + cause, cause, false);
         this.type = type;
     }
 

@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.In
 
 /**
  * Created by andy on 12/11/2019
- *
  */
 public class RemovePodActionPage extends InitActionPage {
 

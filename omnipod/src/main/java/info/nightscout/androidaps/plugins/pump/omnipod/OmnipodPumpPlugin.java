@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 
@@ -24,8 +23,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -49,7 +46,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
@@ -59,12 +55,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask;
@@ -72,7 +66,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpVa
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
@@ -89,41 +82,29 @@ import io.reactivex.schedulers.Schedulers;
  */
 @Singleton
 public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface, RileyLinkPumpDevice {
-    protected PodStateManager podStateManager;
-    private static OmnipodPumpPlugin plugin = null;
-    private RileyLinkServiceData rileyLinkServiceData;
-    private ServiceTaskExecutor serviceTaskExecutor;
-    private RileyLinkOmnipodService rileyLinkOmnipodService;
-    private OmnipodUtil omnipodUtil;
-    protected OmnipodPumpStatus omnipodPumpStatus = null;
-    //protected OmnipodUIComm omnipodUIComm;
+    private final PodStateManager podStateManager;
+    private final RileyLinkServiceData rileyLinkServiceData;
+    private final ServiceTaskExecutor serviceTaskExecutor;
+    private final OmnipodPumpStatus omnipodPumpStatus;
 
     private CompositeDisposable disposable = new CompositeDisposable();
-
 
     // variables for handling statuses and history
     protected boolean firstRun = true;
     protected boolean isRefresh = false;
-    private boolean isBasalProfileInvalid = false;
-    private boolean basalProfileChanged = false;
     private boolean isInitialized = false;
-    protected IOmnipodManager omnipodCommunicationManager;
 
-    // TODO make non-static just inject the Singleton and use a getter)
-    public static boolean isBusy = false;
+
+    private RileyLinkOmnipodService rileyLinkOmnipodService;
+
+    private boolean isBusy = false;
     // TODO it seems that we never add anything to this list?
     //  I Wouldn't know why we need it anyway
     protected List<Long> busyTimestamps = new ArrayList<>();
-    protected boolean sentIdToFirebase = false;
     protected boolean hasTimeDateOrTimeZoneChanged = false;
     private int timeChangeRetries = 0;
-
     private Profile currentProfile;
-
-    boolean omnipodServiceRunning = false;
-
     private long nextPodCheck = 0L;
-    //OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -134,7 +115,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             ResourceHelper resourceHelper,
             ActivePluginProvider activePlugin,
             SP sp,
-            OmnipodUtil omnipodUtil,
             OmnipodPumpStatus omnipodPumpStatus,
             PodStateManager podStateManager,
             CommandQueueProvider commandQueue,
@@ -157,23 +137,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
-
-        displayConnectionMessages = false;
-        this.omnipodUtil = omnipodUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
 
-        //OmnipodUtil.setDriverState();
-
-// TODO loop
-//        if (OmnipodUtil.isOmnipodEros()) {
-//            OmnipodUtil.setPlugin(this);
-//            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-//            OmnipodUtil.setPumpType(PumpType.Insulet_Omnipod);
-//        }
-
-//        // TODO ccc
-
-        serviceConnection = new ServiceConnection() {
+        displayConnectionMessages = false;
+        this.serviceConnection = new ServiceConnection() {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
@@ -228,28 +195,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             }
         };
 
-    }
-
-    protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType,
-                                HasAndroidInjector injector,
-                                AAPSLogger aapsLogger,
-                                RxBusWrapper rxBus,
-                                Context context,
-                                ResourceHelper resourceHelper,
-                                ActivePluginProvider activePlugin,
-                                info.nightscout.androidaps.utils.sharedPreferences.SP sp,
-                                CommandQueueProvider commandQueue,
-                                FabricPrivacy fabricPrivacy,
-                                DateUtil dateUtil) {
-        super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil);
-
-//        this.rileyLinkUtil = rileyLinkUtil;
-//        this.medtronicUtil = medtronicUtil;
-//        this.sp = sp;
-//        this.medtronicPumpStatus = medtronicPumpStatus;
-//        this.medtronicHistoryData = medtronicHistoryData;
-//        this.rileyLinkServiceData = rileyLinkServiceData;
-//        this.serviceTaskExecutor = serviceTaskExecutor;
     }
 
     public PodStateManager getPodStateManager() {
@@ -566,25 +511,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         }
     }
 
-
-    public void setIsBusy(boolean isBusy_) {
-        isBusy = isBusy_;
+    public void setIsBusy(boolean isBusy) {
+        this.isBusy = isBusy;
     }
-
 
     private void getPodPumpStatus() {
         // TODO read pod status
         aapsLogger.error(LTag.PUMP, "getPodPumpStatus() NOT IMPLEMENTED");
-
-        //addPodStatusRequest(OmnipodStatusRequest.GetPodState);
-
-        //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
-        //driverState = OmnipodDriverState.Initalized_PodAvailable;
-        // FIXME this does not seem to make sense
-        omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
-        // we would probably need to read Basal Profile here too
     }
-
 
     List<OmnipodStatusRequest> omnipodStatusRequestList = new ArrayList<>();
 
@@ -595,12 +529,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             omnipodStatusRequestList.add(pumpStatusRequest);
         }
     }
-
-    @Override
-    public void setDriverState(OmnipodDriverState state) {
-        //this.driverState = state;
-    }
-
 
     public void resetStatusState() {
         firstRun = true;
@@ -625,28 +553,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (podStateManager.isPodInitialized()) {
             aapsLogger.debug(LTag.PUMP, "PodStateManager (saved): " + podStateManager);
-
-            if (!isRefresh) {
-                pumpState = PumpDriverState.Initialized;
-            }
-
             // TODO handle if session state too old
             getPodPumpStatus();
         } else {
             aapsLogger.debug(LTag.PUMP, "No Pod running");
-            omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 
         finishAction("Omnipod Pump");
-
-        if (!sentIdToFirebase) {
-            Bundle params = new Bundle();
-            params.putString("version", BuildConfig.VERSION);
-
-            getFabricPrivacy().getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
-
-            sentIdToFirebase = true;
-        }
 
         isInitialized = true;
 
@@ -917,7 +830,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             return new PumpEnactResult(getInjector()) //
                     .success(true) //
                     .enacted(false) //
-                    .comment(resourceHelper.gs(R.string.medtronic_cmd_basal_profile_not_set_is_same));
+                    .comment(resourceHelper.gs(R.string.omnipod_cmd_basal_profile_not_set_is_same));
         }
 
         setRefreshButtonEnabled(false);
@@ -952,7 +865,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     protected List<CustomAction> customActions = null;
 
     private CustomAction customActionResetRLConfig = new CustomAction(
-            R.string.medtronic_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
+            R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
 
 
     @Override
@@ -988,11 +901,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
         aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + omnipodPumpStatus.timeChangeEventEnabled + "]");
 
-        if (omnipodUtil.getDriverState() == OmnipodDriverState.Initalized_PodAttached) {
-            if (omnipodPumpStatus.timeChangeEventEnabled) {
-                aapsLogger.info(LTag.PUMP, getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
-                this.hasTimeDateOrTimeZoneChanged = true;
-            }
+        if (omnipodPumpStatus.timeChangeEventEnabled && podStateManager.isPodRunning()) {
+            aapsLogger.info(LTag.PUMP, getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
+            this.hasTimeDateOrTimeZoneChanged = true;
         }
     }
 

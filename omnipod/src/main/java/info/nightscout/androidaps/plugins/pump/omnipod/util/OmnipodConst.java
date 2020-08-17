@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.util;
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
 
 /**
  * Created by andy on 4.8.2019

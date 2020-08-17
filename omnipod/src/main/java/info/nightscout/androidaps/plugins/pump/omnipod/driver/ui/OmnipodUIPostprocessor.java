@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -10,10 +7,8 @@ import javax.inject.Singleton;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
@@ -22,19 +17,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 // TODO remove once OmnipodPumpStatus has been removed
 @Singleton
 public class OmnipodUIPostprocessor {
-
-
-    private static final Logger LOG = LoggerFactory.getLogger(LTag.PUMP.name());
-
-    private OmnipodPumpStatus pumpStatus;
-    private OmnipodPumpPluginInterface omnipodPumpPlugin;
-    private RxBusWrapper rxBus;
+    private final AAPSLogger aapsLogger;
+    private final OmnipodPumpStatus pumpStatus;
 
     @Inject
-    public OmnipodUIPostprocessor(OmnipodPumpPlugin plugin, OmnipodPumpStatus pumpStatus) {
+    public OmnipodUIPostprocessor(AAPSLogger aapsLogger, OmnipodPumpStatus pumpStatus) {
+        this.aapsLogger = aapsLogger;
         this.pumpStatus = pumpStatus;
-        this.omnipodPumpPlugin = plugin;
-        this.rxBus = plugin.getRxBus();
     }
 
     // this is mostly intended for command that return certain statuses (Remaining Insulin, ...), and
@@ -42,8 +31,7 @@ public class OmnipodUIPostprocessor {
     public void postProcessData(OmnipodUITask uiTask) {
 
         switch (uiTask.commandType) {
-
-            case SetBolus: {
+            case SetBolus:
                 if (uiTask.returnData != null) {
 
                     PumpEnactResult result = uiTask.returnData;
@@ -59,57 +47,18 @@ public class OmnipodUIPostprocessor {
                         }
                     }
                 }
-            }
-            break;
+                break;
 
-            case CancelTemporaryBasal: {
+            case CancelTemporaryBasal:
                 pumpStatus.tempBasalStart = 0;
                 pumpStatus.tempBasalEnd = 0;
                 pumpStatus.tempBasalAmount = null;
                 pumpStatus.tempBasalLength = null;
-            }
-            break;
-
-//            case PairAndPrimePod: {
-//                if (uiTask.returnData.success) {
-//                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.PairAndPrime, false);
-//                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.FillCanulaSetBasalProfile, true);
-//                }
-//                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.DeactivatePod, true);
-//            }
-//            break;
-//
-//            case FillCanulaAndSetBasalProfile: {
-//                if (uiTask.returnData.success) {
-//                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
-//                }
-//                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.DeactivatePod, true);
-//            }
-//            break;
-//
-//            case DeactivatePod:
-//            case ResetPodStatus: {
-//                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.PairAndPrime, true);
-//                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.DeactivatePod, false);
-//            }
-//            break;
-
+                break;
 
             default:
-                if (isLogEnabled())
-                    LOG.trace("Post-processing not implemented for {}.", uiTask.commandType.name());
+                aapsLogger.debug(LTag.PUMP, "Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
-
-
-    }
-
-
-    private boolean isLogEnabled() {
-        return true; //L.isEnabled(LTag.PUMP);
-    }
-
-    public RxBusWrapper getRxBus() {
-        return this.rxBus;
     }
 }

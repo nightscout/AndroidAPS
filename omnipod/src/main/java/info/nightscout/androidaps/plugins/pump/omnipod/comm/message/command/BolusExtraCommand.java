@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command;
 import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class BolusExtraCommand extends MessageBlock {

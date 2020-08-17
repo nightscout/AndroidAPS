@@ -7,7 +7,7 @@ public class IllegalMessageAddressException extends OmnipodException {
     private final int actual;
 
     public IllegalMessageAddressException(int expected, int actual) {
-        super("Invalid message address. Expected="+ expected +", actual="+ actual, false);
+        super("Invalid message address. Expected=" + expected + ", actual=" + actual, false);
         this.expected = expected;
         this.actual = actual;
     }

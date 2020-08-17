@@ -9,17 +9,15 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -32,11 +30,11 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     private PodManagementActivity podManagementActivity;
     private PodActionType actionType;
 
-    @Inject OmnipodUtil omnipodUtil;
     @Inject PodStateManager podStateManager;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject NSUpload nsUpload;
+    @Inject DatabaseHelperInterface databaseHelper;
 
     public InitPodRefreshAction(HasAndroidInjector injector, PodManagementActivity podManagementActivity, PodActionType actionType) {
         injector.androidInjector().inject(this);
@@ -60,21 +58,17 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     @Override
     public void execute() {
         if (actionType == PodActionType.InitPod) {
-            if (!podStateManager.isPodRunning()) {
-                omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodInitializing);
-            } else {
-                omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
+            if (podStateManager.isPodRunning()) {
                 uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
             }
-        } else {
-            omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 
+        // TODO do this in PodManagerMentActivity itself by listening to OmnipodPumpValuesChanged events
         podManagementActivity.refreshButtons();
     }
 
     private void uploadCareportalEvent(long date, String event) {
-        if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date) != null)
+        if (databaseHelper.getCareportalEventFromTimestamp(date) != null)
             return;
         try {
             JSONObject data = new JSONObject();
@@ -87,7 +81,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
-            MainApp.getDbHelper().createOrUpdate(careportalEvent);
+            databaseHelper.createOrUpdate(careportalEvent);
             nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMPCOMM, "Unhandled exception when uploading SiteChange event.", e);

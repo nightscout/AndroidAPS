@@ -4,8 +4,7 @@ public enum OmnipodStatusRequest {
     ResetState(OmnipodCommandType.ResetPodStatus), //
     AcknowledgeAlerts(OmnipodCommandType.AcknowledgeAlerts), //
     GetPodState(OmnipodCommandType.GetPodStatus), //
-    GetPodPulseLog(OmnipodCommandType.GetPodPulseLog)
-    ;
+    GetPodPulseLog(OmnipodCommandType.GetPodPulseLog);
 
     private OmnipodCommandType commandType;
 

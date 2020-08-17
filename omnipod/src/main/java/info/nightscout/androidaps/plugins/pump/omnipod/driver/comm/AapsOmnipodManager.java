@@ -11,16 +11,16 @@ import java.util.Date;
 import java.util.List;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
@@ -65,7 +66,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -90,6 +90,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
     //TODO: remove and use injection
     private static AapsOmnipodManager instance;
+    private DatabaseHelperInterface databaseHelper;
 
     public static AapsOmnipodManager getInstance() {
         return instance;
@@ -105,7 +106,8 @@ public class AapsOmnipodManager implements IOmnipodManager {
                               ResourceHelper resourceHelper,
                               HasAndroidInjector injector,
                               ActivePluginProvider activePlugin,
-                              Context context) {
+                              Context context,
+                              DatabaseHelperInterface databaseHelper) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager can not be null");
         }
@@ -118,6 +120,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         this.activePlugin = activePlugin;
         this.pumpStatus = pumpStatus;
         this.context = context;
+        this.databaseHelper = databaseHelper;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
         instance = this;
@@ -287,7 +290,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
 
         if (podStateManager.hasFaultEvent()) {
-            showPodFaultErrorDialog(podStateManager.getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
+            showPodFaultErrorDialog(podStateManager.getFaultEvent().getFaultEventCode());
         }
 
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -493,22 +496,22 @@ public class AapsOmnipodManager implements IOmnipodManager {
     }
 
     private long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
-        PodHistory podHistory = new PodHistory(requestTime, entryType);
+        OmnipodHistoryRecord omnipodHistoryRecord = new OmnipodHistoryRecord(requestTime, entryType.getCode());
 
         if (data != null) {
             if (data instanceof String) {
-                podHistory.setData((String) data);
+                omnipodHistoryRecord.setData((String) data);
             } else {
-                podHistory.setData(omnipodUtil.getGsonInstance().toJson(data));
+                omnipodHistoryRecord.setData(omnipodUtil.getGsonInstance().toJson(data));
             }
         }
 
-        podHistory.setSuccess(success);
-        podHistory.setPodSerial(podStateManager.hasPodState() ? String.valueOf(podStateManager.getAddress()) : "None");
+        omnipodHistoryRecord.setSuccess(success);
+        omnipodHistoryRecord.setPodSerial(podStateManager.hasPodState() ? String.valueOf(podStateManager.getAddress()) : "None");
 
-        MainApp.getDbHelper().createOrUpdate(podHistory);
+        databaseHelper.createOrUpdate(omnipodHistoryRecord);
 
-        return podHistory.getPumpId();
+        return omnipodHistoryRecord.getPumpId();
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {
@@ -571,7 +574,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
                 FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
-                showPodFaultErrorDialog(faultEventCode, R.raw.urgentalarm);
+                showPodFaultErrorDialog(faultEventCode);
                 comment = createPodFaultErrorMessage(faultEventCode);
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
@@ -599,13 +602,21 @@ public class AapsOmnipodManager implements IOmnipodManager {
         rxBus.send(event);
     }
 
+    private void showPodFaultErrorDialog(FaultEventCode faultEventCode) {
+        showErrorDialog(createPodFaultErrorMessage(faultEventCode), null);
+    }
+
     private void showPodFaultErrorDialog(FaultEventCode faultEventCode, Integer sound) {
         showErrorDialog(createPodFaultErrorMessage(faultEventCode), sound);
     }
 
+    private void showErrorDialog(String message) {
+        showErrorDialog(message, null);
+    }
+
     private void showErrorDialog(String message, Integer sound) {
         Intent intent = new Intent(context, ErrorHelperActivity.class);
-        intent.putExtra("soundid", sound == null ? 0 : sound);
+        intent.putExtra("soundid", sound);
         intent.putExtra("status", message);
         intent.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

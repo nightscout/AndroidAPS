@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 
 /**
  * Created by andy on 12/11/2019
- *
+ * <p>
  * This page is for InitPod and RemovePod, but Fragments called for this 2 actions are different
  */
 public class InitActionPage extends Page {

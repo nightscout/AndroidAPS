@@ -24,7 +24,7 @@ import com.atech.android.library.wizardpager.model.DisplayTextPage;
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.PageList;
 
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodActionPage;

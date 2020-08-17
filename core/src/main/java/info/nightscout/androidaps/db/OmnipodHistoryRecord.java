@@ -1,22 +1,18 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.driver.db;
+package info.nightscout.androidaps.db;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 /**
  * Created by andy on 30.11.2019.
  */
-@DatabaseTable(tableName = DatabaseHelper.DATABASE_POD_HISTORY)
-public class PodHistory implements DbObjectBase, Comparable<PodHistory> {
+@DatabaseTable(tableName = "PodHistory")
+public class OmnipodHistoryRecord implements DbObjectBase, Comparable<OmnipodHistoryRecord> {
 
     @DatabaseField(id = true)
     public long date;
-
-    private PodHistoryEntryType podHistoryEntryType;
 
     @DatabaseField
     private long podEntryTypeCode;
@@ -36,26 +32,15 @@ public class PodHistory implements DbObjectBase, Comparable<PodHistory> {
     @DatabaseField
     private Boolean successConfirmed;
 
-    public PodHistory() {
+    public OmnipodHistoryRecord() {
         generatePumpId();
     }
 
-
-    public PodHistory(PodHistoryEntryType podDbEntryType) {
-        this.date = System.currentTimeMillis();
-        this.podHistoryEntryType = podDbEntryType;
-        this.podEntryTypeCode = podDbEntryType.getCode();
-        generatePumpId();
-    }
-
-
-    public PodHistory(long dateTimeInMillis, PodHistoryEntryType podDbEntryType) {
+    public OmnipodHistoryRecord(long dateTimeInMillis, long podEntryTypeCode) {
         this.date = dateTimeInMillis;
-        this.podHistoryEntryType = podDbEntryType;
-        this.podEntryTypeCode = podDbEntryType.getCode();
+        this.podEntryTypeCode = podEntryTypeCode;
         generatePumpId();
     }
-
 
     @Override
     public long getDate() {
@@ -70,17 +55,12 @@ public class PodHistory implements DbObjectBase, Comparable<PodHistory> {
         return DateTimeUtil.toStringFromTimeInMillis(this.date);
     }
 
-    public PodHistoryEntryType getPodDbEntryType() {
-        return PodHistoryEntryType.getByCode((int) this.podEntryTypeCode);
-    }
-
-    public void setPodDbEntryType(PodHistoryEntryType podDbEntryType) {
-        //this.podHistoryEntryType = podDbEntryType;
-        this.podEntryTypeCode = podDbEntryType.getCode();
-    }
-
     public long getPodEntryTypeCode() {
         return podEntryTypeCode;
+    }
+
+    public void setPodEntryTypeCode(long podEntryTypeCode) {
+        this.podEntryTypeCode = podEntryTypeCode;
     }
 
     public String getData() {
@@ -130,7 +110,7 @@ public class PodHistory implements DbObjectBase, Comparable<PodHistory> {
     }
 
     @Override
-    public int compareTo(PodHistory otherOne) {
+    public int compareTo(OmnipodHistoryRecord otherOne) {
         return (int) (otherOne.date - this.date);
     }
 }

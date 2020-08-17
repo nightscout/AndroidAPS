@@ -64,17 +64,9 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected CommandQueueProvider commandQueue;
     protected SP sp;
     protected DateUtil dateUtil;
-
-    /*
-        protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
-                .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
-        protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
-                .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
-    */
     protected PumpDescription pumpDescription = new PumpDescription();
-    protected ServiceConnection serviceConnection = null;
+    protected ServiceConnection serviceConnection;
     protected boolean serviceRunning = false;
-    // protected boolean isInitialized = false;
     protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
     protected boolean displayConnectionMessages = false;
     protected PumpType pumpType;

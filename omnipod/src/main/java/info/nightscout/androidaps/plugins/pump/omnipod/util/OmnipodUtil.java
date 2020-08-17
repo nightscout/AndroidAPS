@@ -16,16 +16,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 4/8/19.
@@ -33,37 +29,13 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class OmnipodUtil {
 
-    private final AAPSLogger aapsLogger;
-    private final OmnipodPumpStatus omnipodPumpStatus;
     private final ResourceHelper resourceHelper;
-    private final SP sp;
 
     private Gson gsonInstance = createGson();
-    private OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     @Inject
-    public OmnipodUtil(
-            AAPSLogger aapsLogger,
-            OmnipodPumpStatus omnipodPumpStatus,
-            SP sp,
-            ResourceHelper resourceHelper
-    ) {
-        this.aapsLogger = aapsLogger;
-        this.omnipodPumpStatus = omnipodPumpStatus;
-        this.sp = sp;
+    public OmnipodUtil(ResourceHelper resourceHelper) {
         this.resourceHelper = resourceHelper;
-    }
-
-    public OmnipodDriverState getDriverState() {
-        return driverState;
-    }
-
-    public void setDriverState(OmnipodDriverState state) {
-        if (driverState == state)
-            return;
-
-        driverState = state;
-        omnipodPumpStatus.driverState = state;
     }
 
     private Gson createGson() {
@@ -82,14 +54,6 @@ public class OmnipodUtil {
 
     public Gson getGsonInstance() {
         return this.gsonInstance;
-    }
-
-    public AAPSLogger getAapsLogger() {
-        return this.aapsLogger;
-    }
-
-    public SP getSp() {
-        return this.sp;
     }
 
     public List<String> getTranslatedActiveAlerts(PodStateManager podStateManager) {

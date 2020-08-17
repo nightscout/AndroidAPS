@@ -4,7 +4,6 @@ import org.joda.time.LocalDateTime;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
@@ -20,21 +19,19 @@ public class RLHistoryItemOmnipod extends RLHistoryItem {
     public String getDescription(ResourceHelper resourceHelper) {
 
         switch (this.source) {
-            case RLHistoryItemSource.RileyLink:
+            case RileyLink:
                 return "State: " + resourceHelper.gs(serviceState.getResourceId(targetDevice))
                         + (this.errorCode == null ? "" : ", Error Code: " + errorCode);
 
-            case RLHistoryItemSource.MedtronicPump:
+            case MedtronicPump:
                 return resourceHelper.gs(pumpDeviceState.getResourceId());
 
-            case RLHistoryItemSource.OmnipodCommand:
+            case OmnipodCommand:
                 return omnipodCommandType.name();
 
             default:
                 return "Unknown Description";
         }
     }
-
-
 
 }

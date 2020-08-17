@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command;
 import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalDeliverySchedule;
@@ -11,7 +12,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.DeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.TempBasalDeliverySchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {

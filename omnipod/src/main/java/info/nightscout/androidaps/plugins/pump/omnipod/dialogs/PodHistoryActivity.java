@@ -23,17 +23,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.OmnipodHistoryRecord;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
+import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
@@ -42,6 +43,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
     @Inject AAPSLogger aapsLogger;
     @Inject OmnipodUtil omnipodUtil;
     @Inject ResourceHelper resourceHelper;
+    @Inject DatabaseHelperInterface databaseHelper;
 
     private Spinner historyTypeSpinner;
     private TextView statusView;
@@ -50,8 +52,8 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
     static TypeList showingType = null;
     static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
-    List<PodHistory> fullHistoryList = new ArrayList<>();
-    List<PodHistory> filteredHistoryList = new ArrayList<>();
+    List<OmnipodHistoryRecord> fullHistoryList = new ArrayList<>();
+    List<OmnipodHistoryRecord> filteredHistoryList = new ArrayList<>();
 
     RecyclerViewAdapter recyclerViewAdapter;
     boolean manualChange = false;
@@ -68,9 +70,9 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.HOUR_OF_DAY, -24);
 
-        MainApp.getDbHelper().getPodHistoryFromTime(gc.getTimeInMillis(), false);
+        databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), false);
 
-        fullHistoryList.addAll(MainApp.getDbHelper().getPodHistoryFromTime(gc.getTimeInMillis(), true));
+        fullHistoryList.addAll(databaseHelper.getAllOmnipodHistoryRecordsFromTimestamp(gc.getTimeInMillis(), true));
     }
 
 
@@ -83,8 +85,8 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         if (group == PumpHistoryEntryGroup.All) {
             this.filteredHistoryList.addAll(fullHistoryList);
         } else {
-            for (PodHistory pumpHistoryEntry : fullHistoryList) {
-                if (pumpHistoryEntry.getPodDbEntryType().getGroup() == group) {
+            for (OmnipodHistoryRecord pumpHistoryEntry : fullHistoryList) {
+                if (PodHistoryEntryType.getByCode(pumpHistoryEntry.getPodEntryTypeCode()).getGroup() == group) {
                     this.filteredHistoryList.add(pumpHistoryEntry);
                 }
             }
@@ -207,14 +209,14 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
 
-        List<PodHistory> historyList;
+        List<OmnipodHistoryRecord> historyList;
 
-        RecyclerViewAdapter(List<PodHistory> historyList) {
+        RecyclerViewAdapter(List<OmnipodHistoryRecord> historyList) {
             this.historyList = historyList;
         }
 
 
-        public void setHistoryList(List<PodHistory> historyList) {
+        public void setHistoryList(List<OmnipodHistoryRecord> historyList) {
             this.historyList = historyList;
             Collections.sort(this.historyList);
         }
@@ -231,21 +233,22 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NotNull HistoryViewHolder holder, int position) {
-            PodHistory record = historyList.get(position);
+            OmnipodHistoryRecord record = historyList.get(position);
 
             if (record != null) {
                 holder.timeView.setText(record.getDateTimeString());
-                holder.typeView.setText(record.getPodDbEntryType().getResourceId());
+                holder.typeView.setText(PodHistoryEntryType.getByCode(record.getPodEntryTypeCode()).getResourceId());
                 setValue(record, holder.valueView);
             }
         }
 
 
-        private void setValue(PodHistory historyEntry, TextView valueView) {
+        private void setValue(OmnipodHistoryRecord historyEntry, TextView valueView) {
             //valueView.setText("");
 
             if (historyEntry.isSuccess()) {
-                switch (historyEntry.getPodDbEntryType()) {
+                PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
+                switch (entryType) {
 
                     case SetTemporaryBasal: {
                         TempBasalPair tempBasalPair = omnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
