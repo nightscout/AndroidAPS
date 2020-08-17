@@ -281,6 +281,8 @@ dependencies {
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
+    // Omnipod wizard
+    implementation(name: "com.atech-software.android.library.wizardpager-1.1.4", ext: "aar")
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
     }
