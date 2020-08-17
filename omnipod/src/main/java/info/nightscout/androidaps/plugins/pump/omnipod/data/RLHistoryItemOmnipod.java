@@ -16,22 +16,12 @@ public class RLHistoryItemOmnipod extends RLHistoryItem {
         this.omnipodCommandType = omnipodCommandType;
     }
 
+    @Override
     public String getDescription(ResourceHelper resourceHelper) {
-
-        switch (this.source) {
-            case RileyLink:
-                return "State: " + resourceHelper.gs(serviceState.getResourceId(targetDevice))
-                        + (this.errorCode == null ? "" : ", Error Code: " + errorCode);
-
-            case MedtronicPump:
-                return resourceHelper.gs(pumpDeviceState.getResourceId());
-
-            case OmnipodCommand:
-                return omnipodCommandType.name();
-
-            default:
-                return "Unknown Description";
+        if (RLHistoryItemSource.OmnipodCommand.equals(source)) {
+            return omnipodCommandType.name();
         }
+        return super.getDescription(resourceHelper);
     }
 
 }

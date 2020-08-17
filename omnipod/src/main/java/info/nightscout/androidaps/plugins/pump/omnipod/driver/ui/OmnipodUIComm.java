@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 
@@ -13,19 +15,22 @@ public class OmnipodUIComm {
 
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
-    private final IOmnipodManager omnipodCommunicationManager;
     private final OmnipodUIPostprocessor omnipodUIPostprocessor;
+    private final IOmnipodManager omnipodCommunicationManager;
+    private RileyLinkUtil rileyLinkUtil;
 
     public OmnipodUIComm(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             OmnipodUIPostprocessor omnipodUIPostprocessor,
-            IOmnipodManager omnipodCommunicationManager
+            IOmnipodManager omnipodCommunicationManager,
+            RileyLinkUtil rileyLinkUtil
     ) {
         this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.omnipodUIPostprocessor = omnipodUIPostprocessor;
         this.omnipodCommunicationManager = omnipodCommunicationManager;
+        this.rileyLinkUtil = rileyLinkUtil;
     }
 
 
@@ -35,33 +40,9 @@ public class OmnipodUIComm {
 
         OmnipodUITask task = new OmnipodUITask(injector, commandType, parameters);
 
-        // new Thread(() -> {
-        // LOG.warn("@@@ Start Thread");
-        //
-        // task.execute(getCommunicationManager());
-        //
-        // LOG.warn("@@@ End Thread");
-        // });
+        rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(commandType));
 
         task.execute(this.omnipodCommunicationManager);
-
-        // for (int i = 0; i < getMaxWaitTime(commandType); i++) {
-        // synchronized (task) {
-        // // try {
-        // //
-        // // //task.wait(1000);
-        // // } catch (InterruptedException e) {
-        // // LOG.error("executeCommand InterruptedException", e);
-        // // }
-        //
-        //
-        // SystemClock.sleep(1000);
-        // }
-        //
-        // if (task.isReceived()) {
-        // break;
-        // }
-        // }
 
         if (!task.isReceived()) {
             aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);

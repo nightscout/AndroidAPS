@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
@@ -43,6 +44,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodUtil omnipodUtil;
     @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
     @Inject PodStateManager podStateManager;
+    @Inject DatabaseHelperInterface databaseHelper;
 
     private static RileyLinkOmnipodService instance;
 
@@ -70,22 +72,20 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         super.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-
 
     @Override
     public RileyLinkEncodingType getEncoding() {
         return RileyLinkEncodingType.Manchester;
     }
 
-
     /**
      * If you have customized RileyLinkServiceData you need to override this
      */
+    @Override
     public void initRileyLinkServiceData() {
 
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
@@ -111,7 +111,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
             aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
-                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this);
+                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this, databaseHelper);
 
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUIPostprocessor, aapsOmnipodManager);
 
@@ -121,7 +121,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         rxBus.send(new EventOmnipodPumpValuesChanged());
     }
 
-
     public OmnipodUIComm getDeviceCommandExecutor() {
         return this.omnipodUIComm;
     }
@@ -129,7 +128,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     public void resetRileyLinkConfiguration() {
         rfspy.resetRileyLinkConfiguration();
     }
-
 
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
@@ -141,14 +139,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         this.omnipodPumpStatus.setPumpDeviceState(pumpDeviceState);
     }
 
-
     public class LocalBinder extends Binder {
-
         public RileyLinkOmnipodService getServiceInstance() {
             return RileyLinkOmnipodService.this;
         }
     }
-
 
     /* private functions */
 
@@ -158,7 +153,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         return rileyLinkServiceData.rileyLinkServiceState.isReady();
     }
 
-
+    @Override
     public boolean verifyConfiguration() {
         try {
             omnipodPumpStatus.rileyLinkErrorDescription = null;
@@ -202,11 +197,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         }
     }
 
-
     private boolean reconfigureService() {
-
         if (!inPreInit) {
-
             if (rileyLinkAddressChanged) {
                 rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
                 rileyLinkAddressChanged = false;
