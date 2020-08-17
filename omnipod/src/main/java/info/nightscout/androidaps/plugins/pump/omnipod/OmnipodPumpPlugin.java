@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 
@@ -105,6 +106,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private int timeChangeRetries = 0;
     private Profile currentProfile;
     private long nextPodCheck = 0L;
+    private boolean sentIdToFirebase;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -560,6 +562,15 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         }
 
         finishAction("Omnipod Pump");
+
+        if (!sentIdToFirebase) {
+            Bundle params = new Bundle();
+            params.putString("version", BuildConfig.VERSION);
+
+            getFabricPrivacy().getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
+
+            sentIdToFirebase = true;
+        }
 
         isInitialized = true;
 
