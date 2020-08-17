@@ -12,7 +12,7 @@ public class OmnipodConst {
 
     static final String Prefix = "AAPS.Omnipod.";
 
-    public class Prefs {
+    public static class Prefs {
         public static final String PodState = Prefix + "pod_state";
         public static final int BeepBasalEnabled = R.string.key_omnipod_beep_basal_enabled;
         public static final int BeepBolusEnabled = R.string.key_omnipod_beep_bolus_enabled;
@@ -22,7 +22,7 @@ public class OmnipodConst {
         public static final int TimeChangeEventEnabled = R.string.key_omnipod_timechange_enabled;
     }
 
-    public class Statistics {
+    public static class Statistics {
         public static final String StatsPrefix = "omnipod_";
         public static final String FirstPumpStart = Prefix + "first_pump_use";
         public static final String LastGoodPumpCommunicationTime = Prefix + "lastGoodPumpCommunicationTime";
