@@ -20,7 +20,6 @@ import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -61,7 +60,7 @@ public class RileyLinkBLE {
     private boolean mIsConnected = false;
 
     @Inject
-    public RileyLinkBLE(HasAndroidInjector injector, final Context context) {
+    public RileyLinkBLE(final Context context) {
         this.context = context;
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
