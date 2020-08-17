@@ -929,11 +929,4 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return false;
     }
 
-
-    @Override
-    public RxBusWrapper getRxBus() {
-        return this.rxBus;
-    }
-
-
 }
