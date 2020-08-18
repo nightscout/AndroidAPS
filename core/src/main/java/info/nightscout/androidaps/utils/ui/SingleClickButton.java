@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils;
+package info.nightscout.androidaps.utils.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
