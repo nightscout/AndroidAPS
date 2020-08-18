@@ -3,7 +3,7 @@ package info.nightscout.androidaps.utils.protection
 import androidx.biometric.BiometricConstants
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
 import java.util.concurrent.Executors
