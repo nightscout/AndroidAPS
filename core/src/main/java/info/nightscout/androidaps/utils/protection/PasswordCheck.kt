@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper

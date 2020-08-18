@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.utils.protection
 
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,10 +42,10 @@ class ProtectionCheck @Inject constructor(
 
     fun isLocked(protection: Protection): Boolean {
         return when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
-            ProtectionType.NONE      -> false
-            ProtectionType.BIOMETRIC -> true
-            ProtectionType.MASTER_PASSWORD  -> sp.getString(R.string.key_master_password, "") != ""
-            ProtectionType.CUSTOM_PASSWORD  -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
+            ProtectionType.NONE            -> false
+            ProtectionType.BIOMETRIC       -> true
+            ProtectionType.MASTER_PASSWORD -> sp.getString(R.string.key_master_password, "") != ""
+            ProtectionType.CUSTOM_PASSWORD -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
         }
     }
 
@@ -53,13 +53,13 @@ class ProtectionCheck @Inject constructor(
     fun queryProtection(activity: FragmentActivity, protection: Protection,
                         ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
         when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
-            ProtectionType.NONE      ->
+            ProtectionType.NONE            ->
                 ok?.run()
-            ProtectionType.BIOMETRIC ->
+            ProtectionType.BIOMETRIC       ->
                 BiometricCheck.biometricPrompt(activity, titleResourceIDs[protection.ordinal], ok, cancel, fail, passwordCheck)
-            ProtectionType.MASTER_PASSWORD  ->
+            ProtectionType.MASTER_PASSWORD ->
                 passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
-            ProtectionType.CUSTOM_PASSWORD  ->
+            ProtectionType.CUSTOM_PASSWORD ->
                 passwordCheck.queryPassword(activity, titleResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() })
         }
     }
