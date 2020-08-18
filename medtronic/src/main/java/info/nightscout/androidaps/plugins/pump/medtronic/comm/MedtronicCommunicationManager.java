@@ -74,8 +74,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private boolean doWakeUpBeforeCommand = true;
 
 
-    public MedtronicCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
-        super(injector, rfspy);
+    public MedtronicCommunicationManager(HasAndroidInjector injector) {
+        super(injector);
         medtronicPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
