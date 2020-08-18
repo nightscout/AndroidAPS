@@ -169,30 +169,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                             break;
                         }
                     }
-
-
-//                        if (OmnipodPumpPlugin.this.omnipodPumpStatus != null) {
-//
-//                            aapsLogger.debug(LTag.PUMP, "Starting OmniPod-RileyLink service");
-//                            if (omnipodService.setNotInPreInit()) {
-//                                if (omnipodCommunicationManager == null) {
-//                                    omnipodCommunicationManager = AapsOmnipodManager.getInstance();
-//                                    omnipodCommunicationManager.setPumpStatus(OmnipodPumpPlugin.this.omnipodPumpStatus);
-//                                    omnipodServiceRunning = true;
-//                                } else {
-//                                    omnipodCommunicationManager.setPumpStatus(OmnipodPumpPlugin.this.omnipodPumpStatus);
-//                                }
-//
-//                                omnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-//                                //omnipodUtil.setPlugin(OmnipodPumpPlugin.this);
-//
-//                                omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, plugin, OmnipodPumpPlugin.this.omnipodPumpStatus);
-//                                break;
-//                            }
-//                        }
-//
-//                        SystemClock.sleep(5000);
-                    //}
                 }).start();
             }
         };
@@ -225,23 +201,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         );
 
         super.onStart();
-
-
-        //rileyLinkOmnipodService.verifyConfiguration();
-        //initPumpStatusData();
     }
-
-//    @Override
-//    protected void onResume() {
-//
-//    }
-
-//    private void refreshConfiguration() {
-//        if (pumpStatusLocal != null) {
-//            pumpStatusLocal.refreshConfiguration();
-//        }
-//        verifyConfiguration()
-//    }
 
     @Override
     protected void onStop() {
@@ -252,7 +212,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private String getLogPrefix() {
         return "OmnipodPlugin::";
     }
-
 
     @Override
     public void initPumpStatusData() {
@@ -269,16 +228,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (!sp.contains(OmnipodConst.Statistics.FirstPumpStart)) {
             sp.putLong(OmnipodConst.Statistics.FirstPumpStart, System.currentTimeMillis());
         }
-
     }
-
 
     @Override
     public void onStartCustomActions() {
-
         // check status every minute (if any status needs refresh we send readStatus command)
         new Thread(() -> {
-
             do {
                 SystemClock.sleep(60000);
 
@@ -725,29 +680,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         }
-
-        // if TBR is running we will cancel it.
-//        if (tbrCurrent != null) {
-//            
-//                aapsLogger.info(LTag.PUMP,getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
-//
-//            // CANCEL
-//            OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
-//
-//            PumpEnactResult result = responseTask2.getResult();
-//
-//            if (result.success) {
-//                
-//                    aapsLogger.info(LTag.PUMP,getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
-//            } else {
-//                
-//                    aapsLogger.error(LTag.PUMP,getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
-//
-//                finishAction("TBR");
-//
-//                return result;
-//            }
-//        }
 
         // now start new TBR
         OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetTemporaryBasal,

@@ -60,7 +60,7 @@ public class RLHistoryItem {
     public String getDescription(ResourceHelper resourceHelper) {
         switch (this.source) {
             case RileyLink:
-                return "State: " + resourceHelper.gs(serviceState.getResourceId(targetDevice))
+                return "State: " + resourceHelper.gs(serviceState.getResourceId())
                         + (this.errorCode == null ? "" : ", Error Code: " + errorCode);
             case MedtronicPump:
                 return resourceHelper.gs(pumpDeviceState.getResourceId());

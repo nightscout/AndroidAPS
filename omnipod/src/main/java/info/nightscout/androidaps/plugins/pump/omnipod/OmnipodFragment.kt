@@ -35,13 +35,13 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.omnipod_fragment.*
 import org.apache.commons.lang3.StringUtils
@@ -69,14 +69,10 @@ class OmnipodFragment : DaggerFragment() {
     // @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var protectionCheck: ProtectionCheck
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var disposables: CompositeDisposable = CompositeDisposable()
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     init {
         refreshLoop = Runnable {
@@ -157,23 +153,23 @@ class OmnipodFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
-        disposable += rxBus
+        disposables += rxBus
             .toObservable(EventOmnipodRefreshButtonState::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ omnipod_refresh.isEnabled = it.newState }, { fabricPrivacy.logException(it) })
-        disposable += rxBus
+        disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateRileyLinkUiElements() }, { fabricPrivacy.logException(it) })
-        disposable += rxBus
+        disposables += rxBus
             .toObservable(EventOmnipodPumpValuesChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateOmipodUiElements() }, { fabricPrivacy.logException(it) })
-        disposable += rxBus
+        disposables += rxBus
             .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateAcknowledgeAlertsUiElements() }, { fabricPrivacy.logException(it) })
-        disposable += rxBus
+        disposables += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
             .subscribe({
@@ -200,7 +196,7 @@ class OmnipodFragment : DaggerFragment() {
 
     override fun onPause() {
         super.onPause()
-        disposable.clear()
+        disposables.clear()
         loopHandler.removeCallbacks(refreshLoop)
     }
 
@@ -215,7 +211,7 @@ class OmnipodFragment : DaggerFragment() {
 
         val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
 
-        val resourceId = rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
+        val resourceId = rileyLinkServiceState.getResourceId()
         val rileyLinkError = rileyLinkServiceData.rileyLinkError
 
         omnipod_rl_status.text =

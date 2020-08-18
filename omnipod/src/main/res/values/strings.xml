@@ -147,6 +147,7 @@
     <string name="omnipod_time_or_timezone_change">Time and/or Timezone change on pump</string>
     <string name="omnipod_composite_time">%1$s and %2$s</string>
     <string name="omnipod_time_ago">%1$s ago</string>
+    <string name="omnipod_waiting_for_rileylink_connection">Waiting for RileyLink connection...</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

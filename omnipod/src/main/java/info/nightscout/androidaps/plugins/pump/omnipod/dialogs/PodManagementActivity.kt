@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dialogs
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.atech.android.library.wizardpager.WizardPagerActivity
 import com.atech.android.library.wizardpager.WizardPagerContext
@@ -11,9 +13,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus
@@ -24,11 +25,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.Remo
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.ShortInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
 import javax.inject.Inject
 
@@ -38,18 +40,15 @@ import javax.inject.Inject
 class PodManagementActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var omnipodUtil: OmnipodUtil
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var aapsOmnipodManager: AapsOmnipodManager
 
-    private var initPodChanged = false
+    private var disposables: CompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,33 +56,39 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
         initpod_init_pod.setOnClickListener {
             initPodAction()
-            initPodChanged = true
         }
 
         initpod_remove_pod.setOnClickListener {
             removePodAction()
-            initPodChanged = true
         }
 
         initpod_reset_pod.setOnClickListener {
             resetPodAction()
-            initPodChanged = true
         }
 
         initpod_pod_history.setOnClickListener {
             showPodHistory()
         }
+    }
 
-        refreshButtons();
+    override fun onResume() {
+        super.onResume()
+        disposables += rxBus
+            .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ refreshButtons() }, { fabricPrivacy.logException(it) })
+
+        refreshButtons()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposables.clear()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        if (initPodChanged) {
-            rxBus.send(EventOmnipodPumpValuesChanged())
-            rxBus.send(EventRefreshOverview("Omnipod Pod Management"))
-        }
+        rxBus.send(EventRefreshOverview("Omnipod Pod Management"))
     }
 
     fun initPodAction() {
@@ -148,20 +153,21 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     fun showPodHistory() {
-//        OKDialog.showConfirmation(this,
-//                MainApp.gs(R.string.omnipod_cmd_pod_history_na), null)
-
         startActivity(Intent(applicationContext, PodHistoryActivity::class.java))
     }
 
     fun refreshButtons() {
-        initpod_init_pod.isEnabled = !podStateManager.isPodRunning()
-
+        initpod_init_pod.isEnabled = !podStateManager.isPodActivationCompleted
         initpod_remove_pod.isEnabled = podStateManager.isPodInitialized
         initpod_reset_pod.isEnabled = podStateManager.hasPodState()
 
-        if (!rileyLinkServiceData.rileyLinkServiceState.isReady) {
+        val waitingForRlView = findViewById<LinearLayout>(R.id.initpod_waiting_for_rl_layout)
+
+        if (rileyLinkServiceData.rileyLinkServiceState.isReady) {
+            waitingForRlView.visibility = View.GONE
+        } else {
             // if rileylink is not running we disable all operations that require a RL connection
+            waitingForRlView.visibility = View.VISIBLE
             initpod_init_pod.isEnabled = false
             initpod_remove_pod.isEnabled = false
             initpod_reset_pod.isEnabled = false

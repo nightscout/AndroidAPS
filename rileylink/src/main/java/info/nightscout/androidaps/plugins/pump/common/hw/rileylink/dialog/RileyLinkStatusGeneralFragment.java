@@ -36,7 +36,6 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     @Inject ActivePluginProvider activePlugin;
     @Inject ResourceHelper resourceHelper;
-    //@Inject MedtronicUtil medtronicUtil;
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject DateUtil dateUtil;
@@ -103,7 +102,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
-        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId(targetDevice)));
+        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);

@@ -51,8 +51,6 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
         if (this.cancelActionText.equals("Cancel")) {
             //AapsOmnipodManager.getInstance().resetPodStatus();
         }
-
-        podManagementActivity.refreshButtons();
     }
 
     @Override
@@ -62,9 +60,6 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
                 uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
             }
         }
-
-        // TODO do this in PodManagerMentActivity itself by listening to OmnipodPumpValuesChanged events
-        podManagementActivity.refreshButtons();
     }
 
     private void uploadCareportalEvent(long date, String event) {
