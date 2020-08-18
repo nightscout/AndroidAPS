@@ -26,6 +26,7 @@ import javax.inject.Singleton
         CommandQueueModule::class,
         ObjectivesModule::class,
         WizardModule::class,
+        RileyLinkModule::class,
         MedtronicModule::class,
         OmnipodModule::class,
         APSModule::class,

@@ -53,7 +53,6 @@ public abstract class RileyLinkCommunicationManager {
 
     public RileyLinkCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         this.injector = injector;
-        injector.androidInjector().inject(this);
         this.rfspy = rfspy;
     }
 

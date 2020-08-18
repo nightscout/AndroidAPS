@@ -18,8 +18,8 @@ import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
  * Created by geoff on 5/26/16.
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
+@Singleton
 public class RileyLinkBLE {
 
     @Inject AAPSLogger aapsLogger;
@@ -58,13 +59,11 @@ public class RileyLinkBLE {
     private Runnable radioResponseCountNotified;
     private boolean mIsConnected = false;
 
-
-    public RileyLinkBLE(HasAndroidInjector injector, final Context context) {
-        injector.androidInjector().inject(this);
+    @Inject
+    public RileyLinkBLE(final Context context) {
         this.context = context;
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
         bluetoothGattCallback = new BluetoothGattCallback() {
 
             @Override
@@ -255,6 +254,11 @@ public class RileyLinkBLE {
                 }
             }
         };
+    }
+
+    @Inject
+    public void onInit() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
     }
 
 

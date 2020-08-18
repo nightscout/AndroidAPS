@@ -14,8 +14,6 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
@@ -45,11 +43,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
     @Inject PodStateManager podStateManager;
     @Inject DatabaseHelperInterface databaseHelper;
-
-    private static RileyLinkOmnipodService instance;
-
-    private OmnipodCommunicationManager omnipodCommunicationManager;
-    private AapsOmnipodManager aapsOmnipodManager;
+    @Inject AapsOmnipodManager aapsOmnipodManager;
+    @Inject OmnipodCommunicationManager omnipodCommunicationManager;
 
     private IBinder mBinder = new LocalBinder();
     private boolean rileyLinkAddressChanged = false;
@@ -59,11 +54,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     public RileyLinkOmnipodService() {
         super();
-        instance = this;
-    }
-
-    public static RileyLinkOmnipodService getInstance() {
-        return instance;
     }
 
     @Override
@@ -94,8 +84,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
-        rileyLinkBLE = new RileyLinkBLE(injector, this); // or this
-        rfspy = new RFSpy(injector, rileyLinkBLE);
         rfspy.startReader();
 
         initializeErosOmnipodManager();
@@ -105,18 +93,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        AapsOmnipodManager instance = AapsOmnipodManager.getInstance();
-        if (instance == null) {
-            OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
-            this.omnipodCommunicationManager = omnipodCommunicationService;
-
-            aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podStateManager, omnipodPumpStatus,
-                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this, databaseHelper);
-
+        if (omnipodUIComm == null) {
             omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUIPostprocessor, aapsOmnipodManager, rileyLinkUtil);
-
-        } else {
-            aapsOmnipodManager = instance;
         }
         rxBus.send(new EventOmnipodPumpValuesChanged());
     }
