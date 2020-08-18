@@ -16,7 +16,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -27,7 +26,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class InitPodRefreshAction extends AbstractCancelAction implements FinishActionInterface {
 
-    private PodManagementActivity podManagementActivity;
     private PodActionType actionType;
 
     @Inject PodStateManager podStateManager;
@@ -36,9 +34,8 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     @Inject NSUpload nsUpload;
     @Inject DatabaseHelperInterface databaseHelper;
 
-    public InitPodRefreshAction(HasAndroidInjector injector, PodManagementActivity podManagementActivity, PodActionType actionType) {
+    public InitPodRefreshAction(HasAndroidInjector injector, PodActionType actionType) {
         injector.androidInjector().inject(this);
-        this.podManagementActivity = podManagementActivity;
         this.actionType = actionType;
     }
 
@@ -46,10 +43,6 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     public void execute(String cancelReason) {
         if (cancelReason != null && cancelReason.trim().length() > 0) {
             this.cancelActionText = cancelReason;
-        }
-
-        if (this.cancelActionText.equals("Cancel")) {
-            //AapsOmnipodManager.getInstance().resetPodStatus();
         }
     }
 
@@ -82,7 +75,6 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
             aapsLogger.error(LTag.PUMPCOMM, "Unhandled exception when uploading SiteChange event.", e);
         }
     }
-
 
     @Override
     public String getFinishActionText() {
