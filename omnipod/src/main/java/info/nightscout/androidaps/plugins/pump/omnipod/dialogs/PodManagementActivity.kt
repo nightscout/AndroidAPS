@@ -94,7 +94,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     fun initPodAction() {
 
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(injector, this, PodActionType.InitPod)
+        var refreshAction = InitPodRefreshAction(injector, PodActionType.InitPod)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
@@ -122,7 +122,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     fun removePodAction() {
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(injector, this, PodActionType.RemovePod)
+        var refreshAction = InitPodRefreshAction(injector, PodActionType.RemovePod)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
