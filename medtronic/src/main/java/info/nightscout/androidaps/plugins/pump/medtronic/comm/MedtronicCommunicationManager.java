@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
@@ -55,6 +56,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * This was mostly rewritten from Original version, and lots of commands and
  * functionality added.
  */
+@Singleton
 public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
