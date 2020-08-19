@@ -41,9 +41,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject RFSpy rfSpy;
+    @Inject MedtronicCommunicationManager medtronicCommunicationManager;
 
     private MedtronicUIComm medtronicUIComm;
-    private MedtronicCommunicationManager medtronicCommunicationManager;
     private IBinder mBinder = new LocalBinder();
 
     private boolean serialChanged = false;
@@ -102,8 +102,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         rfspy.startReader();
 
-        // init rileyLinkCommunicationManager
-        medtronicCommunicationManager = new MedtronicCommunicationManager(injector);
         medtronicUIComm = new MedtronicUIComm(injector, aapsLogger, medtronicUtil, medtronicUIPostprocessor, medtronicCommunicationManager);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
