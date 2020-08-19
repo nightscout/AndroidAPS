@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -49,7 +50,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 /**
  * Created by andy on 6/29/18.
  */
-// TODO make singleton and rename to OmnipodRileyLinkCommunicationManager
+// TODO rename to OmnipodRileyLinkCommunicationManager
+@Singleton
 public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject OmnipodPumpStatus omnipodPumpStatus;
