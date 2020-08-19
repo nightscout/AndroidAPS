@@ -26,6 +26,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -137,16 +138,16 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonChecked = overview_insulin_start_eating_soon_tt.isChecked
 
         if (insulinAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.bolus))
             if (recordOnlyChecked)
-                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.bolusrecordedonly) + "</font>")
+                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.warning))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarning, resourceHelper.gc(R.color.warning), insulin, insulinAfterConstraints))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
         }
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + "<font color='" + resourceHelper.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + eatingSoonTTDuration + " " + resourceHelper.gs(R.string.unit_minute_short) + ")</font>")
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
 
         val timeOffset = overview_insulin_time.value.toInt()
         val time = DateUtil.now() + T.mins(timeOffset.toLong()).msecs()
