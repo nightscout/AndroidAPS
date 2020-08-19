@@ -18,8 +18,8 @@ android {
         // OMNIPOD: for usage in Firebase event during testing phase
         buildConfigField "String", "VERSION", '"2.7-omnipod-0.4.1-SNAPSHOT"'
         // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
-        buildConfigField "String", "DEV_VERSION", '"2.6.7-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"65c8cc98804cfc366239ad2bedb2dd98e3e4f3c2"'
+        buildConfigField "String", "DEV_VERSION", '"2.7.0-rc3"'
+        buildConfigField "String", "DEV_VERSION_COMMIT", '"a4b2ce32a59a617eed9ad006e85efdeec51cd899"'
         buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"16.8.2020"' // 16th of August
     }
 
