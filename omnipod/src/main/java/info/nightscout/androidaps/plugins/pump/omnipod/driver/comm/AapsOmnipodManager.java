@@ -75,6 +75,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.SingleSubject;
 
 @Singleton
 public class AapsOmnipodManager implements IOmnipodManager {
@@ -294,18 +295,37 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
     @Override
     public PumpEnactResult cancelBolus() {
+        SingleSubject<Boolean> bolusCommandExecutionSubject = delegate.getBolusCommandExecutionSubject();
+        if (bolusCommandExecutionSubject != null) {
+            // Wait until the bolus command has actually been executed before sending the cancel bolus command
+            aapsLogger.debug(LTag.PUMP, "Cancel bolus was requested, but the bolus command is still being executed. Awaiting bolus command execution");
+            boolean bolusCommandSuccessfullyExecuted = bolusCommandExecutionSubject.blockingGet();
+            if (bolusCommandSuccessfullyExecuted) {
+                aapsLogger.debug(LTag.PUMP, "Bolus command successfully executed. Proceeding bolus cancellation");
+            } else {
+                aapsLogger.debug(LTag.PUMP, "Not cancelling bolus: bolus command failed");
+                String comment = getStringResource(R.string.omnipod_bolus_did_not_succeed);
+                addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.CancelBolus, comment);
+                return new PumpEnactResult(injector).success(true).enacted(false).comment(comment);
+            }
+        }
+
         long time = System.currentTimeMillis();
         String comment = null;
-        while (delegate.hasActiveBolus()) {
+        for (int i = 1; delegate.hasActiveBolus(); i++) {
+            aapsLogger.debug(LTag.PUMP, "Attempting to cancel bolus (#{})", i);
             try {
                 delegate.cancelBolus(isBolusBeepsEnabled());
+                aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus", i);
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (PodFaultException ex) {
+                aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus (implicitly because of a Pod Fault)");
                 showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventCode(), null);
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
+                aapsLogger.debug(LTag.PUMP, "Failed to cancel bolus", ex);
                 comment = handleAndTranslateException(ex);
             }
         }

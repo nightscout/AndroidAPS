@@ -61,6 +61,8 @@ public class OmnipodManager {
     private PodStateManager podStateManager;
 
     private ActiveBolusData activeBolusData;
+    private SingleSubject<Boolean> bolusCommandExecutionSubject;
+
     private final Object bolusDataMutex = new Object();
 
     private AAPSLogger aapsLogger;
@@ -277,12 +279,16 @@ public class OmnipodManager {
 
         logStartingCommandExecution("bolus [units=" + units + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
+        bolusCommandExecutionSubject = SingleSubject.create();
+
         CommandDeliveryStatus commandDeliveryStatus = CommandDeliveryStatus.SUCCESS;
 
         try {
             executeAndVerify(() -> communicationService.executeAction(new BolusAction(podStateManager, units, acknowledgementBeep, completionBeep)));
         } catch (OmnipodException ex) {
             if (ex.isCertainFailure()) {
+                bolusCommandExecutionSubject.onSuccess(false);
+                bolusCommandExecutionSubject = null;
                 throw ex;
             }
 
@@ -318,6 +324,11 @@ public class OmnipodManager {
         synchronized (bolusDataMutex) {
             activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
         }
+
+        // Return successful command execution AFTER storing activeBolusData
+        //  Otherwise, hasActiveBolus() would return false and the caller would not cancel the bolus.
+        bolusCommandExecutionSubject.onSuccess(true);
+        bolusCommandExecutionSubject = null;
 
         disposables.add(Completable.complete() //
                 .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
@@ -484,6 +495,10 @@ public class OmnipodManager {
         synchronized (bolusDataMutex) {
             return activeBolusData != null;
         }
+    }
+
+    public SingleSubject<Boolean> getBolusCommandExecutionSubject() {
+        return bolusCommandExecutionSubject;
     }
 
     // Only works for commands with nonce resyncable message blocks

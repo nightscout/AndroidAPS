@@ -148,6 +148,7 @@
     <string name="omnipod_composite_time">%1$s and %2$s</string>
     <string name="omnipod_time_ago">%1$s ago</string>
     <string name="omnipod_waiting_for_rileylink_connection">Waiting for RileyLink connection...</string>
+    <string name="omnipod_bolus_did_not_succeed">Bolus did not succeed</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>
