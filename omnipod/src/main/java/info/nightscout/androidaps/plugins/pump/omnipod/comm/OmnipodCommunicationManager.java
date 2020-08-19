@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
@@ -55,9 +54,9 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject OmnipodPumpStatus omnipodPumpStatus;
 
+    // This empty constructor must be kept, otherwise dagger injection might break!
     @Inject
-    public OmnipodCommunicationManager(HasAndroidInjector injector) {
-        super(injector);
+    public OmnipodCommunicationManager() {
     }
 
     @Inject

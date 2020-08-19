@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
@@ -73,9 +72,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     private boolean doWakeUpBeforeCommand = true;
 
+    // This empty constructor must be kept, otherwise dagger injection might break!
+    @Inject
+    public MedtronicCommunicationManager() {}
 
-    public MedtronicCommunicationManager(HasAndroidInjector injector) {
-        super(injector);
+    @Inject
+    public void onInit() {
+        // we can't do this in the constructor, as sp only gets injected after the constructor has returned
         medtronicPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
