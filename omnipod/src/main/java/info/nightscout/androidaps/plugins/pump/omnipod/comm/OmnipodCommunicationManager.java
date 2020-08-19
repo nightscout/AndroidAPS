@@ -6,15 +6,13 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
@@ -50,14 +48,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 /**
  * Created by andy on 6/29/18.
  */
-// TODO make singleton and rename to OmnipodRileyLinkCommunicationManager
+// TODO rename to OmnipodRileyLinkCommunicationManager
+@Singleton
 public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject OmnipodPumpStatus omnipodPumpStatus;
 
+    // This empty constructor must be kept, otherwise dagger injection might break!
     @Inject
-    public OmnipodCommunicationManager(HasAndroidInjector injector) {
-        super(injector);
+    public OmnipodCommunicationManager() {
     }
 
     @Inject
