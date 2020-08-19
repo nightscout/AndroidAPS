@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
@@ -34,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * RileyLinkMedtronicService is intended to stay running when the gui-app is closed.
  */
+@Singleton
 public class RileyLinkMedtronicService extends RileyLinkService {
 
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
