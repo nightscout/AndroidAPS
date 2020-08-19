@@ -55,8 +55,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     private boolean inPreInit = true;
 
 
+    // This empty constructor must be kept, otherwise dagger injection might break!
+    @Inject
     public RileyLinkMedtronicService() {
-        super();
     }
 
 
