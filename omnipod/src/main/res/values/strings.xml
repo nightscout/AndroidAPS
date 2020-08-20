@@ -93,9 +93,9 @@
     <string name="omnipod_cmd_suspend_delivery">Suspend Delivery</string>
     <string name="omnipod_cmd_resume_delivery">Resume Delivery</string>
     <string name="omnipod_cmd_unknown_entry">Unknown Entry</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f U</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Rate: %1$.1f U, Duration: %2$d min</string>
+    <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
+    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
+    <string name="omnipod_cmd_tbr_value">Rate: %1$.2f U, Duration: %2$d min</string>
     <string name="omnipod_cmd_reset_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>

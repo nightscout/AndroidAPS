@@ -30,6 +30,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -61,12 +62,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInt
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
@@ -87,6 +90,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private final RileyLinkServiceData rileyLinkServiceData;
     private final ServiceTaskExecutor serviceTaskExecutor;
     private final OmnipodPumpStatus omnipodPumpStatus;
+    private final AapsOmnipodManager aapsOmnipodManager;
+    private final OmnipodUtil omnipodUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -94,7 +99,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     protected boolean firstRun = true;
     protected boolean isRefresh = false;
     private boolean isInitialized = false;
-
 
     private RileyLinkOmnipodService rileyLinkOmnipodService;
 
@@ -119,13 +123,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             SP sp,
             OmnipodPumpStatus omnipodPumpStatus,
             PodStateManager podStateManager,
+            AapsOmnipodManager aapsOmnipodManager,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
             ServiceTaskExecutor serviceTaskExecutor,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            OmnipodUtil omnipodUtil
     ) {
-
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodFragment.class.getName()) //
@@ -134,26 +139,25 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         .preferencesId(R.xml.pref_omnipod) //
                         .description(R.string.description_pump_omnipod), //
                 PumpType.Insulet_Omnipod,
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil
-        );
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil);
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
         this.omnipodPumpStatus = omnipodPumpStatus;
+        this.aapsOmnipodManager = aapsOmnipodManager;
+        this.omnipodUtil = omnipodUtil;
 
         displayConnectionMessages = false;
         this.serviceConnection = new ServiceConnection() {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
                 aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
                 rileyLinkOmnipodService = null;
             }
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-
                 aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
                 RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
                 rileyLinkOmnipodService = mLocalBinder.getServiceInstance();
@@ -172,7 +176,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 }).start();
             }
         };
-
     }
 
     public PodStateManager getPodStateManager() {
@@ -199,6 +202,27 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         rileyLinkOmnipodService.verifyConfiguration();
                 }, fabricPrivacy::logException)
         );
+        disposable.add(rxBus
+                .toObservable(EventAppInitialized.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    // See if a bolus was active before the app previously exited
+                    // If so, add it to history
+                    // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
+                    // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
+                    if (sp.contains(OmnipodConst.Prefs.CurrentBolus)) {
+                        String currentBolusString = sp.getString(OmnipodConst.Prefs.CurrentBolus, "");
+                        aapsLogger.warn(LTag.PUMP, "Found active bolus in SP. Adding Treatment: {}", currentBolusString);
+                        try {
+                            DetailedBolusInfo detailedBolusInfo = omnipodUtil.getGsonInstance().fromJson(currentBolusString, DetailedBolusInfo.class);
+                            aapsOmnipodManager.addBolusToHistory(detailedBolusInfo);
+                        } catch (Exception ex) {
+                            aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex);
+                        }
+                        sp.remove(OmnipodConst.Prefs.CurrentBolus);
+                    }
+                }, fabricPrivacy::logException)
+        );
 
         super.onStart();
     }
@@ -215,7 +239,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public void initPumpStatusData() {
-
         omnipodPumpStatus.lastConnection = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
         omnipodPumpStatus.lastDataTime = omnipodPumpStatus.lastConnection;
         omnipodPumpStatus.previousConnection = omnipodPumpStatus.lastConnection;
@@ -267,7 +290,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         }
     }
 
-
     @Override
     public Class getServiceClass() {
         return RileyLinkOmnipodService.class;
@@ -278,12 +300,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return this.omnipodPumpStatus;
     }
 
-
     @Override
     public String deviceID() {
         return "Omnipod";
     }
-
 
     // Pump Plugin
 
@@ -291,14 +311,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return rileyLinkOmnipodService != null;
     }
 
-
     @Override
     public boolean isInitialized() {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isInitialized");
         return isServiceSet() && isInitialized;
     }
-
 
     @Override
     public boolean isBusy() {
@@ -321,18 +339,15 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return false;
     }
 
-
     @Override
     public void resetRileyLinkConfiguration() {
         rileyLinkOmnipodService.resetRileyLinkConfiguration();
     }
 
-
     @Override
     public boolean hasTuneUp() {
         return false;
     }
-
 
     @Override
     public void doTuneUpDevice() {
@@ -344,7 +359,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         rxBus.send(new EventOmnipodPumpValuesChanged());
     }
 
-
     @Override
     public RileyLinkOmnipodService getRileyLinkService() {
         return rileyLinkOmnipodService;
@@ -353,7 +367,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public OmnipodUIComm getDeviceCommandExecutor() {
         return rileyLinkOmnipodService.getDeviceCommandExecutor();
     }
-
 
     private synchronized void clearBusyQueue() {
 
@@ -381,14 +394,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     }
 
-
     @Override
     public boolean isConnected() {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnected");
         return isServiceSet() && rileyLinkOmnipodService.isInitialized();
     }
-
 
     @Override
     public boolean isConnecting() {
@@ -397,7 +408,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return !isServiceSet() || !rileyLinkOmnipodService.isInitialized();
     }
 
-
     @Override
     public boolean isSuspended() {
         return !podStateManager.isPodRunning() || podStateManager.isSuspended();
@@ -405,10 +415,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public void getPumpStatus() {
-
         if (firstRun) {
             initializePump(!isRefresh);
             triggerUIChange();
+
         } else if (!omnipodStatusRequestList.isEmpty()) {
 
             List<OmnipodStatusRequest> removeList = new ArrayList<>();
@@ -492,13 +502,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         isRefresh = true;
     }
 
-
     // FIXME do we actually need this? If a user presses refresh during an action,
     //  I suppose the GetStatusCommand would just be queued?
     private void setRefreshButtonEnabled(boolean enabled) {
         rxBus.send(new EventOmnipodRefreshButtonState(enabled));
     }
-
 
     private void initializePump(boolean realInit) {
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
@@ -532,7 +540,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         this.firstRun = false;
     }
 
-
     @Override
     public boolean isThisProfileSet(Profile profile) {
 
@@ -546,7 +553,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return (currentProfile.areProfileBasalPatternsSame(profile));
     }
 
-
     @Override
     public long lastDataTime() {
         if (omnipodPumpStatus.lastConnection != 0) {
@@ -555,7 +561,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         return System.currentTimeMillis();
     }
-
 
     @Override
     public double getBaseBasalRate() {
@@ -568,35 +573,29 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         }
     }
 
-
     @Override
     public double getReservoirLevel() {
         return omnipodPumpStatus.reservoirRemainingUnits;
     }
-
 
     @Override
     public int getBatteryLevel() {
         return 75;
     }
 
-
     @Override
     protected void triggerUIChange() {
         rxBus.send(new EventOmnipodPumpValuesChanged());
     }
-
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
     }
 
-
     @Override
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "deliverBolus - {}", detailedBolusInfo);
 
         setRefreshButtonEnabled(false);
@@ -647,20 +646,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         //finishAction("Bolus");
     }
 
-
     private void incrementStatistics(String statsKey) {
         long currentCount = sp.getLong(statsKey, 0L);
         currentCount++;
         sp.putLong(statsKey, currentCount);
     }
 
-
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
                                                 boolean enforceNew) {
-
         setRefreshButtonEnabled(false);
 
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
@@ -709,7 +705,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return omnipodPumpStatus.getTemporaryBasal();
     }
 
-
     protected void finishAction(String overviewKey) {
         if (overviewKey != null)
             rxBus.send(new EventRefreshOverview(overviewKey, false));
@@ -718,7 +713,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(true);
     }
-
 
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
@@ -802,7 +796,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return result;
     }
 
-
     // OPERATIONS not supported by Pump or Plugin
 
     protected List<CustomAction> customActions = null;
@@ -813,7 +806,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public List<CustomAction> getCustomActions() {
-
         if (customActions == null) {
             this.customActions = Arrays.asList(
                     customActionResetRLConfig //,
@@ -829,7 +821,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         OmnipodCustomActionType mcat = (OmnipodCustomActionType) customActionType;
 
         switch (mcat) {
-
             case ResetRileyLinkConfiguration: {
                 serviceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
             }

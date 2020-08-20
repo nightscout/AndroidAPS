@@ -14,6 +14,7 @@ public class OmnipodConst {
 
     public static class Prefs {
         public static final String PodState = Prefix + "pod_state";
+        public static final String CurrentBolus = Prefix + "current_bolus";
         public static final int BeepBasalEnabled = R.string.key_omnipod_beep_basal_enabled;
         public static final int BeepBolusEnabled = R.string.key_omnipod_beep_bolus_enabled;
         public static final int BeepSMBEnabled = R.string.key_omnipod_beep_smb_enabled;
@@ -26,11 +27,9 @@ public class OmnipodConst {
         public static final String StatsPrefix = "omnipod_";
         public static final String FirstPumpStart = Prefix + "first_pump_use";
         public static final String LastGoodPumpCommunicationTime = Prefix + "lastGoodPumpCommunicationTime";
-        //public static final String LastGoodPumpFrequency = Prefix + "LastGoodPumpFrequency";
         public static final String TBRsSet = StatsPrefix + "tbrs_set";
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
         public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
-        //public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
     }
 
     public static final double POD_PULSE_SIZE = 0.05;

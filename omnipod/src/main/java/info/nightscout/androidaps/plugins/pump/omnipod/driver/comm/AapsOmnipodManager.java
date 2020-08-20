@@ -71,6 +71,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManage
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -89,6 +90,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
     private final ActivePluginProvider activePlugin;
     private final OmnipodPumpStatus pumpStatus;
     private final Context context;
+    private final SP sp;
 
     private final OmnipodManager delegate;
     private DatabaseHelperInterface databaseHelper;
@@ -119,6 +121,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         this.pumpStatus = pumpStatus;
         this.context = context;
         this.databaseHelper = databaseHelper;
+        this.sp = sp;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
     }
@@ -271,26 +274,43 @@ public class AapsOmnipodManager implements IOmnipodManager {
             showErrorDialog(getStringResource(R.string.omnipod_bolus_failed_uncertain), R.raw.boluserror);
         }
 
+        detailedBolusInfo.date = bolusStarted.getTime();
+        detailedBolusInfo.source = Source.PUMP;
+
+        // Store the current bolus for in case the app crashes, gets killed, the phone dies or whatever before the bolus finishes
+        // If we have a stored value for the current bolus on startup, we'll create a Treatment for it
+        // However this can potentially be hours later if for example your phone died and you can't charge it
+        // FIXME !!!
+        // The proper solution here would be to create a treatment right after the bolus started,
+        // and update that treatment after the bolus has finished in case the actual units delivered don't match the requested bolus units
+        // That way, the bolus would immediately be sent to NS so in case the phone dies you could still see the bolus
+        // Unfortunately this doesn't work because
+        //  a) when cancelling a bolus within a few seconds of starting it, after updating the Treatment,
+        //     we get a new treatment event from NS containing the originally created treatment with the original insulin amount.
+        //     This event is processed in TreatmentService.createTreatmentFromJsonIfNotExists().
+        //     Opposed to what the name of this method suggests, it does createOrUpdate,
+        //     overwriting the insulin delivered with the original value.
+        //     So practically it seems impossible to update a Treatment when using NS
+        //  b) we only send newly created treatments to NS, so the insulin amount in NS would never be updated
+        //
+        // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
+        try {
+            sp.putString(OmnipodConst.Prefs.CurrentBolus, omnipodUtil.getGsonInstance().toJson(detailedBolusInfo));
+        } catch (Exception ex) {
+            aapsLogger.error(LTag.PUMP, "Failed to store current bolus to SP", ex);
+        }
+
         // Wait for the bolus to finish
         OmnipodManager.BolusDeliveryResult bolusDeliveryResult =
                 bolusCommandResult.getDeliveryResultSubject().blockingGet();
 
-        double unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
+        detailedBolusInfo.insulin = bolusDeliveryResult.getUnitsDelivered();
 
-        long pumpId = addSuccessToHistory(bolusStarted.getTime(), PodHistoryEntryType.SetBolus, unitsDelivered + ";" + detailedBolusInfo.carbs);
+        addBolusToHistory(detailedBolusInfo);
 
-        detailedBolusInfo.date = bolusStarted.getTime();
-        detailedBolusInfo.insulin = unitsDelivered;
-        detailedBolusInfo.pumpId = pumpId;
-        detailedBolusInfo.source = Source.PUMP;
+        sp.remove(OmnipodConst.Prefs.CurrentBolus);
 
-        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
-
-        if (podStateManager.hasFaultEvent()) {
-            showPodFaultErrorDialog(podStateManager.getFaultEvent().getFaultEventCode());
-        }
-
-        return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(unitsDelivered);
+        return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }
 
     @Override
@@ -310,19 +330,18 @@ public class AapsOmnipodManager implements IOmnipodManager {
             }
         }
 
-        long time = System.currentTimeMillis();
         String comment = null;
         for (int i = 1; delegate.hasActiveBolus(); i++) {
             aapsLogger.debug(LTag.PUMP, "Attempting to cancel bolus (#{})", i);
             try {
                 delegate.cancelBolus(isBolusBeepsEnabled());
                 aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus", i);
-                addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
+                addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (PodFaultException ex) {
                 aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus (implicitly because of a Pod Fault)");
                 showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventCode(), null);
-                addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
+                addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
                 aapsLogger.debug(LTag.PUMP, "Failed to cancel bolus", ex);
@@ -330,7 +349,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
             }
         }
 
-        addFailureToHistory(time, PodHistoryEntryType.CancelBolus, comment);
+        addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.CancelBolus, comment);
         return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
     }
 
@@ -481,6 +500,12 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
     public boolean isInitialized() {
         return delegate.isPodRunning();
+    }
+
+    public void addBolusToHistory(DetailedBolusInfo detailedBolusInfo) {
+        long pumpId = addSuccessToHistory(detailedBolusInfo.date, PodHistoryEntryType.SetBolus, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs);
+        detailedBolusInfo.pumpId = pumpId;
+        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
     }
 
     private void reportImplicitlyCanceledTbr() {
