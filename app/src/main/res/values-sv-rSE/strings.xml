@@ -157,7 +157,6 @@ Eversense-appen.</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Förlängd bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
-    <string name="missing_carbs">Saknar %1$dg</string>
     <string name="exported">Inställningar exporterade</string>
     <string name="export_to">Exportera inställningar till</string>
     <string name="import_from">Importera inställningar från</string>
@@ -236,10 +235,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_remotebolusmindistance_summary">Minsta antal minuter som måste förflyta mellan en fjärrbolus och nästa</string>
     <string name="smscommunicator_remotebolusmindistance">Minsta antal minuter mellan fjärrbolus</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">För att redigera den här inställningen måste du, för din säkerhet, lägga till minst 2 telefonnummer.</string>
-    <string name="bolusdelivered">Bolus %1$.2f enheter levererat</string>
-    <string name="bolusrequested">Kommer att leverera %1$.2f enheter</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f enheter levererat</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolus på %1$.2f enheter levererat</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Temporärt mål på %1$s är satt i %2$d minuter</string>
     <string name="smscommunicator_tt_set">Temporärt mål på %1$s är satt i %2$d minuter</string>
     <string name="smscommunicator_tt_canceled">Temporärt mål avbrutet</string>
@@ -263,9 +258,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_reconnect">Pump återansluten</string>
     <string name="smscommunicator_remotecommandnotallowed">Otillåtet fjärrkommando</string>
     <string name="smscommunicator_remotebolusnotallowed">Fjärrbolus inte tillgängligt. Försök igen senare.</string>
-    <string name="smscommunicator_basalreplywithcode">För att starta temp basal %1$.2f enheter/tim i %2$d min, svara med kod %3$s</string>
     <string name="smscommunicator_profilereplywithcode">För att byta till profil %1$s %2$d%% svara med kod %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">För att starta förlängd bolus med %1$.2f enheter över %2$d min, svara med kod %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Om du vill ange %1$dg kl. %2$s, svara med kod %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">För att starta temp basal %1$d%% i %2$d min, svara med kod %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">För att pausa loop i %1$d minuter, svara med kod %2$s</string>
@@ -274,7 +267,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_loopdisablereplywithcode">För att inaktivera loopen, svara med kod %1$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2f enheter/tim i %2$d min startad</string>
     <string name="smscommunicator_extendedset">Förlängd bolus %1$.2f enheter över %2$d min har startats</string>
-    <string name="smscommunicator_carbsset">%1$dg kolhydrater registrerat</string>
     <string name="smscommunicator_carbsfailed">Misslyckades med att registrera %1$dg kolhydrater</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% enheter/tim i %2$d min startad</string>
     <string name="smscommunicator_tempbasalfailed">Fel vid start av temp basal</string>
@@ -855,7 +847,6 @@ Eversense-appen.</string>
     <string name="code_compare">Stämmer koderna överens mellan denna enhet och din pump?</string>
     <string name="insight_pairing">Parkoppling av Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU levererat</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang bytt</string>
     <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
@@ -913,7 +904,6 @@ Eversense-appen.</string>
     <string name="short_status_extended">Förl: %1$.2f / %2$.2f U i %3$d min</string>
     <string name="short_status_multiwave">Kombi: %1$.2f / %2$.2f U i %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="max_recovery_duration">Max paus mellan återanslutningsförsök [s]</string>
     <string name="min_recovery_duration">Min paus mellan återanslutningsförsök [s]</string>
@@ -1056,8 +1046,6 @@ Eversense-appen.</string>
     <string name="sendsmsactionlabel">Skicka SMS: %1$s</string>
     <string name="sendsmsactiondescription">Skicka SMS till alla nummer</string>
     <string name="sendsmsactiontext">Skicka SMS med text</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolusbegränsning: %2$.2fU till %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
     <string name="partialboluswizard">Direkt bolus [%]</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
@@ -1078,7 +1066,6 @@ Eversense-appen.</string>
     <string name="selected_profile">Valt:</string>
     <string name="unitsnosemicolon">Enheter</string>
     <string name="doyouwantswitchprofile">Vill du byta profil och ta bort ändringar som gjorts i den aktuella profilen?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">På</string>
     <string name="common_off">Av</string>
     <string name="objectives_button_unfinish">Rensa avslutade</string>

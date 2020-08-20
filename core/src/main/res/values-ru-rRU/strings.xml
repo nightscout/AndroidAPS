@@ -8,22 +8,24 @@
     <string name="profile_set_ok">базальный профиль помпы обновлен</string>
     <string name="invalidinput">введенные данные неверны</string>
     <string name="tempbasaldeliveryerror">Ошибка подачи врем базала</string>
-    <string name="goingtodeliver">Начинается подача болюса %1$.2fед.</string>
+    <string name="goingtodeliver">Будет подано %1$.2f ед инс</string>
     <string name="waitingforpump">ожидание помпы</string>
     <string name="connectingfor">Связь установлена за %1$d сек</string>
-    <string name="bolusdelivering">Подается болюс %1$.2fед.</string>
+    <string name="bolusdelivering">Подается болюс %1$.2fед</string>
     <string name="handshaking">Подтверждение связи</string>
     <string name="connecting">соединение устанавливается</string>
     <string name="connected">соединение установлено</string>
     <string name="disconnected">Разъединено</string>
     <string name="disconnecting">разъединение</string>
     <string name="androidaps_start">AndroidAPS запущен</string>
+    <string name="formatinsulinunits1">%1$.1f ед</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
+    <string name="formatsignedinsulinunits">%1$+.2f ед</string>
+    <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f/%2$d ед</string>
-    <string name="pump_basebasalrate">%1$.2f ед/час</string>
+    <string name="pump_basebasalrate">%1$.2f ед/ч</string>
     <string name="format_hours">%1$.2f ч</string>
     <string name="format_mins">%1$d мин</string>
-    <string name="format_mins_short">%1$dм</string>
     <string name="pumpbusy">помпа занята</string>
     <string name="connectionerror">ошибка соединения</string>
     <string name="youareonallowedlimit">разрешенный предел достигнут</string>
@@ -120,10 +122,10 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Недопустимый профиль: %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$d мин</string>
+    <string name="mins">%1$d мин.</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fед</b>Бол:<b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fU</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> ГУ: <b>%6$.0fг</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fед</b> Бол:<b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_announcement">Оовещение</string>
@@ -163,7 +165,7 @@
     <string name="waitingforpumpresult">Ожидание результата</string>
     <string name="smb_shortname">Супер микро болюс SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Необходимы дополнительные углеводы \"%d г в течение %d минут\"</string>
+    <string name="carbsreq">Необходимо дополнительно %d г углеводов в течение %d минут</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">накопительные TDD</string>

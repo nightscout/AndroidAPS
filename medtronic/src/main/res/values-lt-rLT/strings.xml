@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
     <string name="medtronic_bolus_debugging">Boluso/Terapijos Derinimas</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Klaidos</string>
     <string name="medtronic_error_serial_not_set">Serijos Nr. nenustatytas.</string>
     <string name="medtronic_error_serial_invalid">Serijos Nr. neteisingas.</string>
     <string name="medtronic_error_pump_type_not_set">Nenustatytas pompos tipas.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Medtronic pompos istorija</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Atšaukėte bolusą, kuris jau buvo nustatytas pompoje. Medronic pompa nepalaiko šio atšaukimo, todėl turite jį atšaukti rankiniu būdu. Sustabdykite pompą ir vėl ją paleiskite (jei vis dar norite atšaukti bolusą). Aplikacija perims pokyčius su kitu atnaujinimu (per mažiau nei 5 minutes).</string>
     <string name="medtronic_cmd_cant_read_tbr">Negalima sužinoti dabartinės laikinos bazės.</string>
@@ -68,9 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Gauti laikiną bazę</string>
     <string name="medtronic_cmd_desc_set_tbr">Nustatyti laikiną bazę</string>
     <string name="medtronic_cmd_desc_set_bolus">Nustatyti bolusą</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pompa nepasiekiama</string>
+    <string name="medtronic_warning">Perspėjimas</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Dabar</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">prieš</string>
+    <string name="medtronic_notification_check_time_date">Būtina atnaujinti pompos laikrodį</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Įjungti</string>
     <string name="common_off">Išjungta</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
 </resources>

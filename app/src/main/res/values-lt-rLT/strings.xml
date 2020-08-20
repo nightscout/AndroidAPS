@@ -156,7 +156,6 @@
     <string name="overview_tempbasal_button">Laikina bazė</string>
     <string name="overview_extendedbolus_button">Ištęstas bolusas</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
-    <string name="missing_carbs">Trūksta %1$dg</string>
     <string name="exported">Nustatymai eksportuoti</string>
     <string name="export_to">Eksportuoti nustatymus</string>
     <string name="import_from">Importuoti nustatymus iš</string>
@@ -172,6 +171,8 @@
     <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas atšifruojant importuotus nustatymus.</string>
     <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
     <string name="preferences_import_canceled">Importas nutrauktas! Nustatymai NE importuoti!</string>
+    <string name="preferences_import_impossible">Negalima importuoti nustatymų!</string>
+    <string name="goto_main_try_again">Prašome grįžti į pagrindinį ekraną ir bandyti dar kartą.</string>
     <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
     <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
     <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
@@ -233,10 +234,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno boluso, suleisto nuotoliniu būdu iki kito</string>
     <string name="smscommunicator_remotebolusmindistance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
-    <string name="bolusdelivered">%1$.2fvv bolusas sėkmingai suleistas</string>
-    <string name="bolusrequested">Bus suleista %1$.2fvv</string>
-    <string name="smscommunicator_bolusdelivered">%1$.2fvv bolusas sėkmingai suleistas</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolusas %1$.2fvv sėkmingai suleistas</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Tikslas %1$s %2$d min.</string>
     <string name="smscommunicator_tt_set">Tikslas %1$s %2$d min. nustatytas sėkmingai</string>
     <string name="smscommunicator_tt_canceled">Laikinas tikslas atšauktas sėkmingai</string>
@@ -260,9 +257,7 @@
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
     <string name="smscommunicator_remotebolusnotallowed">Nuotolinis bolusas negalimas. Bandykite vėliau.</string>
-    <string name="smscommunicator_basalreplywithcode">Norėdami aktyvuoti %1$.2fvv/val bazę, kurios trukmė %2$d min, atsakykite kodu %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Norėdami perjungti profilį %1$s %2$d%%, atsakykite kodu %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Norint pradėti ištęstinį bolusą %1$.2fvv %2$d min., atsakykite kodu %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Įvedimui %1$dg %2$s atsakykite kodu %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Norėdami aktyvuoti %1$d%% bazę %2$d min., atsakykite kodu %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Norėdami sustabdyti Ciklą %1$d min., atsakykite kodu %2$s</string>
@@ -271,7 +266,6 @@
     <string name="smscommunicator_loopdisablereplywithcode">Ciklo išjungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_tempbasalset">%1$.2f vv/val laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
     <string name="smscommunicator_extendedset">%1$.2f vv ištęstas bolusas, kurio trukmė %2$d min., aktyvuotas sėkmingai</string>
-    <string name="smscommunicator_carbsset">%1$dg angliavandeniai įrašyti sėkmingai</string>
     <string name="smscommunicator_carbsfailed">Įvesti %1$dg angliavandenių nepavyko</string>
     <string name="smscommunicator_tempbasalset_percent">%1$d%% laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
     <string name="smscommunicator_tempbasalfailed">Laikina bazė neaktyvuota</string>
@@ -645,6 +639,7 @@
     <string name="enablesmbwithtemptarget">Įjungti SMB su laikinais tikslais</string>
     <string name="enablesmbwithtemptarget_summary">Įjungti SMB, kai laikinas tikslas aktyvuotas (Netrukus valgysiu, Aktyvumas)</string>
     <string name="enablesmbwithhightemptarget">Įjungti SMB su intensyviais laikinais tikslais</string>
+    <string name="enablesmbwithhightemptarget_summary">Įjungti SMB, kai yra aktyvus aukštas tikslas (aktyvumas, daugiau nei 100 mg/dl arba 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="overview_carbs_label">AV</string>
     <string name="overview_buttons_selection">Mygtukai</string>
@@ -678,6 +673,7 @@
     <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
     <string name="category">Kategorija</string>
     <string name="subcategory">Subkategorija</string>
+    <string name="bolusrecordedonly">Bolusai bus tik įrašyti (nebus suleisti iš pompos)</string>
     <string name="ns_autobackfill_summary">Automatiškai atstatyti trūkstamus KG duomenis iš NS</string>
     <string name="loop_smbsetbypump_label">SMB nustatyta iš pompos</string>
     <string name="overview_show_activity">Aktyvumas</string>
@@ -794,6 +790,7 @@
     <string name="askforpermission">Prašyti leidimo</string>
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
     <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
+    <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
     <string name="request">Užklausa</string>
     <string name="insulinsourcesetup">Konfigūruoti insulino įskiepį</string>
     <string name="exit">Išeiti</string>
@@ -849,7 +846,6 @@
     <string name="code_compare">Ar kodas, kurį matote įrenginyje, sutampa su pompos kodu?</string>
     <string name="insight_pairing">Insight sujungimas</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fvv iš %2$.2fvv suleista</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Kateteris pakeistas</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
@@ -907,7 +903,6 @@
     <string name="short_status_extended">Ištęstas: %1$.2f / %2$.2f V %3$d min</string>
     <string name="short_status_multiwave">Daugiabangis: %1$.2f / %2$.2f vv %3$d min</string>
     <string name="short_status_tdd">BPD: %1$.2f</string>
-    <string name="short_status_reservoir">Rez.: %1$.2fvv</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Didž. atkūrimo trukmė [s]</string>
     <string name="min_recovery_duration">Min. atkūrimo trukmė [s]</string>
@@ -1050,8 +1045,6 @@
     <string name="sendsmsactionlabel">Siųsti SMS: %1$s</string>
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>
     <string name="sendsmsactiontext">Išsiųsti SMS žinutę su tekstu</string>
-    <string name="insulinFromCob"><![CDATA[AAO palyginus su AIO: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Pritaikyti boluso apribojimai: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
     <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
@@ -1072,7 +1065,6 @@
     <string name="selected_profile">Parinkta:</string>
     <string name="unitsnosemicolon">Vienetai</string>
     <string name="doyouwantswitchprofile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">Įjungta</string>
     <string name="common_off">Išjungta</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>

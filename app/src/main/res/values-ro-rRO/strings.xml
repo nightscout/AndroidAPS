@@ -156,7 +156,6 @@
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
-    <string name="missing_carbs">Lipsă %1$dg</string>
     <string name="exported">Am exportat preferințele</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Importă setările din</string>
@@ -235,10 +234,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Numarul minim de minute care trebuie sa treaca intre un bolus la distanta si urmatorul</string>
     <string name="smscommunicator_remotebolusmindistance">Cate minute trebuie sa treaca, cel puţin, intre un bolus si următorul</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Pentru siguranta dumneavoastra, pentru a edita aceasta preferinta trebuie sa adaugati cel putin 2 numere de telefon.</string>
-    <string name="bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
-    <string name="bolusrequested">Se va livra un bolus de %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Țintă %1$s pentru %2$d minute</string>
     <string name="smscommunicator_tt_set">Tinta %1$s pentru %2$d minute este setata cu succes</string>
     <string name="smscommunicator_tt_canceled">Tinta temporara anulata cu succes</string>
@@ -262,9 +257,7 @@
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus de la distanță nu este disponibil. Încearcă din nou mai târziu.</string>
-    <string name="smscommunicator_basalreplywithcode">Pentru a iniția bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Pentru a schimba profilul în %1$s %2$d%% trimiteți codul %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Pentru a stabili bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Pentru a introduce %1$dg la %2$s, raspundeti cu: %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pentru a iniția bazala de %1$d%% pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
@@ -273,7 +266,6 @@
     <string name="smscommunicator_loopdisablereplywithcode">Pentru a dezactiva bucla inchisa, raspundeti cu %1$s</string>
     <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
     <string name="smscommunicator_extendedset">Bolusul extins de %1$.2fU pentru %2$d min a fost inițiat</string>
-    <string name="smscommunicator_carbsset">%1$dg carbohidrati introdusi cu succes</string>
     <string name="smscommunicator_carbsfailed">Introducerea a %1$dg de carbohidrati a esuat</string>
     <string name="smscommunicator_tempbasalset_percent">Bazala temporară %1$d%% pentru %2$d minute a fost stabilită cu succes</string>
     <string name="smscommunicator_tempbasalfailed">Trimiterea bazalei temporare a eșuat</string>
@@ -854,7 +846,6 @@
     <string name="code_compare">Sunt identice codurile afișate aici și cele de pe pompă?</string>
     <string name="insight_pairing">Asociere Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">Livrat %1$.2fU / %2$.2fU</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Canulă schimbată</string>
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
@@ -912,7 +903,6 @@
     <string name="short_status_extended">Extins: %1$.2f / %2$.2f U pentru %3$d min</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U pentru %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Rzvr.: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Timpul maxim de restabilire [s]</string>
     <string name="min_recovery_duration">Timpul minim de restabilire [s]</string>
@@ -1055,8 +1045,6 @@
     <string name="sendsmsactionlabel">Trimite SMS: %1$s</string>
     <string name="sendsmsactiondescription">Trimite SMS către toate numerele</string>
     <string name="sendsmsactiontext">Trimite SMS cu text</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricție de bolus aplicată: %2$.2fU la %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
     <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
     <string name="deliverpartofboluswizard">Wizard bolus face un calcul, dar numai o parte din insulina calculată este și livrată. Este mai eficient când se folosește cu algoritmul SMB.</string>
@@ -1077,7 +1065,6 @@
     <string name="selected_profile">Selectat:</string>
     <string name="unitsnosemicolon">Unități</string>
     <string name="doyouwantswitchprofile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">Pornit</string>
     <string name="common_off">Oprit</string>
     <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>

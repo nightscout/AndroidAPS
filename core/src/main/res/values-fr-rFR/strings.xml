@@ -8,22 +8,17 @@
     <string name="profile_set_ok">Profil Basal mise à jour dans la pompe</string>
     <string name="invalidinput">Données saisies invalides</string>
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
-    <string name="goingtodeliver">%1$.2fU vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
     <string name="connectingfor">Connexion à %1$d en cours</string>
-    <string name="bolusdelivering">Injection en cours %1$.2fU</string>
     <string name="handshaking">Connexion</string>
     <string name="connecting">Connection en cours</string>
     <string name="connected">Connectée</string>
     <string name="disconnected">Déconnectée</string>
     <string name="disconnecting">Déconnexion en cours</string>
     <string name="androidaps_start">AndroidAPS est lancé</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2fU/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="format_mins_short">%1$dm</string>
     <string name="pumpbusy">Pompe occupée</string>
     <string name="connectionerror">Erreur connection pompe</string>
     <string name="youareonallowedlimit">Vous avez atteint la limite maximale</string>
@@ -82,8 +77,6 @@
     <string name="location_not_found_title">Localisation désactivée</string>
     <string name="location_not_found_message">La localisation doit être activée sur les nouveaux appareils pour que la recherche Bluetooth fonctionne. AAPS n\'enregistre pas votre localisation et la localisation peut être désactivée après l\'appairage.</string>
     <!--    DateUtil-->
-    <string name="minago">il y a %1$dm</string>
-    <string name="hoursago">il y a %1$.1fh</string>
     <string name="shorthour">h</string>
     <string name="days">jours</string>
     <string name="hours">heures</string>
@@ -120,10 +113,7 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Profil incorrect : %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$dmin</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> Gluc.: <b>%6$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_announcement">Notification</string>
@@ -163,7 +153,6 @@
     <string name="waitingforpumpresult">Attente de résultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%dg de glucides supplémentaires requis d\'ici %d minutes</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
     <string name="cumulative_tdd">DTI cumulé</string>
