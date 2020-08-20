@@ -182,9 +182,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if ( sp.getBoolean("daynight", true)) {
             val cd = ColorDrawable(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         } else {
             val cd = ColorDrawable(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
             if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
+            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
         }
         delegate.applyDayNight()
         setTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))
