@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.general.themeselector
 
 import android.R.attr
+import android.R.style
 import android.app.AlertDialog
+import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -17,8 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.ColorPickerView
-import com.skydoves.colorpickerview.flag.FlagMode
-import com.skydoves.colorpickerview.flag.FlagView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.general.colorpicker.CustomFlag
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.RecyclerViewClickListener
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.ThemeAdapter
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.getThemeId
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.themeList
@@ -163,7 +164,9 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
     }
 
     private fun selectColor(lightOrDark: String) {
-        val colorPickerDialog = ColorPickerDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+
+
+        val colorPickerDialog = ColorPickerDialog.Builder(this)
             .setTitle("Select Background Color")
             .setPreferenceName("MyColorPickerDialog")
             .setPositiveButton(getString(R.string.confirm),
