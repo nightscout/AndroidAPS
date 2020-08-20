@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RFSpyResponse;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
@@ -56,6 +55,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * This was mostly rewritten from Original version, and lots of commands and
  * functionality added.
  */
+@Singleton
 public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
@@ -73,9 +73,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     private boolean doWakeUpBeforeCommand = true;
 
+    // This empty constructor must be kept, otherwise dagger injection might break!
+    @Inject
+    public MedtronicCommunicationManager() {}
 
-    public MedtronicCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
-        super(injector, rfspy);
+    @Inject
+    public void onInit() {
+        // we can't do this in the constructor, as sp only gets injected after the constructor has returned
         medtronicPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }

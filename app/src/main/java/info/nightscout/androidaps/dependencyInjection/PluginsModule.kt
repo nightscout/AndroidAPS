@@ -149,6 +149,12 @@ abstract class PluginsModule {
     abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
 
     @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(155)
+    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodPumpPlugin): PluginBase
+
+    @Binds
     @NotNSClient
     @IntoMap
     @IntKey(160)
@@ -339,12 +345,6 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(480)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(490)
-    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodPumpPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

@@ -127,17 +127,13 @@ android {
         multiDexEnabled true
         versionCode 1500
         version "2.7-omnipod-0.4.1-SNAPSHOT"
+        version "2.7.0-rc3"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
-
-        // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
-        buildConfigField "String", "DEV_VERSION", '"2.6.7-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"65c8cc98804cfc366239ad2bedb2dd98e3e4f3c2"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"16.8.2020"' // 16th of August
 
         ndk {
             moduleName "BleCommandUtil"
@@ -250,6 +246,7 @@ dependencies {
     implementation project(':danar')
     implementation project(':rileylink')
     implementation project(':medtronic')
+    implementation project(':omnipod')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'

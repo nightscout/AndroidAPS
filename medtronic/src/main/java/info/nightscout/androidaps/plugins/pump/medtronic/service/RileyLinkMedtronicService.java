@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
@@ -34,15 +35,17 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * RileyLinkMedtronicService is intended to stay running when the gui-app is closed.
  */
+@Singleton
 public class RileyLinkMedtronicService extends RileyLinkService {
 
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject RFSpy rfSpy;
+    @Inject MedtronicCommunicationManager medtronicCommunicationManager;
 
     private MedtronicUIComm medtronicUIComm;
-    private MedtronicCommunicationManager medtronicCommunicationManager;
     private IBinder mBinder = new LocalBinder();
 
     private boolean serialChanged = false;
@@ -54,8 +57,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     private boolean inPreInit = true;
 
 
+    // This empty constructor must be kept, otherwise dagger injection might break!
+    @Inject
     public RileyLinkMedtronicService() {
-        super();
     }
 
 
@@ -99,12 +103,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
-        rileyLinkBLE = new RileyLinkBLE(injector, this); // or this
-        rfspy = new RFSpy(injector, rileyLinkBLE);
         rfspy.startReader();
 
-        // init rileyLinkCommunicationManager
-        medtronicCommunicationManager = new MedtronicCommunicationManager(injector, rfspy);
         medtronicUIComm = new MedtronicUIComm(injector, aapsLogger, medtronicUtil, medtronicUIPostprocessor, medtronicCommunicationManager);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");

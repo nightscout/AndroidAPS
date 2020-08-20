@@ -3,8 +3,6 @@ package info.nightscout.androidaps.dependencyInjection
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
@@ -15,14 +13,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.In
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemoveActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
-import javax.inject.Singleton
 
 @Module
 @Suppress("unused")
@@ -52,9 +45,6 @@ abstract class OmnipodModule {
 
     companion object {
         @Provides
-        @Singleton
-        fun podStateManagerProvider(aapsLogger: AAPSLogger, sp: SP, omnipodPumpStatus: OmnipodPumpStatus,
-                                    rxBus: RxBusWrapper, resourceHelper: ResourceHelper, dateUtil: DateUtil): PodStateManager =
-            AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper, dateUtil)
+        fun podStateManagerProvider(aapsPodStateManager: AapsPodStateManager) : PodStateManager = aapsPodStateManager
     }
 }

@@ -42,6 +42,7 @@
     <string name="rileylink_state_pc_tune_up">Tuning up RileyLink and Pump</string>
     <string name="rileylink_state_pc_error">Problem connecting to Pump</string>
     <string name="rileylink_state_connected">Connected</string>
+    <string name="rileylink_state_rl_ready">RileyLink ready</string>
 
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Device is not RileyLink</string>

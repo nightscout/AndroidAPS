@@ -45,10 +45,10 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected ResourceHelper resourceHelper;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
     @Inject protected ActivePluginProvider activePlugin;
+    @Inject protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management
+    @Inject protected RFSpy rfspy; // interface for RL xxx Mhz radio.
 
-    @NotNull protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management, must be set in initRileyLinkServiceData
     protected BluetoothAdapter bluetoothAdapter;
-    protected RFSpy rfspy; // interface for RL xxx Mhz radio.
     protected RileyLinkBroadcastReceiver mBroadcastReceiver;
     protected RileyLinkBluetoothStateReceiver bluetoothStateReceiver;
 

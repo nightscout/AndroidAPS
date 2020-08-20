@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 
@@ -40,6 +41,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 /**
  * Created by geoff on 5/26/16.
  */
+@Singleton
 public class RFSpy {
 
     @Inject AAPSLogger aapsLogger;
@@ -64,10 +66,14 @@ public class RFSpy {
     private Double currentFrequencyMHz;
 
 
+    @Inject
     public RFSpy(HasAndroidInjector injector, RileyLinkBLE rileyLinkBle) {
-        injector.androidInjector().inject(this);
         this.injector = injector;
         this.rileyLinkBle = rileyLinkBle;
+    }
+
+    @Inject
+    public void onInit() {
         aapsLogger.debug("RileyLinkServiceData:" + rileyLinkServiceData);
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }

@@ -35,27 +35,18 @@ public abstract class RileyLinkCommunicationManager {
     @Inject protected SP sp;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
     @Inject protected ServiceTaskExecutor serviceTaskExecutor;
-
+    @Inject protected RFSpy rfspy;
+    @Inject protected HasAndroidInjector injector;
 
     private final int SCAN_TIMEOUT = 1500;
     private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
 
-    public final HasAndroidInjector injector;
-    protected final RFSpy rfspy;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
     protected long lastGoodReceiverCommunicationTime = 0;
     //    protected PumpStatus pumpStatus;
     private long nextWakeUpRequired = 0L;
-
     private int timeoutCount = 0;
-
-
-    public RileyLinkCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
-        this.injector = injector;
-        injector.androidInjector().inject(this);
-        this.rfspy = rfspy;
-    }
 
 
     // All pump communications go through this function.
