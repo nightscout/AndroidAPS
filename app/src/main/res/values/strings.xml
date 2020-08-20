@@ -188,7 +188,7 @@
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="missing_carbs">Missing %1$dg</string>
+    <string name="missing_carbs">Missing %1$d g</string>
     <string name="exported">Preferences exported</string>
     <string name="export_to">Export settings to</string>
     <string name="import_from">Import settings from</string>
@@ -279,10 +279,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimum number of minutes that must elapse between one remote bolus and the next</string>
     <string name="smscommunicator_remotebolusmindistance">How many minutes must elapse, at least, between one bolus and the next</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
-    <string name="bolusdelivered">Bolus %1$.2fU delivered successfully</string>
-    <string name="bolusrequested">Going to deliver %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU delivered successfully</string>
-    <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2fU delivered successfully</string>
+    <string name="bolusdelivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="bolusrequested">Going to deliver %1$.2f U</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2f U delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s for %2$d minutes</string>
     <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
     <string name="smscommunicator_tt_canceled">Temp Target canceled successfully</string>
@@ -306,9 +306,9 @@
     <string name="smscommunicator_reconnect">Pump reconnected</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_remotebolusnotallowed">Remote bolus not available. Try again later.</string>
-    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2f U/h for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_profilereplywithcode">To switch profile to %1$s %2$d%% reply with code %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">To start extended bolus %1$.2fU for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">To start extended bolus %1$.2f U for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">To enter %1$dg at %2$s reply with code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
@@ -317,7 +317,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">To disable loop reply with code %1$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
-    <string name="smscommunicator_carbsset">Carbs %1$dg entered successfully</string>
+    <string name="smscommunicator_carbsset">Carbs %1$d  g entered successfully</string>
     <string name="smscommunicator_carbsfailed">Entering %1$dg of carbs failed</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
@@ -1020,7 +1020,7 @@
     <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>
     <string name="insight_pairing">Insight pairing</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU delivered</string>
+    <string name="insight_delivered">%1$.2f U / %2$.2f U delivered</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tube changed</string>
     <string name="pump_time_updated">Pump time updated</string>
@@ -1080,7 +1080,7 @@
     <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
+    <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="max_recovery_duration">Max. recovery duration [s]</string>
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
@@ -1256,8 +1256,8 @@
     <string name="sendsmsactiontext">Send SMS with text</string>
 
 
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
@@ -1281,7 +1281,6 @@
     <string name="unitsnosemicolon">Units</string>
     <string name="doyouwantswitchprofile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
     <string name="objectives_button_unfinish">Clear finished</string>

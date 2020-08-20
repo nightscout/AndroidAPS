@@ -31,22 +31,24 @@
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalidinput">Invalid input data</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="goingtodeliver">Going to deliver %1$.2fU</string>
+    <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="connectingfor">Connecting for %1$d s</string>
-    <string name="bolusdelivering">Delivering %1$.2fU</string>
+    <string name="bolusdelivering">Delivering %1$.2f U</string>
     <string name="handshaking">Handshaking</string>
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnecting</string>
     <string name="androidaps_start">AndroidAPS started</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="formatinsulinunits1">%1$.1f U</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2fU/h</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
-    <string name="format_mins_short">%1$dm</string>
     <string name="pumpbusy">Pump is busy</string>
     <string name="connectionerror">Pump connection error</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
@@ -109,8 +111,8 @@
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
 
     <!--    DateUtil-->
-    <string name="minago">%1$dm ago</string>
-    <string name="hoursago">%1$.1fh ago</string>
+    <string name="minago">%1$d m ago</string>
+    <string name="hoursago">%1$.1f h ago</string>
     <string name="shorthour">h</string>
     <string name="days">days</string>
     <string name="hours">hours</string>
@@ -153,11 +155,11 @@
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>
 
     <!--    Temptarget-->
-    <string name="mins">%1$dmin</string>
+    <string name="mins">%1$d min</string>
 
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> Carbs: <b>%6$.0fg</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Carbs: <b>%6$.0f g</b>]]></string>
 
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Check</string>
@@ -201,7 +203,7 @@
     <string name="smb_shortname">SMB</string>
 
     <!--    CarbsReq-->
-    <string name="carbsreq">%dg Additional Carbs Required Within %d Minutes</string>
+    <string name="carbsreq">%d g Additional Carbs Required Within %d Minutes</string>
 
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
