@@ -49,8 +49,10 @@ import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
@@ -340,28 +342,30 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
     @Override
-    public void resetRileyLinkConfiguration() {
-        rileyLinkOmnipodService.resetRileyLinkConfiguration();
-    }
-
-    @Override
-    public boolean hasTuneUp() {
-        return false;
-    }
-
-    @Override
-    public void doTuneUpDevice() {
-        //rileyLinkOmnipodService.doTuneUpDevice();
-    }
-
-    @Override
     public void triggerPumpConfigurationChangedEvent() {
         rxBus.send(new EventOmnipodPumpValuesChanged());
+        rxBus.send(new EventRileyLinkDeviceStatusChange());
     }
 
     @Override
     public RileyLinkOmnipodService getRileyLinkService() {
         return rileyLinkOmnipodService;
+    }
+
+    @Override public RileyLinkPumpInfo getPumpInfo() {
+        String pumpDescription = "Eros";
+        String frequency = resourceHelper.gs(R.string.omnipod_frequency);
+        String connectedModel = podStateManager.isPodInitialized() ? "Eros Pod" : "-";
+        String serialNumber = podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
+        return new RileyLinkPumpInfo(connectedModel, pumpDescription, serialNumber, frequency);
+    }
+
+    @Override public long getLastConnectionTimeMillis() {
+        return omnipodPumpStatus.lastConnection;
+    }
+
+    @Override public void setLastCommunicationToNow() {
+        omnipodPumpStatus.setLastCommunicationToNow();
     }
 
     public OmnipodUIComm getDeviceCommandExecutor() {
@@ -478,8 +482,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         }
     }
 
-    public void setIsBusy(boolean isBusy) {
-        this.isBusy = isBusy;
+    public void setBusy(boolean busy) {
+        this.isBusy = busy;
     }
 
     private void getPodPumpStatus() {

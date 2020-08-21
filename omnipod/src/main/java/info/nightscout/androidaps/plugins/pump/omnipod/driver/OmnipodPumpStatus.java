@@ -80,25 +80,6 @@ public class OmnipodPumpStatus extends PumpStatus {
         return this.rileyLinkErrorDescription;
     }
 
-    @Override
-    public <E> E getCustomData(String key, Class<E> clazz) {
-        switch (key) {
-            // TODO
-            /*
-            case "POD_LOT_NUMBER":
-                return (E) podLotNumber;
-
-            case "POD_AVAILABLE":
-                return (E) podAvailable;
-             */
-
-            default:
-                return null;
-        }
-
-    }
-
-
 //    public boolean setNotInPreInit() {
 //        this.inPreInit = false;
 //

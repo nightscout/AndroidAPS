@@ -200,11 +200,7 @@ public class OmnipodUITask {
 
         aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
-        if (responseType == PodResponseType.Invalid) {
-            omnipodPumpStatus.setLastFailedCommunicationToNow();
-        } else if (responseType == PodResponseType.Error) {
-            omnipodPumpStatus.setLastFailedCommunicationToNow();
-        } else {
+        if (!responseType.isError()) {
             omnipodPumpStatus.setLastCommunicationToNow();
         }
     }

@@ -81,16 +81,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
         return new byte[0];
     }
 
-    @Override public PumpStatus getPumpStatus() {
-        return null;
-    }
-
     @Override public boolean isDeviceReachable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasTunning() {
         return false;
     }
 
