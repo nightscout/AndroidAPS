@@ -98,7 +98,7 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
-class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickListener {
+class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -318,16 +318,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         }
                     }
                 }
-            }
-        }
-    }
-
-
-    override fun onLongClick(v: View): Boolean {
-        when (v.id) {
-            R.id.overview_quickwizardbutton -> {
-                startActivity(Intent(v.context, QuickWizardListActivity::class.java))
-                return true
             }
         }
     }
