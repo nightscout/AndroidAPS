@@ -4,6 +4,7 @@ import org.joda.time.Duration;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.powermock.api.mockito.PowerMockito;
 
 import java.util.List;
 
@@ -13,7 +14,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class AapsOmnipodManagerTest {
     @Rule
@@ -21,17 +21,17 @@ public class AapsOmnipodManagerTest {
 
     @Test
     public void validProfile() {
-        Profile profile = Mockito.mock(Profile.class);
+        Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value1 = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value1 = mock(Profile.ProfileValue.class);
         value1.timeAsSeconds = 0;
         value1.value = 0.5D;
 
-        Profile.ProfileValue value2 = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value2 = mock(Profile.ProfileValue.class);
         value2.timeAsSeconds = 18000;
         value2.value = 1.0D;
 
-        Profile.ProfileValue value3 = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value3 = mock(Profile.ProfileValue.class);
         value3.timeAsSeconds = 50400;
         value3.value = 3.05D;
 
@@ -70,14 +70,14 @@ public class AapsOmnipodManagerTest {
     public void invalidProfileNullEntries() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Basal values can not be null");
-        AapsOmnipodManager.mapProfileToBasalSchedule(Mockito.mock(Profile.class));
+        AapsOmnipodManager.mapProfileToBasalSchedule(mock(Profile.class));
     }
 
     @Test
     public void invalidProfileZeroEntries() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Entries can not be empty");
-        Profile profile = Mockito.mock(Profile.class);
+        Profile profile = mock(Profile.class);
 
         PowerMockito.when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[0]);
 
@@ -89,9 +89,9 @@ public class AapsOmnipodManagerTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("First basal schedule entry should have 0 offset");
 
-        Profile profile = Mockito.mock(Profile.class);
+        Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value = mock(Profile.ProfileValue.class);
         value.timeAsSeconds = 1800;
         value.value = 0.5D;
 
@@ -107,13 +107,13 @@ public class AapsOmnipodManagerTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Invalid start time");
 
-        Profile profile = Mockito.mock(Profile.class);
+        Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value1 = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value1 = mock(Profile.ProfileValue.class);
         value1.timeAsSeconds = 0;
         value1.value = 0.5D;
 
-        Profile.ProfileValue value2 = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value2 = mock(Profile.ProfileValue.class);
         value2.timeAsSeconds = 86400;
         value2.value = 0.5D;
 
@@ -130,9 +130,9 @@ public class AapsOmnipodManagerTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Invalid start time");
 
-        Profile profile = Mockito.mock(Profile.class);
+        Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value = mock(Profile.ProfileValue.class);
         value.timeAsSeconds = -1;
         value.value = 0.5D;
 
@@ -145,9 +145,9 @@ public class AapsOmnipodManagerTest {
 
     @Test
     public void roundsToSupportedPrecision() {
-        Profile profile = Mockito.mock(Profile.class);
+        Profile profile = mock(Profile.class);
 
-        Profile.ProfileValue value = Mockito.mock(Profile.ProfileValue.class);
+        Profile.ProfileValue value = mock(Profile.ProfileValue.class);
         value.timeAsSeconds = 0;
         value.value = 0.04D;
 

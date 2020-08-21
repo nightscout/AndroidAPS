@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +26,6 @@ public class AapsPodStateManagerTest {
     @Mock SP sp;
     @Mock OmnipodPumpStatus omnipodPumpStatus;
     RxBusWrapper rxBus = new RxBusWrapper();
-    @Mock ResourceHelper resourceHelper;
 
     @Test
     public void times() {
@@ -38,7 +36,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus);
         podStateManager.initState(0x0);
         podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
@@ -56,7 +54,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus);
         podStateManager.initState(0x0);
         podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
@@ -79,7 +77,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus, resourceHelper);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, omnipodPumpStatus, rxBus);
         podStateManager.initState(0x0);
         podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);

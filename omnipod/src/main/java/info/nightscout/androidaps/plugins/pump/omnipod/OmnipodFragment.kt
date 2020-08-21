@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
@@ -64,6 +65,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: OmnipodUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
+    @Inject lateinit var dateUtil: DateUtil
 
     // TODO somehow obtain the pumpUnreachableThreshold in order to display last connection time red or white
     // @Inject lateinit var localAlertUtils: LocalAlertUtils
@@ -261,7 +263,8 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_lot.text = podStateManager.lot.toString()
             omnipod_pod_tid.text = podStateManager.tid.toString()
             omnipod_pod_firmware_version.text = resourceHelper.gs(R.string.omnipod_pod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
-            omnipod_pod_expiry.text = podStateManager.expiryDateAsString
+            val expiresAt = podStateManager.expiresAt
+            omnipod_pod_expiry.text = if (expiresAt == null) "???" else dateUtil.dateAndTimeString(expiresAt.toDate())
 
             val stateText: String
             when {

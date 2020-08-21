@@ -30,18 +30,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.utils.DateUtil;
 
 public abstract class PodStateManager {
 
     private final AAPSLogger aapsLogger;
-    private DateUtil dateUtil;
     private final Gson gsonInstance;
     private PodState podState;
 
-    public PodStateManager(AAPSLogger aapsLogger, DateUtil dateUtil) {
+    public PodStateManager(AAPSLogger aapsLogger) {
         this.aapsLogger = aapsLogger;
-        this.dateUtil = dateUtil;
         this.gsonInstance = createGson();
     }
 
@@ -284,12 +281,6 @@ public abstract class PodStateManager {
     public final DateTime getExpiresAt() {
         DateTime expiresAt = getSafe(() -> podState.getExpiresAt());
         return expiresAt == null ? null : expiresAt.withZone(getSafe(() -> podState.getTimeZone()));
-    }
-
-    // TODO doesn't belong here
-    public final String getExpiryDateAsString() {
-        DateTime expiresAt = getExpiresAt();
-        return expiresAt == null ? "???" : dateUtil.dateAndTimeString(expiresAt.toDate());
     }
 
     public final PodProgressStatus getPodProgressStatus() {

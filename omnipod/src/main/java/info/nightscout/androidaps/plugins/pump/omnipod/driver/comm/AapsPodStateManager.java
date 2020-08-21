@@ -25,12 +25,11 @@ public class AapsPodStateManager extends PodStateManager {
     private final SP sp;
     private final OmnipodPumpStatus omnipodPumpStatus;
     private final RxBusWrapper rxBus;
-    private final ResourceHelper resourceHelper;
 
     @Inject
     public AapsPodStateManager(AAPSLogger aapsLogger, SP sp, OmnipodPumpStatus omnipodPumpStatus,
-                               RxBusWrapper rxBus, ResourceHelper resourceHelper, DateUtil dateUtil) {
-        super(aapsLogger, dateUtil);
+                               RxBusWrapper rxBus) {
+        super(aapsLogger);
 
         if (aapsLogger == null) {
             throw new IllegalArgumentException("aapsLogger can not be null");
@@ -44,15 +43,11 @@ public class AapsPodStateManager extends PodStateManager {
         if (rxBus == null) {
             throw new IllegalArgumentException("rxBus can not be null");
         }
-        if (resourceHelper == null) {
-            throw new IllegalArgumentException("resourceHelper can not be null");
-        }
 
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.omnipodPumpStatus = omnipodPumpStatus;
         this.rxBus = rxBus;
-        this.resourceHelper = resourceHelper;
     }
 
     @Override
