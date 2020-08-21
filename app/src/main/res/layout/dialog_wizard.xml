@@ -327,7 +327,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-15dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <TableLayout
             android:id="@+id/treatments_wizard_resulttable"
