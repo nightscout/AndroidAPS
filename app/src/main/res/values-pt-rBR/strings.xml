@@ -156,7 +156,6 @@
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus estendido</string>
     <string name="configbuilder_nightscoutversion_label">Versão do Nightscout:</string>
-    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferências exportadas</string>
     <string name="export_to">Exportar configurações para</string>
     <string name="import_from">Importar configurações de</string>
@@ -229,10 +228,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência você precisa adicionar pelo menos 2 números de telefone.</string>
-    <string name="bolusdelivered">Bolus %1$.2fU entregue com sucesso</string>
-    <string name="bolusrequested">Vão ser administradas %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
-    <string name="smscommunicator_mealbolusdelivered">Bólus de refeição %1$.2fU entregue com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
     <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
     <string name="smscommunicator_tt_canceled">Alvo Temp cancelado com êxito</string>
@@ -253,15 +248,12 @@
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">O comando remoto não é permitido</string>
     <string name="smscommunicator_remotebolusnotallowed">O bolus remoto não está disponível. Tente novamente mais tarde.</string>
-    <string name="smscommunicator_basalreplywithcode">Para começar a basal %1$.2fU/h durante%2$d min responda com o código %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Para mudar o perfil para %1$s %2$d%% responda com o código %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Para começar o bólus estendido %1$.2fU/h para %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Para inserir %1$dg em %2$s responda com código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para começar a basal %1$d%% U/h durante %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extendedset">Bólus estendido %1$.2fU/h para %2$d min iniciado com êxito</string>
-    <string name="smscommunicator_carbsset">Hidratos %1$dg inseridos com sucesso</string>
     <string name="smscommunicator_carbsfailed">Introdução de %1$dg de hidratos falhou</string>
     <string name="smscommunicator_tempbasalset_percent">Basal temporária %1$d%% U/h durante%2$d min iniciada com êxito</string>
     <string name="smscommunicator_tempbasalfailed">Falha ao iniciar basal temp</string>
@@ -815,7 +807,6 @@
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU entregue</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo mudado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
@@ -869,7 +860,6 @@
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser:%1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
@@ -1012,8 +1002,6 @@
     <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS para todos os números</string>
     <string name="sendsmsactiontext">Enviar SMS com texto</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>

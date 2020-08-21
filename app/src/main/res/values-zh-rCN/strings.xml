@@ -169,9 +169,6 @@
     <string name="smscommunicator_bolusreplywithcode">要输注大剂量胰岛素%1$.2fU 回复如下代码 %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">要发送校准值 %1$.2f 回复如下代码 %2$s</string>
     <string name="smscommunicator_bolusfailed">大剂量输注失败</string>
-    <string name="bolusdelivered">已经成功输注大剂量%1$.2fU</string>
-    <string name="bolusrequested">将要输注 %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">已经成功输注大剂量%1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">通过SMS短信允许远程命令</string>
     <string name="danarprofile">DanaR 配置文件设置</string>
     <string name="danarprofile_dia">DIA [h]</string>
@@ -187,9 +184,7 @@
     <string name="valueoutofrange">值 %1$s 超过了硬限制</string>
     <string name="smscommunicator_remotecommandnotallowed">远程命令没有被允许</string>
     <string name="smscommunicator_remotebolusnotallowed">远程大剂量不可用。请稍后再试。</string>
-    <string name="smscommunicator_basalreplywithcode">要开始基础率 %1$.2fU/h 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
     <string name="smscommunicator_profilereplywithcode">要切换配置文件到 %1$s %2$d%% 请回复代码 %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">要开始扩展大剂量 %1$.2fU/h 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">要开始基础率 %1$d%% 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">要暂停闭环 %1$d 分钟请回复如下代码 %2$s</string>
     <string name="smscommunicator_tempbasalset">临时基础率 %1$.2fU/h 持续 %2$d 分钟启用成功了</string>
@@ -713,7 +708,6 @@
     <string name="code_compare">此设备和您的泵上显示的代码是否匹配？</string>
     <string name="insight_pairing">Insight 正在配对</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">已输注%1$.2fU / %2$.2fU</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">管路已经更换</string>
     <string name="pump_time_updated">泵时间已经更新</string>
@@ -767,7 +761,6 @@
     <string name="short_status_extended">扩展: %1$.2f / %2$.2f U 为 %3$d 分钟</string>
     <string name="short_status_multiwave">多波: %1$.2f / %2$.2f U 持续时间 %3$d 分钟</string>
     <string name="short_status_tdd">TDD(日输注总量): %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">电池: %1$d%%</string>
     <string name="max_recovery_duration">最大恢复时间 [s]</string>
     <string name="min_recovery_duration">最小恢复持续时间 [s]</string>

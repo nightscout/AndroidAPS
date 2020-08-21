@@ -105,8 +105,12 @@ class WizardDialog : DaggerDialogFragment() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
 
-        treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
-            ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
+        if (profileFunction.getUnits() == Constants.MGDL)
+            treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
+                ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0.0"), false, ok, textWatcher)
+        else
+            treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
+                ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
         treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep

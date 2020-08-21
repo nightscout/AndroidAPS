@@ -156,7 +156,6 @@
     <string name="overview_tempbasal_button">BazaTymczasowa</string>
     <string name="overview_extendedbolus_button">Bolus Przedłużony</string>
     <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
-    <string name="missing_carbs">Brakuje %1$dg</string>
     <string name="exported">Ustawienia wyeksportowane</string>
     <string name="export_to">Eksportuj ustawienia do</string>
     <string name="import_from">Importuj ustawienia z</string>
@@ -233,10 +232,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimalna liczba minut która musi upłynąć pomiędzy jednym a drugim zdalnie podawanym bolusem</string>
     <string name="smscommunicator_remotebolusmindistance">Ile co najmniej minut musi upłynąć pomiędzy jednym a drugim bolusem</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Dla twojego bezpieczeństwa, aby zmienić to ustawienie musisz dodać co najmniej 2 numery telefonów.</string>
-    <string name="bolusdelivered">Bolus %1$.2fU dostarczony prawidłowo</string>
-    <string name="bolusrequested">Zamierzam podać %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU dostarczony prawidłowo</string>
-    <string name="smscommunicator_mealbolusdelivered">Pomyślnie podano %1$.2fU bolusa posiłkowego</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Cel %1$s na %2$d minut</string>
     <string name="smscommunicator_tt_set">Pomyślnie ustawiono cel %1$s na %2$d minuty</string>
     <string name="smscommunicator_tt_canceled">Pomyślnie anulowano cel tymczasowy</string>
@@ -260,9 +255,7 @@
     <string name="smscommunicator_reconnect">Pompa ponownie podłączona</string>
     <string name="smscommunicator_remotecommandnotallowed">Zdalne komendy nie są dozwolone</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus zdalny niedostępny. Spróbuj ponownie później.</string>
-    <string name="smscommunicator_basalreplywithcode">Aby rozpocząć bazę %1$.2fU/h przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Aby przełączyć profil na %1$s %2$d%% odpowiedz kodem %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Aby rozpocząć bolus przedłużony %1$.2fU przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Aby wprowadzić %1$dg o %2$s odeślij w SMS kod %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Aby rozpocząć bolus przedłużony %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Aby wstrzymać pętle na %1$d minut odpowiedz kodem %2$s</string>
@@ -271,7 +264,6 @@
     <string name="smscommunicator_loopdisablereplywithcode">Aby wyłączyć pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_tempbasalset">Tymczasowa baza %1$.2fU/h przez %2$d min rozpoczęta</string>
     <string name="smscommunicator_extendedset">Bolus przedłużony %1$.2fU na %2$d min. rozpoczęty pomyślnie</string>
-    <string name="smscommunicator_carbsset">Pomyślnie wprowadzono %1$dg węglowodanów</string>
     <string name="smscommunicator_carbsfailed">Próba wprowadzenia %1$dg węglowodanów nie powiodła się</string>
     <string name="smscommunicator_tempbasalset_percent">Tymczasowa baza %1$d%% przez %2$d min. pomyślnie rozpoczęta</string>
     <string name="smscommunicator_tempbasalfailed">Rozpoczęcie tymczasowej bazy nie powiodło się</string>
@@ -850,7 +842,6 @@
     <string name="code_compare">Czy kody wyświetlone na tym urządzeniu i na twojej pompie pasują?</string>
     <string name="insight_pairing">Parowanie Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU dostarczone</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Dren zmieniony</string>
     <string name="pump_time_updated">Czas pompy uaktualniony</string>
@@ -908,7 +899,6 @@
     <string name="short_status_extended">Przedłużony: %1$.2f / %2$.2f U na %3$d min</string>
     <string name="short_status_multiwave">Multiwave (zwykły + przedłużony): %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Zbiornik: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Max. czas odzyskiwania [s]</string>
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
@@ -1051,8 +1041,6 @@
     <string name="sendsmsactionlabel">Wyślij SMS: %1$s</string>
     <string name="sendsmsactiondescription">Wyślij SMS do wszystkich numerów</string>
     <string name="sendsmsactiontext">Wyślij SMS z tekstem</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Wprowadzono ograniczenie bolusa: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
     <string name="deliverpartofboluswizard">Kreator bolusa wykonuje obliczenia, ale tylko ta część obliczonej dawki insuliny jest dostarczana. Pomocne z algorytmem SMB.</string>
@@ -1073,7 +1061,6 @@
     <string name="selected_profile">Wybrany:</string>
     <string name="unitsnosemicolon">Jednostki</string>
     <string name="doyouwantswitchprofile">Czy chcesz przełączyć profil i porzucić zmiany wprowadzone w bieżącym profilu?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">Włącz</string>
     <string name="common_off">Wyłącz</string>
     <string name="objectives_button_unfinish">Wyczyść skończone</string>
