@@ -259,8 +259,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1h = profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
             val val2l = profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
             val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
-            val txt1 = Profile.format_HH_MM(hour * 60 * 60) + " " + valueToUnitsToString(val1l, units) + " - " + valueToUnitsToString(val1h, units) + " " + units
-            val txt2 = Profile.format_HH_MM(hour * 60 * 60) + " " + valueToUnitsToString(val2l, units) + " - " + valueToUnitsToString(val2h, units) + " " + units
+            val txt1 = Profile.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units
+            val txt2 = Profile.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units
             if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h ) {
                 s.append(formatColors(txt1, txt2))
                 s.append("<br>")
@@ -272,9 +272,4 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         }
         return HtmlHelper.fromHtml(s.toString())
     }
-
-    private fun valueToUnitsToString(value: Double, units: String): String? {
-        return if (units == Constants.MGDL) DecimalFormatter.to0Decimal(value) else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
-    }
-
 }
