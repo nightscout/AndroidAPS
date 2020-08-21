@@ -298,7 +298,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.pumpType.determineCorrectBasalSize(omnipodPumpPlugin.baseBasalRate))
 
             omnipod_tempbasal.text = activePlugin.activeTreatments
-                .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
+                .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
 
             // reservoir
             if (podStateManager.reservoirLevel == null) {
