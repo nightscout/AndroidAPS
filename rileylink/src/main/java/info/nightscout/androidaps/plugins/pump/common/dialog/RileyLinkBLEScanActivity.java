@@ -107,6 +107,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePlugin.getActivePump();
             rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
+            rileyLinkPump.triggerPumpConfigurationChangedEvent();
 
             finish();
         });
