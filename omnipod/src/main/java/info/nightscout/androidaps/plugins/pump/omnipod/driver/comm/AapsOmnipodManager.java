@@ -91,9 +91,15 @@ public class AapsOmnipodManager implements IOmnipodManager {
     private final OmnipodPumpStatus pumpStatus;
     private final Context context;
     private final SP sp;
-
     private final OmnipodManager delegate;
-    private DatabaseHelperInterface databaseHelper;
+    private final DatabaseHelperInterface databaseHelper;
+
+    private boolean basalBeepsEnabled;
+    private boolean bolusBeepsEnabled;
+    private boolean smbBeepsEnabled;
+    private boolean tbrBeepsEnabled;
+    private boolean podDebuggingOptionsEnabled;
+    private boolean timeChangeEventEnabled;
 
     @Inject
     public AapsOmnipodManager(OmnipodCommunicationManager communicationService,
@@ -126,8 +132,19 @@ public class AapsOmnipodManager implements IOmnipodManager {
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
     }
 
-    public PodStateManager getPodStateManager() {
-        return podStateManager;
+    @Inject
+    void onInit() {
+        // this cannot be done in the constructor, as sp is not populated at that time
+        reloadSettings();
+    }
+
+    public void reloadSettings() {
+        basalBeepsEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepBasalEnabled, true);
+        bolusBeepsEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepBolusEnabled, true);
+        smbBeepsEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepSMBEnabled, true);
+        tbrBeepsEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
+        podDebuggingOptionsEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false);
+        timeChangeEventEnabled = sp.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
     }
 
     @Override
@@ -236,7 +253,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
     @Override
     public PumpEnactResult resetPodStatus() {
-        getPodStateManager().removeState();
+        podStateManager.removeState();
 
         reportImplicitlyCanceledTbr();
 
@@ -355,7 +372,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
     @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
-        boolean beepsEnabled = isTempBasalBeepsEnabled();
+        boolean beepsEnabled = isTbrBeepsEnabled();
         long time = System.currentTimeMillis();
         try {
             delegate.setTemporaryBasal(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled);
@@ -396,7 +413,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
     public PumpEnactResult cancelTemporaryBasal() {
         long time = System.currentTimeMillis();
         try {
-            delegate.cancelTemporaryBasal(isTempBasalBeepsEnabled());
+            delegate.cancelTemporaryBasal(isTbrBeepsEnabled());
             addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
@@ -498,8 +515,28 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return delegate.getTime();
     }
 
-    public boolean isInitialized() {
-        return delegate.isPodRunning();
+    public boolean isBasalBeepsEnabled() {
+        return basalBeepsEnabled;
+    }
+
+    public boolean isBolusBeepsEnabled() {
+        return bolusBeepsEnabled;
+    }
+
+    public boolean isSmbBeepsEnabled() {
+        return smbBeepsEnabled;
+    }
+
+    public boolean isTbrBeepsEnabled() {
+        return tbrBeepsEnabled;
+    }
+
+    public boolean isPodDebuggingOptionsEnabled() {
+        return podDebuggingOptionsEnabled;
+    }
+
+    public boolean isTimeChangeEventEnabled() {
+        return timeChangeEventEnabled;
     }
 
     public void addBolusToHistory(DetailedBolusInfo detailedBolusInfo) {
@@ -673,22 +710,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
             notification.soundId = sound;
         }
         sendEvent(new EventNewNotification(notification));
-    }
-
-    private boolean isBolusBeepsEnabled() {
-        return this.pumpStatus.beepBolusEnabled;
-    }
-
-    private boolean isSmbBeepsEnabled() {
-        return this.pumpStatus.beepSMBEnabled;
-    }
-
-    private boolean isBasalBeepsEnabled() {
-        return this.pumpStatus.beepBasalEnabled;
-    }
-
-    private boolean isTempBasalBeepsEnabled() {
-        return this.pumpStatus.beepTBREnabled;
     }
 
     private String getStringResource(int id, Object... args) {

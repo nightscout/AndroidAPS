@@ -487,10 +487,6 @@ public class OmnipodManager {
         return podStateManager.getTime();
     }
 
-    public boolean isPodRunning() {
-        return podStateManager.isPodRunning();
-    }
-
     public boolean hasActiveBolus() {
         synchronized (bolusDataMutex) {
             return activeBolusData != null;
@@ -501,8 +497,11 @@ public class OmnipodManager {
         return bolusCommandExecutionSubject;
     }
 
+    private boolean isPodRunning() {
+        return podStateManager.isPodRunning();
+    }
+
     // Only works for commands with nonce resyncable message blocks
-    // FIXME method is too big, needs refactoring
     private StatusResponse executeAndVerify(Supplier<StatusResponse> supplier) {
         try {
             return supplier.get();

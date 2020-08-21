@@ -27,7 +27,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodMa
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 
@@ -36,6 +35,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
  * RileyLinkOmnipodService is intended to stay running when the gui-app is closed.
  */
 public class RileyLinkOmnipodService extends RileyLinkService {
+
+    private static final String REGEX_MAC = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
     @Inject OmnipodPumpStatus omnipodPumpStatus;
@@ -110,7 +111,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
-        this.omnipodPumpStatus.setPumpDeviceState(pumpDeviceState);
+        // Intentionally left blank
+        // We don't use PumpDeviceState in the Omnipod driver
     }
 
     public class LocalBinder extends Binder {
@@ -139,7 +141,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                 omnipodPumpStatus.rileyLinkErrorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                 return false;
             } else {
-                if (!rileyLinkAddress.matches(omnipodPumpStatus.regexMac)) {
+                if (!rileyLinkAddress.matches(REGEX_MAC)) {
                     omnipodPumpStatus.rileyLinkErrorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                     aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
@@ -150,15 +152,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                 }
             }
 
-            this.omnipodPumpStatus.beepBasalEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepBasalEnabled, true);
-            this.omnipodPumpStatus.beepBolusEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepBolusEnabled, true);
-            this.omnipodPumpStatus.beepSMBEnabled = sp.getBoolean(OmnipodConst.Prefs.BeepSMBEnabled, true);
-            this.omnipodPumpStatus.beepTBREnabled = sp.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
-            this.omnipodPumpStatus.podDebuggingOptionsEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false);
-            this.omnipodPumpStatus.timeChangeEventEnabled = sp.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
             rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
-
-            aapsLogger.debug(LTag.PUMPCOMM, "Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.omnipodPumpStatus.beepBasalEnabled, this.omnipodPumpStatus.beepBolusEnabled, this.omnipodPumpStatus.beepSMBEnabled, this.omnipodPumpStatus.beepTBREnabled);
 
             reconfigureService();
 

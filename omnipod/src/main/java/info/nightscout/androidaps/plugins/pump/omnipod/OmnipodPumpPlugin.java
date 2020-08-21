@@ -201,7 +201,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                             (event.isChanged(getResourceHelper(), R.string.key_omnipod_pod_debugging_options_enabled)) ||
                             (event.isChanged(getResourceHelper(), R.string.key_omnipod_beep_smb_enabled)) ||
                             (event.isChanged(getResourceHelper(), R.string.key_omnipod_timechange_enabled)))
-                        rileyLinkOmnipodService.verifyConfiguration();
+                        aapsOmnipodManager.reloadSettings();
                 }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
@@ -837,9 +837,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
-        aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + omnipodPumpStatus.timeChangeEventEnabled + "]");
+        aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
 
-        if (omnipodPumpStatus.timeChangeEventEnabled && podStateManager.isPodRunning()) {
+        if (aapsOmnipodManager.isTimeChangeEventEnabled() && podStateManager.isPodRunning()) {
             aapsLogger.info(LTag.PUMP, getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
             this.hasTimeDateOrTimeZoneChanged = true;
         }

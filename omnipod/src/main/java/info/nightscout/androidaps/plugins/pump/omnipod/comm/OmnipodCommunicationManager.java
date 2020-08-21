@@ -92,7 +92,8 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Override
     public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
-        this.omnipodPumpStatus.setPumpDeviceState(pumpDeviceState);
+        // Intentionally left blank
+        // We don't use PumpDeviceState in the Omnipod driver
     }
 
     public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodStateManager podStateManager, MessageBlock command) {

@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
@@ -66,6 +67,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var omnipodUtil: OmnipodUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsOmnipodManager: AapsOmnipodManager
 
     // TODO somehow obtain the pumpUnreachableThreshold in order to display last connection time red or white
     // @Inject lateinit var localAlertUtils: LocalAlertUtils
@@ -181,7 +183,7 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     fun setVisibilityOfPodDebugButton() {
-        val isEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false)
+        val isEnabled = aapsOmnipodManager.isPodDebuggingOptionsEnabled
 
         if (isEnabled)
             omnipod_pod_debug.visibility = View.VISIBLE
