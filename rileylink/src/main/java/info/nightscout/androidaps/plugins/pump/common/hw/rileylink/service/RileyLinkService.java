@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -184,13 +183,6 @@ public abstract class RileyLinkService extends DaggerService {
             return true;
         }
     }
-
-
-    public void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
-    }
-
-
-
 
     // FIXME: This needs to be run in a session so that is interruptable, has a separate thread, etc.
     public void doTuneUpDevice() {

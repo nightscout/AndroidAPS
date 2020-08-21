@@ -165,27 +165,6 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
         return (errorDescription == null) ? "-" : errorDescription;
     }
 
-    @Override
-    public <E> E getCustomData(String key, Class<E> clazz) {
-        switch(key) {
-            case "SERIAL_NUMBER":
-                return (E)serialNumber;
-
-            case "PUMP_FREQUENCY":
-                return (E)pumpFrequency;
-
-            case "PUMP_MODEL": {
-                if (medtronicDeviceType==null)
-                    return null;
-                else
-                    return (E)medtronicDeviceType.getPumpModel();
-            }
-
-
-            default:
-                return null;
-        }
-    }
 
     public PumpDeviceState getPumpDeviceState() {
         return pumpDeviceState;

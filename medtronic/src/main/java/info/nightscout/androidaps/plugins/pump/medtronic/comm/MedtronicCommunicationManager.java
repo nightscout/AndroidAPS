@@ -916,8 +916,4 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         return false;
 
     }
-
-    @Override public PumpStatus getPumpStatus() {
-        return medtronicPumpStatus;
-    }
 }
