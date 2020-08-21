@@ -184,9 +184,6 @@ public abstract class RileyLinkService extends DaggerService {
         }
     }
 
-    public void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
-    }
-
     // FIXME: This needs to be run in a session so that is interruptable, has a separate thread, etc.
     public void doTuneUpDevice() {
 

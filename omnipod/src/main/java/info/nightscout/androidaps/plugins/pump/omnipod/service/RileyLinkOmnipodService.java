@@ -103,10 +103,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         return this.omnipodUIComm;
     }
 
-    public void resetRileyLinkConfiguration() {
-        rfspy.resetRileyLinkConfiguration();
-    }
-
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
         return omnipodCommunicationManager;
