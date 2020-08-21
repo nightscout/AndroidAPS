@@ -357,7 +357,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         String frequency = resourceHelper.gs(R.string.omnipod_frequency);
         String connectedModel = podStateManager.isPodInitialized() ? "Eros Pod" : "-";
         String serialNumber = podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
-        return new RileyLinkPumpInfo(connectedModel, pumpDescription, serialNumber, frequency);
+        return new RileyLinkPumpInfo(pumpDescription, frequency, connectedModel, serialNumber);
     }
 
     @Override public long getLastConnectionTimeMillis() {
