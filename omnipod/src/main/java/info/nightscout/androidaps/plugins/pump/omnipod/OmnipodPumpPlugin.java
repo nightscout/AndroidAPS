@@ -227,11 +227,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // TODO either find a more elegant solution, or at least make sure this is the right place to do this
         podStateManager.loadPodState();
 
-        initPumpStatusData();
-
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
         serviceRunning = true;
 
         disposables.add(rxBus
