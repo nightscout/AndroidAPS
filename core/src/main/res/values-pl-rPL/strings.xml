@@ -8,22 +8,17 @@
     <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
     <string name="invalidinput">Błędne dane wejściowe</string>
     <string name="tempbasaldeliveryerror">Błąd podania bazy tymczasowej</string>
-    <string name="goingtodeliver">Zamierzam podać %1$.2fU</string>
     <string name="waitingforpump">Czekam na pompę</string>
     <string name="connectingfor">Łączenie przez %1$d s</string>
-    <string name="bolusdelivering">Dostarczam %1$.2fU</string>
     <string name="handshaking">Uściskdłoni</string>
     <string name="connecting">Łączę</string>
     <string name="connected">Połączono</string>
     <string name="disconnected">Rozłączono</string>
     <string name="disconnecting">Rozłączanie</string>
     <string name="androidaps_start">AndroidAPS uruchomiony</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2fJ/g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min.</string>
-    <string name="format_mins_short">%1$dm</string>
     <string name="pumpbusy">Pompa jest zajęta</string>
     <string name="connectionerror">Błąd połączenia z pompą</string>
     <string name="youareonallowedlimit">Osiągnąłeś dozwolony limit</string>
@@ -82,8 +77,6 @@
     <string name="location_not_found_title">Lokalizacja nie jest włączona</string>
     <string name="location_not_found_message">Aby uruchomić odnajdywanie Bluetooth na nowszych urządzeniach, lokalizacja musi być uruchomiona. AAPS nie śledzi twojej lokalizacji więc po udanym parowaniu urządzenia Bluetooth można wyłączyć lokalizację.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$dmin temu</string>
-    <string name="hoursago">%1$.1fh temu</string>
     <string name="shorthour">h</string>
     <string name="days">dni</string>
     <string name="hours">godzin</string>
@@ -120,7 +113,6 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Nieprawidłowy profil: %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$dmin</string>
     <!--    TDD-->
     <!--    Translator-->
     <string name="careportal_bgcheck">Sprawdź BG</string>
@@ -161,7 +153,6 @@
     <string name="waitingforpumpresult">Oczekiwanie na wynik</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Zalecane podanie %dg węglowodanów w przeciągu %d minut</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statystyki</string>
     <string name="cumulative_tdd">Kumulatywna TDD (dawka dzienna)</string>

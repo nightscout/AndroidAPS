@@ -156,7 +156,6 @@
     <string name="overview_tempbasal_button">Basal Temporaire</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
-    <string name="missing_carbs">Manquant %1$dg</string>
     <string name="exported">Préférences exportées</string>
     <string name="export_to">Exporter les paramètres au</string>
     <string name="import_from">Importer les paramètres depuis</string>
@@ -236,10 +235,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_remotebolusmindistance_summary">Nombre minimum de minutes qu\'il doit y avoir entre un bolus distant et le suivant</string>
     <string name="smscommunicator_remotebolusmindistance">Combien de minutes doit-il y avoir, au minimum, entre un bolus et le suivant</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Pour votre sécurité, pour modifier cette préférence vous devez ajouter au moins 2 numéros de téléphone.</string>
-    <string name="bolusdelivered">Bolus %1$.2fU délivré avec succès</string>
-    <string name="bolusrequested">%1$.2fU vont être injectées</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU délivré avec succès</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolus repas de %1$.2fU injecté avec succès</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Cible %1$s pendant %2$d minutes</string>
     <string name="smscommunicator_tt_set">Cible %1$s pendant %2$d minutes définie avec succès</string>
     <string name="smscommunicator_tt_canceled">Cible Temp annulée avec succès</string>
@@ -263,9 +258,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus à distance non disponible. Réessayez plus tard.</string>
-    <string name="smscommunicator_basalreplywithcode">Pour démarrer la Basal %1$.2fU/h pendant %2$d min, renvoyer le code %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Pour changer le profil vers %1$s %2$d%%, renvoyer le code %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Pour démarrer le Bolus étendu %1$.2fU pendant %2$d min, renvoyer le code %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Pour entrer %1$dg à %2$s renvoyer le code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pour démarrer la Basal %1$d%% pendant %2$d min, renvoyer le code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Envoyer le code %2$s pour suspendre la Boucle pour %1$d minutes</string>
@@ -274,7 +267,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loopdisablereplywithcode">Pour désactiver la boucle veuillez répondre avec le code %1$s</string>
     <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal temporaire pour %2$d min</string>
     <string name="smscommunicator_extendedset">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
-    <string name="smscommunicator_carbsset">Les %1$dg de glucides entrés avec succès</string>
     <string name="smscommunicator_carbsfailed">L\'entrée de %1$dg de glucides a échoué</string>
     <string name="smscommunicator_tempbasalset_percent">Démarrage réussi pour %1$d%% de Basal temporaire pour %2$d min</string>
     <string name="smscommunicator_tempbasalfailed">Le démarrage du basal temporaire a échoué</string>
@@ -855,7 +847,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="code_compare">Les codes affichés sur cet appareil et sur la pompe sont-ils identiques ?</string>
     <string name="insight_pairing">Appairage de Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU injecté</string>
     <string name="insight_alert_formatter">%1$s : %2$s</string>
     <string name="tube_changed">Tubulure changée</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
@@ -913,7 +904,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="short_status_extended">Étendue : %1$.2f / %2$.2f U pour %3$d min</string>
     <string name="short_status_multiwave">Mixte : %1$.2f / %2$.2f U pour %3$d min</string>
     <string name="short_status_tdd">DTI : %1$.2f</string>
-    <string name="short_status_reservoir">Réserv. : %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="max_recovery_duration">Durée max. de récupération [s]</string>
     <string name="min_recovery_duration">Durée min. de récupération [s]</string>
@@ -1056,8 +1046,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sendsmsactionlabel">Envoyer SMS : %1$s</string>
     <string name="sendsmsactiondescription">Envoyer SMS à tous les numéros</string>
     <string name="sendsmsactiontext">Envoyer SMS avec du texte</string>
-    <string name="insulinFromCob"><![CDATA[GA vs IA : <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Contraintes de Bolus appliquées : %2$.2fU à %3$.2f</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
     <string name="partialboluswizard">Injecter cette partie de Bolus calculée par l’assistant [%]</string>
     <string name="deliverpartofboluswizard">L\'assistant Bolus effectue le calcul mais seulement cette partie de l\'insuline calculée est délivrée. Utile avec l\'algorithme SMB.</string>
@@ -1078,7 +1066,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="selected_profile">Sélectionné :</string>
     <string name="unitsnosemicolon">Unités</string>
     <string name="doyouwantswitchprofile">Voulez-vous changer de profil et annuler les modifications faites dans le profil actuel ?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
     <string name="objectives_button_unfinish">Refaire l\'objectif</string>

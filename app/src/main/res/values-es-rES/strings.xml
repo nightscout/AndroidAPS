@@ -156,7 +156,6 @@
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
-    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferencias exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
@@ -233,10 +232,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deben transcursar entre un bolus remoto y el siguiente</string>
     <string name="smscommunicator_remotebolusmindistance">Cuántos minutos deben transcurrir, al menos, entre un bolo y el siguiente</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Por su seguridad, para editar esta preferencia es necesario añadir al menos 2 números de teléfono.</string>
-    <string name="bolusdelivered">El bolo %1$.2fU se ha infundido correctamente</string>
-    <string name="bolusrequested">Se van a infundir %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">El bolo %1$.2fU se ha infundido correctamente</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolo %1$.2fU entregado correctamente</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Objetivo %1$s para %2$d minutos</string>
     <string name="smscommunicator_tt_set">Objetivo %1$s para %2$d minutos establecido correctamente</string>
     <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado con éxito</string>
@@ -260,9 +255,7 @@
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">Comando remoto no permitido</string>
     <string name="smscommunicator_remotebolusnotallowed">El bolo remoto no está disponible. Inténtalo de nuevo más tarde.</string>
-    <string name="smscommunicator_basalreplywithcode">Para iniciar una basal de %1$.2fU/h durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Para cambiar el perfil a %1$s %2$d%% responder con el código %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Para iniciar un bolo extendido de %1$.2fU durante %2$d minutos, responder con el código %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Para introducir %1$dg en %2$s responder con código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para iniciar una basal de %1$d%% durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para cancelar lazo por %1$d minutos responde con código %2$s</string>
@@ -271,7 +264,6 @@
     <string name="smscommunicator_loopdisablereplywithcode">Para desactivar el lazo responder con código %1$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_extendedset">Bolo ampliado de %1$.2fU durante %2$d min se inició correctamente</string>
-    <string name="smscommunicator_carbsset">Los carbohidratos %1$dg introducidos con éxito</string>
     <string name="smscommunicator_carbsfailed">Error al introducir %1$dg de carbohidratos</string>
     <string name="smscommunicator_tempbasalset_percent">Basal temporal de %1$d%% durante %2$d min iniciada correctamente</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
@@ -849,7 +841,6 @@
     <string name="code_compare">¿Coinciden los códigos mostrados en este dispositivo y en su infusor?</string>
     <string name="insight_pairing">Insight sincronizada</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU Entregado</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo cambiado</string>
     <string name="pump_time_updated">Hora del infusor actualizada</string>
@@ -907,7 +898,6 @@
     <string name="short_status_extended">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batería.: %1$d%%</string>
     <string name="max_recovery_duration">Max. duración de recuperación [s]</string>
     <string name="min_recovery_duration">Min. duración de recuperación [s]</string>
@@ -1050,8 +1040,6 @@
     <string name="sendsmsactionlabel">Enviar a %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS a todos los números</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricción de bolo aplicada: %2$.2fU a %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de hidratos de carbono: %2$d%% de tiempo. Compruebe de nuevo su calculo. Los COB se pueden sobrestimar, por lo que ¡se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
@@ -1072,7 +1060,6 @@
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
     <string name="doyouwantswitchprofile">¿Desea cambiar el perfil y descartar los cambios realizados al perfil actual?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">Activado</string>
     <string name="common_off">Desactivado</string>
     <string name="objectives_button_unfinish">Limpieza finalizada</string>

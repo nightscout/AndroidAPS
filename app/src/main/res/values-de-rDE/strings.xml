@@ -156,7 +156,7 @@
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="missing_carbs">Fehlend %1$d g</string>
+    <string name="missing_carbs">%1$d g fehlen</string>
     <string name="exported">Einstellungen exportiert</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="import_from">Importiere Einstellungen von</string>
@@ -235,10 +235,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimale Dauer in Minuten, die nach einem Remote-Bolus verstrichen sein muss, bevor ein neuer abgegeben werden kann.</string>
     <string name="smscommunicator_remotebolusmindistance">Anzahl der Minuten, die mindestens zwischen zwei Remote-Bolusabgaben liegen müssen.</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Aus Sicherheitsgründen musst Du mindestens zwei Telefonnummern eintragen, um diese Voreinstellung zu ändern.</string>
-    <string name="bolusdelivered">Bolus %1$.2fIE erfolgreich abgegeben</string>
-    <string name="bolusrequested">Werde %1$.2fIE abgeben</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fIE erfolgreich abgegeben</string>
-    <string name="smscommunicator_mealbolusdelivered">Mahlzeiten-Bolus %1$.2f IE erfolgreich abgegeben.</string>
+    <string name="bolusdelivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
+    <string name="bolusrequested">Werde %1$.2f IE abgeben</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
+    <string name="smscommunicator_mealbolusdelivered">Mahlzeiten-Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Ziel %1$s für %2$d Minuten</string>
     <string name="smscommunicator_tt_set">Ziel %1$s für %2$d Minuten erfolgreich gesetzt.</string>
     <string name="smscommunicator_tt_canceled">Temporäres Ziel wurde erfolgreich abgebrochen</string>
@@ -262,9 +262,9 @@
     <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
     <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolusabgabe aus der Ferne nicht verfügbar. Versuche es später erneut.</string>
-    <string name="smscommunicator_basalreplywithcode">Um eine Basalrate von %1$.2fIE/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
+    <string name="smscommunicator_basalreplywithcode">Um eine Basalrate von %1$.2f IE/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Um das Profil auf %1$s %2$d%% zu setzen, antworte mit dem Code %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Um den erweiterten Bolus %1$.2fIE für %2$d Minuten abzugeben, antworte mit dem Code %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Um einen Verzögerungs-Bolus von %1$.2f IE über %2$d Minuten abzugeben, antworte mit dem Code %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Um %1$dg Kohlenhydrate um %2$s einzugeben, antworte mit dem Code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Um die Basalrate von %1$d%% für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Um das Loopen für %1$d Minuten zu pausieren, antworte mit dem Code %2$s.</string>
@@ -273,7 +273,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Um den Loop zu deaktivieren, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_tempbasalset">TBR mit %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
     <string name="smscommunicator_extendedset">Der erweiterte Bolus %1$.2f IE/h für %2$d Minuten wurde erfolgreich gestartet</string>
-    <string name="smscommunicator_carbsset">%1$d g Kohlenhydrate erfolgreich erfasst.</string>
+    <string name="smscommunicator_carbsset">%1$d g Kohlenhydrate erfolgreich erfasst</string>
     <string name="smscommunicator_carbsfailed">Eingabe von %1$d g Kohlenhydraten ist fehlgeschlagen.</string>
     <string name="smscommunicator_tempbasalset_percent">Die temporäre Basalrate wurde erfolgreich für %2$d Minuten auf %1$d%% gesetzt.</string>
     <string name="smscommunicator_tempbasalfailed">Das Starten der TBR ist fehlgeschlagen.</string>
@@ -855,7 +855,7 @@ Unerwartetes Verhalten.</string>
     <string name="code_compare">Stimmen die Codes auf diesem Gerät und auf deiner Pumpe überein?</string>
     <string name="insight_pairing">Insight Kopplung</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U abgegeben</string>
+    <string name="insight_delivered">%1$.2f IE / %2$.2f IE abgegeben</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Schlauch gewechselt</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
@@ -913,7 +913,7 @@ Unerwartetes Verhalten.</string>
     <string name="short_status_extended">Verzögert: %1$.2f / %2$.2f IE für %3$d min.</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f IE für %3$d min.</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2fIE</string>
+    <string name="short_status_reservoir">Reser.: %1$.2f IE</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="max_recovery_duration">Max. Erholungsdauer [s]</string>
     <string name="min_recovery_duration">Min. Erholungsdauer [s]</string>
@@ -1056,8 +1056,8 @@ Unerwartetes Verhalten.</string>
     <string name="sendsmsactionlabel">SMS senden: %1$s</string>
     <string name="sendsmsactiondescription">SMS an alle Nummern senden</string>
     <string name="sendsmsactiontext">SMS mit Text senden</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus-Einschränkung angewendet: %2$.2fIE zu %3$.2fIE</font>]]></string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Bolus Einschränkung angewandt: %2$.2f U statt %1$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
     <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolusrechners</string>
     <string name="deliverpartofboluswizard">Der Bolus-Assistent führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
@@ -1078,7 +1078,6 @@ Unerwartetes Verhalten.</string>
     <string name="selected_profile">Ausgewählt:</string>
     <string name="unitsnosemicolon">Einheiten</string>
     <string name="doyouwantswitchprofile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
-    <string name="format_carbs">%1$d g</string>
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>

@@ -128,7 +128,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump()) + " U\n");
+                ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump(), resourceHelper) + "\n");
 
             if (isCarbsRequired()) {
                 ret += getCarbsRequiredText()+"\n";
@@ -166,7 +166,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump()) + " U<br>");
+                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump(), resourceHelper) + "<br>");
 
             if (isCarbsRequired()) {
                 ret += getCarbsRequiredText()+"<br>";

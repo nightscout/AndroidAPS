@@ -151,7 +151,6 @@
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
-    <string name="missing_carbs">Λείπει %1$dg</string>
     <string name="exported">Επιλογές εξήχθησαν</string>
     <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
     <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
@@ -173,9 +172,6 @@
     <string name="smscommunicator_bolusreplywithcode">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_bolusfailed">Αποτυχία Bolus</string>
-    <string name="bolusdelivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
-    <string name="bolusrequested">Προς έγχυση %1$.2fU</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
     <string name="smscommunicator_remotecommandsallowed">Άδεια για απομακρυσμένες εντολές μέσω SMS</string>
     <string name="danarprofile">Ρυθμίσεις προφίλ DanaR</string>
     <string name="danarprofile_dia">DIA [h]</string>
@@ -191,9 +187,7 @@
     <string name="valueoutofrange">Η τιμή %1$s είναι έξω από τα όρια</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_remotebolusnotallowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
-    <string name="smscommunicator_basalreplywithcode">Για έναρξη βασικού %1$.2fU/h για %2$d λεπτά στείλτε κωδικό %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Για αλλαγή προφίλ σε %1$s %2$d%% στείλτε κωδικό %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Για έναρξη εκτεταμένου bolus %1$.2fU για %2$d λεπτά στείλτε κωδικό %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Για έναρξη βασικού %1$d%% για %2$d λεπτά στείλτε κωδικό %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Για αναστολή κυκλκώματος για %1$d λεπτών στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_tempbasalset">Προσωρινός Ρυθμός %1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
@@ -724,7 +718,6 @@
     <string name="code_compare">Ταιριάζουν οι εμφανιζόμενοι κωδικοί με αυτούς της αντλίας;</string>
     <string name="insight_pairing">Σύζευξη Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU παραδόθηκε</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Σωληνάκι αλλάχθηκε</string>
     <string name="pump_time_updated">Η ώρα στην αντλία άλλαξε</string>
@@ -778,7 +771,6 @@
     <string name="short_status_extended">Εκτεταμένο: %1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="short_status_multiwave">Συνδυαστικό: %1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Αμπούλα:%1$.2fU</string>
     <string name="short_status_battery">Μπατ.:%1$d%%</string>
     <string name="max_recovery_duration">Μέγ. διάρκεια αποκατάστασης [s]</string>
     <string name="min_recovery_duration">Ελάχ. διάρκεια αποκατάστασης [s]</string>
@@ -907,8 +899,6 @@
     <string name="automation_trigger_pump_last_connection_compared">Τελευταία σύνδεση με αντλία %1$s %2$s λεπτά πριν</string>
     <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
@@ -925,7 +915,6 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Οδηγός Bolus</string>
     <string name="unit_minute_short">min</string>
-    <string name="format_carbs">%1$dg</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <!-- MDT Pump Status - removed when PodDeviceState is removed -->
     <string name="medtronic_pump_status_never_contacted">Ποτέ δεν επικοινωνήσατε</string>
