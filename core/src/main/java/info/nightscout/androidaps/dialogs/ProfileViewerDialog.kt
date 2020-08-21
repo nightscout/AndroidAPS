@@ -14,6 +14,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -29,6 +30,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     private var time: Long = 0
@@ -117,7 +119,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         if (mode == Mode.PROFILE_COMPARE)
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
-                    profileview_units.text = profile1.units
+                    profileview_units.text = profileFunction.getUnits()
                     profileview_dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile1.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
                     val profileNames =profileName!!.split("\n").toTypedArray()
                     profileview_activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
@@ -230,7 +232,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     private fun isfs(profile1: Profile, profile2: Profile): Spanned {
         var prev1 = 0.0
         var prev2 = 0.0
-        val units = profile1.units
+        val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {
             val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
@@ -250,7 +252,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         var prev1h = 0.0
         var prev2l = 0.0
         var prev2h = 0.0
-        val units = profile1.units
+        val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {
             val val1l = profile1.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
