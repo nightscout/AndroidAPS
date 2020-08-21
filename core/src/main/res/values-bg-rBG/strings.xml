@@ -18,12 +18,14 @@
     <string name="disconnected">Не е сврзана</string>
     <string name="disconnecting">Разкачане</string>
     <string name="androidaps_start">Стартиран AndroidAPS</string>
+    <string name="formatinsulinunits1">%1$.1fЕ</string>
     <string name="formatinsulinunits">%1$.2fЕ</string>
+    <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
+    <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
     <string name="pump_basebasalrate">%1$.2f Е/ч</string>
     <string name="format_hours">%1$.2f ч</string>
     <string name="format_mins">%1$d мин</string>
-    <string name="format_mins_short">%1$dm</string>
     <string name="pumpbusy">Помпата е заета</string>
     <string name="connectionerror">Грешка при връзка с помпата</string>
     <string name="youareonallowedlimit">Достигнахте лимита</string>
@@ -120,7 +122,7 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Грешен профил: %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$dмин</string>
+    <string name="mins">%1$d мин</string>
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b> Въгл: <b>%6$.0fгр</b>]]></string>

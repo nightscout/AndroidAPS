@@ -537,11 +537,11 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                                 applySMBRequest(resultAfterConstraints, new Callback() {
                                     @Override
                                     public void run() {
-                                        //Callback is only called if a bolus was acutally requested
+                                        // Callback is only called if a bolus was actually requested
                                         if (result.enacted || result.success) {
-                                            lastRun.setTbrSetByPump(result);
-                                            lastRun.setLastTBRRequest(lastRun.getLastAPSRun());
-                                            lastRun.setLastTBREnact(DateUtil.now());
+                                            lastRun.setSmbSetByPump(result);
+                                            lastRun.setLastSMBRequest(lastRun.getLastAPSRun());
+                                            lastRun.setLastSMBEnact(DateUtil.now());
                                         } else {
                                             new Thread(() -> {
                                                 SystemClock.sleep(1000);

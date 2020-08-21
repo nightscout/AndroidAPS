@@ -8,22 +8,24 @@
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="invalidinput">Chybná vstupní data</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
-    <string name="goingtodeliver">Podávání %1$.2fU inzulínu</string>
+    <string name="goingtodeliver">Podávání %1$.2f U inzulínu</string>
     <string name="waitingforpump">Čekání na pumpu</string>
     <string name="connectingfor">Připojování %1$d sec</string>
-    <string name="bolusdelivering">Aplikováno %1$.2fU</string>
+    <string name="bolusdelivering">Aplikováno %1$.2f U</string>
     <string name="handshaking">Navazování spojení</string>
     <string name="connecting">Připojuji</string>
     <string name="connected">Připojeno</string>
     <string name="disconnected">Odpojeno</string>
     <string name="disconnecting">Odpojuji</string>
     <string name="androidaps_start">AndroidAPS restartován</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="formatinsulinunits1">%1$.1f U</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2fU/h</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="format_mins_short">%1$d m</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
     <string name="youareonallowedlimit">Dosaženo limitu</string>
@@ -82,8 +84,8 @@
     <string name="location_not_found_title">Zjišťování polohy není povoleno</string>
     <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS vás nesleduje a po provedení párování můžete tuto volbu opět zakázat.</string>
     <!--    DateUtil-->
-    <string name="minago">před %1$dm</string>
-    <string name="hoursago">před %1$.1fh</string>
+    <string name="minago">před %1$d min</string>
+    <string name="hoursago">před %1$.1f h</string>
     <string name="shorthour">h</string>
     <string name="days">dnů</string>
     <string name="hours">hodin</string>
@@ -120,10 +122,10 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Chybný profil: %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$d minut</string>
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Baz: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Baz: <b>%4$.2fU(%5$.0f%%)</b> Sach.: <b>%6$.0fg</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_announcement">Oznámení</string>

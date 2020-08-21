@@ -98,7 +98,8 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
-class OverviewFragment : DaggerFragment(), View.OnClickListener {
+class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickListener {
+
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -146,6 +147,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     private val secondaryGraphsLabel = ArrayList<TextView>()
 
     private var carbAnimation: AnimationDrawable? = null
+
+    private val graphLock = Object()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -296,7 +299,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_accepttempbutton  -> {
+               
+
+                R.id.overview_accepttempbutton -> {
                     profileFunction.getProfile() ?: return
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         val lastRun = loopPlugin.lastRun
@@ -309,10 +314,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                                 (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                 actionStringHandler.handleInitiate("cancelChangeRequest")
                                 loopPlugin.acceptChangeRequest()
-                            }, null, sp)
+                            })
                         }
                     }
                 }
+            }
+        }
+    }
+
+
+    override fun onLongClick(v: View): Boolean {
+        when (v.id) {
+            R.id.overview_quickwizardbutton -> {
+                startActivity(Intent(v.context, QuickWizardListActivity::class.java))
+                return true
             }
         }
     }
@@ -351,9 +366,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-    @Synchronized
     private fun prepareGraphs() {
-        val numOfGraphs = overviewMenus.setting.size
+        synchronized(graphLock) {
+             val numOfGraphs = overviewMenus.setting.size
 
         if (numOfGraphs != secondaryGraphs.size - 1) {
             // rebuild needed
@@ -387,13 +402,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
                 overview_iobgraph.addView(relativeLayout)
                 secondaryGraphs.add(graph)
+                }
             }
         }
-
     }
 
     private fun scheduleUpdateGUI(from: String) {
         class UpdateRunnable : Runnable {
+
             override fun run() {
                 activity?.runOnUiThread {
                     updateGUI(from)
@@ -408,7 +424,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         scheduledUpdate = worker.schedule(task, 500, TimeUnit.MILLISECONDS)
     }
 
-    @Synchronized
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug("UpdateGUI from $from")
@@ -678,53 +693,57 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                 graphData.addNowLine(now)
 
                 // ------------------ 2nd graph
-                for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
-                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
-                    var useABSForScale = false
-                    var useIobForScale = false
-                    var useCobForScale = false
-                    var useDevForScale = false
-                    var useRatioForScale = false
-                    var useDSForScale = false
-                    var useIAForScale = false
-                    when {
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                synchronized(graphLock) {
+                    for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
+                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
+                        var useABSForScale = false
+                        var useIobForScale = false
+                        var useCobForScale = false
+                        var useDevForScale = false
+                        var useRatioForScale = false
+                        var useDSForScale = false
+                        var useIAForScale = false
+                        when {
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                        }
+
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
+                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
+
+                        // set manual x bounds to have nice steps
+                        secondGraphData.formatAxis(fromTime, endTime)
+                        secondGraphData.addNowLine(now)
+                        secondaryGraphsData.add(secondGraphData)
                     }
-
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
-                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
-
-                    // set manual x bounds to have nice steps
-                    secondGraphData.formatAxis(fromTime, endTime)
-                    secondGraphData.addNowLine(now)
-                    secondaryGraphsData.add(secondGraphData)
                 }
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
-            for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
-                secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
-                secondaryGraphs[g].visibility = (
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                    ).toVisibility()
-                secondaryGraphsData[g].performUpdate()
+            synchronized(graphLock) {
+                for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
+                    secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
+                    secondaryGraphs[g].visibility = (
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                        ).toVisibility()
+                    secondaryGraphsData[g].performUpdate()
+                }
             }
         }
     }

@@ -153,7 +153,6 @@
     <string name="overview_tempbasal_button">임시Basal</string>
     <string name="overview_extendedbolus_button">확장 Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
-    <string name="missing_carbs">누락 %1$dg</string>
     <string name="exported">설정이 저장되었습니다</string>
     <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
     <string name="import_from">다음 위치에서 설정을 불러오시겠습니까</string>
@@ -183,10 +182,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">원격 Bolus를 주입한 후 얼마간의 시간이 흐른 후에야 다음 원격 Bolus주입이 가능합니다</string>
     <string name="smscommunicator_remotebolusmindistance">원격 Bolus를 주입한 후 몇분이 지나야 다음 원격 Bolus 주입이 가능하게 합니까</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">안전을 위하여 이 설정을 수정하기 위해 최소 2개의 폰 번호를 추가해야합니다.</string>
-    <string name="bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다.</string>
-    <string name="bolusrequested">%1$.2fU을 주입합니다</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다</string>
-    <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2f이 주입 완료되었습니다</string>
     <string name="smscommunicator_mealbolusdelivered_tt">%2$d 분 동안 목표 %1$s</string>
     <string name="smscommunicator_tt_set">%2$d 분 동안 목표 %1$s 설정이 완료되었습니다</string>
     <string name="smscommunicator_tt_canceled">임시 목표 취소가 완료되었습니다</string>
@@ -205,15 +200,12 @@
     <string name="valueoutofrange">%1$s값이 하드한계를 벗어났습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
     <string name="smscommunicator_remotebolusnotallowed">원격 주입이 불가능합니다. 나중에 다시 시도해주세요.</string>
-    <string name="smscommunicator_basalreplywithcode">%2$d분 동안 Basal %1$.2fU/h 주입하려면 %3$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_profilereplywithcode">프로파일 %1$s %2$d%%로 변경하려면 %3$s 를 입력하고 답장하세요</string>
-    <string name="smscommunicator_extendedreplywithcode">%2$d분 동안 확장 Bolus %1$.2fU 주입하려면 %3$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_carbsreplywithcode">%2$s에 %1$dg을 입력하려면 %3$s를 입력하고 답장하세요</string>
     <string name="smscommunicator_basalpctreplywithcode">%2$d 분 동안 Basal %1$d%% 주입하려면 %3$s을 입력하고 답장하세요</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d분동안 Loop 일시중지하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalset">Temp Basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
-    <string name="smscommunicator_carbsset">탄수화물 %1$dg 입력이 완료되었습니다</string>
     <string name="smscommunicator_carbsfailed">탄수화물 %1$dg 입력이 실패하였습니다</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp Basal start failed</string>
@@ -748,7 +740,6 @@
     <string name="code_compare">이 장치에서 보여지는 코드와 펌프에서 보여지는 코드가 동일한가요?</string>
     <string name="insight_pairing">Insight와 동기화</string>
     <string name="insight_local">아큐-첵 Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU 주입됨</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">튜브 변경</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
@@ -802,7 +793,6 @@
     <string name="short_status_extended">확장: %3$d분 동안 %1$.2f / %2$.2f U</string>
     <string name="short_status_multiwave">Multiwave: %3$d 분 동안 %1$.2f / %2$.2f U</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="max_recovery_duration">최대 재연결 시간 [초]</string>
     <string name="min_recovery_duration">최소 재연결 시간 [초]</string>
@@ -943,8 +933,6 @@
     <string name="sendsmsactionlabel">SMS 전송: %1$s</string>
     <string name="sendsmsactiondescription">모든 번호에 SMS 전송</string>
     <string name="sendsmsactiontext">문자 포함된 SMS 보내기</string>
-    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus 제약 적용: %2$.2fU 에서 %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
     <string name="partialboluswizard">Bolus 마법사 결과의 이 부분 주입[%]</string>
     <string name="deliverpartofboluswizard">Bolus 마법사는 계산을 수행하지만 계산된 인슐린의 이 부분만 주입됩니다. SMB 알고리즘에 유용합니다.</string>
@@ -965,7 +953,6 @@
     <string name="selected_profile">선택:</string>
     <string name="unitsnosemicolon">단위</string>
     <string name="doyouwantswitchprofile">프로파일을 변경하고 현재 프로파일에 대한 변경 사항을 버리시겠습니까?</string>
-    <string name="format_carbs">%1$dg</string>
     <string name="common_on">켜기</string>
     <string name="common_off">끄기</string>
     <string name="objectives_button_unfinish">완료 초기화</string>
