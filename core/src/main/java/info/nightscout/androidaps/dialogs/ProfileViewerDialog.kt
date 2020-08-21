@@ -226,7 +226,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev1 = val1
             prev2 = val2
         }
-        return HtmlHelper.fromHtml(s.toString())
+        return HtmlHelper.fromHtml(s.delete(s.length-4, s.length).toString())
     }
 
     private fun isfs(profile1: Profile, profile2: Profile): Spanned {
@@ -244,7 +244,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev1 = val1
             prev2 = val2
         }
-        return HtmlHelper.fromHtml(s.toString())
+        return HtmlHelper.fromHtml(s.delete(s.length-4, s.length).toString())
     }
 
     private fun targets(profile1: Profile, profile2: Profile):Spanned {
@@ -270,6 +270,6 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev2l = val2l
             prev2h = val2h
         }
-        return HtmlHelper.fromHtml(s.toString())
+        return HtmlHelper.fromHtml(s.delete(s.length-4, s.length).toString())
     }
 }
