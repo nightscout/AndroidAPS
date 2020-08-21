@@ -15,6 +15,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.close.*
@@ -85,7 +86,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profileview_datelayout.visibility = View.VISIBLE
             }
 
-            Mode.CUSTOM_PROFILE  -> {
+            Mode.CUSTOM_PROFILE -> {
                 profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
                 profile2 = null
                 profileName = customProfileName
@@ -102,7 +103,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profileview_datelayout.visibility = View.GONE
             }
 
-            Mode.DB_PROFILE      -> {
+            Mode.DB_PROFILE -> {
                 val profileList = databaseHelper.getProfileSwitchData(time, true)
                 profile = if (profileList.isNotEmpty()) profileList[0].profileObject else null
                 profile2 = null
@@ -124,7 +125,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                     profileview_ic.text = ics(profile1, profile2)
                     profileview_isf.text = isfs(profile1, profile2)
                     profileview_basal.text = basals(profile1, profile2)
-                    profileview_target.text = HtmlHelper.fromHtml(formatColors("", profile1.targetList.replace("\n","<br>") + "<br>", profile2.targetList.replace("\n","<br>"), ""))
+                    profileview_target.text = targets(profile1, profile2)
                     basal_graph.show(profile1, profile2)
                 }
 
@@ -229,12 +230,13 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     private fun isfs(profile1: Profile, profile2: Profile): Spanned {
         var prev1 = 0.0
         var prev2 = 0.0
+        val units = profile1.units
         val s = StringBuilder()
         for (hour in 0..23) {
-            val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), profile1.units)
-            val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), profile1.units)
+            val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
+            val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), profile1.units + " " + resourceHelper.gs(R.string.profile_per_unit)))
+                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units + " " + resourceHelper.gs(R.string.profile_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -242,4 +244,35 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         }
         return HtmlHelper.fromHtml(s.toString())
     }
+
+    private fun targets(profile1: Profile, profile2: Profile):Spanned {
+        var prev1l = 0.0
+        var prev1h = 0.0
+        var prev2l = 0.0
+        var prev2h = 0.0
+        val units = profile1.units
+        val s = StringBuilder()
+        for (hour in 0..23) {
+            val val1l = profile1.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
+            val val1h = profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
+            val val2l = profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
+            val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
+            val txt1 = Profile.format_HH_MM(hour * 60 * 60) + " " + valueToUnitsToString(val1l, units) + " - " + valueToUnitsToString(val1h, units) + " " + units
+            val txt2 = Profile.format_HH_MM(hour * 60 * 60) + " " + valueToUnitsToString(val2l, units) + " - " + valueToUnitsToString(val2h, units) + " " + units
+            if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h ) {
+                s.append(formatColors(txt1, txt2))
+                s.append("<br>")
+            }
+            prev1l = val1l
+            prev1h = val1h
+            prev2l = val2l
+            prev2h = val2h
+        }
+        return HtmlHelper.fromHtml(s.toString())
+    }
+
+    private fun valueToUnitsToString(value: Double, units: String): String? {
+        return if (units == Constants.MGDL) DecimalFormatter.to0Decimal(value) else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
+    }
+
 }
