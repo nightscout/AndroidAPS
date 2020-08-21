@@ -8,17 +8,14 @@
     <string name="profile_set_ok">Perfil Basal atualizado na bomba</string>
     <string name="invalidinput">Dados de entrada inválidos</string>
     <string name="tempbasaldeliveryerror">Erro na entrega da basal temporária</string>
-    <string name="goingtodeliver">Vão ser administradas %1$.2fU</string>
     <string name="waitingforpump">Aguardando a bomba</string>
     <string name="connectingfor">Conectando para %1$d</string>
-    <string name="bolusdelivering">Administrando %1$.2fU</string>
     <string name="handshaking">Cumprimento</string>
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
     <string name="disconnecting">A desligar</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="pumpbusy">A bomba está ocupada</string>
@@ -79,7 +76,6 @@
     <string name="location_not_found_title">Localização Não Está Activada</string>
     <string name="location_not_found_message">Para que a procura de Bluetooth funcione em aparelhos mais recentes, a localização tem que ser activada. A app não rastreia a sua localização e pode ser desativada depois de um emparelhamento bem sucedido.</string>
     <!--    DateUtil-->
-    <string name="hoursago">%1$.1fh atrás</string>
     <string name="shorthour">h</string>
     <string name="days">dias</string>
     <string name="hours">horas</string>

@@ -156,7 +156,7 @@
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
-    <string name="missing_carbs">Нужни %1$dг</string>
+    <string name="missing_carbs">Нужни %1$d гр</string>
     <string name="exported">Настройките са експортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
@@ -854,7 +854,7 @@
     <string name="code_compare">Съвпадат ли кодовете, показани на това устройство и на Вашата помпа?</string>
     <string name="insight_pairing">Insight свързване</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU доставени</string>
+    <string name="insight_delivered">%1$.2fЕ / %2$.2fЕ доставени</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Тръба сменена</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
@@ -912,7 +912,7 @@
     <string name="short_status_extended">Удължен: %1$.2f / %2$.2f U за %3$d мин</string>
     <string name="short_status_multiwave">Удължен: %1$.2f / %2$.2f U за %3$d мин</string>
     <string name="short_status_tdd">ТДД: %1$.2f</string>
-    <string name="short_status_reservoir">Рез.: %1$.2fU</string>
+    <string name="short_status_reservoir">Рез.: %1$.2fE</string>
     <string name="short_status_battery">Бат.: %1$d%%</string>
     <string name="max_recovery_duration">Макс време за възстановяване [сек]</string>
     <string name="min_recovery_duration">Мин време за възстановяване [сек]</string>
@@ -1055,8 +1055,8 @@
     <string name="sendsmsactionlabel">Изпращане на SMS с текст %1$s</string>
     <string name="sendsmsactiondescription">Изпратете SMS на всички</string>
     <string name="sendsmsactiontext">Изпрати SMS с текст</string>
-    <string name="insulinFromCob"><![CDATA[Въгл срещу АИ: <font color=\'%1$s\'>%2$+.2fг Е</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Ограничение на болуса: %2$.2fЕ на %3$.2fЕ</font>]]></string>
+    <string name="cobvsiob">COB срещу IOB</string>
+    <string name="bolusconstraintappliedwarn">Ограничение на болус: от %1$.2f Е на %2$.2f Е</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
     <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
@@ -1077,7 +1077,6 @@
     <string name="selected_profile">Избрано:</string>
     <string name="unitsnosemicolon">Единици</string>
     <string name="doyouwantswitchprofile">Искате да смените профила и премахнете на промените, направени в текущия профил?</string>
-    <string name="format_carbs">%1$dг</string>
     <string name="common_on">Вкл</string>
     <string name="common_off">Изкл</string>
     <string name="objectives_button_unfinish">Изчисти приключение</string>

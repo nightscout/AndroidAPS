@@ -25,6 +25,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_insulin.*
 import kotlinx.android.synthetic.main.dialog_treatment.*
@@ -101,16 +102,16 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.bolus))
             if (recordOnlyChecked)
-                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.bolusrecordedonly) + "</font>")
+                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.warning))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarning, resourceHelper.gc(R.color.warning), insulin, insulinAfterConstraints))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.gc(R.color.carbs) + "'>" + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(resourceHelper, R.color.carbs))
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add(resourceHelper.gs(R.string.carbsconstraintapplied).formatColor(resourceHelper, R.color.warning))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->

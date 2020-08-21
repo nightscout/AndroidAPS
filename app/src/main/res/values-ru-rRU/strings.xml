@@ -156,7 +156,7 @@
     <string name="overview_tempbasal_button">ВремБазал</string>
     <string name="overview_extendedbolus_button">расширенный болюс</string>
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
-    <string name="missing_carbs">Отсутствует %1$dg</string>
+    <string name="missing_carbs">Не хватает %1$d г</string>
     <string name="exported">настройки экспортированы</string>
     <string name="export_to">экспортировать настройки в</string>
     <string name="import_from">импортировать настройки из</string>
@@ -236,7 +236,7 @@
     <string name="smscommunicator_remotebolusmindistance">Минимум минут, должных пройти между одним болюсом и следующим</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">В целях безопасности, для изменения этого параметра необходимо добавить не менее 2 телефонных номеров.</string>
     <string name="bolusdelivered">Болюс %1$.2fед. подан успешно</string>
-    <string name="bolusrequested">Начинается подача болюса %1$.2fед.</string>
+    <string name="bolusrequested">Будет подано %1$.2fU ед. инс</string>
     <string name="smscommunicator_bolusdelivered">Болюс %1$.2fед. подан успешно</string>
     <string name="smscommunicator_mealbolusdelivered">Болюс на еду %1$.2f ед. подан успешно</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Цель %1$s на %2$d минут</string>
@@ -262,9 +262,9 @@
     <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
     <string name="smscommunicator_remotebolusnotallowed">Удаленный болюс недоступен, повторите попытку позже.</string>
-    <string name="smscommunicator_basalreplywithcode">Чтобы подать базал %1$.2fед./ч в течение %2$d мин. ответьте кодом %3$s</string>
+    <string name="smscommunicator_basalreplywithcode">Для начала подачи базала %1$.2f ед./ч на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Для переключения профиля на %1$s %2$d%% ответьте кодом %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Для начала подачи пролонгированного болюса %1$.2fед. за %2$d мин. ответьте кодом %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Для начала подачи пролонгированного болюса %1$.2fед. на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Чтобы ввести %1$d г в %2$s ответьте кодом %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Для начала подачи базала %1$d%% на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
@@ -856,7 +856,7 @@ Context | Edit Context</string>
     <string name="code_compare">Коды на этом устройстве и на вашей помпе совпадают?</string>
     <string name="insight_pairing">Сопряжение с Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">Подано %1$.2fед./ %2$.2fед</string>
+    <string name="insight_delivered">Подано %1$.2fед / %2$.2fед</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Трубка заменена</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
@@ -914,7 +914,7 @@ Context | Edit Context</string>
     <string name="short_status_extended">Пролонгированный: %1$.2f / %2$.2f U за %3$d мин</string>
     <string name="short_status_multiwave">Пролонгированный: %1$.2f / %2$.2f U за %3$d мин</string>
     <string name="short_status_tdd">Суммарный инсулин TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Резервуар: %1$.2fед</string>
+    <string name="short_status_reservoir">Резерв.: %1$.2f ед</string>
     <string name="short_status_battery">Батарея: %1$d%%</string>
     <string name="max_recovery_duration">Макс продолжительность восстановления [s]</string>
     <string name="min_recovery_duration">Мин. продолжительность восстановления [s]</string>
@@ -1057,8 +1057,8 @@ Context | Edit Context</string>
     <string name="sendsmsactionlabel">Отправить SMS: %1$s</string>
     <string name="sendsmsactiondescription">Отправить SMS на все номера</string>
     <string name="sendsmsactiontext">Отправить SMS с текстом</string>
-    <string name="insulinFromCob"><![CDATA[Активные углеводы COB в сопоставлении с Активным инсулином IOB: <font color=\'%1$s\'>%2$+.2fед</font>]]></string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Применено ограничение на болюс: %2$.2fед до %3$.2fед</font>]]></string>
+    <string name="cobvsiob">угл COB к инс IOB</string>
+    <string name="bolusconstraintappliedwarn">Применено ограничение болюса: %1$.2f ед до %2$.2f ед</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
     <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
     <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подана только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
@@ -1079,7 +1079,6 @@ Context | Edit Context</string>
     <string name="selected_profile">Выбрано:</string>
     <string name="unitsnosemicolon">Единицы</string>
     <string name="doyouwantswitchprofile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
-    <string name="format_carbs">%1$d гр</string>
     <string name="common_on">Вкл.</string>
     <string name="common_off">Выкл.</string>
     <string name="objectives_button_unfinish">Очистить завершенные</string>

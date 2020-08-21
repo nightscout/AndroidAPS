@@ -8,22 +8,24 @@
     <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
     <string name="invalidinput">Dati di input non validi</string>
     <string name="tempbasaldeliveryerror">Errore erogazione basale temporanea</string>
-    <string name="goingtodeliver">Sto per erogare %1$.2fU</string>
+    <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
     <string name="waitingforpump">In attesa del micro</string>
     <string name="connectingfor">In connessione per %1$d s</string>
-    <string name="bolusdelivering">Erogazione di %1$.2fU</string>
+    <string name="bolusdelivering">Erogazione di %1$.2f U</string>
     <string name="handshaking">Connessione</string>
     <string name="connecting">Connessione</string>
     <string name="connected">Connesso</string>
     <string name="disconnected">Disconnesso</string>
     <string name="disconnecting">Disconnessione</string>
     <string name="androidaps_start">AndroidAPS avviato</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="formatinsulinunits1">%1$.1f U</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2fU/h</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="format_mins_short">%1$dm</string>
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
     <string name="youareonallowedlimit">Hai raggiunto il limite consentito</string>
@@ -82,8 +84,8 @@
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$dm fa</string>
-    <string name="hoursago">%1$.1fh fa</string>
+    <string name="minago">%1$d m fa</string>
+    <string name="hoursago">%1$.1f h fa</string>
     <string name="shorthour">h</string>
     <string name="days">giorni</string>
     <string name="hours">ore</string>
@@ -120,10 +122,10 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$dmin</string>
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Boli: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Boli: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> CHO: <b>%6$.0fg</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> CHO: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_announcement">Avviso</string>
@@ -163,7 +165,7 @@
     <string name="waitingforpumpresult">In attesa del risultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%dg di CHO aggiuntivi richiesti entro %d minuti</string>
+    <string name="carbsreq">%d g di CHO aggiuntivi richiesti entro %d minuti</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiche</string>
     <string name="cumulative_tdd">TDD cumulativo</string>

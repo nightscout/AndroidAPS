@@ -170,9 +170,6 @@
     <string name="smscommunicator_bolusreplywithcode">Om %1$.2fU bolus te lewer antwoord met kode %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Om kalibrasie %1$.2f te stuur antwoord met kode %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus het misluk</string>
-    <string name="bolusdelivered">Bolus %1$.2fU suksesvol afgelewer</string>
-    <string name="bolusrequested">Gaan %1$.2fU lewer</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU suksesvol afgelewer</string>
     <string name="smscommunicator_remotecommandsallowed">Laat afstandbeheerde bevele toe via SMS</string>
     <string name="danarprofile">DanaR profiel stellings</string>
     <string name="danarprofile_dia">DIA [h]</string>
@@ -188,9 +185,7 @@
     <string name="valueoutofrange">Waarde %1$s is uit harde perke</string>
     <string name="smscommunicator_remotecommandnotallowed">Afstandbeheerde bevel word nie toegelaat nie</string>
     <string name="smscommunicator_remotebolusnotallowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
-    <string name="smscommunicator_basalreplywithcode">Om %1$.2fU basale vir %2$d min te aktiveer antwoord met kode %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Om profiel te verander na %1$s %2$d%% antwoord met %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Om bolus %1$.2fU vir %2$d min te verleng kies %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Om basal e %1$d%% vir %2$d min te begin kies %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Om lus op te skort vir %1$d minute antwoord met kode %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basale %1$.2fU/h vir %2$d min suksesvol geaktiveerd</string>
@@ -717,7 +712,6 @@
     <string name="code_compare">Stem die kodes gewys op hierdie toestel en op jou pomp saam?</string>
     <string name="insight_pairing">Insight maatjies</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU gelewer</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Pyp verander</string>
     <string name="pump_time_updated">Pomp tyd opgedateer</string>
@@ -771,7 +765,6 @@
     <string name="short_status_extended">Verleng: %1$.2f / %2$.2f U vir %3$d min</string>
     <string name="short_status_multiwave">Multigolf: %1$.2f / %2$.2f U vir %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
-    <string name="short_status_reservoir">Stoor.: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Max. herstel duur [s]</string>
     <string name="min_recovery_duration">Min. herstel duur [s]</string>
@@ -899,7 +892,6 @@
     <string name="automation_trigger_pump_last_connection_compared">Vorige konneksie na pomp %1$s %2$s min terug</string>
     <string name="sendsmsactionlabel">Stuur\'n SMS: %1$s</string>
     <string name="sendsmsactiontext">Stuur\'n SMS met die teks</string>
-    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus beperking aangewend: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="loading">Laai tans...</string>
     <string name="snooze">Sluimer</string>
     <string name="time_range">Tyd reeks</string>

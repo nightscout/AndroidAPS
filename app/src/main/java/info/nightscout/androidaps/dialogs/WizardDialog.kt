@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
+import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -20,11 +21,11 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -32,9 +33,9 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -105,8 +106,12 @@ class WizardDialog : DaggerDialogFragment() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
 
-        treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
-            ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
+        if (profileFunction.getUnits() == Constants.MGDL)
+            treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
+                ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0.0"), false, ok, textWatcher)
+        else
+            treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
+                ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
         treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
@@ -353,5 +358,16 @@ class WizardDialog : DaggerDialogFragment() {
             }
         }
 
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        try {
+            manager.beginTransaction().let {
+                it.add(this, tag)
+                it.commitAllowingStateLoss()
+            }
+        } catch (e: IllegalStateException) {
+            aapsLogger.debug(e.localizedMessage)
+        }
     }
 }

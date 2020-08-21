@@ -8,22 +8,17 @@
     <string name="profile_set_ok">Perfil basal actualizado en bomba</string>
     <string name="invalidinput">Datos inválidos</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
-    <string name="goingtodeliver">Se van a infundir %1$.2fU</string>
     <string name="waitingforpump">Esperando bomba</string>
     <string name="connectingfor">Conexión por %1$d s</string>
-    <string name="bolusdelivering">Infundiendo %1$.2fU</string>
     <string name="handshaking">Estableciendo comunicacion</string>
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
     <string name="disconnecting">Desconectando</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="reservoirvalue">%1$.0f/%2$dU</string>
-    <string name="pump_basebasalrate">%1$.2fU/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="format_mins_short">%1$dm</string>
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
     <string name="youareonallowedlimit">Límite permitido alcanzado</string>
@@ -82,8 +77,6 @@
     <string name="location_not_found_title">Ubicación no habilitada</string>
     <string name="location_not_found_message">Para activar la visibilidad Bluetooth en nuevos dispositivos, la ubicación debe estar habilitada. AAPS no hace un seguimiento de su ubicación y se puede desactivar después de realizar la vinculación.</string>
     <!--    DateUtil-->
-    <string name="minago">Hace %1$dm</string>
-    <string name="hoursago">Hace %1$.1fh</string>
     <string name="shorthour">h</string>
     <string name="days">días</string>
     <string name="hours">horas</string>
@@ -120,7 +113,6 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <!--    Temptarget-->
-    <string name="mins">%1$dmin</string>
     <!--    TDD-->
     <!--    Translator-->
     <string name="careportal_bgcheck">Medir glucosa</string>
@@ -161,7 +153,6 @@
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%dg Carbohidratos adicionales son necesarios dentro de %d minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estadísticas</string>
     <string name="cumulative_tdd">TDD acumulativa</string>
