@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.datetime.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
@@ -22,6 +23,7 @@ import java.util.*
 import javax.inject.Inject
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
@@ -33,6 +35,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     private var okClicked: Boolean = false
 
     companion object {
+
         private var seconds: Int = (Math.random() * 59.0).toInt()
     }
 
@@ -122,6 +125,17 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             }
         }
         cancel.setOnClickListener { dismiss() }
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        try {
+            manager.beginTransaction().let {
+                it.add(this, tag)
+                it.commitAllowingStateLoss()
+            }
+        } catch (e: IllegalStateException) {
+            aapsLogger.debug(e.localizedMessage)
+        }
     }
 
     abstract fun submit(): Boolean

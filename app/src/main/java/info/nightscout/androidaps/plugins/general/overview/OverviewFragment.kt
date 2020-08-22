@@ -111,6 +111,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickListener {
+
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -315,62 +316,58 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
         if (childFragmentManager.isStateSaved) return
-        try {
-            activity?.let { activity ->
-                when (v.id) {
-                    R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
-                    R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
-                    R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
-                    R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
-                    R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(childFragmentManager, "Overview") }))
+        activity?.let { activity ->
+            when (v.id) {
+                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
+                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
+                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
+                R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
+                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(childFragmentManager, "Overview") }))
 
-                    R.id.overview_cgmbutton         -> {
-                        if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
-                            openCgmApp("com.eveningoutpost.dexdrip")
-                        else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
+                R.id.overview_cgmbutton -> {
+                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
+                        openCgmApp("com.eveningoutpost.dexdrip")
+                    else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
+                        dexcomPlugin.findDexcomPackageName()?.let {
+                            openCgmApp(it)
+                        }
+                            ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
+                    }
+                }
+
+                R.id.overview_calibrationbutton -> {
+                    if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
+                        CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
+                    } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
+                        try {
                             dexcomPlugin.findDexcomPackageName()?.let {
-                                openCgmApp(it)
+                                startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
                             }
                                 ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
+                        } catch (e: ActivityNotFoundException) {
+                            ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.g5appnotdetected))
                         }
                     }
+                }
 
-                    R.id.overview_calibrationbutton -> {
-                        if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
-                            CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
-                        } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                            try {
-                                dexcomPlugin.findDexcomPackageName()?.let {
-                                    startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
-                                }
-                                    ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
-                            } catch (e: ActivityNotFoundException) {
-                                ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.g5appnotdetected))
-                            }
-                        }
-                    }
-
-                    R.id.overview_accepttempbutton  -> {
-                        profileFunction.getProfile() ?: return
-                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                            val lastRun = loopPlugin.lastRun
-                            loopPlugin.invoke("Accept temp button", false)
-                            if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                    ?: "".toSpanned(), Runnable {
-                                    aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
-                                    overview_accepttempbutton?.visibility = View.GONE
-                                    (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                    actionStringHandler.handleInitiate("cancelChangeRequest")
-                                    loopPlugin.acceptChangeRequest()
-                                })
-                            }
+                R.id.overview_accepttempbutton -> {
+                    profileFunction.getProfile() ?: return
+                    if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                        val lastRun = loopPlugin.lastRun
+                        loopPlugin.invoke("Accept temp button", false)
+                        if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
+                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                ?: "".toSpanned(), Runnable {
+                                aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
+                                overview_accepttempbutton?.visibility = View.GONE
+                                (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+                                actionStringHandler.handleInitiate("cancelChangeRequest")
+                                loopPlugin.acceptChangeRequest()
+                            })
                         }
                     }
                 }
             }
-        } catch (ignored: IllegalStateException) {
-            // ignore Can not perform this action after onSaveInstanceState
         }
     }
 
@@ -521,6 +518,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun scheduleUpdateGUI(from: String) {
         class UpdateRunnable : Runnable {
+
             override fun run() {
                 activity?.runOnUiThread {
                     updateGUI(from)

@@ -156,6 +156,7 @@
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Predĺžený bolus</string>
     <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
+    <string name="missing_carbs">Chýba %1$d g</string>
     <string name="exported">Nastavenie exportované</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="import_from">Importovať nastavenia z</string>
@@ -234,6 +235,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimálny počet minút, ktorý musí uplynúť medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
     <string name="smscommunicator_remotebolusmindistance">Aspoň koľko minút musí uplynúť, medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Pre vašu bezpečnosť,  musíte pridať aspoň 2 telefónne čísla, aby ste zmenili toto prednastavenie.</string>
+    <string name="bolusdelivered">Bolus %1$.2f JI podaný úspešne</string>
+    <string name="bolusrequested">Podávanie %1$.2f J inzulínu</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f JI podaný úspešne</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolus na jedlo %1$.2f JI podaný úspešne</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Cieľ %1$s na %2$d minút</string>
     <string name="smscommunicator_tt_set">Cieľ %1$s na %2$d minút bol úspešne nastavený</string>
     <string name="smscommunicator_tt_canceled">Dočasný cieľ úspešne zrušený</string>
@@ -257,7 +262,9 @@
     <string name="smscommunicator_reconnect">Pumpa bola znovu pripojená</string>
     <string name="smscommunicator_remotecommandnotallowed">Príkazy na diaľku nie sú povolené</string>
     <string name="smscommunicator_remotebolusnotallowed">Diaľkovo ovládaný bolus nie je momentálne povolený. Skúste to neskôr.</string>
+    <string name="smscommunicator_basalreplywithcode">Pre spustenie bazálu %1$.2f JI/h na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Pre prepnutie profilu na %1$s %2$d%% odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Pre spustenie predĺženého bolusu %1$.2f JI na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Pre zadanie %1$dg na %2$s odpovedz SMS kódom %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pre spustenie bazálu %1$d%% na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
@@ -266,6 +273,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Pre zakázanie uzavretého okruhu, odpovedzte SMS s kódom %1$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fJI/h spustený na %2$d minút</string>
     <string name="smscommunicator_extendedset">Predĺžený bolus %1$.2fJI na %2$d min úspešne spustený</string>
+    <string name="smscommunicator_carbsset">Sacharidy %1$d g zadané úspešne</string>
     <string name="smscommunicator_carbsfailed">Zadanie %1$dg sacharidov sa nepodarilo</string>
     <string name="smscommunicator_tempbasalset_percent">Dočasný bazál %1$d%% na %2$d minút úspešne spustený</string>
     <string name="smscommunicator_tempbasalfailed">Spustenie dočasného bazálu zlyhalo</string>
@@ -846,6 +854,7 @@
     <string name="code_compare">Zhodujú sa kódy zobrazené na tomto zariadení a na pumpe?</string>
     <string name="insight_pairing">Párovanie Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2f JI / %2$.2f JI podaných</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Hadička vymenená</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
@@ -903,6 +912,7 @@
     <string name="short_status_extended">Predl. bolus: %1$.2f / %2$.2f JI na %3$d min</string>
     <string name="short_status_multiwave">Duálny bolus: %1$.2f / %2$.2f JI na %3$d min</string>
     <string name="short_status_tdd">CDD: %1$.2f</string>
+    <string name="short_status_reservoir">Zásobník: %1$.2f JI</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Max. doba trvania obnovenia [s]</string>
     <string name="min_recovery_duration">Min. doba trvania obnovenia [s]</string>
@@ -1045,6 +1055,8 @@
     <string name="sendsmsactionlabel">Poslať SMS: %1$s</string>
     <string name="sendsmsactiondescription">Poslať SMS na všetky čísla</string>
     <string name="sendsmsactiontext">Odoslať SMS s textom</string>
+    <string name="cobvsiob">COB vs. IOB</string>
+    <string name="bolusconstraintappliedwarn">Použité obmedzenie bolusu: %1$.2f J na %2$.2f J</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="partialboluswizard">Podaj túto časť z výsledku kalkulácie [%]</string>
     <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
