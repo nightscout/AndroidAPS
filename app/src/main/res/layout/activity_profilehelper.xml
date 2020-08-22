@@ -167,7 +167,7 @@
                 android:layout_marginStart="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <com.google.android.material.button.MaterialButton
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/profilehelper_copytolocalprofile"
                 style="@style/Widget.MaterialComponents.Button"
                 app:icon="@drawable/ic_clone_48"

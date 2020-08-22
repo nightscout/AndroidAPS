@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/nsprofile_profileswitch"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"

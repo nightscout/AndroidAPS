@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_logsettings"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
@@ -28,7 +28,7 @@
             app:cornerRadius="20dp"
             app:layout_gravity="fill_horizontal" />
 
-        <com.google.android.material.button.MaterialButton
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/log_send"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
@@ -45,7 +45,7 @@
             app:cornerRadius="20dp"
             app:layout_gravity="fill_horizontal" />
 
-        <com.google.android.material.button.MaterialButton
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/log_delete"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
@@ -62,7 +62,7 @@
             app:cornerRadius="20dp"
             app:layout_gravity="fill_horizontal" />
 
-        <com.google.android.material.button.MaterialButton
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_export"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
@@ -79,7 +79,7 @@
             app:cornerRadius="20dp"
             app:layout_gravity="fill_horizontal" />
 
-        <com.google.android.material.button.MaterialButton
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_import"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"
@@ -96,7 +96,7 @@
             app:cornerRadius="20dp"
             app:layout_gravity="fill_horizontal" />
 
-        <com.google.android.material.button.MaterialButton
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_resetdb"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="fill_parent"

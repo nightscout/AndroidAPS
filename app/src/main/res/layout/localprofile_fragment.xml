@@ -264,7 +264,7 @@
             android:layout_gravity="bottom"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/localprofile_profileswitch"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
@@ -286,7 +286,7 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <com.google.android.material.button.MaterialButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/localprofile_reset"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
@@ -303,7 +303,7 @@
                     android:text="@string/reset"
                     app:cornerRadius="20dp" />
 
-                <com.google.android.material.button.MaterialButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/localprofile_save"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
