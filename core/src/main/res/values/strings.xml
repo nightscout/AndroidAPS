@@ -163,6 +163,7 @@
 
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Check</string>
+    <string name="careportal_calibration">Calibration</string>
     <string name="careportal_announcement">Announcement</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>

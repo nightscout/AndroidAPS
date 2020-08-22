@@ -156,9 +156,9 @@ class CareDialog : DialogFragmentWithDate() {
         if (options == EventType.BGCHECK || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT) {
             val type =
                 when {
-                    actions_care_meter.isChecked  -> "Finger"
-                    actions_care_sensor.isChecked -> "Sensor"
-                    else                          -> "Manual"
+                    actions_care_meter.isChecked  -> CareportalEvent.FINGER
+                    actions_care_sensor.isChecked -> CareportalEvent.SENSOR
+                    else                          -> CareportalEvent.MANUAL
                 }
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, actions_care_bg.value) + " " + resourceHelper.gs(unitResId))
