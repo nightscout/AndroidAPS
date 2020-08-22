@@ -3,7 +3,7 @@
 buildscript {
     ext {
         kotlin_version = '1.4.0'
-        coreVersion = '1.3.0'
+        coreVersion = "1.3.1"
         rxjava_version = '2.2.19'
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
@@ -13,7 +13,10 @@ buildscript {
         coroutinesVersion = '1.3.7'
         activityVersion = '1.2.0-alpha08'
         fragmentVersion = '1.3.0-alpha08'
+        materialVersion = '1.3.0-alpha02'
         ormLiteVersion = "4.46"
+        appcompatVersion = "1.3.0-alpha02"
+        swiperefreshVersion ="1.1.0"
     }
     repositories {
         google()
