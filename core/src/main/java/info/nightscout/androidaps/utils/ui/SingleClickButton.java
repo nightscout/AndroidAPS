@@ -49,7 +49,7 @@ public class SingleClickButton extends com.google.android.material.button.Materi
     public void onClick(final View v) {
         setEnabled(false);
         new Thread(() -> {
-            SystemClock.sleep(3000);
+            SystemClock.sleep(1500);
             Activity activity = (Activity) context;
             if (activity != null)
                 activity.runOnUiThread(() -> {
