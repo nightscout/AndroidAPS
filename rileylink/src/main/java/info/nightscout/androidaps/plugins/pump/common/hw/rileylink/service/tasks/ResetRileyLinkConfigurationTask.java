@@ -6,8 +6,8 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 
 /**
  * Created by andy on 9/16/18.
@@ -16,29 +16,23 @@ public class ResetRileyLinkConfigurationTask extends PumpTask {
 
     @Inject ActivePluginProvider activePlugin;
     @Inject RxBusWrapper rxBus;
+    @Inject RFSpy rfSpy;
 
     public ResetRileyLinkConfigurationTask(HasAndroidInjector injector) {
         super(injector);
     }
 
-
-    public ResetRileyLinkConfigurationTask(HasAndroidInjector injector, ServiceTransport transport) {
-        super(injector, transport);
-    }
-
-
     @Override
     public void run() {
-        RileyLinkPumpDevice pumpAbstract = (RileyLinkPumpDevice) activePlugin.getActivePump();
+        RileyLinkPumpDevice rileyLinkPumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
 
         rxBus.send(new EventRefreshButtonState(false));
 
-        pumpAbstract.setIsBusy(true);
-        pumpAbstract.resetRileyLinkConfiguration();
-        pumpAbstract.setIsBusy(false);
+        rileyLinkPumpDevice.setBusy(true);
+        rfSpy.resetRileyLinkConfiguration();
+        rileyLinkPumpDevice.setBusy(false);
 
         rxBus.send(new EventRefreshButtonState(true));
     }
-
 
 }

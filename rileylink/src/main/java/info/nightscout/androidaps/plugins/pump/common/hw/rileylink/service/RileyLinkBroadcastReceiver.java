@@ -143,7 +143,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkReady)) {
 
-            aapsLogger.warn(LTag.PUMPCOMM, "MedtronicConst.Intents.RileyLinkReady");
+            aapsLogger.warn(LTag.PUMPCOMM, "RileyLinkConst.Intents.RileyLinkReady");
             // sendIPCNotification(RT2Const.IPC.MSG_note_WakingPump);
 
             rileyLinkService.rileyLinkBLE.enableNotifications();

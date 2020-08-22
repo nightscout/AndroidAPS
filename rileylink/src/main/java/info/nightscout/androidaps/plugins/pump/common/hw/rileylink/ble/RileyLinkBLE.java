@@ -18,8 +18,8 @@ import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
  * Created by geoff on 5/26/16.
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
+@Singleton
 public class RileyLinkBLE {
 
     @Inject AAPSLogger aapsLogger;
@@ -58,13 +59,11 @@ public class RileyLinkBLE {
     private Runnable radioResponseCountNotified;
     private boolean mIsConnected = false;
 
-
-    public RileyLinkBLE(HasAndroidInjector injector, final Context context) {
-        injector.androidInjector().inject(this);
+    @Inject
+    public RileyLinkBLE(final Context context) {
         this.context = context;
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
         bluetoothGattCallback = new BluetoothGattCallback() {
 
             @Override
@@ -152,8 +151,8 @@ public class RileyLinkBLE {
 
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
                         (newState == BluetoothProfile.STATE_DISCONNECTING)) {
-                    // aapsLogger.debug(LTag.PUMPBTCOMM,"We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
-                    // "Disconnecting");
+                    aapsLogger.debug(LTag.PUMPBTCOMM,"We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
+                     "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected, context);
                     if (manualDisconnect)
@@ -243,8 +242,6 @@ public class RileyLinkBLE {
                     if (rileyLinkFound) {
                         mIsConnected = true;
                         rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady, context);
-                        // RileyLinkUtil.sendNotification(new
-                        // ServiceNotification(RileyLinkConst.Intents.RileyLinkReady), null);
                     } else {
                         mIsConnected = false;
                         rileyLinkServiceData.setServiceState(RileyLinkServiceState.RileyLinkError,
@@ -257,6 +254,11 @@ public class RileyLinkBLE {
                 }
             }
         };
+    }
+
+    @Inject
+    public void onInit() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BT Adapter: " + this.bluetoothAdapter);
     }
 
 
@@ -273,7 +275,6 @@ public class RileyLinkBLE {
                 if (isAnyRileyLinkServiceFound(serviceI)) {
                     return true;
                 }
-
             }
         }
 
@@ -434,6 +435,7 @@ public class RileyLinkBLE {
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported");
                     // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
                             .getCharacteristic(charaUUID);
@@ -493,6 +495,7 @@ public class RileyLinkBLE {
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported");
                     // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
                             .getCharacteristic(charaUUID);
@@ -535,6 +538,7 @@ public class RileyLinkBLE {
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     aapsLogger.error(LTag.PUMPBTCOMM, "BT Device not supported");
                     // TODO: 11/07/2016 UI update for user
+                    // xyz rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(
                             charaUUID);

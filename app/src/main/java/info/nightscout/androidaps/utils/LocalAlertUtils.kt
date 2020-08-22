@@ -39,12 +39,12 @@ class LocalAlertUtils @Inject constructor(
         return T.mins(sp.getInt(resourceHelper.gs(R.string.key_missed_bg_readings_threshold), 30).toLong()).msecs()
     }
 
-    private fun pumpUnreachableThreshold(): Long {
+    fun pumpUnreachableThreshold(): Long {
         return T.mins(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold), 30).toLong()).msecs()
     }
 
     fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
-        val alarmTimeoutExpired = lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis()
+        val alarmTimeoutExpired = isAlarmTimeoutExpired(lastConnection, pumpUnreachableThreshold())
         val nextAlarmOccurrenceReached = sp.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis()
         if (config.APS && sp.getBoolean(resourceHelper.gs(R.string.key_enable_pump_unreachable_alert), true)
             && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
@@ -58,6 +58,14 @@ class LocalAlertUtils @Inject constructor(
             }
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
+    }
+
+    private fun isAlarmTimeoutExpired(lastConnection: Long, unreachableThreshold: Long): Boolean {
+        if (activePlugin.activePump.pumpDescription.hasCustomUnreachableAlertCheck) {
+            return activePlugin.activePump.isUnreachableAlertTimeoutExceeded(unreachableThreshold)
+        } else {
+            return lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis()
+        }
     }
 
     /*Presnoozes the alarms with 5 minutes if no snooze exists.

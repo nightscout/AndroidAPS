@@ -4,18 +4,15 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 
 public interface RileyLinkPumpDevice {
 
-    void setIsBusy(boolean isBusy_);
-
-    boolean isBusy();
-
-    void resetRileyLinkConfiguration();
-
-    boolean hasTuneUp();
-
-    void doTuneUpDevice();
+    void setBusy(boolean busy);
 
     void triggerPumpConfigurationChangedEvent();
 
     RileyLinkService getRileyLinkService();
 
+    RileyLinkPumpInfo getPumpInfo();
+
+    long getLastConnectionTimeMillis();
+
+    void setLastCommunicationToNow();
 }

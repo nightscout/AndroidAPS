@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps.plugins.pump.omnipod">
+
+    <application>
+        <service
+            android:name=".service.RileyLinkOmnipodService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".dialogs.PodManagementActivity" />
+        <activity android:name=".dialogs.PodHistoryActivity" />
+        <activity
+            android:name="com.atech.android.library.wizardpager.WizardPagerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+    </application>
+</manifest>

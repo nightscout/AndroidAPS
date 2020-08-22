@@ -19,8 +19,6 @@ public abstract class PumpStatus {
     public long previousConnection = 0L; // here should be stored last connection of previous session (so needs to be
     // read before lastConnection is modified for first time).
 
-    public long lastErrorConnection = 0L;
-
     // last bolus
     public Date lastBolusTime;
     public Double lastBolusAmount;
@@ -63,26 +61,11 @@ public abstract class PumpStatus {
 
     public abstract void initSettings();
 
-
     public void setLastCommunicationToNow() {
         this.lastDataTime = DateUtil.now();
         this.lastConnection = System.currentTimeMillis();
     }
 
-
-    public void setLastFailedCommunicationToNow() {
-        this.lastErrorConnection = System.currentTimeMillis();
-    }
-
-
     public abstract String getErrorInfo();
-
-
-    public abstract <E> E getCustomData(String key, Class<E> clazz);
-
-    public String getCustomDataAsString(String key) {
-        return getCustomData(key, String.class);
-    }
-
 
 }

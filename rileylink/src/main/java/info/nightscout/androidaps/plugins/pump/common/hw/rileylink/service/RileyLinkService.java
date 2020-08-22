@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,10 +44,10 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected ResourceHelper resourceHelper;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
     @Inject protected ActivePluginProvider activePlugin;
+    @Inject protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management
+    @Inject protected RFSpy rfspy; // interface for RL xxx Mhz radio.
 
-    @NotNull protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management, must be set in initRileyLinkServiceData
     protected BluetoothAdapter bluetoothAdapter;
-    protected RFSpy rfspy; // interface for RL xxx Mhz radio.
     protected RileyLinkBroadcastReceiver mBroadcastReceiver;
     protected RileyLinkBluetoothStateReceiver bluetoothStateReceiver;
 
@@ -99,6 +98,7 @@ public abstract class RileyLinkService extends DaggerService {
         super.onDestroy();
         //LOG.error("I die! I die!");
 
+        // xyz rfspy.stopReader();
         rileyLinkBLE.disconnect(); // dispose of Gatt (disconnect and close)
 
         if (mBroadcastReceiver != null) {
@@ -110,21 +110,6 @@ public abstract class RileyLinkService extends DaggerService {
         }
 
     }
-
-
-    /**
-     * Prefix for Device specific broadcast identifier prefix (for example MSG_PUMP_ for pump or
-     * MSG_POD_ for Omnipod)
-     *
-     * @return
-     */
-    public abstract String getDeviceSpecificBroadcastsIdentifierPrefix();
-
-
-    public abstract boolean handleDeviceSpecificBroadcasts(Intent intent);
-
-
-    public abstract void registerDeviceSpecificBroadcasts(IntentFilter intentFilter);
 
 
     public abstract RileyLinkCommunicationManager getDeviceCommunicationManager();
@@ -198,13 +183,6 @@ public abstract class RileyLinkService extends DaggerService {
             return true;
         }
     }
-
-
-    public void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
-    }
-
-
-
 
     // FIXME: This needs to be run in a session so that is interruptable, has a separate thread, etc.
     public void doTuneUpDevice() {
