@@ -5,8 +5,6 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 
 /**
@@ -33,13 +31,6 @@ public class DiscoverGattServicesTask extends ServiceTask {
 
     @Override
     public void run() {
-
-        if (activePlugin.getActivePump().model() == PumpType.Insulet_Omnipod_Dash) {
-            // TODO different init classes, this can be probably removed later
-            aapsLogger.warn(LTag.PUMPCOMM, "Discovery Gatt Services not implemeneted for Dash.");
-            return;
-        }
-
         RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
 
         if (needToConnect) {

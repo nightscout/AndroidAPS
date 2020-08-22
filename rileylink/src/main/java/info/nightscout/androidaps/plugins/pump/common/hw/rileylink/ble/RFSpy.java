@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 
@@ -40,6 +41,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 /**
  * Created by geoff on 5/26/16.
  */
+@Singleton
 public class RFSpy {
 
     @Inject AAPSLogger aapsLogger;
@@ -58,16 +60,21 @@ public class RFSpy {
     private UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
     private UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
     private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
-    private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
+    //private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
     private Double currentFrequencyMHz;
 
 
+    @Inject
     public RFSpy(HasAndroidInjector injector, RileyLinkBLE rileyLinkBle) {
-        injector.androidInjector().inject(this);
         this.injector = injector;
         this.rileyLinkBle = rileyLinkBle;
+    }
+
+    @Inject
+    public void onInit() {
+        aapsLogger.debug("RileyLinkServiceData:" + rileyLinkServiceData);
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
 
@@ -301,6 +308,7 @@ public class RFSpy {
     private void configureRadioForRegion(RileyLinkTargetFrequency frequency) {
 
         // we update registers only on first run, or if region changed
+        aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkTargetFrequency: " + frequency);
 
         switch (frequency) {
             case Medtronic_WorldWide: {
@@ -423,14 +431,7 @@ public class RFSpy {
     }
 
 
-    public RFSpyResponse resetRileyLink() {
-        RFSpyResponse resp = null;
-        try {
-            resp = writeToData(new Reset(), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Reset command send, response: {}", resp);
-        } catch (Exception e) {
-            e.toString();
-        }
-        return resp;
+    public void stopReader() {
+        reader.stop();
     }
 }

@@ -42,6 +42,7 @@
     <string name="rileylink_state_pc_tune_up">Tuning up RileyLink and Pump</string>
     <string name="rileylink_state_pc_error">Problem connecting to Pump</string>
     <string name="rileylink_state_connected">Connected</string>
+    <string name="rileylink_state_rl_ready">RileyLink ready</string>
 
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Device is not RileyLink</string>
@@ -56,11 +57,6 @@
     <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
 
-
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
-
     <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
     <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
 
@@ -68,9 +64,6 @@
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
 
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
-
-
-
 
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>
@@ -80,10 +73,6 @@
         <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
     </plurals>
-<!--    <plurals name="objective_minutes">-->
-<!--        <item quantity="one">%1$d minute</item>-->
-<!--        <item quantity="other">%1$d minutes</item>-->
-<!--    </plurals>-->
 
 
 </resources>
