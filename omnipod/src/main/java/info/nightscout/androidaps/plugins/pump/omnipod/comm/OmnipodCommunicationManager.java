@@ -263,6 +263,9 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                 }
             } catch (NotEnoughDataException ex) {
                 // Message is (probably) not complete yet
+
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Caught NotEnoughDataException. Sending ACK for CON");
+
                 OmnipodPacket ackForCon = createAckPacket(podStateManager, packetAddress, ackAddressOverride);
 
                 try {
@@ -351,6 +354,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             } catch (Exception ex) {
                 throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
             }
+
             if (response == null) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "exchangePackets response is null");
                 continue;
