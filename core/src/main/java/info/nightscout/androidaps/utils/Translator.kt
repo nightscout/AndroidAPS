@@ -37,8 +37,7 @@ class Translator @Inject internal constructor(
             CareportalEvent.TEMPORARYTARGET     -> resourceHelper.gs(R.string.careportal_temporarytarget)
             CareportalEvent.TEMPBASALCANCEL     -> resourceHelper.gs(R.string.careportal_temporarytargetcancel)
             CareportalEvent.OPENAPSOFFLINE      -> resourceHelper.gs(R.string.careportal_openapsoffline)
-            CareportalEvent.MBG                 -> resourceHelper.gs(R.string.careportal_calibration)
-
+            CareportalEvent.MBG                 -> resourceHelper.gs(R.string.careportal_mbg)
             CareportalEvent.FINGER              -> resourceHelper.gs(R.string.glucosetype_finger)
             CareportalEvent.SENSOR              -> resourceHelper.gs(R.string.glucosetype_sensor)
             CareportalEvent.MANUAL              -> resourceHelper.gs(R.string.manual)
