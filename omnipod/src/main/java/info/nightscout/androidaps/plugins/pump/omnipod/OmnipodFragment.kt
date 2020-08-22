@@ -291,13 +291,13 @@ class OmnipodFragment : DaggerFragment() {
             // last bolus
             if (podStateManager.lastBolusStartTime != null && podStateManager.lastBolusAmount != null) {
                 val ago = readableDuration(podStateManager.lastBolusStartTime)
-                omnipod_lastbolus.text = resourceHelper.gs(R.string.omnipod_last_bolus, omnipodPumpPlugin.pumpType.determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), ago)
+                omnipod_lastbolus.text = resourceHelper.gs(R.string.omnipod_last_bolus, omnipodPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), ago)
             } else {
                 omnipod_lastbolus.text = "-"
             }
 
             // base basal rate
-            omnipod_basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.pumpType.determineCorrectBasalSize(omnipodPumpPlugin.baseBasalRate))
+            omnipod_basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(omnipodPumpPlugin.baseBasalRate))
 
             omnipod_tempbasal.text = activePlugin.activeTreatments
                 .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"

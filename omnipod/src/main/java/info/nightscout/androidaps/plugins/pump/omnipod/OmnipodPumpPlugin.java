@@ -222,6 +222,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // TODO either find a more elegant solution, or at least make sure this is the right place to do this
         podStateManager.loadPodState();
 
+        initPumpStatusData();
+
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         serviceRunning = true;
@@ -306,14 +308,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         omnipodPumpStatus.lastDataTime = omnipodPumpStatus.lastConnection;
         omnipodPumpStatus.previousConnection = omnipodPumpStatus.lastConnection;
 
-        rileyLinkOmnipodService.verifyConfiguration();
-
         aapsLogger.debug(LTag.PUMP, "initPumpStatusData: " + this.omnipodPumpStatus);
-
-        // set first Omnipod Pump Start
-        if (!sp.contains(OmnipodConst.Statistics.FirstPumpStart)) {
-            sp.putLong(OmnipodConst.Statistics.FirstPumpStart, System.currentTimeMillis());
-        }
     }
 
     private void doPodCheck() {
@@ -355,9 +350,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isBusy");
 
         if (isServiceSet()) {
-            if (busy || !podStateManager.isPodRunning()) {
-                return true;
-            }
+            return busy || !podStateManager.isPodRunning();
         }
 
         return false;
@@ -386,10 +379,18 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return new RileyLinkPumpInfo(pumpDescription, frequency, connectedModel, serialNumber);
     }
 
+    /**
+     * Returns the last successful RileyLink communication
+     * For actual communication with the Pod, we use PodStateManager
+     */
     @Override public long getLastConnectionTimeMillis() {
         return omnipodPumpStatus.lastConnection;
     }
 
+    /**
+     * Only use for setting last successful RileyLink communication to now
+     * For actual communication with the Pod, we use PodStateManager
+     */
     @Override public void setLastCommunicationToNow() {
         omnipodPumpStatus.setLastCommunicationToNow();
     }
@@ -443,7 +444,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             triggerUIChange();
 
         } else if (!omnipodStatusRequestList.isEmpty()) {
-
             List<OmnipodStatusRequest> removeList = new ArrayList<>();
 
             for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
@@ -464,9 +464,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                         i.putExtra("clipboardContent", result.toString());
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
-
-//                        OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.action),
-//                                "Pulse Log:\n" + result.toString(), null);
                     }
 
                 } else {
@@ -542,7 +539,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-
         // TODO status was not yet read from pod
         // TODO maybe not possible, need to see how we will handle that
         if (currentProfile == null) {
@@ -564,7 +560,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public double getBaseBasalRate() {
-
         if (currentProfile != null) {
             int hour = (new GregorianCalendar()).get(Calendar.HOUR_OF_DAY);
             return currentProfile.getBasalTimeFromMidnight(DateTimeUtil.getTimeInS(hour * 60));
@@ -596,9 +591,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
             } else {
-                //if (MedtronicHistoryData.doubleBolusDebug)
-                //    aapsLogger.debug("DoubleBolusDebug: deliverTreatment::(carb only entry)");
-
                 // no bolus required, carb only treatment
                 activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
@@ -638,8 +630,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
-                                                boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         setRefreshButtonEnabled(false);
 
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
@@ -688,7 +679,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - started");
 
         setRefreshButtonEnabled(false);
@@ -788,7 +778,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @NotNull
     @Override
     public String serialNumber() {
-        return podStateManager.hasPodState() ? String.valueOf(podStateManager.getAddress()) : "None";
+        return podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
     }
 
     @Override @NonNull public PumpDescription getPumpDescription() {
@@ -817,10 +807,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
-        // if (!veryShort) {
-        // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
-        // + pumpStatus.maxDailyTotalUnits + " U\n";
-        // }
         ret += "IOB: " + getPumpStatusData().iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(getPumpStatusData().reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + getPumpStatusData().batteryRemaining + "\n";
@@ -876,14 +862,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         long rileyLinkInitializationTimeout = 3 * 60 * 1000L; // 3 minutes
         if (podStateManager.isPodRunning() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
             if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
-                if ((podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
+                // We exceeded the alert threshold, and either our last command failed or we cannot reach the RL
+                // We should show an alert
+                return (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
                         rileyLinkServiceData.rileyLinkServiceState.isError() ||
                         // The below clause is a hack for working around the RL service state forever staying in connecting state on startup if the RL is switched off / unreachable
-                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + rileyLinkInitializationTimeout < System.currentTimeMillis())) {
-                    // We exceeded the alert threshold, and either our last command failed or we cannot reach the RL
-                    // We should show an alert
-                    return true;
-                }
+                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + rileyLinkInitializationTimeout < System.currentTimeMillis());
 
                 // Don't trigger an alert when we exceeded the thresholds, but the last communication was successful & the RL is reachable
                 // This happens when we simply didn't need to send any commands to the pump
@@ -924,9 +908,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private void initializePump(boolean realInit) {
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
-        // TODO ccc
-        //OmnipodPumpStatus podPumpStatus = getPodPumpStatusObject();
-
         setRefreshButtonEnabled(false);
 
         if (podStateManager.isPodInitialized()) {
@@ -964,7 +945,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         setRefreshButtonEnabled(false);
 
         try {
-
             OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetBolus,
                     detailedBolusInfo);
 
@@ -1010,10 +990,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         triggerUIChange();
 
         setRefreshButtonEnabled(true);
-    }
-
-    public PumpType getPumpType() {
-        return pumpType;
     }
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {

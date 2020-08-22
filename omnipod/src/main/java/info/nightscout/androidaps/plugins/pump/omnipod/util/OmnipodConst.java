@@ -25,7 +25,6 @@ public class OmnipodConst {
 
     public static class Statistics {
         public static final String StatsPrefix = "omnipod_";
-        public static final String FirstPumpStart = Prefix + "first_pump_use";
         public static final String LastGoodPumpCommunicationTime = Prefix + "lastGoodPumpCommunicationTime";
         public static final String TBRsSet = StatsPrefix + "tbrs_set";
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
