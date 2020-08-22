@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
@@ -15,8 +16,8 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
  * Created by mike on 22.12.2017.
  */
 
-public class SingleClickButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(SingleClickButton.class);
+public class SingleClickButton extends com.google.android.material.button.MaterialButton implements View.OnClickListener {
+    final static Logger log = LoggerFactory.getLogger(SingleClickButton.class);
 
     Context context;
     OnClickListener listener = null;
