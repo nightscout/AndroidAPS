@@ -39,8 +39,6 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
         if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.BASAL_INITIALIZED)) {
             service.programInitialBasalSchedule(communicationService, podStateManager, initialBasalSchedule);
         }
-        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.INSERTING_CANNULA)) {
-        }
 
         if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.INSERTING_CANNULA)) {
             service.executeExpirationRemindersAlertCommand(communicationService, podStateManager);
