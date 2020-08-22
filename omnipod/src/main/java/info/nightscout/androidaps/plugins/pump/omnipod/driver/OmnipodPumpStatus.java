@@ -22,8 +22,6 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     private final SP sp;
 
-    public String rileyLinkErrorDescription = null;
-    public String rileyLinkAddress = null;
     public boolean inPreInit = true;
 
     // statuses
@@ -51,10 +49,9 @@ public class OmnipodPumpStatus extends PumpStatus {
         this.pumpType = PumpType.Insulet_Omnipod;
     }
 
-    // For Omnipod, this method only returns a RileyLink error description
     @Override
     public String getErrorInfo() {
-        return this.rileyLinkErrorDescription;
+        return null;
     }
 
     public void clearTemporaryBasal() {
@@ -78,9 +75,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     @Override
     public String toString() {
         return "OmnipodPumpStatus{" +
-                "rileyLinkErrorDescription='" + rileyLinkErrorDescription + '\'' +
-                ", rileyLinkAddress='" + rileyLinkAddress + '\'' +
-                ", inPreInit=" + inPreInit +
+                "inPreInit=" + inPreInit +
                 ", tempBasalStart=" + tempBasalStart +
                 ", tempBasalEnd=" + tempBasalEnd +
                 ", tempBasalAmount=" + tempBasalAmount +

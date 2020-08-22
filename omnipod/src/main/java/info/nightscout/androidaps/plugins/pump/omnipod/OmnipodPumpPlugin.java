@@ -112,9 +112,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final DateUtil dateUtil;
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
-    private final PumpType pumpType = PumpType.Insulet_Omnipod; // FIXME
+    private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
     private final List<CustomAction> customActions = new ArrayList<>();
+    // TODO: BS: Not really sure what this is all about, have a closer look at it some time
     private final List<OmnipodStatusRequest> omnipodStatusRequestList = new ArrayList<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -127,10 +128,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private boolean isInitialized = false;
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
-    private int timeChangeRetries = 0;
+    private int timeChangeRetries;
     private Profile currentProfile;
-    private long nextPodCheck = 0L;
+    private long nextPodCheck;
     private boolean sentIdToFirebase;
+    private long lastConnectionMillis;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -180,7 +182,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true));
 
         this.serviceConnection = new ServiceConnection() {
-
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
@@ -219,10 +220,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
-        // TODO either find a more elegant solution, or at least make sure this is the right place to do this
         podStateManager.loadPodState();
 
-        initPumpStatusData();
+        lastConnectionMillis = sp.getLong(
+                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
 
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -298,19 +299,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         disposables.clear();
     }
 
-    private String getLogPrefix() {
-        return "OmnipodPlugin::";
-    }
-
-    // FIXME remove
-    public void initPumpStatusData() {
-        omnipodPumpStatus.lastConnection = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
-        omnipodPumpStatus.lastDataTime = omnipodPumpStatus.lastConnection;
-        omnipodPumpStatus.previousConnection = omnipodPumpStatus.lastConnection;
-
-        aapsLogger.debug(LTag.PUMP, "initPumpStatusData: " + this.omnipodPumpStatus);
-    }
-
     private void doPodCheck() {
         if (System.currentTimeMillis() > this.nextPodCheck) {
             if (!podStateManager.isPodRunning()) {
@@ -334,8 +322,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isInitialized() {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isInitialized");
         return isServiceSet() && isInitialized;
     }
 
@@ -346,9 +332,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isBusy() {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isBusy");
-
         if (isServiceSet()) {
             return busy || !podStateManager.isPodRunning();
         }
@@ -379,17 +362,25 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return new RileyLinkPumpInfo(pumpDescription, frequency, connectedModel, serialNumber);
     }
 
+    // Required by RileyLinkPumpDevice interface.
+    // Kind of redundant because we also store last successful and last failed communication in PodStateManager
+
     /**
-     * Returns the last successful RileyLink communication
-     * For actual communication with the Pod, we use PodStateManager
+     * Get the last communication time with the Pod. In the current implementation, this
+     * doesn't have to mean that a command was successfully executed as the Pod could also return an ErrorResponse or PodFaultEvent
+     * For getting the last time a command was successfully executed, use PodStateManager.getLastSuccessfulCommunication
      */
     @Override public long getLastConnectionTimeMillis() {
         return omnipodPumpStatus.lastConnection;
     }
 
+    // Required by RileyLinkPumpDevice interface.
+    // Kind of redundant because we also store last successful and last failed communication in PodStateManager
+
     /**
-     * Only use for setting last successful RileyLink communication to now
-     * For actual communication with the Pod, we use PodStateManager
+     * Set the last communication time with the Pod to now. In the current implementation, this
+     * doesn't have to mean that a command was successfully executed as the Pod could also return an ErrorResponse or PodFaultEvent
+     * For setting the last time a command was successfully executed, use PodStateManager.setLastSuccessfulCommunication
      */
     @Override public void setLastCommunicationToNow() {
         omnipodPumpStatus.setLastCommunicationToNow();
@@ -397,15 +388,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isConnected() {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnected");
         return isServiceSet() && rileyLinkOmnipodService.isInitialized();
     }
 
     @Override
     public boolean isConnecting() {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnecting");
         return !isServiceSet() || !rileyLinkOmnipodService.isInitialized();
     }
 
@@ -437,6 +424,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
+    // TODO seems that this abused to squeeze commands in the queue
+    //  Look for an alternative
     @Override
     public void getPumpStatus() {
         if (firstRun) {
@@ -501,8 +490,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @NotNull
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "setNewBasalProfile");
-
         // this shouldn't be needed, but let's do check if profile setting we are setting is same as current one
         if (this.currentProfile != null && this.currentProfile.areProfileBasalPatternsSame(profile)) {
             return new PumpEnactResult(getInjector()) //
@@ -518,7 +505,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         PumpEnactResult result = responseTask.getResult();
 
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "Basal Profile was set: " + result.success);
+        aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success);
 
         if (result.success) {
             this.currentProfile = profile;
@@ -551,11 +538,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public long lastDataTime() {
-        if (omnipodPumpStatus.lastConnection != 0) {
-            return omnipodPumpStatus.lastConnection;
-        }
-
-        return System.currentTimeMillis();
+        return lastConnectionMillis;
     }
 
     @Override
@@ -612,19 +595,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public void stopBolusDelivering() {
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "stopBolusDelivering");
-
         setRefreshButtonEnabled(false);
 
-        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.CancelBolus);
+        getDeviceCommandExecutor().executeCommand(OmnipodCommandType.CancelBolus);
 
-        PumpEnactResult result = responseTask.getResult();
-
-        //setRefreshButtonEnabled(true);
-
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "stopBolusDelivering - wasSuccess={}", result.success);
-
-        //finishAction("Bolus");
+        setRefreshButtonEnabled(true);
     }
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
@@ -633,19 +608,19 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         setRefreshButtonEnabled(false);
 
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
+        aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         // read current TBR
         TempBasalPair tbrCurrent = readTBR();
 
         if (tbrCurrent != null) {
-            aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
+            aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
                     tbrCurrent.getDurationMinutes(), tbrCurrent.getInsulinRate());
         }
 
         if (tbrCurrent != null && !enforceNew) {
             if (Round.isSame(tbrCurrent.getInsulinRate(), absoluteRate)) {
-                aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
+                aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
                 finishAction("TBR");
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
@@ -657,7 +632,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         PumpEnactResult result = responseTask.getResult();
 
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + result.success);
+        aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
         if (result.success) {
             incrementStatistics(OmnipodConst.Statistics.TBRsSet);
@@ -679,14 +654,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - started");
-
         setRefreshButtonEnabled(false);
 
         TempBasalPair tbrCurrent = readTBR();
 
         if (tbrCurrent == null) {
-            aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - TBR already canceled.");
+            aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already canceled.");
             finishAction("TBR");
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
@@ -698,16 +671,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         finishAction("TBR");
 
         if (result.success) {
-            aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
-
-            TemporaryBasal tempBasal = new TemporaryBasal() //
+            // TODO is this necessary?
+            TemporaryBasal tempBasal = new TemporaryBasal(getInjector()) //
                     .date(System.currentTimeMillis()) //
                     .duration(0) //
                     .source(Source.USER);
 
             activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
-        } else {
-            aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
         }
 
         return result;
@@ -849,10 +819,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
-        aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
+        aapsLogger.warn(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
 
         if (aapsOmnipodManager.isTimeChangeEventEnabled() && podStateManager.isPodRunning()) {
-            aapsLogger.info(LTag.PUMP, getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
+            aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed event received and will be consumed by driver.");
             this.hasTimeDateOrTimeZoneChanged = true;
         }
     }
@@ -906,8 +876,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void initializePump(boolean realInit) {
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
-
         setRefreshButtonEnabled(false);
 
         if (podStateManager.isPodInitialized()) {
@@ -940,8 +908,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        aapsLogger.info(LTag.PUMP, getLogPrefix() + "deliverBolus - {}", detailedBolusInfo);
-
         setRefreshButtonEnabled(false);
 
         try {

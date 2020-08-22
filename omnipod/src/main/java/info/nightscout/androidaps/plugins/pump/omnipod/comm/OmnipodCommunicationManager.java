@@ -9,10 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
@@ -41,7 +39,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
@@ -51,24 +48,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 // TODO rename to OmnipodRileyLinkCommunicationManager
 @Singleton
 public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
-
-    @Inject OmnipodPumpStatus omnipodPumpStatus;
-
     // This empty constructor must be kept, otherwise dagger injection might break!
     @Inject
     public OmnipodCommunicationManager() {
     }
-
-    @Inject
-    public void onInit() {
-        // this cannot be done in the constructor, as sp is not populated at that time
-        omnipodPumpStatus.previousConnection = sp.getLong(
-                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
-    }
-
-//    @Override
-//    protected void configurePumpSpecificSettings() {
-//    }
 
     @Override
     public boolean tryToConnectToDevice() {

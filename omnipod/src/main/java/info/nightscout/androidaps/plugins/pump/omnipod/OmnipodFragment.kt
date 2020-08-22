@@ -12,8 +12,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -24,12 +22,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
@@ -53,7 +49,6 @@ import javax.inject.Inject
 
 class OmnipodFragment : DaggerFragment() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
@@ -61,7 +56,6 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var warnColors: WarnColors
-    @Inject lateinit var omnipodPumpStatus: OmnipodPumpStatus
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: OmnipodUtil
@@ -211,8 +205,6 @@ class OmnipodFragment : DaggerFragment() {
 
     @Synchronized
     private fun updateRileyLinkUiElements() {
-        aapsLogger.info(LTag.PUMP, "OmnipodFragment.setDeviceStatus")
-
         val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
 
         val resourceId = rileyLinkServiceState.getResourceId()
@@ -235,9 +227,9 @@ class OmnipodFragment : DaggerFragment() {
         setVisibilityOfPodDebugButton()
 
         val errors = ArrayList<String>();
-        val rileyLinkErrorInfo = omnipodPumpStatus.errorInfo
-        if (rileyLinkErrorInfo != null) {
-            errors.add(rileyLinkErrorInfo)
+        val rileyLinkErrorDescription = omnipodPumpPlugin.rileyLinkService.errorDescription
+        if (StringUtils.isNotEmpty(rileyLinkErrorDescription)) {
+            errors.add(rileyLinkErrorDescription)
         }
 
         if (!podStateManager.hasPodState() || !podStateManager.isPodInitialized) {

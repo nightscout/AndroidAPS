@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
@@ -39,7 +38,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private static final String REGEX_MAC = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
-    @Inject OmnipodPumpStatus omnipodPumpStatus;
     @Inject OmnipodUtil omnipodUtil;
     @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
     @Inject PodStateManager podStateManager;
@@ -50,6 +48,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private IBinder mBinder = new LocalBinder();
     private boolean rileyLinkAddressChanged = false;
     private boolean inPreInit = true;
+    private String rileyLinkAddress;
+    private String errorDescription;
 
     OmnipodUIComm omnipodUIComm;
 
@@ -115,6 +115,10 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         // We don't use PumpDeviceState in the Omnipod driver
     }
 
+    public String getErrorDescription() {
+        return errorDescription;
+    }
+
     public class LocalBinder extends Binder {
         public RileyLinkOmnipodService getServiceInstance() {
             return RileyLinkOmnipodService.this;
@@ -132,21 +136,21 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Override
     public boolean verifyConfiguration() {
         try {
-            omnipodPumpStatus.rileyLinkErrorDescription = null;
+            errorDescription = null;
 
             String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
                 aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: no address");
-                omnipodPumpStatus.rileyLinkErrorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
+                errorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                 return false;
             } else {
                 if (!rileyLinkAddress.matches(REGEX_MAC)) {
-                    omnipodPumpStatus.rileyLinkErrorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
+                    errorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                     aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
-                    if (!rileyLinkAddress.equals(this.omnipodPumpStatus.rileyLinkAddress)) {
-                        this.omnipodPumpStatus.rileyLinkAddress = rileyLinkAddress;
+                    if (!rileyLinkAddress.equals(this.rileyLinkAddress)) {
+                        this.rileyLinkAddress = rileyLinkAddress;
                         rileyLinkAddressChanged = true;
                     }
                 }
@@ -159,7 +163,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             return true;
 
         } catch (Exception ex) {
-            this.omnipodPumpStatus.rileyLinkErrorDescription = ex.getMessage();
+            errorDescription = ex.getMessage();
             aapsLogger.error(LTag.PUMPCOMM, "Error on Verification: " + ex.getMessage(), ex);
             return false;
         }
