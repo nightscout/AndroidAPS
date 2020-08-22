@@ -20,6 +20,7 @@ public class StatusResponse extends MessageBlock {
     private final PodProgressStatus podProgressStatus;
     private final Duration timeActive;
     private final Double reservoirLevel;
+    private final int ticksDelivered;
     private final double insulinDelivered;
     private final double insulinNotDelivered;
     private final byte podMessageCounter;
@@ -40,7 +41,8 @@ public class StatusResponse extends MessageBlock {
         int highInsulinBits = (encodedData[2] & 0xF) << 9;
         int middleInsulinBits = ByteUtil.convertUnsignedByteToInt(encodedData[3]) << 1;
         int lowInsulinBits = ByteUtil.convertUnsignedByteToInt(encodedData[4]) >>> 7;
-        insulinDelivered = OmnipodConst.POD_PULSE_SIZE * (highInsulinBits | middleInsulinBits | lowInsulinBits);
+        ticksDelivered = (highInsulinBits | middleInsulinBits | lowInsulinBits);
+        insulinDelivered = OmnipodConst.POD_PULSE_SIZE * ticksDelivered;
         podMessageCounter = (byte) ((encodedData[4] >>> 3) & 0xf);
 
         insulinNotDelivered = OmnipodConst.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.convertUnsignedByteToInt(encodedData[5]));
@@ -74,6 +76,8 @@ public class StatusResponse extends MessageBlock {
     public Double getReservoirLevel() {
         return reservoirLevel;
     }
+
+    public int getTicksDelivered() { return ticksDelivered; }
 
     public double getInsulinDelivered() {
         return insulinDelivered;
