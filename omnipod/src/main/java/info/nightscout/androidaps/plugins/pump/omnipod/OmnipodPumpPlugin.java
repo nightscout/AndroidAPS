@@ -113,7 +113,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
     private final List<CustomAction> customActions = new ArrayList<>();
-    // TODO: BS: Not really sure what this is all about, have a closer look at it some time
     private final List<OmnipodStatusRequest> omnipodStatusRequestList = new ArrayList<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -127,7 +126,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private int timeChangeRetries;
     private long nextPodCheck;
     private boolean sentIdToFirebase;
-    private long lastConnectionTimeMillis;
+    private long lastConnectionTimeMillis;// 3 minutes
+    private static final long RILEY_LINK_CONNECT_TIMEOUT = 3 * 60 * 1000L;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -387,12 +387,15 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         lastConnectionTimeMillis = System.currentTimeMillis();
     }
 
-    // TODO seems that this abused to squeeze commands in the queue
-    //  Look for an alternative
+    // We abuse getPumpStatus to squeeze commands in the queue
+    // The only actual status requests we send to the Pod are on startup (in initializeAfterRileyLinkConnection)
+    // And when the user explicitly requested it by clicking the Refresh button on the Omnipod tab
+    // We don't do periodical status requests because that can drain the Pod's battery
+    // However that should be fine because we get a StatusResponse from all insulin commands sent to the Pod
     @Override
     public void getPumpStatus() {
         if (firstRun) {
-            initializePump();
+            initializeAfterRileyLinkConnection();
         } else if (!omnipodStatusRequestList.isEmpty()) {
             Iterator<OmnipodStatusRequest> iterator = omnipodStatusRequestList.iterator();
 
@@ -741,19 +744,21 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
-        long rileyLinkInitializationTimeout = 3 * 60 * 1000L; // 3 minutes
+        // We have a separate notification for when no Pod is active, see doPodCheck()
         if (podStateManager.isPodActivationCompleted() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
-            if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
-                // TODO update comment
-                // We exceeded the alert threshold, and either our last command failed or we cannot reach the RL
-                // We should show an alert
-                // Don't trigger an alert when we exceeded the thresholds, but the last communication was successful & the RL is reachable
-                // This happens when we simply didn't need to send any commands to the pump
-                return !podStateManager.isPodRunning() ||
-                        (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
+            long currentTimeMillis = System.currentTimeMillis();
+
+            if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < currentTimeMillis) {
+                // We exceeded the user defined alert threshold. However, as we don't send periodical status requests to the Pod to prevent draining it's battery,
+                // Exceeding the threshold alone is not a reason to trigger an alert: it could very well be that we just didn't need to send any commands for a while
+                // Below return statement covers these cases in which we will trigger an alert:
+                // - Sending the last command to the Pod failed
+                // - RileyLink is in an error state
+                // - RileyLink has been connecting for over RILEY_LINK_CONNECT_TIMEOUT
+                return (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
                         rileyLinkServiceData.rileyLinkServiceState.isError() ||
                         // The below clause is a hack for working around the RL service state forever staying in connecting state on startup if the RL is switched off / unreachable
-                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + rileyLinkInitializationTimeout < System.currentTimeMillis());
+                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + RILEY_LINK_CONNECT_TIMEOUT < currentTimeMillis);
             }
         }
 
@@ -816,7 +821,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
-    private void initializePump() {
+    private void initializeAfterRileyLinkConnection() {
         if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
             PumpEnactResult result = executeCommand(OmnipodCommandType.GetPodStatus, aapsOmnipodManager::getPodStatus);
             if (result.success) {
