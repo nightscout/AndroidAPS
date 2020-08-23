@@ -24,7 +24,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManage
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
@@ -99,17 +98,15 @@ class OmnipodFragment : DaggerFragment() {
         }
 
         omnipod_refresh.setOnClickListener {
-            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
-                displayNotConfiguredDialog()
-            } else {
-                omnipod_refresh.isEnabled = false
-                omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequest.GetPodState);
-                commandQueue.readStatus("Clicked Refresh", object : Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread { omnipod_refresh.isEnabled = true }
-                    }
-                })
-            }
+            omnipod_pod_active_alerts_ack.isEnabled = false
+            omnipod_refresh.isEnabled = false
+            omnipod_pod_debug.isEnabled = false
+            omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequest.GetPodState);
+            commandQueue.readStatus("Clicked Refresh", object : Callback() {
+                override fun run() {
+                    activity?.runOnUiThread { updateOmipodUiElements() }
+                }
+            })
         }
 
         omnipod_stats.setOnClickListener {
@@ -125,8 +122,14 @@ class OmnipodFragment : DaggerFragment() {
                 displayNotConfiguredDialog()
             } else {
                 omnipod_pod_active_alerts_ack.isEnabled = false
+                omnipod_refresh.isEnabled = false
+                omnipod_pod_debug.isEnabled = false
                 omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequest.AcknowledgeAlerts);
-                commandQueue.readStatus("Clicked Alert Ack", null)
+                commandQueue.readStatus("Clicked Alert Ack", object : Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread { updateOmipodUiElements() }
+                    }
+                })
             }
         }
 
@@ -134,11 +137,13 @@ class OmnipodFragment : DaggerFragment() {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
                 displayNotConfiguredDialog()
             } else {
+                omnipod_pod_active_alerts_ack.isEnabled = false
+                omnipod_refresh.isEnabled = false
                 omnipod_pod_debug.isEnabled = false
                 omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequest.GetPodPulseLog);
                 commandQueue.readStatus("Clicked Refresh", object : Callback() {
                     override fun run() {
-                        activity?.runOnUiThread { omnipod_pod_debug.isEnabled = true }
+                        activity?.runOnUiThread { updateOmipodUiElements() }
                     }
                 })
             }
@@ -148,10 +153,6 @@ class OmnipodFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
-        disposables += rxBus
-            .toObservable(EventOmnipodRefreshButtonState::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ omnipod_refresh.isEnabled = it.newState }, { fabricPrivacy.logException(it) })
         disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -170,12 +171,12 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     fun setVisibilityOfPodDebugButton() {
-        val isEnabled = aapsOmnipodManager.isPodDebuggingOptionsEnabled
-
-        if (isEnabled)
+        if (aapsOmnipodManager.isPodDebuggingOptionsEnabled) {
             omnipod_pod_debug.visibility = View.VISIBLE
-        else
+            omnipod_pod_debug.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && !commandQueue.statusInQueue()
+        } else {
             omnipod_pod_debug.visibility = View.GONE
+        }
     }
 
     private fun displayNotConfiguredDialog() {
@@ -294,7 +295,8 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_queue.text = status
         }
 
-        omnipod_refresh.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
+        omnipod_refresh.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && podStateManager.isPodInitialized
+            && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED) && !commandQueue.statusInQueue()
     }
 
     private fun updateLastConnectionUiElements() {
@@ -358,12 +360,12 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun updateAcknowledgeAlertsUiElements() {
-        if (podStateManager.isPodInitialized && podStateManager.hasActiveAlerts()) {
-            omnipod_pod_active_alerts_ack.isEnabled = true
+        if (podStateManager.isPodInitialized && podStateManager.hasActiveAlerts() && !podStateManager.isPodDead) {
             omnipod_pod_active_alerts.text = TextUtils.join(System.lineSeparator(), omnipodUtil.getTranslatedActiveAlerts(podStateManager))
+            omnipod_pod_active_alerts_ack.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && !commandQueue.statusInQueue()
         } else {
-            omnipod_pod_active_alerts_ack.isEnabled = false
             omnipod_pod_active_alerts.text = "-"
+            omnipod_pod_active_alerts_ack.isEnabled = false
         }
     }
 
