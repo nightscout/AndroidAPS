@@ -41,7 +41,7 @@ public interface IOmnipodManager {
      *
      * @param detailedBolusInfo DetailedBolusInfo instance with amount and all other required data
      */
-    PumpEnactResult setBolus(DetailedBolusInfo detailedBolusInfo);
+    PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo);
 
     /**
      * Cancel Bolus (if bolus is already stopped, return acknowledgment)

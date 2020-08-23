@@ -15,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodI
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemoveActionFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
 
 @Module
 @Suppress("unused")
@@ -37,7 +36,6 @@ abstract class OmnipodModule {
     @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
 
     // Data
-    @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): OmnipodUITask
     @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
     @ContributesAndroidInjector abstract fun podStateManager(): PodStateManager
     @ContributesAndroidInjector abstract fun initPodTask(): InitPodTask
@@ -45,6 +43,6 @@ abstract class OmnipodModule {
 
     companion object {
         @Provides
-        fun podStateManagerProvider(aapsPodStateManager: AapsPodStateManager) : PodStateManager = aapsPodStateManager
+        fun podStateManagerProvider(aapsPodStateManager: AapsPodStateManager): PodStateManager = aapsPodStateManager
     }
 }

@@ -258,7 +258,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
     }
 
     @Override
-    public PumpEnactResult setBolus(DetailedBolusInfo detailedBolusInfo) {
+    public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
         boolean beepsEnabled = detailedBolusInfo.isSMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
