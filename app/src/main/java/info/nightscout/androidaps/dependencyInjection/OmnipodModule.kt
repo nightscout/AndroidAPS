@@ -4,17 +4,17 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodHistoryActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodTask
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemoveActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodHistoryActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodManagementActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitPodTask
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.InitPodRefreshAction
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.PodInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.removepod.RemoveActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
+import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsPodStateManager
 
 @Module
 @Suppress("unused")
@@ -32,7 +32,7 @@ abstract class OmnipodModule {
 
     // Service
     @ContributesAndroidInjector
-    abstract fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
+    abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
     @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
 
     // Data

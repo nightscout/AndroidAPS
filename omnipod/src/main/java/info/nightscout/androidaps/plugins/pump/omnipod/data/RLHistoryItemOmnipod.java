@@ -4,7 +4,7 @@ import org.joda.time.LocalDateTime;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RLHistoryItemOmnipod extends RLHistoryItem {

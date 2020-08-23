@@ -66,17 +66,18 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCustomActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStatusRequestType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.RileyLinkOmnipodService;
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -98,7 +99,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final RileyLinkServiceData rileyLinkServiceData;
     private final ServiceTaskExecutor serviceTaskExecutor;
     private final AapsOmnipodManager aapsOmnipodManager;
-    private final OmnipodUtil omnipodUtil;
+    private final AapsOmnipodUtil aapsOmnipodUtil;
     private final RileyLinkUtil rileyLinkUtil;
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
@@ -113,7 +114,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
     private final List<CustomAction> customActions = new ArrayList<>();
-    private final List<OmnipodStatusRequest> omnipodStatusRequestList = new ArrayList<>();
+    private final List<OmnipodStatusRequestType> omnipodStatusRequestList = new ArrayList<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     // variables for handling statuses and history
@@ -145,7 +146,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             RileyLinkServiceData rileyLinkServiceData,
             ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
-            OmnipodUtil omnipodUtil,
+            AapsOmnipodUtil aapsOmnipodUtil,
             RileyLinkUtil rileyLinkUtil
     ) {
         super(new PluginDescription() //
@@ -168,7 +169,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
         this.aapsOmnipodManager = aapsOmnipodManager;
-        this.omnipodUtil = omnipodUtil;
+        this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.rileyLinkUtil = rileyLinkUtil;
 
         pumpDescription = new PumpDescription(pumpType);
@@ -250,16 +251,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     // If so, add it to history
                     // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
                     // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
-                    if (sp.contains(OmnipodConst.Prefs.CurrentBolus)) {
-                        String currentBolusString = sp.getString(OmnipodConst.Prefs.CurrentBolus, "");
+                    if (sp.contains(OmnipodStorageKeys.Prefs.CurrentBolus)) {
+                        String currentBolusString = sp.getString(OmnipodStorageKeys.Prefs.CurrentBolus, "");
                         aapsLogger.warn(LTag.PUMP, "Found active bolus in SP. Adding Treatment: {}", currentBolusString);
                         try {
-                            DetailedBolusInfo detailedBolusInfo = omnipodUtil.getGsonInstance().fromJson(currentBolusString, DetailedBolusInfo.class);
+                            DetailedBolusInfo detailedBolusInfo = aapsOmnipodUtil.getGsonInstance().fromJson(currentBolusString, DetailedBolusInfo.class);
                             aapsOmnipodManager.addBolusToHistory(detailedBolusInfo);
                         } catch (Exception ex) {
                             aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex);
                         }
-                        sp.remove(OmnipodConst.Prefs.CurrentBolus);
+                        sp.remove(OmnipodStorageKeys.Prefs.CurrentBolus);
                     }
                 }, fabricPrivacy::logException)
         );
@@ -397,10 +398,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (firstRun) {
             initializeAfterRileyLinkConnection();
         } else if (!omnipodStatusRequestList.isEmpty()) {
-            Iterator<OmnipodStatusRequest> iterator = omnipodStatusRequestList.iterator();
+            Iterator<OmnipodStatusRequestType> iterator = omnipodStatusRequestList.iterator();
 
             while (iterator.hasNext()) {
-                OmnipodStatusRequest statusRequest = iterator.next();
+                OmnipodStatusRequestType statusRequest = iterator.next();
                 switch (statusRequest) {
                     case GetPodPulseLog:
                         try {
@@ -580,7 +581,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
         if (result.success) {
-            incrementStatistics(OmnipodConst.Statistics.TBRsSet);
+            incrementStatistics(OmnipodStorageKeys.Statistics.TBRsSet);
         }
 
         return result;
@@ -765,7 +766,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return false;
     }
 
-    public void addPodStatusRequest(OmnipodStatusRequest pumpStatusRequest) {
+    public void addPodStatusRequest(OmnipodStatusRequestType pumpStatusRequest) {
         omnipodStatusRequestList.add(pumpStatusRequest);
     }
 
@@ -850,8 +851,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         PumpEnactResult result = executeCommand(OmnipodCommandType.SetBolus, () -> aapsOmnipodManager.bolus(detailedBolusInfo));
 
         if (result.success) {
-            incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
-                    : OmnipodConst.Statistics.StandardBoluses);
+            incrementStatistics(detailedBolusInfo.isSMB ? OmnipodStorageKeys.Statistics.SMBBoluses
+                    : OmnipodStorageKeys.Statistics.StandardBoluses);
 
             result.carbsDelivered(detailedBolusInfo.carbs);
         }

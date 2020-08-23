@@ -3,12 +3,12 @@
 
     <application>
         <service
-            android:name=".service.RileyLinkOmnipodService"
+            android:name=".rileylink.RileyLinkOmnipodService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".dialogs.PodManagementActivity" />
-        <activity android:name=".dialogs.PodHistoryActivity" />
+        <activity android:name=".ui.PodManagementActivity" />
+        <activity android:name=".ui.PodHistoryActivity" />
         <activity
             android:name="com.atech.android.library.wizardpager.WizardPagerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
