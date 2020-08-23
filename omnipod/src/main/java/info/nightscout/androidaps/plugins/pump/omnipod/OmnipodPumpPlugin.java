@@ -74,6 +74,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorage
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPodStateActionsAllowedChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
@@ -95,6 +96,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 @Singleton
 public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
+    private static final long RILEY_LINK_CONNECT_TIMEOUT = 3 * 60 * 1000L; // 3 minutes
+
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final ServiceTaskExecutor serviceTaskExecutor;
@@ -127,8 +130,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private int timeChangeRetries;
     private long nextPodCheck;
     private boolean sentIdToFirebase;
-    private long lastConnectionTimeMillis;// 3 minutes
-    private static final long RILEY_LINK_CONNECT_TIMEOUT = 3 * 60 * 1000L;
+    private long lastConnectionTimeMillis;
+    private boolean podStateActionsAllowed = true;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -398,6 +401,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (firstRun) {
             initializeAfterRileyLinkConnection();
         } else if (!omnipodStatusRequestList.isEmpty()) {
+            setAllowPodStateActions(false);
             Iterator<OmnipodStatusRequestType> iterator = omnipodStatusRequestList.iterator();
 
             while (iterator.hasNext()) {
@@ -433,8 +437,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                         aapsLogger.error(LTag.PUMP, "Unknown status request: " + statusRequest.name());
                 }
                 iterator.remove();
+                setAllowPodStateActions(true);
             }
         } else if (this.hasTimeDateOrTimeZoneChanged) {
+            setAllowPodStateActions(false);
             PumpEnactResult result = executeCommand(OmnipodCommandType.SetTime, aapsOmnipodManager::setTime);
 
             if (result.success) {
@@ -455,6 +461,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     timeChangeRetries = 0;
                 }
             }
+            setAllowPodStateActions(true);
         }
     }
 
@@ -535,6 +542,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             // no bolus required, carb only treatment
             activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
+            // FIXME do we need this??
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
             bolusingEvent.setT(new Treatment());
             bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
@@ -767,6 +775,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public void addPodStatusRequest(OmnipodStatusRequestType pumpStatusRequest) {
+        setAllowPodStateActions(false);
         omnipodStatusRequestList.add(pumpStatusRequest);
     }
 
@@ -848,6 +857,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
+        setAllowPodStateActions(false);
         PumpEnactResult result = executeCommand(OmnipodCommandType.SetBolus, () -> aapsOmnipodManager.bolus(detailedBolusInfo));
 
         if (result.success) {
@@ -856,6 +866,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
             result.carbsDelivered(detailedBolusInfo.carbs);
         }
+        setAllowPodStateActions(true);
 
         return result;
     }
@@ -885,6 +896,19 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
+    }
+
+    private void setAllowPodStateActions(boolean allowed) {
+        if (podStateActionsAllowed != allowed) {
+            podStateActionsAllowed = allowed;
+            rxBus.send(new EventOmnipodPodStateActionsAllowedChanged());
+        }
+    }
+
+    // Allow usage of buttons in Omnipod tab that read or modify the Pod state:
+    //   Refresh Status, Acknowledge Alerts and Get Pulse Log
+    public boolean isPodStateActionsAllowed() {
+        return podStateActionsAllowed;
     }
 
 }

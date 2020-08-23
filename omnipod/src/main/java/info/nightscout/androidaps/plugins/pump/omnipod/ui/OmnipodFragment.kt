@@ -23,10 +23,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStatusRequestType
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPodStateActionsAllowedChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -101,11 +101,7 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_refresh.setOnClickListener {
             disablePodActionButtons()
             omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.GetPodState);
-            commandQueue.readStatus("Clicked Refresh", object : Callback() {
-                override fun run() {
-                    activity?.runOnUiThread { updatePodActionButtons() }
-                }
-            })
+            commandQueue.readStatus("Clicked Refresh", null)
         }
 
         omnipod_rileylink_stats.setOnClickListener {
@@ -122,11 +118,7 @@ class OmnipodFragment : DaggerFragment() {
             } else {
                 disablePodActionButtons()
                 omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.AcknowledgeAlerts);
-                commandQueue.readStatus("Clicked Alert Ack", object : Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread { updatePodActionButtons() }
-                    }
-                })
+                commandQueue.readStatus("Clicked Alert Ack", null)
             }
         }
 
@@ -136,11 +128,7 @@ class OmnipodFragment : DaggerFragment() {
             } else {
                 disablePodActionButtons()
                 omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.GetPodPulseLog);
-                commandQueue.readStatus("Clicked Refresh", object : Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread { updatePodActionButtons() }
-                    }
-                })
+                commandQueue.readStatus("Clicked Refresh", null)
             }
         }
     }
@@ -160,6 +148,12 @@ class OmnipodFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateOmipodStatus()
+                updatePodActionButtons()
+            }, { fabricPrivacy.logException(it) })
+        disposables += rxBus
+            .toObservable(EventOmnipodPodStateActionsAllowedChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
                 updatePodActionButtons()
             }, { fabricPrivacy.logException(it) })
         disposables += rxBus
@@ -355,13 +349,13 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        omnipod_refresh.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && podStateManager.isPodInitialized
-            && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED) && !commandQueue.statusInQueue()
+        omnipod_refresh.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
+            && rileyLinkServiceData.rileyLinkServiceState.isReady && omnipodPumpPlugin.isPodStateActionsAllowed
     }
 
     private fun updateAcknowledgeAlertsButton() {
         if (podStateManager.isPodInitialized && podStateManager.hasActiveAlerts() && !podStateManager.isPodDead) {
-            omnipod_pod_active_alerts_ack.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && !commandQueue.statusInQueue()
+            omnipod_pod_active_alerts_ack.isEnabled = omnipodPumpPlugin.isPodStateActionsAllowed && rileyLinkServiceData.rileyLinkServiceState.isReady
         } else {
             omnipod_pod_active_alerts_ack.isEnabled = false
         }
@@ -370,7 +364,7 @@ class OmnipodFragment : DaggerFragment() {
     fun updatePulseLogButton() {
         if (aapsOmnipodManager.isPodDebuggingOptionsEnabled) {
             omnipod_pod_debug.visibility = View.VISIBLE
-            omnipod_pod_debug.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && !commandQueue.statusInQueue()
+            omnipod_pod_debug.isEnabled = podStateManager.isPodActivationCompleted && omnipodPumpPlugin.isPodStateActionsAllowed && rileyLinkServiceData.rileyLinkServiceState.isReady
         } else {
             omnipod_pod_debug.visibility = View.GONE
         }
