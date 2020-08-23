@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.events.Event;
-import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -53,8 +52,6 @@ public class AapsPodStateManager extends PodStateManager {
         aapsLogger.debug(LTag.PUMP, "Pod State changed. Sending events.");
 
         sendEvent(new EventOmnipodPumpValuesChanged());
-        // TODO is this necessary?
-        sendEvent(new EventRefreshOverview("Omnipod Pump", true));
     }
 
     private void sendEvent(Event event) {
