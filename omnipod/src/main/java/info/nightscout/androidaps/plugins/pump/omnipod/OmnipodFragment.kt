@@ -281,12 +281,10 @@ class OmnipodFragment : DaggerFragment() {
                 .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
 
             // total delivered
-            omnipod_total_delivered.text = podStateManager.totalInsulinDelivered.let {
-                when {
-                    it == null                        -> "-"
-                    it < OmnipodConst.POD_SETUP_UNITS -> resourceHelper.gs(R.string.omnipod_total_delivered_pod_preparing)
-                    else                              -> resourceHelper.gs(R.string.omnipod_total_delivered, it - OmnipodConst.POD_SETUP_UNITS);
-                }
+            omnipod_total_delivered.text = if (podStateManager.isPodActivationCompleted) {
+                resourceHelper.gs(R.string.omnipod_total_delivered, podStateManager.totalInsulinDelivered - OmnipodConst.POD_SETUP_UNITS);
+            } else {
+                "-"
             }
 
             // reservoir

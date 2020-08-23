@@ -27,7 +27,6 @@
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
     <string name="omnipod_pod_status">Pod Status</string>
     <string name="omnipod_total_delivered_label">Total Delivered</string>
-    <string name="omnipod_total_delivered_pod_preparing">Pod Preparing</string>
     <string name="omnipod_total_delivered">%1$.2f U</string>
     <string name="omnipod_reservoir_left">%1$.2f U left</string>
     <string name="omnipod_reservoir_over50">Over 50 U</string>
