@@ -586,7 +586,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (tbrCurrent != null && !enforceNew) {
             if (Round.isSame(tbrCurrent.absoluteRate, absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
-                rxBus.send(new EventRefreshOverview("Omnipod command: TBR", true));
+                rxBus.send(new EventRefreshOverview("Omnipod command: SetTemporaryBasal", false));
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         }
@@ -624,7 +624,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         if (tbrCurrent == null) {
             aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already canceled.");
-            rxBus.send(new EventRefreshOverview("Omnipod command: TBR", true));
+            rxBus.send(new EventRefreshOverview("Omnipod command: CancelTemporaryBasal", false));
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 

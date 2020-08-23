@@ -48,7 +48,7 @@ public class OmnipodUIComm {
             aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);
         }
 
-        rxBus.send(new EventRefreshOverview("Omnipod command: "+ commandType.name(), true));
+        rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
 
         return task;
     }
