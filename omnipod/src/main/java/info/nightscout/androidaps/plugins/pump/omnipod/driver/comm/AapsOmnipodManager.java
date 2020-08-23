@@ -35,7 +35,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
@@ -68,7 +67,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
@@ -88,7 +86,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
     private final ActivePluginProvider activePlugin;
-    private final OmnipodPumpStatus pumpStatus;
     private final Context context;
     private final SP sp;
     private final OmnipodManager delegate;
@@ -104,7 +101,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
     @Inject
     public AapsOmnipodManager(OmnipodCommunicationManager communicationService,
                               PodStateManager podStateManager,
-                              OmnipodPumpStatus pumpStatus,
                               OmnipodUtil omnipodUtil,
                               AAPSLogger aapsLogger,
                               RxBusWrapper rxBus,
@@ -124,7 +120,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         this.resourceHelper = resourceHelper;
         this.injector = injector;
         this.activePlugin = activePlugin;
-        this.pumpStatus = pumpStatus;
         this.context = context;
         this.databaseHelper = databaseHelper;
         this.sp = sp;
@@ -391,12 +386,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
         long pumpId = addSuccessToHistory(time, PodHistoryEntryType.SetTemporaryBasal, tempBasalPair);
 
-        pumpStatus.tempBasalStart = time;
-        pumpStatus.tempBasalAmount = tempBasalPair.getInsulinRate();
-        pumpStatus.tempBasalLength = tempBasalPair.getDurationMinutes();
-        pumpStatus.tempBasalEnd = DateTimeUtil.getTimeInFutureFromMinutes(time, tempBasalPair.getDurationMinutes());
-        pumpStatus.tempBasalPumpId = pumpId;
-
         TemporaryBasal tempStart = new TemporaryBasal(injector) //
                 .date(time) //
                 .duration(tempBasalPair.getDurationMinutes()) //
@@ -558,7 +547,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
             TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
                     .date(time) //
                     .duration(0) //
-                    .pumpId(pumpStatus.tempBasalPumpId)
                     .source(Source.PUMP);
 
             plugin.addToHistoryTempBasal(temporaryBasal);
@@ -716,7 +704,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return resourceHelper.gs(id, args);
     }
 
-    static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
+    public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
         if (profile == null) {
             throw new IllegalArgumentException("Profile can not be null");
         }

@@ -15,27 +15,23 @@ public class OmnipodUIComm {
 
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
-    private final OmnipodUIPostprocessor omnipodUIPostprocessor;
     private final IOmnipodManager omnipodCommunicationManager;
     private RileyLinkUtil rileyLinkUtil;
 
     public OmnipodUIComm(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
-            OmnipodUIPostprocessor omnipodUIPostprocessor,
             IOmnipodManager omnipodCommunicationManager,
             RileyLinkUtil rileyLinkUtil
     ) {
         this.injector = injector;
         this.aapsLogger = aapsLogger;
-        this.omnipodUIPostprocessor = omnipodUIPostprocessor;
         this.omnipodCommunicationManager = omnipodCommunicationManager;
         this.rileyLinkUtil = rileyLinkUtil;
     }
 
 
     public OmnipodUITask executeCommand(OmnipodCommandType commandType, Object... parameters) {
-
         aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
 
         OmnipodUITask task = new OmnipodUITask(injector, commandType, parameters);
@@ -48,10 +44,7 @@ public class OmnipodUIComm {
             aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);
         }
 
-        task.postProcess(omnipodUIPostprocessor);
-
         return task;
-
     }
 
 }

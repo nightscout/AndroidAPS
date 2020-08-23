@@ -2,9 +2,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule;
 
 import org.joda.time.Duration;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class BasalSchedule {
     private final List<BasalScheduleEntry> entries;
@@ -15,7 +17,7 @@ public class BasalSchedule {
         } else if (!entries.get(0).getStartTime().isEqual(Duration.ZERO)) {
             throw new IllegalArgumentException("First basal schedule entry should have 0 offset");
         }
-        this.entries = entries;
+        this.entries = new ArrayList<>(entries);
     }
 
     public double rateAt(Duration offset) {
@@ -89,6 +91,17 @@ public class BasalSchedule {
         return "BasalSchedule{" +
                 "entries=" + entries +
                 '}';
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BasalSchedule that = (BasalSchedule) o;
+        return entries.equals(that.entries);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(entries);
     }
 
     public static class BasalScheduleDurationEntry {

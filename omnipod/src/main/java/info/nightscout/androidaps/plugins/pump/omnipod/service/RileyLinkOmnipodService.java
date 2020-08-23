@@ -24,8 +24,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 
@@ -39,7 +37,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
     @Inject OmnipodUtil omnipodUtil;
-    @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
     @Inject PodStateManager podStateManager;
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject AapsOmnipodManager aapsOmnipodManager;
@@ -73,31 +70,18 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         return RileyLinkEncodingType.Manchester;
     }
 
-    /**
-     * If you have customized RileyLinkServiceData you need to override this
-     */
     @Override
     public void initRileyLinkServiceData() {
-
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
         rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
-        // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
         rfspy.startReader();
 
-        initializeErosOmnipodManager();
+        omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, aapsOmnipodManager, rileyLinkUtil);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkOmnipodService newly constructed");
-        //omnipodPumpStatus = (OmnipodPumpStatus) omnipodPumpPlugin.getPumpStatusData();
-    }
-
-    private void initializeErosOmnipodManager() {
-        if (omnipodUIComm == null) {
-            omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUIPostprocessor, aapsOmnipodManager, rileyLinkUtil);
-        }
-        rxBus.send(new EventOmnipodPumpValuesChanged());
     }
 
     public OmnipodUIComm getDeviceCommandExecutor() {

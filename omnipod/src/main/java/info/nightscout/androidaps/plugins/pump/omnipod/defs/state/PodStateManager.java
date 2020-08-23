@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
+// TODO add nullchecks on some setters
 public abstract class PodStateManager {
 
     private final AAPSLogger aapsLogger;

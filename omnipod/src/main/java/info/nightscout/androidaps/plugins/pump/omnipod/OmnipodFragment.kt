@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
@@ -163,10 +162,6 @@ class OmnipodFragment : DaggerFragment() {
             .toObservable(EventOmnipodPumpValuesChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateOmipodUiElements() }, { fabricPrivacy.logException(it) })
-        disposables += rxBus
-            .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateAcknowledgeAlertsUiElements() }, { fabricPrivacy.logException(it) })
         disposables += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
