@@ -419,7 +419,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         } else if (!omnipodStatusRequestList.isEmpty()) {
             Iterator<OmnipodStatusRequest> iterator = omnipodStatusRequestList.iterator();
 
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 OmnipodStatusRequest omnipodStatusRequest = iterator.next();
                 if (omnipodStatusRequest == OmnipodStatusRequest.GetPodPulseLog) {
                     OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
@@ -680,7 +680,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         JSONObject status = new JSONObject();
         JSONObject extended = new JSONObject();
         try {
-            status.put("status", podStateManager.isPodRunning() ? "normal" : "error");
+            status.put("status", podStateManager.isPodRunning() ? (podStateManager.isSuspended() ? "suspended" : "normal") : "no active Pod");
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
             battery.put("percent", getBatteryLevel());
@@ -792,12 +792,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         OmnipodCustomActionType mcat = (OmnipodCustomActionType) customActionType;
 
         switch (mcat) {
-            case ResetRileyLinkConfiguration: {
+            case ResetRileyLinkConfiguration:
                 serviceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
-            }
-            break;
+                break;
 
             default:
+                aapsLogger.warn(LTag.PUMP, "Unknown custom action: {}" + mcat);
                 break;
         }
     }
