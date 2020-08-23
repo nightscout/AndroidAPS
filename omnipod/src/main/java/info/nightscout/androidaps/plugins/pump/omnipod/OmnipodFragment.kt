@@ -248,6 +248,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_firmware_version.text = "-"
             omnipod_pod_expiry.text = "-"
             omnipod_basabasalrate.text = "-"
+            omnipod_total_delivered.text = "-"
             omnipod_reservoir.text = "-"
             omnipod_tempbasal.text = "-"
             omnipod_lastbolus.text = "-"
@@ -278,6 +279,13 @@ class OmnipodFragment : DaggerFragment() {
 
             omnipod_tempbasal.text = activePlugin.activeTreatments
                 .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
+
+            // total delivered
+            omnipod_total_delivered.text = if (podStateManager.isPodActivationCompleted) {
+                resourceHelper.gs(R.string.omnipod_total_delivered, podStateManager.totalInsulinDelivered - OmnipodConst.POD_SETUP_UNITS);
+            } else {
+                "-"
+            }
 
             // reservoir
             if (podStateManager.reservoirLevel == null) {

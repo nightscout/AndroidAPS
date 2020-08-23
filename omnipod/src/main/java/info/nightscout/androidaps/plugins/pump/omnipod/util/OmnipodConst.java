@@ -53,4 +53,5 @@ public class OmnipodConst {
 
     public static final double POD_PRIME_BOLUS_UNITS = 2.6;
     public static final double POD_CANNULA_INSERTION_BOLUS_UNITS = 0.5;
+    public static final double POD_SETUP_UNITS = POD_PRIME_BOLUS_UNITS + POD_CANNULA_INSERTION_BOLUS_UNITS;
 }
