@@ -8,9 +8,9 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.RateEntry;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 
 public class BasalScheduleExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;

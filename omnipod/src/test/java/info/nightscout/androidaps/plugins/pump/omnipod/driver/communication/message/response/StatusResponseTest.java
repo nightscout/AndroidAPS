@@ -45,6 +45,7 @@ public class StatusResponseTest {
         assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, statusResponse.getPodProgressStatus());
         assertNull("Reservoir level should be null", statusResponse.getReservoirLevel());
         assertEquals(Duration.standardMinutes(1307).getMillis(), statusResponse.getTimeActive().getMillis());
+        assertEquals(1201, statusResponse.getTicksDelivered());
         assertEquals(60.05, statusResponse.getInsulinDelivered(), 0.000001);
         assertEquals(15, statusResponse.getPodMessageCounter());
         assertEquals(0, statusResponse.getInsulinNotDelivered(), 0.000001);
@@ -62,6 +63,7 @@ public class StatusResponseTest {
         assertEquals(PodProgressStatus.FIFTY_OR_LESS_UNITS, statusResponse.getPodProgressStatus());
         assertEquals(24.4, statusResponse.getReservoirLevel(), 0.000001);
         assertEquals(Duration.standardMinutes(4261).getMillis(), statusResponse.getTimeActive().getMillis());
+        assertEquals(3134, statusResponse.getTicksDelivered());
         assertEquals(156.7, statusResponse.getInsulinDelivered(), 0.000001);
         assertEquals(13, statusResponse.getPodMessageCounter());
         assertEquals(0, statusResponse.getInsulinNotDelivered(), 0.000001);
@@ -80,6 +82,8 @@ public class StatusResponseTest {
         assertEquals(OmnipodConstants.POD_PULSE_SIZE * 1023, statusResponse.getInsulinNotDelivered(), 0.000001);
         assertNull("Reservoir level should be null", statusResponse.getReservoirLevel());
         assertEquals(OmnipodConstants.POD_PULSE_SIZE * 8191, statusResponse.getInsulinDelivered(), 0.0000001);
+        assertEquals(8191, statusResponse.getTicksDelivered());
+        assertEquals(OmnipodConstants.POD_PULSE_SIZE * 8191, statusResponse.getInsulinDelivered(), 0.0000001);
         assertEquals(15, statusResponse.getPodMessageCounter());
         assertEquals(8, statusResponse.getAlerts().getAlertSlots().size());
 
@@ -94,6 +98,7 @@ public class StatusResponseTest {
         assertTrue(Duration.standardMinutes(3547).isEqual(statusResponse.getTimeActive()));
         assertEquals(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
         assertEquals(PodProgressStatus.FIFTY_OR_LESS_UNITS, statusResponse.getPodProgressStatus());
+        assertEquals(2589, statusResponse.getTicksDelivered());
         assertEquals(129.45, statusResponse.getInsulinDelivered(), 0.00001);
         assertEquals(46.00, statusResponse.getReservoirLevel(), 0.00001);
         assertEquals(2.2, statusResponse.getInsulinNotDelivered(), 0.0001);

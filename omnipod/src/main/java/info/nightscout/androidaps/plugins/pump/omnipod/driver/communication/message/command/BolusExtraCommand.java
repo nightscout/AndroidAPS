@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mes
 import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandInitializationException;
 
 public class BolusExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;

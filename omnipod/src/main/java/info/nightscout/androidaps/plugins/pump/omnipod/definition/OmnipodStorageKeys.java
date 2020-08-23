@@ -7,7 +7,7 @@ public class OmnipodStorageKeys {
 
     public static class Prefs {
         public static final String PodState = Prefix + "pod_state";
-        public static final String CurrentBolus = Prefix + "current_bolus";
+        public static final String ActiveBolus = Prefix + "current_bolus";
         public static final int BeepBasalEnabled = R.string.key_omnipod_beep_basal_enabled;
         public static final int BeepBolusEnabled = R.string.key_omnipod_beep_bolus_enabled;
         public static final int BeepSMBEnabled = R.string.key_omnipod_beep_smb_enabled;

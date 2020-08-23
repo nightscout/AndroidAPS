@@ -303,6 +303,10 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getReservoirLevel());
     }
 
+    public final Double getTotalInsulinDelivered() {
+        return getSafe(() -> podState.getTotalInsulinDelivered());
+    }
+
     public final Duration getScheduleOffset() {
         DateTime now = getTime();
         return new Duration(now.withTimeAtStartOfDay(), now);
@@ -374,6 +378,7 @@ public abstract class PodStateManager {
             podState.setActiveAlerts(statusResponse.getAlerts());
             podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
+            podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
             podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
             podState.setLastUpdatedFromStatusResponse(DateTime.now());
         });
@@ -470,6 +475,7 @@ public abstract class PodStateManager {
         private DateTime expiresAt;
         private PodInfoFaultEvent faultEvent;
         private Double reservoirLevel;
+        private Integer totalTicksDelivered;
         private boolean suspended;
         private NonceState nonceState;
         private PodProgressStatus podProgressStatus;
@@ -601,6 +607,22 @@ public abstract class PodStateManager {
 
         void setReservoirLevel(Double reservoirLevel) {
             this.reservoirLevel = reservoirLevel;
+        }
+
+        public Integer getTotalTicksDelivered() {
+            return totalTicksDelivered;
+        }
+
+        public Double getTotalInsulinDelivered() {
+            if (totalTicksDelivered != null) {
+                return totalTicksDelivered * OmnipodConstants.POD_PULSE_SIZE;
+            } else {
+                return null;
+            }
+        }
+
+        void setTotalTicksDelivered(Integer totalTicksDelivered) {
+            this.totalTicksDelivered = totalTicksDelivered;
         }
 
         public boolean isSuspended() {

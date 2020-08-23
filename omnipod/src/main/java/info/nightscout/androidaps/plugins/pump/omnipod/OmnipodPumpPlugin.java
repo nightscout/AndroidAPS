@@ -66,6 +66,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCustomActionType;
@@ -254,16 +255,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     // If so, add it to history
                     // Needs to be done after EventAppInitialized because otherwise, TreatmentsPlugin.onStart() hasn't been called yet
                     // so it didn't initialize a TreatmentService yet, resulting in a NullPointerException
-                    if (sp.contains(OmnipodStorageKeys.Prefs.CurrentBolus)) {
-                        String currentBolusString = sp.getString(OmnipodStorageKeys.Prefs.CurrentBolus, "");
-                        aapsLogger.warn(LTag.PUMP, "Found active bolus in SP. Adding Treatment: {}", currentBolusString);
+                    if (sp.contains(OmnipodStorageKeys.Prefs.ActiveBolus)) {
+                        String activeBolusString = sp.getString(OmnipodStorageKeys.Prefs.ActiveBolus, "");
+                        aapsLogger.warn(LTag.PUMP, "Found active bolus in SP: {}. Adding Treatment.", activeBolusString);
                         try {
-                            DetailedBolusInfo detailedBolusInfo = aapsOmnipodUtil.getGsonInstance().fromJson(currentBolusString, DetailedBolusInfo.class);
-                            aapsOmnipodManager.addBolusToHistory(detailedBolusInfo);
+                            ActiveBolus activeBolus = aapsOmnipodUtil.getGsonInstance().fromJson(activeBolusString, ActiveBolus.class);
+                            aapsOmnipodManager.addBolusToHistory(activeBolus.toDetailedBolusInfo(aapsLogger));
                         } catch (Exception ex) {
                             aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex);
                         }
-                        sp.remove(OmnipodStorageKeys.Prefs.CurrentBolus);
+                        sp.remove(OmnipodStorageKeys.Prefs.ActiveBolus);
                     }
                 }, fabricPrivacy::logException)
         );

@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mes
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 
 /**
  * Created by andy on 6/1/18.

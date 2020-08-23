@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.definition;
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.R;
-
 /**
  * Created by andy on 4.8.2019
  */
@@ -30,4 +28,5 @@ public class OmnipodConstants {
 
     public static final double POD_PRIME_BOLUS_UNITS = 2.6;
     public static final double POD_CANNULA_INSERTION_BOLUS_UNITS = 0.5;
+    public static final double POD_SETUP_UNITS = POD_PRIME_BOLUS_UNITS + POD_CANNULA_INSERTION_BOLUS_UNITS;
 }

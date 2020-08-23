@@ -4,16 +4,16 @@ import org.joda.time.Duration;
 
 import java.util.Collections;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.ConfigureAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.FaultConfigCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.AlertConfigurationUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.AlertConfigurationUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
 
 public class PrimeService {
 

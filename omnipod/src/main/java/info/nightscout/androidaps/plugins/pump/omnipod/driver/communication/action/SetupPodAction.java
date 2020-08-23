@@ -4,16 +4,16 @@ import org.joda.time.DateTime;
 
 import java.util.Collections;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.SetupPodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.VersionResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalVersionResponseTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
 
 public class SetupPodAction implements OmnipodAction<VersionResponse> {
     private final PodStateManager podStateManager;

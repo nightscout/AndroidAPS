@@ -8,8 +8,8 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 
 public class PodInfoActiveAlerts extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 11;

@@ -36,8 +36,18 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.OmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodHistoryEntryType;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitReceiver;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommunicationException;
@@ -53,20 +63,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.MessageD
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceResyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NotEnoughDataException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodReturnedErrorResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitReceiver;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalScheduleEntry;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodHistoryEntryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
@@ -309,9 +310,11 @@ public class AapsOmnipodManager {
         //
         // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
         try {
-            sp.putString(OmnipodStorageKeys.Prefs.CurrentBolus, aapsOmnipodUtil.getGsonInstance().toJson(detailedBolusInfo));
+            ActiveBolus activeBolus = ActiveBolus.fromDetailedBolusInfo(detailedBolusInfo);
+            sp.putString(OmnipodStorageKeys.Prefs.ActiveBolus, aapsOmnipodUtil.getGsonInstance().toJson(activeBolus));
+            aapsLogger.debug(LTag.PUMP, "Stored active bolus to SP for recovery");
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMP, "Failed to store current bolus to SP", ex);
+            aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);
         }
 
         // Wait for the bolus to finish
@@ -322,7 +325,7 @@ public class AapsOmnipodManager {
 
         addBolusToHistory(detailedBolusInfo);
 
-        sp.remove(OmnipodStorageKeys.Prefs.CurrentBolus);
+        sp.remove(OmnipodStorageKeys.Prefs.ActiveBolus);
 
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }

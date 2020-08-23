@@ -18,12 +18,12 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.FullInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.ShortInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.InitPodRefreshAction
-import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign

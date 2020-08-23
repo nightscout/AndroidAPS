@@ -7,9 +7,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSe
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.LogEventErrorCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 
 public class PodInfoFaultEvent extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 21;

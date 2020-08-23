@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.GetStatusCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NotEnoughDataException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.GetStatusCommand;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 
 public class OmnipodMessage {
 
