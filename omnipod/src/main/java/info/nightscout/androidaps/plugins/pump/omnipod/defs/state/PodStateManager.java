@@ -80,7 +80,7 @@ public abstract class PodStateManager {
      * @return true if we have a Pod state and the Pod activation has been completed. The pod could also be dead at this point
      */
     public final boolean isPodActivationCompleted() {
-        return isPodInitialized() && podState.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS);
+        return isPodInitialized() && podState.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS) && podState.getPodProgressStatus() != PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
     }
 
     /**

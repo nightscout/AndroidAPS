@@ -31,18 +31,19 @@
     <string name="omnipod_pod_address">Pod Address</string>
     <string name="omnipod_pod_expiry">Pod Expires</string>
     <string name="omnipod_warning">Warning</string>
-    <string name="omnipod_pod_status_no_pod_connected">No Pod connected</string>
-    <string name="omnipod_pod_setup_in_progress">Pod setup in progress (Pod progress status: %1$s)</string>
-    <string name="omnipod_pod_status_not_initalized">Pod not initialized</string>
+    <string name="omnipod_pod_status_no_active_pod">No active Pod</string>
+    <string name="omnipod_pod_status_waiting_for_pair_and_prime">Setup in progress (waiting for pair and prime)</string>
+    <string name="omnipod_pod_status_waiting_for_cannula_insertion">Setup in progress (waiting for cannula insertion)</string>
+    <string name="omnipod_pod_status_running">Running</string>
+    <string name="omnipod_pod_status_suspended">Suspended</string>
     <string name="omnipod_pod_status_pod_fault">Pod Fault</string>
+    <string name="omnipod_pod_status_activation_time_exceeded">Activation time exceeded</string>
+    <string name="omnipod_pod_status_inactive">Inactive</string>
     <string name="omnipod_pod_status_pod_fault_description">Pod Fault: %1$s %2$s</string>
-    <string name="omnipod_pod_status_pod_running">Pod running (last delivery status: %1$s)</string>
     <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_ack_short">Ack Alerts</string>
     <string name="omnipod_last_bolus" translatable="false">%1$.2f %2$s (%3$s)</string>
     <string name="omnipod_pod_status_initalizing">Initializing</string>
-    <string name="omnipod_pod_status_active">Active</string>
-    <string name="omnipod_pod_status_unknown">Unknown</string>
 
 
     <!-- Omnipod - Dialogs -->

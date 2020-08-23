@@ -143,8 +143,6 @@ class OmnipodFragment : DaggerFragment() {
                 })
             }
         }
-
-        omnipod_lastconnection.setTextColor(Color.WHITE)
     }
 
     override fun onResume() {
@@ -219,6 +217,7 @@ class OmnipodFragment : DaggerFragment() {
     fun updateOmipodUiElements() {
         updateLastConnectionUiElements()
         updateAcknowledgeAlertsUiElements()
+        updatePodStatusUiElements()
         setVisibilityOfPodDebugButton()
 
         val errors = ArrayList<String>();
@@ -242,11 +241,6 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_tempbasal.text = "-"
             omnipod_lastbolus.text = "-"
             omnipod_lastconnection.setTextColor(Color.WHITE)
-            if (podStateManager.hasPodState()) {
-                omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_not_initalized)
-            } else {
-                omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_no_pod_connected)
-            }
         } else {
             omnipod_pod_address.text = podStateManager.address.toString()
             omnipod_pod_lot.text = podStateManager.lot.toString()
@@ -255,25 +249,10 @@ class OmnipodFragment : DaggerFragment() {
             val expiresAt = podStateManager.expiresAt
             omnipod_pod_expiry.text = if (expiresAt == null) "???" else dateUtil.dateAndTimeString(expiresAt.toDate())
 
-            val stateText: String
-            when {
-                podStateManager.hasFaultEvent() -> {
-                    val faultEventCode = podStateManager.faultEvent.faultEventCode
-                    stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault)
-                    errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
-                }
-
-                podStateManager.isPodRunning    -> {
-                    stateText = resourceHelper.gs(R.string.omnipod_pod_status_pod_running, if (podStateManager.lastDeliveryStatus == null) null else podStateManager.lastDeliveryStatus.name)
-                }
-
-                else                            -> {
-                    stateText = resourceHelper.gs(R.string.omnipod_pod_setup_in_progress, podStateManager.podProgressStatus.name)
-                }
+            if (podStateManager.hasFaultEvent()) {
+                val faultEventCode = podStateManager.faultEvent.faultEventCode
+                errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
-            omnipod_pod_status.text = stateText
-
-            updateLastConnectionUiElements()
 
             // last bolus
             if (podStateManager.lastBolusStartTime != null && podStateManager.lastBolusAmount != null) {
@@ -299,8 +278,13 @@ class OmnipodFragment : DaggerFragment() {
             }
         }
 
-        omnipod_pod_status.setTextColor(if (podStateManager.hasFaultEvent()) Color.RED else Color.WHITE)
-        omnipod_errors.text = if (errors.size == 0) "-" else StringUtils.join(errors, System.lineSeparator())
+        if (errors.size == 0) {
+            omnipod_errors.text = "-"
+            omnipod_errors.setTextColor(Color.WHITE)
+        } else {
+            omnipod_errors.text = StringUtils.join(errors, System.lineSeparator())
+            omnipod_errors.setTextColor(Color.RED)
+        }
 
         val status = commandQueue.spannedStatus()
         if (status.toString() == "") {
@@ -332,6 +316,44 @@ class OmnipodFragment : DaggerFragment() {
             } else {
                 omnipod_lastconnection.text = "-"
             }
+        }
+    }
+
+    private fun updatePodStatusUiElements() {
+        if (!podStateManager.hasPodState()) {
+            omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_no_active_pod)
+        } else if (!podStateManager.isPodActivationCompleted) {
+            if (!podStateManager.isPodInitialized) {
+                omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_pair_and_prime)
+            } else {
+                if (PodProgressStatus.ACTIVATION_TIME_EXCEEDED == podStateManager.podProgressStatus) {
+                    omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_activation_time_exceeded)
+                } else if (podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
+                    omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_pair_and_prime)
+                } else {
+                    omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_cannula_insertion)
+                }
+            }
+        } else {
+            if (podStateManager.podProgressStatus.isRunning) {
+                if (podStateManager.isSuspended) {
+                    omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_suspended)
+                } else {
+                    omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_running)
+                }
+            } else if (podStateManager.podProgressStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
+                omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_pod_fault)
+            } else if (podStateManager.podProgressStatus == PodProgressStatus.INACTIVE) {
+                omnipod_pod_status.text = resourceHelper.gs(R.string.omnipod_pod_status_inactive)
+            } else {
+                omnipod_pod_status.text = podStateManager.podProgressStatus.toString()
+            }
+        }
+
+        if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended) {
+            omnipod_pod_status.setTextColor(Color.RED)
+        } else {
+            omnipod_pod_status.setTextColor(Color.WHITE)
         }
     }
 
