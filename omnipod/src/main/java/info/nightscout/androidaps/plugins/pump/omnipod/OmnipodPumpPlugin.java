@@ -66,7 +66,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
@@ -93,7 +92,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, OmnipodPumpPluginInterface, RileyLinkPumpDevice {
+public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final ServiceTaskExecutor serviceTaskExecutor;
@@ -842,7 +841,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         aapsLogger.error(LTag.PUMP, "getPodPumpStatus() NOT IMPLEMENTED");
     }
 
-    @Override public void addPodStatusRequest(OmnipodStatusRequest pumpStatusRequest) {
+    public void addPodStatusRequest(OmnipodStatusRequest pumpStatusRequest) {
         if (pumpStatusRequest == OmnipodStatusRequest.ResetState) {
             resetStatusState();
         } else {
