@@ -57,6 +57,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
@@ -109,6 +110,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
+    private final OmnipodUIComm commandExecutor;
 
     private final List<CustomAction> customActions = new ArrayList<>();
     // TODO: BS: Not really sure what this is all about, have a closer look at it some time
@@ -143,7 +145,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             RileyLinkServiceData rileyLinkServiceData,
             ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
-            OmnipodUtil omnipodUtil
+            OmnipodUtil omnipodUtil,
+            RileyLinkUtil rileyLinkUtil
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -171,6 +174,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         customActions.add(new CustomAction(
                 R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true));
+
+        commandExecutor = new OmnipodUIComm(injector, aapsLogger, aapsOmnipodManager, rileyLinkUtil, rxBus);
 
         this.serviceConnection = new ServiceConnection() {
             @Override
@@ -418,7 +423,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 OmnipodStatusRequest omnipodStatusRequest = iterator.next();
                 OmnipodUITask omnipodUITask;
                 if (omnipodStatusRequest == OmnipodStatusRequest.GetPodPulseLog) {
-                    omnipodUITask = getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
+                    omnipodUITask = commandExecutor.executeCommand(omnipodStatusRequest.getCommandType());
 
                     PodInfoRecentPulseLog result = (PodInfoRecentPulseLog) omnipodUITask.returnDataObject;
 
@@ -437,16 +442,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     }
 
                 } else {
-                    omnipodUITask = getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
-                }
-
-                if (!omnipodUITask.wasCommandSuccessful()) {
-                    // TODO Refresh buttons
+                    commandExecutor.executeCommand(omnipodStatusRequest.getCommandType());
                 }
                 iterator.remove();
             }
         } else if (this.hasTimeDateOrTimeZoneChanged) {
-            OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetTime);
+            OmnipodUITask omnipodUITask = commandExecutor.executeCommand(OmnipodCommandType.SetTime);
 
             if (omnipodUITask.wasCommandSuccessful()) {
                 this.hasTimeDateOrTimeZoneChanged = false;
@@ -472,7 +473,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @NotNull
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetBasalProfile,
+        OmnipodUITask responseTask = commandExecutor.executeCommand(OmnipodCommandType.SetBasalProfile,
                 profile);
 
         PumpEnactResult result = responseTask.getResult();
@@ -564,7 +565,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public void stopBolusDelivering() {
-        getDeviceCommandExecutor().executeCommand(OmnipodCommandType.CancelBolus);
+        commandExecutor.executeCommand(OmnipodCommandType.CancelBolus);
     }
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
@@ -585,13 +586,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (tbrCurrent != null && !enforceNew) {
             if (Round.isSame(tbrCurrent.absoluteRate, absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
-                refreshOverview("TBR");
+                rxBus.send(new EventRefreshOverview("Omnipod command: TBR", true));
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         }
 
         // now start new TBR
-        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetTemporaryBasal,
+        OmnipodUITask responseTask = commandExecutor.executeCommand(OmnipodCommandType.SetTemporaryBasal,
                 absoluteRate, durationInMinutes);
 
         PumpEnactResult result = responseTask.getResult();
@@ -602,7 +603,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             incrementStatistics(OmnipodConst.Statistics.TBRsSet);
         }
 
-        refreshOverview("TBR");
         return result;
     }
 
@@ -624,15 +624,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         if (tbrCurrent == null) {
             aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already canceled.");
-            refreshOverview("TBR");
+            rxBus.send(new EventRefreshOverview("Omnipod command: TBR", true));
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.CancelTemporaryBasal);
+        OmnipodUITask responseTask = commandExecutor.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
 
         PumpEnactResult result = responseTask.getResult();
-
-        refreshOverview("TBR");
 
         if (result.success) {
             // TODO is this necessary?
@@ -818,17 +816,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return false;
     }
 
-    public OmnipodUIComm getDeviceCommandExecutor() {
-        return rileyLinkOmnipodService.getDeviceCommandExecutor();
-    }
-
     public void addPodStatusRequest(OmnipodStatusRequest pumpStatusRequest) {
         omnipodStatusRequestList.add(pumpStatusRequest);
     }
 
     private void initializePump() {
         if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
-            OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.GetPodStatus);
+            OmnipodUITask omnipodUITask = commandExecutor.executeCommand(OmnipodCommandType.GetPodStatus);
             if (omnipodUITask.wasCommandSuccessful()) {
                 aapsLogger.debug(LTag.PUMP, "Successfully retrieved Pod status on startup");
             } else {
@@ -837,8 +831,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running");
         }
-
-        refreshOverview("Omnipod Pump");
 
         if (!sentIdToFirebase) {
             Bundle params = new Bundle();
@@ -854,23 +846,19 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        try {
-            OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetBolus,
-                    detailedBolusInfo);
+        OmnipodUITask responseTask = commandExecutor.executeCommand(OmnipodCommandType.SetBolus,
+                detailedBolusInfo);
 
-            PumpEnactResult result = responseTask.getResult();
+        PumpEnactResult result = responseTask.getResult();
 
-            if (result.success) {
-                incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
-                        : OmnipodConst.Statistics.StandardBoluses);
+        if (result.success) {
+            incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
+                    : OmnipodConst.Statistics.StandardBoluses);
 
-                result.carbsDelivered(detailedBolusInfo.carbs);
-            }
-
-            return result;
-        } finally {
-            refreshOverview("Bolus");
+            result.carbsDelivered(detailedBolusInfo.carbs);
         }
+
+        return result;
     }
 
     private void incrementStatistics(String statsKey) {
@@ -881,10 +869,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     protected TemporaryBasal readTBR() {
         return activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
-    }
-
-    protected void refreshOverview(String overviewKey) {
-        rxBus.send(new EventRefreshOverview(overviewKey, false));
     }
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {

@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 
@@ -47,8 +46,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private boolean inPreInit = true;
     private String rileyLinkAddress;
     private String errorDescription;
-
-    OmnipodUIComm omnipodUIComm;
 
     public RileyLinkOmnipodService() {
         super();
@@ -79,13 +76,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
         rfspy.startReader();
 
-        omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, aapsOmnipodManager, rileyLinkUtil);
-
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkOmnipodService newly constructed");
-    }
-
-    public OmnipodUIComm getDeviceCommandExecutor() {
-        return this.omnipodUIComm;
     }
 
     @Override

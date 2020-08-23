@@ -86,11 +86,6 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         disposables.clear()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        rxBus.send(EventRefreshOverview("Omnipod Pod Management"))
-    }
-
     fun initPodAction() {
 
         val pagerSettings = WizardPagerSettings()
