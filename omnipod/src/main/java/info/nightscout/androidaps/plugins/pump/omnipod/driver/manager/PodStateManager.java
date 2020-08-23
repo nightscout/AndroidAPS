@@ -26,10 +26,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSl
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 
 // TODO add nullchecks on some setters
 public abstract class PodStateManager {
@@ -138,7 +138,7 @@ public abstract class PodStateManager {
     }
 
     public final void setMessageNumber(int messageNumber) {
-        setAndStore(() -> podState.setMessageNumber(messageNumber));
+        setAndStore(() -> podState.setMessageNumber(messageNumber), false);
     }
 
     public final int getPacketNumber() {
@@ -146,7 +146,7 @@ public abstract class PodStateManager {
     }
 
     public final void setPacketNumber(int packetNumber) {
-        setAndStore(() -> podState.setPacketNumber(packetNumber));
+        setAndStore(() -> podState.setPacketNumber(packetNumber), false);
     }
 
     public final void increaseMessageNumber() {
@@ -190,8 +190,8 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastSuccessfulCommunication());
     }
 
-    public final void setLastSuccessfulCommunication(DateTime dateTime) {
-        setAndStore(() -> podState.setLastSuccessfulCommunication(dateTime));
+    public final void setLastSuccessfulCommunication(DateTime dateTime, boolean notifyPodStateChanged) {
+        setAndStore(() -> podState.setLastSuccessfulCommunication(dateTime), notifyPodStateChanged);
     }
 
     public final DateTime getLastFailedCommunication() {

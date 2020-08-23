@@ -452,7 +452,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_basabasalrate"
+                        android:id="@+id/omnipod_base_basal_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -707,7 +707,7 @@
                     android:text="@string/omnipod_ack_short" />
 
                 <Button
-                    android:id="@+id/omnipod_stats"
+                    android:id="@+id/omnipod_rileylink_stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -17,16 +17,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMe
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.OmnipodAction;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommunicationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageSequenceNumberException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceResyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NotEnoughDataException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodPacket;
@@ -36,11 +26,21 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageSequenceNumberException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceResyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodReturnedErrorResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 
 /**
  * Created by andy on 6/29/18.
@@ -125,12 +125,18 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
 
             aapsLogger.debug(LTag.PUMPCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
+            boolean isExpectedResponseType = responseClass.isInstance(responseMessageBlock);
+            // Set last successful communication before updating from status response to prevent duplicately notifying Pod state changes
+            // as podStateManager.updateFromStatusResponse() also notifies of Pod state changes.
+            if (isExpectedResponseType) {
+                podStateManager.setLastSuccessfulCommunication(DateTime.now(), !(responseMessageBlock instanceof StatusResponse));
+            }
+
             if (responseMessageBlock instanceof StatusResponse) {
                 podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
             }
 
-            if (responseClass.isInstance(responseMessageBlock)) {
-                podStateManager.setLastSuccessfulCommunication(DateTime.now());
+            if (isExpectedResponseType) {
                 return (T) responseMessageBlock;
             } else {
                 if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
