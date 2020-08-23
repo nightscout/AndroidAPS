@@ -60,6 +60,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturne
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
@@ -295,9 +296,11 @@ public class AapsOmnipodManager implements IOmnipodManager {
         //
         // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
         try {
-            sp.putString(OmnipodConst.Prefs.CurrentBolus, omnipodUtil.getGsonInstance().toJson(detailedBolusInfo));
+            ActiveBolus activeBolus = ActiveBolus.fromDetailedBolusInfo(detailedBolusInfo);
+            sp.putString(OmnipodConst.Prefs.ActiveBolus, omnipodUtil.getGsonInstance().toJson(activeBolus));
+            aapsLogger.debug(LTag.PUMP, "Stored active bolus to SP for recovery");
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMP, "Failed to store current bolus to SP", ex);
+            aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);
         }
 
         // Wait for the bolus to finish
@@ -308,7 +311,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
         addBolusToHistory(detailedBolusInfo);
 
-        sp.remove(OmnipodConst.Prefs.CurrentBolus);
+        sp.remove(OmnipodConst.Prefs.ActiveBolus);
 
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }

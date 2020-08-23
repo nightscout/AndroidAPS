@@ -281,7 +281,7 @@ class OmnipodFragment : DaggerFragment() {
                 .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
 
             // total delivered
-            omnipod_total_delivered.text = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) {
+            omnipod_total_delivered.text = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) { // Null check for backwards compatibility
                 resourceHelper.gs(R.string.omnipod_total_delivered, podStateManager.totalInsulinDelivered - OmnipodConst.POD_SETUP_UNITS);
             } else {
                 "-"
