@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -416,9 +417,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             triggerUIChange();
 
         } else if (!omnipodStatusRequestList.isEmpty()) {
-            List<OmnipodStatusRequest> removeList = new ArrayList<>();
+            Iterator<OmnipodStatusRequest> iterator = omnipodStatusRequestList.iterator();
 
-            for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
+            while(iterator.hasNext()) {
+                OmnipodStatusRequest omnipodStatusRequest = iterator.next();
                 if (omnipodStatusRequest == OmnipodStatusRequest.GetPodPulseLog) {
                     OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
 
@@ -441,11 +443,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 } else {
                     getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
                 }
-                removeList.add(omnipodStatusRequest);
+                iterator.remove();
             }
-
-            omnipodStatusRequestList.removeAll(removeList);
-
         } else if (this.hasTimeDateOrTimeZoneChanged) {
             OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetTime);
 
