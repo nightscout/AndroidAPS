@@ -57,7 +57,7 @@ public class InitActionPage extends Page {
      *
      * @return
      */
-    public boolean isBackActionPossible() {
+    @Override public boolean isBackActionPossible() {
         return actionCompleted;
     }
 
@@ -66,7 +66,7 @@ public class InitActionPage extends Page {
      *
      * @return
      */
-    public boolean isNextActionPossible() {
+    @Override public boolean isNextActionPossible() {
         return actionSuccess;
     }
 

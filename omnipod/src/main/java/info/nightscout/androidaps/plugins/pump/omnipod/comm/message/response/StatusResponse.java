@@ -91,7 +91,7 @@ public class StatusResponse extends MessageBlock {
         return alerts;
     }
 
-    public byte[] getRawData() {
+    @Override public byte[] getRawData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             stream.write(getType().getValue());

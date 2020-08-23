@@ -469,7 +469,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
     // Updates the pods current time based on the device timezone and the pod's time zone
-    public PumpEnactResult setTime() {
+    @Override public PumpEnactResult setTime() {
         long time = System.currentTimeMillis();
         try {
             delegate.setTime(isBasalBeepsEnabled());
@@ -491,7 +491,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    public PodInfoRecentPulseLog readPulseLog() {
+    @Override public PodInfoRecentPulseLog readPulseLog() {
         PodInfoResponse response = delegate.getPodInfo(PodInfoType.RECENT_PULSE_LOG);
         return response.getPodInfo();
     }

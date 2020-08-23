@@ -54,7 +54,7 @@ public class RemovePodWizardModel extends AbstractWizardModel {
         );
     }
 
-    public Fragment getReviewFragment() {
+    @Override public Fragment getReviewFragment() {
         return PodInfoFragment.create("removePodInfoFragment", false);
     }
 
