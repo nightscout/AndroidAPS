@@ -60,7 +60,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.IOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
@@ -77,7 +76,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.SingleSubject;
 
 @Singleton
-public class AapsOmnipodManager implements IOmnipodManager {
+public class AapsOmnipodManager {
 
     private final PodStateManager podStateManager;
     private final OmnipodUtil omnipodUtil;
@@ -142,47 +141,54 @@ public class AapsOmnipodManager implements IOmnipodManager {
         timeChangeEventEnabled = sp.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
     }
 
-    @Override
-    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
-        long time = System.currentTimeMillis();
-        if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
-            try {
-                Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
-                        handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
-
-                return new PumpEnactResult(injector).success(true).enacted(true);
-            } catch (Exception ex) {
-                String comment = handleAndTranslateException(ex);
-                podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
-                addFailureToHistory(time, PodHistoryEntryType.PairAndPrime, comment);
-                return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
-            }
-        } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
-            try {
-                BasalSchedule basalSchedule;
-                try {
-                    basalSchedule = mapProfileToBasalSchedule(profile);
-                } catch (Exception ex) {
-                    throw new CommandInitializationException("Basal profile mapping failed", ex);
-                }
-                Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
-                        handleSetupActionResult(podInitActionType, podInitReceiver, res, time, profile));
-
-                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
-
-                return new PumpEnactResult(injector).success(true).enacted(true);
-            } catch (Exception ex) {
-                String comment = handleAndTranslateException(ex);
-                podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
-                addFailureToHistory(time, PodHistoryEntryType.FillCannulaSetBasalProfile, comment);
-                return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
-            }
+    public PumpEnactResult pairAndPrime(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver) {
+        if (podInitActionType != PodInitActionType.PairAndPrimeWizardStep) {
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
         }
 
-        return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
+        long time = System.currentTimeMillis();
+
+        try {
+            Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
+                    handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
+
+            return new PumpEnactResult(injector).success(true).enacted(true);
+        } catch (Exception ex) {
+            String comment = handleAndTranslateException(ex);
+            podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
+            addFailureToHistory(time, PodHistoryEntryType.PairAndPrime, comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+        }
     }
 
-    @Override
+    public PumpEnactResult setInitialBasalScheduleAndInsertCannula(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
+        if (podInitActionType != PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
+        }
+
+        long time = System.currentTimeMillis();
+
+        try {
+            BasalSchedule basalSchedule;
+            try {
+                basalSchedule = mapProfileToBasalSchedule(profile);
+            } catch (Exception ex) {
+                throw new CommandInitializationException("Basal profile mapping failed", ex);
+            }
+            Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
+                    handleSetupActionResult(podInitActionType, podInitReceiver, res, time, profile));
+
+            rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+
+            return new PumpEnactResult(injector).success(true).enacted(true);
+        } catch (Exception ex) {
+            String comment = handleAndTranslateException(ex);
+            podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
+            addFailureToHistory(time, PodHistoryEntryType.FillCannulaSetBasalProfile, comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+        }
+    }
+
     public PumpEnactResult getPodStatus() {
         long time = System.currentTimeMillis();
         try {
@@ -196,7 +202,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         }
     }
 
-    @Override
     public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
         long time = System.currentTimeMillis();
         try {
@@ -217,7 +222,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult setBasalProfile(Profile profile) {
         long time = System.currentTimeMillis();
         try {
@@ -246,7 +250,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult resetPodStatus() {
         podStateManager.removeState();
 
@@ -257,7 +260,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
@@ -325,7 +327,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }
 
-    @Override
     public PumpEnactResult cancelBolus() {
         SingleSubject<Boolean> bolusCommandExecutionSubject = delegate.getBolusCommandExecutionSubject();
         if (bolusCommandExecutionSubject != null) {
@@ -365,7 +366,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
     }
 
-    @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         boolean beepsEnabled = isTbrBeepsEnabled();
         long time = System.currentTimeMillis();
@@ -398,7 +398,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult cancelTemporaryBasal() {
         long time = System.currentTimeMillis();
         try {
@@ -413,7 +412,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult acknowledgeAlerts() {
         long time = System.currentTimeMillis();
         try {
@@ -427,7 +425,6 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult getPodInfo(PodInfoType podInfoType) {
         long time = System.currentTimeMillis();
         try {
@@ -467,9 +464,8 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     // Updates the pods current time based on the device timezone and the pod's time zone
-    @Override public PumpEnactResult setTime() {
+    public PumpEnactResult setTime() {
         long time = System.currentTimeMillis();
         try {
             delegate.setTime(isBasalBeepsEnabled());
@@ -491,7 +487,7 @@ public class AapsOmnipodManager implements IOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override public PodInfoRecentPulseLog readPulseLog() {
+    public PodInfoRecentPulseLog readPulseLog() {
         PodInfoResponse response = delegate.getPodInfo(PodInfoType.RECENT_PULSE_LOG);
         return response.getPodInfo();
     }
