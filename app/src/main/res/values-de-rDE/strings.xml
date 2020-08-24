@@ -400,7 +400,7 @@
     <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
     <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
-    <string name="notavailable">nicht verfügbar</string>
+    <string name="notavailable">n/a</string>
     <string name="patientage">Patientenalter</string>
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
@@ -1083,7 +1083,6 @@ Unerwartetes Verhalten.</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
     <string name="objectives_button_unstart">Ziel neu starten</string>
     <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
-    <string name="time_or_timezone_change">Zeit- und/oder Zeitzonenänderung an der Pumpe</string>
     <string name="nopumpselected">Keine Pumpe ausgewählt</string>
     <string name="setupwizard_units_prompt">Wähle die Einheit, in der die Werte angezeigt werden sollen.</string>
     <string name="ns_ploadlocalprofile">Lade die Änderungen des lokalen Profils zu NS hoch.</string>
@@ -1160,7 +1159,6 @@ Unerwartetes Verhalten.</string>
     <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
     <string name="overview_show_absinsulin">Gesamtinsulin</string>
     <string name="master_password_summary">Das Master-Passwort wird für die Backup-Verschlüsselung und zur Außerkraftsetzung der Sicherheit in der Anwendung verwendet. Merke es Dir oder bewahre es an einem sicheren Ort auf.</string>
-    <string name="passwords_dont_match">Die Passwörter stimmen nicht überein.</string>
     <string name="current_master_password">Aktuelles Master-Passwort</string>
     <string name="statuslights">Statusanzeige</string>
     <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
@@ -1169,124 +1167,6 @@ Unerwartetes Verhalten.</string>
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nie verbunden</string>
-    <string name="medtronic_pump_status_waking_up">Aufwecken</string>
-    <string name="medtronic_pump_status_error_comm">Fehler bei der Kommunikation</string>
-    <string name="medtronic_pump_status_timeout_comm">Zeitüberschreitung bei Kommunikation</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpe ist nicht erreichbar</string>
-    <string name="medtronic_pump_status_invalid_config">Ungültige Einstellung</string>
-    <string name="medtronic_pump_status_active">Aktiv</string>
-    <string name="medtronic_pump_status_sleeping">Schläft</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Um den Omnipod nutzen zu können, brauchst Du einen RileyLink (mind. Firmware 2.0).</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Bolus-Piep aktiviert</string>
-    <string name="omnipod_config_beep_basal_enabled">Basal-Piep aktiviert</string>
-    <string name="omnipod_config_beep_smb_enabled">SMB-Piep aktiviert</string>
-    <string name="omnipod_config_beep_tbr_enabled">TBR-Piep aktiviert</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Pod-Debugging-Optionen aktiviert</string>
-    <string name="omnipod_config_timechange_enabled">Sommerzeit/Zeitzonen-Erkennung aktiviert</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">Pod Mgmt</string>
-    <string name="omnipod_pod_status">Pod Status</string>
-    <string name="omnipod_reservoir_left">%1$.2f IE übrig</string>
-    <string name="omnipod_reservoir_over50">über 50 IE</string>
-    <string name="omnipod_pod_address">Pod Adresse</string>
-    <string name="omnipod_pod_expiry">Pod läuft ab</string>
-    <string name="omnipod_pod_name_no_info">Keine Info</string>
-    <string name="omnipod_pod_no_pod_connected">Kein Pod verbunden</string>
-    <string name="omnipod_pod_not_initalized">Nicht initialisiert</string>
-    <string name="omnipod_pod_active_alerts">Aktive Pod-Warnungen</string>
-    <string name="omnipod_ack_short">Alarm bestätigen</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">Aktion ist nicht möglich.\n\n Du musst zuerst den Omnipod konfigurieren, bevor Du diese Operation verwenden kannst.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Aktion ist nicht möglich.\n\n Du musst ein paar Minuten warten bis AAPS versucht, das Profil zum ersten Mal zu setzen.</string>
-    <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
-    <string name="omnipod_error_pod_not_attached">Kein aktiver Pod.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Kommandoprüfung fehlgeschlagen</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Es ist ein unerwarteter Fehler aufgetreten. Bitte melden! (Typ: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Kommunikation fehlgeschlagen: Ungültige Eingabeparameter empfangen.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Keine Verbindung: Zeitüberschreitung</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Keine Verbindung: Es ist ein unerwarteter Fehler aufgetreten. Bitte melden!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Kommunikation fehlgeschlagen: Die Überprüfung der Nachrichtenintegrität ist fehlgeschlagen.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Kommunikation fehlgeschlagen: Es wurde ein ungültiges Paket vom Pod empfangen.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Kommunikation fehlgeschlagen: Der Pod befindet sich in einem falschen Status.</string>
-    <string name="omnipod_driver_error_invalid_response">Kommunikation fehlgeschlagen: Es wurde eine ungültige Antwort vom Pod empfangen.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Kommunikation fehlgeschlagen: Ungültige Zeichenfolge vom Pod empfangen.</string>
-    <string name="omnipod_driver_error_invalid_message_address">Kommunikation fehlgeschlagen: Ungültige Adresse vom Pod empfangen.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Kommunikation fehlgeschlagen: Nachricht vom Pod konnte nicht decodiert werden.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Kommunikation fehlgeschlagen: Nonce resync fehlgeschlagen.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Kommunikation fehlgeschlagen: Nonce nicht synchronisiert</string>
-    <string name="omnipod_driver_error_not_enough_data">Kommunikation fehlgeschlagen: Nicht genügend Daten vom Pod empfangen.</string>
-    <string name="omnipod_driver_error_pod_fault">Ein Pod-Fehler (%1$03d %2$s) wurde festgestellt. Bitte deaktiviere den Pod und starte einen neuen.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Kommunikation fehlgeschlagen: Fehlerhafte Antwort vom Pod.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Pod Management</string>
-    <string name="omnipod_cmd_init_pod">Init Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Pod deaktivieren</string>
-    <string name="omnipod_cmd_reset_pod">Pod zurücksetzen</string>
-    <string name="omnipod_cmd_pod_history">Pod Historie</string>
-    <string name="omnipod_cmd_set_bolus">Setze Bolus</string>
-    <string name="omnipod_cmd_cancel_bolus">Bolus abbrechen</string>
-    <string name="omnipod_cmd_set_tbr">Setze Temporäre Basalrate</string>
-    <string name="omnipod_cmd_cancel_tbr">Temporäre Basalrate abbrechen (intern über den Treiber)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Temporäre Basalrate abbrechen (vom Benutzer erzwungen)</string>
-    <string name="omnipod_cmd_set_basal_schedule">Basalrate festlegen</string>
-    <string name="omnipod_cmd_get_pod_status">Pod-Status abrufen</string>
-    <string name="omnipod_cmd_get_pod_info">Pod-Info abrufen</string>
-    <string name="omnipod_cmd_set_time">Zeit einstellen</string>
-    <string name="omnipod_cmd_configure_alerts">Warnungen konfigurieren</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Alarme bestätigen</string>
-    <string name="omnipod_cmd_suspend_delivery">Abgabe abbrechen</string>
-    <string name="omnipod_cmd_resume_delivery">Abgabe wieder aufnehmen</string>
-    <string name="omnipod_cmd_unknown_entry">Unbekannte Eingabe</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f IE</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f IE, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Rate: %1$.1f IE, Dauer: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">Wenn Du <b>OK</b> klickst, wird die Verbindung zum Pod zwangsweise getrennt und Du wirst Dich nicht mehr mit ihm verbinden können.
-Mache das nur, wenn AAPS nicht mehr mit dem Pod kommunizieren kann. Wenn dies noch geht, nutze stattdessen die Option <b>Deaktiviere Pod</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">Pod Historie derzeit nicht verfügbar.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Befülle den Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nBefülle den neuen Pod mit ausreichend Insulin für 3 Tage.\n\nAchte auch zwei Pieptöne vom Pod während des Füllens. Diese zeigen an, dass der Pod mit der Mindestmenge von 85 IE befüllt wurde. Leere die Spritze komplett, auch wenn Du die beiden Pieptöne gehört hast.\n\nKlicke <b>Weiter</b> nachdem Du den Pod befüllt hast.\n\n<b>Hinweis:</b> Entferne den Nadelschutz des Pods noch nicht.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Befüllen</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Versuche Dich mit dem neuen Pod zu verbinden und befülle ihn.\n\nWenn alle Anzeigen angehakt sind, kannst Du <b>Weiter</b> klicken.\n\n<b>Hinweis:</b> Pod und RileyLink müssen dabei sehr nah beieinander sein.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Befestige den Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nBereite die Infusionsstelle vor. Entferne den Nadelschutz des Pods und die Schutzfolie über dem Kleber. Klebe dann den Pod an die gewünschte Körperstelle.\n\nFalls die Kanüle herausragt, klicke <b>Abbrechen</b> und verwirf den Pod.\n\nKlicke <b>Weiter</b>; um die Kanüle zu setzen und die Insulinabgabe zu beginnen.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Kanüle setzen</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Erste Basalrate und Kanüle werden nun gesetzt.\n\nWenn alle Häkchen gesetzt sind, kannst Du <b>Weiter</b> klicken.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nDer Pod ist jetzt aktiv.\n\nDeine Basalrate ist programmiert und die Kanüle wurde gesetzt.\n\nBitte überprüfe, ob die Kanüle korrekt gesetzt wurde und ersetze den Pod, wenn Du das Gefühl hast, dass dies nicht erfolgreich war.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Pod deaktivieren</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nDrücke <b>Weiter</b> um den Pod zu deaktivieren.\n\n<b>Hinweis:</b> Dies unterbricht die gesamte Insulinabgabe und deaktiviert den Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Deaktiviere den Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Deaktiviere den Pod.\n\nWenn alle Häkchen gesetzt sind, kannst Du <b>Weiter</b>drücken.\n\n<b>Hinweis:</b> Wenn das Deaktivieren fortwährend fehlschlägt, drücke bitte <b>Abbrechen</b> und verwende die Option <b>Reset Pod</b>, um den Pod Status zwangsweise zurückzusetzen.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deaktiviert.\n\nBitte entferne den Pod von Deinem Körper und entsorge ihn.</string>
-    <string name="omnipod_init_pod_pair_pod">Pod verbinden</string>
-    <string name="omnipod_init_pod_prime_pod">Pod befüllen</string>
-    <string name="omnipod_init_pod_fill_cannula">Kanüle befüllen</string>
-    <string name="omnipod_init_pod_set_basal_profile">Basalprofil setzen</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Abgabe abbrechen</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Pod deaktivieren</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Integration für Omnipod Dash.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Erinnerung Setup beendet</string>
-    <string name="omnipod_alert_expiration">Pod läuft in Kürze ab</string>
-    <string name="omnipod_alert_expiration_advisory">Pod läuft in Kürze ab</string>
-    <string name="omnipod_alert_shutdown_imminent">Herunterfahren steht unmittelbar bevor</string>
-    <string name="omnipod_alert_low_reservoir">Niedriger Reservoirstand</string>
-    <string name="omnipod_alert_unknown_alert">Unbekannter Alarm</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Das Festlegen der Basalrate evtl. fehlgeschlagen. Insulinabgabe wird evtl. ausgesetzt! Aktualisiere den Pod-Status.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Das Festlegen der temporären Basalrate evtl. fehlgeschlagen. Sofern eine temporäre Basalrate bestand, wurde diese ggf. beendet! Aktualisiere den Pod-Status.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Das Festlegen der Zeit evtl. fehlgeschlagen. Insulinabgabe wird evtl. ausgesetzt! Aktualisiere den Pod-Status.</string>
-    <string name="omnipod_bolus_failed_uncertain">Erfolgreiche Bolusabgabe konnte nicht sicher ermittelt werden. Stelle sicher, dass der Pod Insulin abgibt oder brich den Bolus ab.</string>
-    <string name="omnipod_rl_stats">RL Stats</string>
-    <string name="omnipod_read_pulse_log_short">Pulse Log</string>
     <string name="comapareprofile">Profile vergleichen</string>
     <string name="nav_profilehelper">Profil-Helfer</string>
     <string name="motoldefaultprofile">Standard-Profil</string>

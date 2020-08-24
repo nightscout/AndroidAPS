@@ -1065,7 +1065,6 @@
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
     <string name="objectives_button_unstart">Wissen gestart</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
-    <string name="time_or_timezone_change">Tijd en/of tijdzone wijzigen op de pomp</string>
     <string name="nopumpselected">Geen pomp geselecteerd</string>
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
     <string name="ns_ploadlocalprofile">Upload lokale profielwijzigingen naar NS</string>
@@ -1140,7 +1139,6 @@
     <string name="authorizationfailed">Authorisatie mislukt</string>
     <string name="overview_show_absinsulin">Absolute insuline</string>
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
-    <string name="passwords_dont_match">Wachtwoorden komen niet overeen</string>
     <string name="current_master_password">Huidig masterwachtwoord</string>
     <string name="statuslights">Statusindicatoren</string>
     <string name="statuslights_copy_ns">Kopieer instellingen van NS</string>
@@ -1149,122 +1147,5 @@
     <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
     <string name="largedisplay_description">Groot scherm</string>
     <string name="skin">Skin</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nooit verbonden</string>
-    <string name="medtronic_pump_status_waking_up">Ontwaken</string>
-    <string name="medtronic_pump_status_error_comm">Communicatiefout</string>
-    <string name="medtronic_pump_status_timeout_comm">Time-out op de communicatie</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pomp niet bereikbaar</string>
-    <string name="medtronic_pump_status_invalid_config">Ongeldige configuratie</string>
-    <string name="medtronic_pump_status_active">Actief</string>
-    <string name="medtronic_pump_status_sleeping">Slapend</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Pomp integratie voor Omnipod, vereist RileyLink (met firmware 2.0 of hoger).</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Bolus pieptoon ingeschakeld</string>
-    <string name="omnipod_config_beep_basal_enabled">Basaal pieptoon ingeschakeld</string>
-    <string name="omnipod_config_beep_smb_enabled">SMB pieptoon ingeschakeld</string>
-    <string name="omnipod_config_beep_tbr_enabled">Tijdelijk basaal pieptoon ingeschakeld</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Pod debugging opties ingeschakeld</string>
-    <string name="omnipod_config_timechange_enabled">DST/tijdzone detectie ingeschakeld</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">Pod Beheer</string>
-    <string name="omnipod_pod_status">Pod Status</string>
-    <string name="omnipod_reservoir_left">%1$.2f E over</string>
-    <string name="omnipod_reservoir_over50">Meer dan 50 E</string>
-    <string name="omnipod_pod_address">Pod adres</string>
-    <string name="omnipod_pod_expiry">Pod verloopt</string>
-    <string name="omnipod_pod_name_no_info">Geen info</string>
-    <string name="omnipod_pod_no_pod_connected">Geen pod verbonden</string>
-    <string name="omnipod_pod_not_initalized">Niet geïnitialiseerd</string>
-    <string name="omnipod_pod_active_alerts">Actieve pod alarmen</string>
-    <string name="omnipod_ack_short">Alarmen bevestigen</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433,91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">Bewerking is niet mogelijk.\n\nJe moet eerst Omnipod ingesteld hebben, voordat je deze bewerking kunt gebruiken.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Bewerking is niet mogelijk.\n\nJe moet enkele minuten wachten, totdat AAPS voor de eerste keer probeert om het profiel in te stellen.</string>
-    <string name="omnipod_error_illegal_init_action_type">Ongeldig PodInitActionType: %1$s</string>
-    <string name="omnipod_error_pod_not_attached">Geen actieve pod.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Opdracht verificatie is mislukt.</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Er is een onverwachte fout opgetreden. Rapporteer dit alsjeblieft! (type: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Communicatie mislukt: ongeldige invoerparameters ontvangen.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Communicatie mislukt: timeout.</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Communicatie mislukt: er is een onvoorziene fout opgetreden. Rapporteer dit alsjeblieft!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Communicatie mislukt: de Pod bevindt zich in een verkeerde staat.</string>
-    <string name="omnipod_driver_error_invalid_response">Communicatie mislukt: ongeldig antwoord ontvangen van de Pod.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Communicatie mislukt: bericht met ongeldig volgnummer ontvangen van de Pod.</string>
-    <string name="omnipod_driver_error_invalid_message_address">Communicatie mislukt: bericht met ongeldig adres ontvangen van de Pod.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Communicatie is mislukt: kon bericht van de Pod niet decoderen.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Communicatie mislukt: nonce resync is mislukt.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Communicatie mislukt: nonce out of sync.</string>
-    <string name="omnipod_driver_error_not_enough_data">Communicatie mislukt: onvoldoende gegevens ontvangen van de Pod.</string>
-    <string name="omnipod_driver_error_pod_fault">Een pod-fout (%1$03d %2$s) is gedetecteerd. Deactiveer je Pod en start een nieuwe.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Communicatie mislukt: de Pod heeft een foutrespons gegeven.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Pod Beheer</string>
-    <string name="omnipod_cmd_init_pod">Initialiseer Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Deactiveer Pod</string>
-    <string name="omnipod_cmd_reset_pod">Reset Pod</string>
-    <string name="omnipod_cmd_pod_history">Pod Historie</string>
-    <string name="omnipod_cmd_set_bolus">Bolus instellen</string>
-    <string name="omnipod_cmd_cancel_bolus">Annuleer Bolus</string>
-    <string name="omnipod_cmd_set_tbr">Instellen Tijdelijke Basaal</string>
-    <string name="omnipod_cmd_cancel_tbr">Annuleer Tijdelijk Basaal (Intern door stuurprogramma)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Annuleer Tijdelijk Basaal (Geforceerd door gebruiker)</string>
-    <string name="omnipod_cmd_set_basal_schedule">Basaalprofiel instellen</string>
-    <string name="omnipod_cmd_get_pod_status">Pod status ophalen</string>
-    <string name="omnipod_cmd_get_pod_info">Pod info ophalen</string>
-    <string name="omnipod_cmd_set_time">Tijd instellen</string>
-    <string name="omnipod_cmd_configure_alerts">Configureer alarmen</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Bevestig alarmen</string>
-    <string name="omnipod_cmd_suspend_delivery">Onderbreek toediening</string>
-    <string name="omnipod_cmd_resume_delivery">Hervat toediening</string>
-    <string name="omnipod_cmd_unknown_entry">Onbekende invoer</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f E</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f E, KH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Basaal: %1$.1f E, Duur: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">Als je op <b>OK</b> klikt, zal de Pod gedwongen worden gereset en kun je niet meer communiceren met de Pod. Doe dit alleen als je al niet meer met de Pod kunt communiceren. Als je nog wel kunt communiceren met de Pod, gebruik dan de optie <b>Deactiveer Pod</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">Pod Historie momenteel niet beschikbaar.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Vul de Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nVul de nieuwe Pod met voldoende insuline voor 3 dagen.\n\nLuister of je twee piepjes hoort tijdens het vullen. Deze geven aan dat de minimum hoeveelheid van 85E is bereikt. Ook als je de twee piepjes hebt gehoord ga je verder met vullen totdat de vulspuit volledig leeg is.\n\nNa het vullen van de Pod druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> verwijder de beschermkap van de Pod naald nog niet!</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Uitvullen</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Probeer te koppelen met de nieuwe Pod en laat de Pod de naald uitvullen.\n\nWanneer alle onderdelen zijn afgerond, druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> Houd de Pod goed dicht bij de RileyLink terwijl je dit doet.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Plaats de Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nBereid het plaatsen voor. Verwijder de beschermdop van de naald en haal de papiertjes van de sticker.\n\n(Mocht je zien dat de canule uitsteekt, druk dan op <b>Annuleren</b> en begin overnieuw met een andere Pod.)\n\nBevestig de Pod op de huid. Druk op <b>Volgende</b> om de canule te gaan inschieten en de insulinetoediening te laten starten.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Canule inschieten</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">De basaalstand wordt ingesteld en de canule wordt ingeschoten.\n\nWanneer alle onderdelen zijn afgerond, druk je op <b>Volgende</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nDe Pod is nu actief.\n\nJouw basaalprofiel is ingeladen in de Pod en de canule is ingebracht.\n\nControleer of de canule correct is geplaatst en vervang de Pod als je denkt dat er iets is misgegaan.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Deactiveer Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nDruk op <b>Volgende</b> om de Pod te deactiveren.\n\n<b>Opmerking:</b> Hiermee wordt de insuline toediening gestopt en wordt de Pod gedeactiveerd.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Deactiveren van de Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactiveren van de Pod.\n\nWanneer alle onderdelen zijn afgerond, druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> Als deactiveren herhaaldelijk niet wil lukken, druk je op <b>Annuleren</b> en gebruik de optie <b>Reset Pod</b> om de Pod-status geforceerd te deactiveren.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod gedeactiveerd.\n\nVerwijder de Pod van je lichaam en gooi hem weg.</string>
-    <string name="omnipod_init_pod_pair_pod">Pod Koppelen</string>
-    <string name="omnipod_init_pod_prime_pod">Pod Uitvullen</string>
-    <string name="omnipod_init_pod_fill_cannula">Canule vullen</string>
-    <string name="omnipod_init_pod_set_basal_profile">Instellen Basaal Profiel</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Annuleer toediening</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Deactiveer Pod</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Pomp integratie voor Omnipod Dash.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Herinnering koppeling afronden</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
-    <string name="omnipod_alert_expiration">Pod verloopt binnenkort</string>
-    <string name="omnipod_alert_expiration_advisory">Pod verloopt binnenkort</string>
-    <string name="omnipod_alert_shutdown_imminent">Schakelt zeer binnenkort uit</string>
-    <string name="omnipod_alert_low_reservoir">Laag reservoir</string>
-    <string name="omnipod_alert_unknown_alert">Onbekend alarm</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Het instellen van basaal profiel is mogelijk mislukt. De toediening is misschien gestopt! Vernieuw de status van Pod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Het instellen van tijdelijk basaal is mogelijk mislukt. Als er al een tijdelijk basaal actief was, is dat misschien geannuleerd! Vernieuw de status van de Pod.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Het instellen van de tijd is mogelijk mislukt. De toediening is misschien gestopt! Vernieuw de status van Pod.</string>
-    <string name="omnipod_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer of de Pod de bolus aan het toedienen is of annuleer de bolus.</string>
-    <string name="omnipod_rl_stats">RL Statistieken</string>
-    <string name="omnipod_read_pulse_log_short">Pulsen Log</string>
     <string name="nav_profilehelper">Profiel hulp</string>
 </resources>

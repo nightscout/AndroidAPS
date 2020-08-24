@@ -1066,7 +1066,6 @@
     <string name="objectives_button_unfinish">Wyczyść skończone</string>
     <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
-    <string name="time_or_timezone_change">Zmiana czasu i/lub strefy czasowej w pompie</string>
     <string name="nopumpselected">Nie wybrano pompy</string>
     <string name="setupwizard_units_prompt">Wybierz jednostki, w których chcesz wyświetlać wartości</string>
     <string name="ns_ploadlocalprofile">Prześlij zmiany w profilu lokalnym do NS</string>
@@ -1142,7 +1141,6 @@
     <string name="authorizationfailed">Autoryzacja nie powiodła się</string>
     <string name="overview_show_absinsulin">Cała insulina</string>
     <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je lub przechowuj w bezpiecznym miejscu.</string>
-    <string name="passwords_dont_match">Hasła się nie zgadzają!</string>
     <string name="current_master_password">Aktualne hasło główne</string>
     <string name="statuslights">Wskaźniki stanu</string>
     <string name="statuslights_copy_ns">Kopiowanie ustawień z NS</string>
@@ -1151,123 +1149,6 @@
     <string name="buttonson_description">Przyciski są zawsze wyświetlane na dole ekranu</string>
     <string name="largedisplay_description">Duży ekran</string>
     <string name="skin">Motyw</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nigdy nie połączona</string>
-    <string name="medtronic_pump_status_waking_up">Wybudzanie</string>
-    <string name="medtronic_pump_status_error_comm">Błąd komunikacji</string>
-    <string name="medtronic_pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pompa nieosiągalna</string>
-    <string name="medtronic_pump_status_invalid_config">Nieprawidłowe ustawienia</string>
-    <string name="medtronic_pump_status_active">Aktywna</string>
-    <string name="medtronic_pump_status_sleeping">Uśpiona</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Integracja pompy Omnipod, wymaga RileyLink (z firmwarem 2.0 lub wyższym).</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Sygnał dźwiękowy bolusa włączony</string>
-    <string name="omnipod_config_beep_basal_enabled">Sygnał dźwiękowy bazy włączony</string>
-    <string name="omnipod_config_beep_smb_enabled">Sygnał dźwiękowy SMB włączony</string>
-    <string name="omnipod_config_beep_tbr_enabled">Sygnał dźwiękowy TBR (tymczasowej dawk bazowej) włączony</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Włączone opcje debugowania PODów</string>
-    <string name="omnipod_config_timechange_enabled">Włączone wykrywanie stref czasowych</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">Pod Mgmt</string>
-    <string name="omnipod_pod_status">Status Pod</string>
-    <string name="omnipod_reservoir_left">%1$.2f U zostało</string>
-    <string name="omnipod_reservoir_over50">Ponad 50 U</string>
-    <string name="omnipod_pod_address">Adres Pod</string>
-    <string name="omnipod_pod_expiry">Pod traci ważność</string>
-    <string name="omnipod_pod_name_no_info">Brak informacji</string>
-    <string name="omnipod_pod_no_pod_connected">Pod nie podłączony</string>
-    <string name="omnipod_pod_not_initalized">Nie zainicjowany</string>
-    <string name="omnipod_pod_active_alerts">Aktywne alarmy Pod</string>
-    <string name="omnipod_ack_short">Alerty ack</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433,91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować Omnipod przed uruchomieniem tego działania.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Operacja nie jest możliwa.\n\n Trzeba poczekać kilka minut, aż AAPS spróbuje ustawić profil pierwszy raz.</string>
-    <string name="omnipod_error_illegal_init_action_type">Niedozwolone działanie PodInitActionType: %1$s</string>
-    <string name="omnipod_error_pod_not_attached">Brak aktywnego Pod.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Nieudana weryfikacja polecenia.</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Wystąpił nieoczekiwany błąd. Proszę zgłosić! (typ: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Komunikacja nie powiodła się: odebrano niepoprawne parametry wejściowe.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Komunikacja nie powiodła się: przekroczono limit czasu.</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Komunikacja nie powiodła się: wystąpił nieoczekiwany błąd. Proszę zgłosić!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Komunikacja nie powiodła się: weryfikacja integralności komunikatu nie powiodła się.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Komunikacja nie powiodła się: odebrano niepoprawny pakiet (komunikat) z Poda.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Komunikacja nie powiodła się: Pod jest w niewłaściwym stanie.</string>
-    <string name="omnipod_driver_error_invalid_response">Komunikacja nie powiodła się: odebrano niepoprawną odpowiedź (pakiet) z Poda.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Komunikacja nie powiodła się: odebrano komunikat z niepoprawną sekwencją liczb z Poda.</string>
-    <string name="omnipod_driver_error_invalid_message_address">Komunikacja nie powiodła się: odebrano komunikat z niepoprawną adresacją z Poda.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Komunikacja nie powiodła się: nie powiodło się dekodowanie komunikatu z Poda.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Komunikacja nie powiodła się: nonce resync nie powiodło się.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Komunikacja nie powiodła się: nonce nie jest zsynchronizowane.</string>
-    <string name="omnipod_driver_error_not_enough_data">Komunikacja nie powiodła się: brak wystarczającej ilości danych odebranych z Poda.</string>
-    <string name="omnipod_driver_error_pod_fault">Błąd Pod. (%1$03d %2$s) został wykryty. Zdezaktywuj swój Pod i uruchom nowy.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Komunikacja nie powiodła się: Pod zwrócił odpowiedź o błędzie.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Zarządzanie Pod</string>
-    <string name="omnipod_cmd_init_pod">Uruchom Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Odłącz Pod</string>
-    <string name="omnipod_cmd_reset_pod">Resetuj Pod</string>
-    <string name="omnipod_cmd_pod_history">Historia Pod</string>
-    <string name="omnipod_cmd_set_bolus">Podanie bolusa</string>
-    <string name="omnipod_cmd_cancel_bolus">Anulowanie bolusa</string>
-    <string name="omnipod_cmd_set_tbr">Ustaw tymczasową dawkę bazową</string>
-    <string name="omnipod_cmd_cancel_tbr">Anuluj tymczasową bazę (wewnętrznie przez sterownik)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Anuluj tymczasową bazę (wymuszone przez użytkownika)</string>
-    <string name="omnipod_cmd_set_basal_schedule">Ustaw harmonogram Dawki bazowej</string>
-    <string name="omnipod_cmd_get_pod_status">Pobierz status Pod</string>
-    <string name="omnipod_cmd_get_pod_info">Pobierz informacje o Pod</string>
-    <string name="omnipod_cmd_set_time">Ustaw czas</string>
-    <string name="omnipod_cmd_configure_alerts">Konfigurowanie alertów</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Potwierdź alerty</string>
-    <string name="omnipod_cmd_suspend_delivery">Wstrzymaj podawanie</string>
-    <string name="omnipod_cmd_resume_delivery">Wznów podawanie</string>
-    <string name="omnipod_cmd_unknown_entry">Nieznany Wpis</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f U</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Dawka: %1$.1f U, Czas: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">Jeśli naciśniesz <b>OK</b>, stan Pod zostanie wyzerowany i nie będziesz mógł więcej komunikować się z tym Podem. Zrób to tylko wtedy, gdy nie możesz się z nim skmunikować. Jeśli nadal można komunikować się z Podem, skorzystaj z opcji <b>Odłącz Pod</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">Historia Pod nie jest dostępna w tej chwili.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Napełnij Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nNapełnij nowego Poda z wystarczającą ilością insuliny przez 3 dni.\n\nNasłuchuj dwóch sygnałów dźwiękowych z Poda podczas procesu napełniania. Wskazują one, że minimalna ilość 85U została wypełniona. Należy upewnić się, że ampułkostrzykawka jest całkowicie pusta, nawet po odsłuchaniu dwóch sygnałów dźwiękowych.\n\nPo napełnieniu Poda, należy nacisnąć <b>Dalej</b>.\n\n<b>Uwaga:</b> nie usuwaj w tym czasie osłonki igłowej Poda.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Wypełnianie</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Próba sparowania z nowym Podem i wypełnienia go.\n\nKiedy wszystkie elementy są sprawdzone, można nacisnąć <b>Następny</b>.\n\n<b>Uwaga:</b> prosimy o trzymanie w tym czasie Poda bardzo blisko RileyLink.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Przymocuj Poda</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPrzygotowanie miejsca do infuzji. Zdjąć osłonkę igły i zabezpieczenie plastra i przykleić Pod do skóry w miejscu wkłucia.\n\nJeśli kaniula odkleja się, proszę wcisnąć <b>Anuluj</b> i odczepić Pod.\n\nNaciśnij <b>Następny</b> w celu wprowadzenia kaniuli i rozpoczęcia podawania bazy.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Wprowadzanie kaniuli</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Próba ustawienia początkowego planu bazowego i wprowadzeia kaniuli.\n\nKiedy wszystkie elementy są sprawdzane, można nacisnąć <b>Następny</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Informacje o Podzie</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPod jest teraz aktywny.\n\nTwój plan dawki bazowej został zaprogramowany i wprowadzono kaniulę w miejsce wkłucia.\n\nSprawdź, czy kaniula została prawidłowo włożona i wymień swój Pod, jeśli czujesz, że nie.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Odłącz Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nNaciśnij <b>Następny</b> w celu odłączenia Poda.\n\n<b>Uwaga:</b> To spowoduje zawieszenie wszystkich dostaw insuliny i dezaktywację Poda.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Odłączanie Poda</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Deaktywacja Pod.\n\nKiedy wszystkie elementy są zaznaczone, możesz nacisnąć <b>Następna</b>.\n\n<b>Uwaga:</b> Jeśli deaktywacja w sposób ciągły nie powodzi się, należy nacisnąć <b>Anuluj</b> i użyć opcji <b>Reset Pod</b>, aby wymusić zresetowanie stanu Pod.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod odłączony.\n\nProszę odkleić Pod od ciała i wyrzucić go.</string>
-    <string name="omnipod_init_pod_pair_pod">Sparuj Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Wypełnij Pod</string>
-    <string name="omnipod_init_pod_fill_cannula">Wypełnij kaniulę</string>
-    <string name="omnipod_init_pod_set_basal_profile">Ustaw profil dawki bazowej</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Anulowanie podawania</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Odłącz Pod</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Integracja pompy dla Omnipod Dash.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Zakończ przypomnienie parowania</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Zakończ przypomnienie o konfiguracji</string>
-    <string name="omnipod_alert_expiration">Pod wkrótce straci ważność</string>
-    <string name="omnipod_alert_expiration_advisory">Pod wkrótce straci ważność</string>
-    <string name="omnipod_alert_shutdown_imminent">Wyłączenie jest nieuchronne</string>
-    <string name="omnipod_alert_low_reservoir">Niski poziom w zbiorniku</string>
-    <string name="omnipod_alert_unknown_alert">Nieznany alarm</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Ustawienie profilu podstawowego mogło się nie powieść. Podawanie mogło zostać zawieszone! Odśwież status Pod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Ustawienie bazy tymczasowej mogło się nie powieść. Jeśli była już uruchomiona baza tymczasowa, to mogła zostać odwołana! Odśwież status Pod.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Ustawienie czasu mogło się nie powieść. Podawanie mogło zostać zawieszone! Odśwież status Pod.</string>
-    <string name="omnipod_bolus_failed_uncertain">Nie można sprawdzić, czy podano bolus. Upewnij się, że Twój Pod podaje bolus lub odwołaj go.</string>
-    <string name="omnipod_rl_stats">Statystyki RL</string>
-    <string name="omnipod_read_pulse_log_short">Logi pulsów omnipod</string>
     <string name="comapareprofile">Porównaj profile</string>
     <string name="nav_profilehelper">Pomocnik profilu</string>
     <string name="motoldefaultprofile">Profil domyślny</string>

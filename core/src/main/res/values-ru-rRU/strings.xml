@@ -101,6 +101,7 @@
     <string name="unit_weeks">нед</string>
     <string name="shortminute">мин</string>
     <string name="shortday">дн</string>
+    <!--    Protection-->
     <!--    Profile-->
     <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
     <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>

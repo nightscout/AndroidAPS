@@ -101,6 +101,9 @@
     <string name="unit_weeks">settimane</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Password errata</string>
+    <string name="passwords_dont_match">Le password non coincidono</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>

@@ -1082,7 +1082,6 @@
     <string name="objectives_button_unfinish">Vymazanie dokončené</string>
     <string name="objectives_button_unstart">Vymazanie začaté</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
-    <string name="time_or_timezone_change">Zmena času a/alebo časovej zóny na pumpe</string>
     <string name="nopumpselected">Nie je vybraná žiadna pumpa</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
     <string name="ns_ploadlocalprofile">Odoslať zmeny lokálneho profilu do NS</string>
@@ -1159,7 +1158,6 @@
     <string name="authorizationfailed">Autorizácia zlyhala</string>
     <string name="overview_show_absinsulin">Celkový inzulín</string>
     <string name="master_password_summary">Hlavné heslo sa používa na šifrovanie zálohy a na \"prebitie\" zabezpečenia v aplikácii. Dobre si ho zapamätajte, alebo uložte na bezpečnom mieste.</string>
-    <string name="passwords_dont_match">Heslá sa nezhodujú</string>
     <string name="current_master_password">Aktuálne hlavné heslo</string>
     <string name="statuslights">Indikátory stavu</string>
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
@@ -1168,123 +1166,6 @@
     <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
     <string name="largedisplay_description">Veľký displej</string>
     <string name="skin">Vzhľad</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nikdy nepripojené</string>
-    <string name="medtronic_pump_status_waking_up">Prebúdzanie</string>
-    <string name="medtronic_pump_status_error_comm">Chyba komunikácie</string>
-    <string name="medtronic_pump_status_timeout_comm">Uplynul časový limit komunikácie</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpa nedostupná</string>
-    <string name="medtronic_pump_status_invalid_config">Neplatná konfigurácia</string>
-    <string name="medtronic_pump_status_active">Aktívna</string>
-    <string name="medtronic_pump_status_sleeping">Spiaca</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Integrácia pumpy pre Omnipod, vyžaduje zariadenie RileyLink (s firmwarom aspoň 2.0).</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Pípnutie pri boluse povolené</string>
-    <string name="omnipod_config_beep_basal_enabled">Pípnutie pri bazále povolené</string>
-    <string name="omnipod_config_beep_smb_enabled">Pípnutie pri SMB povolené</string>
-    <string name="omnipod_config_beep_tbr_enabled">Pípnutie pri TBR povolené</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Možnosti ladenia Podu povolené</string>
-    <string name="omnipod_config_timechange_enabled">Letný čas / Detekcia časového pásma povolená</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">Správa Podu</string>
-    <string name="omnipod_pod_status">Stav Podu</string>
-    <string name="omnipod_reservoir_left">Zostáva %1$.2f JI</string>
-    <string name="omnipod_reservoir_over50">Viac ako 50 JI</string>
-    <string name="omnipod_pod_address">Adresa Podu</string>
-    <string name="omnipod_pod_expiry">Expirácia Podu</string>
-    <string name="omnipod_pod_name_no_info">Žiadne info</string>
-    <string name="omnipod_pod_no_pod_connected">Žiadny Pod nie je pripojený</string>
-    <string name="omnipod_pod_not_initalized">Nie je inicializovaný</string>
-    <string name="omnipod_pod_active_alerts">Výstrahy aktívneho Podu</string>
-    <string name="omnipod_ack_short">Potvrdiť výstrahu</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433,91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">Operácia nie je možná.\n\nNajskôr je nutné nakonfigurovať Omnipod, kým bude možné túto funkciu použiť.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Operácia nie je možná.\n\n Je potrebné niekoľko minút počkať, pokiaľ sa AAPS nepokúsi prvý krát nastaviť profil.</string>
-    <string name="omnipod_error_illegal_init_action_type">Neplatný atribút PodInitActionType: %1$s</string>
-    <string name="omnipod_error_pod_not_attached">Žiadny aktívny Pod.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Overenie príkazu zlyhalo.</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Došlo k neočakávanej chybe. Nahláste ju! (typ: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Komunikácia zlyhala: boli prijaté neplatné vstupné parametre.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Komunikácia zlyhala: časový limit vypršal.</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Komunikácia zlyhala: vyskytla sa neočakávaná chyba. Prosím, nahláste to!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Komunikácia zlyhala: overenie integrity správy zlyhalo.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Komunikácia zlyhala: boli prijaté neplatné pakety z Podu.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Komunikácia zlyhala: Pod je v chybnom stave.</string>
-    <string name="omnipod_driver_error_invalid_response">Komunikácia zlyhala: bola prijatá neplatná odozva z Podu.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Komunikácia zlyhala: bola prijatá správa s neplatným poradovým číslom z Podu.</string>
-    <string name="omnipod_driver_error_invalid_message_address">Komunikácia zlyhala: bola prijatá správa s neplatnou adresou z Podu.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Komunikácia zlyhala: nepodarilo se dekódovať správu z Podu.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Komunikácia zlyhala: opakovaná synchronizácia Nonce hodnoty zlyhala.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Komunikácia zlyhala: hodnota Nonce nebola synchronizovaná.</string>
-    <string name="omnipod_driver_error_not_enough_data">Komunikácia zlyhala: nedostatok dát prijatých z Podu.</string>
-    <string name="omnipod_driver_error_pod_fault">Bola zistená chyba Podu (%1$03d %2$s). Deaktivujte Pod a spustite nový.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Komunikácia zlyhala: Pod vrátil chybovú odozvu.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Správa Podu</string>
-    <string name="omnipod_cmd_init_pod">Inicializovať Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Deaktivovať Pod</string>
-    <string name="omnipod_cmd_reset_pod">Resetovať Pod</string>
-    <string name="omnipod_cmd_pod_history">História Podu</string>
-    <string name="omnipod_cmd_set_bolus">Nastaviť bolus</string>
-    <string name="omnipod_cmd_cancel_bolus">Zrušiť bolus</string>
-    <string name="omnipod_cmd_set_tbr">Nastaviť dočasný bazál</string>
-    <string name="omnipod_cmd_cancel_tbr">Zrušiť dočasný bazál (interne ovládačom)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Zrušiť dočasný bazál (nútene užívateľom)</string>
-    <string name="omnipod_cmd_set_basal_schedule">Nastaviť plán bazálu</string>
-    <string name="omnipod_cmd_get_pod_status">Zistiť stav Podu</string>
-    <string name="omnipod_cmd_get_pod_info">Zistiť informácie o Pode</string>
-    <string name="omnipod_cmd_set_time">Nastaviť čas</string>
-    <string name="omnipod_cmd_configure_alerts">Nastaviť výstrahy</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Potvrdiť výstrahy</string>
-    <string name="omnipod_cmd_suspend_delivery">Pozastaviť dodávanie inzulínu</string>
-    <string name="omnipod_cmd_resume_delivery">Pokračovať v dodávaní inzulínu</string>
-    <string name="omnipod_cmd_unknown_entry">Neznáma položka</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f JI</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f JI, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Rýchlosť: %1$.1f JI, Doba trvania: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">Keď stlačíš <b>OK</b>, bude pripojenie na Pod nútene prerušené a nebudete sa môcť k nemu už viac pripojiť. Urob tak iba vtedy, ak AAPS nemôže viac komunikovať s Podom. Ak stále môžete komunikovať s Podom, prosím použite možnosť <b>Deaktivovať Pod</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">História Podu momentálne nie je dostupná.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Naplňte Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nNaplňte Pod dostatočným množstvom inzulínu na 3 dni.\n\nPočúvaj aj dve pípnutia počas plnenia. Tieto poukazujú na to, že Pod bol naplnený minimálnym množstvom 85 JI. Úplne vyprázdni striekačku, aj keď si počul dve pípnutia.\n\nKlikni &lt;bĎalej&lt;/b&gt; po tom, čo si naplnil Pod.\n\n&lt;b&gt;Poznámka:&lt;/b&gt; Neodstraňuj ešte ochranu ihly na Pode.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Plnenie</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Pokús sa spárovať s novým Podom a naplň ho.\n\nKeď sú všetky položky zaškrtnuté, môžete stlačiť <b>Ďalej</b>.\n\n<b>Poznámka:</b> prosím držte teraz Pod veľmi blízko RileyLinku.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Pripevni Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPripravte infúzny set. Odstráňte krytku ihly na Pode a ochranu samolepky a pripojte Pod k infúznemu setu. \n\nAk sa kanyla odlepí, prosím stlačte <b>Zrušiť</b> a zahoďte Váš Pod.\n\nStlačte <b>Ďalšia</b> na zavedenie kanyly a začiatok podávania bazálu.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Zavedenie kanyly</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Pokúšam sa nastaviť počiatočnú bazálnu dávku a zaviesť kanylu.\n\nAk sú všetky položky označené, môžete stlačiť <b>Ďalší</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Informácie o Pode</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPod je teraz aktívny.\n\nVaša bazálna dávka je nastavená a kanyla bola zavedená.\n\nProsím skontrolujte, či bola kanyla zavedená správne a ak máte pocit, že nie, tak vymeňte Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Deaktivovať Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nStlačte <b>Ďalej</b> pre deaktiváciu Podu.\n\n<b>Poznámka:</b> Toto preruší celkovo podávanie inzulínu a deaktivuje Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Deaktivácia Podu</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Deaktivujem Pod.\n\nKeď sú všetky položky zaškrtnuté, môžete stlačiť <b>Ďalej</b>.\n\n<b>Poznámka:</b> Ak deaktivácia neustále zlyháva, stlačte prosím <b>Zrušiť</b> a použite možnosť <b>Resetovať Pod</b>, na nútené obnovenie stavu Podu.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deaktivovaný.\n\nProsím odstráňte Pod z Vášho tela a zlikvidujte ho.</string>
-    <string name="omnipod_init_pod_pair_pod">Spárujte Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Naplňte Pod</string>
-    <string name="omnipod_init_pod_fill_cannula">Naplňte kanylu</string>
-    <string name="omnipod_init_pod_set_basal_profile">Nastavte bazálny profil</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Zrušte podávanie</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Deaktivujte Pod</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Integrácia pumpy pre Omnipod Dash.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Pripomienka ukončenia párovania</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Pripomienka ukončenia nastavenia</string>
-    <string name="omnipod_alert_expiration">Pod čoskoro expiruje</string>
-    <string name="omnipod_alert_expiration_advisory">Pod čoskoro expiruje</string>
-    <string name="omnipod_alert_shutdown_imminent">Vypnutie je bezprostredné</string>
-    <string name="omnipod_alert_low_reservoir">Nízka hladina zásobníka</string>
-    <string name="omnipod_alert_unknown_alert">Neznáma výstraha</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Nastavenie bazálu mohlo zlyhať. Podávanie môže byť pozastavené! Prosím, obnovte stav Podu.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Nastavenie dočasného bazálu mohlo zlyhať. Ak už bol spustený dočasný bazál, mohol byť zrušený! Prosím, obnovte stav Podu.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Nastavenie času mohlo zlyhať. Podávanie môže byť pozastavené! Prosím, obnovte stav Podu.</string>
-    <string name="omnipod_bolus_failed_uncertain">Nie je možné overiť, či bolo podávanie bolusu úspešné. Prosím overte, že váš Pod podáva bolus, alebo zrušte bolus.</string>
-    <string name="omnipod_rl_stats">Štatistiky RL</string>
-    <string name="omnipod_read_pulse_log_short">Pulse Log</string>
     <string name="comapareprofile">Porovnať profily</string>
     <string name="nav_profilehelper">Pomocník s profilom</string>
     <string name="motoldefaultprofile">Predvolený profil</string>

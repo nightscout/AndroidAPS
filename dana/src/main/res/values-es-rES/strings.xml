@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Actualizando dosis basales</string>
     <string name="settingtempbasal">Ajustando basal temporal</string>
     <string name="waitingfortimesynchronization">Esperando para sincronización (%1$d sec)</string>
-    <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpumppassword">¡Contraseña de la bomba incorrecta!</string>
     <string name="danar_history_alarm">Alarmas</string>
     <string name="danar_history_basalhours">Basal Horas</string>

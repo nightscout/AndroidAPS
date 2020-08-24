@@ -92,6 +92,7 @@
     <string name="unit_weeks">săptămâni</string>
     <string name="shortminute">min</string>
     <string name="shortday">z</string>
+    <!--    Protection-->
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valori bazale nesincronizate cu ora: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %1$s</string>
