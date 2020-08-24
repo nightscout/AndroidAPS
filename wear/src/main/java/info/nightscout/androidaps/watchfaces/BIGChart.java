@@ -98,8 +98,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private String cobString = "";
 
     private TextView statusView;
-    private long chartTapTime = 0l;
-    private long sgvTapTime = 0l;
+    private long chartTapTime = 0L;
+    private long sgvTapTime = 0L;
 
     @Override
     public void onCreate() {
