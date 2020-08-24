@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.general.themeselector
 
 import android.R.attr
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.CompoundButton
@@ -28,7 +30,6 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.T
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.getThemeId
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.themeList
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
-import kotlinx.android.synthetic.main.colorpicker_flagview.*
 import kotlinx.android.synthetic.main.themeselector_bottom_sheet.*
 import kotlinx.android.synthetic.main.themeselector_scrolling_fragment.*
 import java.util.*
@@ -94,12 +95,10 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         // init the bottom sheet behavior
         mBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet)
         val backGround = sp.getBoolean("backgroundcolor", true)
-        if (backGround == true) select_backgroundcolor.setVisibility(View.GONE) else select_backgroundcolor.setVisibility(View.VISIBLE)
         val switchCompatBackground = findViewById<SwitchCompat>(R.id.switch_backgroundimage)
         switchCompatBackground.isChecked = backGround
         switchCompatBackground.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
             sp.putBoolean("backgroundcolor", b)
-            if (b == true) select_backgroundcolor.setVisibility(View.GONE) else select_backgroundcolor.setVisibility(View.VISIBLE)
             val delayTime = 200
             compoundButton.postDelayed(Runnable { changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         }
@@ -130,14 +129,14 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
 
         setDefaultColorDark?.setOnClickListener(View.OnClickListener {
             sp.putInt("darkBackgroundColor", ContextCompat.getColor(this, R.color.background_dark))
-            select_backgroundcolordark!!.setBackgroundColor( getColor((R.color.background_dark)))
+            select_backgroundcolordark!!.setBackgroundColor(getColor((R.color.background_dark)))
             val delayTime = 200
             select_backgroundcolordark!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         })
 
         setDefaultColorLight?.setOnClickListener(View.OnClickListener {
-            sp.putInt("lightBackgroundColor",  ContextCompat.getColor(this, R.color.background_light))
-            select_backgroundcolorlight!!.setBackgroundColor( getColor((R.color.background_light)))
+            sp.putInt("lightBackgroundColor", ContextCompat.getColor(this, R.color.background_light))
+            select_backgroundcolorlight!!.setBackgroundColor(getColor((R.color.background_light)))
             val delayTime = 200
             select_backgroundcolorlight!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         })
@@ -200,6 +199,18 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
 
         val colorPickerView: ColorPickerView = colorPickerDialog.colorPickerView
         colorPickerView.setFlagView(CustomFlag(this, R.layout.colorpicker_flagview)) // sets a custom flagView
+        colorPickerView.preferenceName = "AAPS-ColorPicker"
+        colorPickerView.setLifecycleOwner(this)
+
+        val manager = ColorPickerPreferenceManager.getInstance(this)
+        if (lightOrDark === "light") {
+            manager.setColor("AAPS-ColorPicker", sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
+        } else if (lightOrDark === "dark") {
+            manager.setColor("AAPS-ColorPicker", sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
+        }
+        var point = Point(0,0)
+        manager.getSelectorPosition("AAPS-ColorPicker",point)
+        if(point === Point(0,0)) manager.setSelectorPosition("AAPS-ColorPicker", Point(530, 520))
         colorPickerDialog.show()
 
         setBackground()

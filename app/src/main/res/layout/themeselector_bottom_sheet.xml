@@ -49,9 +49,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:paddingStart="4dp"
+            android:paddingStart="6dp"
             android:paddingEnd="4dp"
-            android:text="Background"/>
+            android:text="Image"/>
 
         <View
             android:layout_width="1dp"
@@ -79,10 +79,24 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/select_backgroundcolor"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="116dp"
             android:layout_marginTop="0dp"
             app:cardElevation="4dp"
             android:background="?android:colorBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <TextView
+                style="@style/Text.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="4dp"
+                android:text="Background Color "/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -175,6 +189,8 @@
                     android:layout_marginEnd="4dp"
                     style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                     android:text="Default" />
+
+            </LinearLayout>
 
             </LinearLayout>
 
