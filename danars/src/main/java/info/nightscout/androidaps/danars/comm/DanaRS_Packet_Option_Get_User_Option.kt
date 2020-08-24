@@ -20,10 +20,10 @@ class DanaRS_Packet_Option_Get_User_Option(
     override fun handleMessage(data: ByteArray) {
         var dataIndex = DATA_START
         var dataSize = 1
-        danaPump.timeDisplayType = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.timeDisplayType24 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0
         dataIndex += dataSize
         dataSize = 1
-        danaPump.buttonScrollOnOff = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaPump.buttonScrollOnOff = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 1
         dataIndex += dataSize
         dataSize = 1
         danaPump.beepAndAlarm = byteArrayToInt(getBytes(data, dataIndex, dataSize))
@@ -68,7 +68,7 @@ class DanaRS_Packet_Option_Get_User_Option(
         val selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         // Pump's screen on time can't be less than 5
         failed = if (danaPump.lcdOnTimeSec < 5) true else false
-        aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType: " + danaPump.timeDisplayType)
+        aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType24: " + danaPump.timeDisplayType24)
         aapsLogger.debug(LTag.PUMPCOMM, "buttonScrollOnOff: " + danaPump.buttonScrollOnOff)
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm: " + danaPump.beepAndAlarm)
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec: " + danaPump.lcdOnTimeSec)

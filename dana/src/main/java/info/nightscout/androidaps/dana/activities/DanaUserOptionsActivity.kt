@@ -28,6 +28,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -71,9 +72,9 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
         aapsLogger.debug(LTag.PUMP,
             "UserOptionsLoaded:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
-                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
                 + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
-                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\nbeepAndAlarm:" + danaPump.beepAndAlarm
                 + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
                 + "\nbackLight:" + danaPump.backlightOnTimeSec
                 + "\npumpUnits:" + danaPump.units
@@ -84,33 +85,35 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         danar_shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, save_user_options)
         danar_lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, save_user_options)
         when (danaPump.beepAndAlarm) {
-            0x01  -> danar_pumpalarm_sound.isChecked = true
-            0x02  -> danar_pumpalarm_vibrate.isChecked = true
-            0x11  -> danar_pumpalarm_both.isChecked = true
+            0b01 -> danar_pumpalarm_sound.isChecked = true
+            0b10 -> danar_pumpalarm_vibrate.isChecked = true
+            0b11 -> danar_pumpalarm_both.isChecked = true
 
-            0x101 -> {
+            0b101 -> {
                 danar_pumpalarm_sound.isChecked = true
                 danar_beep.isChecked = true
             }
 
-            0x110 -> {
+            0b110 -> {
                 danar_pumpalarm_vibrate.isChecked = true
                 danar_beep.isChecked = true
             }
 
-            0x111 -> {
+            0b111 -> {
                 danar_pumpalarm_both.isChecked = true
                 danar_beep.isChecked = true
             }
         }
-        if (danaPump.lastSettingsRead == 0L)
-            aapsLogger.error(LTag.PUMP, "No settings loaded from pump!") else setData()
+        if (danaPump.lastSettingsRead == 0L && danaPump.hwModel < 0x05) // RS+ doesn't use lastSettingsRead
+            aapsLogger.error(LTag.PUMP, "No settings loaded from pump!")
+        else
+            setData()
     }
 
     fun setData() {
         // in DanaRS timeDisplay values are reversed
-        danar_timeformat.isChecked = !isRS() && danaPump.timeDisplayType != 0 || isRS() && danaPump.timeDisplayType == 0
-        danar_buttonscroll.isChecked = danaPump.buttonScrollOnOff != 0
+        danar_timeformat.isChecked = danaPump.timeDisplayType24
+        danar_buttonscroll.isChecked = danaPump.buttonScrollOnOff
         danar_beep.isChecked = danaPump.beepAndAlarm > 4
         danar_screentimeout.value = danaPump.lcdOnTimeSec.toDouble()
         danar_backlight.value = danaPump.backlightOnTimeSec.toDouble()
@@ -123,12 +126,9 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         //exit if pump is not DanaRS, DanaR, or DanaR with upgraded firmware
         if (!isRS() && !isDanaR() && !isDanaRv2()) return
 
-        if (isRS()) // displayTime on RS is reversed
-            danaPump.timeDisplayType = if (danar_timeformat.isChecked) 0 else 1
-        else
-            danaPump.timeDisplayType = if (danar_timeformat.isChecked) 1 else 0
+        danaPump.timeDisplayType24 = danar_timeformat.isChecked
 
-        danaPump.buttonScrollOnOff = if (danar_buttonscroll.isChecked) 1 else 0
+        danaPump.buttonScrollOnOff = danar_buttonscroll.isChecked
         danaPump.beepAndAlarm = when {
             danar_pumpalarm_sound.isChecked   -> 1
             danar_pumpalarm_vibrate.isChecked -> 2
