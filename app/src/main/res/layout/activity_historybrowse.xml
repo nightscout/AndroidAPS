@@ -38,6 +38,8 @@
                 android:id="@+id/historybrowse_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="Button" />
 
@@ -57,6 +59,8 @@
                 android:id="@+id/historybrowse_zoom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="24" />
 

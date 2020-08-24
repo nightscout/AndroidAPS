@@ -21,7 +21,7 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorOnBackground">@color/color_on_background</item>
         <item name="colorOnError">@color/color_on_error</item>
-        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurfaceDefault</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
@@ -87,6 +87,10 @@
 
     <style name="AppTheme.base" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
     </style>
 
     <style name="AppTheme.RED" parent="AppTheme.NoActionBar">

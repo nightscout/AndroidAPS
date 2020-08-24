@@ -30,6 +30,7 @@ object ThemeUtil {
     const val THEME_GRAY = 17
     const val THEME_BLUEGRAY = 18
     const val THEME_DARKSIDE = 19
+    const val THEME_DEFAULT = 20
 
     private var ActualTheme: Int = THEME_DARKSIDE
 
@@ -56,6 +57,7 @@ object ThemeUtil {
             THEME_GRAY       -> themeId = R.style.AppTheme_GRAY
             THEME_BLUEGRAY   -> themeId = R.style.AppTheme_BLUEGRAY
             THEME_DARKSIDE   -> themeId = R.style.AppTheme_DARKSIDE
+            THEME_DEFAULT    -> themeId = R.style.AppTheme_DEFAULT
 
             else             -> {
             }
@@ -94,6 +96,7 @@ object ThemeUtil {
             THEME_GRAY       -> themeName = if ( mIsNightMode) "Gray" else "Gray"
             THEME_BLUEGRAY   -> themeName = if ( mIsNightMode) "Bluegray" else "Bluegray"
             THEME_DARKSIDE   -> themeName = if ( mIsNightMode) "Darkside" else "Lightside"
+            THEME_DEFAULT   -> themeName = if ( mIsNightMode) "AAPS Default Dark" else "AAPS Default Light"
             else             -> {
             }
         }
@@ -123,6 +126,7 @@ object ThemeUtil {
             themeArrayList.add(Theme(17, R.color.primaryColorGray, R.color.primaryDarkColorGray, R.color.secondaryColorGray))
             themeArrayList.add(Theme(18, R.color.primaryColorBlueGray, R.color.primaryDarkColorBlueGray, R.color.secondaryColorBlueGray))
             themeArrayList.add(Theme(19, R.color.primaryColorDarkside, R.color.primaryDarkColorDarkside, R.color.secondaryColorDarkside))
+            themeArrayList.add(Theme(20, R.color.primaryColorDefault, R.color.primaryDarkColorDefault, R.color.secondaryColorDefault))
             return themeArrayList
         }
 }

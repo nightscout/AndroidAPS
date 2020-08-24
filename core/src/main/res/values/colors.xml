@@ -204,8 +204,8 @@
     <color name="background_stats_color">#707991</color>
 
     <!---Android Dark ans Light Theme Base colors-->
-    <color name="background_dark">#303030</color>
-    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#121212</color>
+    <color name="background_light">#FFFFFF</color>
 
     <!---Default material colors-->
     <color name="colorOnPrimary">#000000</color>
@@ -225,6 +225,27 @@
     <color name="themeSelected">#e300aaff</color>
     <color name="seperator">#7ca6a6a6</color>
 
+    <!-- Default default Theme -->
+    <color name="primaryColorDefault">#6200EE</color>
+    <color name="primaryColorVariantDefault">#3700B3</color>
+    <color name="secondaryColorDefault">#03DAC6</color>
+    <color name="secondaryColorVariantDefault">#018786</color>
+    <color name="colorBackgroundDefault">#FFFFFF</color>
+    <color name="colorSurfaceDefault">#FFFFFF</color>
+    <color name="colorErrorDefault">#B00020</color>
+    <color name="colorOnPrimaryDefault">#FFFFFF</color>
+    <color name="colorOnSecondaryDefault">#000000</color>
+    <color name="colorOnBackgroundDefault">#000000</color>
+    <color name="colorOnSurfaceDefault">#000000</color>
+    <color name="colorOnErrorDefault">#000000</color>
+    <color name="primaryLightColorDefault">#A572E3</color>
+    <color name="primaryDarkColorDefault">#3700B3</color>
+    <color name="secondaryLightColorDefault">#03F2DD</color>
+    <color name="secondaryDarkColorDefault">#e1a902</color>
+    <color name="primaryTextColorDefault">#ffffff</color>
+    <color name="secondaryTextColorDefault">#000000</color>
+    <color name="PillColorStartDefault">#1c171c</color>
+    <color name="PillColorEndDefault">#bbb9bb</color>
 
     <!-- RED Theme -->
     <color name="primaryColorRed">#F44336</color>

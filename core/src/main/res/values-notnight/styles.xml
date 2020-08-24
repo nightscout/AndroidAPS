@@ -90,6 +90,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
 
     <style name="AppTheme.RED" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->

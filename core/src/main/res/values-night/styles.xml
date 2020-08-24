@@ -71,7 +71,7 @@
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
         <!-- TDD Stats   -->
         <item name="backgroundStatsColor">@color/background_stats_color</item>
-        <!---Android Dark ans Light Theme Base colors-->
+        <!---Android Dark and Light Theme Base colors-->
         <item name="backgroundBaseColorDark" >@color/background_dark</item>
         <item name="backgroundBaseColorLight" >@color/background_light</item>
         <item name="backgroundBaseColor" >@color/background_dark</item>
@@ -92,6 +92,10 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
     </style>
 
     <style name="AppTheme.RED" parent="AppTheme.NoActionBar">

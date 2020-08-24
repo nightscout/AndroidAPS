@@ -79,7 +79,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/select_backgroundcolor"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="100dp"
             android:layout_marginTop="0dp"
             app:cardElevation="4dp"
             android:background="?android:colorBackground">
@@ -103,16 +103,35 @@
                     android:paddingEnd="4dp"
                     android:text="Color dark"/>
 
-                <TextView
-                    android:id="@+id/select_backgroundcolordark"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
                     android:layout_weight="3"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@color/background_dark"
-                    android:text=""/>
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/select_backgroundcolordark"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@color/background_dark"
+                        android:text=""/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/setDefaultColorDark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:text="Default" />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="1dp"
@@ -129,16 +148,35 @@
                     android:paddingEnd="4dp"
                     android:text="Color light"/>
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:padding="2dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/select_backgroundcolorlight"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="5"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@color/background_light"
+                    android:layout_marginEnd="6dp"
+                    android:background="@color/background_dark"
                     android:text=""/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/setDefaultColorLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:layout_marginEnd="4dp"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:text="Default" />
+
+            </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

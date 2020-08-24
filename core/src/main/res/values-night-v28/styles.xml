@@ -80,6 +80,10 @@
         <item name="backgroundBaseColor" >@color/background_light</item>
     </style>
 
+    <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
     <style name="AppTheme.LIME" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColorLime</item>

@@ -1,9 +1,6 @@
 package info.nightscout.androidaps.plugins.general.themeselector
 
 import android.R.attr
-import android.R.style
-import android.app.AlertDialog
-import android.content.res.Resources
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -20,21 +17,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+import com.skydoves.colorpickerview.preference.ColorPickerPreferenceManager
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.colorpicker.CustomFlag
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.RecyclerViewClickListener
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.ThemeAdapter
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme
-import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.getThemeId
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.themeList
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
+import kotlinx.android.synthetic.main.colorpicker_flagview.*
 import kotlinx.android.synthetic.main.themeselector_bottom_sheet.*
 import kotlinx.android.synthetic.main.themeselector_scrolling_fragment.*
 import java.util.*
-import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent.builder as builder1
 
 class ScrollingActivity : MainActivity(), View.OnClickListener {
     companion object {
@@ -131,6 +128,20 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         select_backgroundcolordark.setOnClickListener(View.OnClickListener { selectColor("dark") })
         select_backgroundcolorlight.setOnClickListener(View.OnClickListener { selectColor("light") })
 
+        setDefaultColorDark?.setOnClickListener(View.OnClickListener {
+            sp.putInt("darkBackgroundColor", ContextCompat.getColor(this, R.color.background_dark))
+            select_backgroundcolordark!!.setBackgroundColor( getColor((R.color.background_dark)))
+            val delayTime = 200
+            select_backgroundcolordark!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+        })
+
+        setDefaultColorLight?.setOnClickListener(View.OnClickListener {
+            sp.putInt("lightBackgroundColor",  ContextCompat.getColor(this, R.color.background_light))
+            select_backgroundcolorlight!!.setBackgroundColor( getColor((R.color.background_light)))
+            val delayTime = 200
+            select_backgroundcolorlight!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+        })
+
         mAdapter = ThemeAdapter(sp, mThemeList, object : RecyclerViewClickListener {
             override fun onClick(view: View?, position: Int) {
                 (mBottomSheetBehavior as BottomSheetBehavior<*>).setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -164,8 +175,6 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
     }
 
     private fun selectColor(lightOrDark: String) {
-
-
         val colorPickerDialog = ColorPickerDialog.Builder(this)
             .setTitle("Select Background Color")
             .setPreferenceName("MyColorPickerDialog")

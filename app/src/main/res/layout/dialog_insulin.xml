@@ -151,6 +151,8 @@
                 android:id="@+id/overview_insulin_plus05"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+0.5" />
 
@@ -158,6 +160,8 @@
                 android:id="@+id/overview_insulin_plus10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+1.0" />
 
@@ -165,6 +169,8 @@
                 android:id="@+id/overview_insulin_plus20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+2.0" />
 
