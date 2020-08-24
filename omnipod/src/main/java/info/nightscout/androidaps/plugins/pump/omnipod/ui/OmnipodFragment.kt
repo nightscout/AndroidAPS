@@ -243,8 +243,10 @@ class OmnipodFragment : DaggerFragment() {
                 omnipod_lastbolus.text = "-"
             }
 
+            val now = DateTime.now()
+
             // base basal rate
-            omnipod_base_basal_rate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(omnipodPumpPlugin.baseBasalRate))
+            omnipod_base_basal_rate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(Duration(now.withTimeAtStartOfDay(), now))))
 
             omnipod_tempbasal.text = activePlugin.activeTreatments
                 .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
@@ -265,7 +267,7 @@ class OmnipodFragment : DaggerFragment() {
                 warnColors.setColorInverse(omnipod_reservoir, podStateManager.reservoirLevel, 50.0, 20.0)
             }
 
-            omnipod_pod_active_alerts.text = TextUtils.join(System.lineSeparator(), aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager))
+            omnipod_pod_active_alerts.text = if (podStateManager.hasActiveAlerts()) TextUtils.join(System.lineSeparator(), aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager)) else "-"
         }
 
         if (errors.size == 0) {
@@ -274,14 +276,6 @@ class OmnipodFragment : DaggerFragment() {
         } else {
             omnipod_errors.text = StringUtils.join(errors, System.lineSeparator())
             omnipod_errors.setTextColor(Color.RED)
-        }
-
-        val status = commandQueue.spannedStatus()
-        if (status.toString() == "") {
-            omnipod_queue.visibility = View.GONE
-        } else {
-            omnipod_queue.visibility = View.VISIBLE
-            omnipod_queue.text = status
         }
     }
 

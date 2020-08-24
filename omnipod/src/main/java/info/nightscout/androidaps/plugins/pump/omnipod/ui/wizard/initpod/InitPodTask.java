@@ -7,7 +7,9 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 
 /**
@@ -17,6 +19,7 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
 
     @Inject ProfileFunction profileFunction;
     @Inject AapsOmnipodManager aapsOmnipodManager;
+    @Inject RxBusWrapper rxBus;
     private InitActionFragment initActionFragment;
 
     public InitPodTask(HasAndroidInjector injector, InitActionFragment initActionFragment) {
@@ -48,6 +51,8 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
         } else if (initActionFragment.podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
             initActionFragment.callResult = aapsOmnipodManager.deactivatePod(initActionFragment);
         }
+
+        rxBus.send(new EventOmnipodPumpValuesChanged());
 
         return "OK";
     }

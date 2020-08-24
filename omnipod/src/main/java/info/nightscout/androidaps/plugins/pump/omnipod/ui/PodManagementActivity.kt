@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.FullInitPodWizardModel
@@ -74,6 +75,10 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ refreshButtons() }, { fabricPrivacy.logException(it) })
+        disposables += rxBus
+            .toObservable(EventOmnipodPumpValuesChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ refreshButtons() }, { fabricPrivacy.logException(it) })
 
@@ -142,7 +147,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         OKDialog.showConfirmation(this,
             resourceHelper.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             aapsOmnipodManager.resetPodStatus()
-            refreshButtons()
+            rxBus.send(EventOmnipodPumpValuesChanged())
         })
     }
 

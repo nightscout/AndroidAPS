@@ -46,7 +46,6 @@ public abstract class PodStateManager {
     public final void removeState() {
         this.podState = null;
         storePodState();
-        notifyPodStateChanged();
     }
 
     public final void initState(int address) {
@@ -55,7 +54,6 @@ public abstract class PodStateManager {
         }
         podState = new PodState(address);
         storePodState();
-        notifyPodStateChanged();
     }
 
     /**
@@ -98,9 +96,6 @@ public abstract class PodStateManager {
     }
 
     public final void setInitializationParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone, PodProgressStatus podProgressStatus) {
-        if (!hasPodState()) {
-            throw new IllegalStateException("Cannot set pairing parameters: podState is null");
-        }
         if (isPodInitialized() && getPodProgressStatus().isAfter(PodProgressStatus.REMINDER_INITIALIZED)) {
             throw new IllegalStateException("Cannot set pairing parameters: pairing parameters have already been set");
         }
@@ -137,26 +132,34 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getMessageNumber());
     }
 
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final void setMessageNumber(int messageNumber) {
-        setAndStore(() -> podState.setMessageNumber(messageNumber), false);
+        setSafe(() -> podState.setMessageNumber(messageNumber));
     }
 
     public final int getPacketNumber() {
         return getSafe(() -> podState.getPacketNumber());
     }
 
-    public final void setPacketNumber(int packetNumber) {
-        setAndStore(() -> podState.setPacketNumber(packetNumber), false);
-    }
-
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final void increaseMessageNumber() {
-        setAndStore(() -> podState.setMessageNumber((podState.getMessageNumber() + 1) & 0b1111), false);
+        setSafe(() -> podState.setMessageNumber((podState.getMessageNumber() + 1) & 0b1111));
     }
 
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final void increasePacketNumber() {
-        setAndStore(() -> podState.setPacketNumber((podState.getPacketNumber() + 1) & 0b11111), false);
+        setSafe(() -> podState.setPacketNumber((podState.getPacketNumber() + 1) & 0b11111));
     }
 
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final synchronized void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
         if (!isPodInitialized()) {
             throw new IllegalStateException("Cannot resync nonce: Pod is not paired yet");
@@ -169,7 +172,7 @@ public abstract class PodStateManager {
         int seed = ((sum & 0xFFFF) ^ syncWord);
         NonceState nonceState = new NonceState(podState.getLot(), podState.getTid(), (byte) (seed & 0xFF));
 
-        setAndStore(() -> podState.setNonceState(nonceState), false);
+        setSafe(() -> podState.setNonceState(nonceState));
     }
 
     public final synchronized int getCurrentNonce() {
@@ -179,27 +182,36 @@ public abstract class PodStateManager {
         return podState.getNonceState().getCurrentNonce();
     }
 
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final synchronized void advanceToNextNonce() {
         if (!isPodInitialized()) {
             throw new IllegalStateException("Cannot advance to next nonce: Pod is not paired yet");
         }
-        setAndStore(() -> podState.getNonceState().advanceToNextNonce(), false);
+        setSafe(() -> podState.getNonceState().advanceToNextNonce());
     }
 
     public final DateTime getLastSuccessfulCommunication() {
         return getSafe(() -> podState.getLastSuccessfulCommunication());
     }
 
-    public final void setLastSuccessfulCommunication(DateTime dateTime, boolean notifyPodStateChanged) {
-        setAndStore(() -> podState.setLastSuccessfulCommunication(dateTime), notifyPodStateChanged);
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
+    public final void setLastSuccessfulCommunication(DateTime dateTime) {
+        setSafe(() -> podState.setLastSuccessfulCommunication(dateTime));
     }
 
     public final DateTime getLastFailedCommunication() {
         return getSafe(() -> podState.getLastFailedCommunication());
     }
 
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final void setLastFailedCommunication(DateTime dateTime) {
-        setAndStore(() -> podState.setLastFailedCommunication(dateTime));
+        setSafe(() -> podState.setLastFailedCommunication(dateTime));
     }
 
     public final DateTime getLastUpdatedFromStatusResponse() {
@@ -359,11 +371,11 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastDeliveryStatus());
     }
 
+    /**
+     * Does not automatically store pod state in order to decrease I/O load
+     */
     public final void updateFromStatusResponse(StatusResponse statusResponse) {
-        if (!hasPodState()) {
-            throw new IllegalStateException("Cannot update from status response: podState is null");
-        }
-        setAndStore(() -> {
+        setSafe(() -> {
             if (podState.getActivatedAt() == null) {
                 DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
                 podState.setActivatedAt(activatedAtCalculated);
@@ -385,23 +397,21 @@ public abstract class PodStateManager {
     }
 
     private void setAndStore(Runnable runnable) {
-        setAndStore(runnable, true);
+        setSafe(runnable);
+        storePodState();
     }
 
-    private void setAndStore(Runnable runnable, boolean notifyPodStateChanged) {
+    // Not actually "safe" as it throws an Exception, but it prevents NPEs
+    private void setSafe(Runnable runnable) {
         if (!hasPodState()) {
             throw new IllegalStateException("Cannot mutate PodState: podState is null");
         }
         runnable.run();
-        storePodState();
-        if (notifyPodStateChanged) {
-            notifyPodStateChanged();
-        }
     }
 
-    private void storePodState() {
+    public void storePodState() {
         String podState = gsonInstance.toJson(this.podState);
-        aapsLogger.info(LTag.PUMP, "storePodState: storing podState: " + podState);
+        aapsLogger.debug(LTag.PUMP, "storePodState: storing podState: {}", podState);
         storePodState(podState);
     }
 
@@ -425,11 +435,7 @@ public abstract class PodStateManager {
                 aapsLogger.error(LTag.PUMP, "loadPodState: could not deserialize PodState: " + storedPodState, ex);
             }
         }
-
-        notifyPodStateChanged();
     }
-
-    protected abstract void notifyPodStateChanged();
 
     // Not actually "safe" as it throws an Exception, but it prevents NPEs
     private <T> T getSafe(Supplier<T> supplier) {

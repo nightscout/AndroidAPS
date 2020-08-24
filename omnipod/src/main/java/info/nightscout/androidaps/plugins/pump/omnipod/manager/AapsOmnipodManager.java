@@ -69,6 +69,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodRetur
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.SetupActionResult;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -316,6 +317,11 @@ public class AapsOmnipodManager {
         } catch (Exception ex) {
             aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);
         }
+
+        // Bolus is already updated in Pod state. If this was an SMB, it could be that
+        // the user is looking at the Pod tab right now, so send an extra event
+        // (this is normally done in OmnipodPumpPlugin)
+        sendEvent(new EventOmnipodPumpValuesChanged());
 
         // Wait for the bolus to finish
         OmnipodManager.BolusDeliveryResult bolusDeliveryResult =

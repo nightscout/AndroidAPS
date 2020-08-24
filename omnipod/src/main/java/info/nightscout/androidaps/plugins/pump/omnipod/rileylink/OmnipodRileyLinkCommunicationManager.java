@@ -105,70 +105,67 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     }
 
     public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
-
-        aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage [responseClass={}, podStateManager={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
+        aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage: responseClass={}, podStateManager={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}", //
                 responseClass.getSimpleName(), podStateManager, message, addressOverride, ackAddressOverride, automaticallyResyncNonce);
 
-        for (int i = 0; 2 > i; i++) {
+        try {
+            for (int i = 0; 2 > i; i++) {
 
-            if (podStateManager.isPodInitialized() && message.isNonceResyncable()) {
-                podStateManager.advanceToNextNonce();
-            }
+                if (podStateManager.isPodInitialized() && message.isNonceResyncable()) {
+                    podStateManager.advanceToNextNonce();
+                }
 
-            MessageBlock responseMessageBlock;
-            try {
-                responseMessageBlock = transportMessages(podStateManager, message, addressOverride, ackAddressOverride);
-            } catch (Exception ex) {
-                podStateManager.setLastFailedCommunication(DateTime.now());
-                throw ex;
-            }
+                MessageBlock responseMessageBlock;
+                try {
+                    responseMessageBlock = transportMessages(podStateManager, message, addressOverride, ackAddressOverride);
+                } catch (Exception ex) {
+                    podStateManager.setLastFailedCommunication(DateTime.now());
+                    throw ex;
+                }
 
-            aapsLogger.debug(LTag.PUMPCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
+                aapsLogger.debug(LTag.PUMPCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
-            boolean isExpectedResponseType = responseClass.isInstance(responseMessageBlock);
-            // Set last successful communication before updating from status response to prevent duplicately notifying Pod state changes
-            // as podStateManager.updateFromStatusResponse() also notifies of Pod state changes.
-            if (isExpectedResponseType) {
-                podStateManager.setLastSuccessfulCommunication(DateTime.now(), !(responseMessageBlock instanceof StatusResponse));
-            }
+                if (responseMessageBlock instanceof StatusResponse) {
+                    podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
+                }
 
-            if (responseMessageBlock instanceof StatusResponse) {
-                podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
-            }
-
-            if (isExpectedResponseType) {
-                return (T) responseMessageBlock;
-            } else {
-                if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
-                    ErrorResponse error = (ErrorResponse) responseMessageBlock;
-                    if (error.getErrorResponseCode() == ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE) {
-                        podStateManager.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
-                        if (automaticallyResyncNonce) {
-                            aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Resyncing nonce and retrying to send message as automaticallyResyncNonce=true");
-                            message.resyncNonce(podStateManager.getCurrentNonce());
+                if (responseClass.isInstance(responseMessageBlock)) {
+                    podStateManager.setLastSuccessfulCommunication(DateTime.now());
+                    return (T) responseMessageBlock;
+                } else {
+                    if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
+                        ErrorResponse error = (ErrorResponse) responseMessageBlock;
+                        if (error.getErrorResponseCode() == ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE) {
+                            podStateManager.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
+                            if (automaticallyResyncNonce) {
+                                aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Resyncing nonce and retrying to send message as automaticallyResyncNonce=true");
+                                message.resyncNonce(podStateManager.getCurrentNonce());
+                            } else {
+                                aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Not resyncing nonce as automaticallyResyncNonce=true");
+                                podStateManager.setLastFailedCommunication(DateTime.now());
+                                throw new NonceOutOfSyncException();
+                            }
                         } else {
-                            aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Not resyncing nonce as automaticallyResyncNonce=true");
                             podStateManager.setLastFailedCommunication(DateTime.now());
-                            throw new NonceOutOfSyncException();
+                            throw new PodReturnedErrorResponseException(error);
                         }
+                    } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
+                        PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
+                        podStateManager.setFaultEvent(faultEvent);
+                        podStateManager.setLastFailedCommunication(DateTime.now());
+                        throw new PodFaultException(faultEvent);
                     } else {
                         podStateManager.setLastFailedCommunication(DateTime.now());
-                        throw new PodReturnedErrorResponseException(error);
+                        throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
                     }
-                } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
-                    PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
-                    podStateManager.setFaultEvent(faultEvent);
-                    podStateManager.setLastFailedCommunication(DateTime.now());
-                    throw new PodFaultException(faultEvent);
-                } else {
-                    podStateManager.setLastFailedCommunication(DateTime.now());
-                    throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
                 }
             }
-        }
 
-        podStateManager.setLastFailedCommunication(DateTime.now());
-        throw new NonceResyncException();
+            podStateManager.setLastFailedCommunication(DateTime.now());
+            throw new NonceResyncException();
+        } finally {
+            podStateManager.storePodState();
+        }
     }
 
     private MessageBlock transportMessages(PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {

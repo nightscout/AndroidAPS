@@ -76,6 +76,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPodStateActionsAllowedChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
@@ -429,10 +430,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                         }
                         break;
                     case AcknowledgeAlerts:
-                        executeCommand(OmnipodCommandType.GetPodPulseLog, aapsOmnipodManager::acknowledgeAlerts);
+                        executeCommand(OmnipodCommandType.AcknowledgeAlerts, aapsOmnipodManager::acknowledgeAlerts);
                         break;
                     case GetPodState:
-                        executeCommand(OmnipodCommandType.GetPodPulseLog, aapsOmnipodManager::getPodStatus);
+                        executeCommand(OmnipodCommandType.GetPodStatus, aapsOmnipodManager::getPodStatus);
                         break;
                     default:
                         aapsLogger.error(LTag.PUMP, "Unknown status request: " + statusRequest.name());
@@ -881,6 +882,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         // TODO maybe only do this for specific commands
         rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
+
+        rxBus.send(new EventOmnipodPumpValuesChanged());
 
         return pumpEnactResult;
     }
