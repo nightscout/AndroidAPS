@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Uaktualnianie dawek bazowych</string>
     <string name="settingtempbasal">Ustawianie bazy tymczasowej</string>
     <string name="waitingfortimesynchronization">Oczekiwanie na synchronizację czasu (%1$d sec)</string>
-    <string name="wrongpassword">Złe hasło</string>
     <string name="wrongpumppassword">Błędne hasło pompy!</string>
     <string name="danar_history_alarm">Alarmy</string>
     <string name="danar_history_basalhours">Godziny Bazy</string>

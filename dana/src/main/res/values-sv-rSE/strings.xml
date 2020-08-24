@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Uppdaterar basaldoser</string>
     <string name="settingtempbasal">Ställer in temp basal</string>
     <string name="waitingfortimesynchronization">Väntar på tidssynkronisering (%1$d sek)</string>
-    <string name="wrongpassword">Fel lösenord</string>
     <string name="wrongpumppassword">Fel lösenord för pump</string>
     <string name="danar_history_alarm">Larm</string>
     <string name="danar_history_basalhours">Basaltimmar</string>

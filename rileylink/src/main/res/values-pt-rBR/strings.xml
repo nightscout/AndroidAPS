@@ -46,10 +46,4 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <string name="medtronic_pump_frequency_us_ca">EUA &amp; Canadá (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Em todo o Mundo (868 Mhz)</string>
-    <!--    <plurals name="objective_minutes">-->
-    <!--        <item quantity="one">%1$d minute</item>-->
-    <!--        <item quantity="other">%1$d minutes</item>-->
-    <!--    </plurals>-->
 </resources>

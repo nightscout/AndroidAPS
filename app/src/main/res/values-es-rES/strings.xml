@@ -156,6 +156,7 @@
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
+    <string name="missing_carbs">Falta %1$d g</string>
     <string name="exported">Preferencias exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
@@ -171,6 +172,8 @@
     <string name="password_preferences_decrypt_prompt">Se le solicitará la contraseña maestra, que es necesaria para descifrar las preferencias importadas.</string>
     <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
     <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>
+    <string name="preferences_import_impossible">¡No se pueden importar preferencias!</string>
+    <string name="goto_main_try_again">Por favor, vuelve a la pantalla principal e inténtalo de nuevo.</string>
     <string name="preferences_import_list_title">Seleccionar fichero para importar</string>
     <string name="check_preferences_before_import">Por favor, compruebe las preferencias antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
@@ -232,6 +235,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deben transcursar entre un bolus remoto y el siguiente</string>
     <string name="smscommunicator_remotebolusmindistance">Cuántos minutos deben transcurrir, al menos, entre un bolo y el siguiente</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Por su seguridad, para editar esta preferencia es necesario añadir al menos 2 números de teléfono.</string>
+    <string name="bolusdelivered">Bolo %1$.2fU enviado correctamente</string>
+    <string name="bolusrequested">Entregando %1$.2f U</string>
+    <string name="smscommunicator_bolusdelivered">Bolo %1$.2fU enviado correctamente</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolo de comida %1$.2f U entregado con éxito</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Objetivo %1$s para %2$d minutos</string>
     <string name="smscommunicator_tt_set">Objetivo %1$s para %2$d minutos establecido correctamente</string>
     <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado con éxito</string>
@@ -264,6 +271,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Para desactivar el lazo responder con código %1$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_extendedset">Bolo ampliado de %1$.2fU durante %2$d min se inició correctamente</string>
+    <string name="smscommunicator_carbsset">Carbohidratos %1$d  g ingresados correctamente</string>
     <string name="smscommunicator_carbsfailed">Error al introducir %1$dg de carbohidratos</string>
     <string name="smscommunicator_tempbasalset_percent">Basal temporal de %1$d%% durante %2$d min iniciada correctamente</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
@@ -637,6 +645,7 @@
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
     <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (TT) activo (ComerPronto, Actividad)</string>
     <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivo Temporal Alto</string>
+    <string name="enablesmbwithhightemptarget_summary">Habilitar SMB cuando hay un objetivo temporal alto activo (ejercicio, superior a 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_carbs_label">Carbohidratos</string>
     <string name="overview_buttons_selection">Botones</string>
@@ -670,6 +679,7 @@
     <string name="do_not_bolus_record_only">No administrar Bolo, solo anotar</string>
     <string name="category">Categoría</string>
     <string name="subcategory">Subcategoría</string>
+    <string name="bolusrecordedonly">Bolo sólo se registrará (no será entregado por la bomba)</string>
     <string name="ns_autobackfill_summary">Rellenar BGs perdidos desde NS</string>
     <string name="loop_smbsetbypump_label">SMB administrado por bomba</string>
     <string name="overview_show_activity">Actividad</string>
@@ -786,6 +796,7 @@
     <string name="askforpermission">Pedir permiso</string>
     <string name="needsystemwindowpermission">La aplicación necesita permiso de ventana del sistema para las notificaciones</string>
     <string name="needlocationpermission">La aplicación necesita permiso de ubicación para la exploración de BT e identificación de WiFi</string>
+    <string name="needstoragepermission">La aplicación necesita permiso de almacenamiento para poder almacenar archivos de registro y valores de exportación</string>
     <string name="request">Solicitar</string>
     <string name="insulinsourcesetup">Configurar complemento de insulina</string>
     <string name="exit">Salir</string>
@@ -841,6 +852,7 @@
     <string name="code_compare">¿Coinciden los códigos mostrados en este dispositivo y en su infusor?</string>
     <string name="insight_pairing">Insight sincronizada</string>
     <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2f U / %2$.2f U entregado</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo cambiado</string>
     <string name="pump_time_updated">Hora del infusor actualizada</string>
@@ -898,6 +910,7 @@
     <string name="short_status_extended">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U durante %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Batería.: %1$d%%</string>
     <string name="max_recovery_duration">Max. duración de recuperación [s]</string>
     <string name="min_recovery_duration">Min. duración de recuperación [s]</string>
@@ -1040,6 +1053,7 @@
     <string name="sendsmsactionlabel">Enviar a %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS a todos los números</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
+    <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de hidratos de carbono: %2$d%% de tiempo. Compruebe de nuevo su calculo. Los COB se pueden sobrestimar, por lo que ¡se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
@@ -1065,7 +1079,6 @@
     <string name="objectives_button_unfinish">Limpieza finalizada</string>
     <string name="objectives_button_unstart">Limpieza iniciada</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
-    <string name="time_or_timezone_change">Cambio de hora y/o huso horario en la bomba</string>
     <string name="nopumpselected">Ninguna bomba seleccionada</string>
     <string name="setupwizard_units_prompt">Seleccione las unidades en las que desea visualizar los valores</string>
     <string name="ns_ploadlocalprofile">Subir cambios de perfil local a NS</string>
@@ -1090,6 +1103,7 @@
     <string name="nav_survey">Encuesta</string>
     <string name="invalidage">Entrada de edad no válida</string>
     <string name="invalidweight">Peso no válido</string>
+    <string name="invalidpct">Entrada % invalida</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Promedio</string>
     <string name="tir">TIR</string>
@@ -1141,7 +1155,6 @@
     <string name="authorizationfailed">Ha fallado la autorización</string>
     <string name="overview_show_absinsulin">Insulina en total</string>
     <string name="master_password_summary">La contraseña maestra se usa para cifrar la copia de seguridad y para sustituir la seguridad en la aplicación. Recordar o almacenar en sitio seguro.</string>
-    <string name="passwords_dont_match">Contraseñas no coinciden</string>
     <string name="current_master_password">Contraseña maestra actual</string>
     <string name="statuslights">Luces de estado</string>
     <string name="statuslights_copy_ns">Copiar ajustes de NS</string>
@@ -1150,128 +1163,15 @@
     <string name="buttonson_description">Los botones siempre se muestran en la parte inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grande</string>
     <string name="skin">Tema</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nunca conectados</string>
-    <string name="medtronic_pump_status_waking_up">En fase de inicio</string>
-    <string name="medtronic_pump_status_error_comm">Error con la comunicación</string>
-    <string name="medtronic_pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
-    <string name="medtronic_pump_status_pump_unreachable">Infusora no alcanzable</string>
-    <string name="medtronic_pump_status_invalid_config">Configuración no válida</string>
-    <string name="medtronic_pump_status_active">Activo</string>
-    <string name="medtronic_pump_status_sleeping">Suspendida</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Aviso de bolo activado</string>
-    <string name="omnipod_config_beep_basal_enabled">Aviso de basal activado</string>
-    <string name="omnipod_config_beep_smb_enabled">Aviso de SMB activado</string>
-    <string name="omnipod_config_beep_tbr_enabled">Aviso de TBT activado</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Opciones de depuración de Pod habilitadas</string>
-    <string name="omnipod_config_timechange_enabled">Detección de DST/Timezone habilitada</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">Pod Mgmt</string>
-    <string name="omnipod_pod_status">Estado de Pod</string>
-    <string name="omnipod_reservoir_left">%1$.2f U restantes</string>
-    <string name="omnipod_reservoir_over50">Más De 50 U</string>
-    <string name="omnipod_pod_address">Dirección de Pod</string>
-    <string name="omnipod_pod_expiry">Pod Caduca</string>
-    <string name="omnipod_pod_name_no_info">Sin info</string>
-    <string name="omnipod_pod_no_pod_connected">Sin Pod conectado</string>
-    <string name="omnipod_pod_not_initalized">No Inicializado</string>
-    <string name="omnipod_pod_active_alerts">Alertas de Pod activas</string>
-    <string name="omnipod_ack_short">Alertas Ack</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">La operación no es posible.\n\nDebe configurar Omnipod primero, antes de poder usar esta operación.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">La operación no es posible.\n\n Necesitas esperar unos minutos, hasta que AAPS intente establecer el perfil por primera vez.</string>
-    <string name="omnipod_error_illegal_init_action_type">Ilegal PodInitActionType: %1$s</string>
-    <string name="omnipod_error_pod_not_attached">Ningún pod activo.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Falló la verificación del comando.</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Error inesperado. Por favor, informe! (tipo: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Comunicación fallida: se han recibido parámetros de entrada inválidos.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Comunicación fallida: tiempo de espera.</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">La comunicación ha fallado: error inesperado. ¡Por favor, Informe!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Comunicación fallida: falló la verificación de integridad del mensaje.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">La comunicación ha fallado: se ha recibido un paquete no válido del Pod.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">La comunicación ha fallado: el Pod está en un estado incorrecto.</string>
-    <string name="omnipod_driver_error_invalid_response">La comunicación ha fallado: se ha recibido una respuesta no válida del Pod.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Ha fallado la comunicación: se ha recibido un mensaje con un número de secuencia no válido del Pod.</string>
-    <string name="omnipod_driver_error_invalid_message_address">La comunicación ha fallado: se ha recibido un mensaje con una dirección no válida desde el Pod.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">La comunicación ha fallado: no se ha podido descodificar el mensaje del Pod.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">La comunicación ha fallado: nonce resync ha fallado.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Comunicación fallida: nonce no sincronizada.</string>
-    <string name="omnipod_driver_error_not_enough_data">La comunicación ha fallado: no se han recibido suficientes datos del Pod.</string>
-    <string name="omnipod_driver_error_pod_fault">Un error de Pod (%1$03d %2$s) se ha detectado. Por favor, desactive su Pod e inicie uno nuevo.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">La comunicación ha fallado: el Pod ha devuelto una respuesta de error.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Administración de Pod</string>
-    <string name="omnipod_cmd_init_pod">Iniciar Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
-    <string name="omnipod_cmd_reset_pod">Restablecer Pod</string>
-    <string name="omnipod_cmd_pod_history">Historial de Pod</string>
-    <string name="omnipod_cmd_set_bolus">Establecer Bolo</string>
-    <string name="omnipod_cmd_cancel_bolus">Cancelar Bolus</string>
-    <string name="omnipod_cmd_set_tbr">Establecer la basal temporal</string>
-    <string name="omnipod_cmd_cancel_tbr">Cancelar Basal Temporal (Internamente por controlador)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Cancelar Basal Temporal (forzado por el usuario)</string>
-    <string name="omnipod_cmd_set_basal_schedule">Establecer Planificación Basal</string>
-    <string name="omnipod_cmd_get_pod_status">Obtener estado de Pod</string>
-    <string name="omnipod_cmd_get_pod_info">Obtener información de Pod</string>
-    <string name="omnipod_cmd_set_time">Establecer hora</string>
-    <string name="omnipod_cmd_configure_alerts">Configurar alertas</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Confirmar Alertas</string>
-    <string name="omnipod_cmd_suspend_delivery">Suspender la entrega</string>
-    <string name="omnipod_cmd_resume_delivery">Reanudar la entrega</string>
-    <string name="omnipod_cmd_unknown_entry">Entrada desconocida</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1fU</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Tasa: %1$.1f U, Duración: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">Si pulsa <b>OK</b>, el estado de Pod se restablecerá por la fuerza y ya no podrá comunicarse con el Pod. Hágalo sólo si ya no puede comunicarse con el Pod. Si todavía puede comunicarse con el Pod, utilice la opción <b>Desactivar Pod</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">Historial del Pod no disponible en el momento.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Llenar el Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nLlenar el nuevo Pod con suficiente insulina durante 3 días.\n\nEscucha dos pitidos del Pod durante el proceso de llenado. Esto indica que se ha insertado la cantidad mínima de 85U. Asegúrese de vaciar completamente la jeringa, incluso después de escuchar los dos pitidos.\n\nDespués de llenar el Pod, por favor pulse <b>Next</b>.\n\n<b>Nota:</b> no retire el capuchón de la aguja del Pod en este momento.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Cebado</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Intentando emparejar con el nuevo Pod y primarlo.\n\nCuando todos los elementos están marcados, puedes pulsar <b>Siguiente</b>.\n\n<b>Nota:</b> por favor mantenga el Pod muy cerca del RileyLink en este momento.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Adherir el Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPreparar el sitio de infusión. Retire el capuchón de la aguja del Pod y el adhesivo y aplique el Pod al sitio de perfusión.\n\nSi la cánula se queda fuera, por favor presione <b>Cancel</b> y descarte su Pod.\n\nPress <b>Next</b> para insertar la cánula y comenzar la entrega basal.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Insertar cánula</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Intentando establecer la programación basal inicial e insertar la cánula.\n\nCuando todos los elementos están marcados, puede pulsar <b>Siguiente</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nEl Pod ahora está activo.\n\nSu horario basal ha sido programado y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si usted siente que no lo ha hecho.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Desactivar Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega insulina y desactivará el Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Desactivando el Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Desactivando el Pod.\n\nCuando se comprueban todos los elementos, puede pulsar <b>Next</b>.\n\n<b>Nota:</b> Si la desactivación falla, por favor pulse <b>Cancelar</b> y utilice la opción <b>Restablecer Pod</b> para restablecer por la fuerza el estado de Pod.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, retire el Pod de su cuerpo y desecharlo.</string>
-    <string name="omnipod_init_pod_pair_pod">Emparejar Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Llenado de cánula del Pod</string>
-    <string name="omnipod_init_pod_fill_cannula">Llenar cánula</string>
-    <string name="omnipod_init_pod_set_basal_profile">Establecer el perfil basal</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Cancelar entrega</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Desactivar Pod</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Integración de la bomba para Omnipod Dash.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Finalizar recordatorio de emparejamiento</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Recordatorio de configuración finalizado</string>
-    <string name="omnipod_alert_expiration">Pod a punto de caducar</string>
-    <string name="omnipod_alert_expiration_advisory">Pod a punto de caducar</string>
-    <string name="omnipod_alert_shutdown_imminent">El apagado es inminente</string>
-    <string name="omnipod_alert_low_reservoir">Reservorio bajo</string>
-    <string name="omnipod_alert_unknown_alert">Alerta desconocida</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">La configuración del perfil basal podría haber fallado. ¡La entrega podría ser suspendida! Por favor, actualiza el estado de Pod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">La configuración de basal temporal podría haber fallado. Si ya se está ejecutando una basal temporal, ¡puede que haya sido cancelada! Por favor, actualice el estado del pod.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Ajuste de la hora puede ser que haya fallado. La entrega puede ser suspendido! Por favor, actualizar estado de Pod.</string>
-    <string name="omnipod_bolus_failed_uncertain">No se puede verificar si el bolo ha sido exitoso. Por favor verifique que su Pod está poniendo bolo o cancele el bolo.</string>
-    <string name="omnipod_rl_stats">Estadísticas del RL</string>
-    <string name="omnipod_read_pulse_log_short">Registro de pulso</string>
     <string name="comapareprofile">Comparar perfiles</string>
     <string name="nav_profilehelper">Asistente de perfil</string>
+    <string name="motoldefaultprofile">Perfil predeterminado</string>
     <string name="currentprofile">Perfil actual</string>
     <string name="availableprofile">Perfil disponible</string>
     <string name="profiletype">Tipo de perfil</string>
     <string name="formatwithtdd">Edad: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Edad: %1$.0f TDD: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Edad: %1$.0f Peso: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% de basal</string>
+    <string name="dpvdefaultprofile">Perfil DPV por defecto</string>
 </resources>

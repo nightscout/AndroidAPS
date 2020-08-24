@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Обновява базални стойности</string>
     <string name="settingtempbasal">Настройва временен базал</string>
     <string name="waitingfortimesynchronization">Изчаква синхронизация на времето (%1$d сек)</string>
-    <string name="wrongpassword">Грешна парола</string>
     <string name="wrongpumppassword">Грешна парола за помпата!</string>
     <string name="danar_history_alarm">Аларми</string>
     <string name="danar_history_basalhours">Базален по часове</string>

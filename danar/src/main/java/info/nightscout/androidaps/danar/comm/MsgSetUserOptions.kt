@@ -13,8 +13,8 @@ class MsgSetUserOptions(
             // No options set -> Exiting
             aapsLogger.debug(LTag.PUMPCOMM, "NO USER OPTIONS LOADED EXITING!")
         } else {
-            danaPump.userOptionsFrompump!![0] = (if (danaPump.timeDisplayType == 1) 0 else 1).toByte()
-            danaPump.userOptionsFrompump!![1] = danaPump.buttonScrollOnOff.toByte()
+            danaPump.userOptionsFrompump!![0] = if( danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
+            danaPump.userOptionsFrompump!![1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
             danaPump.userOptionsFrompump!![2] = danaPump.beepAndAlarm.toByte()
             danaPump.userOptionsFrompump!![3] = danaPump.lcdOnTimeSec.toByte()
             danaPump.userOptionsFrompump!![4] = danaPump.backlightOnTimeSec.toByte()

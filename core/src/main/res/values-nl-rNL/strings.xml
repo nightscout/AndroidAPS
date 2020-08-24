@@ -92,6 +92,7 @@
     <string name="unit_weeks">weken</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!--    Protection-->
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %1$s</string>
