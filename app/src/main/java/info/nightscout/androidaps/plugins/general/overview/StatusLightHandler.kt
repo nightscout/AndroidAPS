@@ -27,35 +27,35 @@ class StatusLightHandler @Inject constructor(
     /**
      * applies the extended statusLight subview on the overview fragment
      */
-    fun updateStatusLights(careportal_canulaage: TextView?, careportal_insulinage: TextView?, careportal_reservoirlevel: TextView?, careportal_sensorage: TextView?, careportal_pbage: TextView?, careportal_batterylevel: TextView?) {
+    fun updateStatusLights(careportal_canulaage: TextView?, careportal_insulinage: TextView?, careportal_reservoirlevel: TextView?, careportal_sensorage: TextView?, careportal_pbage: TextView?, careportal_batterylevel: TextView?, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) {
         val pump = activePlugin.activePump
-        handleAge(careportal_canulaage, CareportalEvent.SITECHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0)
-        handleAge(careportal_insulinage, CareportalEvent.INSULINCHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
-        handleAge(careportal_sensorage, CareportalEvent.SENSORCHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
-        handleAge(careportal_pbage, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
+        handleAge(careportal_canulaage, CareportalEvent.SITECHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0, ColorNormal, ColorWarning, ColorAlarm)
+        handleAge(careportal_insulinage, CareportalEvent.INSULINCHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0, ColorNormal, ColorWarning, ColorAlarm)
+        handleAge(careportal_sensorage, CareportalEvent.SENSORCHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0,ColorNormal, ColorWarning, ColorAlarm)
+        handleAge(careportal_pbage, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0, ColorNormal, ColorWarning, ColorAlarm)
         if (!config.NSCLIENT)
-            handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
+            handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U", ColorNormal, ColorWarning, ColorAlarm)
         if (!config.NSCLIENT && pump.model() != PumpType.AccuChekCombo)
-            handleLevel(careportal_batterylevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
+            handleLevel(careportal_batterylevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", ColorNormal, ColorWarning, ColorAlarm)
     }
 
-    private fun handleAge(view: TextView?, eventName: String, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
+    private fun handleAge(view: TextView?, eventName: String, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) {
         val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
         val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)
         val careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(eventName)
         if (careportalEvent != null) {
-            warnColors.setColorByAge(view, careportalEvent, warn, urgent)
+            warnColors.setColorByAge(view, careportalEvent, warn, urgent, ColorNormal, ColorWarning, ColorAlarm)
             view?.text = careportalEvent.age(resourceHelper.shortTextMode(), resourceHelper)
         } else {
             view?.text = if (resourceHelper.shortTextMode()) "-" else resourceHelper.gs(R.string.notavailable)
         }
     }
 
-    private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
+    private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
         @Suppress("SetTextI18n")
         view?.text = " " + DecimalFormatter.to0Decimal(level) + units
-        warnColors.setColorInverse(view, level, resWarn, resUrgent)
+        warnColors.setColorInverse(view, level, resWarn, resUrgent, ColorNormal, ColorWarning, ColorAlarm)
     }
 }

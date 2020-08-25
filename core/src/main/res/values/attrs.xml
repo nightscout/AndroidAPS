@@ -43,6 +43,10 @@
     <attr name="backgroundBaseColorDark" format="reference" />
     <attr name="backgroundBaseColorLight" format="reference" />
     <attr name="backgroundBaseColor" format="reference" />
+    <!-- colors for statuslight handler    -->
+    <attr name="statuslight_normal" format="reference|color" />
+    <attr name="statuslight_Warning" format="reference|color" />
+    <attr name="statuslight_alarm" format="reference|color" />
 
     <!-- For bluring effect -->
     <declare-styleable name="BlurringView">

@@ -606,7 +606,15 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private fun upDateStatusLight() {
         // Status lights
         overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
+        statusLightHandler.updateStatusLights(careportal_canulaage,
+                                              careportal_insulinage,
+                                              careportal_reservoirlevel,
+                                              careportal_sensorage,
+                                              careportal_pbage,
+                                              careportal_batterylevel,
+                                              resourceHelper.getAttributeColor(this, R.attr.statuslight_normal),
+                                              resourceHelper.getAttributeColor(this, R.attr.statuslight_Warning),
+                                              resourceHelper.getAttributeColor(this, R.attr.statuslight_alarm))
     }
 
     private fun upDateLoop() { 

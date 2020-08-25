@@ -74,6 +74,10 @@
         <item name="backgroundBaseColorDark" >@color/background_dark</item>
         <item name="backgroundBaseColorLight" >@color/background_light</item>
         <item name="backgroundBaseColor" >@color/background_light</item>
+        <!-- colors for statuslight handler    -->
+        <item name="statuslight_normal" >@color/statuslight_normal</item>
+        <item name="statuslight_Warning" >@color/statuslight_Warning</item>
+        <item name="statuslight_alarm" >@color/statuslight_alarm</item>
     </style>
 
     <style name="AppTheme.YELLOW" parent="AppTheme.NoActionBar">

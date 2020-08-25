@@ -201,6 +201,11 @@
     <color name="background_dark">#121212</color>
     <color name="background_light">#FFFFFF</color>
 
+    <!-- colors for statuslight handler    -->
+    <color name="statuslight_normal" >#FFFFFF</color>
+    <color name="statuslight_Warning" >#FFFF00</color>
+    <color name="statuslight_alarm" >#ff0400</color>
+
     <!---Default material colors-->
     <color name="colorOnPrimary">#FFFFFF</color>
     <color name="colorOnSecondary">#FFFFFF</color>
