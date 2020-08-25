@@ -78,6 +78,18 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     public static final String MBG = "Mbg"; // comming from entries
 
+    // found in CareDialog.kt file
+    public static final String FINGER = "Finger";
+    public static final String SENSOR = "Sensor";
+    public static final String MANUAL = "Manual";
+
+    // found in Translator.kt
+    public static final String SNACKBOLUS = "Snack Bolus";
+    public static final String SENSORSTART = "Sensor Start";
+    public static final String TEMPBASALSTART = "Temp Basal Start";
+    public static final String TEMPBASALEND = "Temp Basal End";
+    public static final String TEMPBASALCANCEL = "Temporary Target Cancel";
+
     @Deprecated
     public CareportalEvent() {
         StaticInjector.Companion.getInstance().androidInjector().inject(this);

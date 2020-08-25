@@ -101,6 +101,9 @@
     <string name="unit_weeks">týždňov</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Nesprávne heslo</string>
+    <string name="passwords_dont_match">Heslá sa nezhodujú</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>

@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">обновление значений базала</string>
     <string name="settingtempbasal">установка врем базала</string>
     <string name="waitingfortimesynchronization">Ожидание синхронизации времени (%1$d сек)</string>
-    <string name="wrongpassword">неверный пароль</string>
     <string name="wrongpumppassword">неверный пароль помпы</string>
     <string name="danar_history_alarm">оповещения об опасности</string>
     <string name="danar_history_basalhours">почасовые базалы</string>

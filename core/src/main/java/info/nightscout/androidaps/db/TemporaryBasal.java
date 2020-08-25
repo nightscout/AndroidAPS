@@ -262,7 +262,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
             double dia = profile.getDia();
             double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
-            double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
+            double tempBolusSpacing = (double) (realDuration / aboutFiveMinIntervals);
 
             for (long j = 0L; j < aboutFiveMinIntervals; j++) {
                 // find middle of the interval

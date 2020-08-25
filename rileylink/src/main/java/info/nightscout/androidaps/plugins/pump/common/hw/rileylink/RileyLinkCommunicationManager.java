@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -17,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
@@ -35,27 +36,18 @@ public abstract class RileyLinkCommunicationManager {
     @Inject protected SP sp;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
     @Inject protected ServiceTaskExecutor serviceTaskExecutor;
-
+    @Inject protected RFSpy rfspy;
+    @Inject protected HasAndroidInjector injector;
+    @Inject protected ActivePluginProvider activePluginProvider;
 
     private final int SCAN_TIMEOUT = 1500;
     private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
 
-    public final HasAndroidInjector injector;
-    protected final RFSpy rfspy;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
     protected long lastGoodReceiverCommunicationTime = 0;
-    //    protected PumpStatus pumpStatus;
     private long nextWakeUpRequired = 0L;
-
     private int timeoutCount = 0;
-
-
-    public RileyLinkCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
-        this.injector = injector;
-        injector.androidInjector().inject(this);
-        this.rfspy = rfspy;
-    }
 
 
     // All pump communications go through this function.
@@ -98,10 +90,10 @@ public abstract class RileyLinkCommunicationManager {
                     rfSpyResponse.wasTimeout(), rfSpyResponse.isUnknownCommand(), rfSpyResponse.isInvalidParam());
 
             if (rfSpyResponse.wasTimeout()) {
-                if (hasTunning()) {
+                if (rileyLinkServiceData.targetDevice.isTuneUpEnabled()) {
                     timeoutCount++;
 
-                    long diff = System.currentTimeMillis() - getPumpStatus().lastConnection;
+                    long diff = System.currentTimeMillis() - getPumpDevice().getLastConnectionTimeMillis();
 
                     if (diff > ALLOWED_PUMP_UNREACHABLE) {
                         aapsLogger.warn(LTag.PUMPCOMM, "We reached max time that Pump can be unreachable. Starting Tuning.");
@@ -137,10 +129,6 @@ public abstract class RileyLinkCommunicationManager {
 
     public int getNotConnectedCount() {
         return rfspy != null ? rfspy.notConnectedCount : 0;
-    }
-
-    public boolean hasTunning() {
-        return true;
     }
 
 
@@ -413,7 +401,8 @@ public abstract class RileyLinkCommunicationManager {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
         sp.putLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime);
-        getPumpStatus().setLastCommunicationToNow();
+
+        getPumpDevice().setLastCommunicationToNow();
     }
 
 
@@ -434,7 +423,9 @@ public abstract class RileyLinkCommunicationManager {
         }
     }
 
-    public abstract PumpStatus getPumpStatus();
+    private RileyLinkPumpDevice getPumpDevice() {
+        return (RileyLinkPumpDevice) activePluginProvider.getActivePump();
+    }
 
     public abstract boolean isDeviceReachable();
 }

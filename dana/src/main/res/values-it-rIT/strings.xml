@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Aggiornamento velocità basali</string>
     <string name="settingtempbasal">Impostazione basale temporanea</string>
     <string name="waitingfortimesynchronization">In attesa della sincronizzazione dell\'ora (%1$d sec)</string>
-    <string name="wrongpassword">Password errata</string>
     <string name="wrongpumppassword">Password micro errata!</string>
     <string name="danar_history_alarm">Allarmi</string>
     <string name="danar_history_basalhours">Ore basali</string>

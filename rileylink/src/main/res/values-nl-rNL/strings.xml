@@ -45,10 +45,4 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <string name="medtronic_pump_frequency_us_ca">VS &amp; Canada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Wereldwijd (868 Mhz)</string>
-    <!--    <plurals name="objective_minutes">-->
-    <!--        <item quantity="one">%1$d minute</item>-->
-    <!--        <item quantity="other">%1$d minutes</item>-->
-    <!--    </plurals>-->
 </resources>

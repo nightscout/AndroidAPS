@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Bazė naujinama</string>
     <string name="settingtempbasal">Laikinos bazės nustatymas</string>
     <string name="waitingfortimesynchronization">Laukiama laiko sinchronizavimo (%1$d sek.)</string>
-    <string name="wrongpassword">Neteisingas slaptažodis</string>
     <string name="wrongpumppassword">Neteisingas pompos slaptažodis!</string>
     <string name="danar_history_alarm">Aliarmai</string>
     <string name="danar_history_basalhours">Valandinė bazė</string>

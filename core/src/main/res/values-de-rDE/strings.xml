@@ -101,6 +101,9 @@
     <string name="unit_weeks">Wochen</string>
     <string name="shortminute">min</string>
     <string name="shortday">d</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Falsches Passwort</string>
+    <string name="passwords_dont_match">Die Passwörter stimmen nicht überein.</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>

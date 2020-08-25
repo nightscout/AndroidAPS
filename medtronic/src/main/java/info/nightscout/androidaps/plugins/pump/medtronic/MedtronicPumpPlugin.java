@@ -36,7 +36,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -55,9 +54,11 @@ import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
@@ -81,7 +82,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIRespons
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -162,6 +162,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.serviceTaskExecutor = serviceTaskExecutor;
 
         displayConnectionMessages = false;
+    }
+
+
+    @Override
+    protected void onStart() {
+        aapsLogger.debug(LTag.PUMP, this.deviceID() + " started.");
 
         serviceConnection = new ServiceConnection() {
 
@@ -189,11 +195,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 }).start();
             }
         };
-    }
 
-
-    @Override
-    protected void onStart() {
         super.onStart();
     }
 
@@ -232,21 +234,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         migrateSettings();
 
-    }
-
-    @Override
-    public void resetRileyLinkConfiguration() {
-        rileyLinkMedtronicService.resetRileyLinkConfiguration();
-    }
-
-    @Override
-    public boolean hasTuneUp() {
-        return true;
-    }
-
-    @Override
-    public void doTuneUpDevice() {
-        rileyLinkMedtronicService.doTuneUpDevice();
     }
 
     @Override
@@ -337,6 +324,22 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return rileyLinkMedtronicService;
     }
 
+    @Override public RileyLinkPumpInfo getPumpInfo() {
+        String pumpDescription = pumpType.getDescription();
+        String frequency = resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide);
+        String model = medtronicPumpStatus.medtronicDeviceType == null ? "???" : "Medtronic " + medtronicPumpStatus.medtronicDeviceType.getPumpModel();
+        String serialNumber = medtronicPumpStatus.serialNumber;
+        return new RileyLinkPumpInfo(pumpDescription, frequency, model, serialNumber);
+    }
+
+    @Override public long getLastConnectionTimeMillis() {
+        return medtronicPumpStatus.lastConnection;
+    }
+
+    @Override public void setLastCommunicationToNow() {
+        medtronicPumpStatus.setLastCommunicationToNow();
+    }
+
     @Override
     public boolean isInitialized() {
         if (displayConnectionMessages)
@@ -346,8 +349,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public void setIsBusy(boolean isBusy_) {
-        isBusy = isBusy_;
+    public void setBusy(boolean busy) {
+        isBusy = busy;
     }
 
     @Override
@@ -772,7 +775,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             if ((clock.localDeviceTime.getYear() <= 2015) || (timeDiff <= 24 * 60 * 60)) {
 
-                aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump." , timeDiff);
+                aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump.", timeDiff);
 
                 rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(MedtronicCommandType.SetRealTimeClock);
 

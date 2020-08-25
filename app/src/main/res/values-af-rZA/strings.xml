@@ -905,22 +905,4 @@
     <string name="boluswizard">Bolus slimjan</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nooit gekontak nie</string>
-    <string name="medtronic_pump_status_waking_up">Besig om te wek</string>
-    <string name="medtronic_pump_status_error_comm">Fout met kommunikasie</string>
-    <string name="medtronic_pump_status_timeout_comm">Te lank op kommunikasie gewag</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pomp onbeskikbaar</string>
-    <string name="medtronic_pump_status_invalid_config">Ongeldige konfigirasie</string>
-    <string name="medtronic_pump_status_active">Aktief</string>
-    <string name="medtronic_pump_status_sleeping">Slaap</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <!-- Omnipod Configuration -->
-    <!-- Omnipod - Fragment -->
-    <!-- Omnipod - Dialogs -->
-    <!-- Omnipod - Error -->
-    <!-- Omnipod - Pod Mgmt -->
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
 </resources>

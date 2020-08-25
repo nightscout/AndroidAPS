@@ -33,6 +33,7 @@ ext {
 repositories {
     jcenter { url "https://jcenter.bintray.com/" }
     mavenCentral()
+    google()
 }
 
 def generateGitBuild = { ->
@@ -280,8 +281,7 @@ dependencies {
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
     // Omnipod wizard
-    implementation(name: "com.atech-software.android.library.wizardpager-1.1.1", ext: "aar")
-
+    implementation(name: "com.atech-software.android.library.wizardpager-1.1.4", ext: "aar")
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
     }
@@ -333,7 +333,7 @@ dependencies {
 
     // Phone checker
     implementation 'com.scottyab:rootbeer-lib:0.0.8'
-    
+
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.3.0-beta01'

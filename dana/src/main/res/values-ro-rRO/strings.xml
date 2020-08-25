@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Se actualizează ratele bazale</string>
     <string name="settingtempbasal">Se setează bazala temporară</string>
     <string name="waitingfortimesynchronization">Se așteaptă o sincronizare a timpului (%1$d s)</string>
-    <string name="wrongpassword">Parolă greșită</string>
     <string name="wrongpumppassword">Parola pompei greșită!</string>
     <string name="danar_history_alarm">Alarme</string>
     <string name="danar_history_basalhours">Ore bazale</string>

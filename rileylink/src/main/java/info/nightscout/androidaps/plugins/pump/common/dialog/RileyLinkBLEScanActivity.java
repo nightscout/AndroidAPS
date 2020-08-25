@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -35,16 +34,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
@@ -110,24 +105,9 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-            PumpInterface activePump = activePlugin.getActivePump();
-
-            if (activePump.manufacturer() == ManufacturerType.Medtronic) {
-                RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePump;
-                rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
-
-                rileyLinkPump.triggerPumpConfigurationChangedEvent();
-
-            } else if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Insulet) {
-                if (activePump.model() == PumpType.Insulet_Omnipod_Dash) {
-                    aapsLogger.error("Omnipod Dash not yet implemented.");
-                } else {
-                    RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePump;
-                    rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
-
-                    rileyLinkPump.triggerPumpConfigurationChangedEvent();
-                }
-            }
+            RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePlugin.getActivePump();
+            rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
+            rileyLinkPump.triggerPumpConfigurationChangedEvent();
 
             finish();
         });
