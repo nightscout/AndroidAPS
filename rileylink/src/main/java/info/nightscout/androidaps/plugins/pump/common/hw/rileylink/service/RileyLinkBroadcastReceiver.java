@@ -94,20 +94,20 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         super.onReceive(context, intent);
 
         if (intent == null) {
-            aapsLogger.error(LTag.PUMPCOMM, "onReceive: received null intent");
+            aapsLogger.error(LTag.PUMPBTCOMM, "onReceive: received null intent");
         } else {
             String action = intent.getAction();
             if (action == null) {
                 aapsLogger.error("onReceive: null action");
             } else {
-                aapsLogger.debug(LTag.PUMPCOMM, "Received Broadcast: " + action);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Received Broadcast: " + action);
 
                 if (!processBluetoothBroadcasts(action) && //
                         !processRileyLinkBroadcasts(action, context) && //
                         !processTuneUpBroadcasts(action) && //
                         !processApplicationSpecificBroadcasts(action, intent) //
                 ) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Unhandled broadcast: action=" + action);
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Unhandled broadcast: action=" + action);
                 }
             }
         }
@@ -143,7 +143,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkReady)) {
 
-            aapsLogger.warn(LTag.PUMPCOMM, "RileyLinkConst.Intents.RileyLinkReady");
+            aapsLogger.warn(LTag.PUMPBTCOMM, "RileyLinkConst.Intents.RileyLinkReady");
             // sendIPCNotification(RT2Const.IPC.MSG_note_WakingPump);
 
             rileyLinkService.rileyLinkBLE.enableNotifications();
@@ -154,16 +154,16 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             RileyLinkFirmwareVersion rlVersion = rileyLinkServiceData.firmwareVersion;
 
 //            if (isLoggingEnabled())
-            aapsLogger.debug(LTag.PUMPCOMM, "RfSpy version (BLE113): " + bleVersion);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy version (BLE113): " + bleVersion);
             rileyLinkService.rileyLinkServiceData.versionBLE113 = bleVersion;
 
 //            if (isLoggingEnabled())
-            aapsLogger.debug(LTag.PUMPCOMM, "RfSpy Radio version (CC110): " + rlVersion.name());
+            aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): " + rlVersion.name());
             this.rileyLinkServiceData.versionCC110 = rlVersion;
 
             ServiceTask task = new InitializePumpManagerTask(injector, context);
             serviceTaskExecutor.startTask(task);
-            aapsLogger.info(LTag.PUMPCOMM, "Announcing RileyLink open For business");
+            aapsLogger.info(LTag.PUMPBTCOMM, "Announcing RileyLink open For business");
 
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkNewAddressSet)) {
@@ -192,13 +192,13 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
     public boolean processBluetoothBroadcasts(String action) {
 
         if (action.equals(RileyLinkConst.Intents.BluetoothConnected)) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Bluetooth - Connected");
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Bluetooth - Connected");
             serviceTaskExecutor.startTask(new DiscoverGattServicesTask(injector));
 
             return true;
 
         } else if (action.equals(RileyLinkConst.Intents.BluetoothReconnected)) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Bluetooth - Reconnecting");
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Bluetooth - Reconnecting");
 
             getServiceInstance().bluetoothInit();
             serviceTaskExecutor.startTask(new DiscoverGattServicesTask(injector, true));

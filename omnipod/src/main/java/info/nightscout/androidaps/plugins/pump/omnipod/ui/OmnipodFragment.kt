@@ -48,7 +48,7 @@ import org.joda.time.Duration
 import javax.inject.Inject
 
 class OmnipodFragment : DaggerFragment() {
-    val REFRESH_INTERVAL_MILLIS = 15 * 1000L; // 15 seconds
+    private val REFRESH_INTERVAL_MILLIS = 15 * 1000L; // 15 seconds
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -179,7 +179,7 @@ class OmnipodFragment : DaggerFragment() {
         loopHandler.removeCallbacks(refreshLoop)
     }
 
-    fun updateUi() {
+    private fun updateUi() {
         updateRileyLinkStatus()
         updateOmipodStatus()
         updatePodActionButtons()
@@ -204,7 +204,7 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_rl_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
     }
 
-    fun updateOmipodStatus() {
+    private fun updateOmipodStatus() {
         updateLastConnection()
         updatePodStatus()
 

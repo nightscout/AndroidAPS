@@ -10,7 +10,7 @@ public enum AlertSlot {
     SLOT6((byte) 0x06),
     SLOT7((byte) 0x07);
 
-    private byte value;
+    private final byte value;
 
     AlertSlot(byte value) {
         this.value = value;

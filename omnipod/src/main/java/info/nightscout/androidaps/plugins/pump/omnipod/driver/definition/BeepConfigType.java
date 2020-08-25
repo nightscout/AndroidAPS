@@ -19,7 +19,7 @@ public enum BeepConfigType {
     FIVE_SECONDS_BEEP((byte) 0xE), // can only be used if Pod is currently suspended
     NO_BEEP((byte) 0xF);
 
-    private byte value;
+    private final byte value;
 
     BeepConfigType(byte value) {
         this.value = value;

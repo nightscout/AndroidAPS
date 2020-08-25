@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RLHistoryItemOmnipod extends RLHistoryItem {
 
-    private OmnipodCommandType omnipodCommandType;
+    private final OmnipodCommandType omnipodCommandType;
 
     public RLHistoryItemOmnipod(OmnipodCommandType omnipodCommandType) {
         super(new LocalDateTime(), RLHistoryItemSource.OmnipodCommand, RileyLinkTargetDevice.Omnipod);

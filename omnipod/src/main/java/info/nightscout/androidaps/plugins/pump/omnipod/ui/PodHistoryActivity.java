@@ -50,15 +50,14 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
-    static TypeList showingType = null;
-    static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
-    List<OmnipodHistoryRecord> fullHistoryList = new ArrayList<>();
-    List<OmnipodHistoryRecord> filteredHistoryList = new ArrayList<>();
+    private static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
+    private final List<OmnipodHistoryRecord> fullHistoryList = new ArrayList<>();
+    private final List<OmnipodHistoryRecord> filteredHistoryList = new ArrayList<>();
 
-    RecyclerViewAdapter recyclerViewAdapter;
-    boolean manualChange = false;
+    private RecyclerViewAdapter recyclerViewAdapter;
+    private boolean manualChange = false;
 
-    List<TypeList> typeListFull;
+    private List<TypeList> typeListFull;
 
 
     public PodHistoryActivity() {
@@ -162,7 +161,6 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                 if (manualChange)
                     return;
                 TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
-                showingType = selected;
                 selectedGroup = selected.entryGroup;
                 filterHistory(selectedGroup);
             }
@@ -190,10 +188,10 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         return typeList;
     }
 
-    public static class TypeList {
+    static class TypeList {
 
-        PumpHistoryEntryGroup entryGroup;
-        String name;
+        final PumpHistoryEntryGroup entryGroup;
+        final String name;
 
         TypeList(PumpHistoryEntryGroup entryGroup) {
             this.entryGroup = entryGroup;
@@ -216,7 +214,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         }
 
 
-        public void setHistoryList(List<OmnipodHistoryRecord> historyList) {
+        void setHistoryList(List<OmnipodHistoryRecord> historyList) {
             this.historyList = historyList;
             Collections.sort(this.historyList);
         }
@@ -326,9 +324,9 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
         class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-            TextView timeView;
-            TextView typeView;
-            TextView valueView;
+            final TextView timeView;
+            final TextView typeView;
+            final TextView valueView;
 
             HistoryViewHolder(View itemView) {
                 super(itemView);

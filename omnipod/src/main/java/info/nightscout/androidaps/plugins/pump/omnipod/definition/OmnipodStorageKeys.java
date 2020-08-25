@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.definition;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 
 public class OmnipodStorageKeys {
-    static final String Prefix = "AAPS.Omnipod.";
+    private static final String Prefix = "AAPS.Omnipod.";
 
     public static class Prefs {
         public static final String PodState = Prefix + "pod_state";
@@ -17,7 +17,7 @@ public class OmnipodStorageKeys {
     }
 
     public static class Statistics {
-        public static final String StatsPrefix = "omnipod_";
+        static final String StatsPrefix = "omnipod_";
         public static final String TBRsSet = StatsPrefix + "tbrs_set";
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
         public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";

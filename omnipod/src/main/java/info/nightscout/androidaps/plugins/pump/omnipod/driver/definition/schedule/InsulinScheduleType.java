@@ -5,7 +5,7 @@ public enum InsulinScheduleType {
     TEMP_BASAL_SCHEDULE(1),
     BOLUS(2);
 
-    private byte value;
+    private final byte value;
 
     InsulinScheduleType(int value) {
         this.value = (byte) value;

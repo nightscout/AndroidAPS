@@ -6,7 +6,7 @@ public enum DeliveryType {
     TEMP_BASAL((byte) 0x02),
     BOLUS((byte) 0x04);
 
-    private byte value;
+    private final byte value;
 
     DeliveryType(byte value) {
         this.value = value;

@@ -44,16 +44,16 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
 
     private static boolean isFirstView;
 
-    protected PageFragmentCallbacks mCallbacks;
-    protected String mKey;
+    private PageFragmentCallbacks mCallbacks;
+    private String mKey;
     protected InitActionPage mPage;
 
     protected ProgressBar progressBar;
     protected TextView errorView;
     protected Button retryButton;
 
-    protected PodInitActionType podInitActionType;
-    protected List<PodInitActionType> children;
+    PodInitActionType podInitActionType;
+    private List<PodInitActionType> children;
     protected Map<PodInitActionType, CheckBox> mapCheckBoxes;
 
     protected PumpEnactResult callResult;
@@ -209,7 +209,7 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
         }
     }
 
-    public void setCheckBox(PodInitActionType podInitActionType, boolean isSuccess) {
+    protected void setCheckBox(PodInitActionType podInitActionType, boolean isSuccess) {
         FragmentActivity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(() -> {

@@ -7,7 +7,7 @@ public enum PacketType {
     CON((byte) 0b100),
     ACK((byte) 0b010);
 
-    private byte value;
+    private final byte value;
 
     PacketType(byte value) {
         this.value = value;

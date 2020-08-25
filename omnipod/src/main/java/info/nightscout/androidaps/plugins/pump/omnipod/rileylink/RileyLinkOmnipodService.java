@@ -40,7 +40,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject AapsOmnipodManager aapsOmnipodManager;
     @Inject OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
 
-    private IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new LocalBinder();
     private boolean rileyLinkAddressChanged = false;
     private boolean inPreInit = true;
     private String rileyLinkAddress;
@@ -52,7 +52,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        aapsLogger.warn(LTag.PUMPCOMM, "onConfigurationChanged");
+        aapsLogger.warn(LTag.PUMPBTCOMM, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
@@ -75,7 +75,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
         rfspy.startReader();
 
-        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkOmnipodService newly constructed");
+        aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkOmnipodService newly constructed");
     }
 
     @Override
@@ -115,13 +115,13 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
-                aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: no address");
+                aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: no address");
                 errorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
                 return false;
             } else {
                 if (!rileyLinkAddress.matches(REGEX_MAC)) {
                     errorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
-                    aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
                     if (!rileyLinkAddress.equals(this.rileyLinkAddress)) {
                         this.rileyLinkAddress = rileyLinkAddress;
@@ -138,7 +138,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
         } catch (Exception ex) {
             errorDescription = ex.getMessage();
-            aapsLogger.error(LTag.PUMPCOMM, "Error on Verification: " + ex.getMessage(), ex);
+            aapsLogger.error(LTag.PUMPBTCOMM, "Error on Verification: " + ex.getMessage(), ex);
             return false;
         }
     }

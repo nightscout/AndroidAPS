@@ -8,7 +8,7 @@ public enum DeliveryStatus {
     BOLUS_IN_PROGRESS((byte) 0x05),
     BOLUS_AND_TEMP_BASAL((byte) 0x06);
 
-    private byte value;
+    private final byte value;
 
     DeliveryStatus(byte value) {
         this.value = value;

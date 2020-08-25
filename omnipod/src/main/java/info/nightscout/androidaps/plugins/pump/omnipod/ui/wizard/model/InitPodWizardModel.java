@@ -8,13 +8,13 @@ import com.tech.freak.wizardpager.model.AbstractWizardModel;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.PodInfoFragment;
 
-public abstract class InitPodWizardModel extends AbstractWizardModel {
-    public InitPodWizardModel(Context context) {
+abstract class InitPodWizardModel extends AbstractWizardModel {
+    InitPodWizardModel(Context context) {
         super(context);
     }
 
     @Override
     public Fragment getReviewFragment() {
-        return PodInfoFragment.create("initPodInfoFragment", true);
+        return PodInfoFragment.create(true);
     }
 }

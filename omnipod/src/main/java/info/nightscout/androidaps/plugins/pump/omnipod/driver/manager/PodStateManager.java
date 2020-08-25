@@ -38,7 +38,7 @@ public abstract class PodStateManager {
     private final Gson gsonInstance;
     private PodState podState;
 
-    public PodStateManager(AAPSLogger aapsLogger) {
+    protected PodStateManager(AAPSLogger aapsLogger) {
         this.aapsLogger = aapsLogger;
         this.gsonInstance = createGson();
     }
@@ -619,7 +619,7 @@ public abstract class PodStateManager {
             return totalTicksDelivered;
         }
 
-        public Double getTotalInsulinDelivered() {
+        Double getTotalInsulinDelivered() {
             if (totalTicksDelivered != null) {
                 return totalTicksDelivered * OmnipodConstants.POD_PULSE_SIZE;
             } else {
@@ -631,7 +631,7 @@ public abstract class PodStateManager {
             this.totalTicksDelivered = totalTicksDelivered;
         }
 
-        public boolean isSuspended() {
+        boolean isSuspended() {
             return suspended;
         }
 
@@ -647,7 +647,7 @@ public abstract class PodStateManager {
             this.nonceState = nonceState;
         }
 
-        public PodProgressStatus getPodProgressStatus() {
+        PodProgressStatus getPodProgressStatus() {
             return podProgressStatus;
         }
 
@@ -679,7 +679,7 @@ public abstract class PodStateManager {
             this.basalSchedule = basalSchedule;
         }
 
-        public DateTime getLastBolusStartTime() {
+        DateTime getLastBolusStartTime() {
             return lastBolusStartTime;
         }
 
@@ -787,7 +787,7 @@ public abstract class PodStateManager {
             return (int) ((table[1] + (table[0] << 16)) & 0xFFFFFFFFL);
         }
 
-        public int getCurrentNonce() {
+        int getCurrentNonce() {
             return (int) table[(2 + index)];
         }
 

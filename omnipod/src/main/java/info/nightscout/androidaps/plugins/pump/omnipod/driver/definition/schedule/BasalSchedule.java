@@ -108,7 +108,7 @@ public class BasalSchedule {
         private final Duration duration;
         private final Duration startTime;
 
-        public BasalScheduleDurationEntry(double rate, Duration startTime, Duration duration) {
+        BasalScheduleDurationEntry(double rate, Duration startTime, Duration duration) {
             this.rate = rate;
             this.duration = duration;
             this.startTime = startTime;
@@ -133,7 +133,7 @@ public class BasalSchedule {
         private final Duration startTime;
         private final Duration duration;
 
-        public BasalScheduleLookupResult(int index, BasalScheduleEntry basalScheduleEntry, Duration startTime, Duration duration) {
+        BasalScheduleLookupResult(int index, BasalScheduleEntry basalScheduleEntry, Duration startTime, Duration duration) {
             this.index = index;
             this.basalScheduleEntry = basalScheduleEntry;
             this.startTime = startTime;
@@ -144,7 +144,7 @@ public class BasalSchedule {
             return index;
         }
 
-        public BasalScheduleEntry getBasalScheduleEntry() {
+        BasalScheduleEntry getBasalScheduleEntry() {
             return basalScheduleEntry;
         }
 

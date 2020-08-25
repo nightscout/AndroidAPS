@@ -18,7 +18,7 @@ public enum PodProgressStatus {
     ACTIVATION_TIME_EXCEEDED((byte) 0x0e), // Took > 2 hours from progress 2 to 3 or > 1 hour from 3 to 8
     INACTIVE((byte) 0x0f); // Pod deactivated or a fatal packet state error
 
-    private byte value;
+    private final byte value;
 
     PodProgressStatus(byte value) {
         this.value = value;

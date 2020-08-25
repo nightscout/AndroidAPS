@@ -20,7 +20,7 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
     @Inject ProfileFunction profileFunction;
     @Inject AapsOmnipodManager aapsOmnipodManager;
     @Inject RxBusWrapper rxBus;
-    private InitActionFragment initActionFragment;
+    private final InitActionFragment initActionFragment;
 
     public InitPodTask(HasAndroidInjector injector, InitActionFragment initActionFragment) {
         injector.androidInjector().inject(this);

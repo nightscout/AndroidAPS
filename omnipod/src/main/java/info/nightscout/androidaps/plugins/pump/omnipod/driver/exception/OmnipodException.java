@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.exception;
 public abstract class OmnipodException extends RuntimeException {
     private boolean certainFailure;
 
-    public OmnipodException(String message, boolean certainFailure) {
+    OmnipodException(String message, boolean certainFailure) {
         super(message);
         this.certainFailure = certainFailure;
     }
 
-    public OmnipodException(String message, Throwable cause, boolean certainFailure) {
+    OmnipodException(String message, Throwable cause, boolean certainFailure) {
         super(message, cause);
         this.certainFailure = certainFailure;
     }

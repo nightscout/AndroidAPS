@@ -21,10 +21,10 @@ public class InitActionPage extends Page {
 
     protected PodInitActionType podInitActionType;
 
-    protected boolean actionCompleted = false;
-    protected boolean actionSuccess = false;
+    private boolean actionCompleted = false;
+    private boolean actionSuccess = false;
 
-    public InitActionPage(ModelCallbacks callbacks, String title) {
+    protected InitActionPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);
     }
 

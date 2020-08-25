@@ -31,7 +31,7 @@ public class AapsOmnipodUtil {
 
     private final ResourceHelper resourceHelper;
 
-    private Gson gsonInstance = createGson();
+    private final Gson gsonInstance = createGson();
 
     @Inject
     public AapsOmnipodUtil(ResourceHelper resourceHelper) {

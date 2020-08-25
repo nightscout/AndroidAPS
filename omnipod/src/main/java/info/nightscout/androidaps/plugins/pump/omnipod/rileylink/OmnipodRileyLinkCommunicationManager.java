@@ -105,7 +105,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     }
 
     public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
-        aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage: responseClass={}, podStateManager={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}", //
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Exchanging OmnipodMessage: responseClass={}, podStateManager={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}", //
                 responseClass.getSimpleName(), podStateManager, message, addressOverride, ackAddressOverride, automaticallyResyncNonce);
 
         try {
@@ -123,7 +123,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                     throw ex;
                 }
 
-                aapsLogger.debug(LTag.PUMPCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
                 if (responseMessageBlock instanceof StatusResponse) {
                     podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
@@ -138,10 +138,10 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                         if (error.getErrorResponseCode() == ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE) {
                             podStateManager.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
                             if (automaticallyResyncNonce) {
-                                aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Resyncing nonce and retrying to send message as automaticallyResyncNonce=true");
+                                aapsLogger.warn(LTag.PUMPBTCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Resyncing nonce and retrying to send message as automaticallyResyncNonce=true");
                                 message.resyncNonce(podStateManager.getCurrentNonce());
                             } else {
-                                aapsLogger.warn(LTag.PUMPCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Not resyncing nonce as automaticallyResyncNonce=true");
+                                aapsLogger.warn(LTag.PUMPBTCOMM, "Received ErrorResponse 0x14 (Nonce out of sync). Not resyncing nonce as automaticallyResyncNonce=true");
                                 podStateManager.setLastFailedCommunication(DateTime.now());
                                 throw new NonceOutOfSyncException();
                             }
@@ -175,7 +175,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         }
 
         if (podStateManager.getMessageNumber() != message.getSequenceNumber()) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Message number in Pod State [{}] does not match message sequence number [{}]. Setting message number in Pod State to {}", podStateManager.getMessageNumber(), message.getSequenceNumber(), message.getSequenceNumber());
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Message number in Pod State [{}] does not match message sequence number [{}]. Setting message number in Pod State to {}", podStateManager.getMessageNumber(), message.getSequenceNumber(), message.getSequenceNumber());
             podStateManager.setMessageNumber(message.getSequenceNumber());
         }
 
@@ -226,7 +226,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                 // so it's impossible for the pod to have received the message
                 newException.setCertainFailure(!lastPacket);
 
-                aapsLogger.debug(LTag.PUMPCOMM, "Caught exception in transportMessages. Set certainFailure to {} because encodedMessage.length={}", newException.isCertainFailure(), encodedMessage.length);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Caught exception in transportMessages. Set certainFailure to {} because encodedMessage.length={}", newException.isCertainFailure(), encodedMessage.length);
 
                 throw newException;
             }
@@ -331,7 +331,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         podStateManager.increasePacketNumber();
 
         while (System.currentTimeMillis() < timeoutTime) {
-            OmnipodPacket response = null;
+            OmnipodPacket response;
             try {
                 response = (OmnipodPacket) sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds);
             } catch (RileyLinkCommunicationException | OmnipodException ex) {

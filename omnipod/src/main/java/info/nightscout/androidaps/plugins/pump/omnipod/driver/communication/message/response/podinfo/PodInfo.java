@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfo
 public abstract class PodInfo {
     private final byte[] encodedData;
 
-    public PodInfo(byte[] encodedData) {
+    PodInfo(byte[] encodedData) {
         this.encodedData = encodedData;
     }
 

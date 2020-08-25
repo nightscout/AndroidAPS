@@ -124,16 +124,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     // variables for handling statuses and history
-    protected boolean firstRun = true;
-    protected boolean hasTimeDateOrTimeZoneChanged = false;
-    protected boolean displayConnectionMessages = false;
+    private boolean firstRun = true;
+    private boolean hasTimeDateOrTimeZoneChanged = false;
+    private final boolean displayConnectionMessages = false;
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
     private int timeChangeRetries;
     private long nextPodCheck;
     private boolean sentIdToFirebase;
     private long lastConnectionTimeMillis;
-    private Handler loopHandler = new Handler();
+    private final Handler loopHandler = new Handler();
 
     private final Runnable statusChecker;
 
@@ -858,8 +858,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.firstRun = false;
     }
 
-    @NonNull
-    protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
+    @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = executeCommand(OmnipodCommandType.SetBolus, () -> aapsOmnipodManager.bolus(detailedBolusInfo));
 
         if (result.success) {
@@ -893,7 +892,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         sp.putLong(statsKey, currentCount);
     }
 
-    protected TemporaryBasal readTBR() {
+    private TemporaryBasal readTBR() {
         return activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
     }
 

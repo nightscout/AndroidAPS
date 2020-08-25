@@ -15,7 +15,7 @@ public class BasalDeliveryTable {
     private static final int NUM_SEGMENTS = 48;
     private static final int MAX_SEGMENTS_PER_ENTRY = 16;
 
-    private List<BasalTableEntry> entries = new ArrayList<>();
+    private final List<BasalTableEntry> entries = new ArrayList<>();
 
     public BasalDeliveryTable(BasalSchedule schedule) {
         TempSegment[] expandedSegments = new TempSegment[48];
@@ -97,14 +97,14 @@ public class BasalDeliveryTable {
                 '}';
     }
 
-    private class TempSegment {
-        private int pulses;
+    private static class TempSegment {
+        private final int pulses;
 
-        public TempSegment(int pulses) {
+        TempSegment(int pulses) {
             this.pulses = pulses;
         }
 
-        public int getPulses() {
+        int getPulses() {
             return pulses;
         }
     }

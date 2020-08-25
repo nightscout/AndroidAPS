@@ -40,7 +40,7 @@ public enum PodHistoryEntryType {
     UnknownEntryType(99, R.string.omnipod_cmd_unknown_entry);
 
     private int code;
-    private static Map<Integer, PodHistoryEntryType> instanceMap;
+    private static final Map<Integer, PodHistoryEntryType> instanceMap;
 
     @StringRes
     private int resourceId;

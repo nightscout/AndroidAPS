@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Message
 public abstract class MessageBlock {
     protected byte[] encodedData = new byte[0];
 
-    public MessageBlock() {
+    protected MessageBlock() {
     }
 
     public abstract MessageBlockType getType();

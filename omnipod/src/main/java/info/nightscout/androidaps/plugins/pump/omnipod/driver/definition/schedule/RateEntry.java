@@ -15,7 +15,7 @@ public class RateEntry implements IRawRepresentable {
     // We use a double for the delay between pulses because the Joda time API lacks precision for our calculations
     private final double delayBetweenPulsesInSeconds;
 
-    public RateEntry(double totalPulses, double delayBetweenPulsesInSeconds) {
+    private RateEntry(double totalPulses, double delayBetweenPulsesInSeconds) {
         this.totalPulses = totalPulses;
         this.delayBetweenPulsesInSeconds = delayBetweenPulsesInSeconds;
     }

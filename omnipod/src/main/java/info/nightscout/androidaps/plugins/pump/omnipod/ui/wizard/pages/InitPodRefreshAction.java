@@ -26,7 +26,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class InitPodRefreshAction extends AbstractCancelAction implements FinishActionInterface {
 
-    private PodActionType actionType;
+    private final PodActionType actionType;
 
     @Inject PodStateManager podStateManager;
     @Inject AAPSLogger aapsLogger;

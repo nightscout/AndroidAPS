@@ -122,7 +122,7 @@ public enum FaultEventCode {
     BAD_STATE_IN_MAYBE_INC_33_D((byte) 0x97),
     VALUES_DO_NOT_MATCH_OR_ARE_GREATER_THAN_0_X_97((byte) 0x98);
 
-    private byte value;
+    private final byte value;
 
     FaultEventCode(byte value) {
         this.value = value;

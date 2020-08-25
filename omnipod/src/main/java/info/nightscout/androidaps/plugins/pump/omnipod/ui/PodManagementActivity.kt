@@ -90,7 +90,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         disposables.clear()
     }
 
-    fun initPodAction() {
+    private fun initPodAction() {
 
         val pagerSettings = WizardPagerSettings()
         var refreshAction = InitPodRefreshAction(injector, PodActionType.InitPod)
@@ -119,7 +119,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         this@PodManagementActivity.startActivity(myIntent)
     }
 
-    fun removePodAction() {
+    private fun removePodAction() {
         val pagerSettings = WizardPagerSettings()
         var refreshAction = InitPodRefreshAction(injector, PodActionType.RemovePod)
 
@@ -143,7 +143,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     }
 
-    fun resetPodAction() {
+    private fun resetPodAction() {
         OKDialog.showConfirmation(this,
             resourceHelper.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             aapsOmnipodManager.resetPodStatus()
@@ -151,11 +151,11 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         })
     }
 
-    fun showPodHistory() {
+    private fun showPodHistory() {
         startActivity(Intent(applicationContext, PodHistoryActivity::class.java))
     }
 
-    fun refreshButtons() {
+    private fun refreshButtons() {
         initpod_init_pod.isEnabled = !podStateManager.isPodActivationCompleted
         initpod_remove_pod.isEnabled = podStateManager.isPodInitialized
         initpod_reset_pod.isEnabled = podStateManager.hasPodState()

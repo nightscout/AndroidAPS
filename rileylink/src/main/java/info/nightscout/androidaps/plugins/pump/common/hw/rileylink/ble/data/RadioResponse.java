@@ -118,7 +118,7 @@ public class RadioResponse {
                         receivedCRC = decodeThis[decodeThis.length - 1];
                         byte calculatedCRC = CRC.crc8(decodedPayload);
                         if (receivedCRC != calculatedCRC) {
-                            aapsLogger.error(LTag.PUMPCOMM, String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
+                            aapsLogger.error(LTag.PUMPBTCOMM, String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
                                     calculatedCRC, receivedCRC));
                         }
                     } else {

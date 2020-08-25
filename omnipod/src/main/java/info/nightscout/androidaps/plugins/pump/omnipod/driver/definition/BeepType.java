@@ -12,7 +12,7 @@ public enum BeepType {
     BIP_BIP_BIP_BIP_BIP_BIP((byte) 0x07),
     BEEEP_BEEEP((byte) 0x08);
 
-    private byte value;
+    private final byte value;
 
     BeepType(byte value) {
         this.value = value;

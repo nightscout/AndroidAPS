@@ -81,14 +81,14 @@ public abstract class RileyLinkService extends DaggerService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        //aapsLogger.warn(LTag.PUMPCOMM, "onUnbind");
+        //aapsLogger.warn(LTag.PUMPBTCOMM, "onUnbind");
         return super.onUnbind(intent);
     }
 
 
     @Override
     public void onRebind(Intent intent) {
-        //aapsLogger.warn(LTag.PUMPCOMM, "onRebind");
+        //aapsLogger.warn(LTag.PUMPBTCOMM, "onRebind");
         super.onRebind(intent);
     }
 
@@ -123,7 +123,7 @@ public abstract class RileyLinkService extends DaggerService {
 
 
     public boolean bluetoothInit() {
-        aapsLogger.debug(LTag.PUMPCOMM, "bluetoothInit: attempting to get an adapter");
+        aapsLogger.debug(LTag.PUMPBTCOMM, "bluetoothInit: attempting to get an adapter");
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothInitializing);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -153,10 +153,10 @@ public abstract class RileyLinkService extends DaggerService {
 
         if (rileyLinkBLE.isConnected()) {
             if (deviceAddress.equals(rileyLinkServiceData.rileylinkAddress)) {
-                aapsLogger.info(LTag.PUMPCOMM, "No change to RL address.  Not reconnecting.");
+                aapsLogger.info(LTag.PUMPBTCOMM, "No change to RL address.  Not reconnecting.");
                 return false;
             } else {
-                aapsLogger.warn(LTag.PUMPCOMM, "Disconnecting from old RL (" + rileyLinkServiceData.rileylinkAddress
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnecting from old RL (" + rileyLinkServiceData.rileylinkAddress
                         + "), reconnecting to new: " + deviceAddress);
 
                 rileyLinkBLE.disconnect();
@@ -168,7 +168,7 @@ public abstract class RileyLinkService extends DaggerService {
                 return true;
             }
         } else {
-            aapsLogger.debug(LTag.PUMPCOMM, "Using RL " + deviceAddress);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Using RL " + deviceAddress);
 
             if (rileyLinkServiceData.getRileyLinkServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
@@ -203,7 +203,7 @@ public abstract class RileyLinkService extends DaggerService {
         newFrequency = getDeviceCommunicationManager().tuneForDevice();
 
         if ((newFrequency != 0.0) && (newFrequency != lastGoodFrequency)) {
-            aapsLogger.info(LTag.PUMPCOMM, "Saving new pump frequency of {} MHz", newFrequency);
+            aapsLogger.info(LTag.PUMPBTCOMM, "Saving new pump frequency of {} MHz", newFrequency);
             sp.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, newFrequency);
             rileyLinkServiceData.lastGoodFrequency = newFrequency;
             rileyLinkServiceData.tuneUpDone = true;

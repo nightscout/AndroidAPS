@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.definition;
 
-public abstract class AlertTrigger<T> {
-    protected T value;
+abstract class AlertTrigger<T> {
+    private final T value;
 
-    public AlertTrigger(T value) {
+    AlertTrigger(T value) {
         this.value = value;
     }
 
@@ -11,4 +11,3 @@ public abstract class AlertTrigger<T> {
         return value;
     }
 }
-

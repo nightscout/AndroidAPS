@@ -30,20 +30,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
  * Created by andy on 12/11/2019
  */
 public class PodInfoFragment extends DaggerFragment {
-    private static final String ARG_KEY = "key";
     private static final String ARG_INIT_POD = "initPod";
 
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
     @Inject PodStateManager podStateManager;
 
-    private PageFragmentCallbacks mCallbacks;
-    private String mKey;
-    public boolean isInitPod;
+    private boolean isInitPod;
     private ArrayList<ReviewItem> mCurrentReviewItems;
 
-    public static PodInfoFragment create(String key, boolean initPod) {
+    public static PodInfoFragment create(boolean initPod) {
         Bundle args = new Bundle();
-        args.putString(ARG_KEY, key);
         args.putBoolean(ARG_INIT_POD, initPod);
 
         PodInfoFragment fragment = new PodInfoFragment();
@@ -58,7 +54,6 @@ public class PodInfoFragment extends DaggerFragment {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Bundle args = getArguments();
-        mKey = args.getString(ARG_KEY);
         isInitPod = args.getBoolean(ARG_INIT_POD);
     }
 
@@ -120,28 +115,16 @@ public class PodInfoFragment extends DaggerFragment {
         if (!(activity instanceof PageFragmentCallbacks)) {
             throw new ClassCastException("Activity must implement PageFragmentCallbacks");
         }
-
-        mCallbacks = (PageFragmentCallbacks) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallbacks = null;
     }
 
-    private class PodInfoAdapter extends ArrayAdapter<ReviewItem> {
-
-        private ArrayList<ReviewItem> dataSet;
-        Context mContext;
-        private int lastPosition = -1;
-
-        // View lookup cache
-
-        public PodInfoAdapter(ArrayList<ReviewItem> data, Context context) {
+    private static class PodInfoAdapter extends ArrayAdapter<ReviewItem> {
+        PodInfoAdapter(ArrayList<ReviewItem> data, Context context) {
             super(context, com.tech.freak.wizardpager.R.layout.list_item_review, data);
-            this.dataSet = data;
-            this.mContext = context;
         }
 
 
@@ -152,8 +135,6 @@ public class PodInfoFragment extends DaggerFragment {
             // Check if an existing view is being reused, otherwise inflate the view
             ViewHolder viewHolder; // view lookup cache stored in tag
 
-            final View result;
-
             if (convertView == null) {
 
                 viewHolder = new ViewHolder();
@@ -162,12 +143,9 @@ public class PodInfoFragment extends DaggerFragment {
                 viewHolder.txtName = (TextView) convertView.findViewById(android.R.id.text1);
                 viewHolder.txtType = (TextView) convertView.findViewById(android.R.id.text2);
 
-                result = convertView;
-
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
-                result = convertView;
             }
 
             viewHolder.txtName.setText(dataModel.getTitle());
