@@ -203,12 +203,7 @@ public class OmnipodManager {
 
         try {
             cancelDelivery(EnumSet.allOf(DeliveryType.class), acknowledgementBeep);
-        } catch (Exception ex) {
-            logCommandExecutionFinished("setBasalSchedule");
-            throw ex;
-        }
 
-        try {
             try {
                 return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
                         false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
@@ -231,21 +226,18 @@ public class OmnipodManager {
 
         try {
             cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
-        } catch (Exception ex) {
-            logCommandExecutionFinished("setTemporaryBasal");
-            throw ex;
-        }
 
-        try {
-            StatusResponse statusResponse = executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
-                    podStateManager, rate, duration,
-                    acknowledgementBeep, completionBeep)));
-            return statusResponse;
-        } catch (OmnipodException ex) {
-            // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
-            // Setting this to an uncertain failure will enable for the user to get an appropriate warning
-            ex.setCertainFailure(false);
-            throw ex;
+            try {
+                StatusResponse statusResponse = executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
+                        podStateManager, rate, duration,
+                        acknowledgementBeep, completionBeep)));
+                return statusResponse;
+            } catch (OmnipodException ex) {
+                // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
+                // Setting this to an uncertain failure will enable for the user to get an appropriate warning
+                ex.setCertainFailure(false);
+                throw ex;
+            }
         } finally {
             logCommandExecutionFinished("setTemporaryBasal");
         }
@@ -295,8 +287,6 @@ public class OmnipodManager {
             // Catch uncertain exceptions as we still want to report bolus progress indication
             aapsLogger.error(LTag.PUMPBTCOMM, "Caught exception[certainFailure=false] in bolus", ex);
             commandDeliveryStatus = CommandDeliveryStatus.UNCERTAIN_FAILURE;
-        } finally {
-            logCommandExecutionFinished("bolus");
         }
 
         DateTime startDate = DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
@@ -364,6 +354,8 @@ public class OmnipodManager {
                     }
                 })
                 .subscribe());
+
+        logCommandExecutionFinished("bolus");
 
         return new BolusCommandResult(commandDeliveryStatus, bolusCompletionSubject);
     }
