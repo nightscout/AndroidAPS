@@ -12,9 +12,9 @@ class WarnColors @Inject constructor(val resourceHelper: ResourceHelper) {
 
     fun setColor(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) =
         view?.setTextColor(when {
-            value >= urgentLevel -> ColorNormal
+            value >= urgentLevel -> ColorAlarm
             value >= warnLevel   -> ColorWarning
-            else                 -> ColorAlarm
+            else                 -> ColorNormal
         })
 
     fun setColorInverse(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) =
