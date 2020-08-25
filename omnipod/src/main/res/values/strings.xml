@@ -152,6 +152,10 @@
     <string name="omnipod_time_ago">%1$s ago</string>
     <string name="omnipod_waiting_for_rileylink_connection">Waiting for RileyLink connection...</string>
     <string name="omnipod_bolus_did_not_succeed">Bolus did not succeed</string>
+    <string name="omnipod_refresh">Refresh</string>
+    <string name="omnipod_resume_delivery">Resume delivery</string>
+    <string name="omnipod_error_pod_suspended">Pod suspended</string>
+    <string name="omnipod_less_than_a_minute_ago">Less than a minute ago</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

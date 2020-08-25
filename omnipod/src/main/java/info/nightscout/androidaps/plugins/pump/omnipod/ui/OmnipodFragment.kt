@@ -27,10 +27,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateMa
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
+import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -48,6 +48,7 @@ import org.joda.time.Duration
 import javax.inject.Inject
 
 class OmnipodFragment : DaggerFragment() {
+    val REFRESH_INTERVAL_MILLIS = 15 * 1000L; // 15 seconds
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -75,7 +76,7 @@ class OmnipodFragment : DaggerFragment() {
     init {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateUi() }
-            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+            loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         }
     }
 
@@ -85,6 +86,11 @@ class OmnipodFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        omnipod_resume_delivery.setOnClickListener {
+            disablePodActionButtons()
+            commandQueue.startPump(null)
+        }
 
         omnipod_pod_mgmt.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
@@ -136,7 +142,7 @@ class OmnipodFragment : DaggerFragment() {
 
     override fun onResume() {
         super.onResume()
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -355,12 +361,14 @@ class OmnipodFragment : DaggerFragment() {
         updateRefreshStatusButton()
         updateAcknowledgeAlertsButton()
         updatePulseLogButton()
+        updateResumeDeliveryButton()
     }
 
     private fun disablePodActionButtons() {
         omnipod_pod_active_alerts_ack.isEnabled = false
         omnipod_refresh.isEnabled = false
         omnipod_pod_debug.isEnabled = false
+        omnipod_resume_delivery.isEnabled = false
     }
 
     private fun updateRefreshStatusButton() {
@@ -376,12 +384,22 @@ class OmnipodFragment : DaggerFragment() {
         }
     }
 
-    fun updatePulseLogButton() {
+    private fun updatePulseLogButton() {
         if (aapsOmnipodManager.isPodDebuggingOptionsEnabled) {
             omnipod_pod_debug.visibility = View.VISIBLE
             omnipod_pod_debug.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
             omnipod_pod_debug.visibility = View.GONE
+        }
+    }
+
+    private fun updateResumeDeliveryButton() {
+        val queueEmptyOrStartingPump = isQueueEmpty() || commandQueue.isRunning(Command.CommandType.START_PUMP)
+        if (podStateManager.isPodActivationCompleted && podStateManager.isSuspended && queueEmptyOrStartingPump) {
+            omnipod_resume_delivery.visibility = View.VISIBLE
+            omnipod_resume_delivery.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+        } else {
+            omnipod_resume_delivery.visibility = View.GONE
         }
     }
 
@@ -393,18 +411,24 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun readableDuration(dateTime: DateTime): String {
-        val minutes = Duration(dateTime, DateTime.now()).standardMinutes.toInt()
+        val duration = Duration(dateTime, DateTime.now())
+        val hours = duration.standardHours.toInt()
+        val minutes = duration.standardMinutes.toInt()
+        val seconds = duration.standardSeconds.toInt()
         when {
-            minutes == 0   -> {
+            seconds < 10           -> {
                 return resourceHelper.gs(R.string.omnipod_moments_ago)
             }
 
-            minutes < 60   -> {
+            seconds < 60           -> {
+                return resourceHelper.gs(R.string.omnipod_less_than_a_minute_ago)
+            }
+
+            seconds < 60 * 60      -> { // < 1 hour
                 return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_minutes, minutes, minutes))
             }
 
-            minutes < 1440 -> {
-                val hours = minutes / 60
+            seconds < 24 * 60 * 60 -> { // < 1 day
                 val minutesLeft = minutes % 60
                 if (minutesLeft > 0)
                     return resourceHelper.gs(R.string.omnipod_time_ago,
@@ -412,8 +436,7 @@ class OmnipodFragment : DaggerFragment() {
                 return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours))
             }
 
-            else           -> {
-                val hours = minutes / 60
+            else                   -> {
                 val days = hours / 24
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)

@@ -714,24 +714,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/omnipod_resume_delivery"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_local_activate"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_resume_delivery" />
 
                 <Button
                     android:id="@+id/omnipod_refresh"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_actions_refill"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/combo_refresh" />
+                    android:text="@string/omnipod_refresh" />
 
 
                 <Button
                     android:id="@+id/omnipod_pod_mgmt"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_danarhistory"
                     android:paddingLeft="0dp"
@@ -742,7 +752,7 @@
                     android:id="@+id/omnipod_pod_active_alerts_ack"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_cp_aaps_offline"
                     android:paddingLeft="0dp"
@@ -753,7 +763,7 @@
                     android:id="@+id/omnipod_rileylink_stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_danarstats"
                     android:paddingLeft="0dp"
@@ -764,7 +774,7 @@
                     android:id="@+id/omnipod_pod_debug"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_cp_bolus_correction"
                     android:paddingLeft="0dp"

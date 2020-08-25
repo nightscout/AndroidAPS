@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 
@@ -97,7 +98,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 @Singleton
 public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
-    private static final long RILEY_LINK_CONNECT_TIMEOUT = 3 * 60 * 1000L; // 3 minutes
+    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
+    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
@@ -118,13 +120,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
     private final List<CustomAction> customActions = new ArrayList<>();
-    private final List<OmnipodStatusRequestType> omnipodStatusRequestList = new ArrayList<>();
+    private final List<OmnipodStatusRequestType> statusRequestList = new ArrayList<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     // variables for handling statuses and history
     protected boolean firstRun = true;
     protected boolean hasTimeDateOrTimeZoneChanged = false;
-    protected boolean serviceRunning = false;
     protected boolean displayConnectionMessages = false;
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
@@ -132,6 +133,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private long nextPodCheck;
     private boolean sentIdToFirebase;
     private long lastConnectionTimeMillis;
+    private Handler loopHandler = new Handler();
+
+    private final Runnable statusChecker;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -207,15 +211,27 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 rileyLinkOmnipodService = null;
             }
         };
-    }
 
-    public PodStateManager getPodStateManager() {
-        return podStateManager;
+        statusChecker = new Runnable() {
+            @Override public void run() {
+                if (!OmnipodPumpPlugin.this.statusRequestList.isEmpty() || OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
+                    if (!getCommandQueue().statusInQueue()) {
+                        getCommandQueue().readStatus(statusRequestList.isEmpty() ? "Date or Time Zone Changed" : "Status Refresh Requested", null);
+                    }
+                }
+
+                doPodCheck();
+
+                loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
+            }
+        };
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        loopHandler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS);
 
         // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
@@ -226,7 +242,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        serviceRunning = true;
 
         disposables.add(rxBus
                 .toObservable(EventAppExit.class)
@@ -267,23 +282,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     }
                 }, fabricPrivacy::logException)
         );
-
-        // check status every minute (if any status needs refresh we send readStatus command)
-        new Thread(() -> {
-            do {
-                SystemClock.sleep(60000);
-
-                if (!this.omnipodStatusRequestList.isEmpty() || this.hasTimeDateOrTimeZoneChanged) {
-                    if (!getCommandQueue().statusInQueue()) {
-                        getCommandQueue().readStatus("Status Refresh Requested", null);
-                    }
-                }
-
-                doPodCheck();
-
-            } while (serviceRunning);
-
-        }).start();
     }
 
     @Override
@@ -291,9 +289,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         super.onStop();
         aapsLogger.debug(LTag.PUMP, "OmnipodPumpPlugin.onStop()");
 
-        context.unbindService(serviceConnection);
+        loopHandler.removeCallbacks(statusChecker);
 
-        serviceRunning = false;
+        context.unbindService(serviceConnection);
 
         disposables.clear();
     }
@@ -305,6 +303,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 rxBus.send(new EventNewNotification(notification));
             } else {
                 rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+
+                if (podStateManager.isSuspended()) {
+                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_error_pod_suspended), Notification.NORMAL);
+                    rxBus.send(new EventNewNotification(notification));
+                } else {
+                    rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+                }
             }
 
             this.nextPodCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
@@ -400,8 +405,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public void getPumpStatus() {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
-        } else if (!omnipodStatusRequestList.isEmpty()) {
-            Iterator<OmnipodStatusRequestType> iterator = omnipodStatusRequestList.iterator();
+        } else if (!statusRequestList.isEmpty()) {
+            Iterator<OmnipodStatusRequestType> iterator = statusRequestList.iterator();
 
             while (iterator.hasNext()) {
                 OmnipodStatusRequestType statusRequest = iterator.next();
@@ -469,6 +474,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success);
 
         if (result.success) {
+            rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
             Notification notification = new Notification(Notification.PROFILE_SET_OK,
                     resourceHelper.gs(R.string.profile_set_ok),
                     Notification.INFO, 60);
@@ -758,12 +764,14 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 // Exceeding the threshold alone is not a reason to trigger an alert: it could very well be that we just didn't need to send any commands for a while
                 // Below return statement covers these cases in which we will trigger an alert:
                 // - Sending the last command to the Pod failed
+                // - The Pod is suspended
                 // - RileyLink is in an error state
                 // - RileyLink has been connecting for over RILEY_LINK_CONNECT_TIMEOUT
                 return (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
+                        podStateManager.isSuspended() ||
                         rileyLinkServiceData.rileyLinkServiceState.isError() ||
                         // The below clause is a hack for working around the RL service state forever staying in connecting state on startup if the RL is switched off / unreachable
-                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + RILEY_LINK_CONNECT_TIMEOUT < currentTimeMillis);
+                        (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + RILEY_LINK_CONNECT_TIMEOUT_MILLIS < currentTimeMillis);
             }
         }
 
@@ -771,7 +779,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public void addPodStatusRequest(OmnipodStatusRequestType pumpStatusRequest) {
-        omnipodStatusRequestList.add(pumpStatusRequest);
+        statusRequestList.add(pumpStatusRequest);
     }
 
     @Override
