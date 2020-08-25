@@ -67,7 +67,6 @@
     <string name="updatingbasalrates">Updating basal rates</string>
     <string name="settingtempbasal">Setting temp basal</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%1$d sec)</string>
-    <string name="wrongpassword">Wrong password</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="danar_history_alarm">Alarms</string>
     <string name="danar_history_basalhours">Basal Hours</string>

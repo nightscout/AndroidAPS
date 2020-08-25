@@ -41,6 +41,7 @@ import javax.inject.Singleton
  *      use html table for results presentation
  * TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
  * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
+ *      Check in oref0-autotune if Tune insulin works with exponential curve (aaps doesn't use bilinear curves anymore...)
  */
 
 @Singleton
@@ -222,6 +223,9 @@ class AutotunePlugin @Inject constructor(
         val utcOffset = ((DateUtil.fromISODateString(DateUtil.toISOString(runDate, null, null)).time - DateUtil.fromISODateString(DateUtil.toISOString(runDate)).time) / (60 * 1000)).toInt()
         val startDateString = DateUtil.toISOString(firstloopstart, "yyyy-MM-dd", null)
         val endDateString = DateUtil.toISOString(Date(lastloopend.time - 24 * 60 * 60 * 1000L), "yyyy-MM-dd", null)
+        val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
+        val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) " -c=true" else ""
+        val optInsulinCurve = ""
         try {
             jsonSettings.put("datestring", DateUtil.toISOString(runDate, null, null))
             jsonSettings.put("dateutc", DateUtil.toISOString(runDate))
@@ -235,11 +239,12 @@ class AutotunePlugin @Inject constructor(
             // command to change timezone
             jsonSettings.put("timezone_command", "sudo ln -sf /usr/share/zoneinfo/" + TimeZone.getDefault().id + " /etc/localtime")
             // oref0_command is for running oref0-autotune on a virtual machine in a dedicated ~/aaps subfolder
-            jsonSettings.put("oref0_command", "oref0-autotune -d=~/aaps -n=" + sp.getString(R.string.key_nsclientinternal_url, "") + " -s=" + startDateString + " -e=" + endDateString)
+            jsonSettings.put("oref0_command", "oref0-autotune -d=~/aaps -n=$nsUrl -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
             // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
-            jsonSettings.put("aaps_command", "aaps-autotune -d=~/aaps -s=$startDateString -e=$endDateString")
+            jsonSettings.put("aaps_command", "aaps-autotune -d=~/aaps -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
+            //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
             if (insulinInterface.id == InsulinInterface.OREF_ULTRA_RAPID_ACTING) jsonSettings.put("curve", "ultra-rapid") else if (insulinInterface.id == InsulinInterface.OREF_RAPID_ACTING) jsonSettings.put("curve", "rapid-acting") else if (insulinInterface.id == InsulinInterface.OREF_FREE_PEAK) {
                 jsonSettings.put("curve", "bilinear")
                 jsonSettings.put("insulinpeaktime", sp.getInt(R.string.key_insulin_oref_peak, 75))

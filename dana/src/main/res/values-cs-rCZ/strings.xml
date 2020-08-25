@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Aktualizuji bazály</string>
     <string name="settingtempbasal">Nastavuji dočasný bazál</string>
     <string name="waitingfortimesynchronization">Čekání na synchronizaci času (%1$d s)</string>
-    <string name="wrongpassword">Chybné heslo</string>
     <string name="wrongpumppassword">Špatné heslo k pumpě!</string>
     <string name="danar_history_alarm">Alarmy</string>
     <string name="danar_history_basalhours">Hodinové bazály</string>

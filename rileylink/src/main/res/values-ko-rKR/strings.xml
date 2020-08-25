@@ -45,10 +45,4 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">메드트로닉 펌프</string>
     <string name="rileylink_target_device_omnipod">옴니포드</string>
-    <string name="medtronic_pump_frequency_us_ca">미국 &amp; 캐나다(916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">타국가(868 Mhz)</string>
-    <!--    <plurals name="objective_minutes">-->
-    <!--        <item quantity="one">%1$d minute</item>-->
-    <!--        <item quantity="other">%1$d minutes</item>-->
-    <!--    </plurals>-->
 </resources>

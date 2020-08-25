@@ -22,7 +22,7 @@ public enum RileyLinkServiceState {
     RileyLinkInitializing(R.string.rileylink_state_rl_init), // (S) start Gatt discovery (OK -> RileyLinkReady, Error ->
                                                              // BluetoothEnabled) ??
     RileyLinkError(R.string.rileylink_state_rl_error), // (E)
-    RileyLinkReady(R.string.rileylink_state_connected), // (OK) if tunning was already done we go to PumpConnectorReady
+    RileyLinkReady(R.string.rileylink_state_rl_ready), // (OK) if tunning was already done we go to PumpConnectorReady
 
     // Tunning
     TuneUpDevice(R.string.rileylink_state_pc_tune_up), // (S)
@@ -40,43 +40,23 @@ public enum RileyLinkServiceState {
     // RileyLinkConnected, // -> TuneUpPump (on 1st), else PumpConnectorReady
 
     // PumpConnected, //
-
     ;
 
     int resourceId;
-    Integer resourceIdPod;
-
 
     RileyLinkServiceState(int resourceId) {
         this.resourceId = resourceId;
     }
 
-
-    RileyLinkServiceState(int resourceId, int resourceIdPod) {
-        this.resourceId = resourceId;
-        this.resourceIdPod = resourceIdPod;
+    public boolean isReady() {
+        return (this == PumpConnectorReady);
     }
 
-
-    public static boolean isReady(RileyLinkServiceState serviceState) {
-        return (/* serviceState == RileyLinkReady || */serviceState == PumpConnectorReady);
+    public int getResourceId() {
+        return this.resourceId;
     }
-
-
-    public int getResourceId(RileyLinkTargetDevice targetDevice) {
-        if (this.resourceIdPod != null) {
-
-            return (targetDevice == null || targetDevice == RileyLinkTargetDevice.MedtronicPump) ? //
-            this.resourceId
-                : this.resourceIdPod;
-        } else {
-            return this.resourceId;
-        }
-    }
-
 
     public boolean isConnecting() {
-
         return (this == RileyLinkServiceState.BluetoothInitializing || //
             // this == RileyLinkServiceState.BluetoothError || //
             this == RileyLinkServiceState.BluetoothReady || //
@@ -86,9 +66,7 @@ public enum RileyLinkServiceState {
         );
     }
 
-
     public boolean isError() {
-
         return (this == RileyLinkServiceState.BluetoothError || //
         // this == RileyLinkServiceState.PumpConnectorError || //
         this == RileyLinkServiceState.RileyLinkError);

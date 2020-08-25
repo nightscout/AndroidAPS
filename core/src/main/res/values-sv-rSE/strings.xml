@@ -8,15 +8,22 @@
     <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
     <string name="invalidinput">Fel på inmatning</string>
     <string name="tempbasaldeliveryerror">Fel vid justering av temp basal</string>
+    <string name="goingtodeliver">Kommer att leverera %1$.2f enheter</string>
     <string name="waitingforpump">Väntar på pump</string>
     <string name="connectingfor">Ansluter (%1$d s)</string>
+    <string name="bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="handshaking">Anslutningen verifieras</string>
     <string name="connecting">Ansluter</string>
     <string name="connected">Ansluten</string>
     <string name="disconnected">Frånkopplad</string>
     <string name="disconnecting">Kopplar från</string>
     <string name="androidaps_start">AndroidAPS startad</string>
+    <string name="formatinsulinunits1">%1$.1f U</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$dg</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pump upptagen</string>
@@ -77,6 +84,8 @@
     <string name="location_not_found_title">Platsdata är inte aktiverat</string>
     <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$dm sedan</string>
+    <string name="hoursago">%1$.1f tim sedan</string>
     <string name="shorthour">h</string>
     <string name="days">dagar</string>
     <string name="hours">timmar</string>
@@ -92,6 +101,9 @@
     <string name="unit_weeks">veckor</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Fel lösenord</string>
+    <string name="passwords_dont_match">Lösenorden stämmer inte överens</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Profilens basaler är inte satta på hel timme: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %1$s</string>
@@ -113,7 +125,10 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ogiltig profil: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> KH: <b>%6$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BG-kontroll</string>
     <string name="careportal_announcement">Meddelande</string>
@@ -153,6 +168,7 @@
     <string name="waitingforpumpresult">Väntar på resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%dg KH behövs inom %d minuter</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulativ TDD</string>

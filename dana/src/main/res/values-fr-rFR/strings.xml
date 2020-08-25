@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Mise à jour des débits basal</string>
     <string name="settingtempbasal">Définir basal temp</string>
     <string name="waitingfortimesynchronization">Attente de synchronisation de l\'heure (%1$d sec)</string>
-    <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpumppassword">Mot de passe pompe incorrect !</string>
     <string name="danar_history_alarm">Alarmes</string>
     <string name="danar_history_basalhours">Heures Basal</string>

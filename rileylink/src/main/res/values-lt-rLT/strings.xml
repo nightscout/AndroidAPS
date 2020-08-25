@@ -49,9 +49,6 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Pasaulinis (868 Mhz)</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
@@ -64,8 +61,4 @@
         <item quantity="many">%1$d val.</item>
         <item quantity="other">%1$d val.</item>
     </plurals>
-    <!--    <plurals name="objective_minutes">-->
-    <!--        <item quantity="one">%1$d minute</item>-->
-    <!--        <item quantity="other">%1$d minutes</item>-->
-    <!--    </plurals>-->
 </resources>

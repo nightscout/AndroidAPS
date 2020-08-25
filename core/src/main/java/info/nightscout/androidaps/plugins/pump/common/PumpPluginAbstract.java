@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -36,7 +37,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -64,17 +64,9 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected CommandQueueProvider commandQueue;
     protected SP sp;
     protected DateUtil dateUtil;
-
-    /*
-        protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
-                .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
-        protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
-                .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
-    */
     protected PumpDescription pumpDescription = new PumpDescription();
-    protected ServiceConnection serviceConnection = null;
+    protected ServiceConnection serviceConnection;
     protected boolean serviceRunning = false;
-    // protected boolean isInitialized = false;
     protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
     protected boolean displayConnectionMessages = false;
     protected PumpType pumpType;
@@ -113,6 +105,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     public abstract void initPumpStatusData();
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -135,6 +128,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     @Override
     protected void onStop() {
+        aapsLogger.debug(LTag.PUMP, this.deviceID() + " onStop()");
+
         context.unbindService(serviceConnection);
 
         serviceRunning = false;
@@ -477,6 +472,10 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
+    }
+
+    protected FabricPrivacy getFabricPrivacy() {
+        return this.fabricPrivacy;
     }
 
 }

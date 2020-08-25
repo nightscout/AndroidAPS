@@ -8,6 +8,7 @@ interface DatabaseHelperInterface {
     fun getAllBgreadingsDataFromTime(mills: Long, ascending: Boolean): List<BgReading>
     fun createOrUpdate(careportalEvent: CareportalEvent)
     fun createOrUpdate(record: DanaRHistoryRecord)
+    fun createOrUpdate(record: OmnipodHistoryRecord)
     fun create(record: DbRequest)
     fun getDanaRHistoryRecordsByType(type: Byte): List<DanaRHistoryRecord>
     fun getTDDs(): List<TDD>
@@ -19,9 +20,10 @@ interface DatabaseHelperInterface {
     fun roundDateToSec(date: Long): Long
     fun createOrUpdateTDD(record: TDD)
     fun createOrUpdate(tempBasal: TemporaryBasal)
-    fun findTempBasalByPumpId(id: Long) : TemporaryBasal
-    fun getTemporaryBasalsDataFromTime(mills: Long, ascending: Boolean) : List<TemporaryBasal>
-    fun getCareportalEventFromTimestamp(timestamp: Long): CareportalEvent
+    fun findTempBasalByPumpId(id: Long): TemporaryBasal
+    fun getTemporaryBasalsDataFromTime(mills: Long, ascending: Boolean): List<TemporaryBasal>
+    fun getCareportalEventFromTimestamp(timestamp: Long): CareportalEvent?
+    fun getAllOmnipodHistoryRecordsFromTimestamp(timestamp: Long, ascending: Boolean): List<OmnipodHistoryRecord>
     fun getTDDsForLastXDays(days: Int): List<TDD>
     fun getProfileSwitchData(from: Long, ascending: Boolean): List<ProfileSwitch>
 }
