@@ -98,6 +98,10 @@
 
     <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/plastic_grey</item>
+        <item name="colorPrimaryDark">@color/darkgray</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/black</item>
     </style>
 
     <style name="AppTheme.DARKSIDE" parent="AppTheme.NoActionBar">

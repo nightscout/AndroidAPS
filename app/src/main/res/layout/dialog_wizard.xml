@@ -299,6 +299,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/show_calculation"
                 android:layout_gravity="center_vertical"
+                android:tint="?attr/iconColorToolbar"
                 android:src="@drawable/ic_visibility" />
 
             <com.google.android.material.button.MaterialButton

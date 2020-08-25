@@ -96,6 +96,9 @@
 
     <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/plastic_grey</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="AppTheme.RED" parent="AppTheme.NoActionBar">

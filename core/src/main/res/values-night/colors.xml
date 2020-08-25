@@ -31,7 +31,7 @@
     <color name="inrange">#1ba1e2</color>
     <color name="inrange_bg">#1ba1e2</color>
     <color name="low">#FF0000</color>
-    <color name="high">#FFEC0B</color>
+    <color name="high">#FFFF00</color>
 
     <color name="actionsConfirm">#FFFF00</color>
     <color name="tabBgColor">#f0003f59</color>
