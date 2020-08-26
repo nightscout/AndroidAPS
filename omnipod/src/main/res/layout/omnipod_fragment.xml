@@ -715,7 +715,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/omnipod_resume_delivery"
+                    android:id="@+id/omnipod_button_resume_delivery"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -723,10 +723,11 @@
                     android:drawableTop="@drawable/ic_local_activate"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/omnipod_resume_delivery" />
+                    android:text="@string/omnipod_resume_delivery"
+                    android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/omnipod_refresh"
+                    android:id="@+id/omnipod_button_refresh_status"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -736,9 +737,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_refresh" />
 
-
                 <Button
-                    android:id="@+id/omnipod_pod_mgmt"
+                    android:id="@+id/omnipod_button_pod_mgmt"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -749,7 +749,7 @@
                     android:text="@string/omnipod_pod_mgmt" />
 
                 <Button
-                    android:id="@+id/omnipod_pod_active_alerts_ack"
+                    android:id="@+id/omnipod_button_acknowledge_active_alerts"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -757,10 +757,10 @@
                     android:drawableTop="@drawable/ic_cp_aaps_offline"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/omnipod_ack_short" />
+                    android:text="@string/omnipod_acknowledge_active_alerts_short" />
 
                 <Button
-                    android:id="@+id/omnipod_rileylink_stats"
+                    android:id="@+id/omnipod_button_rileylink_stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -771,7 +771,7 @@
                     android:text="@string/omnipod_rl_stats" />
 
                 <Button
-                    android:id="@+id/omnipod_pod_debug"
+                    android:id="@+id/omnipod_button_pulse_log"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -779,7 +779,20 @@
                     android:drawableTop="@drawable/ic_cp_bolus_correction"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/omnipod_read_pulse_log_short" />
+                    android:text="@string/omnipod_read_pulse_log_short"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/omnipod_button_suspend_delivery"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_loop_disabled"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_suspend_delivery_short"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

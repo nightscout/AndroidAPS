@@ -3,23 +3,23 @@ package info.nightscout.androidaps.plugins.pump.omnipod.definition;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 
 public class OmnipodStorageKeys {
-    private static final String Prefix = "AAPS.Omnipod.";
+    private static final String PREFIX = "AAPS.Omnipod.";
 
-    public static class Prefs {
-        public static final String PodState = Prefix + "pod_state";
-        public static final String ActiveBolus = Prefix + "current_bolus";
-        public static final int BeepBasalEnabled = R.string.key_omnipod_beep_basal_enabled;
-        public static final int BeepBolusEnabled = R.string.key_omnipod_beep_bolus_enabled;
-        public static final int BeepSMBEnabled = R.string.key_omnipod_beep_smb_enabled;
-        public static final int BeepTBREnabled = R.string.key_omnipod_beep_tbr_enabled;
-        public static final int PodDebuggingOptionsEnabled = R.string.key_omnipod_pod_debugging_options_enabled;
-        public static final int TimeChangeEventEnabled = R.string.key_omnipod_timechange_enabled;
+    public static class Preferences {
+        public static final String POD_STATE = PREFIX + "pod_state";
+        public static final String ACTIVE_BOLUS = PREFIX + "current_bolus";
+        public static final int BASAL_BEEPS_ENABLED = R.string.key_omnipod_basal_beeps_enabled;
+        public static final int BOLUS_BEEPS_ENABLED = R.string.key_omnipod_bolus_beeps_enabled;
+        public static final int SMB_BEEPS_ENABLED = R.string.key_omnipod_smb_beeps_enabled;
+        public static final int TBR_BEEPS_ENABLED = R.string.key_omnipod_tbr_beeps_enabled;
+        public static final int SUSPEND_DELIVERY_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
+        public static final int PULSE_LOG_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
+        public static final int TIME_CHANGE_EVENT_ENABLED = R.string.key_omnipod_time_change_event_enabled;
     }
 
     public static class Statistics {
-        static final String StatsPrefix = "omnipod_";
-        public static final String TBRsSet = StatsPrefix + "tbrs_set";
-        public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
-        public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
+        public static final String TBRS_SET = PREFIX + "tbrs_set";
+        public static final String STANDARD_BOLUSES_DELIVERED = PREFIX + "std_boluses_delivered";
+        public static final String SMB_BOLUSES_DELIVERED = PREFIX + "smb_boluses_delivered";
     }
 }

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
  */
 
 public enum OmnipodCustomActionType implements CustomActionType {
-    ResetRileyLinkConfiguration;
+    RESET_RILEY_LINK_CONFIGURATION;
 
     @Override
     public String getKey() {

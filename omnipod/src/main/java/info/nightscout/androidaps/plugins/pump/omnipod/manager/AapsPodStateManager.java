@@ -28,11 +28,11 @@ public class AapsPodStateManager extends PodStateManager {
 
     @Override
     protected String readPodState() {
-        return sp.getString(OmnipodStorageKeys.Prefs.PodState, "");
+        return sp.getString(OmnipodStorageKeys.Preferences.POD_STATE, "");
     }
 
     @Override
     protected void storePodState(String podState) {
-        sp.putString(OmnipodStorageKeys.Prefs.PodState, podState);
+        sp.putString(OmnipodStorageKeys.Preferences.POD_STATE, podState);
     }
 }

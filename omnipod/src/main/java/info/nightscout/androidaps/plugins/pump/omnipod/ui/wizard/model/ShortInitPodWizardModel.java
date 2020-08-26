@@ -31,7 +31,7 @@ public class ShortInitPodWizardModel extends InitPodWizardModel {
 
                 new InitActionPage(this,
                         R.string.omnipod_init_pod_wizard_step4_title,
-                        PodInitActionType.FillCannulaSetBasalProfileWizardStep
+                        PodInitActionType.FILL_CANNULA_SET_BASAL_PROFILE_WIZARD_STEP
                 ).setRequired(true).setCancelReason("Cancel")
         );
 

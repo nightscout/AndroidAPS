@@ -16,33 +16,38 @@
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_omnipod_beep_bolus_enabled"
-            android:title="@string/omnipod_config_beep_bolus_enabled" />
+            android:key="@string/key_omnipod_bolus_beeps_enabled"
+            android:title="@string/omnipod_config_bolus_beeps_enabled" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_omnipod_beep_basal_enabled"
-            android:title="@string/omnipod_config_beep_basal_enabled" />
+            android:key="@string/key_omnipod_basal_beeps_enabled"
+            android:title="@string/omnipod_config_basal_beeps_enabled" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_omnipod_beep_smb_enabled"
-            android:title="@string/omnipod_config_beep_smb_enabled" />
+            android:key="@string/key_omnipod_smb_beeps_enabled"
+            android:title="@string/omnipod_config_smb_beeps_enabled" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_omnipod_beep_tbr_enabled"
-            android:title="@string/omnipod_config_beep_tbr_enabled" />
+            android:key="@string/key_omnipod_tbr_beeps_enabled"
+            android:title="@string/omnipod_config_tbr_beeps_enabled" />
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_omnipod_pod_debugging_options_enabled"
-            android:title="@string/omnipod_config_pod_debugging_options_enabled" />
+            android:key="@string/key_omnipod_suspend_delivery_button_enabled"
+            android:title="@string/omnipod_config_suspend_delivery_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_pulse_log_button_enabled"
+            android:title="@string/omnipod_config_pulse_log_button_enabled" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_omnipod_timechange_enabled"
-            android:title="@string/omnipod_config_timechange_enabled" />
+            android:key="@string/key_omnipod_time_change_event_enabled"
+            android:title="@string/omnipod_config_time_change_enabled" />
 
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

@@ -13,31 +13,31 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R;
  */
 public enum PodHistoryEntryType {
 
-    PairAndPrime(1, R.string.omnipod_init_pod_wizard_step2_title, PumpHistoryEntryGroup.Prime),
-    FillCannulaSetBasalProfile(2, R.string.omnipod_init_pod_wizard_step4_title, PumpHistoryEntryGroup.Prime),
-    DeactivatePod(3, R.string.omnipod_cmd_deactivate_pod, PumpHistoryEntryGroup.Prime),
-    ResetPodState(4, R.string.omnipod_cmd_reset_pod, PumpHistoryEntryGroup.Prime),
+    PAIR_AND_PRIME(1, R.string.omnipod_init_pod_wizard_step2_title, PumpHistoryEntryGroup.Prime),
+    FILL_CANNULA_SET_BASAL_PROFILE(2, R.string.omnipod_init_pod_wizard_step4_title, PumpHistoryEntryGroup.Prime),
+    DEACTIVATE_POD(3, R.string.omnipod_cmd_deactivate_pod, PumpHistoryEntryGroup.Prime),
+    RESET_POD_STATE(4, R.string.omnipod_cmd_discard_pod, PumpHistoryEntryGroup.Prime),
 
-    SetTemporaryBasal(10, R.string.omnipod_cmd_set_tbr, PumpHistoryEntryGroup.Basal),
-    CancelTemporaryBasal(11, R.string.omnipod_cmd_cancel_tbr, PumpHistoryEntryGroup.Basal),
-    CancelTemporaryBasalForce(12, R.string.omnipod_cmd_cancel_tbr_forced, PumpHistoryEntryGroup.Basal),
+    SET_TEMPORARY_BASAL(10, R.string.omnipod_cmd_set_tbr, PumpHistoryEntryGroup.Basal),
+    CANCEL_TEMPORARY_BASAL_BY_DRIVER(11, R.string.omnipod_cmd_cancel_tbr_by_driver, PumpHistoryEntryGroup.Basal),
+    CANCEL_TEMPORARY_BASAL(12, R.string.omnipod_cmd_cancel_tbr, PumpHistoryEntryGroup.Basal),
 
-    SetBasalSchedule(20, R.string.omnipod_cmd_set_basal_schedule, PumpHistoryEntryGroup.Basal),
+    SET_BASAL_SCHEDULE(20, R.string.omnipod_cmd_set_basal_schedule, PumpHistoryEntryGroup.Basal),
 
-    GetPodStatus(30, R.string.omnipod_cmd_get_pod_status, PumpHistoryEntryGroup.Configuration),
-    GetPodInfo(31, R.string.omnipod_cmd_get_pod_info, PumpHistoryEntryGroup.Configuration),
-    SetTime(32, R.string.omnipod_cmd_set_time, PumpHistoryEntryGroup.Configuration),
+    GET_POD_STATUS(30, R.string.omnipod_cmd_get_pod_status, PumpHistoryEntryGroup.Configuration),
+    GET_POD_INFO(31, R.string.omnipod_cmd_get_pod_info, PumpHistoryEntryGroup.Configuration),
+    SET_TIME(32, R.string.omnipod_cmd_set_time, PumpHistoryEntryGroup.Configuration),
 
-    SetBolus(40, R.string.omnipod_cmd_set_bolus, PumpHistoryEntryGroup.Bolus),
-    CancelBolus(41, R.string.omnipod_cmd_cancel_bolus, PumpHistoryEntryGroup.Bolus),
+    SET_BOLUS(40, R.string.omnipod_cmd_set_bolus, PumpHistoryEntryGroup.Bolus),
+    CANCEL_BOLUS(41, R.string.omnipod_cmd_cancel_bolus, PumpHistoryEntryGroup.Bolus),
 
-    ConfigureAlerts(50, R.string.omnipod_cmd_configure_alerts, PumpHistoryEntryGroup.Alarm),
-    AcknowledgeAlerts(51, R.string.omnipod_cmd_acknowledge_alerts, PumpHistoryEntryGroup.Alarm),
+    CONFIGURE_ALERTS(50, R.string.omnipod_cmd_configure_alerts, PumpHistoryEntryGroup.Alarm),
+    ACKNOWLEDGE_ALERTS(51, R.string.omnipod_cmd_acknowledge_alerts, PumpHistoryEntryGroup.Alarm),
 
-    SuspendDelivery(60, R.string.omnipod_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),
-    ResumeDelivery(61, R.string.omnipod_cmd_resume_delivery, PumpHistoryEntryGroup.Basal),
+    SUSPEND_DELIVERY(60, R.string.omnipod_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),
+    RESUME_DELIVERY(61, R.string.omnipod_cmd_resume_delivery, PumpHistoryEntryGroup.Basal),
 
-    UnknownEntryType(99, R.string.omnipod_cmd_unknown_entry);
+    UNKNOWN_ENTRY_TYPE(99, R.string.omnipod_cmd_unknown_entry);
 
     private int code;
     private static final Map<Integer, PodHistoryEntryType> instanceMap;
@@ -82,7 +82,7 @@ public enum PodHistoryEntryType {
         if (instanceMap.containsKey(code)) {
             return instanceMap.get(code);
         } else {
-            return UnknownEntryType;
+            return UNKNOWN_ENTRY_TYPE;
         }
     }
 

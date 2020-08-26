@@ -468,7 +468,7 @@ public class OmnipodManager {
             logCommandExecutionFinished("deactivatePod");
         }
 
-        podStateManager.removeState();
+        podStateManager.discardState();
     }
 
     public OmnipodRileyLinkCommunicationManager getCommunicationService() {

@@ -118,9 +118,9 @@ public class InitActionFragment extends DaggerFragment implements PodInitReceive
             mapCheckBoxes.put(child, checkBox1);
         }
 
-        if (podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
+        if (podInitActionType == PodInitActionType.FILL_CANNULA_SET_BASAL_PROFILE_WIZARD_STEP) {
             headerView.setText(R.string.omnipod_init_pod_wizard_step4_action_header);
-        } else if (podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
+        } else if (podInitActionType == PodInitActionType.DEACTIVATE_POD_WIZARD_STEP) {
             headerView.setText(R.string.omnipod_remove_pod_wizard_step2_action_header);
         }
 

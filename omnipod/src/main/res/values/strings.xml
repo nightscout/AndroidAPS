@@ -9,18 +9,20 @@
     <string name="description_pump_omnipod">Pump integration for Omnipod, requires RileyLink (with at least 2.0 firmware) device.</string>
 
     <!-- Omnipod Configuration -->
-    <string name="key_omnipod_beep_bolus_enabled" translatable="false">pref_omnipod_beep_bolus_enabled</string>
-    <string name="key_omnipod_beep_basal_enabled" translatable="false">pref_omnipod_beep_basal_enabled</string>
-    <string name="key_omnipod_beep_smb_enabled" translatable="false">pref_omnipod_beep_smb_enabled</string>
-    <string name="key_omnipod_beep_tbr_enabled" translatable="false">pref_omnipod_beep_tbr_enabled</string>
-    <string name="key_omnipod_pod_debugging_options_enabled" translatable="false">pref_omnipod_pod_debugging_options_enabled</string>
-    <string name="key_omnipod_timechange_enabled" translatable="false">pref_omnipod_timechange_enabled</string>
-    <string name="omnipod_config_beep_bolus_enabled">Bolus beep enabled</string>
-    <string name="omnipod_config_beep_basal_enabled">Basal beep enabled</string>
-    <string name="omnipod_config_beep_smb_enabled">SMB beep enabled</string>
-    <string name="omnipod_config_beep_tbr_enabled">TBR beep enabled</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Pod debugging options enabled</string>
-    <string name="omnipod_config_timechange_enabled">DST/Time zone detection enabled</string>
+    <string name="key_omnipod_bolus_beeps_enabled" translatable="false">AAPS.Omnipod.bolus_beeps_enabled</string>
+    <string name="key_omnipod_basal_beeps_enabled" translatable="false">AAPS.Omnipod.basal_beeps_enabled</string>
+    <string name="key_omnipod_smb_beeps_enabled" translatable="false">AAPS.Omnipod.smb_beeps_enabled</string>
+    <string name="key_omnipod_tbr_beeps_enabled" translatable="false">AAPS.Omnipod.tbr_beeps_enabled</string>
+    <string name="key_omnipod_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
+    <string name="key_omnipod_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
+    <string name="key_omnipod_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
+    <string name="omnipod_config_bolus_beeps_enabled">Bolus beeps enabled</string>
+    <string name="omnipod_config_basal_beeps_enabled">Basal beeps enabled</string>
+    <string name="omnipod_config_smb_beeps_enabled">SMB beeps enabled</string>
+    <string name="omnipod_config_tbr_beeps_enabled">TBR beeps enabled</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Suspend Delivery button enabled</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Pulse Log button enabled</string>
+    <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
 
     <!-- Omnipod - Fragment -->
     <string name="omnipod_moments_ago">Moments ago</string>
@@ -43,9 +45,8 @@
     <string name="omnipod_pod_status_inactive">Inactive</string>
     <string name="omnipod_pod_status_pod_fault_description">Pod fault: %1$s %2$s</string>
     <string name="omnipod_pod_active_alerts">Active Pod alerts</string>
-    <string name="omnipod_ack_short">Ack alerts</string>
+    <string name="omnipod_acknowledge_active_alerts_short">Ack alerts</string>
     <string name="omnipod_last_bolus" translatable="false">%1$.2f %2$s (%3$s)</string>
-    <string name="omnipod_pod_status_initalizing">Initializing</string>
 
 
     <!-- Omnipod - Dialogs -->
@@ -80,13 +81,13 @@
     <string name="omnipod_pod_mgmt_title">Pod management</string>
     <string name="omnipod_cmd_init_pod">Init Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Deactivate Pod</string>
-    <string name="omnipod_cmd_reset_pod">Reset Pod</string>
+    <string name="omnipod_cmd_discard_pod">Discard Pod</string>
     <string name="omnipod_cmd_pod_history">Pod history</string>
     <string name="omnipod_cmd_set_bolus">Set bolus</string>
     <string name="omnipod_cmd_cancel_bolus">Cancel bolus</string>
     <string name="omnipod_cmd_set_tbr">Set temporary basal</string>
-    <string name="omnipod_cmd_cancel_tbr">Cancel temporary basal (internally by driver)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Cancel temporary casal (forced by user)</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Cancel temporary basal (internally by driver)</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancel temporary basal</string>
     <string name="omnipod_cmd_set_basal_schedule">Set basal schedule</string>
     <string name="omnipod_cmd_get_pod_status">Get Pod status</string>
     <string name="omnipod_cmd_get_pod_info">Get Pod info</string>
@@ -99,7 +100,7 @@
     <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Rate: %1$.2f U, duration: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.</string>
+    <string name="omnipod_cmd_discard_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
     <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
@@ -114,7 +115,7 @@
     <string name="omnipod_remove_pod_wizard_step1_title">Deactivate Pod</string>
     <string name="omnipod_remove_pod_wizard_step1_desc">\nPress <b>Next</b> to deactivate the Pod.\n\n<b>Note:</b> This will suspend all insulin delivery and deactivate the Pod.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">Deactivating the Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactivating the Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> If deactivating continuously fails, please press <b>Cancel</b> and use the <b>Reset Pod</b> option to forcibly reset the Pod state.</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactivating the Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> If deactivating continuously fails, please press <b>Cancel</b> and use the <b>Discard Pod</b> option to forcibly reset the Pod state.</string>
     <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deactivated.\n\nPlease remove the Pod from your body and discard it.</string>
     <string name="omnipod_init_pod_pair_pod">Pair Pod</string>
     <string name="omnipod_init_pod_prime_pod">Prime Pod</string>
@@ -153,6 +154,10 @@
     <string name="omnipod_resume_delivery">Resume delivery</string>
     <string name="omnipod_error_pod_suspended">Pod suspended</string>
     <string name="omnipod_less_than_a_minute_ago">Less than a minute ago</string>
+    <string name="omnipod_suspend_delivery_short">Suspend</string>
+    <string name="omnipod_cmd_pair_and_prime">Pair and prime</string>
+    <string name="omnipod_cmd_fill_cannula_set_basal_profile">Fill cannula and set basal profile</string>
+    <string name="omnipod_cmd_get_pulse_log">Get pulse log</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

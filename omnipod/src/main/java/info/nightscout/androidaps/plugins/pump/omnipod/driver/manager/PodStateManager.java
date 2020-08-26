@@ -43,7 +43,7 @@ public abstract class PodStateManager {
         this.gsonInstance = createGson();
     }
 
-    public final void removeState() {
+    public final void discardState() {
         this.podState = null;
         storePodState();
     }

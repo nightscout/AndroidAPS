@@ -31,7 +31,7 @@ public class FullInitPodWizardModel extends InitPodWizardModel {
 
                 new InitActionPage(this,
                         R.string.omnipod_init_pod_wizard_step2_title,
-                        PodInitActionType.PairAndPrimeWizardStep
+                        PodInitActionType.PAIR_AND_PRIME_WIZARD_STEP
                 ).setRequired(true).setCancelReason("Cancel"),
 
                 new DisplayTextPage(this,
@@ -41,7 +41,7 @@ public class FullInitPodWizardModel extends InitPodWizardModel {
 
                 new InitActionPage(this,
                         R.string.omnipod_init_pod_wizard_step4_title,
-                        PodInitActionType.FillCannulaSetBasalProfileWizardStep
+                        PodInitActionType.FILL_CANNULA_SET_BASAL_PROFILE_WIZARD_STEP
                 ).setRequired(true).setCancelReason("Cancel")
         );
     }

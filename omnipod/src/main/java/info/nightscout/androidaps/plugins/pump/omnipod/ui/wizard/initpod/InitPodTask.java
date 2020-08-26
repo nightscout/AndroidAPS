@@ -37,18 +37,18 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        if (initActionFragment.podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
+        if (initActionFragment.podInitActionType == PodInitActionType.PAIR_AND_PRIME_WIZARD_STEP) {
             initActionFragment.callResult = aapsOmnipodManager.pairAndPrime(
                     initActionFragment.podInitActionType,
                     initActionFragment
             );
-        } else if (initActionFragment.podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
+        } else if (initActionFragment.podInitActionType == PodInitActionType.FILL_CANNULA_SET_BASAL_PROFILE_WIZARD_STEP) {
             initActionFragment.callResult = aapsOmnipodManager.setInitialBasalScheduleAndInsertCannula(
                     initActionFragment.podInitActionType,
                     initActionFragment,
                     profileFunction.getProfile()
             );
-        } else if (initActionFragment.podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
+        } else if (initActionFragment.podInitActionType == PodInitActionType.DEACTIVATE_POD_WIZARD_STEP) {
             initActionFragment.callResult = aapsOmnipodManager.deactivatePod(initActionFragment);
         }
 

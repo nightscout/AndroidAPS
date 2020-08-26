@@ -87,12 +87,12 @@ class OmnipodFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_resume_delivery.setOnClickListener {
+        omnipod_button_resume_delivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.startPump(null)
         }
 
-        omnipod_pod_mgmt.setOnClickListener {
+        omnipod_button_pod_mgmt.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 activity?.let { activity ->
                     protectionCheck.queryProtection(
@@ -105,13 +105,13 @@ class OmnipodFragment : DaggerFragment() {
             }
         }
 
-        omnipod_refresh.setOnClickListener {
+        omnipod_button_refresh_status.setOnClickListener {
             disablePodActionButtons()
-            omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.GetPodState);
+            omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.GET_POD_STATE);
             commandQueue.readStatus("Clicked Refresh", null)
         }
 
-        omnipod_rileylink_stats.setOnClickListener {
+        omnipod_button_rileylink_stats.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
@@ -119,24 +119,22 @@ class OmnipodFragment : DaggerFragment() {
             }
         }
 
-        omnipod_pod_active_alerts_ack.setOnClickListener {
-            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
-                displayNotConfiguredDialog()
-            } else {
-                disablePodActionButtons()
-                omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.AcknowledgeAlerts);
-                commandQueue.readStatus("Clicked Alert Ack", null)
-            }
+        omnipod_button_acknowledge_active_alerts.setOnClickListener {
+            disablePodActionButtons()
+            omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.ACKNOWLEDGE_ALERTS);
+            commandQueue.readStatus("Clicked Acknowledge Alert", null)
         }
 
-        omnipod_pod_debug.setOnClickListener {
-            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
-                displayNotConfiguredDialog()
-            } else {
-                disablePodActionButtons()
-                omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.GetPodPulseLog);
-                commandQueue.readStatus("Clicked Pulse Log", null)
-            }
+        omnipod_button_suspend_delivery.setOnClickListener {
+            disablePodActionButtons()
+            omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.SUSPEND_DELIVERY);
+            commandQueue.readStatus("Clicked Suspend Delivery", null)
+        }
+
+        omnipod_button_pulse_log.setOnClickListener {
+            disablePodActionButtons()
+            omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequestType.GET_PULSE_LOG);
+            commandQueue.readStatus("Clicked Pulse Log", null)
         }
     }
 
@@ -359,47 +357,57 @@ class OmnipodFragment : DaggerFragment() {
 
     private fun updatePodActionButtons() {
         updateRefreshStatusButton()
-        updateAcknowledgeAlertsButton()
-        updatePulseLogButton()
         updateResumeDeliveryButton()
+        updateAcknowledgeAlertsButton()
+        updateSuspendDeliveryButton()
+        updatePulseLogButton()
     }
 
     private fun disablePodActionButtons() {
-        omnipod_pod_active_alerts_ack.isEnabled = false
-        omnipod_refresh.isEnabled = false
-        omnipod_pod_debug.isEnabled = false
-        omnipod_resume_delivery.isEnabled = false
+        omnipod_button_acknowledge_active_alerts.isEnabled = false
+        omnipod_button_resume_delivery.isEnabled = false
+        omnipod_button_refresh_status.isEnabled = false
+        omnipod_button_pulse_log.isEnabled = false
     }
 
     private fun updateRefreshStatusButton() {
-        omnipod_refresh.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
+        omnipod_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
             && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
-    }
-
-    private fun updateAcknowledgeAlertsButton() {
-        if (podStateManager.isPodInitialized && podStateManager.hasActiveAlerts() && !podStateManager.isPodDead) {
-            omnipod_pod_active_alerts_ack.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
-        } else {
-            omnipod_pod_active_alerts_ack.isEnabled = false
-        }
-    }
-
-    private fun updatePulseLogButton() {
-        if (aapsOmnipodManager.isPodDebuggingOptionsEnabled) {
-            omnipod_pod_debug.visibility = View.VISIBLE
-            omnipod_pod_debug.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
-        } else {
-            omnipod_pod_debug.visibility = View.GONE
-        }
     }
 
     private fun updateResumeDeliveryButton() {
         val queueEmptyOrStartingPump = isQueueEmpty() || commandQueue.isRunning(Command.CommandType.START_PUMP)
         if (podStateManager.isPodActivationCompleted && podStateManager.isSuspended && queueEmptyOrStartingPump) {
-            omnipod_resume_delivery.visibility = View.VISIBLE
-            omnipod_resume_delivery.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+            omnipod_button_resume_delivery.visibility = View.VISIBLE
+            omnipod_button_resume_delivery.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
-            omnipod_resume_delivery.visibility = View.GONE
+            omnipod_button_resume_delivery.visibility = View.GONE
+        }
+    }
+
+    private fun updateAcknowledgeAlertsButton() {
+        if (podStateManager.isPodInitialized && podStateManager.hasActiveAlerts() && !podStateManager.isPodDead) {
+            omnipod_button_acknowledge_active_alerts.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+        } else {
+            omnipod_button_acknowledge_active_alerts.isEnabled = false
+        }
+    }
+
+    private fun updateSuspendDeliveryButton() {
+        if (aapsOmnipodManager.isSuspendDeliveryButtonEnabled) {
+            omnipod_button_suspend_delivery.visibility = View.VISIBLE
+            omnipod_button_suspend_delivery.isEnabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+        } else {
+            omnipod_button_suspend_delivery.visibility = View.GONE
+        }
+    }
+
+    private fun updatePulseLogButton() {
+        if (aapsOmnipodManager.isPulseLogButtonEnabled) {
+            omnipod_button_pulse_log.visibility = View.VISIBLE
+            omnipod_button_pulse_log.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+        } else {
+            omnipod_button_pulse_log.visibility = View.GONE
         }
     }
 

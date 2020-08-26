@@ -59,11 +59,11 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         }
 
         initpod_remove_pod.setOnClickListener {
-            removePodAction()
+            deactivatePodAction()
         }
 
         initpod_reset_pod.setOnClickListener {
-            resetPodAction()
+            discardPodAction()
         }
 
         initpod_pod_history.setOnClickListener {
@@ -93,7 +93,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     private fun initPodAction() {
 
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(injector, PodActionType.InitPod)
+        var refreshAction = InitPodRefreshAction(injector, PodActionType.INIT_POD)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
@@ -119,9 +119,9 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         this@PodManagementActivity.startActivity(myIntent)
     }
 
-    private fun removePodAction() {
+    private fun deactivatePodAction() {
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(injector, PodActionType.RemovePod)
+        var refreshAction = InitPodRefreshAction(injector, PodActionType.DEACTIVATE_POD)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
@@ -143,10 +143,10 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     }
 
-    private fun resetPodAction() {
+    private fun discardPodAction() {
         OKDialog.showConfirmation(this,
-            resourceHelper.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
-            aapsOmnipodManager.resetPodStatus()
+            resourceHelper.gs(R.string.omnipod_cmd_discard_pod_desc), Thread {
+            aapsOmnipodManager.discardPodState()
             rxBus.send(EventOmnipodPumpValuesChanged())
         })
     }

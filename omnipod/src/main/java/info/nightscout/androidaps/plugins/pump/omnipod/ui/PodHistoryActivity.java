@@ -248,21 +248,21 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                 PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
                 switch (entryType) {
 
-                    case SetTemporaryBasal: {
+                    case SET_TEMPORARY_BASAL: {
                         TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
                         valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
                     break;
 
-                    case FillCannulaSetBasalProfile:
-                    case SetBasalSchedule: {
+                    case FILL_CANNULA_SET_BASAL_PROFILE:
+                    case SET_BASAL_SCHEDULE: {
                         if (historyEntry.getData() != null) {
                             setProfileValue(historyEntry.getData(), valueView);
                         }
                     }
                     break;
 
-                    case SetBolus: {
+                    case SET_BOLUS: {
                         if (historyEntry.getData().contains(";")) {
                             String[] splitVal = historyEntry.getData().split(";");
                             valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
@@ -272,20 +272,20 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     }
                     break;
 
-                    case GetPodStatus:
-                    case GetPodInfo:
-                    case SetTime:
-                    case PairAndPrime:
-                    case CancelTemporaryBasal:
-                    case CancelTemporaryBasalForce:
-                    case ConfigureAlerts:
-                    case CancelBolus:
-                    case DeactivatePod:
-                    case ResetPodState:
-                    case AcknowledgeAlerts:
-                    case SuspendDelivery:
-                    case ResumeDelivery:
-                    case UnknownEntryType:
+                    case GET_POD_STATUS:
+                    case GET_POD_INFO:
+                    case SET_TIME:
+                    case PAIR_AND_PRIME:
+                    case CANCEL_TEMPORARY_BASAL_BY_DRIVER:
+                    case CANCEL_TEMPORARY_BASAL:
+                    case CONFIGURE_ALERTS:
+                    case CANCEL_BOLUS:
+                    case DEACTIVATE_POD:
+                    case RESET_POD_STATE:
+                    case ACKNOWLEDGE_ALERTS:
+                    case SUSPEND_DELIVERY:
+                    case RESUME_DELIVERY:
+                    case UNKNOWN_ENTRY_TYPE:
                     default:
                         valueView.setText("");
                         break;

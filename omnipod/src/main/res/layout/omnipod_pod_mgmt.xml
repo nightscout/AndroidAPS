@@ -111,7 +111,7 @@
                 android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_cp_pump_canula"
-                android:text="@string/omnipod_cmd_reset_pod"
+                android:text="@string/omnipod_cmd_discard_pod"
                 android:textAllCaps="false" />
 
             <TextView

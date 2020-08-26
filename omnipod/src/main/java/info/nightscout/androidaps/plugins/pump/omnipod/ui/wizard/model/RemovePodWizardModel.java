@@ -48,7 +48,7 @@ public class RemovePodWizardModel extends AbstractWizardModel {
 
                 new RemovePodActionPage(this,
                         R.string.omnipod_remove_pod_wizard_step2_title,
-                        PodInitActionType.DeactivatePodWizardStep
+                        PodInitActionType.DEACTIVATE_POD_WIZARD_STEP
                 ).setRequired(true).setCancelReason("Cancel")
 
         );

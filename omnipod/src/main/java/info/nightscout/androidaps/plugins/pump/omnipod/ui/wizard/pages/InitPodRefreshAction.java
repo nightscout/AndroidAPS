@@ -48,7 +48,7 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
 
     @Override
     public void execute() {
-        if (actionType == PodActionType.InitPod) {
+        if (actionType == PodActionType.INIT_POD) {
             if (podStateManager.isPodRunning()) {
                 uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
             }
