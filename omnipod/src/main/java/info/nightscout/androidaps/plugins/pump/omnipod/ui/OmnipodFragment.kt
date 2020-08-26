@@ -394,7 +394,8 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun updateSuspendDeliveryButton() {
-        if (aapsOmnipodManager.isSuspendDeliveryButtonEnabled) {
+        // If the Pod is currently suspended, we show the Resume delivery button instead.
+        if (aapsOmnipodManager.isSuspendDeliveryButtonEnabled && !(podStateManager.isPodRunning && podStateManager.isSuspended)) {
             omnipod_button_suspend_delivery.visibility = View.VISIBLE
             omnipod_button_suspend_delivery.isEnabled = podStateManager.isPodRunning && !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {

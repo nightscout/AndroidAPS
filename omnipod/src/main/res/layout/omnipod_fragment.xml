@@ -715,18 +715,6 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/omnipod_button_resume_delivery"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_local_activate"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_resume_delivery"
-                    android:visibility="gone" />
-
-                <Button
                     android:id="@+id/omnipod_button_refresh_status"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
@@ -792,6 +780,18 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_suspend_delivery_short"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/omnipod_button_resume_delivery"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_local_activate"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_resume_delivery"
                     android:visibility="gone" />
 
             </LinearLayout>
