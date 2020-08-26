@@ -15,14 +15,6 @@ public class AapsPodStateManager extends PodStateManager {
     @Inject
     public AapsPodStateManager(AAPSLogger aapsLogger, SP sp) {
         super(aapsLogger);
-
-        if (aapsLogger == null) {
-            throw new IllegalArgumentException("aapsLogger can not be null");
-        }
-        if (sp == null) {
-            throw new IllegalArgumentException("sp can not be null");
-        }
-
         this.sp = sp;
     }
 
