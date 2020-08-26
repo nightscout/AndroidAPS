@@ -30,7 +30,9 @@ public class PrimeAction implements OmnipodAction<StatusResponse> {
             throw new IllegalPodProgressException(PodProgressStatus.PAIRING_COMPLETED, podStateManager.isPodInitialized() ? podStateManager.getPodProgressStatus() : null);
         }
         if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PRIMING)) {
-            service.executeDisableTab5Sub16FaultConfigCommand(communicationService, podStateManager);
+            // FaultConfigCommand sets internal pod variables to effectively disable $6x faults which occur more often with a 0 TBR
+            service.executeDisableTab5Sub16And17FaultConfigCommand(communicationService, podStateManager);
+
             service.executeFinishSetupReminderAlertCommand(communicationService, podStateManager);
             return service.executePrimeBolusCommand(communicationService, podStateManager);
         } else if (podStateManager.getPodProgressStatus().equals(PodProgressStatus.PRIMING)) {

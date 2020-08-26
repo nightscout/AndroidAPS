@@ -340,7 +340,7 @@ public class OmnipodManager {
                                 }
                             } catch (PodFaultException ex) {
                                 // Substract units not delivered in case of a Pod failure
-                                unitsNotDelivered = ex.getFaultEvent().getInsulinNotDelivered();
+                                unitsNotDelivered = ex.getFaultEvent().getBolusNotDelivered();
 
                                 aapsLogger.debug(LTag.PUMPCOMM, "Caught PodFaultException in bolus completion verification", ex);
                                 break;
@@ -374,9 +374,9 @@ public class OmnipodManager {
 
             try {
                 StatusResponse statusResponse = cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
-                discardActiveBolusData(statusResponse.getInsulinNotDelivered());
+                discardActiveBolusData(statusResponse.getBolusNotDelivered());
             } catch (PodFaultException ex) {
-                discardActiveBolusData(ex.getFaultEvent().getInsulinNotDelivered());
+                discardActiveBolusData(ex.getFaultEvent().getBolusNotDelivered());
                 throw ex;
             } finally {
                 logCommandExecutionFinished("cancelBolus");

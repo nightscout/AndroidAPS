@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLin
 
 public class PrimeService {
 
-    public StatusResponse executeDisableTab5Sub16FaultConfigCommand(OmnipodRileyLinkCommunicationManager communicationService, PodStateManager podStateManager) {
+    public StatusResponse executeDisableTab5Sub16And17FaultConfigCommand(OmnipodRileyLinkCommunicationManager communicationService, PodStateManager podStateManager) {
         FaultConfigCommand faultConfigCommand = new FaultConfigCommand(podStateManager.getCurrentNonce(), (byte) 0x00, (byte) 0x00);
         OmnipodMessage faultConfigMessage = new OmnipodMessage(podStateManager.getAddress(),
                 Collections.singletonList(faultConfigCommand), podStateManager.getMessageNumber());

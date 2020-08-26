@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Message
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 
-public class StatusResponse extends MessageBlock {
+public class StatusResponse extends MessageBlock implements StatusUpdatableResponse {
     private static final int MESSAGE_LENGTH = 10;
 
     private final DeliveryStatus deliveryStatus;
@@ -22,9 +22,9 @@ public class StatusResponse extends MessageBlock {
     private final Double reservoirLevel;
     private final int ticksDelivered;
     private final double insulinDelivered;
-    private final double insulinNotDelivered;
+    private final double bolusNotDelivered;
     private final byte podMessageCounter;
-    private final AlertSet alerts;
+    private final AlertSet unacknowledgedAlerts;
 
     public StatusResponse(byte[] encodedData) {
         if (encodedData.length < MESSAGE_LENGTH) {
@@ -45,8 +45,8 @@ public class StatusResponse extends MessageBlock {
         insulinDelivered = OmnipodConstants.POD_PULSE_SIZE * ticksDelivered;
         podMessageCounter = (byte) ((encodedData[4] >>> 3) & 0xf);
 
-        insulinNotDelivered = OmnipodConstants.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.convertUnsignedByteToInt(encodedData[5]));
-        alerts = new AlertSet((byte) (((encodedData[6] & 0x7f) << 1) | (ByteUtil.convertUnsignedByteToInt(encodedData[7]) >>> 7)));
+        bolusNotDelivered = OmnipodConstants.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.convertUnsignedByteToInt(encodedData[5]));
+        unacknowledgedAlerts = new AlertSet((byte) (((encodedData[6] & 0x7f) << 1) | (ByteUtil.convertUnsignedByteToInt(encodedData[7]) >>> 7)));
 
         double reservoirValue = (((encodedData[8] & 0x3) << 8) + ByteUtil.convertUnsignedByteToInt(encodedData[9])) * OmnipodConstants.POD_PULSE_SIZE;
         if (reservoirValue > OmnipodConstants.MAX_RESERVOIR_READING) {
@@ -61,40 +61,40 @@ public class StatusResponse extends MessageBlock {
         return MessageBlockType.STATUS_RESPONSE;
     }
 
-    public DeliveryStatus getDeliveryStatus() {
+    @Override public DeliveryStatus getDeliveryStatus() {
         return deliveryStatus;
     }
 
-    public PodProgressStatus getPodProgressStatus() {
+    @Override public PodProgressStatus getPodProgressStatus() {
         return podProgressStatus;
     }
 
-    public Duration getTimeActive() {
+    @Override public Duration getTimeActive() {
         return timeActive;
     }
 
-    public Double getReservoirLevel() {
+    @Override public Double getReservoirLevel() {
         return reservoirLevel;
     }
 
-    public int getTicksDelivered() {
+    @Override public int getTicksDelivered() {
         return ticksDelivered;
     }
 
-    public double getInsulinDelivered() {
+    @Override public double getInsulinDelivered() {
         return insulinDelivered;
     }
 
-    public double getInsulinNotDelivered() {
-        return insulinNotDelivered;
+    @Override public double getBolusNotDelivered() {
+        return bolusNotDelivered;
     }
 
-    public byte getPodMessageCounter() {
+    @Override public byte getPodMessageCounter() {
         return podMessageCounter;
     }
 
-    public AlertSet getAlerts() {
-        return alerts;
+    @Override public AlertSet getUnacknowledgedAlerts() {
+        return unacknowledgedAlerts;
     }
 
     @Override public byte[] getRawData() {
@@ -109,17 +109,18 @@ public class StatusResponse extends MessageBlock {
         return stream.toByteArray();
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "StatusResponse{" +
                 "deliveryStatus=" + deliveryStatus +
                 ", podProgressStatus=" + podProgressStatus +
                 ", timeActive=" + timeActive +
                 ", reservoirLevel=" + reservoirLevel +
+                ", ticksDelivered=" + ticksDelivered +
                 ", insulinDelivered=" + insulinDelivered +
-                ", insulinNotDelivered=" + insulinNotDelivered +
+                ", bolusNotDelivered=" + bolusNotDelivered +
                 ", podMessageCounter=" + podMessageCounter +
-                ", alerts=" + alerts +
+                ", unacknowledgedAlerts=" + unacknowledgedAlerts +
+                ", encodedData=" + ByteUtil.shortHexStringWithoutSpaces(encodedData) +
                 '}';
     }
 }

@@ -48,8 +48,8 @@ public class StatusResponseTest {
         assertEquals(1201, statusResponse.getTicksDelivered());
         assertEquals(60.05, statusResponse.getInsulinDelivered(), 0.000001);
         assertEquals(15, statusResponse.getPodMessageCounter());
-        assertEquals(0, statusResponse.getInsulinNotDelivered(), 0.000001);
-        assertEquals(0, statusResponse.getAlerts().getAlertSlots().size());
+        assertEquals(0, statusResponse.getBolusNotDelivered(), 0.000001);
+        assertEquals(0, statusResponse.getUnacknowledgedAlerts().getAlertSlots().size());
 
         assertArrayEquals(ByteUtil.fromHexString("1d180258f80000146fff"), statusResponse.getRawData());
     }
@@ -66,9 +66,9 @@ public class StatusResponseTest {
         assertEquals(3134, statusResponse.getTicksDelivered());
         assertEquals(156.7, statusResponse.getInsulinDelivered(), 0.000001);
         assertEquals(13, statusResponse.getPodMessageCounter());
-        assertEquals(0, statusResponse.getInsulinNotDelivered(), 0.000001);
-        assertEquals(1, statusResponse.getAlerts().getAlertSlots().size());
-        assertEquals(AlertSlot.SLOT3, statusResponse.getAlerts().getAlertSlots().get(0));
+        assertEquals(0, statusResponse.getBolusNotDelivered(), 0.000001);
+        assertEquals(1, statusResponse.getUnacknowledgedAlerts().getAlertSlots().size());
+        assertEquals(AlertSlot.SLOT3, statusResponse.getUnacknowledgedAlerts().getAlertSlots().get(0));
 
         assertArrayEquals(ByteUtil.fromHexString("1d19061f6800044295e8"), statusResponse.getRawData());
     }
@@ -79,13 +79,13 @@ public class StatusResponseTest {
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertEquals(Duration.standardMinutes(8191).getMillis(), statusResponse.getTimeActive().getMillis());
-        assertEquals(OmnipodConstants.POD_PULSE_SIZE * 1023, statusResponse.getInsulinNotDelivered(), 0.000001);
+        assertEquals(OmnipodConstants.POD_PULSE_SIZE * 1023, statusResponse.getBolusNotDelivered(), 0.000001);
         assertNull("Reservoir level should be null", statusResponse.getReservoirLevel());
         assertEquals(OmnipodConstants.POD_PULSE_SIZE * 8191, statusResponse.getInsulinDelivered(), 0.0000001);
         assertEquals(8191, statusResponse.getTicksDelivered());
         assertEquals(OmnipodConstants.POD_PULSE_SIZE * 8191, statusResponse.getInsulinDelivered(), 0.0000001);
         assertEquals(15, statusResponse.getPodMessageCounter());
-        assertEquals(8, statusResponse.getAlerts().getAlertSlots().size());
+        assertEquals(8, statusResponse.getUnacknowledgedAlerts().getAlertSlots().size());
 
         assertArrayEquals(ByteUtil.fromHexString("1d11ffffffffffffffff"), statusResponse.getRawData());
     }
@@ -101,7 +101,7 @@ public class StatusResponseTest {
         assertEquals(2589, statusResponse.getTicksDelivered());
         assertEquals(129.45, statusResponse.getInsulinDelivered(), 0.00001);
         assertEquals(46.00, statusResponse.getReservoirLevel(), 0.00001);
-        assertEquals(2.2, statusResponse.getInsulinNotDelivered(), 0.0001);
+        assertEquals(2.2, statusResponse.getBolusNotDelivered(), 0.0001);
         assertEquals(9, statusResponse.getPodMessageCounter());
 
         assertArrayEquals(ByteUtil.fromHexString("1d19050ec82c08376f98"), statusResponse.getRawData());

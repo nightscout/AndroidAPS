@@ -24,7 +24,7 @@ public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
 
     @Override
     public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
-        if (!podStateManager.isSuspended() && !podStateManager.hasFaultEvent()) {
+        if (!podStateManager.isSuspended() && !podStateManager.isPodFaulted()) {
             try {
                 communicationService.executeAction(new CancelDeliveryAction(podStateManager,
                         EnumSet.allOf(DeliveryType.class), acknowledgementBeep));

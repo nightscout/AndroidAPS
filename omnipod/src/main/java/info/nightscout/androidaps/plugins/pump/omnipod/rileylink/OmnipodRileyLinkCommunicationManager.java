@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodPacket;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.DeactivatePodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.ErrorResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
@@ -125,8 +125,8 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
 
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
-                if (responseMessageBlock instanceof StatusResponse) {
-                    podStateManager.updateFromStatusResponse((StatusResponse) responseMessageBlock);
+                if (responseMessageBlock instanceof StatusUpdatableResponse) {
+                    podStateManager.updateFromResponse((StatusUpdatableResponse) responseMessageBlock);
                 }
 
                 if (responseClass.isInstance(responseMessageBlock)) {

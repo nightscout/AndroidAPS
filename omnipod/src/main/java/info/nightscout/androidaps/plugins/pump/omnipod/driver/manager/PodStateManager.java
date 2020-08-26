@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
@@ -57,7 +57,7 @@ public abstract class PodStateManager {
     }
 
     /**
-     * @return true if we have a Pod state (which at least contains an ddress), indicating it is legal to call getters on PodStateManager
+     * @return true if we have a Pod state (which at least contains an address), indicating it is legal to call getters on PodStateManager
      */
     public final boolean hasPodState() {
         return podState != null;
@@ -86,6 +86,13 @@ public abstract class PodStateManager {
      */
     public final boolean isPodRunning() {
         return isPodInitialized() && getPodProgressStatus().isRunning();
+    }
+
+    /**
+     * @return true if the Pod is initialized and a Fault Event has occurred
+     */
+    public final boolean isPodFaulted() {
+        return isPodInitialized() && podState.getPodProgressStatus().equals(PodProgressStatus.FAULT_EVENT_OCCURRED);
     }
 
     /**
@@ -214,10 +221,15 @@ public abstract class PodStateManager {
         setSafe(() -> podState.setLastFailedCommunication(dateTime));
     }
 
-    public final DateTime getLastUpdatedFromStatusResponse() {
-        return getSafe(() -> podState.getLastUpdatedFromStatusResponse());
+    public final DateTime getLastUpdatedFromResponse() {
+        return getSafe(() -> podState.getLastUpdatedFromResponse());
     }
 
+    /**
+     * @return true if the Pod State contains a fault event. Is the Pod state does not contain
+     * a fault event, this does NOT necessarily mean that the Pod is not faulted. For a reliable
+     * indication on whether or not the pod is faulted, see {@link #isPodFaulted() isPodFaulted()}
+     */
     public final boolean hasFaultEvent() {
         return podState != null && podState.getFaultEvent() != null;
     }
@@ -374,7 +386,7 @@ public abstract class PodStateManager {
     /**
      * Does not automatically store pod state in order to decrease I/O load
      */
-    public final void updateFromStatusResponse(StatusResponse statusResponse) {
+    public final void updateFromResponse(StatusUpdatableResponse statusResponse) {
         setSafe(() -> {
             if (podState.getActivatedAt() == null) {
                 DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
@@ -387,12 +399,12 @@ public abstract class PodStateManager {
             }
 
             podState.setSuspended(statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
-            podState.setActiveAlerts(statusResponse.getAlerts());
+            podState.setActiveAlerts(statusResponse.getUnacknowledgedAlerts());
             podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
             podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
             podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
-            podState.setLastUpdatedFromStatusResponse(DateTime.now());
+            podState.setLastUpdatedFromResponse(DateTime.now());
         });
     }
 
@@ -475,7 +487,7 @@ public abstract class PodStateManager {
         private int messageNumber;
         private DateTime lastSuccessfulCommunication;
         private DateTime lastFailedCommunication;
-        private DateTime lastUpdatedFromStatusResponse;
+        private DateTime lastUpdatedFromResponse;
         private DateTimeZone timeZone;
         private DateTime activatedAt;
         private DateTime expiresAt;
@@ -567,12 +579,12 @@ public abstract class PodStateManager {
             this.lastFailedCommunication = lastFailedCommunication;
         }
 
-        DateTime getLastUpdatedFromStatusResponse() {
-            return lastUpdatedFromStatusResponse;
+        DateTime getLastUpdatedFromResponse() {
+            return lastUpdatedFromResponse;
         }
 
-        void setLastUpdatedFromStatusResponse(DateTime lastUpdatedFromStatusResponse) {
-            this.lastUpdatedFromStatusResponse = lastUpdatedFromStatusResponse;
+        void setLastUpdatedFromResponse(DateTime lastUpdatedFromResponse) {
+            this.lastUpdatedFromResponse = lastUpdatedFromResponse;
         }
 
         DateTimeZone getTimeZone() {
@@ -734,12 +746,13 @@ public abstract class PodStateManager {
                     ", messageNumber=" + messageNumber +
                     ", lastSuccessfulCommunication=" + lastSuccessfulCommunication +
                     ", lastFailedCommunication=" + lastFailedCommunication +
-                    ", lastUpdatedFromStatusResponse=" + lastUpdatedFromStatusResponse +
+                    ", lastUpdatedFromResponse=" + lastUpdatedFromResponse +
                     ", timeZone=" + timeZone +
                     ", activatedAt=" + activatedAt +
                     ", expiresAt=" + expiresAt +
                     ", faultEvent=" + faultEvent +
                     ", reservoirLevel=" + reservoirLevel +
+                    ", totalTicksDelivered=" + totalTicksDelivered +
                     ", suspended=" + suspended +
                     ", nonceState=" + nonceState +
                     ", podProgressStatus=" + podProgressStatus +
