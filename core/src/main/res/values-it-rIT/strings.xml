@@ -131,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> CHO: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Controllo BG</string>
+    <string name="careportal_mbg">BG manuale o Calibrazione</string>
     <string name="careportal_announcement">Avviso</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Domanda</string>

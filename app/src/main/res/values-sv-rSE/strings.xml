@@ -61,7 +61,7 @@ Eversense-appen.</string>
     <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">KH</string>
+    <string name="treatments_wizard_carbs_label">Kolhydrater</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>

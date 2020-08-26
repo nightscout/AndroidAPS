@@ -131,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU(%5$.0f%%)</b> KH: <b>%6$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BG-kontroll</string>
+    <string name="careportal_mbg">Manuellt BG eller kalibrering</string>
     <string name="careportal_announcement">Meddelande</string>
     <string name="careportal_note">Anteckning</string>
     <string name="careportal_question">Fråga</string>
