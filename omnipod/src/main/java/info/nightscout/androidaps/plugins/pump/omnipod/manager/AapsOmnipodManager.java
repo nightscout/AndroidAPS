@@ -543,19 +543,19 @@ public class AapsOmnipodManager {
     }
 
     private void reportImplicitlyCancelledTbr() {
-        //TreatmentsPlugin plugin = TreatmentsPlugin.getPlugin();
         TreatmentsInterface plugin = activePlugin.getActiveTreatments();
         if (plugin.isTempBasalInProgress()) {
             aapsLogger.debug(LTag.PUMP, "Reporting implicitly cancelled TBR to Treatments plugin");
 
             long time = System.currentTimeMillis() - 1000;
 
-            addSuccessToHistory(time, PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
+            long pumpId = addSuccessToHistory(time, PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
 
             TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
                     .date(time) //
                     .duration(0) //
-                    .source(Source.PUMP);
+                    .source(Source.PUMP) //
+                    .pumpId(pumpId);
 
             plugin.addToHistoryTempBasal(temporaryBasal);
         }
