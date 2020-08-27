@@ -100,7 +100,7 @@
     <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Rate: %1$.2f U, duration: %2$d min</string>
-    <string name="omnipod_cmd_discard_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.</string>
+    <string name="omnipod_cmd_discard_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.\n\nIf you wish to proceed, please make sure to also remove the Pod from your body.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
     <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
@@ -132,9 +132,11 @@
     <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile might have failed. Delivery might be suspended! Please refresh Pod status.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Setting temp basal might have failed. If there was a temp basal already running, that may have been cancelled! Please refresh Pod status.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Setting time might have failed. Delivery might be suspended! Please refresh Pod status.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please refresh Pod status and resume delivery from the Omnipod tab if needed.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please resume delivery from the Omnipod tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal might have failed. If a temp basal was already running, it might have been cancelled without AndroidAPS being aware!</string>
+    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please refresh Pod status and resume delivery from the Omnipod tab if needed.</string>
+    <string name="omnipod_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please resume delivery from the Omnipod tab.</string>
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
     <string name="omnipod_rl_stats">RL stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse log</string>
@@ -158,6 +160,8 @@
     <string name="omnipod_cmd_pair_and_prime">Pair and prime</string>
     <string name="omnipod_cmd_fill_cannula_set_basal_profile">Fill cannula and set basal profile</string>
     <string name="omnipod_cmd_get_pulse_log">Get pulse log</string>
+    <string name="omnipod_uncertain_failure">Uncertain failure</string>
+    <string name="omnipod_cancelled_old_tbr_failed_to_set_new">Cancelled the old temporary basal, but failed to set new temporary basal</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

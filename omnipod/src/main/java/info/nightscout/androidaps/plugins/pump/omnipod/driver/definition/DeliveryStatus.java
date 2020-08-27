@@ -30,4 +30,8 @@ public enum DeliveryStatus {
     public boolean isBolusing() {
         return this.equals(BOLUS_IN_PROGRESS) || this.equals(BOLUS_AND_TEMP_BASAL);
     }
+
+    public boolean isTbrRunning() {
+        return this.equals(TEMP_BASAL_RUNNING) || this.equals(BOLUS_AND_TEMP_BASAL);
+    }
 }
