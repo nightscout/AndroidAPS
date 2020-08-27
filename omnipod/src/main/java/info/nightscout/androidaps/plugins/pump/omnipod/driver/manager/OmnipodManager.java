@@ -547,6 +547,7 @@ public class OmnipodManager {
 
     // Only works for commands with nonce resyncable message blocks
     private StatusResponse executeAndVerify(Supplier<StatusResponse> supplier) {
+        logStartingCommandExecution("verifyCommand");
         try {
             return supplier.get();
         } catch (Exception originalException) {
@@ -556,7 +557,6 @@ public class OmnipodManager {
                 aapsLogger.warn(LTag.PUMPCOMM, "Caught exception in executeAndVerify. Verifying command by using cancel none command to verify nonce", originalException);
 
                 try {
-                    logStartingCommandExecution("verifyCommand");
                     StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podStateManager,
                             new CancelDeliveryCommand(podStateManager.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
                     aapsLogger.info(LTag.PUMPCOMM, "Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);

@@ -207,9 +207,11 @@ class OmnipodFragment : DaggerFragment() {
         updatePodStatus()
 
         val errors = ArrayList<String>();
-        val rileyLinkErrorDescription = omnipodPumpPlugin.rileyLinkService.errorDescription
-        if (StringUtils.isNotEmpty(rileyLinkErrorDescription)) {
-            errors.add(rileyLinkErrorDescription)
+        if (omnipodPumpPlugin.rileyLinkService != null) {
+            val rileyLinkErrorDescription = omnipodPumpPlugin.rileyLinkService.errorDescription
+            if (StringUtils.isNotEmpty(rileyLinkErrorDescription)) {
+                errors.add(rileyLinkErrorDescription)
+            }
         }
 
         if (!podStateManager.hasPodState() || !podStateManager.isPodInitialized) {
@@ -254,7 +256,7 @@ class OmnipodFragment : DaggerFragment() {
             // base basal rate
             omnipod_base_basal_rate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(Duration(now.withTimeAtStartOfDay(), now))))
 
-            omnipod_tempbasal.text = activePlugin.activeTreatments
+            omnipod_tempbasal.text = if (aapsOmnipodManager.hasSuspendedFakeTbr()) "-" else activePlugin.activeTreatments
                 .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
 
             // total delivered

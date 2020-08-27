@@ -214,6 +214,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         statusChecker = new Runnable() {
             @Override public void run() {
+                if (podStateManager.isPodRunning() && !podStateManager.isSuspended()) {
+                    aapsOmnipodManager.cancelSuspendedFakeTbrIfExists();
+                } else {
+                    aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
+                }
+
                 if (!OmnipodPumpPlugin.this.statusRequestList.isEmpty() || OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
                     if (!getCommandQueue().statusInQueue()) {
                         getCommandQueue().readStatus(statusRequestList.isEmpty() ? "Date or Time Zone Changed" : "Status Refresh Requested", null);
@@ -569,7 +575,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         executeCommand(OmnipodCommandType.CANCEL_BOLUS, aapsOmnipodManager::cancelBolus);
     }
 
-    // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
+    // if enforceNew===true current temp basal is cancelled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
@@ -608,7 +614,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         TemporaryBasal tbrCurrent = readTBR();
 
         if (tbrCurrent == null) {
-            aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already canceled.");
+            aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already cancelled.");
             rxBus.send(new EventRefreshOverview("Omnipod command: CancelTemporaryBasal", false));
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }

@@ -21,6 +21,8 @@ public enum PodHistoryEntryType {
     SET_TEMPORARY_BASAL(10, R.string.omnipod_cmd_set_tbr, PumpHistoryEntryGroup.Basal),
     CANCEL_TEMPORARY_BASAL_BY_DRIVER(11, R.string.omnipod_cmd_cancel_tbr_by_driver, PumpHistoryEntryGroup.Basal),
     CANCEL_TEMPORARY_BASAL(12, R.string.omnipod_cmd_cancel_tbr, PumpHistoryEntryGroup.Basal),
+    SET_FAKE_SUSPENDED_TEMPORARY_BASAL(13, R.string.omnipod_cmd_set_fake_suspended_tbr),
+    CANCEL_FAKE_SUSPENDED_TEMPORARY_BASAL(14, R.string.omnipod_cmd_cancel_fake_suspended_tbr),
 
     SET_BASAL_SCHEDULE(20, R.string.omnipod_cmd_set_basal_schedule, PumpHistoryEntryGroup.Basal),
 

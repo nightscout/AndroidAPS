@@ -162,6 +162,8 @@
     <string name="omnipod_cmd_get_pulse_log">Get pulse log</string>
     <string name="omnipod_uncertain_failure">Uncertain failure</string>
     <string name="omnipod_cancelled_old_tbr_failed_to_set_new">Cancelled the old temporary basal, but failed to set new temporary basal</string>
+    <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
+    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

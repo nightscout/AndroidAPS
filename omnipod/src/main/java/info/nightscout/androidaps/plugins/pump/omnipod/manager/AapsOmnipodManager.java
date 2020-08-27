@@ -45,6 +45,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalScheduleEntry;
@@ -186,6 +187,8 @@ public class AapsOmnipodManager {
 
             rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
 
+            cancelSuspendedFakeTbrIfExists();
+
             return new PumpEnactResult(injector).success(true).enacted(true);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
@@ -219,9 +222,9 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        reportImplicitlyCancelledTbr();
-
         addSuccessToHistory(time, PodHistoryEntryType.DEACTIVATE_POD, null);
+
+        createSuspendedFakeTbrIfNotExists();
 
         podInitReceiver.returnInitTaskStatus(PodInitActionType.DEACTIVATE_POD_WIZARD_STEP, true, null);
 
@@ -240,11 +243,17 @@ public class AapsOmnipodManager {
                 throw new CommandInitializationException("Basal profile mapping failed", ex);
             }
             delegate.setBasalSchedule(basalSchedule, isBasalBeepsEnabled());
+
+            time = System.currentTimeMillis();
             // Because setting a basal profile actually suspends and then resumes delivery, TBR is implicitly cancelled
-            reportImplicitlyCancelledTbr();
+            if (historyEntryType == PodHistoryEntryType.RESUME_DELIVERY) {
+                cancelSuspendedFakeTbrIfExists();
+            } else {
+                reportImplicitlyCancelledTbr(time - 1000);
+            }
             addSuccessToHistory(time, historyEntryType, profile.getBasalValues());
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
-            reportImplicitlyCancelledTbr();
+            createSuspendedFakeTbrIfNotExists();
             String comment = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_suspended);
             showErrorDialog(comment, R.raw.boluserror);
             addFailureToHistory(time, historyEntryType, comment);
@@ -266,9 +275,9 @@ public class AapsOmnipodManager {
     public PumpEnactResult discardPodState() {
         podStateManager.discardState();
 
-        reportImplicitlyCancelledTbr();
-
         addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.RESET_POD_STATE, null);
+
+        createSuspendedFakeTbrIfNotExists();
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -393,7 +402,7 @@ public class AapsOmnipodManager {
             delegate.setTemporaryBasal(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled);
             time = System.currentTimeMillis();
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
-            reportImplicitlyCancelledTbr();
+            reportImplicitlyCancelledTbr(time);
             String comment = getStringResource(R.string.omnipod_cancelled_old_tbr_failed_to_set_new);
             addFailureToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
@@ -407,8 +416,6 @@ public class AapsOmnipodManager {
             addFailureToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
-
-        reportImplicitlyCancelledTbr();
 
         long pumpId = addSuccessToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
 
@@ -462,8 +469,10 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        reportImplicitlyCancelledTbr();
         addSuccessToHistory(time, PodHistoryEntryType.SUSPEND_DELIVERY, null);
+
+        createSuspendedFakeTbrIfNotExists();
+
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
@@ -472,11 +481,12 @@ public class AapsOmnipodManager {
         long time = System.currentTimeMillis();
         try {
             delegate.setTime(isBasalBeepsEnabled());
+            time = System.currentTimeMillis();
             // Because set time actually suspends and then resumes delivery, TBR is implicitly cancelled
-            reportImplicitlyCancelledTbr();
+            reportImplicitlyCancelledTbr(time - 1000);
             addSuccessToHistory(time, PodHistoryEntryType.SET_TIME, null);
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
-            reportImplicitlyCancelledTbr();
+            createSuspendedFakeTbrIfNotExists();
             String comment = getStringResource(R.string.omnipod_error_set_time_failed_delivery_suspended);
             showErrorDialog(comment, R.raw.boluserror);
             addFailureToHistory(time, PodHistoryEntryType.SET_TIME, comment);
@@ -542,12 +552,51 @@ public class AapsOmnipodManager {
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
     }
 
-    private void reportImplicitlyCancelledTbr() {
+    public synchronized void createSuspendedFakeTbrIfNotExists() {
+        if (!hasSuspendedFakeTbr()) {
+            aapsLogger.debug(LTag.PUMP, "Creating fake suspended TBR");
+
+            long pumpId = addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.SET_FAKE_SUSPENDED_TEMPORARY_BASAL, null);
+
+            TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
+                    .date(System.currentTimeMillis()) //
+                    .absolute(0.0) //
+                    .duration((int) OmnipodConstants.SERVICE_DURATION.getStandardMinutes()) //
+                    .source(Source.PUMP) //
+                    .pumpId(pumpId);
+
+            activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+        }
+    }
+
+    public synchronized void cancelSuspendedFakeTbrIfExists() {
+        if (hasSuspendedFakeTbr()) {
+            aapsLogger.debug(LTag.PUMP, "Cancelling fake suspended TBR");
+            long pumpId = addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_FAKE_SUSPENDED_TEMPORARY_BASAL, null);
+
+            TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
+                    .date(System.currentTimeMillis()) //
+                    .duration(0) //
+                    .source(Source.PUMP) //
+                    .pumpId(pumpId);
+
+            activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+        }
+    }
+
+    public boolean hasSuspendedFakeTbr() {
+        if (activePlugin.getActiveTreatments().isTempBasalInProgress()) {
+            TemporaryBasal tempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
+            OmnipodHistoryRecord historyRecord = databaseHelper.findOmnipodHistoryRecordByPumpId(tempBasal.pumpId);
+            return historyRecord != null && PodHistoryEntryType.getByCode(historyRecord.getPodEntryTypeCode()).equals(PodHistoryEntryType.SET_FAKE_SUSPENDED_TEMPORARY_BASAL);
+        }
+        return false;
+    }
+
+    private void reportImplicitlyCancelledTbr(long time) {
         TreatmentsInterface plugin = activePlugin.getActiveTreatments();
         if (plugin.isTempBasalInProgress()) {
             aapsLogger.debug(LTag.PUMP, "Reporting implicitly cancelled TBR to Treatments plugin");
-
-            long time = System.currentTimeMillis() - 1000;
 
             long pumpId = addSuccessToHistory(time, PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
 
