@@ -3,7 +3,7 @@
 
     <application>
         <service
-            android:name=".rileylink.RileyLinkOmnipodService"
+            android:name=".rileylink.service.RileyLinkOmnipodService"
             android:enabled="true"
             android:exported="true" />
 

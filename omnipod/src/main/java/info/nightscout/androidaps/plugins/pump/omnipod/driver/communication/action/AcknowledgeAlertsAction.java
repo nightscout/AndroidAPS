@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSe
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class AcknowledgeAlertsAction implements OmnipodAction<StatusResponse> {
     private final PodStateManager podStateManager;

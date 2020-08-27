@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.rileylink;
+package info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 
 

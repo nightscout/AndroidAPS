@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalP
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;

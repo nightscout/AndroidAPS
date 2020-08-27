@@ -78,7 +78,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProg
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.RileyLinkOmnipodService;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.utils.DateUtil;

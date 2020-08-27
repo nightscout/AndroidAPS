@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Omnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.AlertConfigurationUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class InsertCannulaService {
     public StatusResponse programInitialBasalSchedule(OmnipodRileyLinkCommunicationManager communicationService,

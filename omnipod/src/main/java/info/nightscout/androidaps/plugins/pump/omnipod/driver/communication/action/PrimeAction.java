@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProg
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class PrimeAction implements OmnipodAction<StatusResponse> {
 

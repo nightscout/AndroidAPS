@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalM
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class SetupPodAction implements OmnipodAction<VersionResponse> {
     private final PodStateManager podStateManager;

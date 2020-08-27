@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.rileylink;
+package info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager;
 
 import org.joda.time.DateTime;
 

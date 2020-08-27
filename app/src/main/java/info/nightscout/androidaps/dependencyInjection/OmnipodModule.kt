@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsPodStateManager
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.OmnipodRileyLinkCommunicationManager
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitActionFragment
