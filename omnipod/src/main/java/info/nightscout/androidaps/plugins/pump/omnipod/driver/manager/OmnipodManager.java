@@ -204,8 +204,8 @@ public class OmnipodManager {
         logStartingCommandExecution("setBasalSchedule [basalSchedule=" + schedule + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            boolean wasSuspended = !podStateManager.isSuspended();
-            if (wasSuspended) {
+            boolean wasSuspended = podStateManager.isSuspended();
+            if (!wasSuspended) {
                 suspendDelivery(acknowledgementBeep);
             }
 
