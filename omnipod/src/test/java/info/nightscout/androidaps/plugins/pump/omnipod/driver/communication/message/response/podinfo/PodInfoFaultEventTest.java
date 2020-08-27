@@ -62,6 +62,7 @@ public class PodInfoFaultEventTest {
 
         assertEquals(PodProgressStatus.FAULT_EVENT_OCCURRED, podInfoFaultEvent.getPodProgressStatus());
         assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
+        assertEquals(2034, podInfoFaultEvent.getTicksDelivered());
         assertEquals(101.7, podInfoFaultEvent.getInsulinDelivered(), 0.000001);
         assertEquals(0, podInfoFaultEvent.getBolusNotDelivered(), 0.000001);
         assertEquals(0x04, podInfoFaultEvent.getPodMessageCounter());
@@ -82,6 +83,7 @@ public class PodInfoFaultEventTest {
 
         assertEquals(PodProgressStatus.INACTIVE, podInfoFaultEvent.getPodProgressStatus());
         assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
+        assertEquals(236, podInfoFaultEvent.getTicksDelivered());
         assertEquals(11.8, podInfoFaultEvent.getInsulinDelivered(), 0.000001);
         assertEquals(0.05, podInfoFaultEvent.getBolusNotDelivered(), 0.000001);
         assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
@@ -97,11 +99,12 @@ public class PodInfoFaultEventTest {
     }
 
     @Test
-    public void testPodInfoFaultEventMaxInsulinNotDelivered() {
+    public void testPodInfoFaultEventMaxBolusNotDelivered() {
         PodInfoFaultEvent podInfoFaultEvent = new PodInfoFaultEvent(ByteUtil.fromHexString("020f00ffff0200ec6a026803ff026b000028a7082023"));
 
         assertEquals(PodProgressStatus.INACTIVE, podInfoFaultEvent.getPodProgressStatus());
         assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
+        assertEquals(236, podInfoFaultEvent.getTicksDelivered());
         assertEquals(11.8, podInfoFaultEvent.getInsulinDelivered(), 0.000001);
         assertEquals(3276.75, podInfoFaultEvent.getBolusNotDelivered(), 0.000001); // Insane and will not happen, but this verifies that we convert it to an unsigned int
         assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
