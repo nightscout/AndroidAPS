@@ -392,7 +392,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             }
 
             // Prepare for pumps using % basals
-            if (pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
+            if (pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
                 result.usePercent = true;
             }
             result.percent = (int) (result.rate / profile.getBasal() * 100);
@@ -650,7 +650,6 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
      */
 
     private void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
-        boolean allowPercentage = virtualPumpPlugin.isEnabled(PluginType.PUMP);
 
         if (!request.tempBasalRequested) {
             if (callback != null) {
@@ -681,7 +680,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(now);
-        if (request.usePercent && allowPercentage) {
+        if (request.usePercent && allowPercentage()) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
@@ -782,6 +781,10 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         detailedBolusInfo.deliverAt = request.deliverAt;
         getAapsLogger().debug(LTag.APS, "applyAPSRequest: bolus()");
         commandQueue.bolus(detailedBolusInfo, callback);
+    }
+
+    private boolean allowPercentage() {
+        return virtualPumpPlugin.isEnabled(PluginType.PUMP);
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {

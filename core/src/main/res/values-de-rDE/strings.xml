@@ -131,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> KH: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BZ-Test</string>
+    <string name="careportal_mbg">Manuelle BZ oder Kalibrierung</string>
     <string name="careportal_announcement">Ankündigung</string>
     <string name="careportal_note">Notiz</string>
     <string name="careportal_question">Frage</string>
