@@ -116,6 +116,10 @@ class MedtronicFragment : DaggerFragment() {
         medtronic_history.setOnClickListener(clickListener)
         medtronic_stats.setOnClickListener(clickListener)
 
+        medtronic_refresh.visibility == View.GONE
+        medtronic_history.visibility == View.GONE
+        medtronic_stats.visibility == View.GONE
+
         ViewAnimation.showOut(medtronic_refresh)
         ViewAnimation.showOut(medtronic_history)
         ViewAnimation.showOut(medtronic_stats)

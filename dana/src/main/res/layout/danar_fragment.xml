@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         android:paddingTop="5dp"
         android:background="?attr/fragmentbackground"
         tools:context="info.nightscout.androidaps.dana.DanaRFragment">
@@ -15,10 +16,6 @@
         android:layout_gravity="top|right"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="10dp"
-        app:backgroundTint="?attr/colorPrimaryDark"
-        android:backgroundTint="?attr/colorPrimaryDark"
-        android:background="?attr/colorPrimaryDark"
-        android:tint="?attr/iconColor"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_more" />

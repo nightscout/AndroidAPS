@@ -112,6 +112,16 @@ class LocalProfileFragment : DaggerFragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+        fabNewProfile.visibility == View.GONE
+        fabCloneProfile.visibility == View.GONE
+        fabDeleteProfile.visibility == View.GONE
+        fabActivateProfile.visibility == View.GONE
+
+        ViewAnimation.showOut(fabNewProfile)
+        ViewAnimation.showOut(fabCloneProfile)
+        ViewAnimation.showOut(fabDeleteProfile)
+        ViewAnimation.showOut(fabActivateProfile)
+
         fabMenu.setOnClickListener(clickListener)
         fabNewProfile.setOnClickListener(clickListener)
         fabCloneProfile.setOnClickListener(clickListener)

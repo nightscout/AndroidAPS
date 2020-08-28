@@ -95,6 +95,17 @@ class DanaFragment : DaggerFragment() {
 
         dana_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
+        fabDanaMenu.visibility == View.GONE
+        fabDanaMenuUserOptions.visibility == View.GONE
+        danar_history.visibility == View.GONE
+        danar_stats.visibility == View.GONE
+        danar_viewprofile.visibility == View.GONE
+
+        ViewAnimation.showOut(fabDanaMenuUserOptions)
+        ViewAnimation.showOut(danar_history)
+        ViewAnimation.showOut(danar_stats)
+        ViewAnimation.showOut(danar_viewprofile)
+
         fabDanaMenuUserOptions.setOnClickListener(clickListener)
         fabDanaMenu.setOnClickListener(clickListener)
         danar_history.setOnClickListener(clickListener)
