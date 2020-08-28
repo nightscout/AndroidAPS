@@ -76,7 +76,7 @@ class TirCalculator @Inject constructor(
         val tit30 = calculate(30, lowTitMgdl, highTitMgdl)
         val averageTit30 = averageTIR(tit30)
         return HtmlHelper.fromHtml(
-            "<br><b>" + resourceHelper.gs(R.string.tir) + ":</b><br>" +
+            "<br><b>" + resourceHelper.gs(R.string.tir) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
                 toText(resourceHelper, tir7) +
                 "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
                 averageTir7.toText(resourceHelper, tir7.size()) + "<br>" +

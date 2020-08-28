@@ -262,7 +262,9 @@
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">Comando remoto no permitido</string>
     <string name="smscommunicator_remotebolusnotallowed">El bolo remoto no está disponible. Inténtalo de nuevo más tarde.</string>
+    <string name="smscommunicator_basalreplywithcode">Para iniciar una basal de %1$.2fU/h durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Para cambiar el perfil a %1$s %2$d%% responder con el código %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Para iniciar un bolo extendido de %1$.2fU durante %2$d minutos, responder con el código %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Para introducir %1$dg en %2$s responder con código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para iniciar una basal de %1$d%% durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para cancelar lazo por %1$d minutos responde con código %2$s</string>
@@ -1054,6 +1056,7 @@
     <string name="sendsmsactiondescription">Enviar SMS a todos los números</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
     <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de hidratos de carbono: %2$d%% de tiempo. Compruebe de nuevo su calculo. Los COB se pueden sobrestimar, por lo que ¡se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>

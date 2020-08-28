@@ -51,6 +51,7 @@ class BLEComm @Inject internal constructor(
 ) {
 
     companion object {
+
         private const val WRITE_DELAY_MILLIS: Long = 50
         private const val UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb"
         private const val UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb"
@@ -375,22 +376,22 @@ class BLEComm @Inject internal constructor(
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
                         when (decryptedBuffer[1]) {
                             // 1st packet exchange
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()         ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte() ->
                                 processConnectResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte()   ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte() ->
                                 processEncryptionResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte()      ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte() ->
                                 processPasskeyCheck(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte()    ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte() ->
                                 processPairingRequest(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte()     ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte() ->
                                 processPairingRequest2(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte()     -> {
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte() -> {
                                 // not easy mode, request time info
                                 if (decryptedBuffer[2] == 0x05.toByte()) sendTimeInfo()
                                 // easy mode
@@ -453,32 +454,19 @@ class BLEComm @Inject internal constructor(
             // v3 2nd layer encryption
             v3Encryption = true
             danaPump.v3RSPump = true
-            val model = decryptedBuffer[5]
-            // val protocol = decryptedBuffer[7]
-            if (model == 0x05.toByte()) {
+            danaPump.hwModel = decryptedBuffer[5].toInt()
+            danaPump.protocol = decryptedBuffer[7].toInt()
+            // grab randomSyncKey
+            sp.putString(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
+
+            if (danaPump.hwModel == 0x05) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
                 // Dana RS Pump
-                val randomPairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-                val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
-                if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
-                    val randomSyncKey = String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1])
-                    sp.putString(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, randomSyncKey)
-                    val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
-                    val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
-                    var tRandomSyncKey: Byte = 0
-                    if (randomSyncKey.isNotEmpty()) {
-                        tRandomSyncKey = randomSyncKey.toInt(16).toByte()
-                    }
-                    bleEncryption.setPairingKeys(tPairingKey, tRandomPairingKey, tRandomSyncKey)
-                    sendV3PairingInformation(0)
-                } else {
-                    sendV3PairingInformation(1)
-                }
-            } else if (model == 0x06.toByte()) {
+                sendV3PairingInformation()
+            } else if (danaPump.hwModel == 0x06) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 EASY (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
                 // Dana RS Easy
-                val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASYMENU_CHECK, null, null)
-                writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
+                sendEasyMenuCheck()
             }
             // response PUMP : error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'M'.toByte() && decryptedBuffer[5] == 'P'.toByte()) {
@@ -523,6 +511,24 @@ class BLEComm @Inject internal constructor(
 
     // 2nd packet v3
     // 0x00 Start encryption, 0x01 Request pairing
+    private fun sendV3PairingInformation() {
+        val randomPairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+        val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+        if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
+            val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
+            val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
+            var tRandomSyncKey: Byte = 0
+            val randomSyncKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, "")
+            if (randomSyncKey.isNotEmpty()) {
+                tRandomSyncKey = randomSyncKey.toInt(16).toByte()
+            }
+            bleEncryption.setPairingKeys(tPairingKey, tRandomPairingKey, tRandomSyncKey)
+            sendV3PairingInformation(0)
+        } else {
+            sendV3PairingInformation(1)
+        }
+    }
+
     private fun sendV3PairingInformation(requestNewPairing: Int) {
         val params = byteArrayOf(requestNewPairing.toByte())
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, params, null)
@@ -635,7 +641,7 @@ class BLEComm @Inject internal constructor(
         isUnitUD = decryptedBuffer[3] == 0x01.toByte()
 
         // request time information
-        if (v3Encryption) sendV3PairingInformation(1)
+        if (v3Encryption) sendV3PairingInformation()
         else sendTimeInfo()
     }
 

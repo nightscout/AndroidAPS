@@ -38,6 +38,7 @@
     <string name="rileylink_state_pc_tune_up">A ajustar RileyLink e a Bomba</string>
     <string name="rileylink_state_pc_error">Problema ao ligar à Bomba</string>
     <string name="rileylink_state_connected">Ligado</string>
+    <string name="rileylink_state_rl_ready">RileyLink pronto</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Dispositivo não é RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink inacessível</string>

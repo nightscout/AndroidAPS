@@ -8,15 +8,22 @@
     <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
     <string name="invalidinput">Entrada Inválida</string>
     <string name="tempbasaldeliveryerror">Erro na administração da Basal Temp</string>
+    <string name="goingtodeliver">A ser administrado %1$.2f U</string>
     <string name="waitingforpump">À espera da bomba</string>
     <string name="connectingfor">A ligar durante %1$d s</string>
+    <string name="bolusdelivering">A administrar %1$.2f U</string>
     <string name="handshaking">Cumprimento</string>
     <string name="connecting">A ligar</string>
     <string name="connected">Ligado</string>
     <string name="disconnected">Desligado</string>
     <string name="disconnecting">A desligar</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
+    <string name="formatinsulinunits1">%1$.1f U</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
     <string name="pumpbusy">A bomba está ocupada</string>
@@ -77,6 +84,8 @@
     <string name="location_not_found_title">Localização Não Está Activa</string>
     <string name="location_not_found_message">Para a Pesquisa Bluetooth funcionar em dispositivos mais recentes, a localização deve ser activada. AAPS não acompanha a sua localização e pode ser desactivada após o emparelhamento bem-sucedido.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d m atrás</string>
+    <string name="hoursago">%1$.1f h atrás</string>
     <string name="shorthour">h</string>
     <string name="days">dias</string>
     <string name="hours">horas</string>
@@ -93,6 +102,8 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <!--    Protection-->
+    <string name="wrongpassword">Palavra-passe incorreta</string>
+    <string name="passwords_dont_match">Palavras-passe não correspondem</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
@@ -114,9 +125,13 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Ból: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Ból: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Hidratos: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Verificar Glic</string>
+    <string name="careportal_mbg">Glicemia Manual or Calibração</string>
     <string name="careportal_announcement">Anúncio</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Questão</string>
@@ -154,6 +169,7 @@
     <string name="waitingforpumpresult">À espera de resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%d g Hidratos Adicionais Necessários Dentro de %d Minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
     <string name="cumulative_tdd">Dose diária acumulativa</string>
