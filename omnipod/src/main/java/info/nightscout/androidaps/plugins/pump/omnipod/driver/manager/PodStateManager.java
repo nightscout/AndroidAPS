@@ -404,6 +404,11 @@ public abstract class PodStateManager {
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
             podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
             podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
+            if (!statusResponse.getDeliveryStatus().isTbrRunning()) {
+                podState.setLastTempBasalStartTime(null);
+                podState.setLastTempBasalAmount(null);
+                podState.setLastTempBasalDuration(null);
+            }
             podState.setLastUpdatedFromResponse(DateTime.now());
         });
     }

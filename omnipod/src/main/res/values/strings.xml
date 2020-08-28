@@ -47,6 +47,7 @@
     <string name="omnipod_pod_active_alerts">Active Pod alerts</string>
     <string name="omnipod_acknowledge_active_alerts_short">Ack alerts</string>
     <string name="omnipod_last_bolus" translatable="false">%1$.2f %2$s (%3$s)</string>
+    <string name="omnipod_temp_basal" translatable="false">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
 
 
     <!-- Omnipod - Dialogs -->
@@ -103,9 +104,9 @@
     <string name="omnipod_cmd_discard_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.\n\nIf you wish to proceed, please make sure to also remove the Pod from your body.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away.</string>
     <string name="omnipod_init_pod_wizard_step2_title">Priming</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with the new Pod and prime it.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please keep the Pod and the RileyLink a few inches apart at this time.</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with the new Pod and prime it.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away it.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Attach the Pod</string>
     <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare the infusion site. Remove the Pod\'s needle cap and adhesive backing and attach the Pod to the infusion site.\n\nIf the cannula sticks out, please press <b>Cancel</b> and discard your Pod.\n\nPress <b>Next</b> to insert the cannula and begin basal delivery.</string>
     <string name="omnipod_init_pod_wizard_step4_title">Inserting cannula</string>

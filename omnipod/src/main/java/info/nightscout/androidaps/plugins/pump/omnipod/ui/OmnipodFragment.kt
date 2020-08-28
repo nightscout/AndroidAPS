@@ -236,7 +236,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_tid.text = podStateManager.tid.toString()
             omnipod_pod_firmware_version.text = resourceHelper.gs(R.string.omnipod_pod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
             val expiresAt = podStateManager.expiresAt
-            omnipod_pod_expiry.text = if (expiresAt == null) "???" else dateUtil.dateAndTimeString(expiresAt.toDate())
+            omnipod_pod_expiry.text = if (expiresAt == null) "-" else dateUtil.dateAndTimeString(expiresAt.toDate())
 
             if (podStateManager.hasFaultEvent()) {
                 val faultEventCode = podStateManager.faultEvent.faultEventCode
@@ -254,13 +254,30 @@ class OmnipodFragment : DaggerFragment() {
             val now = DateTime.now()
 
             // base basal rate
-            omnipod_base_basal_rate.text = resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(Duration(now.withTimeAtStartOfDay(), now))))
+            omnipod_base_basal_rate.text = if (podStateManager.isPodActivationCompleted) {
+                resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(Duration(now.withTimeAtStartOfDay(), now))))
+            } else {
+                "-"
+            }
 
-            omnipod_tempbasal.text = if (aapsOmnipodManager.hasSuspendedFakeTbr()) "-" else activePlugin.activeTreatments
-                .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: "-"
+            // Temp basal
+            val lastTempBasalStartTime = podStateManager.lastTempBasalStartTime;
+            val lastTempBasalAmount = podStateManager.lastTempBasalAmount
+            val lastTempBasalDuration = podStateManager.lastTempBasalDuration;
+            if (lastTempBasalStartTime != null && lastTempBasalAmount != null && lastTempBasalDuration != null) {
+                val endTime = lastTempBasalStartTime.plus(lastTempBasalDuration);
+                val minutesRunning = Duration(lastTempBasalStartTime, now).standardMinutes
+                omnipod_tempbasal.text = if (endTime.isAfter(now)) {
+                    resourceHelper.gs(R.string.omnipod_temp_basal, lastTempBasalAmount, dateUtil.timeString(lastTempBasalStartTime.millis), minutesRunning, lastTempBasalDuration.standardMinutes)
+                } else {
+                    "-"
+                }
+            } else {
+                omnipod_tempbasal.text = "-"
+            }
 
             // total delivered
-            omnipod_total_delivered.text = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) { // Null check for backwards compatibility
+            omnipod_total_delivered.text = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) {
                 resourceHelper.gs(R.string.omnipod_total_delivered, podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS);
             } else {
                 "-"
@@ -288,7 +305,7 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun updateLastConnection() {
-        if (podStateManager.isPodInitialized && podStateManager.lastSuccessfulCommunication != null) { // Null check for backwards compatibility
+        if (podStateManager.isPodInitialized && podStateManager.lastSuccessfulCommunication != null) {
             omnipod_lastconnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             omnipod_lastconnection.setTextColor(Color.WHITE)
             /*
@@ -388,7 +405,7 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     private fun updateAcknowledgeAlertsButton() {
-        if (podStateManager.isPodInitialized && podStateManager.hasActiveAlerts() && !podStateManager.isPodDead) {
+        if (podStateManager.isPodActivationCompleted && podStateManager.hasActiveAlerts() && !podStateManager.isPodDead) {
             omnipod_button_acknowledge_active_alerts.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
             omnipod_button_acknowledge_active_alerts.isEnabled = false

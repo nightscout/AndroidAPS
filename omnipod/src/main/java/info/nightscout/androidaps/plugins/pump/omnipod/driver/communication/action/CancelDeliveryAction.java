@@ -52,9 +52,7 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
 
         StatusResponse statusResponse = communicationService.exchangeMessages(StatusResponse.class, podStateManager,
                 new OmnipodMessage(podStateManager.getAddress(), messageBlocks, podStateManager.getMessageNumber()));
-        if (deliveryTypes.contains(DeliveryType.TEMP_BASAL)) {
-            podStateManager.setLastTempBasal(null, null, null);
-        }
+
         return statusResponse;
     }
 }
