@@ -361,7 +361,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_lastconnection"
+                        android:id="@+id/omnipod_last_connection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -406,7 +406,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_lastbolus"
+                        android:id="@+id/omnipod_last_bolus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -497,7 +497,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_tempbasal"
+                        android:id="@+id/omnipod_temp_basal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
