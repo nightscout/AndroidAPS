@@ -131,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f JI</b> Bol: <b>%3$.2f JI</b> Baz: <b>%4$.2f JI(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Kontrola glykémie</string>
+    <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
     <string name="careportal_note">Poznámka</string>
     <string name="careportal_question">Otázka</string>

@@ -38,6 +38,7 @@
     <string name="rileylink_state_pc_tune_up">RileyLink ir Pompos suderinimas</string>
     <string name="rileylink_state_pc_error">Sujungimo su pompa problema</string>
     <string name="rileylink_state_connected">Prisijungta</string>
+    <string name="rileylink_state_rl_ready">RileyLink paruoštas</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Įrenginys nėra RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink nepasiekiama</string>

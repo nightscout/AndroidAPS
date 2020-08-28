@@ -102,6 +102,8 @@
     <string name="shortminute">min.</string>
     <string name="shortday">d</string>
     <!--    Protection-->
+    <string name="wrongpassword">Neteisingas slaptažodis</string>
+    <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valandinė bazė pakeista mažiausia palaikoma verte: %1$s</string>
@@ -129,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f vv</b> Boluso: <b>%3$.2f vv</b> Bazės: <b>%4$.2f vv(%5$.0f%%)</b> AV: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">KG testas</string>
+    <string name="careportal_mbg">KG iš kraujo arba kalibracija</string>
     <string name="careportal_announcement">Pranešimas</string>
     <string name="careportal_note">Pastaba</string>
     <string name="careportal_question">Klausimas</string>
