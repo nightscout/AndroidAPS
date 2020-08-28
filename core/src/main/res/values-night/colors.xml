@@ -225,7 +225,7 @@
     <color name="seperator">#7ca6a6a6</color>
 
     <!-- Default Dark Theme -->
-    <color name="primaryColorDefault">#BB86FC</color>
+    <color name="primaryColorDefault">#666666</color>
     <color name="primaryColorVariantDefault">#3700B3</color>
     <color name="secondaryColorDefault">#03DAC6</color>
     <color name="secondaryColorVariantDefault">#03DAC6</color>

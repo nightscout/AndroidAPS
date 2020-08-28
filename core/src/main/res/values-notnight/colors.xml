@@ -224,7 +224,7 @@
     <color name="seperator">#7ca6a6a6</color>
 
     <!-- Default Light Theme -->
-    <color name="primaryColorDefault">#6200EE</color>
+    <color name="primaryColorDefault">#4e4e4e</color>
     <color name="primaryColorVariantDefault">#3700B3</color>
     <color name="secondaryColorDefault">#03DAC6</color>
     <color name="secondaryColorVariantDefault">#018786</color>
