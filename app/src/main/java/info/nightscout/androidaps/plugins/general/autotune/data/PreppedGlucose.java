@@ -91,12 +91,24 @@ public class PreppedGlucose {
             for (BGDatum bgd:basalGlucoseData) {
                 basaljson.put(bgd.toJSON(false));
             }
-
+            JSONArray diajson = new JSONArray();
+            JSONArray peakjson = new JSONArray();
+            if(diaDeviations.size() > 0 || peakDeviations.size() > 0 ) {
+                for (DiaDatum diad:diaDeviations) {
+                    diajson.put(diad.toJSON());
+                }
+                for (PeakDatum peakd:peakDeviations) {
+                    peakjson.put(peakd.toJSON());
+                }
+            }
             json.put("CRData", crjson);
             json.put("CSFGlucoseData", csfjson);
             json.put("ISFGlucoseData", isfjson);
             json.put("basalGlucoseData", basaljson);
-
+            if(diaDeviations.size() > 0 || peakDeviations.size() > 0 ) {
+                json.put("diaDeviations", diajson);
+                json.put("peakDeviations", peakjson);
+            }
             if (indent != 0)
                 jsonString = json.toString(indent);
             else
@@ -106,6 +118,4 @@ public class PreppedGlucose {
 
         return jsonString;
     }
-
-
 }
