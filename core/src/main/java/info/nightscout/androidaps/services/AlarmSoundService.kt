@@ -41,7 +41,7 @@ class AlarmSoundService : DaggerService() {
 
     }
 
-    private val handler = Handler()
+    private val increaseVolumeHandler = Handler()
     private var currentVolumeLevel = 0
 
     override fun onBind(intent: Intent): IBinder? = null
@@ -70,7 +70,7 @@ class AlarmSoundService : DaggerService() {
                 if (sp.getBoolean(R.string.key_gradually_increase_notification_volume, false)) {
                     currentVolumeLevel = 0;
                     player?.setVolume(0f, 0f)
-                    handler.postDelayed(volumeUpdater, VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS)
+                    increaseVolumeHandler.postDelayed(volumeUpdater, VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS)
                 } else {
                     player?.setVolume(1f, 1f)
                 }
@@ -84,7 +84,7 @@ class AlarmSoundService : DaggerService() {
     }
 
     override fun onDestroy() {
-        handler.removeCallbacks(volumeUpdater)
+        increaseVolumeHandler.removeCallbacks(volumeUpdater)
         player?.stop()
         player?.release()
         aapsLogger.debug(LTag.CORE, "onDestroy")
@@ -97,24 +97,21 @@ class AlarmSoundService : DaggerService() {
     // TODO replace with VolumeShaper when min API level >= 26
     private val volumeUpdater = object : Runnable {
         override fun run() {
-            if (player?.isPlaying == true) {
-                currentVolumeLevel++;
+            currentVolumeLevel++;
 
-                val volumePercentage = 100.0.coerceAtMost(currentVolumeLevel / VOLUME_INCREASE_STEPS.toDouble() * 100)
-                val volume = 1 - (ln(1.0.coerceAtLeast(100.0 - volumePercentage)) / ln(100.0))
+            val volumePercentage = 100.0.coerceAtMost(currentVolumeLevel / VOLUME_INCREASE_STEPS.toDouble() * 100)
+            val volume = (1 - (ln(1.0.coerceAtLeast(100.0 - volumePercentage)) / ln(100.0))).toFloat()
 
-                aapsLogger.debug(LTag.CORE, "Setting notification volume to {} ({} %)", volume, volumePercentage)
+            aapsLogger.debug(LTag.CORE, "Setting notification volume to {} ({} %)", volume, volumePercentage)
 
-                val floatVolume = volume.toFloat()
-                player?.setVolume(floatVolume, floatVolume)
+            player?.setVolume(volume, volume)
 
-                if (currentVolumeLevel < VOLUME_INCREASE_STEPS) {
-                    // Increase volume faster as time goes by
-                    val delay = VOLUME_INCREASE_MIN_DELAY_MILLIS.coerceAtLeast(VOLUME_INCREASE_BASE_DELAY_MILLIS -
-                        ((currentVolumeLevel - 1).toDouble().pow(VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT) * 1000).toLong())
-                    aapsLogger.debug(LTag.CORE, "Next notification volume increment in {}ms", delay)
-                    handler.postDelayed(this, delay);
-                }
+            if (currentVolumeLevel < VOLUME_INCREASE_STEPS) {
+                // Increase volume faster as time goes by
+                val delay = VOLUME_INCREASE_MIN_DELAY_MILLIS.coerceAtLeast(VOLUME_INCREASE_BASE_DELAY_MILLIS -
+                    ((currentVolumeLevel - 1).toDouble().pow(VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT) * 1000).toLong())
+                aapsLogger.debug(LTag.CORE, "Next notification volume increment in {}ms", delay)
+                increaseVolumeHandler.postDelayed(this, delay);
             }
         }
     }
