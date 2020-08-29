@@ -20,7 +20,22 @@ public class CRDatum {
     public double crInsulin = 0d;
     public double crInsulinTotal = 0d;
 
-    public JSONObject toJSON() throws JSONException {
+    public CRDatum() {}
+
+    public CRDatum(JSONObject json) {
+        try {
+            if (json.has("CRInitialIOB")) crInitialIOB = json.getDouble("CRInitialIOB");
+            if (json.has("CRInitialBG")) crInitialBG = json.getDouble("CRInitialBG");
+            if (json.has("CRInitialCarbTime")) crInitialCarbTime = DateUtil.fromISODateString(json.getString("CRInitialCarbTime")).getTime();
+            if (json.has("CREndIOB")) crEndIOB = json.getDouble("CREndIOB");
+            if (json.has("CREndBG")) crEndBG = json.getDouble("CREndBG");
+            if (json.has("CREndTime")) crEndTime = DateUtil.fromISODateString(json.getString("CREndTime")).getTime();
+            if (json.has("CRCarbs")) crCarbs = json.getDouble("CRCarbs");
+            if (json.has("CRInsulin")) crInsulin = json.getDouble("CRInsulin");
+        } catch (JSONException e) {}
+    }
+
+    public JSONObject toJSON() {
         JSONObject crjson = new JSONObject();
         try {
             crjson.put("CRInitialIOB", crInitialIOB);

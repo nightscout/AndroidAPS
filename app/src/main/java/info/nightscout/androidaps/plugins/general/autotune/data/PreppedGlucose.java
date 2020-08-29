@@ -30,83 +30,66 @@ public class PreppedGlucose {
         this.basalGlucoseData=basalGlucoseData;
     }
 
+    public PreppedGlucose(JSONObject json) {
+        if (json == null) return;
+        crData = null;
+        csfGlucoseData = null;
+        isfGlucoseData = null;
+        basalGlucoseData = null;
+
+        try {
+            crData = JsonCRDataToList(json.getJSONArray("CRData"));
+            csfGlucoseData = JsonGlucoseDataToList(json.getJSONArray("CSFGlucoseData"));
+            isfGlucoseData = JsonGlucoseDataToList(json.getJSONArray("ISFGlucoseData"));
+            basalGlucoseData = JsonGlucoseDataToList(json.getJSONArray("basalGlucoseData"));
+        } catch (JSONException e) {
+        }
+    }
+
+    private List<BGDatum> JsonGlucoseDataToList(JSONArray array) {
+        List<BGDatum> bgData = new ArrayList<BGDatum>();
+        for (int index = 0; index < array.length(); index++) {
+            try {
+                final JSONObject o = array.getJSONObject(index);
+                bgData.add(new BGDatum(o));
+            } catch (Exception e) {
+            }
+        }
+        return bgData;
+    }
+
+    private List<CRDatum> JsonCRDataToList(JSONArray array) {
+        List<CRDatum> crData = new ArrayList<CRDatum>();
+        for (int index = 0; index < array.length(); index++) {
+            try {
+                final JSONObject o = array.getJSONObject(index);
+                crData.add(new CRDatum(o));
+            } catch (Exception e) {
+            }
+        }
+        return crData;
+    }
 
     public String toString(int indent) {
         String jsonString = "";
         JSONObject json = new JSONObject();
 
-        Date now = new Date(System.currentTimeMillis());
-        int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(now,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(now)).getTime()) / (60 * 1000));
-
         try {
             JSONArray crjson = new JSONArray();
             for (CRDatum crd : crData) {
-                JSONObject crdjson = new JSONObject();
-                crdjson.put("CRInitialIOB",crd.crInitialIOB);
-                crdjson.put("CRInitialBG",crd.crInitialBG);
-                crdjson.put("CRInitialCarbTime", DateUtil.toISOAsUTC(crd.crInitialCarbTime));
-                crdjson.put("CREndIOB",crd.crEndIOB);
-                crdjson.put("CREndBG",crd.crEndBG);
-                crdjson.put("CREndTime",DateUtil.toISOAsUTC(crd.crEndTime));
-                crdjson.put("CRCarbs",crd.crCarbs);
-                crdjson.put("CRInsulin",crd.crInsulin);
-                crjson.put(crdjson);
+                crjson.put(crd.toJSON());
             }
-
             JSONArray csfjson = new JSONArray();
             for (BGDatum bgd: csfGlucoseData) {
-                JSONObject bgdjson = new JSONObject();
-                bgdjson.put("_id",bgd._id);
-                bgdjson.put("date", bgd.date);
-                bgdjson.put("dateString", DateUtil.toISOAsUTC(bgd.date));
-                bgdjson.put("sgv",bgd.value);
-                bgdjson.put("direction",bgd.direction);
-                bgdjson.put("type","sgv");
-                bgdjson.put("sysTime",DateUtil.toISOAsUTC(bgd.date));
-                bgdjson.put("utcOffset",utcOffset);
-                bgdjson.put("glucose",bgd.value);
-                bgdjson.put("avgDelta",bgd.AvgDelta);
-                bgdjson.put("BGI",bgd.BGI);
-                bgdjson.put("deviation",bgd.deviation);
-                bgdjson.put("mealAbsorption",bgd.mealAbsorption);
-                bgdjson.put("mealCarbs",bgd.mealCarbs);
-                csfjson.put(bgdjson);
+                csfjson.put(bgd.toJSON(true));
             }
-
             JSONArray isfjson = new JSONArray();
             for (BGDatum bgd: isfGlucoseData) {
-                JSONObject bgdjson = new JSONObject();
-                bgdjson.put("_id",bgd._id);
-                bgdjson.put("date", bgd.date);
-                bgdjson.put("dateString", DateUtil.toISOAsUTC(bgd.date));
-                bgdjson.put("sgv",bgd.value);
-                bgdjson.put("direction",bgd.direction);
-                bgdjson.put("type","sgv");
-                bgdjson.put("sysTime",DateUtil.toISOAsUTC(bgd.date));
-                bgdjson.put("utcOffset",utcOffset);
-                bgdjson.put("glucose",bgd.value);
-                bgdjson.put("avgDelta",bgd.AvgDelta);
-                bgdjson.put("BGI",bgd.BGI);
-                bgdjson.put("deviation",bgd.deviation);
-                isfjson.put(bgdjson);
+                isfjson.put(bgd.toJSON(false));
             }
-
             JSONArray basaljson = new JSONArray();
             for (BGDatum bgd:basalGlucoseData) {
-                JSONObject bgdjson = new JSONObject();
-                bgdjson.put("_id",bgd._id);
-                bgdjson.put("date", bgd.date);
-                bgdjson.put("dateString", DateUtil.toISOAsUTC(bgd.date));
-                bgdjson.put("sgv",bgd.value);
-                bgdjson.put("direction",bgd.direction);
-                bgdjson.put("type","sgv");
-                bgdjson.put("sysTime",DateUtil.toISOAsUTC(bgd.date));
-                bgdjson.put("utcOffset",utcOffset);
-                bgdjson.put("glucose",bgd.value);
-                bgdjson.put("avgDelta",bgd.AvgDelta);
-                bgdjson.put("BGI",bgd.BGI);
-                bgdjson.put("deviation",bgd.deviation);
-                basaljson.put(bgdjson);
+                basaljson.put(bgd.toJSON(false));
             }
 
             json.put("CRData", crjson);
