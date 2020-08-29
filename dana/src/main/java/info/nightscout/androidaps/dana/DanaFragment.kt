@@ -95,12 +95,6 @@ class DanaFragment : DaggerFragment() {
 
         dana_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
-        fabDanaMenu.visibility == View.GONE
-        fabDanaMenuUserOptions.visibility == View.GONE
-        danar_history.visibility == View.GONE
-        danar_stats.visibility == View.GONE
-        danar_viewprofile.visibility == View.GONE
-
         ViewAnimation.showOut(fabDanaMenuUserOptions)
         ViewAnimation.showOut(danar_history)
         ViewAnimation.showOut(danar_stats)
@@ -131,12 +125,12 @@ class DanaFragment : DaggerFragment() {
     private val clickListener: View.OnClickListener = View.OnClickListener { view ->
         when ( view.id ){
             R.id.fabDanaMenu -> {
-                if ( fabDanaMenuUserOptions.visibility == View.GONE && danar_history.visibility == View.GONE && danar_stats.visibility == View.GONE && danar_viewprofile.visibility == View.GONE) {
+                if ( danar_viewprofile.visibility == View.GONE) {
                     ViewAnimation.showIn(fabDanaMenuUserOptions)
                     ViewAnimation.showIn(danar_history)
                     ViewAnimation.showIn(danar_stats)
                     ViewAnimation.showIn(danar_viewprofile)
-                } else if ( fabDanaMenuUserOptions.visibility == View.VISIBLE && danar_history.visibility == View.VISIBLE && danar_stats.visibility == View.VISIBLE && danar_viewprofile.visibility == View.VISIBLE) {
+                } else  {
                     ViewAnimation.showOut(fabDanaMenuUserOptions)
                     ViewAnimation.showOut(danar_history)
                     ViewAnimation.showOut(danar_stats)
