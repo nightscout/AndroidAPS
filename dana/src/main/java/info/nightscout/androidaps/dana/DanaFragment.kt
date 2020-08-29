@@ -111,25 +111,6 @@ class DanaFragment : DaggerFragment() {
         danar_history.setOnClickListener(clickListener)
         danar_stats.setOnClickListener(clickListener)
         danar_viewprofile.setOnClickListener(clickListener)
-
-        //danar_history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
-      /*  danar_viewprofile.setOnClickListener {
-            val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
-                ?: return@setOnClickListener
-            val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
-                ?: return@setOnClickListener
-            val args = Bundle()
-            args.putLong("time", DateUtil.now())
-            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-            args.putString("customProfile", profile.data.toString())
-            args.putString("customProfileUnits", profile.units)
-            args.putString("customProfileName", profileName)
-            val pvd = ProfileViewerDialog()
-            pvd.arguments = args
-            pvd.show(childFragmentManager, "ProfileViewDialog")
-        }*/
-        //danar_stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
-        //danar_user_options.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }
         danar_btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.lastConnection = 0
@@ -150,12 +131,12 @@ class DanaFragment : DaggerFragment() {
     private val clickListener: View.OnClickListener = View.OnClickListener { view ->
         when ( view.id ){
             R.id.fabDanaMenu -> {
-                if ( fabDanaMenuUserOptions.visibility == View.GONE) {
+                if ( fabDanaMenuUserOptions.visibility == View.GONE && danar_history.visibility == View.GONE && danar_stats.visibility == View.GONE && danar_viewprofile.visibility == View.GONE) {
                     ViewAnimation.showIn(fabDanaMenuUserOptions)
                     ViewAnimation.showIn(danar_history)
                     ViewAnimation.showIn(danar_stats)
                     ViewAnimation.showIn(danar_viewprofile)
-                } else if ( fabDanaMenuUserOptions.visibility == View.VISIBLE) {
+                } else if ( fabDanaMenuUserOptions.visibility == View.VISIBLE && danar_history.visibility == View.VISIBLE && danar_stats.visibility == View.VISIBLE && danar_viewprofile.visibility == View.VISIBLE) {
                     ViewAnimation.showOut(fabDanaMenuUserOptions)
                     ViewAnimation.showOut(danar_history)
                     ViewAnimation.showOut(danar_stats)

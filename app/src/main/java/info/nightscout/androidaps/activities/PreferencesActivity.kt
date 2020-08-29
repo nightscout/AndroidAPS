@@ -19,10 +19,6 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // sets theme and color
-        val newTheme: Int = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
-        setTheme(ThemeUtil.getThemeId(newTheme))
-
         setContentView(R.layout.activity_single_fragment)
         title = resourceHelper.gs(R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

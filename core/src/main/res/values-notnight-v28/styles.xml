@@ -78,6 +78,8 @@
         <item name="statuslight_normal" >@color/statuslight_normal</item>
         <item name="statuslight_Warning" >@color/statuslight_Warning</item>
         <item name="statuslight_alarm" >@color/statuslight_alarm</item>
+        <!-- back arrow actionbar    -->
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrowleft</item>
     </style>
 
     <style name="AppTheme.YELLOW" parent="AppTheme.NoActionBar">
