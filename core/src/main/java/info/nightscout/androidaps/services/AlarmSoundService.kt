@@ -27,17 +27,17 @@ class AlarmSoundService : DaggerService() {
     private var resourceId = R.raw.error
 
     companion object {
-        private const val VOLUME_INCREASE_STEPS = 40; // Total number of steps to increase volume with
-        private const val VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS = 3_000L; // Number of milliseconds that the notification should initially be silent
-        private const val VOLUME_INCREASE_BASE_DELAY_MILLIS = 15_000; // Base delay between volume increments
-        private const val VOLUME_INCREASE_MIN_DELAY_MILLIS = 2_000L; // Minimum delay between volume increments
+        private const val VOLUME_INCREASE_STEPS = 40 // Total number of steps to increase volume with
+        private const val VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS = 3_000L // Number of milliseconds that the notification should initially be silent
+        private const val VOLUME_INCREASE_BASE_DELAY_MILLIS = 15_000 // Base delay between volume increments
+        private const val VOLUME_INCREASE_MIN_DELAY_MILLIS = 2_000L // Minimum delay between volume increments
 
         /*
          * Delay until the next volumen increment will be the lowest value of VOLUME_INCREASE_MIN_DELAY_MILLIS and
          * VOLUME_INCREASE_BASE_DELAY_MILLIS - (currentVolumeLevel - 1) ^ VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT * 1000
          *
          */
-        private const val VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT = 2.0;
+        private const val VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT = 2.0
 
     }
 
@@ -65,10 +65,10 @@ class AlarmSoundService : DaggerService() {
             player?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
             afd.close()
             player?.isLooping = true
-            val audioManager = getAudioManager();
+            val audioManager = getAudioManager()
             if (!audioManager.isMusicActive) {
                 if (sp.getBoolean(R.string.key_gradually_increase_notification_volume, false)) {
-                    currentVolumeLevel = 0;
+                    currentVolumeLevel = 0
                     player?.setVolume(0f, 0f)
                     increaseVolumeHandler.postDelayed(volumeUpdater, VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS)
                 } else {
@@ -111,7 +111,7 @@ class AlarmSoundService : DaggerService() {
                 val delay = VOLUME_INCREASE_MIN_DELAY_MILLIS.coerceAtLeast(VOLUME_INCREASE_BASE_DELAY_MILLIS -
                     ((currentVolumeLevel - 1).toDouble().pow(VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT) * 1000).toLong())
                 aapsLogger.debug(LTag.CORE, "Next notification volume increment in {}ms", delay)
-                increaseVolumeHandler.postDelayed(this, delay);
+                increaseVolumeHandler.postDelayed(this, delay)
             }
         }
     }
