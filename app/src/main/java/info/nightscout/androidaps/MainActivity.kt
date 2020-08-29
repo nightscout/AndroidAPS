@@ -14,6 +14,7 @@ import android.os.Handler
 import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -35,20 +36,12 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.ms_square.etsyblur.BlurSupport
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
+import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -139,6 +132,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
+    private var menu: Menu? = null
 
     // change to selected theme in theme manager
     open fun changeTheme(newTheme: Int) {
@@ -158,7 +152,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
             val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
         }
 
         delegate.applyDayNight()
@@ -185,7 +179,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
         } else {
             val cd = ColorDrawable(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
-            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable( cd)
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
             delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
         }
         delegate.applyDayNight()
@@ -239,8 +233,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
                         fab.translationX = dx
                     }
 
-                    MotionEvent.ACTION_UP   -> {
-                        if ( bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER ) {
+                    MotionEvent.ACTION_UP -> {
+                        if (bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER) {
                             bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
                             bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
                             bottom_app_bar.overflowIcon = null
@@ -288,6 +282,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 bottom_app_bar.performHide()
                 bottom_app_bar.performShow()
                 checkPluginPreferences(main_pager)
+                setPluginPreferenceMenuName()
+                setDisabledMenuItemColorPluginPreferences()
             }
         })
 
@@ -296,18 +292,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
         setUserStats()
         setupViews()
         disposable.add(rxBus
-            .toObservable(EventRebuildTabs::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                if (it.recreate) recreate()
-                else setupViews()
-                setWakeLock()
-            }) { fabricPrivacy::logException }
+                .toObservable(EventRebuildTabs::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.recreate) recreate()
+                    else setupViews()
+                    setWakeLock()
+                }) { fabricPrivacy::logException }
         )
         disposable.add(rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
+                .toObservable(EventPreferenceChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             val intent = Intent(this, SetupWizardActivity::class.java)
@@ -432,17 +428,17 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     return
                 }
 
-                R.id.reservoirView, R.id.canulaage             -> {
+                R.id.reservoirView, R.id.canulaage -> {
                     fillDialog.show(manager!!, "FillDialog")
                     return
                 }
 
-                R.id.batteryage                                -> {
+                R.id.batteryage -> {
                     newCareDialog.setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(manager!!, "Actions")
                     return
                 }
 
-                R.id.fab                                       -> {
+                R.id.fab -> {
                     isRotate = ViewAnimation.rotateFab(view, !isRotate)
                     if (isRotate) {
                         main_bottom_fab_menu.visibility = View.VISIBLE
@@ -460,17 +456,17 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     return
                 }
 
-                R.id.treatmentButton   -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(manager!!, "MainActivity") }))
+                R.id.treatmentButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(manager!!, "MainActivity") }))
                 R.id.quickwizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
 
-                R.id.cgmButton         -> {
+                R.id.cgmButton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
                         dexcomPlugin.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
-                            ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
+                                ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
                     }
                 }
 
@@ -482,7 +478,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                             dexcomPlugin.findDexcomPackageName()?.let {
                                 startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
                             }
-                                ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
+                                    ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
                         } catch (e: ActivityNotFoundException) {
                             ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.g5appnotdetected))
                         }
@@ -499,18 +495,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (manager.isStateSaved) return
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.wizardButton      -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(manager, "Main") }))
-                R.id.insulinButton           -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(manager, "Main") }))
-                R.id.carbsButton       -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(manager, "Main") }))
+                R.id.wizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(manager, "Main") }))
+                R.id.insulinButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(manager, "Main") }))
+                R.id.carbsButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(manager, "Main") }))
 
-                R.id.cgmButton         -> {
+                R.id.cgmButton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
                         dexcomPlugin.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
-                            ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
+                                ?: ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.dexcom_app_not_installed))
                     }
                 }
             }
@@ -607,14 +603,14 @@ open class MainActivity : NoSplashAppCompatActivity() {
         // Status lights
         overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         statusLightHandler.updateStatusLights(careportal_canulaage,
-                                              careportal_insulinage,
-                                              careportal_reservoirlevel,
-                                              careportal_sensorage,
-                                              careportal_pbage,
-                                              careportal_batterylevel,
-                                              resourceHelper.getAttributeColor(this, R.attr.statuslight_normal),
-                                              resourceHelper.getAttributeColor(this, R.attr.statuslight_Warning),
-                                              resourceHelper.getAttributeColor(this, R.attr.statuslight_alarm))
+                careportal_insulinage,
+                careportal_reservoirlevel,
+                careportal_sensorage,
+                careportal_pbage,
+                careportal_batterylevel,
+                resourceHelper.getAttributeColor(this, R.attr.statuslight_normal),
+                resourceHelper.getAttributeColor(this, R.attr.statuslight_Warning),
+                resourceHelper.getAttributeColor(this, R.attr.statuslight_alarm))
     }
 
     private fun upDateLoop() { 
@@ -669,9 +665,17 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
     }
 
+    private fun setDisabledMenuItemColorPluginPreferences() {
+        if( pluginPreferencesMenuItem?.isEnabled == false){
+            val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
+            spanString.setSpan(ForegroundColorSpan( getColor(R.color.concinnity_grey)) , 0,spanString.length, 0)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.setTitle(spanString)
+        }
+    }
+
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
-        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
+       if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -687,60 +691,60 @@ open class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) }),
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) })
+                UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) }),
+                UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) })
         )
         disposable.add(rxBus
-            .toObservable(EventRefreshOverview::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                if (it.now) updateGUI(it.from)
-                else scheduleUpdateGUI(it.from)
-            }) { fabricPrivacy.logException(it) })
+                .toObservable(EventRefreshOverview::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.now) updateGUI(it.from)
+                    else scheduleUpdateGUI(it.from)
+                }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventExtendedBolusChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventExtendedBolusChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventExtendedBolusChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventTempBasalChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventTempBasalChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventTempBasalChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventTreatmentChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventTreatmentChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventTreatmentChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventTreatmentChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventTempTargetChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventTempTargetChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventTempTargetChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventTempTargetChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventAcceptOpenLoopChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventAcceptOpenLoopChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventAcceptOpenLoopChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventAcceptOpenLoopChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventCareportalEventChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventCareportalEventChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventCareportalEventChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventCareportalEventChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventInitializationChanged::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventInitializationChanged") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventInitializationChanged::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventInitializationChanged") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventAutosensCalculationFinished::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventProfileNeedsUpdate::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventProfileNeedsUpdate::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventPreferenceChange") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventPreferenceChange::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventPreferenceChange") }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
-            .toObservable(EventNewOpenLoopNotification::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }) { fabricPrivacy.logException(it) })
+                .toObservable(EventNewOpenLoopNotification::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe({ scheduleUpdateGUI("EventNewOpenLoopNotification") }) { fabricPrivacy.logException(it) })
         refreshLoop = Runnable {
             scheduleUpdateGUI("refreshLoop")
             loopHandler.postDelayed(refreshLoop, 60 * 1000L)
@@ -842,7 +846,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (permissions.isNotEmpty()) {
             if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
-                    AndroidPermission.CASE_STORAGE                                                                                                                                        ->                         //show dialog after permission is granted
+                    AndroidPermission.CASE_STORAGE ->                         //show dialog after permission is granted
                         OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text), null, sp)
 
                     AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY, AndroidPermission.CASE_PHONE_STATE, AndroidPermission.CASE_SYSTEM_WINDOW -> {
@@ -868,8 +872,14 @@ open class MainActivity : NoSplashAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    private fun setPluginPreferenceMenuName() {
+        val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
+       this.menu?.findItem(R.id.nav_plugin_preferences)?.setTitle(plugin.name + ' ' + resourceHelper.gs(R.string.nav_preferences))
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         //show all selected plugins not selected for hamburger menu in option menu
+        this.menu = menu
         var itemId = 0
         for (p in activePlugin.pluginsList) {
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
@@ -884,13 +894,15 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
+        setPluginPreferenceMenuName()
         checkPluginPreferences(main_pager)
+        setDisabledMenuItemColorPluginPreferences()
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_preferences        -> {
+            R.id.nav_preferences -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", -1)
@@ -899,22 +911,22 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
-            R.id.nav_historybrowser     -> {
+            R.id.nav_historybrowser -> {
                 startActivity(Intent(this, HistoryBrowseActivity::class.java))
                 return true
             }
 
-            R.id.nav_themeselector        -> {
+            R.id.nav_themeselector -> {
                 startActivity(Intent(this, ScrollingActivity::class.java))
                 return true
             }
 
-            R.id.nav_setupwizard        -> {
+            R.id.nav_setupwizard -> {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
                 return true
             }
 
-            R.id.nav_about              -> {
+            R.id.nav_about -> {
                 var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.nightscoutVersionName}"
@@ -924,20 +936,20 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
                 val adb: AlertDialog.Builder = AlertDialog.Builder(this)
                 adb
-                    .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + "\nNew GUI")
-                    .setIcon(iconsProvider.getIcon())
-                    .setMessage(messageSpanned)
-                    .setPositiveButton(resourceHelper.gs(R.string.ok), null)
-                    .create().also {
-                    it.setCanceledOnTouchOutside(false)
-                    it.setOnShowListener { OKDialog.setdrawableBackground(this, it as AlertDialog, sp) }
-                    it.show()
-                    (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
-                }
+                        .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + "\nNew GUI")
+                        .setIcon(iconsProvider.getIcon())
+                        .setMessage(messageSpanned)
+                        .setPositiveButton(resourceHelper.gs(R.string.ok), null)
+                        .create().also {
+                            it.setCanceledOnTouchOutside(false)
+                            it.setOnShowListener { OKDialog.setdrawableBackground(this, it as AlertDialog, sp) }
+                            it.show()
+                            (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
+                        }
                 return true
             }
 
-            R.id.nav_exit               -> {
+            R.id.nav_exit -> {
                 aapsLogger.debug(LTag.CORE, "Exiting")
                 rxBus.send(EventAppExit())
                 finish()
@@ -960,12 +972,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 */
-            R.id.nav_defaultprofile     -> {
+            R.id.nav_defaultprofile -> {
                 startActivity(Intent(this, ProfileHelperActivity::class.java))
                 return true
             }
 
-            R.id.nav_stats              -> {
+            R.id.nav_stats -> {
                 startActivity(Intent(this, StatsActivity::class.java))
                 return true
             }
