@@ -30,4 +30,13 @@ public class DiaDatum {
         } catch (JSONException e) {}
         return crjson;
     }
+
+    public Boolean equals(DiaDatum obj) {
+        Boolean isEqual = true;
+        if (dia != obj.dia) isEqual = false;
+        if (meanDeviation != obj.meanDeviation) isEqual = false;
+        if (smrDeviation != obj.smrDeviation) isEqual = false;
+        if (rmsDeviation != obj.rmsDeviation) isEqual = false;
+        return isEqual;
+    }
 }

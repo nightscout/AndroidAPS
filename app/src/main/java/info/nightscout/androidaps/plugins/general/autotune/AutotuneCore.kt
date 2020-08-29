@@ -415,9 +415,9 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         for (i in isfGlucose.indices) {
             val deviation = isfGlucose[i].deviation
             isfDeviations.add(deviation)
-            val BGI = isfGlucose[i].BGI
+            val BGI = isfGlucose[i].bgi
             bGIs.add(BGI)
-            val avgDelta = isfGlucose[i].AvgDelta
+            val avgDelta = isfGlucose[i].avgDelta
             avgDeltas.add(avgDelta)
             val ratio = 1 + deviation / BGI
             //log.debug("Deviation:",deviation,"BGI:",BGI,"avgDelta:",avgDelta,"ratio:",ratio);

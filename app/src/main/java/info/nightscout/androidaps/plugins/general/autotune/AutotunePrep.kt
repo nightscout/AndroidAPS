@@ -143,7 +143,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 log("Could not find glucose data")
             }
             avgDelta = Round.roundTo(avgDelta, 0.01)
-            glucoseDatum.AvgDelta = avgDelta
+            glucoseDatum.avgDelta = avgDelta
 
             //sens = ISF
             val sens = profileData.getIsfMgdl(BGTime)
@@ -182,7 +182,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             // activity times ISF times 5 minutes is BGI
             val BGI = Round.roundTo(-iob.activity * sens * 5, 0.01)
             // datum = one glucose data point (being prepped to store in output)
-            glucoseDatum.BGI = BGI
+            glucoseDatum.bgi = BGI
             // calculating deviation
             var deviation = avgDelta - BGI
 

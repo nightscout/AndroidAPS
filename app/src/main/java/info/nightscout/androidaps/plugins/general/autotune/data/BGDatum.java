@@ -17,11 +17,11 @@ public class BGDatum extends BgReading {
     //Added by Rumen for autotune
     public String _id = "";
     public double deviation = 0d;
-    public double BGI = 0d;
+    public double bgi = 0d;
     public String mealAbsorption = "";
     public  int mealCarbs = 0;
     public String uamAbsorption = "";
-    public double AvgDelta;
+    public double avgDelta;
     private BgReading bgreading;
     public BGDatum() {
     }
@@ -33,8 +33,8 @@ public class BGDatum extends BgReading {
             if (json.has("sgv")) value = json.getDouble("sgv");
             if (json.has("direction")) direction = json.getString("direction");
             if (json.has("deviation")) deviation = json.getDouble("deviation");
-            if (json.has("BGI")) BGI = json.getDouble("BGI");
-            if (json.has("avgDelta")) AvgDelta = json.getDouble("avgDelta");
+            if (json.has("BGI")) bgi = json.getDouble("BGI");
+            if (json.has("avgDelta")) avgDelta = json.getDouble("avgDelta");
             if (json.has("mealAbsorption")) mealAbsorption = json.getString("mealAbsorption");
             if (json.has("mealCarbs")) mealCarbs = json.getInt("mealCarbs");
         } catch (JSONException e) {}
@@ -66,8 +66,8 @@ public class BGDatum extends BgReading {
             bgjson.put("sysTime",DateUtil.toISOAsUTC(date));
             bgjson.put("utcOffset",utcOffset);
             bgjson.put("glucose",value);
-            bgjson.put("avgDelta", AvgDelta);
-            bgjson.put("BGI", BGI);
+            bgjson.put("avgDelta", avgDelta);
+            bgjson.put("BGI", bgi);
             bgjson.put("deviation",deviation);
             if (mealData) {
                 bgjson.put("mealAbsorption", mealAbsorption);
@@ -76,5 +76,16 @@ public class BGDatum extends BgReading {
 
         } catch (JSONException e) {}
         return bgjson;
+    }
+
+    public Boolean equals(BGDatum obj) {
+        Boolean isEqual = true;
+        if (_id != obj._id) isEqual = false;
+        if (deviation != obj.deviation) isEqual = false;
+        if (avgDelta != obj.avgDelta) isEqual = false;
+        if (bgi != obj.bgi) isEqual = false;
+        if (mealAbsorption != obj.mealAbsorption) isEqual = false;
+        if (mealCarbs != obj.mealCarbs) isEqual = false;
+        return isEqual;
     }
 }

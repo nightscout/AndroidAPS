@@ -5,10 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import info.nightscout.androidaps.utils.DateUtil;
 
 public class PreppedGlucose {
     public List<CRDatum> crData = new ArrayList<CRDatum>();
@@ -117,5 +114,34 @@ public class PreppedGlucose {
         } catch (JSONException e) {}
 
         return jsonString;
+    }
+
+    public Boolean equals(PreppedGlucose obj) {
+        Boolean isEqual = true;
+        if(crData.size() == obj.crData.size()) {
+            for(int index=0; index<crData.size(); index++)
+                if ( ! crData.get(index).equals(obj.crData.get(index))) isEqual = false;
+        } else isEqual = false;
+        if(csfGlucoseData.size() == obj.csfGlucoseData.size()) {
+            for(int index=0; index<csfGlucoseData.size(); index++)
+                if ( ! csfGlucoseData.get(index).equals(obj.csfGlucoseData.get(index))) isEqual = false;
+        } else isEqual = false;
+        if(isfGlucoseData.size() == obj.isfGlucoseData.size()) {
+            for(int index=0; index<isfGlucoseData.size(); index++)
+                if ( ! isfGlucoseData.get(index).equals(obj.isfGlucoseData.get(index))) isEqual = false;
+        } else isEqual = false;
+        if(basalGlucoseData.size() == obj.basalGlucoseData.size()) {
+            for(int index=0; index<basalGlucoseData.size(); index++)
+                if ( ! basalGlucoseData.get(index).equals(obj.basalGlucoseData.get(index))) isEqual = false;
+        } else isEqual = false;
+        if(diaDeviations.size() == obj.diaDeviations.size()) {
+            for(int index=0; index<diaDeviations.size(); index++)
+                if ( ! diaDeviations.get(index).equals(obj.diaDeviations.get(index))) isEqual = false;
+        } else isEqual = false;
+        if(peakDeviations.size() == obj.peakDeviations.size()) {
+            for(int index=0; index<peakDeviations.size(); index++)
+                if ( ! peakDeviations.get(index).equals(obj.peakDeviations.get(index))) isEqual = false;
+        } else isEqual = false;
+        return isEqual;
     }
 }
