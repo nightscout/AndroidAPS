@@ -5,8 +5,6 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.autotune.data.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.FabricPrivacy
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
@@ -14,11 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
-
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(FabricPrivacy::class, MainApp::class, GlucoseStatus::class)
