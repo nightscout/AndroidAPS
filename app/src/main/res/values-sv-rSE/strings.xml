@@ -149,7 +149,7 @@ Eversense-appen.</string>
     <string name="careportal_newnstreatment_percent_label">Procent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolut</string>
     <string name="careportal_newnstreatment_notes_label">Anteckning</string>
-    <string name="event_time_label">Tid för händelse</string>
+    <string name="event_time_label">När</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_enteredby_title">Loggat av</string>
     <string name="careportal_newnstreatment_glucosetype">Glukostyp</string>
@@ -843,7 +843,7 @@ Eversense-appen.</string>
     <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
     <string name="as">AS</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
-    <string name="time_offset">Tidsförskjutning</string>
+    <string name="time_offset">KH-tid</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyl</string>
