@@ -22,6 +22,7 @@
     <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
     <string name="pairing">Pairing</string>
 
     <!--    General-->
@@ -279,7 +280,6 @@
     <!--    Notification(R.string.medtronic_history_group_notification), //-->
     <!--    Statistic(R.string.medtronic_history_group_statistic),-->
     <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
-
 
 
 </resources>
