@@ -581,7 +581,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal"  />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -625,7 +625,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal"  />
 
 
             </LinearLayout>
@@ -654,9 +654,9 @@
                     android:drawableTop="@drawable/ic_actions_refill"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/combo_refresh" />
+                    android:text="@string/" />
 
-
+                combo_refresh
                 <Button
                     android:id="@+id/omnipod_pod_mgmt"
                     style="@style/ButtonSmallFontStyle"
