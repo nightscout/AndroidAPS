@@ -28,6 +28,7 @@ import javax.inject.Singleton
         WizardModule::class,
         RileyLinkModule::class,
         MedtronicModule::class,
+        OmnipodModule::class,
         APSModule::class,
         PreferencesModule::class,
         OverviewModule::class,
