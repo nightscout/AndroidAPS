@@ -156,6 +156,7 @@
     <string name="overview_tempbasal_button">Laikina bazė</string>
     <string name="overview_extendedbolus_button">Ištęstas bolusas</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
+    <string name="missing_carbs">Trūksta %1$d g</string>
     <string name="exported">Nustatymai eksportuoti</string>
     <string name="export_to">Eksportuoti nustatymus</string>
     <string name="import_from">Importuoti nustatymus iš</string>
@@ -234,6 +235,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno boluso, suleisto nuotoliniu būdu iki kito</string>
     <string name="smscommunicator_remotebolusmindistance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
+    <string name="bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="bolusrequested">Bus suleista %1$.2f vv</string>
+    <string name="smscommunicator_bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolusas %1$.2f vv sėkmingai suleistas</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Tikslas %1$s %2$d min.</string>
     <string name="smscommunicator_tt_set">Tikslas %1$s %2$d min. nustatytas sėkmingai</string>
     <string name="smscommunicator_tt_canceled">Laikinas tikslas atšauktas sėkmingai</string>
@@ -257,7 +262,9 @@
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
     <string name="smscommunicator_remotebolusnotallowed">Nuotolinis bolusas negalimas. Bandykite vėliau.</string>
+    <string name="smscommunicator_basalreplywithcode">Norėdami aktyvuoti %1$.2f vv/val bazę, kurios trukmė %2$d min, atsakykite kodu %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Norėdami perjungti profilį %1$s %2$d%%, atsakykite kodu %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Norint pradėti ištęstinį bolusą %1$.2f vv %2$d min., atsakykite kodu %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Įvedimui %1$dg %2$s atsakykite kodu %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Norėdami aktyvuoti %1$d%% bazę %2$d min., atsakykite kodu %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Norėdami sustabdyti Ciklą %1$d min., atsakykite kodu %2$s</string>
@@ -266,6 +273,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Ciklo išjungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_tempbasalset">%1$.2f vv/val laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
     <string name="smscommunicator_extendedset">%1$.2f vv ištęstas bolusas, kurio trukmė %2$d min., aktyvuotas sėkmingai</string>
+    <string name="smscommunicator_carbsset">%1$d g angliavandenių įrašyti sėkmingai</string>
     <string name="smscommunicator_carbsfailed">Įvesti %1$dg angliavandenių nepavyko</string>
     <string name="smscommunicator_tempbasalset_percent">%1$d%% laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
     <string name="smscommunicator_tempbasalfailed">Laikina bazė neaktyvuota</string>
@@ -846,6 +854,7 @@
     <string name="code_compare">Ar kodas, kurį matote įrenginyje, sutampa su pompos kodu?</string>
     <string name="insight_pairing">Insight sujungimas</string>
     <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2f vv iš %2$.2f vv suleista</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Kateteris pakeistas</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
@@ -903,6 +912,7 @@
     <string name="short_status_extended">Ištęstas: %1$.2f / %2$.2f V %3$d min</string>
     <string name="short_status_multiwave">Daugiabangis: %1$.2f / %2$.2f vv %3$d min</string>
     <string name="short_status_tdd">BPD: %1$.2f</string>
+    <string name="short_status_reservoir">Rez.: %1$.2f vv</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Didž. atkūrimo trukmė [s]</string>
     <string name="min_recovery_duration">Min. atkūrimo trukmė [s]</string>
@@ -1045,6 +1055,8 @@
     <string name="sendsmsactionlabel">Siųsti SMS: %1$s</string>
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>
     <string name="sendsmsactiontext">Išsiųsti SMS žinutę su tekstu</string>
+    <string name="cobvsiob">AAO prieš AIO</string>
+    <string name="bolusconstraintappliedwarn">Pritaikytas boluso apribojimas: %1$.2f vv iki %2$.2f vv</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
     <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
@@ -1070,7 +1082,6 @@
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
-    <string name="time_or_timezone_change">Laiko ir/ar laiko zonos pakeitimas pompoje</string>
     <string name="nopumpselected">Pompa nepasirinkta</string>
     <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
     <string name="ns_ploadlocalprofile">Įkelti vietinio profilio pakeitimus į NS</string>
@@ -1147,7 +1158,6 @@
     <string name="authorizationfailed">Autorizacija nepavyko</string>
     <string name="overview_show_absinsulin">Insulinas absoliučiais vienetais</string>
     <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginiam šifravimui ir programos saugumo ignoravimui. Atsiminkite jį arba laikykite užsirašę saugioje vietoje.</string>
-    <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
     <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
     <string name="statuslights">Būklės indikatoriai</string>
     <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
@@ -1156,123 +1166,6 @@
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Niekada nebuvo sujungta</string>
-    <string name="medtronic_pump_status_waking_up">Pažadinimas</string>
-    <string name="medtronic_pump_status_error_comm">Ryšio klaida</string>
-    <string name="medtronic_pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pompa nepasiekiama</string>
-    <string name="medtronic_pump_status_invalid_config">Neteisinga konfigūracija</string>
-    <string name="medtronic_pump_status_active">Aktyvi</string>
-    <string name="medtronic_pump_status_sleeping">Užmigusi</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Omnipod pompos integracijai reikalingas RileyLink (programinės įrangos versija ne mažiau 2.0).</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Boluso signalas įjungtas</string>
-    <string name="omnipod_config_beep_basal_enabled">Bazės signalas įjungtas</string>
-    <string name="omnipod_config_beep_smb_enabled">SMB signalas įjungtas</string>
-    <string name="omnipod_config_beep_tbr_enabled">Laikinos bazės signalas įjungtas</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Įgalintos POD derinimo galimybės</string>
-    <string name="omnipod_config_timechange_enabled">Vasaros laiko/laiko juostos aptikimas įgalintas</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">POD valdymas</string>
-    <string name="omnipod_pod_status">POD būklė</string>
-    <string name="omnipod_reservoir_left">liko %1$.2f U</string>
-    <string name="omnipod_reservoir_over50">Daugiau nei 50 U</string>
-    <string name="omnipod_pod_address">POD adresas</string>
-    <string name="omnipod_pod_expiry">POD laikas pasibaigs</string>
-    <string name="omnipod_pod_name_no_info">Nėra informacijos</string>
-    <string name="omnipod_pod_no_pod_connected">POD neprijungta</string>
-    <string name="omnipod_pod_not_initalized">Nepavyko paleisti</string>
-    <string name="omnipod_pod_active_alerts">Aktyvaus POD signalai</string>
-    <string name="omnipod_ack_short">Priimti pranešimus</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">Operacija negalima.\n\n Pirmiausia turite sukonfigūruoti Omnipod pompą prieš atliekant šią operaciją.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Operacija negalima.\n\n Jūs turite palaukti kelias minutes, kol AAPS bando nustatyti profilį pirmą kartą.</string>
-    <string name="omnipod_error_illegal_init_action_type">Neteisingas inicijavimo tipas:%1$s</string>
-    <string name="omnipod_error_pod_not_attached">Nėra aktyvaus POD.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Komandos patikra nepavyko.</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Įvyko netikėta klaida. Prašome pranešti! (tipas: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Ryšio klaida: gauti neteisingi įvesties parametrai.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Ryšio klaida: skirtas laikas baigėsi.</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Ryšio klaida: įvyko netikėta klaida. Prašome pranešti!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Ryšio klaida: pranešimo vientisumo patikra nepavyko.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Ryšio klaida: netinkami įvesties iš POD parametrai.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Ryšio klaida: Pod būklė yra netinkama.</string>
-    <string name="omnipod_driver_error_invalid_response">Ryšio klaida: gautas netinkamas atsakymas iš POD.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Ryšio klaida: iš POD gautas pranešimas su negaliojančiu serijos numeriu.</string>
-    <string name="omnipod_driver_error_invalid_message_address">Ryšio klaida: iš POD gautas pranešimas su netinkamu adresu.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Ryšio klaida: nepavyko iššifruoti pranešimo iš POD.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Ryšio klaida: nepavyko iš naujo sinchronizuoti Nonce.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Ryšio klaida: Nonce nebuvo sinchronizuota.</string>
-    <string name="omnipod_driver_error_not_enough_data">Ryšio klaida: nepakankamai duomenų gauta iš POD.</string>
-    <string name="omnipod_driver_error_pod_fault">Aptikta POD klaida (%1$03d %2$s). Išjunkite POD ir pradėkite naują.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Ryšio klaida: POD pateikė klaidos atsakymą.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">POD valdymas</string>
-    <string name="omnipod_cmd_init_pod">Inicijuoti POD</string>
-    <string name="omnipod_cmd_deactivate_pod">Išjungti POD</string>
-    <string name="omnipod_cmd_reset_pod">Atstatyti POD</string>
-    <string name="omnipod_cmd_pod_history">POD istorija</string>
-    <string name="omnipod_cmd_set_bolus">Nustatyti bolusą</string>
-    <string name="omnipod_cmd_cancel_bolus">Atšaukti bolusą</string>
-    <string name="omnipod_cmd_set_tbr">Nustatyti laikiną bazę</string>
-    <string name="omnipod_cmd_cancel_tbr">Atšaukti laikiną bazę (vidinis valdiklis)</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Atšaukti laikiną bazę (Inicijuota vartotojo)</string>
-    <string name="omnipod_cmd_set_basal_schedule">Nustatyti bazės tvarkaraštį</string>
-    <string name="omnipod_cmd_get_pod_status">Gauti POD būklę</string>
-    <string name="omnipod_cmd_get_pod_info">Gauti POD informaciją</string>
-    <string name="omnipod_cmd_set_time">Nustatyti laiką</string>
-    <string name="omnipod_cmd_configure_alerts">Konfigūruoti perspėjimus</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Patvirtinti perspėjimus</string>
-    <string name="omnipod_cmd_suspend_delivery">Sustabdyti suleidimą</string>
-    <string name="omnipod_cmd_resume_delivery">Atnaujinti suleidimą</string>
-    <string name="omnipod_cmd_unknown_entry">Nežinomas Įrašas</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f vv</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f vv, AV=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Kiekis: %1$.1f vv, Trukmė: %2$d min</string>
-    <string name="omnipod_cmd_reset_pod_desc">Jei spustelėsite <b>OK</b>, ryšys su POD bus priverstinai nutrauktas ir nebegalėsite prie jo prisijungti. Atlikite tai tik tada, kai AAPS nebegali bendrauti su POD. Jei ryšys su POD vis tiek veikia, naudokite parinktį <b>Išjungti POD</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">POD istorija šiuo metu nėra prieinama.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Užpildyti POD</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nUžpildykite naują POD insulinu, kurio pakaktų 3 dienas.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš POD, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 85vv. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę POD, spustelėkite <b>Kitas</b>.\n\n <b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite POD adatos apsauginio dangtelio.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Užpildymas</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Pabandykite suporuoti naują POD ir užpildykite jį.\n\nKai pažymėti visi elemetai, galite spustelėti <b>Kitas</b>.\n\n <b>Pastaba:</b> POD ir RileyLink turi būti būti labai arti vienas kito.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Prijunkite POD</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nParuoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir užklijuokite POD ant infuzijos vietos.\n\nJei kaniulė atšoks, paspauskite <b>Atšaukti</b> ir pakeiskite POD.\n\nSpauskite <b>Kitas</b>, norėdami įvesti kaniulę ir pradėti leisti insuliną.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Įvedama kaniulė</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Mėginkite nustatyti pradinį bazės profilį ir įvesti kaniulę.\n\nKai visi elementai yra patikrinti, galite paspausti <b>Kitas</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">POD informacija</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPOD yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė buvo tinkamai įvesta, ir, jei jaučiate, kad taip nėra, pakeiskite POD.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Išjungti POD</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nSpustelėkite<b>Kitas</b>, kad išjungtumėte POD.\n\n<b>Pastaba:</b> Tai sustabdys insulino leidimą ir išjungs POD.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">POD išjungimas</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">POD išjungimas.\n\nJei visi elementai pažymėti, galite paspausti <b>Kitas</b>.\n\n <b>Pastaba:</b> Jei išjungimas vis nepavyksta, paspauskite <b> Atšaukti</b> ir naudokite parinktį <b>Atstatyti POD </b>, kad priverstinai atkurtumėte POD būklę.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">POD išjungtas.\n\nNuimkite POD nuo odos ir jį išmeskite.</string>
-    <string name="omnipod_init_pod_pair_pod">POD suporavimas</string>
-    <string name="omnipod_init_pod_prime_pod">POD užpildymas</string>
-    <string name="omnipod_init_pod_fill_cannula">Kaniulės užpildymas</string>
-    <string name="omnipod_init_pod_set_basal_profile">Nustatyti bazės profilį</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Atšauti insulino leidimą</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Išjungti POD</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Integracija su Omnipod Dash pompa.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Priminimas apie suporavimo pabaigą</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Priminimas apie sąrankos pabaigą</string>
-    <string name="omnipod_alert_expiration">POD galiojimas greitai baigsis</string>
-    <string name="omnipod_alert_expiration_advisory">POD galiojimas greitai baigsis</string>
-    <string name="omnipod_alert_shutdown_imminent">Išjungimas yra neišvengiamas</string>
-    <string name="omnipod_alert_low_reservoir">Žemas rezervuaro lygis</string>
-    <string name="omnipod_alert_unknown_alert">Nežinomas perspėjimas</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Gali nepavykti nustatyti bazės profilio. Insulino leidimas gali būti sustabdytas! Atkurkite POD būseną.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Laikinos valandinės bazės nustatymas gali būti nesėkmingas. Jei laikina valandinė bazė iki šiol buvo nustatyta ir galioja, ji gali būti atšaukta! Atnaujinkite POD būseną.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Laiko nustatymas gali būti nesėkmingas. Insulino leidimas gali būti sustabdytas! Atkurkite POD būseną.</string>
-    <string name="omnipod_bolus_failed_uncertain">Neįmanoma patikrinti, ar bolusas suleistas sėkmingai. Patikrinkite, ar jūsų POD leidžia bolusą, arba bolusą atšaukite.</string>
-    <string name="omnipod_rl_stats">RL statistika</string>
-    <string name="omnipod_read_pulse_log_short">Pulse žurnalas</string>
     <string name="comapareprofile">Palyginti profilius</string>
     <string name="nav_profilehelper">Profilio pagalbininkas</string>
     <string name="motoldefaultprofile">Numatytasis profilis</string>

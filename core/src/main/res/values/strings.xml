@@ -25,6 +25,8 @@
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
+    <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
+    <string name="pairing">Pairing</string>
 
     <!--    General-->
     <string name="error">Error</string>
@@ -170,6 +172,7 @@
 
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Check</string>
+    <string name="careportal_mbg">Manual BG or Calibration</string>
     <string name="careportal_announcement">Announcement</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
@@ -281,7 +284,6 @@
     <!--    Notification(R.string.medtronic_history_group_notification), //-->
     <!--    Statistic(R.string.medtronic_history_group_statistic),-->
     <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
-
 
 
 </resources>

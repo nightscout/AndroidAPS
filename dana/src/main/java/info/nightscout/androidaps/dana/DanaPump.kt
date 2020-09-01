@@ -159,8 +159,8 @@ class DanaPump @Inject constructor(
     var v3RSPump = false;
 
     // User settings
-    var timeDisplayType = 0
-    var buttonScrollOnOff = 0
+    var timeDisplayType24 = false
+    var buttonScrollOnOff = false
     var beepAndAlarm = 0
     var lcdOnTimeSec = 0
     var backlightOnTimeSec = 0

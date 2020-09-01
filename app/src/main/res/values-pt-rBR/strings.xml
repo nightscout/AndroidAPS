@@ -1093,35 +1093,10 @@
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="overview_show_absinsulin">Insulina absoluta</string>
     <string name="master_password_summary">Password Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
-    <string name="passwords_dont_match">As passwords não coincidem</string>
     <string name="current_master_password">Senha mestra atual</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="classic_description">Tema original</string>
     <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Nunca contatado</string>
-    <string name="medtronic_pump_status_waking_up">A acordar</string>
-    <string name="medtronic_pump_status_error_comm">Erro com comunicação</string>
-    <string name="medtronic_pump_status_timeout_comm">Tempo limite para comunicação</string>
-    <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
-    <string name="medtronic_pump_status_invalid_config">Configuração inválida</string>
-    <string name="medtronic_pump_status_active">Ativo</string>
-    <string name="medtronic_pump_status_sleeping">A dormir</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <!-- Omnipod Configuration -->
-    <!-- Omnipod - Fragment -->
-    <!-- Omnipod - Dialogs -->
-    <!-- Omnipod - Error -->
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_deactivate_pod">Desativado Pod</string>
-    <string name="omnipod_cmd_set_bolus">Definir Bólus</string>
-    <string name="omnipod_cmd_set_tbr">Definir Basal temporário</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1f U</string>
-    <string name="omnipod_init_pod_set_basal_profile">Definir Perfil Basal</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Desativado Pod</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
 </resources>

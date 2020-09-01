@@ -657,6 +657,7 @@
     <string name="missed_bg_readings">Missed BG readings</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
+    <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>

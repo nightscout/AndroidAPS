@@ -44,7 +44,7 @@
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
     <string name="objectives_exam_gate">Studia e rispondi correttamente alle domande</string>
     <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
-    <string name="wronganswer">Risposta sbagliata!</string>
+    <string name="wronganswer">Risposta errata!</string>
     <string name="unfinshed_button">Prossimo N.C.</string>
     <string name="requestcode">Codice richiesta: %1$s</string>
     <string name="objectives_hint">(segna tutte le risposte corrette)</string>

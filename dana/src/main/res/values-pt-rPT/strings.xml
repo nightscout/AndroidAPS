@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">A actualizar taxas das basais</string>
     <string name="settingtempbasal">Definindo basal temp</string>
     <string name="waitingfortimesynchronization">À espera da sincronização da hora (%1$d sec)</string>
-    <string name="wrongpassword">Senha incorrecta</string>
     <string name="wrongpumppassword">Senha da bomba incorrecta!</string>
     <string name="danar_history_alarm">Alarmes</string>
     <string name="danar_history_basalhours">Horas de Basal</string>

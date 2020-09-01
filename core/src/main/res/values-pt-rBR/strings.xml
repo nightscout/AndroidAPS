@@ -90,6 +90,7 @@
     <string name="unit_days">dias</string>
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
+    <!--    Protection-->
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>

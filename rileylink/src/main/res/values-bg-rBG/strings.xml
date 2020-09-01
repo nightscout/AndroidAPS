@@ -38,6 +38,7 @@
     <string name="rileylink_state_pc_tune_up">Настройка на RileyLink и помпа</string>
     <string name="rileylink_state_pc_error">Проблем при връзка с помпата</string>
     <string name="rileylink_state_connected">Свързан</string>
+    <string name="rileylink_state_rl_ready">RileyLink готов</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Устройството не е RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink недостъпен</string>
@@ -49,11 +50,4 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic помпа</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <string name="medtronic_pump_frequency_us_ca">САЩ &amp; Канада (916 Mhz)</string>
-    <string name="medtronic_pump_frequency_worldwide">Останалата част от света (868 Mhz)</string>
-    <!--    <plurals name="objective_minutes">-->
-    <!--        <item quantity="one">%1$d minute</item>-->
-    <!--        <item quantity="other">%1$d minutes</item>-->
-    <!--    </plurals>-->
 </resources>

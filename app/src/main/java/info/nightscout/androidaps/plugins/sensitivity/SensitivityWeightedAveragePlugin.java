@@ -159,7 +159,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         for (int i = 0; i < data.size(); i++) {
             long reversedWeigth = data.keyAt(i);
             double value = data.valueAt(i);
-            double weight = (hightestWeight - reversedWeigth) / 2;
+            double weight = (hightestWeight - reversedWeigth) / 2.0;
             weights += weight;
             weightedsum += weight * value;
         }

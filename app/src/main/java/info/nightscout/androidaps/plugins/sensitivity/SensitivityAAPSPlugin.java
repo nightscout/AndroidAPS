@@ -155,7 +155,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
         Arrays.sort(deviations);
 
         double percentile = IobCobCalculatorPlugin.percentile(deviations, 0.50);
-        double basalOff = percentile * (60 / 5) / sens;
+        double basalOff = percentile * (60.0 / 5.0) / sens;
         double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
         if (percentile < 0) { // sensitive

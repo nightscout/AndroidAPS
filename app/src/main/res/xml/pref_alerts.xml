@@ -47,6 +47,11 @@
             android:key="@string/key_raise_notifications_as_android_notifications"
             android:title="@string/raise_notifications_as_android_notifications" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_gradually_increase_notification_volume"
+            android:title="@string/gradually_increase_notification_volume" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

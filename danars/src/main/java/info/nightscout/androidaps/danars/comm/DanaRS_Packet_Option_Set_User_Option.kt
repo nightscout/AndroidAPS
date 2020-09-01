@@ -20,16 +20,16 @@ class DanaRS_Packet_Option_Set_User_Option(
     override fun getRequestParams(): ByteArray {
         aapsLogger.debug(LTag.PUMPCOMM,
             "UserOptions:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
-                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
                 + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
-                + "\ntimeDisplayType:" + danaPump.timeDisplayType
+                + "\nbeepAndAlarm:" + danaPump.beepAndAlarm
                 + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
                 + "\nbacklight:" + danaPump.backlightOnTimeSec
                 + "\ndanaRPumpUnits:" + danaPump.units
                 + "\nlowReservoir:" + danaPump.lowReservoirRate)
         val request = ByteArray(13)
-        request[0] = (danaPump.timeDisplayType and 0xff).toByte()
-        request[1] = (danaPump.buttonScrollOnOff and 0xff).toByte()
+        request[0] = if (danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
+        request[1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
         request[2] = (danaPump.beepAndAlarm and 0xff).toByte()
         request[3] = (danaPump.lcdOnTimeSec and 0xff).toByte()
         request[4] = (danaPump.backlightOnTimeSec and 0xff).toByte()

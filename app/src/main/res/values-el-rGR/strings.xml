@@ -916,22 +916,4 @@
     <string name="boluswizard">Οδηγός Bolus</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Ποτέ δεν επικοινωνήσατε</string>
-    <string name="medtronic_pump_status_waking_up">Ξύπνημα</string>
-    <string name="medtronic_pump_status_error_comm">Σφάλμα με επικοινωνία</string>
-    <string name="medtronic_pump_status_timeout_comm">Λήξη χρόνου επικοινωνίας</string>
-    <string name="medtronic_pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
-    <string name="medtronic_pump_status_invalid_config">Μη έγκυρη παραμετροποίηση</string>
-    <string name="medtronic_pump_status_active">Ενεργή</string>
-    <string name="medtronic_pump_status_sleeping">Sleeping</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <!-- Omnipod Configuration -->
-    <!-- Omnipod - Fragment -->
-    <!-- Omnipod - Dialogs -->
-    <!-- Omnipod - Error -->
-    <!-- Omnipod - Pod Mgmt -->
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
 </resources>

@@ -101,6 +101,9 @@
     <string name="unit_weeks">týždňov</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Nesprávne heslo</string>
+    <string name="passwords_dont_match">Heslá sa nezhodujú</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
@@ -128,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f JI</b> Bol: <b>%3$.2f JI</b> Baz: <b>%4$.2f JI(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Kontrola glykémie</string>
+    <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
     <string name="careportal_note">Poznámka</string>
     <string name="careportal_question">Otázka</string>
