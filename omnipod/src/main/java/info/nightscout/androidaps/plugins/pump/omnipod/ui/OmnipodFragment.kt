@@ -153,7 +153,7 @@ class OmnipodFragment : DaggerFragment() {
             .toObservable(EventOmnipodPumpValuesChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                updateOmipodStatus()
+                updateOmnipodStatus()
                 updatePodActionButtons()
             }, { fabricPrivacy.logException(it) })
         disposables += rxBus
@@ -180,7 +180,7 @@ class OmnipodFragment : DaggerFragment() {
 
     private fun updateUi() {
         updateRileyLinkStatus()
-        updateOmipodStatus()
+        updateOmnipodStatus()
         updatePodActionButtons()
         updateQueueStatus()
     }
@@ -203,7 +203,7 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_rl_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
     }
 
-    private fun updateOmipodStatus() {
+    private fun updateOmnipodStatus() {
         updateLastConnection()
         updatePodStatus()
 
