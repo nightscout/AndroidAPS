@@ -158,7 +158,8 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                     } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
                         PodInfoFaultEvent faultEvent = (PodInfoFaultEvent) ((PodInfoResponse) responseMessageBlock).getPodInfo();
                         podStateManager.setFaultEvent(faultEvent);
-                        podStateManager.setLastFailedCommunication(DateTime.now());
+                        // Treat as successful communication as the user will get notified and can work with this response
+                        podStateManager.setLastSuccessfulCommunication(DateTime.now());
                         throw new PodFaultException(faultEvent);
                     } else {
                         podStateManager.setLastFailedCommunication(DateTime.now());
