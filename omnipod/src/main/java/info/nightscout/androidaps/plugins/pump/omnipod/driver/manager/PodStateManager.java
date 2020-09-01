@@ -15,6 +15,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -352,31 +353,56 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastBolusAmount());
     }
 
-    public final void setLastBolus(DateTime startTime, double amount) {
+    public final Duration getLastBolusDuration() {
+        return getSafe(() -> podState.getLastBolusDuration());
+    }
+
+    public final void setLastBolus(DateTime startTime, double amount, Duration duration) {
         setAndStore(() -> {
             podState.setLastBolusStartTime(startTime);
             podState.setLastBolusAmount(amount);
+            podState.setLastBolusDuration(duration);
         });
     }
 
-    public final DateTime getLastTempBasalStartTime() {
-        return getSafe(() -> podState.getLastTempBasalStartTime());
+    public final DateTime getTempBasalStartTime() {
+        return getSafe(() -> podState.getTempBasalStartTime());
     }
 
-    public final Double getLastTempBasalAmount() {
-        return getSafe(() -> podState.getLastTempBasalAmount());
+    public final Double getTempBasalAmount() {
+        return getSafe(() -> podState.getTempBasalAmount());
     }
 
-    public final Duration getLastTempBasalDuration() {
-        return getSafe(() -> podState.getLastTempBasalDuration());
+    public final Duration getTempBasalDuration() {
+        return getSafe(() -> podState.getTempBasalDuration());
     }
 
-    public final void setLastTempBasal(DateTime startTime, Double amount, Duration duration) {
-        setAndStore(() -> {
-            podState.setLastTempBasalStartTime(startTime);
-            podState.setLastTempBasalAmount(amount);
-            podState.setLastTempBasalDuration(duration);
-        });
+    public final void setTempBasal(DateTime startTime, Double amount, Duration duration) {
+        setTempBasal(startTime, amount, duration, true);
+    }
+
+    public final void setTempBasal(DateTime startTime, Double amount, Duration duration, boolean store) {
+        DateTime currentStartTime = getTempBasalStartTime();
+        Double currentAmount = getTempBasalAmount();
+        Duration currentDuration = getTempBasalDuration();
+        if (!Objects.equals(currentStartTime, startTime) || !Objects.equals(currentAmount, amount) || !Objects.equals(currentDuration, duration)) {
+            Runnable runnable = () -> {
+                podState.setTempBasalStartTime(startTime);
+                podState.setTempBasalAmount(amount);
+                podState.setTempBasalDuration(duration);
+            };
+
+            if (store) {
+                setAndStore(runnable);
+            } else {
+                setSafe(runnable);
+            }
+            onTbrChanged();
+        }
+    }
+
+    public final boolean hasTempBasal() {
+        return getTempBasalAmount() != null && getTempBasalDuration() != null && getTempBasalStartTime() != null;
     }
 
     public final DeliveryStatus getLastDeliveryStatus() {
@@ -405,12 +431,16 @@ public abstract class PodStateManager {
             podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
             podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
             if (!statusResponse.getDeliveryStatus().isTbrRunning()) {
-                podState.setLastTempBasalStartTime(null);
-                podState.setLastTempBasalAmount(null);
-                podState.setLastTempBasalDuration(null);
+                // Triggers {@link #onTbrChanged() onTbrChanged()} when appropriate
+                setTempBasal(null, null, null, false);
             }
             podState.setLastUpdatedFromResponse(DateTime.now());
         });
+    }
+
+    protected void onTbrChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
     }
 
     private void setAndStore(Runnable runnable) {
@@ -507,9 +537,10 @@ public abstract class PodStateManager {
         private BasalSchedule basalSchedule;
         private DateTime lastBolusStartTime;
         private Double lastBolusAmount;
-        private Double lastTempBasalAmount;
-        private DateTime lastTempBasalStartTime;
-        private Duration lastTempBasalDuration;
+        private Duration lastBolusDuration;
+        private Double tempBasalAmount;
+        private DateTime tempBasalStartTime;
+        private Duration tempBasalDuration;
         private final Map<AlertSlot, AlertType> configuredAlerts = new HashMap<>();
 
         private PodState(int address) {
@@ -712,28 +743,36 @@ public abstract class PodStateManager {
             this.lastBolusAmount = lastBolusAmount;
         }
 
-        Double getLastTempBasalAmount() {
-            return lastTempBasalAmount;
+        Duration getLastBolusDuration() {
+            return lastBolusDuration;
         }
 
-        void setLastTempBasalAmount(Double lastTempBasalAmount) {
-            this.lastTempBasalAmount = lastTempBasalAmount;
+        void setLastBolusDuration(Duration lastBolusDuration) {
+            this.lastBolusDuration = lastBolusDuration;
         }
 
-        DateTime getLastTempBasalStartTime() {
-            return lastTempBasalStartTime;
+        Double getTempBasalAmount() {
+            return tempBasalAmount;
         }
 
-        void setLastTempBasalStartTime(DateTime lastTempBasalStartTime) {
-            this.lastTempBasalStartTime = lastTempBasalStartTime;
+        void setTempBasalAmount(Double tempBasalAmount) {
+            this.tempBasalAmount = tempBasalAmount;
         }
 
-        Duration getLastTempBasalDuration() {
-            return lastTempBasalDuration;
+        DateTime getTempBasalStartTime() {
+            return tempBasalStartTime;
         }
 
-        void setLastTempBasalDuration(Duration lastTempBasalDuration) {
-            this.lastTempBasalDuration = lastTempBasalDuration;
+        void setTempBasalStartTime(DateTime tempBasalStartTime) {
+            this.tempBasalStartTime = tempBasalStartTime;
+        }
+
+        Duration getTempBasalDuration() {
+            return tempBasalDuration;
+        }
+
+        void setTempBasalDuration(Duration tempBasalDuration) {
+            this.tempBasalDuration = tempBasalDuration;
         }
 
         Map<AlertSlot, AlertType> getConfiguredAlerts() {
@@ -766,9 +805,10 @@ public abstract class PodStateManager {
                     ", basalSchedule=" + basalSchedule +
                     ", lastBolusStartTime=" + lastBolusStartTime +
                     ", lastBolusAmount=" + lastBolusAmount +
-                    ", lastTempBasalAmount=" + lastTempBasalAmount +
-                    ", lastTempBasalStartTime=" + lastTempBasalStartTime +
-                    ", lastTempBasalDuration=" + lastTempBasalDuration +
+                    ", lastBolusDuration=" + lastBolusDuration +
+                    ", tempBasalAmount=" + tempBasalAmount +
+                    ", tempBasalStartTime=" + tempBasalStartTime +
+                    ", tempBasalDuration=" + tempBasalDuration +
                     ", configuredAlerts=" + configuredAlerts +
                     '}';
         }

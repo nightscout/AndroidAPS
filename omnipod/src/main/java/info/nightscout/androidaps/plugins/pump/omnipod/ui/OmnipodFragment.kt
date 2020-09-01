@@ -265,9 +265,9 @@ class OmnipodFragment : DaggerFragment() {
             }
 
             // Temp basal
-            val lastTempBasalStartTime = podStateManager.lastTempBasalStartTime;
-            val lastTempBasalAmount = podStateManager.lastTempBasalAmount
-            val lastTempBasalDuration = podStateManager.lastTempBasalDuration;
+            val lastTempBasalStartTime = podStateManager.tempBasalStartTime;
+            val lastTempBasalAmount = podStateManager.tempBasalAmount
+            val lastTempBasalDuration = podStateManager.tempBasalDuration;
             if (lastTempBasalStartTime != null && lastTempBasalAmount != null && lastTempBasalDuration != null) {
                 val endTime = lastTempBasalStartTime.plus(lastTempBasalDuration);
                 val minutesRunning = Duration(lastTempBasalStartTime, now).standardMinutes

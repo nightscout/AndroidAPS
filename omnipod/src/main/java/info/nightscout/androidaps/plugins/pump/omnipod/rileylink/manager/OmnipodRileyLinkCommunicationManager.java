@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.DeactivatePodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.ErrorResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfo;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
@@ -127,6 +128,11 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
 
                 if (responseMessageBlock instanceof StatusUpdatableResponse) {
                     podStateManager.updateFromResponse((StatusUpdatableResponse) responseMessageBlock);
+                } else if (responseMessageBlock instanceof PodInfoResponse) {
+                    PodInfo podInfo = ((PodInfoResponse) responseMessageBlock).getPodInfo();
+                    if (podInfo instanceof StatusUpdatableResponse) {
+                        podStateManager.updateFromResponse((StatusUpdatableResponse) podInfo);
+                    }
                 }
 
                 if (responseClass.isInstance(responseMessageBlock)) {
@@ -150,7 +156,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                             throw new PodReturnedErrorResponseException(error);
                         }
                     } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
-                        PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
+                        PodInfoFaultEvent faultEvent = (PodInfoFaultEvent) ((PodInfoResponse) responseMessageBlock).getPodInfo();
                         podStateManager.setFaultEvent(faultEvent);
                         podStateManager.setLastFailedCommunication(DateTime.now());
                         throw new PodFaultException(faultEvent);

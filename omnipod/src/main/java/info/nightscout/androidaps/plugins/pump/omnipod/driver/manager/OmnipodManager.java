@@ -331,12 +331,13 @@ public class OmnipodManager {
             commandDeliveryStatus = CommandDeliveryStatus.UNCERTAIN_FAILURE;
         }
 
-        DateTime startDate = DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
-        podStateManager.setLastBolus(startDate, units);
-
-        CompositeDisposable disposables = new CompositeDisposable();
         Duration bolusDuration = calculateBolusDuration(units, OmnipodConstants.POD_BOLUS_DELIVERY_RATE);
         Duration estimatedRemainingBolusDuration = bolusDuration.minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+
+        DateTime startDate = DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        podStateManager.setLastBolus(startDate, units, estimatedRemainingBolusDuration);
+
+        CompositeDisposable disposables = new CompositeDisposable();
 
         if (progressIndicationConsumer != null) {
             int numberOfProgressReports = Math.max(20, Math.min(100, (int) Math.ceil(units) * 10));
@@ -427,7 +428,7 @@ public class OmnipodManager {
     private void discardActiveBolusData(double bolusNotDelivered) {
         synchronized (bolusDataMutex) {
             double unitsDelivered = activeBolusData.getUnits() - bolusNotDelivered;
-            podStateManager.setLastBolus(activeBolusData.getStartDate(), unitsDelivered);
+            podStateManager.setLastBolus(activeBolusData.getStartDate(), unitsDelivered, new Duration(activeBolusData.getStartDate(), DateTime.now()));
             activeBolusData.getDisposables().dispose();
             activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(unitsDelivered));
             activeBolusData = null;
@@ -505,7 +506,7 @@ public class OmnipodManager {
         // Try to get pulse log for diagnostics
         try {
             PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podStateManager, PodInfoType.RECENT_PULSE_LOG));
-            PodInfoRecentPulseLog pulseLogInfo = podInfoResponse.getPodInfo();
+            PodInfoRecentPulseLog pulseLogInfo = (PodInfoRecentPulseLog) podInfoResponse.getPodInfo();
             aapsLogger.info(LTag.PUMPCOMM, "Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
         } catch (Exception ex) {
             aapsLogger.warn(LTag.PUMPCOMM, "Failed to retrieve pulse log from the pod", ex);

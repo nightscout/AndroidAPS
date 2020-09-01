@@ -77,6 +77,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
@@ -255,6 +256,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
         disposables.add(rxBus
+                .toObservable(EventOmnipodTbrChanged.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> updateAapsTbr(), fabricPrivacy::logException)
+        );
+        disposables.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -289,6 +295,17 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     }
                 }, fabricPrivacy::logException)
         );
+    }
+
+    private void updateAapsTbr() {
+        // As per the characteristics of the Omnipod, we only know whether or not a TBR is currently active
+        // But it doesn't tell us the duration or amount, so we can only update TBR status in AAPS if
+        // The pod is not running a TBR, while AAPS thinks it is
+        if (!podStateManager.hasTempBasal()) {
+            if (activePlugin.getActiveTreatments().isTempBasalInProgress()) {
+                aapsOmnipodManager.reportCancelledTbr();
+            }
+        }
     }
 
     @Override

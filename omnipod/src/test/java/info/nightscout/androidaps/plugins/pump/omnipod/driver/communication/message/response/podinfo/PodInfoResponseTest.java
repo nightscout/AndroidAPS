@@ -41,7 +41,7 @@ public class PodInfoResponseTest {
 
         assertEquals(PodInfoType.FAULT_EVENT, podInfoResponse.getSubType());
 
-        PodInfoFaultEvent podInfo = podInfoResponse.getPodInfo();
+        PodInfoFaultEvent podInfo = (PodInfoFaultEvent) podInfoResponse.getPodInfo();
         assertFalse(podInfo.isFaultAccessingTables());
         assertEquals(LogEventErrorCode.INTERNAL_2_BIT_VARIABLE_SET_AND_MANIPULATED_IN_MAIN_LOOP_ROUTINES_2, podInfo.getLogEventErrorType());
     }
@@ -53,6 +53,6 @@ public class PodInfoResponseTest {
         assertEquals(PodInfoType.FAULT_EVENT, podInfoResponse.getSubType());
 
         thrown.expect(ClassCastException.class);
-        PodInfoActiveAlerts podInfo = podInfoResponse.getPodInfo();
+        PodInfoActiveAlerts podInfo = (PodInfoActiveAlerts) podInfoResponse.getPodInfo();
     }
 }

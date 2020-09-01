@@ -46,7 +46,7 @@ public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
 
         OmnipodMessage message = new OmnipodMessage(podStateManager.getAddress(), messageBlocks, podStateManager.getMessageNumber());
         StatusResponse statusResponse = communicationService.exchangeMessages(StatusResponse.class, podStateManager, message);
-        podStateManager.setLastTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration);
+        podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration);
         return statusResponse;
     }
 }
