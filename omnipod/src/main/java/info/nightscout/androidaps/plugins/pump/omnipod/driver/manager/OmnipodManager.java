@@ -243,7 +243,7 @@ public class OmnipodManager {
 
         logStartingCommandExecution("setTemporaryBasal [rate=" + rate + ", duration=" + duration + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
-        boolean cancelCurrentTbr = podStateManager.getLastDeliveryStatus().isTbrRunning();
+        boolean cancelCurrentTbr = podStateManager.isTempBasalRunning();
 
         try {
             if (cancelCurrentTbr) {

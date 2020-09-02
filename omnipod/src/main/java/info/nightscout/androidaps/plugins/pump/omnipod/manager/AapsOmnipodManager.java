@@ -248,7 +248,14 @@ public class AapsOmnipodManager {
             addFailureToHistory(historyEntryType, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (DeliveryStatusVerificationFailedException ex) {
-            String comment = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_might_be_suspended);
+            String comment;
+            if(ex.getExpectedStatus() == DeliveryStatus.SUSPENDED) {
+                // Happened when suspending delivery before setting the new profile
+                comment = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_might_be_suspended);
+            } else {
+                // Happened when setting the new profile (after suspending delivery)
+                comment = getStringResource(R.string.omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended);
+            }
             showNotification(comment, Notification.URGENT, R.raw.boluserror);
             addFailureToHistory(historyEntryType, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);

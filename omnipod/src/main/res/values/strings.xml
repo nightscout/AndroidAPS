@@ -133,7 +133,8 @@
     <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
-    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="omnipod_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
