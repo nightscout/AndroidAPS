@@ -37,6 +37,7 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
         }
 
         if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.BASAL_INITIALIZED)) {
+            podStateManager.setBasalSchedule(initialBasalSchedule);
             service.programInitialBasalSchedule(communicationService, podStateManager, initialBasalSchedule);
         }
 

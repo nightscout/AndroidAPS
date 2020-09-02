@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action;
 
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import java.util.Arrays;
@@ -11,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.SetInsulinScheduleCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.TempBasalExtraCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
@@ -45,8 +43,6 @@ public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
                 new TempBasalExtraCommand(rate, duration, acknowledgementBeep, completionBeep, Duration.ZERO));
 
         OmnipodMessage message = new OmnipodMessage(podStateManager.getAddress(), messageBlocks, podStateManager.getMessageNumber());
-        StatusResponse statusResponse = communicationService.exchangeMessages(StatusResponse.class, podStateManager, message);
-        podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration);
-        return statusResponse;
+        return communicationService.exchangeMessages(StatusResponse.class, podStateManager, message);
     }
 }

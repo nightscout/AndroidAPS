@@ -46,8 +46,6 @@ public class SetBasalScheduleAction implements OmnipodAction<StatusResponse> {
         OmnipodMessage basalMessage = new OmnipodMessage(podStateManager.getAddress(), Arrays.asList(setBasal, extraCommand),
                 podStateManager.getMessageNumber());
 
-        StatusResponse statusResponse = communicationService.exchangeMessages(StatusResponse.class, podStateManager, basalMessage);
-        podStateManager.setBasalSchedule(basalSchedule);
-        return statusResponse;
+        return communicationService.exchangeMessages(StatusResponse.class, podStateManager, basalMessage);
     }
 }

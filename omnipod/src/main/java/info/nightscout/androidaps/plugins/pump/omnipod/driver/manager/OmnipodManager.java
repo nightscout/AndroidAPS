@@ -212,6 +212,7 @@ public class OmnipodManager {
             try {
                 executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
                         false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
+                podStateManager.setBasalSchedule(schedule);
             } catch (OmnipodException ex) {
                 if (ex.isCertainFailure()) {
                     if (!wasSuspended) {
@@ -221,7 +222,9 @@ public class OmnipodManager {
                 }
 
                 // verifyDeliveryStatus will throw an exception if verification fails
-                if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                if (verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                    podStateManager.setBasalSchedule(schedule);
+                } else {
                     if (!wasSuspended) {
                         throw new CommandFailedAfterChangingDeliveryStatusException("Suspending delivery succeeded but setting the new basal schedule did not", ex);
                     }
@@ -262,6 +265,7 @@ public class OmnipodManager {
             try {
                 executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
                         podStateManager, rate, duration, acknowledgementBeep, completionBeep)));
+                podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration, true);
             } catch (OmnipodException ex) {
                 if (ex.isCertainFailure()) {
                     if (cancelCurrentTbr) {
@@ -271,13 +275,25 @@ public class OmnipodManager {
                 }
 
                 // verifyDeliveryStatus will throw an exception if verification fails
-                if (!verifyDeliveryStatus(DeliveryStatus.TEMP_BASAL_RUNNING, ex)) {
-                    if (cancelCurrentTbr) {
-                        throw new CommandFailedAfterChangingDeliveryStatusException("Failed to set new TBR while cancelling old TBR succeeded", ex);
-                    }
+                try {
+                    if (verifyDeliveryStatus(DeliveryStatus.TEMP_BASAL_RUNNING, ex)) {
+                        podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration, true);
+                    } else {
+                        if (cancelCurrentTbr) {
+                            throw new CommandFailedAfterChangingDeliveryStatusException("Failed to set new TBR while cancelling old TBR succeeded", ex);
+                        }
 
-                    ex.setCertainFailure(true);
-                    throw ex;
+                        ex.setCertainFailure(true);
+                        throw ex;
+                    }
+                } catch (OmnipodException ex2) {
+                    if (!ex2.isCertainFailure()) {
+                        // We're not sure that setting the new TBR failed, so we assume that it succeeded
+                        // If it didn't, PodStateManager.updateFromResponse() will fix the state
+                        // upon receiving the next StatusResponse
+                        podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration, false);
+                    }
+                    throw ex2;
                 }
             }
         } finally {
@@ -331,15 +347,16 @@ public class OmnipodManager {
             commandDeliveryStatus = CommandDeliveryStatus.UNCERTAIN_FAILURE;
         }
 
-        Duration bolusDuration = calculateBolusDuration(units, OmnipodConstants.POD_BOLUS_DELIVERY_RATE);
-        Duration estimatedRemainingBolusDuration = bolusDuration.minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        DateTime estimatedBolusStartDate = DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        Duration estimatedBolusDuration = calculateBolusDuration(units, OmnipodConstants.POD_BOLUS_DELIVERY_RATE);
+        Duration estimatedRemainingBolusDuration = estimatedBolusDuration.minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
 
-        DateTime startDate = DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
-        podStateManager.setLastBolus(startDate, units, estimatedRemainingBolusDuration);
+        podStateManager.setLastBolus(estimatedBolusStartDate, units, estimatedBolusDuration, commandDeliveryStatus == CommandDeliveryStatus.SUCCESS);
 
         CompositeDisposable disposables = new CompositeDisposable();
 
         if (progressIndicationConsumer != null) {
+
             int numberOfProgressReports = Math.max(20, Math.min(100, (int) Math.ceil(units) * 10));
             long progressReportInterval = estimatedRemainingBolusDuration.getMillis() / numberOfProgressReports;
 
@@ -355,7 +372,7 @@ public class OmnipodManager {
         SingleSubject<BolusDeliveryResult> bolusCompletionSubject = SingleSubject.create();
 
         synchronized (bolusDataMutex) {
-            activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
+            activeBolusData = new ActiveBolusData(units, estimatedBolusStartDate, commandDeliveryStatus, bolusCompletionSubject, disposables);
         }
 
         // Return successful command execution AFTER storing activeBolusData
@@ -380,7 +397,7 @@ public class OmnipodManager {
                                     break;
                                 }
                             } catch (PodFaultException ex) {
-                                // Substract units not delivered in case of a Pod failure
+                                // Subtract units not delivered in case of a Pod failure
                                 bolusNotDelivered = ex.getFaultEvent().getBolusNotDelivered();
 
                                 aapsLogger.debug(LTag.PUMPCOMM, "Caught PodFaultException in bolus completion verification", ex);
@@ -428,7 +445,7 @@ public class OmnipodManager {
     private void discardActiveBolusData(double bolusNotDelivered) {
         synchronized (bolusDataMutex) {
             double unitsDelivered = activeBolusData.getUnits() - bolusNotDelivered;
-            podStateManager.setLastBolus(activeBolusData.getStartDate(), unitsDelivered, new Duration(activeBolusData.getStartDate(), DateTime.now()));
+            podStateManager.setLastBolus(activeBolusData.getStartDate(), unitsDelivered, new Duration(activeBolusData.getStartDate(), DateTime.now()), activeBolusData.getCommandDeliveryStatus() == CommandDeliveryStatus.SUCCESS);
             activeBolusData.getDisposables().dispose();
             activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(unitsDelivered));
             activeBolusData = null;
@@ -465,8 +482,6 @@ public class OmnipodManager {
         logStartingCommandExecution("setTime [acknowledgementBeeps=" + acknowledgementBeeps + "]");
 
         try {
-            suspendDelivery(acknowledgementBeeps);
-
             DateTimeZone oldTimeZone = podStateManager.getTimeZone();
 
             try {
@@ -476,20 +491,8 @@ public class OmnipodManager {
 
                 setBasalSchedule(podStateManager.getBasalSchedule(), acknowledgementBeeps);
             } catch (OmnipodException ex) {
-                if (ex.isCertainFailure()) {
-                    podStateManager.setTimeZone(oldTimeZone);
-                    throw new CommandFailedAfterChangingDeliveryStatusException("Suspending delivery succeeded but resuming did not", ex);
-                }
-
-                try {
-                    // verifyDeliveryStatus will throw an exception if verification fails
-                    if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
-                        throw new CommandFailedAfterChangingDeliveryStatusException("Suspending delivery succeeded but resuming did not", ex);
-                    }
-                } catch (Exception ex2) {
-                    podStateManager.setTimeZone(oldTimeZone);
-                    throw ex2;
-                }
+                podStateManager.setTimeZone(oldTimeZone);
+                throw ex;
             }
         } finally {
             logCommandExecutionFinished("setTime");
@@ -620,13 +623,14 @@ public class OmnipodManager {
      */
     private boolean verifyDeliveryStatus(DeliveryStatus expectedStatus, Throwable verificationCause) {
         aapsLogger.debug(LTag.PUMPCOMM, "Attempting to verify delivery status (expected={})", expectedStatus);
-        for (int i = 0; 2 > i; i++) {
+        for (int i = 0; 3 > i; i++) {
             try {
                 StatusResponse podStatus = getPodStatus();
                 aapsLogger.debug(LTag.PUMPCOMM, "Resolved delivery status (expected={}, actual={})", expectedStatus, podStatus.getDeliveryStatus());
                 return podStatus.getDeliveryStatus().equals(expectedStatus);
-            } catch (Exception ignored) {
-                // ignore and try to continue
+            } catch (Exception ex) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Ignoring exception thrown in getPodStatus() during attempt to verify delivery status: {}: {}",
+                        ex.getClass().getSimpleName(), ex.getMessage());
             }
         }
         aapsLogger.warn(LTag.PUMPCOMM, "Failed to verify delivery status");
@@ -694,12 +698,14 @@ public class OmnipodManager {
     private static class ActiveBolusData {
         private final double units;
         private final DateTime startDate;
+        private final CommandDeliveryStatus commandDeliveryStatus;
         private final SingleSubject<BolusDeliveryResult> bolusCompletionSubject;
         private final CompositeDisposable disposables;
 
-        private ActiveBolusData(double units, DateTime startDate, SingleSubject<BolusDeliveryResult> bolusCompletionSubject, CompositeDisposable disposables) {
+        private ActiveBolusData(double units, DateTime startDate, CommandDeliveryStatus commandDeliveryStatus, SingleSubject<BolusDeliveryResult> bolusCompletionSubject, CompositeDisposable disposables) {
             this.units = units;
             this.startDate = startDate;
+            this.commandDeliveryStatus = commandDeliveryStatus;
             this.bolusCompletionSubject = bolusCompletionSubject;
             this.disposables = disposables;
         }
@@ -710,6 +716,10 @@ public class OmnipodManager {
 
         DateTime getStartDate() {
             return startDate;
+        }
+
+        CommandDeliveryStatus getCommandDeliveryStatus() {
+            return commandDeliveryStatus;
         }
 
         CompositeDisposable getDisposables() {

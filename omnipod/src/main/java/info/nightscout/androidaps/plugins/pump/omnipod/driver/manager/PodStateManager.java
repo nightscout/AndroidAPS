@@ -357,12 +357,22 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastBolusDuration());
     }
 
-    public final void setLastBolus(DateTime startTime, double amount, Duration duration) {
+    public final boolean isLastBolusCertain() {
+        Boolean certain = getSafe(() -> podState.isLastBolusCertain());
+        return certain == null || certain;
+    }
+
+    public final void setLastBolus(DateTime startTime, double amount, Duration duration, boolean certain) {
         setAndStore(() -> {
             podState.setLastBolusStartTime(startTime);
             podState.setLastBolusAmount(amount);
             podState.setLastBolusDuration(duration);
+            podState.setLastBolusCertain(certain);
         });
+    }
+
+    public final boolean hasLastBolus() {
+        return getLastBolusAmount() != null && getLastBolusDuration() != null && getLastBolusStartTime() != null;
     }
 
     public final DateTime getTempBasalStartTime() {
@@ -377,11 +387,16 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getTempBasalDuration());
     }
 
-    public final void setTempBasal(DateTime startTime, Double amount, Duration duration) {
-        setTempBasal(startTime, amount, duration, true);
+    public final boolean isTempBasalCertain() {
+        Boolean certain = getSafe(() -> podState.isTempBasalCertain());
+        return certain == null || certain;
     }
 
-    public final void setTempBasal(DateTime startTime, Double amount, Duration duration, boolean store) {
+    public final void setTempBasal(DateTime startTime, Double amount, Duration duration, boolean certain) {
+        setTempBasal(startTime, amount, duration, certain, true);
+    }
+
+    public final void setTempBasal(DateTime startTime, Double amount, Duration duration, Boolean certain, boolean store) {
         DateTime currentStartTime = getTempBasalStartTime();
         Double currentAmount = getTempBasalAmount();
         Duration currentDuration = getTempBasalDuration();
@@ -390,6 +405,7 @@ public abstract class PodStateManager {
                 podState.setTempBasalStartTime(startTime);
                 podState.setTempBasalAmount(amount);
                 podState.setTempBasalDuration(duration);
+                podState.setTempBasalCertain(certain);
             };
 
             if (store) {
@@ -401,8 +417,24 @@ public abstract class PodStateManager {
         }
     }
 
+    /**
+     * @return true when a Temp Basal is stored in the Pod Stated
+     * Please note that this could also be an expired Temp Basal. For an indication on whether or not
+     * a temp basal is actually running, use {@link #isTempBasalRunning() isTempBasalRunning()}
+     */
     public final boolean hasTempBasal() {
         return getTempBasalAmount() != null && getTempBasalDuration() != null && getTempBasalStartTime() != null;
+    }
+
+    /**
+     * @return true when a Temp Basal is stored in the Pod Stated and this temp basal is currently running (based on start time and duration)
+     */
+    public final boolean isTempBasalRunning() {
+        if (hasTempBasal()) {
+            DateTime tempBasalEndTime = getTempBasalStartTime().plus(getTempBasalDuration());
+            return DateTime.now().isBefore(tempBasalEndTime);
+        }
+        return false;
     }
 
     public final DeliveryStatus getLastDeliveryStatus() {
@@ -430,9 +462,13 @@ public abstract class PodStateManager {
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
             podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
             podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
-            if (!statusResponse.getDeliveryStatus().isTbrRunning()) {
+            if (statusResponse.getDeliveryStatus().isTbrRunning()) {
+                if (!isTempBasalCertain() && isTempBasalRunning()) {
+                    podState.setTempBasalCertain(true);
+                }
+            } else {
                 // Triggers {@link #onTbrChanged() onTbrChanged()} when appropriate
-                setTempBasal(null, null, null, false);
+                setTempBasal(null, null, null, true, false);
             }
             podState.setLastUpdatedFromResponse(DateTime.now());
         });
@@ -538,9 +574,11 @@ public abstract class PodStateManager {
         private DateTime lastBolusStartTime;
         private Double lastBolusAmount;
         private Duration lastBolusDuration;
+        private Boolean lastBolusCertain;
         private Double tempBasalAmount;
         private DateTime tempBasalStartTime;
         private Duration tempBasalDuration;
+        private Boolean tempBasalCertain;
         private final Map<AlertSlot, AlertType> configuredAlerts = new HashMap<>();
 
         private PodState(int address) {
@@ -751,6 +789,14 @@ public abstract class PodStateManager {
             this.lastBolusDuration = lastBolusDuration;
         }
 
+        Boolean isLastBolusCertain() {
+            return lastBolusCertain;
+        }
+
+        void setLastBolusCertain(Boolean certain) {
+            this.lastBolusCertain = certain;
+        }
+
         Double getTempBasalAmount() {
             return tempBasalAmount;
         }
@@ -773,6 +819,14 @@ public abstract class PodStateManager {
 
         void setTempBasalDuration(Duration tempBasalDuration) {
             this.tempBasalDuration = tempBasalDuration;
+        }
+
+        Boolean isTempBasalCertain() {
+            return tempBasalCertain;
+        }
+
+        void setTempBasalCertain(Boolean certain) {
+            this.tempBasalCertain = certain;
         }
 
         Map<AlertSlot, AlertType> getConfiguredAlerts() {
