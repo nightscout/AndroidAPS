@@ -340,8 +340,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
             log("Categorizing all UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
-        } else if (UAMLength < 12) {
-            log("Found less than 1h of UAM: assuming all meals were announced, and categorizing UAM data as basal.")
+        } else if (CSFLength > 12) {
+            log("Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else {
             if (2 * basalLength < UAMLength) {
