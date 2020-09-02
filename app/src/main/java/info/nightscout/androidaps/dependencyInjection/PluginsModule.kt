@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastP
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
@@ -334,9 +335,15 @@ abstract class PluginsModule {
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
     @Binds
-    @AllConfigs
+    @APS
     @IntoMap
     @IntKey(480)
+    abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(490)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
 
     @Qualifier
