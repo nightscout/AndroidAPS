@@ -1,9 +1,10 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.androidaps.plugins.pump.omnipod.dagger
 
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsPodStateManager
@@ -40,6 +41,7 @@ abstract class OmnipodModule {
     @ContributesAndroidInjector abstract fun podStateManager(): PodStateManager
     @ContributesAndroidInjector abstract fun initPodTask(): InitPodTask
     @ContributesAndroidInjector abstract fun omnipodPumpPlugin(): OmnipodPumpPlugin
+    @ContributesAndroidInjector abstract fun rlHistoryItemOmnipod(): RLHistoryItemOmnipod
 
     companion object {
         @Provides
