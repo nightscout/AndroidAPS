@@ -301,7 +301,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // As per the characteristics of the Omnipod, we only know whether or not a TBR is currently active
         // But it doesn't tell us the duration or amount, so we can only update TBR status in AAPS if
         // The pod is not running a TBR, while AAPS thinks it is
-        if (!podStateManager.hasTempBasal()) {
+        if (!podStateManager.isTempBasalRunning()) {
             if (activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
                 aapsOmnipodManager.reportCancelledTbr();
             }
