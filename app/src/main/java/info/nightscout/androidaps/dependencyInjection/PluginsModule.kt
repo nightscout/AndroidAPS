@@ -335,7 +335,7 @@ abstract class PluginsModule {
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
     @Binds
-    @APS
+    @NotNSClient
     @IntoMap
     @IntKey(480)
     abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
