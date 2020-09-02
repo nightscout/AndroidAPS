@@ -209,10 +209,13 @@ public class OmnipodManager {
                 suspendDelivery(acknowledgementBeep);
             }
 
+            // Store the new Basal schedule after successfully suspending delivery, so that if setting the Basal schedule fails,
+            // And we later try to resume delivery, the new schedule is used
+            podStateManager.setBasalSchedule(schedule);
+
             try {
                 executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
                         false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
-                podStateManager.setBasalSchedule(schedule);
             } catch (OmnipodException ex) {
                 if (ex.isCertainFailure()) {
                     if (!wasSuspended) {
@@ -222,9 +225,7 @@ public class OmnipodManager {
                 }
 
                 // verifyDeliveryStatus will throw an exception if verification fails
-                if (verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
-                    podStateManager.setBasalSchedule(schedule);
-                } else {
+                if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
                     if (!wasSuspended) {
                         throw new CommandFailedAfterChangingDeliveryStatusException("Suspending delivery succeeded but setting the new basal schedule did not", ex);
                     }
@@ -286,6 +287,9 @@ public class OmnipodManager {
                         ex.setCertainFailure(true);
                         throw ex;
                     }
+                } catch (CommandFailedAfterChangingDeliveryStatusException ex2) {
+                    // Don't set temp basal in Pod State for this Exception
+                    throw ex2;
                 } catch (OmnipodException ex2) {
                     if (!ex2.isCertainFailure()) {
                         // We're not sure that setting the new TBR failed, so we assume that it succeeded
