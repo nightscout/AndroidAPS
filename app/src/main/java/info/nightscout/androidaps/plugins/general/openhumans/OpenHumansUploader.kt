@@ -163,6 +163,23 @@ class OpenHumansUploader @Inject constructor(
     }
 
     @JvmOverloads
+    fun enqueueTreatment(treatment: Treatment, deleted: Boolean = false) = insertQueueItem("Treatments") {
+        put("date", treatment.date)
+        put("isValid", treatment.isValid)
+        put("source", treatment.source)
+        put("nsId", treatment._id)
+        put("boluscalc", treatment.boluscalc)
+        put("carbs", treatment.carbs)
+        put("dia", treatment.dia)
+        put("insulin", treatment.insulin)
+        put("insulinInterfaceID", treatment.insulinInterfaceID)
+        put("isSMB", treatment.isSMB)
+        put("mealBolus", treatment.mealBolus)
+        put("bolusCalcJson", treatment.getBoluscalc())
+        put("isDeletion", deleted)
+    }
+
+    @JvmOverloads
     fun enqueueCareportalEvent(careportalEvent: CareportalEvent, deleted: Boolean = false) = insertQueueItem("CareportalEvents") {
         put("date", careportalEvent.date)
         put("isValid", careportalEvent.isValid)
@@ -306,7 +323,7 @@ class OpenHumansUploader @Inject constructor(
             .flatMap { openHumansAPI.getProjectMemberId(it.accessToken) }
             .doOnSuccess {
                 projectMemberId = it
-                copyExistingDataToQueue()
+                // TODO: halted for now. Might create too much upload data. copyExistingDataToQueue()
                 rxBus.send(OpenHumansFragment.UpdateViewEvent)
             }
             .doOnError {

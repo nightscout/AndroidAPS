@@ -9,7 +9,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
 import javax.inject.Inject
 
-//TODO OH: make injectable
 class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
     : RxWorker(context, workerParameters) {
 

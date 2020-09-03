@@ -43,7 +43,6 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    //TODO OH: make injectable
     class ExchangeAuthTokenDialog : DaggerDialogFragment() {
 
         @Inject
