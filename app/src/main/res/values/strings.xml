@@ -1426,7 +1426,7 @@
     <string name="not_logged_in">Not logged in</string>
     <string name="you_need_to_accept_the_of_use_first">You need to accept the terms of use first.</string>
     <string name="successfully_logged_in">Successfully logged in</string>
-    <string name="setup_will_continue_in_background">The setup will be completed in background now. Thanks for uploading your data.</string>
+    <string name="setup_will_continue_in_background">The setup will be completed in background now. Thanks for uploading your data.\n\nPlease keep this plugin and your phone turned on for a short while for the setup to complete.</string>
     <string name="completing_login">Completing login…</string>
     <string name="donate_your_data_to_science">Donate your data to science</string>
     <string name="open_humans_short">OH</string>
