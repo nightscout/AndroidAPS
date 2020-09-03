@@ -12,6 +12,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -27,14 +28,17 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class InitPodRefreshAction extends AbstractCancelAction implements FinishActionInterface {
 
     private final PodActionType actionType;
+    private final HasAndroidInjector injector;
 
     @Inject PodStateManager podStateManager;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject NSUpload nsUpload;
     @Inject DatabaseHelperInterface databaseHelper;
+    @Inject ProfileFunction profileFunction;
 
     public InitPodRefreshAction(HasAndroidInjector injector, PodActionType actionType) {
+        this.injector = injector;
         injector.androidInjector().inject(this);
         this.actionType = actionType;
     }
@@ -50,6 +54,8 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     public void execute() {
         if (actionType == PodActionType.INIT_POD) {
             if (podStateManager.isPodRunning()) {
+                uploadCareportalEvent(System.currentTimeMillis() - 2000, CareportalEvent.PUMPBATTERYCHANGE);
+                uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
                 uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
             }
         }
@@ -61,10 +67,14 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
         try {
             JSONObject data = new JSONObject();
             String enteredBy = sp.getString("careportal_enteredby", "");
-            if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
+            if (enteredBy.isEmpty()) {
+                data.put("enteredBy", enteredBy);
+            }
             data.put("created_at", DateUtil.toISOString(date));
+            data.put("mills", date);
             data.put("eventType", event);
-            CareportalEvent careportalEvent = new CareportalEvent();
+            data.put("units", profileFunction.getUnits());
+            CareportalEvent careportalEvent = new CareportalEvent(injector);
             careportalEvent.date = date;
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = event;
