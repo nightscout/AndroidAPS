@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils.textValidator
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -37,25 +36,20 @@ class DefaultEditTextValidator : EditTextValidator {
         resetValidators(context)
     }
 
-    constructor(editTextView: EditText, typedArray: TypedArray, context: Context) {
-        emptyAllowed = typedArray.getBoolean(R.styleable.FormEditText_emptyAllowed, false)
-        testType = typedArray.getInt(R.styleable.FormEditText_testType, EditTextValidator.TEST_NOCHECK)
-        testErrorString = typedArray.getString(R.styleable.FormEditText_testErrorString)
-        classType = typedArray.getString(R.styleable.FormEditText_classType)
-        customRegexp = typedArray.getString(R.styleable.FormEditText_customRegexp)
-        emptyErrorStringDef = typedArray.getString(R.styleable.FormEditText_emptyErrorString)
-        customFormat = typedArray.getString(R.styleable.FormEditText_customFormat)
-        if (testType == EditTextValidator.TEST_MIN_LENGTH)
-            minLength = typedArray.getInt(R.styleable.FormEditText_minLength, 0)
-        if (testType == EditTextValidator.TEST_NUMERIC_RANGE) {
-            minNumber = typedArray.getInt(R.styleable.FormEditText_minNumber, Int.MIN_VALUE)
-            maxNumber = typedArray.getInt(R.styleable.FormEditText_maxNumber, Int.MAX_VALUE)
-        }
-        if (testType == EditTextValidator.TEST_FLOAT_NUMERIC_RANGE) {
-            floatminNumber = typedArray.getFloat(R.styleable.FormEditText_floatminNumber, Float.MIN_VALUE)
-            floatmaxNumber = typedArray.getFloat(R.styleable.FormEditText_floatmaxNumber, Float.MAX_VALUE)
-        }
-        typedArray.recycle()
+    constructor(editTextView: EditText, parameters: Parameters, context: Context) {
+        emptyAllowed = parameters.emptyAllowed
+        testType = parameters.testType
+        testErrorString = parameters.testErrorString
+        classType = parameters.classType
+        customRegexp = parameters.customRegexp
+        emptyErrorStringDef = parameters.emptyErrorStringDef
+        customFormat = parameters.customFormat
+        minLength = parameters.minLength
+        minNumber = parameters.minNumber
+        maxNumber = parameters.maxNumber
+        floatminNumber = parameters.floatminNumber
+        floatmaxNumber = parameters.floatmaxNumber
+
         setEditText(editTextView)
         resetValidators(context)
     }
@@ -168,7 +162,7 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     @Suppress("unused")
-    fun setClassType(classType: String?, testErrorString: String?, context: Context)  : DefaultEditTextValidator{
+    fun setClassType(classType: String?, testErrorString: String?, context: Context): DefaultEditTextValidator {
         testType = EditTextValidator.TEST_CUSTOM
         this.classType = classType
         this.testErrorString = testErrorString
@@ -177,7 +171,7 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     @Suppress("unused")
-    fun setCustomRegexp(customRegexp: String?, context: Context) : DefaultEditTextValidator {
+    fun setCustomRegexp(customRegexp: String?, context: Context): DefaultEditTextValidator {
         testType = EditTextValidator.TEST_REGEXP
         this.customRegexp = customRegexp
         resetValidators(context)
@@ -185,13 +179,13 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     @Suppress("unused")
-    fun setEmptyAllowed(emptyAllowed: Boolean, context: Context) : DefaultEditTextValidator {
+    fun setEmptyAllowed(emptyAllowed: Boolean, context: Context): DefaultEditTextValidator {
         this.emptyAllowed = emptyAllowed
         resetValidators(context)
         return this
     }
 
-    fun setEmptyErrorString(emptyErrorString: String?) : DefaultEditTextValidator {
+    fun setEmptyErrorString(emptyErrorString: String?): DefaultEditTextValidator {
         emptyErrorStringActual = if (!TextUtils.isEmpty(emptyErrorString)) {
             emptyErrorString
         } else {
@@ -201,14 +195,14 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     @Suppress("unused")
-    fun setTestErrorString(testErrorString: String?, context: Context) : DefaultEditTextValidator {
+    fun setTestErrorString(testErrorString: String?, context: Context): DefaultEditTextValidator {
         this.testErrorString = testErrorString
         resetValidators(context)
         return this
     }
 
     @Suppress("unused")
-    fun setTestType(testType: Int, context: Context) : DefaultEditTextValidator {
+    fun setTestType(testType: Int, context: Context): DefaultEditTextValidator {
         this.testType = testType
         resetValidators(context)
         return this
@@ -248,4 +242,19 @@ class DefaultEditTextValidator : EditTextValidator {
         } catch (e: Throwable) {
             !TextUtils.isEmpty(editTextView.error)
         }
+
+    class Parameters {
+        var testErrorString: String? = null
+        var emptyAllowed = false
+        var testType: Int = EditTextValidator.TEST_NOCHECK
+        var classType: String? = null
+        var customRegexp: String? = null
+        var customFormat: String? = null
+        var emptyErrorStringDef: String? = null
+        var minLength = 0
+        var minNumber = 0
+        var maxNumber = 0
+        var floatminNumber = 0f
+        var floatmaxNumber = 0f
+    }
 }
