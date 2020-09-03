@@ -44,17 +44,13 @@
                         android:textSize="90dp"
                         android:textStyle="bold" />
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/overview_arrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginTop="-5dp"
-                        android:paddingLeft="-2dp"
-                        android:paddingRight="-2dp"
-                        android:text="→"
-                        android:textSize="50sp"
-                        android:textStyle="bold" />
+                        android:paddingTop="18dp"
+                        android:src="@drawable/ic_flat" />
 
                     <TextView
                         android:id="@+id/overview_deltashort"

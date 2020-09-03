@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Bijwerken basaal profiel</string>
     <string name="settingtempbasal">Instellen tijdelijk basaal</string>
     <string name="waitingfortimesynchronization">Wachten op tijdsynchronisatie (%1$d sec)</string>
-    <string name="wrongpassword">Verkeerd wachtwoord</string>
     <string name="wrongpumppassword">Verkeerd pomp wachtwoord!</string>
     <string name="danar_history_alarm">Alarmen</string>
     <string name="danar_history_basalhours">Basale uren</string>

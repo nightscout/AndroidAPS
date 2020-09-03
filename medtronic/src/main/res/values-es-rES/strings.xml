@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
     <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Errores</string>
     <string name="medtronic_error_serial_not_set">Nº serie no establecido.</string>
     <string name="medtronic_error_serial_invalid">Número de serie no válido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de infusora no establecido.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Historial de la infusora Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Has cancelado el bolo después de que ya estaba enviado a la infusora. Debido a que la infusora Medtronic no soporta comando cancelar, tendrás que cancelarlo manualmente. Pon la infusora en modo suspender y luego reinicia (si todavía quieres cancelar). La aplicación recogerá los cambios en la próxima actualización (en menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">No se pudo leer la basal temporal actual.</string>
@@ -69,8 +71,14 @@
     <string name="medtronic_cmd_desc_set_tbr">Establecer la basal temporal</string>
     <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
     <string name="medtronic_pump_status_pump_unreachable">Infusora no alcanzable</string>
+    <string name="medtronic_warning">Alerta</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Ahora</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">hace</string>
+    <string name="medtronic_notification_check_time_date">Se necesita actualizar reloj de la bomba</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Activado</string>
+    <string name="common_off">Desactivado</string>
     <string name="pump_time_updated">Hora del infusor actualizada</string>
 </resources>

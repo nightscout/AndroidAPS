@@ -11,18 +11,19 @@ public enum PumpCapability {
     TempBasal, // isTempBasalCapable
     BasalProfileSet, // isSetBasalProfileCapable
     Refill, // isRefillingCapable
+    ReplaceBattery, // isBatteryReplaceable
     StoreCarbInfo, // storesCarbInfo
     TDD, // supportsTDDs
     ManualTDDLoad, // needsManualTDDLoad
     BasalRate30min, // is30minBasalRatesCapable
 
     // grouped by pump
-    VirtualPumpCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill), //
-    ComboCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, TDD, ManualTDDLoad), //
-    DanaCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, TDD, ManualTDDLoad), //
-    DanaWithHistoryCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
-    InsightCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill,TDD,BasalRate30min), //
-    MedtronicCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, TDD), //
+    VirtualPumpCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery), //
+    ComboCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad), //
+    DanaCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad), //
+    DanaWithHistoryCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, StoreCarbInfo, TDD, ManualTDDLoad), //
+    InsightCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, BasalRate30min), //
+    MedtronicCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD), //
     OmnipodCapabilities(Bolus, TempBasal, BasalProfileSet, BasalRate30min), //
 
     // BasalRates (separately grouped)
@@ -35,19 +36,16 @@ public enum PumpCapability {
     PumpCapability[] children;
 
 
-    PumpCapability()
-    {
+    PumpCapability() {
     }
 
 
-    PumpCapability(PumpCapability...children)
-    {
+    PumpCapability(PumpCapability... children) {
         this.children = children;
     }
 
 
-    public boolean hasCapability(PumpCapability capability)
-    {
+    public boolean hasCapability(PumpCapability capability) {
         // we can only check presense of simple capabilities
         if (capability.children != null)
             return false;
@@ -55,19 +53,16 @@ public enum PumpCapability {
         if (this == capability)
             return true;
 
-        if (this.children!=null)
-        {
+        if (this.children != null) {
             for (PumpCapability child : children) {
                 if (child == capability)
                     return true;
             }
 
             return false;
-        }
-        else
+        } else
             return false;
     }
-
 
 
 }

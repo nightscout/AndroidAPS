@@ -1082,7 +1082,6 @@
     <string name="objectives_button_unfinish">Изчисти приключение</string>
     <string name="objectives_button_unstart">Изчисти стартираните</string>
     <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
-    <string name="time_or_timezone_change">Време и/или промяна на часовата зона на помпата</string>
     <string name="nopumpselected">Не е избрана помпа</string>
     <string name="setupwizard_units_prompt">Изберете единиците, в които искате да работите</string>
     <string name="ns_ploadlocalprofile">Качване на локални промени в НС профила</string>
@@ -1159,7 +1158,6 @@
     <string name="authorizationfailed">Удостоверяването неуспешно</string>
     <string name="overview_show_absinsulin">Абсолютен инсулин</string>
     <string name="master_password_summary">Главната парола се използва за архивиране на настройки и за подмяна на защитата в приложението. Запомни я или я пази на сигурно място.</string>
-    <string name="passwords_dont_match">Паролите не съвпадат</string>
     <string name="current_master_password">Сегашна главна парола</string>
     <string name="statuslights">Индикатори</string>
     <string name="statuslights_copy_ns">Копиране на настройки от NS</string>
@@ -1168,123 +1166,6 @@
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
-    <!-- MDT Pump Status - removed when PodDeviceState is removed -->
-    <string name="medtronic_pump_status_never_contacted">Никога не сме се свързвали</string>
-    <string name="medtronic_pump_status_waking_up">Събуждане</string>
-    <string name="medtronic_pump_status_error_comm">Грешка в комуникацията</string>
-    <string name="medtronic_pump_status_timeout_comm">Изтичане на времето за връзка</string>
-    <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="medtronic_pump_status_invalid_config">Грешна конфигурация</string>
-    <string name="medtronic_pump_status_active">Активна</string>
-    <string name="medtronic_pump_status_sleeping">Спинка си</string>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Интеграция на помпата Omnipod, изисква RileyLink устройство (с фърмуер минимум 2.0 ) .</string>
-    <!-- Omnipod Configuration -->
-    <string name="omnipod_config_beep_bolus_enabled">Звук при болус активен</string>
-    <string name="omnipod_config_beep_basal_enabled">Звук при базал активен</string>
-    <string name="omnipod_config_beep_smb_enabled">Звук при SMB активен</string>
-    <string name="omnipod_config_beep_tbr_enabled">Звук при временен базал активен</string>
-    <string name="omnipod_config_pod_debugging_options_enabled">Опции за отстраняване на грешки в под активирани</string>
-    <string name="omnipod_config_timechange_enabled">Разрешено е DST/Timezone</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_pod_mgmt">Под Mgmt</string>
-    <string name="omnipod_pod_status">Статус на под</string>
-    <string name="omnipod_reservoir_left">%1$.2f Е остават</string>
-    <string name="omnipod_reservoir_over50">Над 50 Е</string>
-    <string name="omnipod_pod_address">Адрес на под</string>
-    <string name="omnipod_pod_expiry">Срокът на пода изтича</string>
-    <string name="omnipod_pod_name_no_info">Няма информация.</string>
-    <string name="omnipod_pod_no_pod_connected">Няма активен под</string>
-    <string name="omnipod_pod_not_initalized">Под не е инициализиран</string>
-    <string name="omnipod_pod_active_alerts">Сигнали за активен под</string>
-    <string name="omnipod_ack_short">Ack Предупреждения</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">Забранено действие.\n\n Първо трябва да конфигурурате Omnipod , преди да използвате тази операция,.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Операцията не е възможна.\n\n Трябва да изчакате няколко минути, докато AAPS се опита да зададе профил за първи път.</string>
-    <string name="omnipod_error_illegal_init_action_type">Неправилен PodInitActionType: %1$s</string>
-    <string name="omnipod_error_pod_not_attached">Няма активен под.</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Грешка при проверка на командата</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Непредвидена грешка. Моля, докладвайте! (тип: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Неуспешна комуникация: получени грешни входни параметри.</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Връзката е неуспешна: таймаут.</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Комуникацията е неуспешна: възникнала е неочаквана грешка. Моля, докладвайте!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Неуспешна комуникация: проверката на целостта на съобщението е неуспешна.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Неуспешна комуникация: получени грешни входни параметри.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Съобщението е неуспешно: Pod е в лошо състояние.</string>
-    <string name="omnipod_driver_error_invalid_response">Неуспешна комуникация: получени грешни входни параметри.</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Неуспешна комуникация: получи съобщение с невалиден номер на последователност от Pod.</string>
-    <string name="omnipod_driver_error_invalid_message_address">Неуспешна комуникация: получи съобщение с невалиден номер на последователност от Pod.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Неуспешна комуникация: получени грешни входни параметри.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Комуникацията е неуспешна: nonce ресинхронизирането е неуспешно.</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Комуникацията е неуспешна: nonce ресинхронизирането е неуспешно.</string>
-    <string name="omnipod_driver_error_not_enough_data">Комуникацията е неуспешна: няма достатъчно данни, получени от Pod.</string>
-    <string name="omnipod_driver_error_pod_fault">Грешка на Pod (%1$03d %2$s). Моля, деактивирайте вашия Pod и стартирайте нов.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Комуникацията е неуспешна: Pod върна отговор с грешка.</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Управление на Pod</string>
-    <string name="omnipod_cmd_init_pod">Инициализация на Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Деактивирай под</string>
-    <string name="omnipod_cmd_reset_pod">Нулиране на под</string>
-    <string name="omnipod_cmd_pod_history">История на под</string>
-    <string name="omnipod_cmd_set_bolus">Стартирай болус</string>
-    <string name="omnipod_cmd_cancel_bolus">Отмяна на болус</string>
-    <string name="omnipod_cmd_set_tbr">Приложи временен базал</string>
-    <string name="omnipod_cmd_cancel_tbr">Отказ на базал</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Отказ на базал</string>
-    <string name="omnipod_cmd_set_basal_schedule">Задаване на график за базал</string>
-    <string name="omnipod_cmd_get_pod_status">Получу статус на под</string>
-    <string name="omnipod_cmd_get_pod_info">Получи информация за Pod</string>
-    <string name="omnipod_cmd_set_time">Задаване на час</string>
-    <string name="omnipod_cmd_configure_alerts">Конфигуриране на аларми</string>
-    <string name="omnipod_cmd_acknowledge_alerts">Потвърждение на аларми</string>
-    <string name="omnipod_cmd_suspend_delivery">Спиране на доставката на инсулин</string>
-    <string name="omnipod_cmd_resume_delivery">Подновяване на доставката</string>
-    <string name="omnipod_cmd_unknown_entry">Непознат запис</string>
-    <string name="omnipod_cmd_bolus_value">%1$.1fЕ</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.1f U, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Скорост: %1$.1f U, Продължителност: %2$d мин.</string>
-    <string name="omnipod_cmd_reset_pod_desc">Ако натиснете <b>OK</b>, състоянието на Pod ще бъде нулирано и няма да можете да общувате с него повече. Правете това, само ако вече не можеш да се свързвате с него. Ако все още можете да общувате с Под, моля, използвайте опцията <b>Деактивирай Pod</b>.</string>
-    <string name="omnipod_cmd_pod_history_na">Историята на Pod не е достъпна в момента.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Напълни Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nНапълнете с достатъчно инсулин за 3 дни.\n\nИзчакайте два сигнала от Pod по време на процеса на зареждане. Те показват, че е вмъкнат минималният размер от 85U. Уверете се, че сте изпразнил напълно спринцовката, дори след като сте чули двата сигнала.\n\nСлед пълнене на Pod, моля натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> не вадете капачката на капсулата на Podв този момент.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Пълнене</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Опитвам се да се сдвоя с Pod.\n\nКогато всички елементи са проверени, можете да натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> задръжте Pod много близо до RileyLink в този момент.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Прикрепете Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nПодгответе мястото за инфузия. Отстранете капачката на Pod и лепенката и прикрепете капсулата към мястото за инфузия.\n\nАко канюла стърчи, моля натиснете <b>Отказ</b> и изхвърлете вашия Pod.\n\nПрес <b>Следваща</b> да се вмъкне канюлата и да започне базалната доставка.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Вмъкване на канюла</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Опитвам се да определя първоначалния базален график и да вмъкна канюлата.\n\nКогато всички елементи са проверени, можете да натиснете <b>Следващ</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Информация за Pod</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\Podе активна.\n\nВашият базален график е програмиран и канюлата вмъкната.\n\nМоля, проверете дали канюлата е поставена правилно или заменете Pod, ако чувствате, че не е.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Деактивирай Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nНатиснете <b>Следващ</b> , за да деактивирате Pod.\n\n<b>Забележка:</b> Това ще спре всички доставки на инсулин и деактивира Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Деактивиране на Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Деактивиране на Pod.\n\nКогато всички елементи са проверени, можете да натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> Ако деактивирането непрекъснато се проваля, моля натиснете <b>Отказ</b> и използвайте опция <b>Нулирай Pod</b> , за да възстановите състоянието на Pod.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod изключен.\n\nмоля, извадете Pod от тялото си и го хвърли.</string>
-    <string name="omnipod_init_pod_pair_pod">Сдвояване на под</string>
-    <string name="omnipod_init_pod_prime_pod">Пълнене на под</string>
-    <string name="omnipod_init_pod_fill_cannula">Напълни канула</string>
-    <string name="omnipod_init_pod_set_basal_profile">Приложи базалният профил</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Отмяна</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Деактивирай под</string>
-    <!-- Omnipod Dash -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod_dash">Интеграция на Omnipod Dash.</string>
-    <string name="omnipod_alert_finish_pairing_reminder">Край на напомняне за сдвояване</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Край на напомнянето за настройка</string>
-    <string name="omnipod_alert_expiration">Подът скоро ще изтече</string>
-    <string name="omnipod_alert_expiration_advisory">Подът скоро ще изтече</string>
-    <string name="omnipod_alert_shutdown_imminent">Спирането е неизбежно</string>
-    <string name="omnipod_alert_low_reservoir">Минимален инсулин в резервоара</string>
-    <string name="omnipod_alert_unknown_alert">Непозната аларма</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Задаването на базален профил може да е неуспешно. Доставката на инсулин може да бъде спряна! Моля, опреснете статуса на под.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Стартиране на временен базал неуспешно. Ако е имало вече такъв, той може да е бил отменен! Моля, обновете статуса на пода.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Задаването на време може да е неуспешно. Доставката на инсулин може да бъде спряна! Моля, опреснете статуса на под.</string>
-    <string name="omnipod_bolus_failed_uncertain">Не може да се провери статус на болус. Моля, уверете се, че вашият под е стартирал болус или го отменете.</string>
-    <string name="omnipod_rl_stats">Статистика на RL</string>
-    <string name="omnipod_read_pulse_log_short">Pulse лог</string>
     <string name="comapareprofile">Сравняване на профили</string>
     <string name="nav_profilehelper">Профил съветник</string>
     <string name="motoldefaultprofile">Профил по подразбиране</string>

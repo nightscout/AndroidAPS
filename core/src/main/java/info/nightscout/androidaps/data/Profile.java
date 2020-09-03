@@ -544,6 +544,10 @@ public class Profile {
         return getValueToTime(targetLow_v, timeAsSeconds);
     }
 
+    public double getTargetLowMgdlTimeFromMidnight(int timeAsSeconds) {
+        return toMgdl(getTargetLowTimeFromMidnight(timeAsSeconds), units);
+    }
+
     public double getTargetHighMgdl() {
         return toMgdl(getTargetHighTimeFromMidnight(secondsFromMidnight()), units);
     }
@@ -556,6 +560,10 @@ public class Profile {
         if (targetHigh_v == null)
             targetHigh_v = convertToSparseArray(targetHigh);
         return getValueToTime(targetHigh_v, timeAsSeconds);
+    }
+
+    public double getTargetHighMgdlTimeFromMidnight(int timeAsSeconds) {
+        return toMgdl(getTargetHighTimeFromMidnight(timeAsSeconds), units);
     }
 
     public class TargetValue {

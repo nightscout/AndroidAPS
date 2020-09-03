@@ -425,7 +425,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     }
 
-   private void scheduleBgHistoryChange(@Nullable final long timestamp) {
+    private void scheduleBgHistoryChange(@Nullable final long timestamp) {
         class PostRunnable implements Runnable {
             public void run() {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg");
@@ -440,8 +440,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             scheduledBgHistoryPost.cancel(false);
         Runnable task = new PostRunnable();
         final int sec = 3;
-        if (oldestBgHistoryChange == 0 || oldestBgHistoryChange > timestamp) oldestBgHistoryChange = timestamp;
-       scheduledBgHistoryPost = bgHistoryWorker.schedule(task, sec, TimeUnit.SECONDS);
+        if (oldestBgHistoryChange == 0 || oldestBgHistoryChange > timestamp)
+            oldestBgHistoryChange = timestamp;
+        scheduledBgHistoryPost = bgHistoryWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
 
@@ -1871,7 +1872,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-
     public List<OmnipodHistoryRecord> getAllOmnipodHistoryRecordsFromTimeStamp(long from, boolean ascending) {
         try {
             Dao<OmnipodHistoryRecord, Long> daoPodHistory = getDaoPodHistory();
@@ -1890,6 +1890,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
+    public OmnipodHistoryRecord findOmnipodHistoryRecordByPumpId(long pumpId) {
+        try {
+            Dao<OmnipodHistoryRecord, Long> daoPodHistory = getDaoPodHistory();
+            QueryBuilder<OmnipodHistoryRecord, Long> queryBuilder = daoPodHistory.queryBuilder();
+            queryBuilder.orderBy("date", false);
+            Where<OmnipodHistoryRecord, Long> where = queryBuilder.where();
+            where.eq("pumpId", pumpId);
+            PreparedQuery<OmnipodHistoryRecord> preparedQuery = queryBuilder.prepare();
+            return daoPodHistory.queryForFirst(preparedQuery);
+        } catch (SQLException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+        return null;
+    }
 
     // Copied from xDrip+
     String calculateDirection(BgReading bgReading) {

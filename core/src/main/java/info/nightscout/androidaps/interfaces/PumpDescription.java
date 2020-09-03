@@ -11,11 +11,11 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 public class PumpDescription {
     public PumpType pumpType = PumpType.GenericAAPS;
 
-    public PumpDescription () {
+    public PumpDescription() {
         resetSettings();
     }
 
-   public PumpDescription (PumpType pumpType) {
+    public PumpDescription(PumpType pumpType) {
         this();
         setPumpDescription(pumpType);
     }
@@ -52,6 +52,7 @@ public class PumpDescription {
     public double basalMaximumRate;
 
     public boolean isRefillingCapable;
+    public boolean isBatteryReplaceable;
 
     public boolean storesCarbInfo;
 
@@ -88,7 +89,8 @@ public class PumpDescription {
         basalMaximumRate = 25d;
         is30minBasalRatesCapable = false;
 
-        isRefillingCapable = false;
+        isRefillingCapable = true;
+        isBatteryReplaceable = true;
         storesCarbInfo = true;
 
         supportsTDDs = false;
@@ -136,6 +138,7 @@ public class PumpDescription {
         basalMinimumRate = pumpType.getBaseBasalMinValue();
 
         isRefillingCapable = pumpCapability.hasCapability(PumpCapability.Refill);
+        isBatteryReplaceable = pumpCapability.hasCapability(PumpCapability.ReplaceBattery);
         storesCarbInfo = pumpCapability.hasCapability(PumpCapability.StoreCarbInfo);
 
         supportsTDDs = pumpCapability.hasCapability(PumpCapability.TDD);

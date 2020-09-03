@@ -101,6 +101,9 @@
     <string name="unit_weeks">седмици</string>
     <string name="shortminute">мин.</string>
     <string name="shortday">д</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Грешна парола</string>
+    <string name="passwords_dont_match">Паролите не съвпадат</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Базалните стойности не са за кръгли часове: %1$s</string>
     <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално поддържаната стойност %1$s</string>

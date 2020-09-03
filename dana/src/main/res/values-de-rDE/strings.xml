@@ -54,7 +54,6 @@
     <string name="updatingbasalrates">Basal-Profil wird aktualisiert</string>
     <string name="settingtempbasal">TBR wird gesetzt</string>
     <string name="waitingfortimesynchronization">Warte auf Zeitsynchronisierung (%1$d Sek.)</string>
-    <string name="wrongpassword">Falsches Passwort</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
     <string name="danar_history_alarm">Alarme</string>
     <string name="danar_history_basalhours">Basal-Stunden</string>
