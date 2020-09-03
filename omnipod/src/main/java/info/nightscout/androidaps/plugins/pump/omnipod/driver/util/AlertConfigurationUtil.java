@@ -11,19 +11,19 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.TimerAl
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.UnitsRemainingAlertTrigger;
 
 public class AlertConfigurationUtil {
-    public static AlertConfiguration createLowReservoirAlertConfiguration(Double units) {
-        return new AlertConfiguration(AlertType.LOW_RESERVOIR_ALERT, AlertSlot.SLOT4, true, false, Duration.ZERO,
+    public static AlertConfiguration createLowReservoirAlertConfiguration(boolean active, Double units) {
+        return new AlertConfiguration(AlertType.LOW_RESERVOIR_ALERT, AlertSlot.SLOT4, active, false, Duration.ZERO,
                 new UnitsRemainingAlertTrigger(units), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_MINUTE_FOR_3_MINUTES_REPEAT_EVERY_60_MINUTES);
     }
 
-    public static AlertConfiguration createExpirationAdvisoryAlertConfiguration(Duration timeUntilAlert, Duration duration) {
-        return new AlertConfiguration(AlertType.EXPIRATION_ADVISORY_ALERT, AlertSlot.SLOT7, true, false, duration,
-                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_MINUTE_FOR_3_MINUTES_REPEAT_EVERY_15_MINUTES);
+    public static AlertConfiguration createExpirationAdvisoryAlertConfiguration(boolean active, Duration timeUntilAlert, Duration duration) {
+        return new AlertConfiguration(AlertType.EXPIRATION_ADVISORY_ALERT, AlertSlot.SLOT7, active, false, duration,
+                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_15_MINUTES);
     }
 
     public static AlertConfiguration createShutdownImminentAlertConfiguration(Duration timeUntilAlert) {
         return new AlertConfiguration(AlertType.SHUTDOWN_IMMINENT_ALARM, AlertSlot.SLOT2, true, false, Duration.ZERO,
-                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_15_MINUTES);
+                new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_MINUTE_FOR_3_MINUTES_REPEAT_EVERY_15_MINUTES);
     }
 
     public static AlertConfiguration createAutoOffAlertConfiguration(boolean active, Duration countdownDuration) {

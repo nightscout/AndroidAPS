@@ -5,7 +5,7 @@
 
     <!-- Omnipod - Base -->
     <string name="omnipod_name" translatable="false">Omnipod</string>
-    <string name="omnipod_name_short" translatable="false">POD</string>
+    <string name="omnipod_name_short" translatable="false">Pod</string>
     <string name="description_pump_omnipod">Pump integration for Omnipod, requires RileyLink (with at least 2.0 firmware) device.</string>
 
     <!-- Omnipod Configuration -->
@@ -16,6 +16,10 @@
     <string name="key_omnipod_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
     <string name="key_omnipod_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
     <string name="key_omnipod_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
+    <string name="key_omnipod_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
+    <string name="key_omnipod_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
+    <string name="key_omnipod_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
+    <string name="key_omnipod_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
     <string name="omnipod_config_bolus_beeps_enabled">Bolus beeps enabled</string>
     <string name="omnipod_config_basal_beeps_enabled">Basal beeps enabled</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB beeps enabled</string>
@@ -23,6 +27,10 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Suspend Delivery button enabled</string>
     <string name="omnipod_config_pulse_log_button_enabled">Pulse Log button enabled</string>
     <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
+    <string name="omnipod_config_expiration_reminder_enabled">Expiration reminder enabled</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Low reservoir alert enabled</string>
+    <string name="omnipod_config_low_reservoir_alert_units">Number of units</string>
 
     <!-- Omnipod - Fragment -->
     <string name="omnipod_moments_ago">Moments ago</string>
@@ -169,6 +177,19 @@
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
     <string name="omnipod_uncertain">uncertain</string>
+    <string name="omnipod_expiration_alerts_updated">Alert configuration updated in Pod</string>
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Other</string>
+    <string name="omnipod_preference_category_alerts">Alerts</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Confirmation beeps</string>
+    <string name="omnipod_wizard_button_exit">Exit</string>
+    <string name="omnipod_wizard_button_previous">Previous</string>
+    <string name="omnipod_wizard_button_next">Next</string>
+    <string name="omnipod_wizard_button_finish">Finish</string>
+    <string name="omnipod_history_item_description">Description</string>
+    <string name="omnipod_history_item_source">Source</string>
+    <string name="omnipod_history_item_date">Date</string>
+    <string name="omnipod_history_type">Type:</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

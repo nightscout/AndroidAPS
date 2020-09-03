@@ -17,6 +17,7 @@ public enum OmnipodCommandType {
     DISCARD_POD(R.string.omnipod_cmd_discard_pod), //
     GET_POD_STATUS(R.string.omnipod_cmd_get_pod_status), //
     SET_TIME(R.string.omnipod_cmd_set_time), //
+    CONFIGURE_ALERTS(R.string.omnipod_cmd_configure_alerts), //
     ACKNOWLEDGE_ALERTS(R.string.omnipod_cmd_acknowledge_alerts), //
     GET_POD_PULSE_LOG(R.string.omnipod_cmd_get_pulse_log), //
     SUSPEND_DELIVERY(R.string.omnipod_cmd_suspend_delivery);

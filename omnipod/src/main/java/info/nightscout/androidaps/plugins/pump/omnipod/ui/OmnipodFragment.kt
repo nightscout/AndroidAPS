@@ -227,6 +227,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_tid.text = PLACEHOLDER
             omnipod_pod_firmware_version.text = PLACEHOLDER
             omnipod_pod_expiry.text = PLACEHOLDER
+            omnipod_pod_expiry.setTextColor(Color.WHITE)
             omnipod_base_basal_rate.text = PLACEHOLDER
             omnipod_total_delivered.text = PLACEHOLDER
             omnipod_reservoir.text = PLACEHOLDER
@@ -237,10 +238,16 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_tid.text = podStateManager.tid.toString()
             omnipod_pod_firmware_version.text = resourceHelper.gs(R.string.omnipod_pod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
             val expiresAt = podStateManager.expiresAt
-            omnipod_pod_expiry.text = if (expiresAt == null) {
-                PLACEHOLDER
+            if (expiresAt == null) {
+                omnipod_pod_expiry.text = PLACEHOLDER
+                omnipod_pod_expiry.setTextColor(Color.WHITE)
             } else {
-                dateUtil.dateAndTimeString(expiresAt.toDate())
+                omnipod_pod_expiry.text = dateUtil.dateAndTimeString(expiresAt.toDate())
+                omnipod_pod_expiry.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
+                    Color.RED
+                } else {
+                    Color.WHITE
+                })
             }
 
             if (podStateManager.hasFaultEvent()) {

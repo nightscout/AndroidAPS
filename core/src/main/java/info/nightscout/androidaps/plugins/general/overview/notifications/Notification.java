@@ -73,6 +73,7 @@ public class Notification {
     public static final int CARBS_REQUIRED = 60;
     public static final int IMPORTANCE_HIGH = 2;
     public static final int OMNIPOD_POD_SUSPENDED = 61;
+    public static final int OMNIPOD_POD_ALERTS_UPDATED = 62;
 
     public static final String CATEGORY_ALARM = "alarm";
 

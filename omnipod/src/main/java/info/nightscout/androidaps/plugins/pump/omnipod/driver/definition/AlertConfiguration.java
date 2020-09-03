@@ -15,8 +15,7 @@ public class AlertConfiguration {
     private final BeepType beepType;
 
     public AlertConfiguration(AlertType alertType, AlertSlot alertSlot, boolean active, boolean autoOffModifier,
-                              Duration duration, AlertTrigger alertTrigger,
-                              BeepType beepType, BeepRepeat beepRepeat) {
+                              Duration duration, AlertTrigger<?> alertTrigger, BeepType beepType, BeepRepeat beepRepeat) {
         this.alertType = alertType;
         this.alertSlot = alertSlot;
         this.active = active;
@@ -33,6 +32,14 @@ public class AlertConfiguration {
 
     public AlertSlot getAlertSlot() {
         return alertSlot;
+    }
+
+    public AlertTrigger<?> getAlertTrigger() {
+        return alertTrigger;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public byte[] getRawData() {
@@ -66,5 +73,18 @@ public class AlertConfiguration {
         encodedData = ByteUtil.concat(encodedData, beepType.getValue());
 
         return encodedData;
+    }
+
+    @Override public String toString() {
+        return "AlertConfiguration{" +
+                "alertType=" + alertType +
+                ", alertSlot=" + alertSlot +
+                ", active=" + active +
+                ", autoOffModifier=" + autoOffModifier +
+                ", duration=" + duration +
+                ", alertTrigger=" + alertTrigger +
+                ", beepRepeat=" + beepRepeat +
+                ", beepType=" + beepType +
+                '}';
     }
 }

@@ -5,6 +5,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
@@ -16,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.acti
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.CancelDeliveryAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.ConfigureAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.DeactivatePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.GetStatusAction;
@@ -24,12 +26,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.acti
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.SetBasalScheduleAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.SetTempBasalAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.SetupPodAction;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.InsertCannulaService;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryType;
@@ -131,7 +133,8 @@ public class OmnipodManager {
                 .observeOn(Schedulers.io());
     }
 
-    public synchronized Single<SetupActionResult> insertCannula(BasalSchedule basalSchedule) {
+    public synchronized Single<SetupActionResult> insertCannula(
+            BasalSchedule basalSchedule, Duration expirationReminderTimeBeforeShutdown, Integer lowReservoirAlertUnits) {
         if (!podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
             throw new IllegalPodProgressException(PodProgressStatus.PRIMING_COMPLETED, !podStateManager.isPodInitialized() ? null : podStateManager.getPodProgressStatus());
         }
@@ -146,7 +149,7 @@ public class OmnipodManager {
         logStartingCommandExecution("insertCannula [basalSchedule=" + basalSchedule + "]");
 
         try {
-            communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podStateManager, basalSchedule));
+            communicationService.executeAction(new InsertCannulaAction(podStateManager, basalSchedule, expirationReminderTimeBeforeShutdown, lowReservoirAlertUnits));
         } finally {
             logCommandExecutionFinished("insertCannula");
         }
@@ -181,6 +184,18 @@ public class OmnipodManager {
             return communicationService.executeAction(new GetPodInfoAction(podStateManager, podInfoType));
         } finally {
             logCommandExecutionFinished("getPodInfo");
+        }
+    }
+
+    public synchronized StatusResponse configureAlerts(List<AlertConfiguration> alertConfigurations) {
+        assertReadyForDelivery();
+        logStartingCommandExecution("configureAlerts");
+        try {
+            StatusResponse statusResponse = executeAndVerify(() -> communicationService.executeAction(new ConfigureAlertsAction(podStateManager, alertConfigurations)));
+            ConfigureAlertsAction.updateConfiguredAlerts(podStateManager, alertConfigurations);
+            return statusResponse;
+        } finally {
+            logCommandExecutionFinished("configureAlerts");
         }
     }
 

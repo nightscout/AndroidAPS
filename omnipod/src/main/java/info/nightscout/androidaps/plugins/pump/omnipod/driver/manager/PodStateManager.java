@@ -441,6 +441,22 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastDeliveryStatus());
     }
 
+    public final Duration getExpirationAlertTimeBeforeShutdown() {
+        return getSafe(() -> podState.getExpirationAlertTimeBeforeShutdown());
+    }
+
+    public final void setExpirationAlertTimeBeforeShutdown(Duration duration) {
+        setAndStore(() -> podState.setExpirationAlertTimeBeforeShutdown(duration));
+    }
+
+    public final Integer getLowReservoirAlertUnits() {
+        return getSafe(() -> podState.getLowReservoirAlertUnits());
+    }
+
+    public final void setLowReservoirAlertUnits(Integer units) {
+        setAndStore(() -> podState.setLowReservoirAlertUnits(units));
+    }
+
     /**
      * Does not automatically store pod state in order to decrease I/O load
      */
@@ -579,6 +595,8 @@ public abstract class PodStateManager {
         private DateTime tempBasalStartTime;
         private Duration tempBasalDuration;
         private Boolean tempBasalCertain;
+        private Duration expirationAlertTimeBeforeShutdown;
+        private Integer lowReservoirAlertUnits;
         private final Map<AlertSlot, AlertType> configuredAlerts = new HashMap<>();
 
         private PodState(int address) {
@@ -833,6 +851,22 @@ public abstract class PodStateManager {
             return configuredAlerts;
         }
 
+        Duration getExpirationAlertTimeBeforeShutdown() {
+            return expirationAlertTimeBeforeShutdown;
+        }
+
+        void setExpirationAlertTimeBeforeShutdown(Duration duration) {
+            expirationAlertTimeBeforeShutdown = duration;
+        }
+
+        Integer getLowReservoirAlertUnits() {
+            return lowReservoirAlertUnits;
+        }
+
+        void setLowReservoirAlertUnits(Integer units) {
+            lowReservoirAlertUnits = units;
+        }
+
         @Override public String toString() {
             return "PodState{" +
                     "address=" + address +
@@ -860,9 +894,13 @@ public abstract class PodStateManager {
                     ", lastBolusStartTime=" + lastBolusStartTime +
                     ", lastBolusAmount=" + lastBolusAmount +
                     ", lastBolusDuration=" + lastBolusDuration +
+                    ", lastBolusCertain=" + lastBolusCertain +
                     ", tempBasalAmount=" + tempBasalAmount +
                     ", tempBasalStartTime=" + tempBasalStartTime +
                     ", tempBasalDuration=" + tempBasalDuration +
+                    ", tempBasalCertain=" + tempBasalCertain +
+                    ", expirationAlertHoursBeforeShutdown=" + expirationAlertTimeBeforeShutdown +
+                    ", lowReservoirAlertUnits=" + lowReservoirAlertUnits +
                     ", configuredAlerts=" + configuredAlerts +
                     '}';
         }

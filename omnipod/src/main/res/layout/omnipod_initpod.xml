@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".plugins.pump.omnipod.dialogs.InitPodWizard">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,7 +28,7 @@
             android:layout_gravity="bottom"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:text="@string/exit"
+            android:text="@string/omnipod_wizard_button_exit"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textStyle="bold" />
     </LinearLayout>
@@ -75,7 +74,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showPreviousPage"
-            android:text="@string/previous_button"
+            android:text="@string/omnipod_wizard_button_previous"
             android:textColor="#FFFFFF" />
 
         <View
@@ -89,7 +88,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showNextPage"
-            android:text="@string/next_button"
+            android:text="@string/omnipod_wizard_button_next"
             android:textColor="#FFFFFF" />
 
         <Button
@@ -98,7 +97,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="finishSetupWizard"
-            android:text="@string/setupwizard_finish"
+            android:text="@string/omnipod_wizard_button_finish"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
