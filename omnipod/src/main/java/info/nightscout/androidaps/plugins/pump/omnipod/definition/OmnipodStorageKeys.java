@@ -15,6 +15,10 @@ public class OmnipodStorageKeys {
         public static final int SUSPEND_DELIVERY_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
         public static final int PULSE_LOG_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
         public static final int TIME_CHANGE_EVENT_ENABLED = R.string.key_omnipod_time_change_event_enabled;
+        public static final int EXPIRATION_REMINDER_ENABLED = R.string.key_omnipod_expiration_reminder_enabled;
+        public static final int EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN = R.string.key_omnipod_expiration_reminder_hours_before_shutdown;
+        public static final int LOW_RESERVOIR_ALERT_ENABLED = R.string.key_omnipod_low_reservoir_alert_enabled;
+        public static final int LOW_RESERVOIR_ALERT_UNITS = R.string.key_omnipod_low_reservoir_alert_units;
     }
 
     public static class Statistics {

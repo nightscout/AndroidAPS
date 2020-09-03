@@ -205,6 +205,8 @@ class OmnipodFragment : DaggerFragment() {
 
     private fun updateOmnipodStatus() {
         updateLastConnection()
+        updateLastBolus()
+        updateTempBasal()
         updatePodStatus()
 
         val errors = ArrayList<String>();
@@ -225,11 +227,10 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_tid.text = PLACEHOLDER
             omnipod_pod_firmware_version.text = PLACEHOLDER
             omnipod_pod_expiry.text = PLACEHOLDER
+            omnipod_pod_expiry.setTextColor(Color.WHITE)
             omnipod_base_basal_rate.text = PLACEHOLDER
             omnipod_total_delivered.text = PLACEHOLDER
             omnipod_reservoir.text = PLACEHOLDER
-            omnipod_temp_basal.text = PLACEHOLDER
-            omnipod_last_bolus.text = PLACEHOLDER
             omnipod_pod_active_alerts.text = PLACEHOLDER
         } else {
             omnipod_pod_address.text = podStateManager.address.toString()
@@ -237,22 +238,21 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_tid.text = podStateManager.tid.toString()
             omnipod_pod_firmware_version.text = resourceHelper.gs(R.string.omnipod_pod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
             val expiresAt = podStateManager.expiresAt
-            omnipod_pod_expiry.text = if (expiresAt == null) {
-                PLACEHOLDER
+            if (expiresAt == null) {
+                omnipod_pod_expiry.text = PLACEHOLDER
+                omnipod_pod_expiry.setTextColor(Color.WHITE)
             } else {
-                dateUtil.dateAndTimeString(expiresAt.toDate())
+                omnipod_pod_expiry.text = dateUtil.dateAndTimeString(expiresAt.toDate())
+                omnipod_pod_expiry.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
+                    Color.RED
+                } else {
+                    Color.WHITE
+                })
             }
 
             if (podStateManager.hasFaultEvent()) {
                 val faultEventCode = podStateManager.faultEvent.faultEventCode
                 errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
-            }
-
-            // last bolus
-            omnipod_last_bolus.text = if (podStateManager.lastBolusStartTime != null && podStateManager.lastBolusAmount != null) {
-                resourceHelper.gs(R.string.omnipod_last_bolus, omnipodPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
-            } else {
-                PLACEHOLDER
             }
 
             val now = DateTime.now()
@@ -262,22 +262,6 @@ class OmnipodFragment : DaggerFragment() {
                 resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(Duration(now.withTimeAtStartOfDay(), now))))
             } else {
                 PLACEHOLDER
-            }
-
-            // Temp basal
-            val lastTempBasalStartTime = podStateManager.lastTempBasalStartTime;
-            val lastTempBasalAmount = podStateManager.lastTempBasalAmount
-            val lastTempBasalDuration = podStateManager.lastTempBasalDuration;
-            if (lastTempBasalStartTime != null && lastTempBasalAmount != null && lastTempBasalDuration != null) {
-                val endTime = lastTempBasalStartTime.plus(lastTempBasalDuration);
-                val minutesRunning = Duration(lastTempBasalStartTime, now).standardMinutes
-                omnipod_temp_basal.text = if (endTime.isAfter(now)) {
-                    resourceHelper.gs(R.string.omnipod_temp_basal, lastTempBasalAmount, dateUtil.timeString(lastTempBasalStartTime.millis), minutesRunning, lastTempBasalDuration.standardMinutes)
-                } else {
-                    PLACEHOLDER
-                }
-            } else {
-                omnipod_temp_basal.text = PLACEHOLDER
             }
 
             // total delivered
@@ -369,6 +353,55 @@ class OmnipodFragment : DaggerFragment() {
             Color.WHITE
         }
         omnipod_pod_status.setTextColor(podStatusColor)
+    }
+
+    private fun updateLastBolus() {
+        if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
+            var text = resourceHelper.gs(R.string.omnipod_last_bolus, omnipodPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
+            val textColor: Int
+
+            if (podStateManager.isLastBolusCertain) {
+                textColor = Color.WHITE
+            } else {
+                textColor = Color.RED
+                text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
+            }
+
+            omnipod_last_bolus.text = text;
+            omnipod_last_bolus.setTextColor(textColor)
+
+        } else {
+            omnipod_last_bolus.text = PLACEHOLDER
+            omnipod_last_bolus.setTextColor(Color.WHITE)
+        }
+    }
+
+    private fun updateTempBasal() {
+        if (podStateManager.isPodActivationCompleted && podStateManager.isTempBasalRunning) {
+            val now = DateTime.now()
+
+            val startTime = podStateManager.tempBasalStartTime;
+            val amount = podStateManager.tempBasalAmount
+            val duration = podStateManager.tempBasalDuration;
+
+            val minutesRunning = Duration(startTime, now).standardMinutes
+
+            var text: String
+            val textColor: Int
+            text = resourceHelper.gs(R.string.omnipod_temp_basal, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
+            if (podStateManager.isTempBasalCertain) {
+                textColor = Color.WHITE
+            } else {
+                textColor = Color.RED
+                text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
+            }
+
+            omnipod_temp_basal.text = text;
+            omnipod_temp_basal.setTextColor(textColor)
+        } else {
+            omnipod_temp_basal.text = PLACEHOLDER
+            omnipod_temp_basal.setTextColor(Color.WHITE)
+        }
     }
 
     private fun updateQueueStatus() {

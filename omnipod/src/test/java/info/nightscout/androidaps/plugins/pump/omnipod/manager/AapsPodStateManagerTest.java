@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class AapsPodStateManagerTest {
     @Mock AAPSLogger aapsLogger;
     @Mock SP sp;
+    @Mock RxBusWrapper rxBus;
 
     @Test
     public void times() {
@@ -31,7 +33,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, rxBus);
         podStateManager.initState(0x0);
         podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
@@ -49,7 +51,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, rxBus);
         podStateManager.initState(0x0);
         podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);
@@ -72,7 +74,7 @@ public class AapsPodStateManagerTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp);
+        AapsPodStateManager podStateManager = new AapsPodStateManager(aapsLogger, sp, rxBus);
         podStateManager.initState(0x0);
         podStateManager.setInitializationParameters(0, 0, new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS);

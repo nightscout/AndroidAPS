@@ -5,7 +5,7 @@
 
     <!-- Omnipod - Base -->
     <string name="omnipod_name" translatable="false">Omnipod</string>
-    <string name="omnipod_name_short" translatable="false">POD</string>
+    <string name="omnipod_name_short" translatable="false">Pod</string>
     <string name="description_pump_omnipod">Pump integration for Omnipod, requires RileyLink (with at least 2.0 firmware) device.</string>
 
     <!-- Omnipod Configuration -->
@@ -16,6 +16,10 @@
     <string name="key_omnipod_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
     <string name="key_omnipod_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
     <string name="key_omnipod_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
+    <string name="key_omnipod_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
+    <string name="key_omnipod_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
+    <string name="key_omnipod_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
+    <string name="key_omnipod_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
     <string name="omnipod_config_bolus_beeps_enabled">Bolus beeps enabled</string>
     <string name="omnipod_config_basal_beeps_enabled">Basal beeps enabled</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB beeps enabled</string>
@@ -23,6 +27,10 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Suspend Delivery button enabled</string>
     <string name="omnipod_config_pulse_log_button_enabled">Pulse Log button enabled</string>
     <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
+    <string name="omnipod_config_expiration_reminder_enabled">Expiration reminder enabled</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Low reservoir alert enabled</string>
+    <string name="omnipod_config_low_reservoir_alert_units">Number of units</string>
 
     <!-- Omnipod - Fragment -->
     <string name="omnipod_moments_ago">Moments ago</string>
@@ -133,12 +141,15 @@
     <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
-    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please refresh Pod status and resume delivery from the Omnipod tab if needed.</string>
-    <string name="omnipod_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please resume delivery from the Omnipod tab.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal might have failed. If a temp basal was already running, it might have been cancelled without AndroidAPS being aware!</string>
-    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please refresh Pod status and resume delivery from the Omnipod tab if needed.</string>
-    <string name="omnipod_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please resume delivery from the Omnipod tab.</string>
-    <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setting basal profile failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="omnipod_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
+    <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please manually verify that your Pod is bolusing by listening to clicks. <b>If you are sure that the bolus didn\'t succeed, you should manually delete the bolus entry from Treatments, even if you click \'Cancel bolus\' now!</b></string>
+    <string name="omnipod_bolus_failed_uncertain_smb">Unable to verify whether SMB bolus (%1$.2f U) succeeded. <b>If you are sure that the Bolus didn\'t succeed, you should manually delete the SMB entry from Treatments.</b></string>
     <string name="omnipod_rl_stats">RL stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse log</string>
     <string name="omnipod_pod_lot">LOT</string>
@@ -165,6 +176,20 @@
     <string name="omnipod_cancelled_old_tbr_failed_to_set_new">Cancelled the old temporary basal, but failed to set new temporary basal</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
+    <string name="omnipod_uncertain">uncertain</string>
+    <string name="omnipod_expiration_alerts_updated">Alert configuration updated in Pod</string>
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Other</string>
+    <string name="omnipod_preference_category_alerts">Alerts</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Confirmation beeps</string>
+    <string name="omnipod_wizard_button_exit">Exit</string>
+    <string name="omnipod_wizard_button_previous">Previous</string>
+    <string name="omnipod_wizard_button_next">Next</string>
+    <string name="omnipod_wizard_button_finish">Finish</string>
+    <string name="omnipod_history_item_description">Description</string>
+    <string name="omnipod_history_item_source">Source</string>
+    <string name="omnipod_history_item_date">Date</string>
+    <string name="omnipod_history_type">Type:</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

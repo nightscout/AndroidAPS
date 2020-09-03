@@ -28,9 +28,17 @@ public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
     public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
         ConfigureAlertsCommand configureAlertsCommand = new ConfigureAlertsCommand(podStateManager.getCurrentNonce(), alertConfigurations);
         StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podStateManager, configureAlertsCommand);
-        for (AlertConfiguration alertConfiguration : alertConfigurations) {
-            podStateManager.putConfiguredAlert(alertConfiguration.getAlertSlot(), alertConfiguration.getAlertType());
-        }
+        updateConfiguredAlerts(podStateManager, alertConfigurations);
         return statusResponse;
+    }
+
+    public static void updateConfiguredAlerts(PodStateManager podStateManager, List<AlertConfiguration> alertConfigurations) {
+        for (AlertConfiguration alertConfiguration : alertConfigurations) {
+            if (alertConfiguration.isActive()) {
+                podStateManager.putConfiguredAlert(alertConfiguration.getAlertSlot(), alertConfiguration.getAlertType());
+            } else {
+                podStateManager.removeConfiguredAlert(alertConfiguration.getAlertSlot());
+            }
+        }
     }
 }

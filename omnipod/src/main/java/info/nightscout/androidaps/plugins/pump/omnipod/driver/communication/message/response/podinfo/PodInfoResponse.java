@@ -21,8 +21,8 @@ public class PodInfoResponse extends MessageBlock {
         return subType;
     }
 
-    public <T extends PodInfo> T getPodInfo() {
-        return (T) podInfo;
+    public PodInfo getPodInfo() {
+        return podInfo;
     }
 
     @Override

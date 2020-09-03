@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.manager;
 
 import android.content.Context;
-import android.content.Intent;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -14,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -24,7 +22,6 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -44,6 +41,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitReceive
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
@@ -75,6 +74,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.SetupActio
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.Disposable;
@@ -94,6 +94,7 @@ public class AapsOmnipodManager {
     private final SP sp;
     private final OmnipodManager delegate;
     private final DatabaseHelperInterface databaseHelper;
+    private final OmnipodAlertUtil omnipodAlertUtil;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -114,7 +115,8 @@ public class AapsOmnipodManager {
                               HasAndroidInjector injector,
                               ActivePluginProvider activePlugin,
                               Context context,
-                              DatabaseHelperInterface databaseHelper) {
+                              DatabaseHelperInterface databaseHelper,
+                              OmnipodAlertUtil omnipodAlertUtil) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager can not be null");
         }
@@ -128,6 +130,7 @@ public class AapsOmnipodManager {
         this.context = context;
         this.databaseHelper = databaseHelper;
         this.sp = sp;
+        this.omnipodAlertUtil = omnipodAlertUtil;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
     }
@@ -153,17 +156,15 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
         }
 
-        long time = System.currentTimeMillis();
-
         try {
             Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
-                    handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
+                    handleSetupActionResult(podInitActionType, podInitReceiver, res, System.currentTimeMillis(), null));
 
             return new PumpEnactResult(injector).success(true).enacted(true);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
-            addFailureToHistory(time, PodHistoryEntryType.PAIR_AND_PRIME, comment);
+            addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.PAIR_AND_PRIME, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
     }
@@ -173,8 +174,6 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
         }
 
-        long time = System.currentTimeMillis();
-
         try {
             BasalSchedule basalSchedule;
             try {
@@ -182,8 +181,9 @@ public class AapsOmnipodManager {
             } catch (Exception ex) {
                 throw new CommandInitializationException("Basal profile mapping failed", ex);
             }
-            Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
-                    handleSetupActionResult(podInitActionType, podInitReceiver, res, time, profile));
+
+            Disposable disposable = delegate.insertCannula(basalSchedule, omnipodAlertUtil.getExpirationReminderTimeBeforeShutdown(), omnipodAlertUtil.getLowReservoirAlertUnits()).subscribe(res -> //
+                    handleSetupActionResult(podInitActionType, podInitReceiver, res, System.currentTimeMillis(), profile));
 
             rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
 
@@ -193,36 +193,46 @@ public class AapsOmnipodManager {
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
-            addFailureToHistory(time, PodHistoryEntryType.FILL_CANNULA_SET_BASAL_PROFILE, comment);
+            addFailureToHistory(PodHistoryEntryType.FILL_CANNULA_SET_BASAL_PROFILE, comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+        }
+    }
+
+    public PumpEnactResult configureAlerts(List<AlertConfiguration> alertConfigurations) {
+        try {
+            StatusResponse statusResponse = delegate.configureAlerts(alertConfigurations);
+            addSuccessToHistory(PodHistoryEntryType.CONFIGURE_ALERTS, alertConfigurations);
+            return new PumpEnactResult(injector).success(true).enacted(false);
+        } catch (Exception ex) {
+            String comment = handleAndTranslateException(ex);
+            addFailureToHistory(PodHistoryEntryType.CONFIGURE_ALERTS, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
     }
 
     public PumpEnactResult getPodStatus() {
-        long time = System.currentTimeMillis();
         try {
             StatusResponse statusResponse = delegate.getPodStatus();
-            addSuccessToHistory(time, PodHistoryEntryType.GET_POD_STATUS, statusResponse);
+            addSuccessToHistory(PodHistoryEntryType.GET_POD_STATUS, statusResponse);
             return new PumpEnactResult(injector).success(true).enacted(false);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.GET_POD_STATUS, comment);
+            addFailureToHistory(PodHistoryEntryType.GET_POD_STATUS, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
     }
 
     public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
-        long time = System.currentTimeMillis();
         try {
             delegate.deactivatePod();
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(PodInitActionType.DEACTIVATE_POD_WIZARD_STEP, false, comment);
-            addFailureToHistory(time, PodHistoryEntryType.DEACTIVATE_POD, comment);
+            addFailureToHistory(PodHistoryEntryType.DEACTIVATE_POD, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        addSuccessToHistory(time, PodHistoryEntryType.DEACTIVATE_POD, null);
+        addSuccessToHistory(PodHistoryEntryType.DEACTIVATE_POD, null);
 
         createSuspendedFakeTbrIfNotExists();
 
@@ -232,7 +242,6 @@ public class AapsOmnipodManager {
     }
 
     public PumpEnactResult setBasalProfile(Profile profile) {
-        long time = System.currentTimeMillis();
         PodHistoryEntryType historyEntryType = podStateManager.isSuspended() ? PodHistoryEntryType.RESUME_DELIVERY : PodHistoryEntryType.SET_BASAL_SCHEDULE;
 
         try {
@@ -244,30 +253,39 @@ public class AapsOmnipodManager {
             }
             delegate.setBasalSchedule(basalSchedule, isBasalBeepsEnabled());
 
-            time = System.currentTimeMillis();
-            // Because setting a basal profile actually suspends and then resumes delivery, TBR is implicitly cancelled
             if (historyEntryType == PodHistoryEntryType.RESUME_DELIVERY) {
                 cancelSuspendedFakeTbrIfExists();
-            } else {
-                reportImplicitlyCancelledTbr(time - 1000);
             }
-            addSuccessToHistory(time, historyEntryType, profile.getBasalValues());
+            addSuccessToHistory(historyEntryType, profile.getBasalValues());
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             createSuspendedFakeTbrIfNotExists();
             String comment = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_suspended);
-            showErrorDialog(comment, R.raw.boluserror);
-            addFailureToHistory(time, historyEntryType, comment);
+            showNotification(Notification.FAILED_UDPATE_PROFILE, comment, Notification.URGENT, R.raw.boluserror);
+            addFailureToHistory(historyEntryType, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (DeliveryStatusVerificationFailedException ex) {
-            String comment = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_might_be_suspended);
-            showErrorDialog(comment, R.raw.boluserror);
-            addFailureToHistory(time, historyEntryType, comment);
+            String comment;
+            if (ex.getExpectedStatus() == DeliveryStatus.SUSPENDED) {
+                // Happened when suspending delivery before setting the new profile
+                comment = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_might_be_suspended);
+            } else {
+                // Happened when setting the new profile (after suspending delivery)
+                comment = getStringResource(R.string.omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended);
+            }
+            showNotification(Notification.FAILED_UDPATE_PROFILE, comment, Notification.URGENT, R.raw.boluserror);
+            addFailureToHistory(historyEntryType, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, historyEntryType, comment);
+            showNotification(Notification.FAILED_UDPATE_PROFILE, comment, Notification.URGENT, R.raw.boluserror);
+            addFailureToHistory(historyEntryType, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
+
+        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+        showNotification(Notification.PROFILE_SET_OK,
+                resourceHelper.gs(R.string.profile_set_ok),
+                Notification.INFO, null);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -306,8 +324,11 @@ public class AapsOmnipodManager {
 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
-
-            showErrorDialog(getStringResource(R.string.omnipod_bolus_failed_uncertain), R.raw.boluserror);
+            if (detailedBolusInfo.isSMB) {
+                showNotification(getStringResource(R.string.omnipod_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, R.raw.boluserror);
+            } else {
+                showNotification(getStringResource(R.string.omnipod_bolus_failed_uncertain), Notification.URGENT, R.raw.boluserror);
+            }
         }
 
         detailedBolusInfo.date = bolusStarted.getTime();
@@ -382,7 +403,7 @@ public class AapsOmnipodManager {
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (PodFaultException ex) {
                 aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus (implicitly because of a Pod Fault)");
-                showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventCode());
+                showPodFaultNotification(ex.getFaultEvent().getFaultEventCode());
                 addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_BOLUS, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
@@ -397,48 +418,56 @@ public class AapsOmnipodManager {
 
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         boolean beepsEnabled = isTbrBeepsEnabled();
-        long time = System.currentTimeMillis();
         try {
             delegate.setTemporaryBasal(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled);
-            time = System.currentTimeMillis();
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
-            reportImplicitlyCancelledTbr(time);
             String comment = getStringResource(R.string.omnipod_cancelled_old_tbr_failed_to_set_new);
-            addFailureToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
+            addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
+            showNotification(comment, Notification.URGENT, null);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (DeliveryStatusVerificationFailedException ex) {
-            String comment = getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled);
+            String comment;
+            if (ex.getExpectedStatus() == DeliveryStatus.TEMP_BASAL_RUNNING) {
+                // Happened after cancelling the old TBR, when attempting to set new TBR
+
+                comment = getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed);
+                long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
+
+                // Assume that setting the temp basal succeeded here, because in case it didn't succeed,
+                // The next StatusResponse that we receive will allow us to recover from the wrong state
+                // as we can see that the delivery status doesn't actually show that a TBR is running
+                // If we would assume that the TBR didn't succeed, we couldn't properly recover upon the next StatusResponse,
+                // as we could only see that the Pod is running a TBR, but we don't know the rate and duration as
+                // the Pod doesn't provide this information
+                addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
+            } else {
+                // Happened when attempting to cancel the old TBR
+                comment = getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled);
+                addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
+            }
+
             showNotification(comment, Notification.URGENT, R.raw.boluserror);
-            addFailureToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
+            addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        long pumpId = addSuccessToHistory(time, PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
+        long pumpId = addSuccessToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
 
-        TemporaryBasal tempStart = new TemporaryBasal(injector) //
-                .date(time) //
-                .duration(tempBasalPair.getDurationMinutes()) //
-                .absolute(tempBasalPair.getInsulinRate()) //
-                .pumpId(pumpId)
-                .source(Source.PUMP);
-
-        activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
+        addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     public PumpEnactResult cancelTemporaryBasal() {
-        long time = System.currentTimeMillis();
         try {
             delegate.cancelTemporaryBasal(isTbrBeepsEnabled());
-            addSuccessToHistory(time, PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, null);
+            addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, comment);
+            addFailureToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
@@ -446,30 +475,27 @@ public class AapsOmnipodManager {
     }
 
     public PumpEnactResult acknowledgeAlerts() {
-        long time = System.currentTimeMillis();
         try {
             delegate.acknowledgeAlerts();
-            addSuccessToHistory(time, PodHistoryEntryType.ACKNOWLEDGE_ALERTS, null);
+            addSuccessToHistory(PodHistoryEntryType.ACKNOWLEDGE_ALERTS, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.ACKNOWLEDGE_ALERTS, comment);
+            addFailureToHistory(PodHistoryEntryType.ACKNOWLEDGE_ALERTS, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     public PumpEnactResult suspendDelivery() {
-        long time = System.currentTimeMillis();
-
         try {
             delegate.suspendDelivery(isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.SUSPEND_DELIVERY, comment);
+            addFailureToHistory(PodHistoryEntryType.SUSPEND_DELIVERY, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        addSuccessToHistory(time, PodHistoryEntryType.SUSPEND_DELIVERY, null);
+        addSuccessToHistory(PodHistoryEntryType.SUSPEND_DELIVERY, null);
 
         createSuspendedFakeTbrIfNotExists();
 
@@ -478,27 +504,23 @@ public class AapsOmnipodManager {
 
     // Updates the pods current time based on the device timezone and the pod's time zone
     public PumpEnactResult setTime() {
-        long time = System.currentTimeMillis();
         try {
             delegate.setTime(isBasalBeepsEnabled());
-            time = System.currentTimeMillis();
-            // Because set time actually suspends and then resumes delivery, TBR is implicitly cancelled
-            reportImplicitlyCancelledTbr(time - 1000);
-            addSuccessToHistory(time, PodHistoryEntryType.SET_TIME, null);
+            addSuccessToHistory(PodHistoryEntryType.SET_TIME, null);
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             createSuspendedFakeTbrIfNotExists();
             String comment = getStringResource(R.string.omnipod_error_set_time_failed_delivery_suspended);
-            showErrorDialog(comment, R.raw.boluserror);
-            addFailureToHistory(time, PodHistoryEntryType.SET_TIME, comment);
+            showNotification(comment, Notification.URGENT, R.raw.boluserror);
+            addFailureToHistory(PodHistoryEntryType.SET_TIME, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (DeliveryStatusVerificationFailedException ex) {
             String comment = getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended);
-            showErrorDialog(comment, R.raw.boluserror);
-            addFailureToHistory(time, PodHistoryEntryType.SET_TIME, comment);
+            showNotification(comment, Notification.URGENT, R.raw.boluserror);
+            addFailureToHistory(PodHistoryEntryType.SET_TIME, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.SET_TIME, comment);
+            addFailureToHistory(PodHistoryEntryType.SET_TIME, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
@@ -507,7 +529,7 @@ public class AapsOmnipodManager {
 
     public PodInfoRecentPulseLog readPulseLog() {
         PodInfoResponse response = delegate.getPodInfo(PodInfoType.RECENT_PULSE_LOG);
-        return response.getPodInfo();
+        return (PodInfoRecentPulseLog) response.getPodInfo();
     }
 
     public OmnipodRileyLinkCommunicationManager getCommunicationService() {
@@ -593,25 +615,41 @@ public class AapsOmnipodManager {
         return false;
     }
 
-    private void reportImplicitlyCancelledTbr(long time) {
-        TreatmentsInterface plugin = activePlugin.getActiveTreatments();
-        if (plugin.isTempBasalInProgress()) {
-            aapsLogger.debug(LTag.PUMP, "Reporting implicitly cancelled TBR to Treatments plugin");
+    public void reportCancelledTbr() {
+        aapsLogger.debug(LTag.PUMP, "Reporting cancelled TBR to AAPS");
 
-            long pumpId = addSuccessToHistory(time, PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
+        long pumpId = addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
 
-            TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
-                    .date(time) //
-                    .duration(0) //
-                    .source(Source.PUMP) //
-                    .pumpId(pumpId);
+        TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
+                .date(System.currentTimeMillis()) //
+                .duration(0) //
+                .source(Source.PUMP) //
+                .pumpId(pumpId);
 
-            plugin.addToHistoryTempBasal(temporaryBasal);
-        }
+        activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+    }
+
+    private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
+        TemporaryBasal tempStart = new TemporaryBasal(injector) //
+                .date(time) //
+                .duration(tempBasalPair.getDurationMinutes()) //
+                .absolute(tempBasalPair.getInsulinRate()) //
+                .pumpId(pumpId)
+                .source(Source.PUMP);
+
+        activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
+    }
+
+    private long addSuccessToHistory(PodHistoryEntryType entryType, Object data) {
+        return addSuccessToHistory(System.currentTimeMillis(), entryType, data);
     }
 
     private long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
         return addToHistory(requestTime, entryType, data, true);
+    }
+
+    private long addFailureToHistory(PodHistoryEntryType entryType, Object data) {
+        return addFailureToHistory(System.currentTimeMillis(), entryType, data);
     }
 
     private long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
@@ -697,7 +735,7 @@ public class AapsOmnipodManager {
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
                 FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
-                showPodFaultErrorDialog(faultEventCode);
+                showPodFaultNotification(faultEventCode);
                 comment = createPodFaultErrorMessage(faultEventCode);
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
@@ -725,26 +763,21 @@ public class AapsOmnipodManager {
         rxBus.send(event);
     }
 
-    private void showPodFaultErrorDialog(FaultEventCode faultEventCode) {
-        showPodFaultErrorDialog(faultEventCode, R.raw.boluserror);
+    private void showPodFaultNotification(FaultEventCode faultEventCode) {
+        showPodFaultNotification(faultEventCode, R.raw.boluserror);
     }
 
-    private void showPodFaultErrorDialog(FaultEventCode faultEventCode, Integer sound) {
-        showErrorDialog(createPodFaultErrorMessage(faultEventCode), sound);
-    }
-
-    private void showErrorDialog(String message, Integer sound) {
-        Intent intent = new Intent(context, ErrorHelperActivity.class);
-        intent.putExtra("soundid", sound);
-        intent.putExtra("status", message);
-        intent.putExtra("title", resourceHelper.gs(R.string.error));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    private void showPodFaultNotification(FaultEventCode faultEventCode, Integer sound) {
+        showNotification(createPodFaultErrorMessage(faultEventCode), Notification.URGENT, sound);
     }
 
     private void showNotification(String message, int urgency, Integer sound) {
+        showNotification(Notification.OMNIPOD_PUMP_ALARM, message, urgency, sound);
+    }
+
+    private void showNotification(int id, String message, int urgency, Integer sound) {
         Notification notification = new Notification( //
-                Notification.OMNIPOD_PUMP_ALARM, //
+                id, //
                 message, //
                 urgency);
         if (sound != null) {
