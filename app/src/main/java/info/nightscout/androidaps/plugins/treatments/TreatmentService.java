@@ -160,6 +160,10 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         public List<Treatment> query(PreparedQuery<Treatment> data) throws SQLException {
             return wrapped.query(data);
         }
+
+        public long countOf() throws SQLException {
+            return wrapped.countOf();
+        }
     }
 
     @Override
@@ -293,6 +297,15 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
 
         return new ArrayList<>();
+    }
+
+    public long count() {
+        try {
+            return this.getDao().countOf();
+        } catch (SQLException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+        return 0L;
     }
 
     /*

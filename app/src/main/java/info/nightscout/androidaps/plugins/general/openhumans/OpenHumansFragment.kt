@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -16,7 +15,9 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -39,6 +40,9 @@ class OpenHumansFragment : DaggerFragment() {
 
     @Inject
     lateinit var openHumansUploader: OpenHumansUploader
+
+    @Inject
+    lateinit var resourceHelper: ResourceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +89,9 @@ class OpenHumansFragment : DaggerFragment() {
         queueSize = view.findViewById(R.id.queue_size)
         workerState = view.findViewById(R.id.worker_state)
         login!!.setOnClickListener { startActivity(Intent(context, OpenHumansLoginActivity::class.java)) }
-        logout!!.setOnClickListener { openHumansUploader.logout() }
+        logout!!.setOnClickListener {
+            activity?.let { activity -> OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.oh_logout_confirmation), Runnable { openHumansUploader.logout() }) }
+        }
         viewsCreated = true
         updateGUI()
         return view

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -53,7 +54,8 @@ class OpenHumansUploader @Inject constructor(
     aapsLogger: AAPSLogger,
     val sp: SP,
     val rxBus: RxBusWrapper,
-    val context: Context
+    val context: Context,
+    val treatmentsPlugin: TreatmentsPlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -72,10 +74,12 @@ class OpenHumansUploader @Inject constructor(
         private const val REDIRECT_URL = "androidaps://setup-openhumans"
         const val AUTH_URL = "https://www.openhumans.org/direct-sharing/projects/oauth2/authorize/?client_id=$CLIENT_ID&response_type=code"
         const val WORK_NAME = "Open Humans"
+        const val NOTIFICATION_CHANNEL = "OpenHumans"
         private const val COPY_NOTIFICATION_ID = 3122
         private const val FAILURE_NOTIFICATION_ID = 3123
         private const val SUCCESS_NOTIFICATION_ID = 3124
         private const val SIGNED_OUT_NOTIFICATION_ID = 3125
+        const val UPLOAD_NOTIFICATION_ID = 3126
     }
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
@@ -323,7 +327,7 @@ class OpenHumansUploader @Inject constructor(
             .flatMap { openHumansAPI.getProjectMemberId(it.accessToken) }
             .doOnSuccess {
                 projectMemberId = it
-                // TODO: halted for now. Might create too much upload data. copyExistingDataToQueue()
+                copyExistingDataToQueue()
                 rxBus.send(OpenHumansFragment.UpdateViewEvent)
             }
             .doOnError {
@@ -353,7 +357,10 @@ class OpenHumansUploader @Inject constructor(
         copyDisposable = Completable.fromCallable { MainApp.getDbHelper().clearOpenHumansQueue() }
             .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows) })
             .doOnSuccess { maxProgress = it }
-            .flatMapObservable { Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) } }
+            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
+            .map { enqueueTreatment(it); increaseCounter() }
+            .ignoreElements()
+            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) })
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
@@ -384,6 +391,7 @@ class OpenHumansUploader @Inject constructor(
                 showSetupFinishedNotification()
             }
             .doOnError {
+                logout()
                 showSetupFailedNotification()
             }
             .doFinally {
@@ -397,7 +405,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun showOngoingNotification(maxProgress: Long? = null, currentProgress: Long? = null) {
-        val notification = NotificationCompat.Builder(context, "OpenHumans")
+        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setContentTitle(resourceHelper.gs(R.string.finishing_open_humans_setup))
             .setContentText(resourceHelper.gs(R.string.this_may_take_a_while))
             .setStyle(NotificationCompat.BigTextStyle())
@@ -411,9 +419,9 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun showSetupFinishedNotification() {
-        val notification = NotificationCompat.Builder(context, "OpenHumans")
+        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setContentTitle(resourceHelper.gs(R.string.setup_finished))
-            .setContentText(resourceHelper.gs(R.string.your_phone_is_upload_data))
+            .setContentText(resourceHelper.gs(R.string.your_phone_will_upload_data))
             .setStyle(NotificationCompat.BigTextStyle())
             .setSmallIcon(R.drawable.notif_icon)
             .build()
@@ -422,7 +430,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun showSetupFailedNotification() {
-        val notification = NotificationCompat.Builder(context, "OpenHumans")
+        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setContentTitle(resourceHelper.gs(R.string.setup_failed))
             .setContentText(resourceHelper.gs(R.string.there_was_an_error))
             .setStyle(NotificationCompat.BigTextStyle())
@@ -559,7 +567,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun handleSignOut() {
-        val notification = NotificationCompat.Builder(context, "OpenHumans")
+        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setContentTitle(resourceHelper.gs(R.string.you_have_been_signed_out_of_open_humans))
             .setContentText(resourceHelper.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose))
             .setStyle(NotificationCompat.BigTextStyle())
@@ -587,9 +595,9 @@ class OpenHumansUploader @Inject constructor(
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresCharging(sp.getBoolean("key_oh_charging_only", false))
             .build()
-        val workRequest = PeriodicWorkRequestBuilder<OHUploadWorker>(1, TimeUnit.DAYS)
+        val workRequest = PeriodicWorkRequestBuilder<OHUploadWorker>(1, TimeUnit.MINUTES) // TODO OH: DAYS
             .setConstraints(constraints)
-            .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.HOURS)
+            .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.MINUTES) //TODO OH: HOURS
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_NAME, if (replace) ExistingPeriodicWorkPolicy.REPLACE else ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }
@@ -598,7 +606,7 @@ class OpenHumansUploader @Inject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManagerCompat = NotificationManagerCompat.from(context)
             notificationManagerCompat.createNotificationChannel(NotificationChannel(
-                "OpenHumans",
+                NOTIFICATION_CHANNEL,
                 resourceHelper.gs(R.string.open_humans),
                 NotificationManager.IMPORTANCE_DEFAULT
             ))

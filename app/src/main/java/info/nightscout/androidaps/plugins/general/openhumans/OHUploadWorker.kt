@@ -1,12 +1,19 @@
 package info.nightscout.androidaps.plugins.general.openhumans
 
+import android.app.Notification
 import android.content.Context
 import android.net.wifi.WifiManager
+import androidx.core.app.NotificationCompat
+import androidx.work.ForegroundInfo
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader.Companion.NOTIFICATION_CHANNEL
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader.Companion.UPLOAD_NOTIFICATION_ID
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Single
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
@@ -17,6 +24,9 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
 
     @Inject
     lateinit var openHumansUploader: OpenHumansUploader
+
+    @Inject
+    lateinit var resourceHelper: ResourceHelper
 
     override fun createWork(): Single<Result> = Single.defer {
 
@@ -31,12 +41,26 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
         val wifiOnly = sp.getBoolean("key_oh_wifi_only", true)
         val isConnectedToWifi = wifiManager?.isWifiEnabled ?: false && wifiManager?.connectionInfo?.networkId != -1
         if (!wifiOnly || (wifiOnly && isConnectedToWifi)) {
-            openHumansUploader.uploadData()
+            setForegroundAsync(createForegroundInfo())
+            openHumansUploader.uploadData().delay(12, TimeUnit.MINUTES) //TODO OH: No Delay
                 .andThen(Single.just(Result.success()))
                 .onErrorResumeNext { Single.just(Result.retry()) }
         } else {
             Single.just(Result.retry())
         }
+    }
+
+    private fun createForegroundInfo(): ForegroundInfo {
+        val title = resourceHelper.gs(info.nightscout.androidaps.R.string.open_humans)
+
+        val notification: Notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
+            .setContentTitle(title)
+            .setTicker(title)
+            .setContentTitle(resourceHelper.gs(info.nightscout.androidaps.R.string.open_humans))
+            .setSmallIcon(info.nightscout.androidaps.R.drawable.notif_icon)
+            .setOngoing(true)
+            .build()
+        return ForegroundInfo(UPLOAD_NOTIFICATION_ID, notification)
     }
 
 }

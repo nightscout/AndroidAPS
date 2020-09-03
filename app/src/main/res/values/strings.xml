@@ -1411,13 +1411,15 @@
     <string name="finishing_open_humans_setup">Finishing Open Humans setup…</string>
     <string name="this_may_take_a_while">This may take a while. Do not turn your phone off.</string>
     <string name="setup_finished">Setup finished</string>
+    <string name="your_phone_will_upload_data">Your phone will upload data to Open Humans soon.</string>
     <string name="your_phone_is_upload_data">Your phone is uploading data to Open Humans now.</string>
     <string name="setup_failed">Setup failed</string>
-    <string name="there_was_an_error">There was an error.</string>
+    <string name="there_was_an_error">There was an error. Please try to log in again in order to proceed. Sorry &amp; Thank you!</string>
     <string name="open_humans_terms">This is an open source tool that will copy your data to Open Humans. We retain no rights to share your data with third parties without your explicit authorization. The data the project and app receive are identified via a random user ID and will only be securely transmitted to an Open Humans account with your authorization of that process. You can stop uploading and delete your upload data at any time via www.openhumans.org.</string>
     <string name="i_understand_and_agree">I understand and agree.</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="oh_logout_confirmation">Do you really want to log out and stop donating data to science?</string>
     <string name="project_member_id">Project Member ID: %s</string>
     <string name="queue_size">Queue Size: %d</string>
     <string name="terms_of_use">Terms of Use</string>
