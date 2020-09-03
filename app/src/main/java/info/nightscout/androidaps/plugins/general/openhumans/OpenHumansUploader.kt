@@ -382,7 +382,7 @@ class OpenHumansUploader @Inject constructor(
             .map { enqueueTempTarget(it); increaseCounter() }
             .ignoreElements()
             .doOnSubscribe {
-                wakeLock.acquire(TimeUnit.MINUTES.toMillis(20))
+                wakeLock.acquire(TimeUnit.MINUTES.toMillis(30))
                 showOngoingNotification()
             }
             .doOnComplete {
@@ -595,9 +595,9 @@ class OpenHumansUploader @Inject constructor(
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresCharging(sp.getBoolean("key_oh_charging_only", false))
             .build()
-        val workRequest = PeriodicWorkRequestBuilder<OHUploadWorker>(1, TimeUnit.MINUTES) // TODO OH: DAYS
+        val workRequest = PeriodicWorkRequestBuilder<OHUploadWorker>(1, TimeUnit.DAYS)
             .setConstraints(constraints)
-            .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.MINUTES) //TODO OH: HOURS
+            .setBackoffCriteria(BackoffPolicy.LINEAR, 20, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_NAME, if (replace) ExistingPeriodicWorkPolicy.REPLACE else ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }

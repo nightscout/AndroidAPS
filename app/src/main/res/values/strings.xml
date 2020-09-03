@@ -1409,7 +1409,7 @@
 
     <string name="open_humans">Open Humans</string>
     <string name="finishing_open_humans_setup">Finishing Open Humans setup…</string>
-    <string name="this_may_take_a_while">This may take a while. Do not turn your phone off.</string>
+    <string name="this_may_take_a_while">This may take a while. Do not turn your phone or this plugin off.</string>
     <string name="setup_finished">Setup finished</string>
     <string name="your_phone_will_upload_data">Your phone will upload data to Open Humans soon.</string>
     <string name="your_phone_is_upload_data">Your phone is uploading data to Open Humans now.</string>
