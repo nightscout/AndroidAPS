@@ -2069,9 +2069,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public List<OHQueueItem> getAllOHQueueItems() {
+    public List<OHQueueItem> getAllOHQueueItems(Long maxEntries) {
         try {
-            return getDaoOpenHumansQueue().queryForAll();
+            return getDaoOpenHumansQueue()
+                    .queryBuilder()
+                    .orderBy("id", true)
+                    .limit(maxEntries)
+                    .query();
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }

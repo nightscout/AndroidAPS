@@ -80,6 +80,7 @@ class OpenHumansUploader @Inject constructor(
         private const val SUCCESS_NOTIFICATION_ID = 3124
         private const val SIGNED_OUT_NOTIFICATION_ID = 3125
         const val UPLOAD_NOTIFICATION_ID = 3126
+        private const val UPLOAD_SEGMENT_SIZE = 10000L
     }
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
@@ -440,7 +441,20 @@ class OpenHumansUploader @Inject constructor(
         notificationManager.notify(FAILURE_NOTIFICATION_ID, notification)
     }
 
-    fun uploadData(): Completable = gatherData()
+    fun uploadDataSegmentally(): Completable =
+        uploadData(UPLOAD_SEGMENT_SIZE)
+            .repeatUntil { MainApp.getDbHelper().ohQueueSize == 0L }
+            .doOnSubscribe {
+                aapsLogger.info(LTag.OHUPLOADER, "Starting segmental upload")
+            }
+            .doOnComplete {
+                aapsLogger.info(LTag.OHUPLOADER, "Segmental upload successful")
+            }
+            .doOnError {
+                aapsLogger.error(LTag.OHUPLOADER, "Segmental upload erroneous", it)
+            }
+
+    fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
         .flatMap { uploadFile(it.first, it.second).andThen(Single.just(it.second)) }
         .flatMapCompletable {
@@ -481,8 +495,8 @@ class OpenHumansUploader @Inject constructor(
         }
     }
 
-    private fun gatherData() = Single.defer {
-        val items = MainApp.getDbHelper().allOHQueueItems
+    private fun gatherData(maxEntries: Long?) = Single.defer {
+        val items = MainApp.getDbHelper().getAllOHQueueItems(maxEntries)
         val baos = ByteArrayOutputStream()
         val zos = ZipOutputStream(baos)
         val tags = mutableListOf<String>()

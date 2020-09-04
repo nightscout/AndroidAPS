@@ -42,7 +42,7 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
         val isConnectedToWifi = wifiManager?.isWifiEnabled ?: false && wifiManager?.connectionInfo?.networkId != -1
         if (!wifiOnly || (wifiOnly && isConnectedToWifi)) {
             setForegroundAsync(createForegroundInfo())
-            openHumansUploader.uploadData()
+            openHumansUploader.uploadDataSegmentally()
                 .andThen(Single.just(Result.success()))
                 .onErrorResumeNext { Single.just(Result.retry()) }
         } else {
