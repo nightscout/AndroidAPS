@@ -71,10 +71,6 @@ class OpenHumansFragment : DaggerFragment() {
                 }
             })
         }
-
-        openHumansUploader.uploadDataSegmentally()
-            .subscribeOn(Schedulers.io())
-            .subscribe()
     }
 
     override fun onDestroy() {
