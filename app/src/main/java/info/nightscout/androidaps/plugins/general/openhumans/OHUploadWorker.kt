@@ -59,6 +59,7 @@ class OHUploadWorker(context: Context, workerParameters: WorkerParameters)
             .setContentText(resourceHelper.gs(info.nightscout.androidaps.R.string.your_phone_is_upload_data))
             .setSmallIcon(info.nightscout.androidaps.R.drawable.notif_icon)
             .setOngoing(true)
+            .setProgress(0, 0 , true)
             .build()
         return ForegroundInfo(UPLOAD_NOTIFICATION_ID, notification)
     }
