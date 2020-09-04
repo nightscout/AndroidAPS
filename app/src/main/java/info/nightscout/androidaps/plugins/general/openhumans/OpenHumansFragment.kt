@@ -18,6 +18,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -46,23 +48,18 @@ class OpenHumansFragment : DaggerFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        compositeDisposable += rxBus.toObservable(UpdateQueueEvent::class.java)
-            .throttleLatest(5, TimeUnit.SECONDS)
-            .observeOn(Schedulers.io())
-            .map { MainApp.getDbHelper().ohQueueSize }
+        compositeDisposable += Single.fromCallable { MainApp.getDbHelper().ohQueueSize }
+            .subscribeOn(Schedulers.io())
+            .repeatWhen { rxBus.toObservable(UpdateViewEvent::class.java)
+                .cast(Any::class.java)
+                .mergeWith(rxBus.toObservable(UpdateQueueEvent::class.java)
+                    .throttleLatest(5, TimeUnit.SECONDS))
+                .toFlowable(BackpressureStrategy.LATEST) }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+            .subscribe({
                 queueSizeValue = it
                 updateGUI()
-            }
-        compositeDisposable += rxBus.toObservable(UpdateViewEvent::class.java)
-            .observeOn(Schedulers.io())
-            .map { MainApp.getDbHelper().ohQueueSize }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                queueSizeValue = it
-                updateGUI()
-            }
+            }, {})
         context?.applicationContext?.let { appContext ->
             WorkManager.getInstance(appContext).getWorkInfosForUniqueWorkLiveData(OpenHumansUploader.WORK_NAME).observe(this, Observer<List<WorkInfo>> {
                 val workInfo = it.lastOrNull()
@@ -74,6 +71,10 @@ class OpenHumansFragment : DaggerFragment() {
                 }
             })
         }
+
+        openHumansUploader.uploadDataSegmentally()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     override fun onDestroy() {
