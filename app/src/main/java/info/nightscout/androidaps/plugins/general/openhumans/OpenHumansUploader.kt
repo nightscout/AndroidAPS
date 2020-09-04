@@ -451,7 +451,7 @@ class OpenHumansUploader @Inject constructor(
                 aapsLogger.info(LTag.OHUPLOADER, "Segmental upload successful")
             }
             .doOnError {
-                aapsLogger.error(LTag.OHUPLOADER, "Segmental upload erroneous", it)
+                aapsLogger.error(LTag.OHUPLOADER, "Segmental upload exceptional", it)
             }
 
     fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
