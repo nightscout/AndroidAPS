@@ -12,7 +12,7 @@ public class OmnipodStorageKeys {
         public static final int BOLUS_BEEPS_ENABLED = R.string.key_omnipod_bolus_beeps_enabled;
         public static final int SMB_BEEPS_ENABLED = R.string.key_omnipod_smb_beeps_enabled;
         public static final int TBR_BEEPS_ENABLED = R.string.key_omnipod_tbr_beeps_enabled;
-        public static final int SUSPEND_DELIVERY_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
+        public static final int SUSPEND_DELIVERY_BUTTON_ENABLED = R.string.key_omnipod_suspend_delivery_button_enabled;
         public static final int PULSE_LOG_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
         public static final int TIME_CHANGE_EVENT_ENABLED = R.string.key_omnipod_time_change_event_enabled;
         public static final int EXPIRATION_REMINDER_ENABLED = R.string.key_omnipod_expiration_reminder_enabled;
