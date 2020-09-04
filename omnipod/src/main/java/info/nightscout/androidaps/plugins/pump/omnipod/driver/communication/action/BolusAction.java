@@ -46,8 +46,8 @@ public class BolusAction implements OmnipodAction<StatusResponse> {
                 podStateManager.getCurrentNonce(), bolusDeliverySchedule);
         BolusExtraCommand bolusExtraCommand = new BolusExtraCommand(units, timeBetweenPulses,
                 acknowledgementBeep, completionBeep);
-        OmnipodMessage primeBolusMessage = new OmnipodMessage(podStateManager.getAddress(),
+        OmnipodMessage bolusMessage = new OmnipodMessage(podStateManager.getAddress(),
                 Arrays.asList(setInsulinScheduleCommand, bolusExtraCommand), podStateManager.getMessageNumber());
-        return communicationService.exchangeMessages(StatusResponse.class, podStateManager, primeBolusMessage);
+        return communicationService.exchangeMessages(StatusResponse.class, podStateManager, bolusMessage);
     }
 }

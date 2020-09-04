@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
@@ -34,9 +35,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -56,7 +55,6 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -140,9 +138,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private long nextPodCheck;
     private boolean sentIdToFirebase;
     private long lastConnectionTimeMillis;
-    private final Handler loopHandler = new Handler();
+    private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
+    private OmnipodCommandType currentCommand;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -322,8 +321,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // But it doesn't tell us the duration or amount, so we can only update TBR status in AAPS if
         // The pod is not running a TBR, while AAPS thinks it is
         if (!podStateManager.isTempBasalRunning()) {
-            if (activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
-                aapsOmnipodManager.reportCancelledTbr();
+            // Only report TBR cancellations if they haven't been explicitly requested
+            if (currentCommand != OmnipodCommandType.CANCEL_TEMPORARY_BASAL) {
+                if (activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
+                    aapsOmnipodManager.reportCancelledTbr();
+                }
             }
         }
     }
@@ -596,7 +598,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
-            aapsLogger.error("deliverTreatment: Invalid input");
+            aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
             return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
                     .comment(getResourceHelper().gs(info.nightscout.androidaps.core.R.string.invalidinput));
         } else if (detailedBolusInfo.insulin > 0) {
@@ -605,15 +607,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         } else {
             // no bolus required, carb only treatment
             activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
-
-            // FIXME do we need this??
-            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
-            bolusingEvent.setT(new Treatment());
-            bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
-            bolusingEvent.setPercent(100);
-            rxBus.send(bolusingEvent);
-
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.");
 
             return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
                     .carbsDelivered(detailedBolusInfo.carbs).comment(getResourceHelper().gs(info.nightscout.androidaps.core.R.string.common_resultok));
@@ -643,7 +636,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (tbrCurrent != null && !enforceNew) {
             if (Round.isSame(tbrCurrent.absoluteRate, absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
-                rxBus.send(new EventRefreshOverview("Omnipod command: SetTemporaryBasal", false));
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         }
@@ -665,23 +657,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         if (tbrCurrent == null) {
             aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already cancelled.");
-            rxBus.send(new EventRefreshOverview("Omnipod command: CancelTemporaryBasal", false));
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        PumpEnactResult result = executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
-
-        if (result.success) {
-            // TODO is this necessary?
-            TemporaryBasal tempBasal = new TemporaryBasal(getInjector()) //
-                    .date(System.currentTimeMillis()) //
-                    .duration(0) //
-                    .source(Source.USER);
-
-            activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
-        }
-
-        return result;
+        return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
     }
 
     // TODO improve (i8n and more)
@@ -934,17 +913,21 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private <T> T executeCommand(OmnipodCommandType commandType, Supplier<T> supplier) {
-        aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
+        try {
+            currentCommand = commandType;
+            aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
 
-        rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(getInjector(), commandType));
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(getInjector(), commandType));
 
-        T pumpEnactResult = supplier.get();
+            T pumpEnactResult = supplier.get();
 
-        rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
+            rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
+            rxBus.send(new EventOmnipodPumpValuesChanged());
 
-        rxBus.send(new EventOmnipodPumpValuesChanged());
-
-        return pumpEnactResult;
+            return pumpEnactResult;
+        } finally {
+            currentCommand = null;
+        }
     }
 
     private boolean verifyPodAlertConfiguration() {
