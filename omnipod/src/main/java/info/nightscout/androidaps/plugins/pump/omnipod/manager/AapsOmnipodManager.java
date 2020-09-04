@@ -374,7 +374,7 @@ public class AapsOmnipodManager {
 
         sp.remove(OmnipodStorageKeys.Preferences.ACTIVE_BOLUS);
 
-        return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
+        return new PumpEnactResult(injector).success(true).enacted(true).carbsDelivered(detailedBolusInfo.carbs).bolusDelivered(detailedBolusInfo.insulin);
     }
 
     public PumpEnactResult cancelBolus() {
@@ -464,12 +464,21 @@ public class AapsOmnipodManager {
     public PumpEnactResult cancelTemporaryBasal() {
         try {
             delegate.cancelTemporaryBasal(isTbrBeepsEnabled());
-            addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
+
+        long pumpId = addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, null);
+
+        TemporaryBasal tempBasal = new TemporaryBasal(injector) //
+                .date(System.currentTimeMillis()) //
+                .duration(0) //
+                .pumpId(pumpId) //
+                .source(Source.PUMP);
+
+        activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -568,9 +577,25 @@ public class AapsOmnipodManager {
         return timeChangeEventEnabled;
     }
 
-    public void addBolusToHistory(DetailedBolusInfo detailedBolusInfo) {
+    public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
+        DetailedBolusInfo detailedBolusInfo = originalDetailedBolusInfo.copy();
+
         long pumpId = addSuccessToHistory(detailedBolusInfo.date, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs);
         detailedBolusInfo.pumpId = pumpId;
+
+        if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime > 0) {
+            // split out a separate carbs record without a pumpId
+            DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+            carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
+            carbInfo.carbs = detailedBolusInfo.carbs;
+            carbInfo.source = Source.USER;
+            activePlugin.getActiveTreatments().addToHistoryTreatment(carbInfo, false);
+
+            // remove carbs from bolusInfo to not trigger any unwanted code paths in
+            // TreatmentsPlugin.addToHistoryTreatment() method
+            detailedBolusInfo.carbTime = 0;
+            detailedBolusInfo.carbs = 0;
+        }
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
     }
 
@@ -634,7 +659,7 @@ public class AapsOmnipodManager {
                 .date(time) //
                 .duration(tempBasalPair.getDurationMinutes()) //
                 .absolute(tempBasalPair.getInsulinRate()) //
-                .pumpId(pumpId)
+                .pumpId(pumpId) //
                 .source(Source.PUMP);
 
         activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
