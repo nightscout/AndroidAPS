@@ -53,7 +53,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
                 params.floatminNumber = typedArray.getFloat(R.styleable.FormEditText_floatminNumber, Float.MIN_VALUE)
                 params.floatmaxNumber = typedArray.getFloat(R.styleable.FormEditText_floatmaxNumber, Float.MAX_VALUE)
             }
+            typedArray.recycle()
         }
-        typedArray.recycle()
     }
 }
