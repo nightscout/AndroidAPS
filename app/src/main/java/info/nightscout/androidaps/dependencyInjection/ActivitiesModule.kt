@@ -7,6 +7,7 @@ import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansLoginActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEScanActivity
@@ -40,4 +41,6 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
     @ContributesAndroidInjector abstract fun contributesDefaultProfileActivity(): ProfileHelperActivity
     @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
+    @ContributesAndroidInjector abstract fun contributesOpenHumansLoginActivity(): OpenHumansLoginActivity
+
 }
