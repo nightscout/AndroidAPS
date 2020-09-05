@@ -243,18 +243,18 @@ class DefaultEditTextValidator : EditTextValidator {
             !TextUtils.isEmpty(editTextView.error)
         }
 
-    class Parameters {
-        var testErrorString: String? = null
-        var emptyAllowed = false
-        var testType: Int = EditTextValidator.TEST_NOCHECK
-        var classType: String? = null
-        var customRegexp: String? = null
-        var customFormat: String? = null
-        var emptyErrorStringDef: String? = null
-        var minLength = 0
-        var minNumber = 0
-        var maxNumber = 0
-        var floatminNumber = 0f
-        var floatmaxNumber = 0f
-    }
+    data class Parameters(
+        val testErrorString: String? = null,
+        val emptyAllowed: Boolean = false,
+        val testType: Int = EditTextValidator.TEST_NOCHECK,
+        val classType: String? = null,
+        val customRegexp: String? = null,
+        val customFormat: String? = null,
+        val emptyErrorStringDef: String? = null,
+        var minLength: Int = 0,
+        var minNumber: Int = 0,
+        var maxNumber: Int = 0,
+        var floatminNumber: Float = 0f,
+        var floatmaxNumber: Float = 0f
+    )
 }
