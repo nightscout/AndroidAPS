@@ -356,7 +356,7 @@ class OpenHumansUploader @Inject constructor(
             if (currentProgress % 1000L == 0L) showOngoingNotification(maxProgress, currentProgress)
         }
         copyDisposable = Completable.fromCallable { MainApp.getDbHelper().clearOpenHumansQueue() }
-            .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows) })
+            .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows + treatmentsPlugin.service.count()) })
             .doOnSuccess { maxProgress = it }
             .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
             .map { enqueueTreatment(it); increaseCounter() }
