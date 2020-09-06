@@ -9,12 +9,10 @@ import info.nightscout.androidaps.core.R
 class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
     : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {
 
-    private lateinit var validatorParameters: DefaultEditTextValidator.Parameters
+    private val validatorParameters: DefaultEditTextValidator.Parameters = obtainValidatorParameters(attrs)
     private var validator: DefaultEditTextValidator? = null
 
     init {
-        obtainValidatorParameters(attrs)
-
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
         }
@@ -35,26 +33,27 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
         holder?.isDividerAllowedBelow = false
     }
 
-    private fun obtainValidatorParameters(attrs: AttributeSet) {
+    private fun obtainValidatorParameters(attrs: AttributeSet): DefaultEditTextValidator.Parameters {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
-        validatorParameters = DefaultEditTextValidator.Parameters()
-        validatorParameters.emptyAllowed = typedArray.getBoolean(R.styleable.FormEditText_emptyAllowed, false)
-        validatorParameters.testType = typedArray.getInt(R.styleable.FormEditText_testType, EditTextValidator.TEST_NOCHECK)
-        validatorParameters.testErrorString = typedArray.getString(R.styleable.FormEditText_testErrorString)
-        validatorParameters.classType = typedArray.getString(R.styleable.FormEditText_classType)
-        validatorParameters.customRegexp = typedArray.getString(R.styleable.FormEditText_customRegexp)
-        validatorParameters.emptyErrorStringDef = typedArray.getString(R.styleable.FormEditText_emptyErrorString)
-        validatorParameters.customFormat = typedArray.getString(R.styleable.FormEditText_customFormat)
-        if (validatorParameters.testType == EditTextValidator.TEST_MIN_LENGTH)
-            validatorParameters.minLength = typedArray.getInt(R.styleable.FormEditText_minLength, 0)
-        if (validatorParameters.testType == EditTextValidator.TEST_NUMERIC_RANGE) {
-            validatorParameters.minNumber = typedArray.getInt(R.styleable.FormEditText_minNumber, Int.MIN_VALUE)
-            validatorParameters.maxNumber = typedArray.getInt(R.styleable.FormEditText_maxNumber, Int.MAX_VALUE)
+        return DefaultEditTextValidator.Parameters(
+            emptyAllowed = typedArray.getBoolean(R.styleable.FormEditText_emptyAllowed, false),
+            testType = typedArray.getInt(R.styleable.FormEditText_testType, EditTextValidator.TEST_NOCHECK),
+            testErrorString = typedArray.getString(R.styleable.FormEditText_testErrorString),
+            classType = typedArray.getString(R.styleable.FormEditText_classType),
+            customRegexp = typedArray.getString(R.styleable.FormEditText_customRegexp),
+            emptyErrorStringDef = typedArray.getString(R.styleable.FormEditText_emptyErrorString),
+            customFormat = typedArray.getString(R.styleable.FormEditText_customFormat)).also { params ->
+            if (params.testType == EditTextValidator.TEST_MIN_LENGTH)
+                params.minLength = typedArray.getInt(R.styleable.FormEditText_minLength, 0)
+            if (params.testType == EditTextValidator.TEST_NUMERIC_RANGE) {
+                params.minNumber = typedArray.getInt(R.styleable.FormEditText_minNumber, Int.MIN_VALUE)
+                params.maxNumber = typedArray.getInt(R.styleable.FormEditText_maxNumber, Int.MAX_VALUE)
+            }
+            if (params.testType == EditTextValidator.TEST_FLOAT_NUMERIC_RANGE) {
+                params.floatminNumber = typedArray.getFloat(R.styleable.FormEditText_floatminNumber, Float.MIN_VALUE)
+                params.floatmaxNumber = typedArray.getFloat(R.styleable.FormEditText_floatmaxNumber, Float.MAX_VALUE)
+            }
+            typedArray.recycle()
         }
-        if (validatorParameters.testType == EditTextValidator.TEST_FLOAT_NUMERIC_RANGE) {
-            validatorParameters.floatminNumber = typedArray.getFloat(R.styleable.FormEditText_floatminNumber, Float.MIN_VALUE)
-            validatorParameters.floatmaxNumber = typedArray.getFloat(R.styleable.FormEditText_floatmaxNumber, Float.MAX_VALUE)
-        }
-        typedArray.recycle()
     }
 }
