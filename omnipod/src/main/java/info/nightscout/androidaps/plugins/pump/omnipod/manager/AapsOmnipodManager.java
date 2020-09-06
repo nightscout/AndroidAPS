@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.manager;
 
-import android.content.Context;
-
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -90,7 +88,6 @@ public class AapsOmnipodManager {
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
     private final ActivePluginProvider activePlugin;
-    private final Context context;
     private final SP sp;
     private final OmnipodManager delegate;
     private final DatabaseHelperInterface databaseHelper;
@@ -114,7 +111,6 @@ public class AapsOmnipodManager {
                               ResourceHelper resourceHelper,
                               HasAndroidInjector injector,
                               ActivePluginProvider activePlugin,
-                              Context context,
                               DatabaseHelperInterface databaseHelper,
                               OmnipodAlertUtil omnipodAlertUtil) {
         if (podStateManager == null) {
@@ -127,7 +123,6 @@ public class AapsOmnipodManager {
         this.resourceHelper = resourceHelper;
         this.injector = injector;
         this.activePlugin = activePlugin;
-        this.context = context;
         this.databaseHelper = databaseHelper;
         this.sp = sp;
         this.omnipodAlertUtil = omnipodAlertUtil;
