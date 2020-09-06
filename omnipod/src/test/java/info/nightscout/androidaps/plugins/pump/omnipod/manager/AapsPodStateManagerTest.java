@@ -22,7 +22,8 @@ import static org.junit.Assert.assertEquals;
 public class AapsPodStateManagerTest {
     @Mock AAPSLogger aapsLogger;
     @Mock SP sp;
-    @Mock RxBusWrapper rxBus;
+
+    private RxBusWrapper rxBus = new RxBusWrapper();
 
     @Test
     public void times() {
