@@ -423,7 +423,7 @@ public class AapsOmnipodManager {
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             String comment = getStringResource(R.string.omnipod_cancelled_old_tbr_failed_to_set_new);
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, comment);
-            showNotification(comment, Notification.URGENT, null);
+            showNotification(comment, Notification.NORMAL, null);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         } catch (DeliveryStatusVerificationFailedException ex) {
             String comment;

@@ -24,9 +24,7 @@ class CommandStartPump(
         } else if (pump.pumpDescription.pumpType == PumpType.Insulet_Omnipod) {
             // When using CommandQueue.setProfile, it refuses to set the profile is the same as the current profile
             // However we need to set the current profile to resume delivery in case the Pod is suspended
-            if (profileFunction.getProfile() != null) {
-                pump.setNewBasalProfile(profileFunction.getProfile())
-            }
+            pump.setNewBasalProfile(profileFunction.getProfile())
         }
     }
 
