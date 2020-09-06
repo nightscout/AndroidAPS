@@ -128,11 +128,7 @@ public class AapsOmnipodManager {
         this.omnipodAlertUtil = omnipodAlertUtil;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
-    }
 
-    @Inject
-    void onInit() {
-        // this cannot be done in the constructor, as sp is not populated at that time
         reloadSettings();
     }
 

@@ -5,7 +5,6 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
-import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodHistoryActivity
@@ -33,7 +32,6 @@ abstract class OmnipodModule {
     // Service
     @ContributesAndroidInjector
     abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
-    @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
 
     // Data
     @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
