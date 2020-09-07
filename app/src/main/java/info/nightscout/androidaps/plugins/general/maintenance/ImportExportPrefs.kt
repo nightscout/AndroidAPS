@@ -130,6 +130,15 @@ class ImportExportPrefs @Inject constructor(
         })
     }
 
+    private fun askForEncryptionPass(activity: Activity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
+                                     @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)) {
+        passwordCheck.queryAnyPassword(activity, passwordName, R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
+            then(password)
+        }, {
+            ToastUtils.warnToast(activity, resourceHelper.gs(canceledMsg))
+        })
+    }
+
     private fun askForMasterPassIfNeeded(activity: Activity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         if (prefsEncryptionIsDisabled()) {
             then("")
@@ -179,6 +188,28 @@ class ImportExportPrefs @Inject constructor(
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nav_import),
                 resourceHelper.gs(R.string.import_from) + " " + fileToImport.file + " ?",
                 Runnable { then("") })
+        }
+    }
+
+    private fun promptForDecryptionPasswordIfNeeded(activity: Activity, prefs: Prefs, importOk: Boolean,
+                                                    format: PrefsFormat, importFile: PrefsFile, then: ((prefs: Prefs, importOk: Boolean) -> Unit)) {
+
+        // current master password was not the one used for decryption, so we prompt for old password...
+        if (!importOk && (prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status == PrefsStatus.ERROR)) {
+            askForEncryptionPass(activity, R.string.preferences_import_canceled, R.string.old_master_password,
+                R.string.different_password_used, R.string.master_password_will_be_replaced) { password ->
+
+                // ...and use it to load & decrypt file again
+                val prefsReloaded = format.loadPreferences(importFile.file, password)
+                prefsReloaded.metadata = prefFileList.checkMetadata(prefsReloaded.metadata)
+
+                // import is OK when we do not have errors (warnings are allowed)
+                val importOkCheckedAgain = checkIfImportIsOk(prefsReloaded)
+
+                then(prefsReloaded, importOkCheckedAgain);
+            }
+        } else {
+            then(prefs, importOk);
         }
     }
 
@@ -258,32 +289,36 @@ class ImportExportPrefs @Inject constructor(
 
             try {
 
-                val prefs = format.loadPreferences(importFile.file, password)
-                prefs.metadata = prefFileList.checkMetadata(prefs.metadata)
+                val prefsAttempted = format.loadPreferences(importFile.file, password)
+                prefsAttempted.metadata = prefFileList.checkMetadata(prefsAttempted.metadata)
 
                 // import is OK when we do not have errors (warnings are allowed)
-                val importOk = checkIfImportIsOk(prefs)
+                val importOkAttempted = checkIfImportIsOk(prefsAttempted)
 
-                // if at end we allow to import preferences
-                val importPossible = (importOk || buildHelper.isEngineeringMode()) && (prefs.values.size > 0)
+                promptForDecryptionPasswordIfNeeded(activity, prefsAttempted, importOkAttempted, format, importFile) { prefs, importOk ->
 
-                PrefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
-                    if (importPossible) {
-                        sp.clear()
-                        for ((key, value) in prefs.values) {
-                            if (value == "true" || value == "false") {
-                                sp.putBoolean(key, value.toBoolean())
-                            } else {
-                                sp.putString(key, value)
+                    // if at end we allow to import preferences
+                    val importPossible = (importOk || buildHelper.isEngineeringMode()) && (prefs.values.size > 0)
+
+                    PrefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
+                        if (importPossible) {
+                            sp.clear()
+                            for ((key, value) in prefs.values) {
+                                if (value == "true" || value == "false") {
+                                    sp.putBoolean(key, value.toBoolean())
+                                } else {
+                                    sp.putString(key, value)
+                                }
                             }
-                        }
 
-                        restartAppAfterImport(activity)
-                    } else {
-                        // for impossible imports it should not be called
-                        ToastUtils.errorToast(activity, resourceHelper.gs(R.string.preferences_import_impossible))
-                    }
-                })
+                            restartAppAfterImport(activity)
+                        } else {
+                            // for impossible imports it should not be called
+                            ToastUtils.errorToast(activity, resourceHelper.gs(R.string.preferences_import_impossible))
+                        }
+                    })
+
+                }
 
             } catch (e: PrefFileNotFoundError) {
                 ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + importFile)

@@ -102,6 +102,8 @@
     <string name="shortminute">мин</string>
     <string name="shortday">дн</string>
     <!--    Protection-->
+    <string name="wrongpassword">Неверный пароль</string>
+    <string name="passwords_dont_match">Пароли не совпадают</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
     <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
@@ -129,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Проверка ГК</string>
+    <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
     <string name="careportal_announcement">Оовещение</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
