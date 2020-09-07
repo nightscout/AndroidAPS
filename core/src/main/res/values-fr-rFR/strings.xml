@@ -131,6 +131,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑ : <b>%2$.2f U</b> Bol : <b>%3$.2f U</b> Bas : <b>%4$.2f U (%5$.0f%%)</b> Gluc : <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
+    <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>

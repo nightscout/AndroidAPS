@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
@@ -24,6 +25,9 @@ class PasswordCheck @Inject constructor(
     private val cryptoUtil: CryptoUtil
 ) {
 
+    /**
+    Asks for "managed" kind of password, checking if it is valid.
+     */
     @SuppressLint("InflateParams")
     fun queryPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null, fail: (() -> Unit)? = null) {
         val password = sp.getString(preference, "")
@@ -109,6 +113,53 @@ class PasswordCheck @Inject constructor(
             .setNegativeButton(context.getString(R.string.cancel)
             ) { dialog, _ ->
                 ToastUtils.infoToast(context, context.getString(R.string.password_not_changed))
+                cancel?.invoke()
+                dialog.cancel()
+            }
+
+        alertDialogBuilder.create().show()
+    }
+
+    /**
+    Prompt free-form password, with additional help and warning messages.
+    Preference ID (preference) is used only to generate ID for password managers,
+    since this query does NOT check validity of password.
+     */
+    @SuppressLint("InflateParams")
+    fun queryAnyPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, @StringRes passwordExplanation: Int?,
+                         @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null) {
+
+        val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
+        val alertDialogBuilder = AlertDialogHelper.Builder(context)
+        alertDialogBuilder.setView(promptsView)
+        passwordExplanation?.let { alertDialogBuilder.setMessage(it) }
+
+        passwordWarning?.let {
+            val extraWarning: TextView = promptsView.findViewById<View>(R.id.password_prompt_extra_message) as TextView;
+            extraWarning.text = context.getString(it);
+            extraWarning.visibility = View.VISIBLE;
+        }
+
+        val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
+        val userInput2 = promptsView.findViewById<View>(R.id.password_prompt_pass_confirm) as EditText
+
+        userInput2.visibility = View.GONE
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val autoFillHintPasswordKind = context.getString(preference)
+            userInput.setAutofillHints(View.AUTOFILL_HINT_PASSWORD, "aaps_${autoFillHintPasswordKind}")
+            userInput.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
+        }
+
+        alertDialogBuilder
+            .setCancelable(false)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
+                val enteredPassword = userInput.text.toString()
+                ok?.invoke(enteredPassword)
+            }
+            .setNegativeButton(context.getString(R.string.cancel)
+            ) { dialog, _ ->
                 cancel?.invoke()
                 dialog.cancel()
             }

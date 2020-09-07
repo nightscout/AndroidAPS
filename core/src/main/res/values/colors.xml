@@ -21,6 +21,7 @@
     <color name="dialog_title_icon_tint">#FFFFFF</color>
     <color name="warningAlertBackground">#FFFB8C00</color>
     <color name="warningAlertHeaderText">#FF000000</color>
+    <color name="warningAccentText">#FFFB8C00</color>
     <color name="errorAlertBackground">#FFFF5555</color>
     <color name="errorAlertHeaderText">#FF000000</color>
     <color name="examinedProfile">#FFFF5555</color>
