@@ -74,7 +74,7 @@ public class InitializePumpManagerTask extends ServiceTask {
 
                 rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady);
 
-                aapsLogger.info(LTag.PUMPCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
+                aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
 
                 rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency);
 
@@ -103,7 +103,7 @@ public class InitializePumpManagerTask extends ServiceTask {
             rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady);
             rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod; // TODO shouldn't be needed
 
-            aapsLogger.info(LTag.PUMPCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
+            aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
 
             rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency);
 

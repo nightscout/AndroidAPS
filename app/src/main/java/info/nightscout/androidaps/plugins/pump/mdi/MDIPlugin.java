@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -69,6 +68,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
         pumpDescription.isTempBasalCapable = false;
         pumpDescription.isSetBasalProfileCapable = false;
         pumpDescription.isRefillingCapable = false;
+        pumpDescription.isBatteryReplaceable = false;
     }
 
     @Override

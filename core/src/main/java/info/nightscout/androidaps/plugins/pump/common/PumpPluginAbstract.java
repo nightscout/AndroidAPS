@@ -474,8 +474,4 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
     }
 
-    protected FabricPrivacy getFabricPrivacy() {
-        return this.fabricPrivacy;
-    }
-
 }

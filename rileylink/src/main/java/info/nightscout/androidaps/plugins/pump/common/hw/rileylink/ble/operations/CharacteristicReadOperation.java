@@ -55,7 +55,7 @@ public class CharacteristicReadOperation extends BLECommOperation {
     public void gattOperationCompletionCallback(UUID uuid, byte[] value) {
         super.gattOperationCompletionCallback(uuid, value);
         if (!characteristic.getUuid().equals(uuid)) {
-            aapsLogger.error(LTag.PUMPCOMM, String.format(
+            aapsLogger.error(LTag.PUMPBTCOMM, String.format(
                     "Completion callback: UUID does not match! out of sequence? Found: %s, should be %s",
                     GattAttributes.lookup(characteristic.getUuid()), GattAttributes.lookup(uuid)));
         }
