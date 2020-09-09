@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -35,12 +36,12 @@ class LocalAlertUtils @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-    private fun missedReadingsThreshold(): Long {
-        return T.mins(sp.getInt(resourceHelper.gs(R.string.key_missed_bg_readings_threshold), 30).toLong()).msecs()
+    fun missedReadingsThreshold(): Long {
+        return T.mins(sp.getInt(resourceHelper.gs(R.string.key_missed_bg_readings_threshold_minutes), Constants.DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES).toLong()).msecs()
     }
 
     fun pumpUnreachableThreshold(): Long {
-        return T.mins(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold), 30).toLong()).msecs()
+        return T.mins(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold_minutes), Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong()).msecs()
     }
 
     fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {

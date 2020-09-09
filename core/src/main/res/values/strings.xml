@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Keys-->
     <string name="key_enable_fabric" translatable="false">enable_fabric</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_units" translatable="false">units</string>
@@ -22,8 +23,9 @@
     <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
+    <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
-    <string name="pairing">Pairing</string>
 
     <!--    General-->
     <string name="error">Error</string>
@@ -89,6 +91,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
+    <string name="pairing">Pairing</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

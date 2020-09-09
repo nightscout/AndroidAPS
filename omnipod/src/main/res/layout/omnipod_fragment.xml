@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.pump.omnipod.OmnipodFragment">
+    tools:context="info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment">
 
 
     <RelativeLayout
@@ -351,7 +351,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_lastconnection"
+                        android:id="@+id/omnipod_last_connection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -393,7 +393,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_lastbolus"
+                        android:id="@+id/omnipod_last_bolus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -436,7 +436,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_basabasalrate"
+                        android:id="@+id/omnipod_base_basal_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -478,7 +478,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/omnipod_tempbasal"
+                        android:id="@+id/omnipod_temp_basal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -494,7 +494,6 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
                     android:background="?android:attr/dividerHorizontal" />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -531,6 +530,50 @@
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/omnipod_total_delivered_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_total_delivered"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="fill_parent"
@@ -644,24 +687,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-
                 <Button
-                    android:id="@+id/omnipod_refresh"
+                    android:id="@+id/omnipod_button_refresh_status"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_actions_refill"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/" />
+                    android:text="@string/omnipod_refresh" />
 
                 combo_refresh
                 <Button
-                    android:id="@+id/omnipod_pod_mgmt"
+                    android:id="@+id/omnipod_button_pod_mgmt"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_danarhistory"
                     android:paddingLeft="0dp"
@@ -669,21 +711,21 @@
                     android:text="@string/omnipod_pod_mgmt" />
 
                 <Button
-                    android:id="@+id/omnipod_pod_active_alerts_ack"
+                    android:id="@+id/omnipod_button_acknowledge_active_alerts"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_cp_aaps_offline"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/omnipod_ack_short" />
+                    android:text="@string/omnipod_acknowledge_active_alerts_short" />
 
                 <Button
-                    android:id="@+id/omnipod_stats"
+                    android:id="@+id/omnipod_button_rileylink_stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_danarstats"
                     android:paddingLeft="0dp"
@@ -691,15 +733,40 @@
                     android:text="@string/omnipod_rl_stats" />
 
                 <Button
-                    android:id="@+id/omnipod_pod_debug"
+                    android:id="@+id/omnipod_button_pulse_log"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_cp_bolus_correction"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/omnipod_read_pulse_log_short" />
+                    android:text="@string/omnipod_read_pulse_log_short"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/omnipod_button_suspend_delivery"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_loop_disabled"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_suspend_delivery_short"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/omnipod_button_resume_delivery"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_local_activate"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_resume_delivery"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
