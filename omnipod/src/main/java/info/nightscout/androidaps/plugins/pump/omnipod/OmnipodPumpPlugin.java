@@ -462,44 +462,46 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (firstRun) {
             initializeAfterRileyLinkConnection();
         } else if (!statusRequestList.isEmpty()) {
-            Iterator<OmnipodStatusRequestType> iterator = statusRequestList.iterator();
+            synchronized (statusRequestList) {
+                Iterator<OmnipodStatusRequestType> iterator = statusRequestList.iterator();
 
-            while (iterator.hasNext()) {
-                OmnipodStatusRequestType statusRequest = iterator.next();
-                switch (statusRequest) {
-                    case GET_PULSE_LOG:
-                        try {
-                            PodInfoRecentPulseLog result = executeCommand(OmnipodCommandType.GET_POD_PULSE_LOG, aapsOmnipodManager::readPulseLog);
-                            Intent i = new Intent(context, ErrorHelperActivity.class);
-                            i.putExtra("soundid", 0);
-                            i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
-                            i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
-                            i.putExtra("clipboardContent", result.toString());
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                        } catch (Exception ex) {
-                            aapsLogger.warn(LTag.PUMP, "Failed to retrieve pulse log", ex);
-                            Intent i = new Intent(context, ErrorHelperActivity.class);
-                            i.putExtra("soundid", 0);
-                            i.putExtra("status", "Failed to retrieve pulse log");
-                            i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                        }
-                        break;
-                    case ACKNOWLEDGE_ALERTS:
-                        executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodManager::acknowledgeAlerts);
-                        break;
-                    case GET_POD_STATE:
-                        executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
-                        break;
-                    case SUSPEND_DELIVERY:
-                        executeCommand(OmnipodCommandType.SUSPEND_DELIVERY, aapsOmnipodManager::suspendDelivery);
-                        break;
-                    default:
-                        aapsLogger.error(LTag.PUMP, "Unknown status request: " + statusRequest.name());
+                while (iterator.hasNext()) {
+                    OmnipodStatusRequestType statusRequest = iterator.next();
+                    switch (statusRequest) {
+                        case GET_PULSE_LOG:
+                            try {
+                                PodInfoRecentPulseLog result = executeCommand(OmnipodCommandType.GET_POD_PULSE_LOG, aapsOmnipodManager::readPulseLog);
+                                Intent i = new Intent(context, ErrorHelperActivity.class);
+                                i.putExtra("soundid", 0);
+                                i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
+                                i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
+                                i.putExtra("clipboardContent", result.toString());
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(i);
+                            } catch (Exception ex) {
+                                aapsLogger.warn(LTag.PUMP, "Failed to retrieve pulse log", ex);
+                                Intent i = new Intent(context, ErrorHelperActivity.class);
+                                i.putExtra("soundid", 0);
+                                i.putExtra("status", "Failed to retrieve pulse log");
+                                i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(i);
+                            }
+                            break;
+                        case ACKNOWLEDGE_ALERTS:
+                            executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodManager::acknowledgeAlerts);
+                            break;
+                        case GET_POD_STATE:
+                            executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+                            break;
+                        case SUSPEND_DELIVERY:
+                            executeCommand(OmnipodCommandType.SUSPEND_DELIVERY, aapsOmnipodManager::suspendDelivery);
+                            break;
+                        default:
+                            aapsLogger.error(LTag.PUMP, "Unknown status request: " + statusRequest.name());
+                    }
+                    iterator.remove();
                 }
-                iterator.remove();
             }
         } else if (this.hasTimeDateOrTimeZoneChanged) {
             PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TIME, aapsOmnipodManager::setTime);
@@ -830,7 +832,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public void addPodStatusRequest(OmnipodStatusRequestType pumpStatusRequest) {
-        statusRequestList.add(pumpStatusRequest);
+        synchronized (statusRequestList) {
+            statusRequestList.add(pumpStatusRequest);
+        }
     }
 
     @Override
