@@ -10,8 +10,11 @@
     <string name="omnipod_config_tbr_beeps_enabled">BIP TBR abilitato</string>
     <string name="omnipod_config_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_config_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Avviso livello serbatoio basso abilitato</string>
     <string name="omnipod_config_low_reservoir_alert_units">Numero di unità</string>
     <!-- Omnipod - Fragment -->
+    <string name="omnipod_moments_ago">Momenti fa</string>
     <string name="omnipod_pod_mgmt">GSTN pod</string>
     <string name="omnipod_pod_status">Stato pod</string>
     <string name="omnipod_total_delivered_label">Totale erogato</string>
@@ -21,6 +24,8 @@
     <string name="omnipod_pod_address">Indirizzo pod</string>
     <string name="omnipod_pod_expiry">Scadenza pod</string>
     <string name="omnipod_pod_status_no_active_pod">Nessun pod attivo</string>
+    <string name="omnipod_pod_status_waiting_for_pair_and_prime">Configurazione in corso (attesa associazione e caricamento)</string>
+    <string name="omnipod_pod_status_waiting_for_cannula_insertion">Configurazione in corso (attesa inserimento cannula)</string>
     <string name="omnipod_pod_status_running">In esecuzione</string>
     <string name="omnipod_pod_status_suspended">Sospeso</string>
     <string name="omnipod_pod_status_pod_fault">Guasto pod</string>
@@ -28,10 +33,13 @@
     <string name="omnipod_pod_status_inactive">Inattivo</string>
     <string name="omnipod_pod_status_pod_fault_description">Guasto pod: %1$s %2$s</string>
     <string name="omnipod_pod_active_alerts">Attiva avvisi pod</string>
+    <string name="omnipod_acknowledge_active_alerts_short">Conferma avvisi</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_error_rileylink_address_invalid">Indirizzo RileyLink non valido.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operazione non possibile.\n\nDevi prima configurare Omnipod.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">Operazione non possibile.\n\n Devi attendere qualche minuto che AAPS imposti il profilo basale per la prima volta.</string>
     <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Nessun pod attivo</string>
     <string name="omnipod_driver_error_setup_action_verification_failed">Verifica comando fallita</string>
@@ -57,14 +65,18 @@
     <string name="omnipod_cmd_deactivate_pod">Disattiva pod</string>
     <string name="omnipod_cmd_pod_history">Storico pod</string>
     <string name="omnipod_cmd_set_bolus">Imposta bolo</string>
+    <string name="omnipod_cmd_set_tbr">Imposta basale temporanea</string>
     <string name="omnipod_cmd_set_basal_schedule">Imposta piano basale</string>
     <string name="omnipod_cmd_get_pod_status">Ottieni stato pod</string>
     <string name="omnipod_cmd_get_pod_info">Ottieni info pod</string>
+    <string name="omnipod_cmd_set_time">Imposta ora</string>
     <string name="omnipod_cmd_configure_alerts">Configura avvisi</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Conferma avvisi</string>
     <string name="omnipod_cmd_suspend_delivery">Sospendi erogazione</string>
     <string name="omnipod_cmd_resume_delivery">Riprendi erogazione</string>
     <string name="omnipod_cmd_unknown_entry">Inserimento sconosciuto</string>
     <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
+    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
     <string name="omnipod_cmd_tbr_value">Tasso: %1$.2f U, durata: %2$d min</string>
     <string name="omnipod_cmd_pod_history_na">Storico pod non disponibile al momento.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Riempi il pod</string>
@@ -92,6 +104,7 @@
     <string name="omnipod_alert_shutdown_imminent">L\'arresto è imminente</string>
     <string name="omnipod_alert_low_reservoir">Livello serbatoio basso</string>
     <string name="omnipod_alert_unknown_alert">Avviso sconosciuto</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Impostazione profilo basale non riuscita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_rl_stats">Statistiche RL</string>
     <string name="omnipod_pod_firmware_version">Versione firmware</string>
     <string name="omnipod_errors">Errori</string>
@@ -99,11 +112,15 @@
     <string name="omnipod_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
     <string name="omnipod_composite_time">%1$s e %2$s</string>
     <string name="omnipod_time_ago">%1$s fa</string>
+    <string name="omnipod_waiting_for_rileylink_connection">Attesa connessione RileyLink...</string>
+    <string name="omnipod_bolus_did_not_succeed">Il bolo non è riuscito</string>
     <string name="omnipod_refresh">Ricarica</string>
     <string name="omnipod_resume_delivery">Riprendi erogazione</string>
     <string name="omnipod_error_pod_suspended">Pod sospeso</string>
     <string name="omnipod_less_than_a_minute_ago">Meno di un minuto fa</string>
     <string name="omnipod_suspend_delivery_short">Sospendi</string>
+    <string name="omnipod_cmd_pair_and_prime">Associa e carica</string>
+    <string name="omnipod_cmd_fill_cannula_set_basal_profile">Riempi cannula e imposta profilo basale</string>
     <string name="omnipod_expiration_alerts_updated">Configurazione avviso aggiornata nel pod</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Altro</string>
