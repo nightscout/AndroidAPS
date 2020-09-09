@@ -201,7 +201,7 @@ class OmnipodFragment : DaggerFragment() {
                 rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
                 else                                                      -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
-        omnipod_rl_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
+        omnipod_rl_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.GRAY)
     }
 
     private fun updateOmnipodStatus() {

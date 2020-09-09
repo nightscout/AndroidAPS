@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="info.nightscout.androidaps.plugins.pump.omnipod.ui.PodManagementActivity">
 
     <ScrollView
@@ -60,7 +61,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/initpod_init_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -68,6 +69,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
+                app:cornerRadius="16dp"
                 android:drawableTop="@drawable/ic_cp_pump_canula"
                 android:text="@string/omnipod_cmd_init_pod"
                 android:textAllCaps="false" />
@@ -81,7 +83,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/initpod_remove_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -89,6 +91,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
+                app:cornerRadius="16dp"
                 android:drawableTop="@drawable/ic_actions_temptarget"
                 android:text="@string/omnipod_cmd_deactivate_pod"
                 android:textAllCaps="false" />
@@ -102,7 +105,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/initpod_reset_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -110,6 +113,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
+                app:cornerRadius="16dp"
                 android:drawableTop="@drawable/ic_cp_pump_canula"
                 android:text="@string/omnipod_cmd_discard_pod"
                 android:textAllCaps="false" />
@@ -123,7 +127,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/initpod_pod_history"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -131,6 +135,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
+                app:cornerRadius="16dp"
                 android:drawableTop="@drawable/ic_danarhistory"
                 android:text="@string/omnipod_cmd_pod_history"
                 android:textAllCaps="false" />

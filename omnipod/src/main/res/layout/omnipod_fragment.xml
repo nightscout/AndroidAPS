@@ -1,9 +1,115 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="5dp"
+        android:background="?attr/fragmentbackground"
+        tools:context="info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment">
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDanaMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_more" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabDanaMenuUserOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/danar_useroptions"
+        android:visibility="gone"
+        app:icon="@drawable/ic_danarhistory"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="150dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/stats"
+        app:icon="@drawable/ic_cp_aaps_offline"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="220dp"
+        android:text="@string/pumphistory"
+        app:icon="@drawable/ic_danarstats"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_history1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="290dp"
+        android:text="@string/pumphistory"
+        app:icon="@drawable/ic_cp_bolus_correction"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_history2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="360dp"
+        android:text="@string/pumphistory"
+        app:icon="@drawable/ic_loop_disabled"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/danar_history3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="360dp"
+        android:text="@string/pumphistory"
+        app:icon="@drawable/ic_local_activate"
+        android:visibility="gone"
+        app:fabSize="auto" />
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id = "@+id/swipeRefresh_dana_rs"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent"
+        android:layout_marginBottom="20dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,6 +145,20 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
+
+                <!-- Omnipod pump -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:drawableTop="@drawable/omnipod" />
+
                 </LinearLayout>
 
 
@@ -82,7 +202,6 @@
                         android:paddingStart="5dp"
                         android:text="{fa-bluetooth-b}"
                         android:textSize="14sp" />
-
 
                 </LinearLayout>
 
@@ -161,7 +280,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -197,7 +315,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -233,7 +350,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -570,7 +686,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -698,7 +813,6 @@
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_refresh" />
 
-                combo_refresh
                 <Button
                     android:id="@+id/omnipod_button_pod_mgmt"
                     style="@style/ButtonSmallFontStyle"
@@ -774,4 +888,5 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
