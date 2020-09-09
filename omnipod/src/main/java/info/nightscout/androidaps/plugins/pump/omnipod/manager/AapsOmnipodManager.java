@@ -469,7 +469,13 @@ public class AapsOmnipodManager {
         try {
             delegate.cancelTemporaryBasal(isTbrBeepsEnabled());
         } catch (Exception ex) {
-            String comment = handleAndTranslateException(ex);
+            String comment;
+            if (ex instanceof OmnipodException && !((OmnipodException) ex).isCertainFailure()) {
+                comment = getStringResource(R.string.omnipod_error_cancel_temp_basal_failed_uncertain);
+                showNotification(comment, Notification.URGENT, R.raw.boluserror);
+            } else {
+                comment = handleAndTranslateException(ex);
+            }
             addFailureToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }

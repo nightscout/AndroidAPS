@@ -270,10 +270,14 @@ public class OmnipodManager {
                         throw ex;
                     }
 
-                    // verifyDeliveryStatus will throw an exception if verification fails
-                    if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
-                        ex.setCertainFailure(true);
-                        throw ex;
+                    try {
+                        if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                            ex.setCertainFailure(true);
+                            throw ex;
+                        }
+                    } catch (DeliveryStatusVerificationFailedException ex2) {
+                        podStateManager.setTempBasalCertain(false);
+                        throw ex2;
                     }
                 }
             }
@@ -321,7 +325,23 @@ public class OmnipodManager {
     }
 
     public synchronized void cancelTemporaryBasal(boolean acknowledgementBeep) {
-        cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
+        try {
+            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
+        } catch (OmnipodException ex) {
+            if (ex.isCertainFailure()) {
+                throw ex;
+            }
+
+            try {
+                if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                    ex.setCertainFailure(true);
+                    throw ex;
+                }
+            } catch (DeliveryStatusVerificationFailedException ex2) {
+                podStateManager.setTempBasalCertain(false);
+                throw ex2;
+            }
+        }
     }
 
     private synchronized StatusResponse cancelDelivery(EnumSet<DeliveryType> deliveryTypes, boolean acknowledgementBeep) {

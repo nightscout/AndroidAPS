@@ -392,6 +392,10 @@ public abstract class PodStateManager {
         return certain == null || certain;
     }
 
+    public final void setTempBasalCertain(boolean certain) {
+        setSafe(() -> podState.setTempBasalCertain(certain));
+    }
+
     public final void setTempBasal(DateTime startTime, Double amount, Duration duration, boolean certain) {
         setTempBasal(startTime, amount, duration, certain, true);
     }
