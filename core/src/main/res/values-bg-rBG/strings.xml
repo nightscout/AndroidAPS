@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Сдвояване</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Грешка</string>
     <string name="not_set_short">Не е зададен</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT ограничения</string>
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
+    <string name="pairing">Сдвояване</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -131,6 +132,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b> Въгл: <b>%6$.0fгр</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Проверка на КЗ</string>
+    <string name="careportal_mbg">Калибрация или ръчна КЗ</string>
     <string name="careportal_announcement">Известие</string>
     <string name="careportal_note">Бележка</string>
     <string name="careportal_question">Въпрос</string>

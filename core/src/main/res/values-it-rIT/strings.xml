@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Associazione</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Errore</string>
     <string name="not_set_short">Non impostato</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
+    <string name="pairing">Associazione</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>

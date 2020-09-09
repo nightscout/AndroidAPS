@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Emparejando</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Error</string>
     <string name="not_set_short">No configurado</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Vigilante de BT</string>
     <string name="btwatchdog_summary">Apaga el bluetooth del móvil por un segundo si no hay conexión con la bomba. Esto ayuda con algunos móviles con problemas para establecer conexión bluetooth estable.</string>
+    <string name="pairing">Emparejando</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>

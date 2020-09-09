@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Párování</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Chyba</string>
     <string name="not_set_short">Nenastaveno</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Hlídač BT</string>
     <string name="btwatchdog_summary">Vypne na 1 sek bluetooth v telefonu, pokud se nedaří připojit k pumpě. Může to pomoci u telefonů, které mají problémy s BT</string>
+    <string name="pairing">Párování</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
