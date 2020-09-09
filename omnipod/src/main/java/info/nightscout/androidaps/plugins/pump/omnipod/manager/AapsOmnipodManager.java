@@ -162,7 +162,14 @@ public class AapsOmnipodManager {
 
     public PumpEnactResult setInitialBasalScheduleAndInsertCannula(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
         if (podInitActionType != PodInitActionType.FILL_CANNULA_SET_BASAL_PROFILE_WIZARD_STEP) {
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
+            String comment = getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name());
+            podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+        }
+        if (profile == null) {
+            String comment = getStringResource(R.string.omnipod_error_set_initial_basal_schedule_no_profile);
+            podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
         try {
@@ -233,6 +240,12 @@ public class AapsOmnipodManager {
     }
 
     public PumpEnactResult setBasalProfile(Profile profile) {
+        if (profile == null) {
+            String comment = getStringResource(R.string.omnipod_error_failed_to_set_profile_empty_profile);
+            showNotification(Notification.FAILED_UDPATE_PROFILE, comment, Notification.URGENT, R.raw.boluserror);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+        }
+
         PodHistoryEntryType historyEntryType = podStateManager.isSuspended() ? PodHistoryEntryType.RESUME_DELIVERY : PodHistoryEntryType.SET_BASAL_SCHEDULE;
 
         try {
@@ -761,7 +774,7 @@ public class AapsOmnipodManager {
             }
             aapsLogger.error(LTag.PUMP, String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager (user-friendly error message: %s)", ((OmnipodException) ex).isCertainFailure(), comment), ex);
         } else {
-            comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
+            comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName(), ex.getMessage());
             aapsLogger.error(LTag.PUMP, String.format("Caught unexpected exception type[certainFailure=false] from OmnipodManager (user-friendly error message: %s)", comment), ex);
         }
 

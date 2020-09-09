@@ -69,7 +69,7 @@
     <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
     <string name="omnipod_error_pod_not_attached">No active Pod</string>
     <string name="omnipod_driver_error_setup_action_verification_failed">Command verification failed</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">An unexpected error occurred. Please report! (type: %1$s).</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">An unexpected error occurred. Please report! (%1$s: %2$s).</string>
     <string name="omnipod_driver_error_invalid_parameters">Communication failed: received invalid input parameters</string>
     <string name="omnipod_driver_error_communication_failed_timeout">Communication failed: timeout</string>
     <string name="omnipod_driver_error_communication_failed_unexpected_exception">Communication failed: an unexpected error occurred. Please report!</string>
@@ -190,6 +190,8 @@
     <string name="omnipod_history_item_source">Source</string>
     <string name="omnipod_history_item_date">Date</string>
     <string name="omnipod_history_type">Type:</string>
+    <string name="omnipod_error_failed_to_set_profile_empty_profile">Failed to set basal profile: received an empty profile. Make sure to activate your basal profile.</string>
+    <string name="omnipod_error_set_initial_basal_schedule_no_profile">No basal profile is active. Make sure to activate your basal profile.</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>
