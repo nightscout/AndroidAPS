@@ -47,7 +47,7 @@
     <string name="pairfirst">Associa il micro con il tuo telefono!</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="startingbolus">Avvio erogazione bolo</string>
-    <string name="waitingforestimatedbolusend">Attesa per la fine del bolo. Rimangono %1$d sec.</string>
+    <string name="waitingforestimatedbolusend">In attesa della fine del bolo. Rimangono %1$d sec.</string>
     <string name="stoppingtempbasal">Stop basale temporanea</string>
     <string name="settingextendedbolus">Impostazione bolo esteso</string>
     <string name="stoppingextendedbolus">Stop bolo esteso</string>
