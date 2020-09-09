@@ -278,7 +278,9 @@ class OmnipodFragment : DaggerFragment() {
                 omnipod_reservoir.setTextColor(Color.WHITE)
             } else {
                 omnipod_reservoir.text = resourceHelper.gs(R.string.omnipod_reservoir_left, podStateManager.reservoirLevel)
-                warnColors.setColorInverse(omnipod_reservoir, podStateManager.reservoirLevel, 50.0, 20.0)
+                warnColors.setColorInverse(omnipod_reservoir, podStateManager.reservoirLevel, 50.0, 20.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
             }
 
             omnipod_pod_active_alerts.text = if (podStateManager.hasActiveAlerts()) {
