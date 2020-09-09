@@ -427,14 +427,48 @@ public abstract class PodStateManager {
     }
 
     /**
-     * @return true when a Temp Basal is stored in the Pod Stated and this temp basal is currently running (based on start time and duration)
+     * @return true when a Temp Basal is stored in the Pod State and this temp basal is currently running (based on start time and duration)
      */
     public final boolean isTempBasalRunning() {
+        return isTempBasalRunningAt(DateTime.now());
+    }
+
+    /**
+     * @return true when a Temp Basal is stored in the Pod State and this temp basal is running at the given time (based on start time and duration)
+     */
+    public final boolean isTempBasalRunningAt(DateTime time) {
         if (hasTempBasal()) {
-            DateTime tempBasalEndTime = getTempBasalStartTime().plus(getTempBasalDuration());
-            return DateTime.now().isBefore(tempBasalEndTime);
+            DateTime tempBasalStartTime = getTempBasalStartTime();
+            DateTime tempBasalEndTime = tempBasalStartTime.plus(getTempBasalDuration());
+            return (time.isAfter(tempBasalStartTime) || time.isEqual(tempBasalStartTime)) && time.isBefore(tempBasalEndTime);
         }
         return false;
+    }
+
+    /**
+     * @return the current effective basal rate (taking Pod suspension, TBR, and basal profile into account)
+     */
+    public final double getEffectiveBasalRate() {
+        if (isSuspended()) {
+            return 0d;
+        }
+        return getEffectiveBasalRateAt(DateTime.now());
+    }
+
+    /**
+     * @return the effective basal rate at the given time (taking TBR, and basal profile into account)
+     * Suspension is not taken into account as we don't keep historic data of that
+     */
+    public final double getEffectiveBasalRateAt(DateTime time) {
+        BasalSchedule basalSchedule = getSafe(() -> podState.getBasalSchedule());
+        if (basalSchedule == null) {
+            return 0d;
+        }
+        if (isTempBasalRunningAt(time)) {
+            return getTempBasalAmount();
+        }
+        Duration offset = new Duration(time.withTimeAtStartOfDay(), time);
+        return basalSchedule.rateAt(offset);
     }
 
     public final DeliveryStatus getLastDeliveryStatus() {

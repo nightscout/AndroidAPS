@@ -126,9 +126,9 @@ public class OmnipodManager {
             logCommandExecutionFinished("pairAndPrime");
         }
 
-        long delayInSeconds = calculateBolusDuration(OmnipodConstants.POD_PRIME_BOLUS_UNITS, OmnipodConstants.POD_PRIMING_DELIVERY_RATE).getStandardSeconds();
+        long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_PRIME_BOLUS_UNITS, OmnipodConstants.POD_PRIMING_DELIVERY_RATE).getMillis();
 
-        return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
+        return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
                 .map(o -> verifySetupAction(PodProgressStatus.PRIMING_COMPLETED)) //
                 .observeOn(Schedulers.io());
     }
@@ -154,9 +154,9 @@ public class OmnipodManager {
             logCommandExecutionFinished("insertCannula");
         }
 
-        long delayInSeconds = calculateBolusDuration(OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConstants.POD_CANNULA_INSERTION_DELIVERY_RATE).getStandardSeconds();
+        long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConstants.POD_CANNULA_INSERTION_DELIVERY_RATE).getMillis();
 
-        return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
+        return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
                 .map(o -> verifySetupAction(PodProgressStatus.ABOVE_FIFTY_UNITS)) //
                 .observeOn(Schedulers.io());
     }
@@ -367,7 +367,7 @@ public class OmnipodManager {
         }
 
         DateTime estimatedBolusStartDate = DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
-        Duration estimatedBolusDuration = calculateBolusDuration(units, OmnipodConstants.POD_BOLUS_DELIVERY_RATE);
+        Duration estimatedBolusDuration = calculateEstimatedBolusDuration(estimatedBolusStartDate, units, OmnipodConstants.POD_BOLUS_DELIVERY_RATE);
         Duration estimatedRemainingBolusDuration = estimatedBolusDuration.minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
 
         podStateManager.setLastBolus(estimatedBolusStartDate, units, estimatedBolusDuration, commandDeliveryStatus == CommandDeliveryStatus.SUCCESS);
@@ -376,7 +376,7 @@ public class OmnipodManager {
 
         if (progressIndicationConsumer != null) {
 
-            int numberOfProgressReports = Math.max(20, Math.min(100, (int) Math.ceil(units) * 10));
+            long numberOfProgressReports = Math.max(10, Math.min(100, estimatedRemainingBolusDuration.getStandardSeconds()));
             long progressReportInterval = estimatedRemainingBolusDuration.getMillis() / numberOfProgressReports;
 
             disposables.add(Flowable.intervalRange(0, numberOfProgressReports + 1, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
@@ -664,14 +664,27 @@ public class OmnipodManager {
         aapsLogger.debug(LTag.PUMPCOMM, "Command execution finished for action: " + action);
     }
 
-    private static Duration calculateBolusDuration(double units, double deliveryRate) {
-        // TODO take current (temp) basal into account
-        //  Be aware that the Pod possibly doesn't have a Basal Schedule yet
-        return Duration.standardSeconds((long) Math.ceil(units / deliveryRate));
-    }
+    private Duration calculateEstimatedBolusDuration(DateTime startTime, double units, double deliveryRateInUnitsPerSecond) {
+        if (!podStateManager.isPodActivationCompleted()) {
+            // No basal or temp basal is active yet
+            return Duration.standardSeconds((long) Math.ceil(units / deliveryRateInUnitsPerSecond));
+        }
 
-    public static Duration calculateBolusDuration(double units) {
-        return calculateBolusDuration(units, OmnipodConstants.POD_BOLUS_DELIVERY_RATE);
+        double pulseIntervalInSeconds = OmnipodConstants.POD_PULSE_SIZE / deliveryRateInUnitsPerSecond;
+        long numberOfPulses = Math.round(units / OmnipodConstants.POD_PULSE_SIZE);
+        double totalEstimatedDurationInSeconds = 0D;
+
+        for (int i = 0; numberOfPulses > i; i++) {
+            DateTime estimatedTimeAtPulse = startTime.plusMillis((int) (totalEstimatedDurationInSeconds * 1000));
+            double effectiveBasalRateAtPulse = podStateManager.getEffectiveBasalRateAt(estimatedTimeAtPulse);
+            double effectivePulsesPerHourAtPulse = effectiveBasalRateAtPulse / OmnipodConstants.POD_PULSE_SIZE;
+            double effectiveBasalPulsesPerSecondAtPulse = effectivePulsesPerHourAtPulse / 3600;
+            double effectiveBasalPulsesPerBolusPulse = pulseIntervalInSeconds * effectiveBasalPulsesPerSecondAtPulse;
+
+            totalEstimatedDurationInSeconds += pulseIntervalInSeconds * (1 + effectiveBasalPulsesPerBolusPulse);
+        }
+
+        return Duration.millis(Math.round(totalEstimatedDurationInSeconds * 1000));
     }
 
     public static boolean isCertainFailure(Exception ex) {
