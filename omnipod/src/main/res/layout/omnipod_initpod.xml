@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -18,7 +18,6 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:onClick="exitPressed"
             app:srcCompat="@drawable/ic_exit_to_app" />
 
         <TextView
@@ -33,16 +32,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/sw_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:keepScreenOn="true"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        tools:text="Title" />
-
     <ScrollView
         android:id="@+id/sw_scrollview"
         android:layout_width="match_parent"
@@ -50,12 +39,28 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/sw_content_fields"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical"
-            android:padding="16dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sw_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:keepScreenOn="true"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"
+                tools:text="Title" />
+
+            <LinearLayout
+                android:id="@+id/sw_content_fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical"
+                android:padding="16dp" />
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
@@ -73,13 +78,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="showPreviousPage"
             android:text="@string/omnipod_wizard_button_previous"
             android:textColor="#FFFFFF" />
 
         <View
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1" />
 
         <Button
@@ -87,7 +91,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="showNextPage"
             android:text="@string/omnipod_wizard_button_next"
             android:textColor="#FFFFFF" />
 
@@ -96,7 +99,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:onClick="finishSetupWizard"
             android:text="@string/omnipod_wizard_button_finish"
             android:textColor="#FFFFFF" />
 
