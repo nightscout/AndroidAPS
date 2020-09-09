@@ -38,6 +38,7 @@
     <string name="rileylink_state_pc_tune_up">Se îmbunătățește RileyLink și pompa</string>
     <string name="rileylink_state_pc_error">Probleme la conectarea cu pompa</string>
     <string name="rileylink_state_connected">Conectat</string>
+    <string name="rileylink_state_rl_ready">RileyLink este gata</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Dispozitivul nu este RileyLink</string>
     <string name="rileylink_error_unreachable">Nu se poate găsi RileyLink</string>

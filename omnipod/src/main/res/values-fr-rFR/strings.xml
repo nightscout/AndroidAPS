@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod -->
+    <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod">L\'intégration de la pompe Omnipod nécessite un boitier RileyLink (avec au minimum un firmware 2.0).</string>
+    <!-- Omnipod Configuration -->
+    <!-- Omnipod - Fragment -->
+    <string name="omnipod_reservoir_left">%1$.2f U restantes</string>
+    <string name="omnipod_reservoir_over50">Plus de 50 U</string>
+    <!-- Omnipod - Dialogs -->
+    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_error_illegal_init_action_type">type d\'action d\'init Pod non autorisée : %1$s</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Erreur inconnue. Veuillez signaler ! (type : %1$s).</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Échec de communication : Erreur inconnue. Veuillez signaler !</string>
+    <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_init_pod">Init Pod</string>
+    <string name="omnipod_cmd_deactivate_pod">Désactiver Pod</string>
+    <string name="omnipod_cmd_pod_history_na">Historique Pod non disponible pour le moment.</string>
+    <string name="omnipod_init_pod_wizard_step1_title">Remplir le Pod</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Amorçage</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Collez le Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPréparez le site d\'injection. Enlevez la protection de l\'aiguille et le support adhésif et collez le Pod sur le site d\'injection.\n\nSi la canule se colle, appuyez sur <b>Annuler</b> et jetez votre Pod.\n\nAppuyez sur <b>Suivant</b> pour insérer la canule et démarrer l\'injection de la basal.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Insertion canule</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Tentative de définir le schéma de basal et d\'insertion de la canule.\n\nQuand tous les items sont cochés, appuyez sur <b>Suivant</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nLe Pod est maintenant actif.\n\nVos débits de basal ont été programmés et la canule a été insérée.\n\nVeuillez verifier que la canule a été insérée correctement et remplacez votre Pod si vous pensez que ce n\'est pas le cas.</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nAppuyez sur <b>Suivant</b> pour désactiver le Pod.\n\n<b>Remarque :</b> Cela suspendra l\'injection de l\'insuline et désactivera le Pod.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Désactivation du Pod</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod désactivé.\n\nVeuillez enlever le Pod de votre corps et le jeter.</string>
+    <string name="omnipod_init_pod_pair_pod">Appairer le Pod</string>
+    <string name="omnipod_init_pod_prime_pod">Amorcer le Pod</string>
+    <!-- Omnipod - Base -->
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
+    <string name="omnipod_alert_shutdown_imminent">Arrêt imminent</string>
+    <string name="omnipod_alert_low_reservoir">Réservoir bas</string>
+    <string name="omnipod_alert_unknown_alert">Alerte inconnue</string>
+</resources>

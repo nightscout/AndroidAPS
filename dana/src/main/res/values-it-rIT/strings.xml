@@ -24,7 +24,7 @@
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
     <string name="pumperror">Errore micro</string>
     <string name="lowbattery">Livello batteria basso</string>
-    <string name="basalcompare">Erogazione di una velocità basale inferiore rispetto alla preimpostata</string>
+    <string name="basalcompare">Erogazione inferiore rispetto alla velocità basale preimpostata</string>
     <string name="pumpshutdown">Arresto micro</string>
     <string name="batterydischarged">Batteria del micro scarica</string>
     <string name="occlusion">Occlusione</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Сопряжение</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Ошибка</string>
     <string name="not_set_short">Не выбрано</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Дежурный режим Watchdog</string>
     <string name="btwatchdog_summary">Выключает bluetooth телефона на одну секунду, если подключение к помпе невозможно. Это помогает на тех телефонах, где зависает модуль bluetooth.</string>
+    <string name="pairing">Сопряжение</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -132,7 +133,7 @@
     <!--    Translator-->
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
-    <string name="careportal_announcement">Оовещение</string>
+    <string name="careportal_announcement">Оповещение</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
     <string name="careportal_exercise">Нгрузка</string>

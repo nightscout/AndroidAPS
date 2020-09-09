@@ -1116,10 +1116,8 @@
     <string name="loop_tbrexecution_time_label">Czas wykonywania bazy tymczasowej</string>
     <string name="insight_alert_notification_channel">Alarmy pompy Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikacji Uwierzytelniającej: %1$s</string>
     <string name="smscommunicator_otp_enabled">Włącz uwierzytelnianie</string>
     <string name="smscommunicator_otp_enabled_summary">Uwierzytelnianie komend za pomocą haseł jednorazowych generowanych przez aplikację Google Authenticator lub podobnych aplikacji 2FA.</string>
-    <string name="smscommunicator_otp_pin">Dodatkowy PIN na końcu tokenu</string>
     <string name="smscommunicator_otp_pin_summary">Dodatkowe cyfry, które powinny być zapamiętywane i przyklejone na końcu każdego wygenerowanego hasła jednorazowego</string>
     <string name="smscomunicator_tab_otp_label">Ustawienia uwierzytelnienia</string>
     <string name="smscommunicator_otp_verify_label">OTP do sprawdzenia:</string>
