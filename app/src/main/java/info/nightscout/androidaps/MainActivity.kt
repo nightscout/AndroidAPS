@@ -61,6 +61,7 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.T
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -354,6 +355,19 @@ open class MainActivity : NoSplashAppCompatActivity() {
         return false
     }
 
+    open fun changeHeaderElements() {
+        val pump = activePlugin.activePump
+        if ( pump.model() == PumpType.Insulet_Omnipod ) {
+            reservoir?.visibility = View.GONE
+            canula?.visibility = View.GONE
+            battery?.visibility = View.GONE
+        } else {
+            reservoir?.visibility = View.VISIBLE
+            canula?.visibility = View.VISIBLE
+            battery?.visibility = View.VISIBLE
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
         val lastBG = iobCobCalculatorPlugin.lastBg()
@@ -362,6 +376,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
         val profileName = profileFunction.getProfileName()
         val xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE)
         val dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE)
+
+        changeHeaderElements()
 
         bottom_navigation?.menu?.findItem(R.id.insulinButton)?.isVisible   = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true))
         bottom_navigation?.menu?.findItem(R.id.carbsButton)?.isVisible  =  (!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)
