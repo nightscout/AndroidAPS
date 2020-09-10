@@ -25,7 +25,8 @@ public class Objective3 extends Objective {
     @Inject
     public Objective3(HasAndroidInjector injector) {
         super(injector, "openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
-        hasSpecialInput = true;
+        // disable option for skipping objectives for now
+        // hasSpecialInput = true;
     }
 
     @Override
