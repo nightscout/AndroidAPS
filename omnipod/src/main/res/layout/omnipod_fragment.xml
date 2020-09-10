@@ -243,6 +243,42 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
+                <!-- Pod Time -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/omnipod_pod_time_on_pod"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_time_on_pod"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <!-- Pod Expires -->
                 <LinearLayout
@@ -780,6 +816,18 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_suspend_delivery_short"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/omnipod_button_set_time"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_access_alarm"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_set_time"
                     android:visibility="gone" />
 
                 <Button

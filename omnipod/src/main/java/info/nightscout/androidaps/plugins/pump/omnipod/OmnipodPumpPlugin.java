@@ -19,11 +19,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
@@ -125,7 +128,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
     private final List<CustomAction> customActions = new ArrayList<>();
-    private final List<OmnipodStatusRequestType> statusRequestList = new ArrayList<>();
+    private final Set<OmnipodStatusRequestType> statusRequests = Collections.synchronizedSet(EnumSet.noneOf(OmnipodStatusRequestType.class));
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     // variables for handling statuses and history
@@ -229,7 +232,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 }
 
                 if (!getCommandQueue().statusInQueue()) {
-                    if (!OmnipodPumpPlugin.this.statusRequestList.isEmpty()) {
+                    if (!OmnipodPumpPlugin.this.statusRequests.isEmpty()) {
                         getCommandQueue().readStatus("Status Refresh Requested", null);
                     } else if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
                         getCommandQueue().readStatus("Date or Time Zone Changed", null);
@@ -461,9 +464,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public void getPumpStatus() {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
-        } else if (!statusRequestList.isEmpty()) {
-            synchronized (statusRequestList) {
-                Iterator<OmnipodStatusRequestType> iterator = statusRequestList.iterator();
+        } else if (!statusRequests.isEmpty()) {
+            synchronized (statusRequests) {
+                Iterator<OmnipodStatusRequestType> iterator = statusRequests.iterator();
 
                 while (iterator.hasNext()) {
                     OmnipodStatusRequestType statusRequest = iterator.next();
@@ -496,6 +499,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             break;
                         case SUSPEND_DELIVERY:
                             executeCommand(OmnipodCommandType.SUSPEND_DELIVERY, aapsOmnipodManager::suspendDelivery);
+                            break;
+                        case SET_TIME:
+                            executeCommand(OmnipodCommandType.SET_TIME, aapsOmnipodManager::setTime);
                             break;
                         default:
                             aapsLogger.error(LTag.PUMP, "Unknown status request: " + statusRequest.name());
@@ -832,9 +838,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public void addPodStatusRequest(OmnipodStatusRequestType pumpStatusRequest) {
-        synchronized (statusRequestList) {
-            statusRequestList.add(pumpStatusRequest);
-        }
+        statusRequests.add(pumpStatusRequest);
     }
 
     @Override
@@ -889,6 +893,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
+    public OmnipodCommandType getCurrentCommand() {
+        return currentCommand;
+    }
+
     private void initializeAfterRileyLinkConnection() {
         if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
             PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
@@ -933,14 +941,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(getInjector(), commandType));
 
-            T pumpEnactResult = supplier.get();
-
-            rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
-            rxBus.send(new EventOmnipodPumpValuesChanged());
-
-            return pumpEnactResult;
+            return supplier.get();
         } finally {
             currentCommand = null;
+            rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
+            rxBus.send(new EventOmnipodPumpValuesChanged());
         }
     }
 

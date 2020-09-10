@@ -533,6 +533,8 @@ public class OmnipodManager {
                 podStateManager.setTimeZone(oldTimeZone);
                 throw ex;
             }
+
+            podStateManager.updateActivatedAt();
         } finally {
             logCommandExecutionFinished("setTime");
         }

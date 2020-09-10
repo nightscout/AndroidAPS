@@ -56,7 +56,7 @@ public final class ExpirationReminderBuilder {
     }
 
     public ExpirationReminderBuilder lowReservoir(boolean active, int units) {
-        if (podStateManager.getReservoirLevel() == null || podStateManager.getReservoirLevel().intValue() > units) {
+        if (podStateManager.getReservoirLevel() == null || podStateManager.getReservoirLevel().intValue() >= units) {
             AlertConfiguration lowReservoirAlertConfiguration = AlertConfigurationUtil.createLowReservoirAlertConfiguration(active, (double) units);
             alerts.put(lowReservoirAlertConfiguration.getAlertSlot(), lowReservoirAlertConfiguration);
         }

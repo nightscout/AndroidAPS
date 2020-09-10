@@ -84,6 +84,7 @@ public abstract class PodStateManager {
 
     /**
      * @return true if we have a Pod state and the Pod is running, meaning the activation process has completed and the Pod is not deactivated or in a fault state
+     * This does not mean the Pod is actually delivering insulin, combine with {@link #isSuspended() isSuspended()} for that
      */
     public final boolean isPodRunning() {
         return isPodInitialized() && getPodProgressStatus().isRunning();
@@ -295,8 +296,21 @@ public abstract class PodStateManager {
     }
 
     public final DateTime getTime() {
-        DateTime now = DateTime.now();
-        return now.withZone(getSafe(() -> podState.getTimeZone()));
+        DateTimeZone timeZone = getSafe(() -> podState.getTimeZone());
+        if (timeZone == null) {
+            return DateTime.now();
+        }
+        Duration timeActive = getSafe(() -> podState.getTimeActive());
+        DateTime activatedAt = getSafe(() -> podState.getActivatedAt());
+        DateTime lastUpdatedFromResponse = getSafe(() -> podState.getLastUpdatedFromResponse());
+        if (timeActive == null || activatedAt == null) {
+            return DateTime.now().withZone(timeZone);
+        }
+        return activatedAt.plus(timeActive).plus(new Duration(lastUpdatedFromResponse, DateTime.now()));
+    }
+
+    public final boolean timeDeviatesMoreThan(Duration duration) {
+        return new Duration(getTime(), DateTime.now().withZoneRetainFields(getSafe(() -> podState.getTimeZone()))).abs().isLongerThan(duration);
     }
 
     public final DateTime getActivatedAt() {
@@ -304,20 +318,21 @@ public abstract class PodStateManager {
         return activatedAt == null ? null : activatedAt.withZone(getSafe(() -> podState.getTimeZone()));
     }
 
+    public final void updateActivatedAt() {
+        setAndStore(() -> podState.setActivatedAt(DateTime.now().withZone(getSafe(() -> podState.getTimeZone())).minus(getSafe(this::getTimeActive))));
+    }
+
+    public final Duration getTimeActive() {
+        return getSafe(() -> podState.getTimeActive());
+    }
+
     public final DateTime getExpiresAt() {
-        DateTime expiresAt = getSafe(() -> podState.getExpiresAt());
-        return expiresAt == null ? null : expiresAt.withZone(getSafe(() -> podState.getTimeZone()));
+        DateTime activatedAt = getSafe(() -> podState.getActivatedAt());
+        return activatedAt == null ? null : activatedAt.withZone(getSafe(() -> podState.getTimeZone())).plus(OmnipodConstants.NOMINAL_POD_LIFE);
     }
 
     public final PodProgressStatus getPodProgressStatus() {
         return getSafe(() -> podState.getPodProgressStatus());
-    }
-
-    public final void setPodProgressStatus(PodProgressStatus podProgressStatus) {
-        if (podProgressStatus == null) {
-            throw new IllegalArgumentException("Pod progress status can not be null");
-        }
-        setAndStore(() -> podState.setPodProgressStatus(podProgressStatus));
     }
 
     public final boolean isSuspended() {
@@ -501,21 +516,16 @@ public abstract class PodStateManager {
     public final void updateFromResponse(StatusUpdatableResponse statusResponse) {
         setSafe(() -> {
             if (podState.getActivatedAt() == null) {
-                DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
+                DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(statusResponse.getTimeActive());
                 podState.setActivatedAt(activatedAtCalculated);
             }
-            DateTime expiresAt = podState.getExpiresAt();
-            DateTime expiresAtCalculated = podState.getActivatedAt().plus(OmnipodConstants.NOMINAL_POD_LIFE);
-            if (expiresAt == null || expiresAtCalculated.isBefore(expiresAt) || expiresAtCalculated.isAfter(expiresAt.plusMinutes(1))) {
-                podState.setExpiresAt(expiresAtCalculated);
-            }
-
             podState.setSuspended(statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
             podState.setActiveAlerts(statusResponse.getUnacknowledgedAlerts());
             podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
             podState.setReservoirLevel(statusResponse.getReservoirLevel());
             podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
             podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
+            podState.setTimeActive(statusResponse.getTimeActive());
             if (statusResponse.getDeliveryStatus().isTbrRunning()) {
                 if (!isTempBasalCertain() && isTempBasalRunning()) {
                     podState.setTempBasalCertain(true);
@@ -615,7 +625,7 @@ public abstract class PodStateManager {
         private DateTime lastUpdatedFromResponse;
         private DateTimeZone timeZone;
         private DateTime activatedAt;
-        private DateTime expiresAt;
+        private Duration timeActive;
         private PodInfoFaultEvent faultEvent;
         private Double reservoirLevel;
         private Integer totalTicksDelivered;
@@ -733,12 +743,12 @@ public abstract class PodStateManager {
             this.activatedAt = activatedAt;
         }
 
-        DateTime getExpiresAt() {
-            return expiresAt;
+        public Duration getTimeActive() {
+            return timeActive;
         }
 
-        void setExpiresAt(DateTime expiresAt) {
-            this.expiresAt = expiresAt;
+        public void setTimeActive(Duration timeActive) {
+            this.timeActive = timeActive;
         }
 
         PodInfoFaultEvent getFaultEvent() {
@@ -919,7 +929,7 @@ public abstract class PodStateManager {
                     ", lastUpdatedFromResponse=" + lastUpdatedFromResponse +
                     ", timeZone=" + timeZone +
                     ", activatedAt=" + activatedAt +
-                    ", expiresAt=" + expiresAt +
+                    ", timeActive=" + timeActive +
                     ", faultEvent=" + faultEvent +
                     ", reservoirLevel=" + reservoirLevel +
                     ", totalTicksDelivered=" + totalTicksDelivered +
@@ -937,7 +947,7 @@ public abstract class PodStateManager {
                     ", tempBasalStartTime=" + tempBasalStartTime +
                     ", tempBasalDuration=" + tempBasalDuration +
                     ", tempBasalCertain=" + tempBasalCertain +
-                    ", expirationAlertHoursBeforeShutdown=" + expirationAlertTimeBeforeShutdown +
+                    ", expirationAlertTimeBeforeShutdown=" + expirationAlertTimeBeforeShutdown +
                     ", lowReservoirAlertUnits=" + lowReservoirAlertUnits +
                     ", configuredAlerts=" + configuredAlerts +
                     '}';

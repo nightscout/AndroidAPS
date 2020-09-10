@@ -157,6 +157,7 @@
     <string name="omnipod_pod_tid">TID</string>
     <string name="omnipod_pod_firmware_version">Firmware version</string>
     <string name="omnipod_pod_firmware_version_value" translatable="false">PM %1$s / PI %2$s</string>
+    <string name="omnipod_pod_time_with_timezone" translatable="false">%1$s (%2$s)</string>
     <string name="omnipod_errors">Errors</string>
     <string name="omnipod_cmd_basal_profile_not_set_is_same">Basal profile is the same, so it will not be set again.</string>
     <string name="omnipod_custom_action_reset_rileylink">Reset RileyLink config</string>
@@ -193,6 +194,8 @@
     <string name="omnipod_history_type">Type:</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Failed to set basal profile: received an empty profile. Make sure to activate your basal profile.</string>
     <string name="omnipod_error_set_initial_basal_schedule_no_profile">No basal profile is active. Make sure to activate your basal profile.</string>
+    <string name="omnipod_pod_time_on_pod">Time on Pod</string>
+    <string name="omnipod_set_time">Set time</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

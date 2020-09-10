@@ -4,5 +4,6 @@ public enum OmnipodStatusRequestType {
     ACKNOWLEDGE_ALERTS,
     GET_POD_STATE,
     GET_PULSE_LOG,
-    SUSPEND_DELIVERY
+    SUSPEND_DELIVERY,
+    SET_TIME
 }
