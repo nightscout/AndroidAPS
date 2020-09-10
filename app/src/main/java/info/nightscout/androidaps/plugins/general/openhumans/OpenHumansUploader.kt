@@ -157,31 +157,35 @@ class OpenHumansUploader @Inject constructor(
         super.onStop()
     }
 
-    fun enqueueBGReading(bgReading: BgReading) = insertQueueItem("BgReadings") {
-        put("date", bgReading.date)
-        put("isValid", bgReading.isValid)
-        put("value", bgReading.value)
-        put("direction", bgReading.direction)
-        put("raw", bgReading.raw)
-        put("source", bgReading.source)
-        put("nsId", bgReading._id)
+    fun enqueueBGReading(bgReading: BgReading?) = bgReading?.let {
+        insertQueueItem("BgReadings") {
+            put("date", bgReading.date)
+            put("isValid", bgReading.isValid)
+            put("value", bgReading.value)
+            put("direction", bgReading.direction)
+            put("raw", bgReading.raw)
+            put("source", bgReading.source)
+            put("nsId", bgReading._id)
+        }
     }
 
     @JvmOverloads
-    fun enqueueTreatment(treatment: Treatment, deleted: Boolean = false) = insertQueueItem("Treatments") {
-        put("date", treatment.date)
-        put("isValid", treatment.isValid)
-        put("source", treatment.source)
-        put("nsId", treatment._id)
-        put("boluscalc", treatment.boluscalc)
-        put("carbs", treatment.carbs)
-        put("dia", treatment.dia)
-        put("insulin", treatment.insulin)
-        put("insulinInterfaceID", treatment.insulinInterfaceID)
-        put("isSMB", treatment.isSMB)
-        put("mealBolus", treatment.mealBolus)
-        put("bolusCalcJson", treatment.getBoluscalc())
-        put("isDeletion", deleted)
+    fun enqueueTreatment(treatment: Treatment?, deleted: Boolean = false) = treatment?.let {
+        insertQueueItem("Treatments") {
+            put("date", treatment.date)
+            put("isValid", treatment.isValid)
+            put("source", treatment.source)
+            put("nsId", treatment._id)
+            put("boluscalc", treatment.boluscalc)
+            put("carbs", treatment.carbs)
+            put("dia", treatment.dia)
+            put("insulin", treatment.insulin)
+            put("insulinInterfaceID", treatment.insulinInterfaceID)
+            put("isSMB", treatment.isSMB)
+            put("mealBolus", treatment.mealBolus)
+            put("bolusCalcJson", treatment.getBoluscalc())
+            put("isDeletion", deleted)
+        }
     }
 
     @JvmOverloads
@@ -240,34 +244,38 @@ class OpenHumansUploader @Inject constructor(
     }
 
     @JvmOverloads
-    fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal, deleted: Boolean = false) = insertQueueItem("TemporaryBasals") {
-        put("date", temporaryBasal.date)
-        put("isValid", temporaryBasal.isValid)
-        put("source", temporaryBasal.source)
-        put("nsId", temporaryBasal._id)
-        put("pumpId", temporaryBasal.pumpId)
-        put("durationInMinutes", temporaryBasal.durationInMinutes)
-        put("durationInMinutes", temporaryBasal.durationInMinutes)
-        put("isAbsolute", temporaryBasal.isAbsolute)
-        put("percentRate", temporaryBasal.percentRate)
-        put("absoluteRate", temporaryBasal.absoluteRate)
-        put("isDeletion", deleted)
+    fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
+        insertQueueItem("TemporaryBasals") {
+            put("date", temporaryBasal.date)
+            put("isValid", temporaryBasal.isValid)
+            put("source", temporaryBasal.source)
+            put("nsId", temporaryBasal._id)
+            put("pumpId", temporaryBasal.pumpId)
+            put("durationInMinutes", temporaryBasal.durationInMinutes)
+            put("durationInMinutes", temporaryBasal.durationInMinutes)
+            put("isAbsolute", temporaryBasal.isAbsolute)
+            put("percentRate", temporaryBasal.percentRate)
+            put("absoluteRate", temporaryBasal.absoluteRate)
+            put("isDeletion", deleted)
+        }
     }
 
     @JvmOverloads
-    fun enqueueTempTarget(tempTarget: TempTarget, deleted: Boolean = false) = insertQueueItem("TempTargets") {
-        put("date", tempTarget.date)
-        put("isValid", tempTarget.isValid)
-        put("source", tempTarget.source)
-        put("nsId", tempTarget._id)
-        put("low", tempTarget.low)
-        put("high", tempTarget.high)
-        put("reason", tempTarget.reason)
-        put("durationInMinutes", tempTarget.durationInMinutes)
-        put("isDeletion", deleted)
+    fun enqueueTempTarget(tempTarget: TempTarget?, deleted: Boolean = false) = tempTarget?.let {
+        insertQueueItem("TempTargets") {
+            put("date", tempTarget.date)
+            put("isValid", tempTarget.isValid)
+            put("source", tempTarget.source)
+            put("nsId", tempTarget._id)
+            put("low", tempTarget.low)
+            put("high", tempTarget.high)
+            put("reason", tempTarget.reason)
+            put("durationInMinutes", tempTarget.durationInMinutes)
+            put("isDeletion", deleted)
+        }
     }
 
-    fun enqueueSMBData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONArray, mealData: JSONObject, currentTemp: JSONObject, autosensData: JSONObject, smbAllowed: Boolean, smbAlwaysAllowed: Boolean, result: JSONObject) = insertQueueItem("APSData") {
+    fun enqueueSMBData(profile: JSONObject?, glucoseStatus: JSONObject?, iobData: JSONArray?, mealData: JSONObject?, currentTemp: JSONObject?, autosensData: JSONObject?, smbAllowed: Boolean, smbAlwaysAllowed: Boolean, result: JSONObject?) = insertQueueItem("APSData") {
         put("algorithm", "SMB")
         put("profile", profile)
         put("glucoseStatus", glucoseStatus)
@@ -280,7 +288,7 @@ class OpenHumansUploader @Inject constructor(
         put("result", result)
     }
 
-    fun enqueueAMAData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONArray, mealData: JSONObject, currentTemp: JSONObject, autosensData: JSONObject, result: JSONObject) = insertQueueItem("APSData") {
+    fun enqueueAMAData(profile: JSONObject?, glucoseStatus: JSONObject?, iobData: JSONArray?, mealData: JSONObject?, currentTemp: JSONObject?, autosensData: JSONObject?, result: JSONObject?) = insertQueueItem("APSData") {
         put("algorithm", "AMA")
         put("profile", profile)
         put("glucoseStatus", glucoseStatus)
@@ -288,16 +296,6 @@ class OpenHumansUploader @Inject constructor(
         put("mealData", mealData)
         put("currentTemp", currentTemp)
         put("autosensData", autosensData)
-        put("result", result)
-    }
-
-    fun enqueueMAData(profile: JSONObject, glucoseStatus: JSONObject, iobData: JSONObject, mealData: JSONObject, currentTemp: JSONObject, result: JSONObject) = insertQueueItem("APSData") {
-        put("algorithm", "MA")
-        put("profile", profile)
-        put("glucoseStatus", glucoseStatus)
-        put("iobData", iobData)
-        put("mealData", mealData)
-        put("currentTemp", currentTemp)
         put("result", result)
     }
 
