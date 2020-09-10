@@ -108,7 +108,7 @@ class MedtronicFragment : DaggerFragment() {
 
         medtronic_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId())
 
-        medtronic_pump_status.setTextColor(Color.WHITE)
+        medtronic_pump_status.setTextColor(Color.GRAY)
         medtronic_pump_status.text = "{fa-bed}"
 
         medtronic_refresh.setOnClickListener(clickListener)

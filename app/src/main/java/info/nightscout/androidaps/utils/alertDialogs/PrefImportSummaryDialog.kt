@@ -84,7 +84,7 @@ object PrefImportSummaryDialog {
             detailsBtn.setOnClickListener {
                 val detailsLayout = LayoutInflater.from(context).inflate(R.layout.import_summary_details, null)
                 val wview = detailsLayout.findViewById<View>(R.id.details_webview) as WebView
-                wview.loadData("<!doctype html><html><head><meta charset=\"utf-8\"><style>body { color: white; }</style></head><body>" + details.joinToString("<hr>"), "text/html; charset=utf-8", "utf-8")
+                wview.loadData("<!doctype html><html><head><meta charset=\"utf-8\"><style>body { color: grey; }</style></head><body>" + details.joinToString("<hr>"), "text/html; charset=utf-8", "utf-8")
                 wview.setBackgroundColor(Color.TRANSPARENT)
                 wview.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 

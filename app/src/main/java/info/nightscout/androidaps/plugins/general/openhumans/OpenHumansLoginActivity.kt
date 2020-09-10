@@ -65,10 +65,10 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
             super.onCreate(savedInstanceState)
             disposable = openHumansUploader.login(arguments?.getString("authToken")!!).subscribeOn(Schedulers.io()).subscribe({
                 dismiss()
-                SetupDoneDialog().show(fragmentManager!!, "SetupDoneDialog")
+                SetupDoneDialog().show(requireFragmentManager(), "SetupDoneDialog")
             }, {
                 dismiss()
-                ErrorDialog(it.message).show(fragmentManager!!, "ErrorDialog")
+                ErrorDialog(it.message).show(requireFragmentManager(), "ErrorDialog")
             })
         }
 

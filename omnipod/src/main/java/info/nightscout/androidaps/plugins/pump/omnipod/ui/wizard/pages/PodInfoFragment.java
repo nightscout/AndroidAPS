@@ -17,6 +17,7 @@ import com.tech.freak.wizardpager.model.ReviewItem;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -51,9 +52,10 @@ public class PodInfoFragment extends DaggerFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Bundle args = getArguments();
+        assert args != null;
         isInitPod = args.getBoolean(ARG_INIT_POD);
     }
 

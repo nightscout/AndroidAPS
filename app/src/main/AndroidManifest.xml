@@ -83,6 +83,8 @@
            android:theme="@style/ProfileHelperAppTheme" />
         <activity android:name=".activities.StatsActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity"
+            android:theme="@style/AppTheme" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
@@ -241,7 +243,6 @@
         <activity
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingActivity"
             android:label="@string/insight_pairing"
