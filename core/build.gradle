@@ -59,12 +59,12 @@ dependencies {
     //Logger
     implementation 'org.slf4j:slf4j-api:1.7.30'
     //Fabric
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
 
     //RxBus
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
 
     //CryptoUtil
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
@@ -83,6 +83,6 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.6"
 
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

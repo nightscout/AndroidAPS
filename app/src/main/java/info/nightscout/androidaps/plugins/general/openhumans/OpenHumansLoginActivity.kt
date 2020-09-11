@@ -55,7 +55,7 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            return AlertDialog.Builder(activity!!)
+            return AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.completing_login)
                 .setMessage(R.string.please_wait)
                 .create()
@@ -65,10 +65,10 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
             super.onCreate(savedInstanceState)
             disposable = openHumansUploader.login(arguments?.getString("authToken")!!).subscribeOn(Schedulers.io()).subscribe({
                 dismiss()
-                SetupDoneDialog().show(requireFragmentManager(), "SetupDoneDialog")
+                SetupDoneDialog().show(parentFragmentManager, "SetupDoneDialog")
             }, {
                 dismiss()
-                ErrorDialog(it.message).show(requireFragmentManager(), "ErrorDialog")
+                ErrorDialog(it.message).show(parentFragmentManager, "ErrorDialog")
             })
         }
 

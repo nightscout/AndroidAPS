@@ -23,7 +23,7 @@ jacoco {
 }
 
 ext {
-    powermockVersion = "1.7.3"
+    powermockVersion = "2.0.7"
     dexmakerVersion = "1.2"
     retrofit2Version = '2.9.0'
     okhttp3Version = '4.8.1'

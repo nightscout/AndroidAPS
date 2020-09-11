@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 ext {
-    powermockVersion = "1.7.3"
+    powermockVersion = "2.0.7"
 }
 
 android {
@@ -79,7 +79,7 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${swiperefreshVersion}"
 
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
 
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
@@ -89,7 +89,7 @@ dependencies {
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
 
     // Omnipod - start
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'net.danlew:android.joda:2.10.6'
     implementation "com.google.code.gson:gson:2.8.6"
     implementation(name: "com.atech-software.android.library.wizardpager-1.1.4", ext: "aar")
@@ -103,10 +103,10 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     testImplementation 'junit:junit:4.13'
-    testImplementation "org.mockito:mockito-core:2.8.47"
+    testImplementation 'org.mockito:mockito-core:3.5.10'
     testImplementation "org.powermock:powermock-api-mockito2:$powermockVersion"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 }

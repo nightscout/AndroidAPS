@@ -23,7 +23,7 @@ jacoco {
 }
 
 ext {
-    powermockVersion = "1.7.3"
+    powermockVersion = "2.0.7"
     dexmakerVersion = "1.2"
     retrofit2Version = '2.9.0'
     okhttp3Version = '4.8.1'
@@ -165,13 +165,13 @@ android {
         flavorDimensions "standard"
         full {
             applicationId "info.nightscout.androidaps"
-            dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
+            dimension 'standard'
         }
         pumpcontrol {
             applicationId "info.nightscout.aapspumpcontrol"
@@ -280,7 +280,7 @@ dependencies {
     implementation("com.github.tony19:logback-android-classic:1.1.1-6") {
         exclude group: "com.google.android", module: "android"
     }
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'org.slf4j:slf4j-api:1.7.30'
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
@@ -303,7 +303,7 @@ dependencies {
 
     implementation 'net.danlew:android.joda:2.10.6'
 
-    implementation 'org.mozilla:rhino:1.7.12'
+    implementation 'org.mozilla:rhino:1.7.13'
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
@@ -312,7 +312,7 @@ dependencies {
 
     testImplementation "junit:junit:4.13"
     testImplementation 'org.json:json:20200518'
-    testImplementation "org.mockito:mockito-core:2.8.47"
+    testImplementation "org.mockito:mockito-core:3.5.10"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
