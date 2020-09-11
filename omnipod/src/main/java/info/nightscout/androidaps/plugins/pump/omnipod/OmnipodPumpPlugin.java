@@ -510,22 +510,38 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 }
             }
         } else if (this.hasTimeDateOrTimeZoneChanged) {
-            PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TIME, aapsOmnipodManager::setTime);
+            PumpEnactResult result;
+            if (aapsOmnipodManager.isTimeChangeEventEnabled()) {
+                result = executeCommand(OmnipodCommandType.SET_TIME, aapsOmnipodManager::setTime);
+            } else {
+                // Even if automatically changing the time is disabled, we still want to at least do a GetStatus request,
+                // in order to update the Pod's activation time, which we need for calculating the time on the Pod
+                result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+            }
 
             if (result.success) {
                 this.hasTimeDateOrTimeZoneChanged = false;
                 timeChangeRetries = 0;
 
-                Notification notification = new Notification(
-                        Notification.TIME_OR_TIMEZONE_CHANGE,
-                        resourceHelper.gs(R.string.omnipod_time_or_timezone_change),
-                        Notification.INFO, 60);
-                rxBus.send(new EventNewNotification(notification));
+                if (aapsOmnipodManager.isTimeChangeEventEnabled()) {
+                    Notification notification = new Notification(
+                            Notification.TIME_OR_TIMEZONE_CHANGE,
+                            resourceHelper.gs(R.string.omnipod_time_or_timezone_change),
+                            Notification.INFO, 60);
+                    rxBus.send(new EventNewNotification(notification));
+                }
 
             } else {
                 timeChangeRetries++;
 
                 if (timeChangeRetries > 3) {
+                    if (aapsOmnipodManager.isTimeChangeEventEnabled()) {
+                        Notification notification = new Notification(
+                                Notification.TIME_OR_TIMEZONE_CHANGE,
+                                resourceHelper.gs(R.string.omnipod_time_or_timezone_change_failed),
+                                Notification.INFO, 60);
+                        rxBus.send(new EventNewNotification(notification));
+                    }
                     this.hasTimeDateOrTimeZoneChanged = false;
                     timeChangeRetries = 0;
                 }
@@ -806,7 +822,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
         aapsLogger.warn(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
 
-        if (aapsOmnipodManager.isTimeChangeEventEnabled() && podStateManager.isPodRunning()) {
+        if (podStateManager.isPodRunning()) {
             aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed event received and will be consumed by driver.");
             this.hasTimeDateOrTimeZoneChanged = true;
         }

@@ -162,6 +162,7 @@
     <string name="omnipod_cmd_basal_profile_not_set_is_same">Basal profile is the same, so it will not be set again.</string>
     <string name="omnipod_custom_action_reset_rileylink">Reset RileyLink config</string>
     <string name="omnipod_time_or_timezone_change">Time and/or time zone changed on the Pod</string>
+    <string name="omnipod_time_or_timezone_change_failed">Failed to automatically change time and/or time zone on the Pod. You can manually synchronise the time on the Omnipod tab.</string>
     <string name="omnipod_composite_time">%1$s and %2$s</string>
     <string name="omnipod_time_ago">%1$s ago</string>
     <string name="omnipod_waiting_for_rileylink_connection">Waiting for RileyLink connection...</string>
