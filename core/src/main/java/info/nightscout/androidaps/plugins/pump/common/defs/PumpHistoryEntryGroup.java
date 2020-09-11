@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.common.defs;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 

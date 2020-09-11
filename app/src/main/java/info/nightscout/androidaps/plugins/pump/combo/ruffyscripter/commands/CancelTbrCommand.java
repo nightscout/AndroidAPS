@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;

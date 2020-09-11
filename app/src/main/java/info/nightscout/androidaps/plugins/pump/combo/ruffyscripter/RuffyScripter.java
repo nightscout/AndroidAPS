@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -20,15 +21,12 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadQuickInfoCommand;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.CancelTbrCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.Command;
@@ -37,8 +35,10 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.Conf
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadBasalProfileCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadHistoryCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadPumpStateCommand;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadQuickInfoCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetBasalProfileCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 
 /**
  * Provides scripting 'runtime' and operations. consider moving operations into a separate

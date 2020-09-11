@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.data;
 
-import androidx.annotation.Nullable;
 import androidx.collection.LongSparseArray;
 
 import java.util.ArrayList;
