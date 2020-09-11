@@ -134,7 +134,6 @@
             android:backgroundTint="?attr/colorPrimary"
             android:background="?attr/colorPrimary"
             android:src="@drawable/ic_add_black_24dp"
-            android:clickable="true"
             android:focusable="true"
             app:layout_anchorGravity="center_horizontal"
             app:layout_anchor="@id/bottom_app_bar" />

@@ -70,11 +70,11 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.6"
     // medtronic - end
 
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_android_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_android_support_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_compiler_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     testImplementation 'junit:junit:4.13'

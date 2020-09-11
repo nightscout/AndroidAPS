@@ -26,7 +26,7 @@ ext {
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
     retrofit2Version = '2.9.0'
-    okhttp3Version = '4.7.2'
+    okhttp3Version = '4.8.1'
 }
 
 
@@ -252,9 +252,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation "com.google.android.gms:play-services-location:17.0.0"
-    implementation 'com.google.firebase:firebase-core:17.4.3'
-    implementation 'com.google.firebase:firebase-auth:19.3.1'
-    implementation 'com.google.firebase:firebase-database:19.3.1'
+    implementation 'com.google.firebase:firebase-core:17.5.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.firebase:firebase-database:19.4.0'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
 
     implementation "androidx.appcompat:appcompat:${appcompatVersion}"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -347,11 +348,11 @@ dependencies {
     /* Dagger2 - We are going to use dagger.android which includes
     * support for Activity and fragment injection so we need to include
     * the following dependencies */
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_android_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_android_support_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
 
     /* Dagger2 - default dependency */
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
