@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Parkoppling</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Fel</string>
     <string name="not_set_short">Ej vald</string>
@@ -18,8 +18,8 @@
     <string name="disconnected">Frånkopplad</string>
     <string name="disconnecting">Kopplar från</string>
     <string name="androidaps_start">AndroidAPS startad</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
+    <string name="formatinsulinunits1">%1$.1fU</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$dg</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Bluetooth-övervakare</string>
     <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
+    <string name="pairing">Parkoppling</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>

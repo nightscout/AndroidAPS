@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod -->
+    <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod">Для интеграции с помпой Omnipod требуется устройство RileyLink (с прошивкой 2.0 и выше).</string>
+    <!-- Omnipod Configuration -->
+    <string name="omnipod_config_pulse_log_button_enabled">Кнопка журнала событий активирована</string>
+    <string name="omnipod_config_time_change_enabled">Включено обнаружение часового пояса</string>
+    <string name="omnipod_config_expiration_reminder_enabled">Включено напоминание об истечении срока действия</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часов до выключения</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Предупреждение о низком уровне в резервуаре включено</string>
+    <string name="omnipod_config_low_reservoir_alert_units">К-во единиц</string>
+    <!-- Omnipod - Fragment -->
+    <string name="omnipod_moments_ago">Только что</string>
+    <string name="omnipod_pod_mgmt">Управление помпой</string>
+    <string name="omnipod_pod_status">Статус помпы</string>
+    <string name="omnipod_total_delivered_label">Всего подано</string>
+    <string name="omnipod_total_delivered">%1$.2f ед</string>
+    <string name="omnipod_reservoir_left">%1$.2f ед. осталось</string>
+    <string name="omnipod_reservoir_over50">Более 50 ед.</string>
+    <string name="omnipod_pod_address">Адрес Пода</string>
+    <string name="omnipod_pod_expiry">Срок Пода истекает</string>
+    <string name="omnipod_warning">Внимание</string>
+    <string name="omnipod_pod_status_no_active_pod">Активная помпа не выбрана</string>
+    <string name="omnipod_pod_status_waiting_for_pair_and_prime">Выполняется настройка (ожидание сопряжения и заполнения)</string>
+    <string name="omnipod_pod_status_waiting_for_cannula_insertion">Выполняется настройка (ожидание ввода катетера)</string>
+    <string name="omnipod_pod_status_running">Выполняется</string>
+    <string name="omnipod_pod_status_suspended">Приостановлено</string>
+    <string name="omnipod_pod_status_pod_fault">Сбой Пода</string>
+    <string name="omnipod_pod_status_activation_time_exceeded">Превышено время активации</string>
+    <string name="omnipod_pod_status_inactive">Неактивирован</string>
+    <string name="omnipod_pod_status_pod_fault_description">Ошибка Пода: %1$s %2$s</string>
+    <string name="omnipod_pod_active_alerts">Активные оповещения помпы</string>
+    <string name="omnipod_acknowledge_active_alerts_short">Оповещения активны</string>
+    <!-- Omnipod - Dialogs -->
+    <string name="omnipod_frequency">Omnipod (433.91 МГц)</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_error_rileylink_address_invalid">Недопустимый адрес RileyLink.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">Операция невозможна.\n\n Сначала нужно настроить помпу Omnipod.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">Операция невозможна.\n\n Подождите несколько минут, пока AAPS пытается задать профиль.</string>
+    <string name="omnipod_error_illegal_init_action_type">Недопустимый тип инициализации: %1$s</string>
+    <string name="omnipod_error_pod_not_attached">Активная помпа не включена</string>
+    <string name="omnipod_driver_error_setup_action_verification_failed">Командная верификация не состоялась</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Произошла непредвиденная ошибка. Пожалуйста, сообщите об ошибке! (сообщить:: %1$s).</string>
+    <string name="omnipod_driver_error_invalid_parameters">Ошибка связи: недопустимые входные параметры</string>
+    <string name="omnipod_driver_error_communication_failed_timeout">Ошибка связи: время ожидания истекло</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Ошибка связи: возникла непредвиденная ошибка. Пожалуйста, сообщите!</string>
+    <string name="omnipod_driver_error_crc_mismatch">Ошибка связи: проверка целостности сообщения завершилась неудачно</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Ошибка связи: получен недопустимый пакет от Pod</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Ошибка связи: Pod находится в неверном состоянии</string>
+    <string name="omnipod_driver_error_invalid_response">Ошибка связи: недопустимый ответ от помпы</string>
+    <string name="omnipod_driver_error_invalid_message_sequence_number">Ошибка связи: получено сообщение с недопустимым порядковым номером от Pod</string>
+    <string name="omnipod_driver_error_invalid_message_address">Ошибка связи: получено сообщение с некорректным адресом от Pod</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Ошибка связи: не удалось декодировать сообщение от Pod</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Ошибка связи: не удалось выполнить повторную синхронизацию nonce</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Ошибка соединения: вне синхронизации</string>
+    <string name="omnipod_driver_error_not_enough_data">Ошибка связи: недостаточно данных от Pod</string>
+    <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_init_pod">Инициализировать Pod</string>
+    <string name="omnipod_cmd_deactivate_pod">Деактивировать Pod</string>
+    <string name="omnipod_cmd_pod_history_na">В настоящее время история помпы недоступна.</string>
+    <string name="omnipod_init_pod_wizard_step1_title">Заполнить Pod</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Первичное заполнение инфузионной секции пода</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Подключить Под</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nПодготовьте место инфузии. Удалите колпачок с иглы и защиту липкого слоя, Установите Pod на тело.\n\nесли канюля выступает, нажмите <b>отменить</b> и утилизируйте Pod.\n\Нажмите <b>Далее</b> чтобы вставить канюлю и начать подачу базала.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Установка канюли (катетера) </string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Определение графика подачи базала и установка канюли. \n\n Когда проверены все шаги, нажмите <b>Далее</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nПомпа сейчас активна.\n\nБазальный график запрограммирован и катетер установлен.\n\nУбедитесь в том, что канюля установлена правильно и замените Pod, если такой уверенности нет.</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nНажмите <b>Далее</b> для деактивации Пода\n\n<b>Примечание:</b> Это Приостановит всякую подачу инсулина и деактивирует помпу.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Деактивация помпы</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod деактивирован.\n\nУдалите и утилизируйте Pod.</string>
+    <string name="omnipod_init_pod_pair_pod">Сопряжение Pod</string>
+    <string name="omnipod_init_pod_prime_pod">Заполнение инфузионной секции Pod\'a</string>
+    <!-- Omnipod - Base -->
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
+    <string name="omnipod_alert_expiration">Срок работы Pod\'a истекает</string>
+    <string name="omnipod_alert_expiration_advisory">Срок Pod\'a истекает в ближайшее время</string>
+    <string name="omnipod_alert_shutdown_imminent">Остановка неизбежна</string>
+    <string name="omnipod_alert_low_reservoir">В резервуаре мало инсулина</string>
+    <string name="omnipod_alert_unknown_alert">Неизвестное оповещение</string>
+</resources>

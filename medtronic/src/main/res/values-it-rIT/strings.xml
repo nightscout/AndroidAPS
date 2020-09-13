@@ -16,7 +16,7 @@
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica Hardware 4b6b</string>
     <string name="medtronic_custom_action_wake_and_tune">Risveglio e Sintonizzazione</string>
     <string name="medtronic_custom_action_clear_bolus_block">Cancella blocco bolo</string>
-    <string name="medtronic_custom_action_reset_rileylink">Reset configurazione RileyLink</string>
+    <string name="medtronic_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo batteria (Power view)</string>
     <string name="medtronic_pump_battery_no">Non selezionato (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Extended view)</string>

@@ -24,6 +24,7 @@ interface DatabaseHelperInterface {
     fun getTemporaryBasalsDataFromTime(mills: Long, ascending: Boolean): List<TemporaryBasal>
     fun getCareportalEventFromTimestamp(timestamp: Long): CareportalEvent?
     fun getAllOmnipodHistoryRecordsFromTimestamp(timestamp: Long, ascending: Boolean): List<OmnipodHistoryRecord>
+    fun findOmnipodHistoryRecordByPumpId(pumpId: Long): OmnipodHistoryRecord?
     fun getTDDsForLastXDays(days: Int): List<TDD>
     fun getProfileSwitchData(from: Long, ascending: Boolean): List<ProfileSwitch>
 }
