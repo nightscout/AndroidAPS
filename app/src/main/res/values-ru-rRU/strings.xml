@@ -71,7 +71,7 @@
     <string name="openapsma_glucosestatus_label">статус гликемии</string>
     <string name="openapsma_currenttemp_label">текущий врем базал</string>
     <string name="openapsma_iobdata_label">данные IOB (активн инс)</string>
-    <string name="openapsma_profile_label">профиль</string>
+    <string name="openapsma_profile_label">Профиль</string>
     <string name="openapsma_mealdata_label">данные приема пищи</string>
     <string name="result">результат</string>
     <string name="result_insulin_carbs">Результат: %1$s %2$s</string>
@@ -80,12 +80,12 @@
     <string name="glucose">гликемия</string>
     <string name="delta">изменение</string>
     <string name="sms_delta">дельта:</string>
-    <string name="configbuilder">конфигуратор</string>
-    <string name="overview">начало</string>
+    <string name="configbuilder">Конфигуратор</string>
+    <string name="overview">Начало</string>
     <string name="nsprofile">профиль NS</string>
     <string name="simpleprofile">простой профиль</string>
     <string name="treatments">Терапия</string>
-    <string name="virtualpump">виртуальная помпа</string>
+    <string name="virtualpump">Виртуальная помпа</string>
     <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
@@ -122,9 +122,9 @@
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AndroidAPS?</string>
-    <string name="xdrip">xdrip</string>
+    <string name="xdrip">xDrip +</string>
     <string name="apsmode_title">режим APS</string>
-    <string name="closedloop">замкнутый цикл</string>
+    <string name="closedloop">Замкнутый цикл</string>
     <string name="openloop">открытый цикл</string>
     <string name="lowglucosesuspend">Приостановка помпы на низкой ГК</string>
     <string name="disabledloop">цикличность неактивирована</string>
@@ -174,6 +174,9 @@
     <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>
     <string name="preferences_import_impossible">Не удается импортировать настройки!</string>
     <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
+    <string name="old_master_password">Старый главный пароль</string>
+    <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
+    <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
     <string name="preferences_import_list_title">Выберите файл для импорта</string>
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
@@ -510,7 +513,7 @@
     <string name="keep_screen_on_title">Не отключать экран</string>
     <string name="keep_screen_on_summary">Не давать системе Android отключать экран. Это увеличит потребление энергии при отключенной сети питания.</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
-    <string name="sensitivityweightedaverage">средневзвешенная чувствительность</string>
+    <string name="sensitivityweightedaverage">Средневзвешенная чувствительность</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">отмена</string>
     <string name="notloadedplugins">не все профили загружены!</string>
@@ -530,7 +533,7 @@
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="free_peak_oref">Свободный от пиков Oref</string>
-    <string name="rapid_acting_oref">быстро действующий Oref</string>
+    <string name="rapid_acting_oref">Быстро действующий Oref</string>
     <string name="ultrarapid_oref">Сверхбыстрый Oref</string>
     <string name="dia_too_short">Значение длительности работы инс %1$f слишком мало - применено %2$f!</string>
     <string name="activate_profile">АКТИВИРОВАТЬ ПРОФИЛЬ</string>
@@ -559,6 +562,7 @@
     <string name="pump_unreachable">Помпа недоступна</string>
     <string name="missed_bg_readings">Пропущенные данные СК</string>
     <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
+    <string name="gradually_increase_notification_volume">Постепенно увеличивать громкость оповещений и уведомлений</string>
     <string name="localalertsettings_title">Локальные оповещения</string>
     <string name="enable_missed_bg_readings_alert">Оповещать при отсутствии данных СК</string>
     <string name="enable_pump_unreachable_alert">Оповещать в случае недоступности помпы</string>
@@ -1135,10 +1139,8 @@ Context | Edit Context</string>
     <string name="loop_tbrexecution_time_label">Время выполнения временной базальной скорости</string>
     <string name="insight_alert_notification_channel">Оповещения помпы Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">из приложения Authenticator на: %1$s</string>
     <string name="smscommunicator_otp_enabled">Включить аутентификатор</string>
     <string name="smscommunicator_otp_enabled_summary">Аутентифицировать команды с помощью одноразовых паролей, сгенерированных Google Authenticator или похожими приложениями 2FA.</string>
-    <string name="smscommunicator_otp_pin">Дополнительный PIN-код в конце маркера</string>
     <string name="smscommunicator_otp_pin_summary">Дополнительные цифры, которые должны быть запомнены и добавлены в конце каждого сгенерированного одноразового пароля</string>
     <string name="smscomunicator_tab_otp_label">Настройка аутентификации</string>
     <string name="smscommunicator_otp_verify_label">OTP для проверки:</string>
@@ -1179,4 +1181,34 @@ Context | Edit Context</string>
     <string name="formatwithweight">Возраст: %1$.0f Вес: %2$.0f кг</string>
     <string name="basalpctfromtdd_label">% базального</string>
     <string name="dpvdefaultprofile">Значение для профиля по умолчанию</string>
+    <string name="open_humans">Проект Open Humans</string>
+    <string name="finishing_open_humans_setup">Завершение установки Open Humans…</string>
+    <string name="this_may_take_a_while">Это может занять некоторое время. Не выключайте телефон или этот плагин.</string>
+    <string name="setup_finished">Установка завершена</string>
+    <string name="your_phone_will_upload_data">Ваш телефон скоро загрузит данные на Open Humans.</string>
+    <string name="your_phone_is_upload_data">Ваш телефон сейчас загружает данные на Open Humans.</string>
+    <string name="setup_failed">Установка не выполнена</string>
+    <string name="there_was_an_error">Произошла ошибка. &amp; для продолжения попробуйте заново войти в систему!</string>
+    <string name="open_humans_terms">Это проект с открытым исходным кодом, который будет копировать ваши данные на Open Humans. Мы не будем обмениваться вашими данными с третьими лицами без вашего явного разрешения. Данные, отправляемые на проект и приложение, идентифицируются с помощью случайного идентификатора и будут безопасно передаваться на учетную запись Open Humans при вашем одобрении этого процесса. Вы можете остановить загрузку и удалить загруженные данные в любое время здесь: www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Я понимаю и соглашаюсь.</string>
+    <string name="login">Вход</string>
+    <string name="logout">Выход</string>
+    <string name="oh_logout_confirmation">Вы действительно хотите выйти из системы и перестать отправлять данные исследователям?</string>
+    <string name="project_member_id">Идентификатор участника проекта: %s</string>
+    <string name="queue_size">Объем данных в очереди на отправку %d</string>
+    <string name="terms_of_use">Условия пользования</string>
+    <string name="not_logged_in">Не выполнен вход</string>
+    <string name="you_need_to_accept_the_of_use_first">Сначала нужно принять условия использования.</string>
+    <string name="successfully_logged_in">Вход выполнен успешно</string>
+    <string name="setup_will_continue_in_background">Настройка будет завершена в фоновом режиме. Спасибо, что загрузила ваши данные.\n\nНе выключайте этот плагин и телефон до завершения установки.</string>
+    <string name="completing_login">Завершение входа в систему…</string>
+    <string name="donate_your_data_to_science">Передайте свои данные исследователям</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
+    <string name="only_upload_if_connected_to_wifi">Загружать только при подключении к WiFi</string>
+    <string name="only_upload_if_charging">Загружать только при зарядке</string>
+    <string name="worker_state">Рабочее состояние: %s</string>
+    <string name="uploaded_data">Загруженные данные</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">На ваш аккаунт Open Humans будут загружены следующие данные: значения ГК, события careportal (за исключением примечаний), пролонгированные болюсы, переключения профиля, суммарные суточные дозы, временные базалы, временные цели, настройки, версии приложения, модель устройства и размеры экрана. Секретная или конфиденциальная информация, такая как адрес вашего сайта Nightscout или API secret, не будет загружена.</string>
 </resources>

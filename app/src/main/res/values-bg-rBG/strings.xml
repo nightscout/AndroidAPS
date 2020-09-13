@@ -559,6 +559,7 @@
     <string name="pump_unreachable">Помпата е недостъпна</string>
     <string name="missed_bg_readings">Липсват данни за КЗ</string>
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
+    <string name="gradually_increase_notification_volume">Постепенно увеличаване на звука за сигнали и аларми</string>
     <string name="localalertsettings_title">Локални аларми</string>
     <string name="enable_missed_bg_readings_alert">Аларма при липса на данни за КЗ</string>
     <string name="enable_pump_unreachable_alert">Аларма при недостъпна помпа</string>
@@ -1133,10 +1134,8 @@
     <string name="loop_tbrexecution_time_label">Продължителност на временни базали</string>
     <string name="insight_alert_notification_channel">Информация за Insight Pump</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">от приложението AUTHENTICATOR за: %1$s</string>
     <string name="smscommunicator_otp_enabled">Активиране на удостоверител</string>
     <string name="smscommunicator_otp_enabled_summary">Удостоверяване чрез еднократна парола, генерирана с Google Authenticator или подобна програма за 2-факторна оторизация.</string>
-    <string name="smscommunicator_otp_pin">Допълнителен PIN в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които следва да бъдат залепени в края на всяка генерирана еднократна парола</string>
     <string name="smscomunicator_tab_otp_label">Настройка на удостоверителя</string>
     <string name="smscommunicator_otp_verify_label">ОТР за проверка:</string>

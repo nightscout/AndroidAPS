@@ -168,12 +168,15 @@
     <string name="openapsma_maxbasal_summary">Questo valore è chiamato max basale nel contesto OpenAPS</string>
     <string name="openapsma_maxiob_title">Max IOB da basale a cui limitare OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
-    <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password principale, che verrà utilizzata per crittografare le preferenze esportate.</string>
+    <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà utilizzata per crittografare le preferenze esportate.</string>
     <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
     <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
     <string name="preferences_import_impossible">Impossibile importare le preferenze!</string>
     <string name="goto_main_try_again">Torna alla schermata principale e riprova.</string>
+    <string name="old_master_password">Password Master precedente</string>
+    <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
+    <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
     <string name="preferences_import_list_title">Seleziona il file da importare</string>
     <string name="check_preferences_before_import">Verifica le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
@@ -559,6 +562,7 @@
     <string name="pump_unreachable">Micro irraggiungibile</string>
     <string name="missed_bg_readings">Letture BG mancanti</string>
     <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
+    <string name="gradually_increase_notification_volume">Aumenta gradualmente il volume per avvisi e notifiche</string>
     <string name="localalertsettings_title">Avvisi locali</string>
     <string name="enable_missed_bg_readings_alert">Avviso se non si ricevono dati BG</string>
     <string name="enable_pump_unreachable_alert">Avviso se il micro è irraggiungibile</string>
@@ -1090,7 +1094,7 @@
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
     <string name="clone_label">Clona</string>
-    <string name="saveorresetchangesfirst">Salva o reimposta prima le modifiche correnti</string>
+    <string name="saveorresetchangesfirst">Salva o resetta prima le modifiche correnti</string>
     <string name="deletecurrentprofile">Rimuovere il profilo corrente?</string>
     <string name="copytolocalprofile">Creare un nuovo profilo locale da questo profilo?</string>
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
@@ -1133,12 +1137,14 @@
     <string name="loop_tbrexecution_time_label">Esecuzione basale temporanea (momento)</string>
     <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore per: %1$s</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore: %1$s seguito da PIN</string>
     <string name="smscommunicator_otp_enabled">Abilita autenticatore</string>
     <string name="smscommunicator_otp_enabled_summary">Autentica i comandi utilizzando OTP (One Time Password) generate da Google Authenticator o app 2FA simili.</string>
-    <string name="smscommunicator_otp_pin">PIN aggiuntivo a fine token</string>
+    <string name="smscommunicator_otp_pin">PIN obbligatorio aggiuntivo a fine token</string>
     <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
     <string name="smscomunicator_tab_otp_label">Configurazione autenticatore</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Il codice di verifica è composto da 6 cifre visualizzate dall\'app autenticatore (note come OTP) seguite da 3 o più cifre del PIN obbligatorio.</string>
     <string name="smscommunicator_otp_verify_label">OTP per verifica:</string>
     <string name="smscommunicator_otp_reset_btn">Resetta autenticatori</string>
     <string name="smscommunicator_otp_reset_title">Resetta chiave autenticatore</string>
@@ -1177,4 +1183,34 @@
     <string name="formatwithweight">Età: %1$.0f Peso: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% di basale</string>
     <string name="dpvdefaultprofile">Profilo DPV predefinito</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Completamento configurazione Open Humans…</string>
+    <string name="this_may_take_a_while">Potrebbe volerci un po\' di tempo. Non spegnere il tuo telefono e non disattivare questo plugin.</string>
+    <string name="setup_finished">Configurazione completata</string>
+    <string name="your_phone_will_upload_data">Il tuo telefono caricherà a breve i dati su Open Humans.</string>
+    <string name="your_phone_is_upload_data">Il tuo telefono sta caricando ora i dati su Open Humans.</string>
+    <string name="setup_failed">Configurazione fallita</string>
+    <string name="there_was_an_error">Si è verificato un errore. Prova ad accedere di nuovo per procedere.</string>
+    <string name="open_humans_terms">Questo è uno strumento open source che copierà i tuoi dati su Open Humans. Non ci riserviamo alcun diritto di condividere i tuoi dati con terze parti senza la tua esplicita autorizzazione. I dati che il progetto e l\'app ricevono vengono identificati tramite un ID utente casuale e verranno trasmessi in modo sicuro a un account Open Humans solo con la tua autorizzazione per tale processo. Puoi interrompere il caricamento ed eliminare i dati di caricamento in qualsiasi momento tramite www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Comprendo e accetto.</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="oh_logout_confirmation">Vuoi davvero fare il logout e smettere di donare dati alla scienza?</string>
+    <string name="project_member_id">Project Member ID: %s</string>
+    <string name="queue_size">Dimensione coda: %d</string>
+    <string name="terms_of_use">Termini di utilizzo</string>
+    <string name="not_logged_in">Accesso non effettuato</string>
+    <string name="you_need_to_accept_the_of_use_first">Devi prima accettare i termini di utilizzo.</string>
+    <string name="successfully_logged_in">Accesso riuscito</string>
+    <string name="setup_will_continue_in_background">La configurazione verrà ora completata in background. Grazie per il caricamento dei tuoi dati.\n\nPer completare la configurazione, mantieni questo plugin attivo e il telefono acceso per un po\' di tempo.</string>
+    <string name="completing_login">Completamento accesso…</string>
+    <string name="donate_your_data_to_science">Dona i tuoi dati alla scienza</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Sei stato disconnesso da Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Fare click qui per accedere di nuovo.</string>
+    <string name="only_upload_if_connected_to_wifi">Upload solo se connesso a WiFi</string>
+    <string name="only_upload_if_charging">Upload solo se in carica</string>
+    <string name="worker_state">Worker State: %s</string>
+    <string name="uploaded_data">Dati caricati</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">I seguenti dati verranno caricati sul tuo account Open Humans: valori glicemia, eventi portale (eccetto note), boli estesi, cambi profilo, dosi giornaliere totali (TDD), basali temporanee, target temporanei, preferenze, versione dell\'applicazione, modello del dispositivo e dimensioni dello schermo. Informazioni segrete o private come l\'URL di Nightscout o l\'API secret non verranno caricate.</string>
 </resources>

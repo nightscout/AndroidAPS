@@ -76,7 +76,7 @@
     <string name="prerequisites_supportedcgm">Un CGM Supportato.</string>
     <string name="update_label">Argomento: aggiornamento di AndroidAPS</string>
     <string name="whatistrue">Cosa è vero?</string>
-    <string name="update_git">Hai bisogno di avere Git installato.</string>
+    <string name="update_git">Devi avere Git installato.</string>
     <string name="update_asap">Aggiornare appena la nuova versione viene rilasciata e avere abbastanza tempo per farlo.</string>
     <string name="update_keys">Dovresti usare le stesse chiavi di firma.</string>
     <string name="update_neverupdate">Non aggiornare mai se il sistema funziona bene.</string>

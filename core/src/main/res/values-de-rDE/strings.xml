@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">Koppeln</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Fehler</string>
     <string name="not_set_short">Nicht angegeben</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Deaktiviert Bluetooth kurzzeitig, falls keine Verbindung zur Pumpe besteht. Dies kann für Smartphones mit Verbindungsproblemen nützlich sein.</string>
+    <string name="pairing">Koppeln</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -131,7 +132,7 @@
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> KH: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BZ-Test</string>
-    <string name="careportal_mbg">Manuelle BZ oder Kalibrierung</string>
+    <string name="careportal_mbg">Manueller BZ oder Kalibrierung</string>
     <string name="careportal_announcement">Ankündigung</string>
     <string name="careportal_note">Notiz</string>
     <string name="careportal_question">Frage</string>
@@ -186,6 +187,7 @@
     <string name="tbb2">Tägl. Basalmenge * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Aktion von Pumpe und/oder Treiber nicht unterstützt.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation NOCH NICHT von Pumpe unterstützt.</string>

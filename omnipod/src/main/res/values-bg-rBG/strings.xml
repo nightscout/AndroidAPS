@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod -->
+    <!-- Omnipod - Base -->
+    <string name="description_pump_omnipod">Интеграция на помпата Omnipod, изисква RileyLink устройство (с фърмуер минимум 2.0 ) .</string>
+    <!-- Omnipod Configuration -->
+    <!-- Omnipod - Fragment -->
+    <string name="omnipod_reservoir_left">%1$.2f Е остават</string>
+    <string name="omnipod_reservoir_over50">Над 50 Е</string>
+    <!-- Omnipod - Dialogs -->
+    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_error_illegal_init_action_type">Неправилен PodInitActionType: %1$s</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Непредвидена грешка. Моля, докладвайте! (тип: %1$s).</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Комуникацията е неуспешна: възникнала е неочаквана грешка. Моля, докладвайте!</string>
+    <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_init_pod">Инициализация на Pod</string>
+    <string name="omnipod_cmd_deactivate_pod">Деактивирай под</string>
+    <string name="omnipod_cmd_pod_history_na">Историята на Pod не е достъпна в момента.</string>
+    <string name="omnipod_init_pod_wizard_step1_title">Напълни Pod</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Пълнене</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Прикрепете Pod</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nПодгответе мястото за инфузия. Отстранете капачката на Pod и лепенката и прикрепете капсулата към мястото за инфузия.\n\nАко канюла стърчи, моля натиснете <b>Отказ</b> и изхвърлете вашия Pod.\n\nПрес <b>Следваща</b> да се вмъкне канюлата и да започне базалната доставка.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Вмъкване на канюла</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Опитвам се да определя първоначалния базален график и да вмъкна канюлата.\n\nКогато всички елементи са проверени, можете да натиснете <b>Следващ</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\Podе активна.\n\nВашият базален график е програмиран и канюлата вмъкната.\n\nМоля, проверете дали канюлата е поставена правилно или заменете Pod, ако чувствате, че не е.</string>
+    <string name="omnipod_remove_pod_wizard_step1_title">Деактивирай Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nНатиснете <b>Следващ</b> , за да деактивирате Pod.\n\n<b>Забележка:</b> Това ще спре всички доставки на инсулин и деактивира Pod.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Деактивиране на Pod</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod изключен.\n\nмоля, извадете Pod от тялото си и го хвърли.</string>
+    <string name="omnipod_init_pod_pair_pod">Сдвояване на под</string>
+    <string name="omnipod_init_pod_prime_pod">Пълнене на под</string>
+    <!-- Omnipod - Base -->
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Край на напомнянето за настройка</string>
+    <string name="omnipod_alert_shutdown_imminent">Спирането е неизбежно</string>
+    <string name="omnipod_alert_low_reservoir">Минимален инсулин в резервоара</string>
+    <string name="omnipod_alert_unknown_alert">Непозната аларма</string>
+</resources>

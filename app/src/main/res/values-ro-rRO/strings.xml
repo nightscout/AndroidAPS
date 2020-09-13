@@ -156,6 +156,7 @@
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
+    <string name="missing_carbs">Lipsă %1$d g</string>
     <string name="exported">Am exportat preferințele</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Importă setările din</string>
@@ -173,6 +174,9 @@
     <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
     <string name="preferences_import_impossible">Nu se pot prelua setările!</string>
     <string name="goto_main_try_again">Mergeți la ecranul principal și încercați din nou.</string>
+    <string name="old_master_password">Parola Master veche</string>
+    <string name="different_password_used">Acest fişier a fost exportat şi criptat cu o parolă master diferită. Furnizaţi parola master veche pentru a decripta fişierul.</string>
+    <string name="master_password_will_be_replaced">Ca rezultat al unui import reusit, parola master curenta VA FI INLOCUITA cu parola master veche!</string>
     <string name="preferences_import_list_title">Selectați fișierul pentru import</string>
     <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
     <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
@@ -234,6 +238,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Numarul minim de minute care trebuie sa treaca intre un bolus la distanta si urmatorul</string>
     <string name="smscommunicator_remotebolusmindistance">Cate minute trebuie sa treaca, cel puţin, intre un bolus si următorul</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Pentru siguranta dumneavoastra, pentru a edita aceasta preferinta trebuie sa adaugati cel putin 2 numere de telefon.</string>
+    <string name="bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
+    <string name="bolusrequested">Se vor livra %1$.2fU</string>
+    <string name="smscommunicator_bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolusul de masa de %1$.2fU a fost livrat cu succes</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Țintă %1$s pentru %2$d minute</string>
     <string name="smscommunicator_tt_set">Tinta %1$s pentru %2$d minute este setata cu succes</string>
     <string name="smscommunicator_tt_canceled">Tinta temporara anulata cu succes</string>
@@ -257,7 +265,9 @@
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus de la distanță nu este disponibil. Încearcă din nou mai târziu.</string>
+    <string name="smscommunicator_basalreplywithcode">Pentru a iniția bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Pentru a schimba profilul în %1$s %2$d%% trimiteți codul %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Pentru a iniția bolusul extins de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Pentru a introduce %1$dg la %2$s, raspundeti cu: %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pentru a iniția bazala de %1$d%% pentru %2$d min trimiteți codul %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
@@ -266,6 +276,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Pentru a dezactiva bucla inchisa, raspundeti cu %1$s</string>
     <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
     <string name="smscommunicator_extendedset">Bolusul extins de %1$.2fU pentru %2$d min a fost inițiat</string>
+    <string name="smscommunicator_carbsset">%1$dg carbohidrați introduși cu succes</string>
     <string name="smscommunicator_carbsfailed">Introducerea a %1$dg de carbohidrati a esuat</string>
     <string name="smscommunicator_tempbasalset_percent">Bazala temporară %1$d%% pentru %2$d minute a fost stabilită cu succes</string>
     <string name="smscommunicator_tempbasalfailed">Trimiterea bazalei temporare a eșuat</string>
@@ -551,6 +562,7 @@
     <string name="pump_unreachable">Pompă indisponibilă</string>
     <string name="missed_bg_readings">Lipsesc date glicemie</string>
     <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
+    <string name="gradually_increase_notification_volume">Creşterea treptată a volumului pentru alerte şi notificări</string>
     <string name="localalertsettings_title">Alerte locale</string>
     <string name="enable_missed_bg_readings_alert">Alarmează dacă nu se primesc glicemii</string>
     <string name="enable_pump_unreachable_alert">Se alertează dacă pompa este indisponibilă</string>
@@ -846,6 +858,7 @@
     <string name="code_compare">Sunt identice codurile afișate aici și cele de pe pompă?</string>
     <string name="insight_pairing">Asociere Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2f U din %2$.2f U livrate</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Canulă schimbată</string>
     <string name="pump_time_updated">Timpul din pompă a fost actualizat</string>
@@ -903,6 +916,7 @@
     <string name="short_status_extended">Extins: %1$.2f / %2$.2f U pentru %3$d min</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U pentru %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Rezervor: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Timpul maxim de restabilire [s]</string>
     <string name="min_recovery_duration">Timpul minim de restabilire [s]</string>
@@ -1045,6 +1059,8 @@
     <string name="sendsmsactionlabel">Trimite SMS: %1$s</string>
     <string name="sendsmsactiondescription">Trimite SMS către toate numerele</string>
     <string name="sendsmsactiontext">Trimite SMS cu text</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Este aplicatâ limitarea bolusului %1$.2f U la %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
     <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
     <string name="deliverpartofboluswizard">Wizard bolus face un calcul, dar numai o parte din insulina calculată este și livrată. Este mai eficient când se folosește cu algoritmul SMB.</string>
@@ -1121,12 +1137,15 @@
     <string name="loop_tbrexecution_time_label">Timpul de execuție al bazalei temporare</string>
     <string name="insight_alert_notification_channel">Alerte pompă Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicația Authenticator pentru: %1$s</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicația Authenticator pentru: %1$s urmat de PIN</string>
     <string name="smscommunicator_otp_enabled">Activare Authenticator</string>
     <string name="smscommunicator_otp_enabled_summary">Autentificați comenzile folosind o parolă unica generată de Google Authenticator sau alte aplicații 2FA similare.</string>
-    <string name="smscommunicator_otp_pin">PIN adițional la sfârșitul token-ului</string>
+    <string name="smscommunicator_otp_pin">PIN obligatoriu suplimentar la sfârșitul token-ului</string>
     <string name="smscommunicator_otp_pin_summary">Cifre suplimentare care ar trebui să fie memorate și adăugate la sfârșitul fiecărei parole unice generate</string>
     <string name="smscomunicator_tab_otp_label">Setare Authenticator</string>
+    <string name="smscommunicator_code_verify_label">Cod de verificat:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + cod PIN</string>
+    <string name="smscommunicator_code_verify_info">Codul de verificare constă din 6 cifre afişate de către aplicaţia Authentificator (cunoscută ca OTP), urmat de 3 sau mai multe cifre de PIN obligatoriu.</string>
     <string name="smscommunicator_otp_verify_label">Parola unică pentru verificare:</string>
     <string name="smscommunicator_otp_reset_btn">Resetați Authenticatori</string>
     <string name="smscommunicator_otp_reset_title">Resetați cheia pentru Authenticator</string>
@@ -1165,4 +1184,34 @@
     <string name="formatwithweight">Vârstă: %1$.0f Greutate: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% din bazală</string>
     <string name="dpvdefaultprofile">Profil implicit DPV</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Finalizare configurare Open Humans…</string>
+    <string name="this_may_take_a_while">Acest lucru poate dura un timp. Nu opriți telefonul și nici acest plugin.</string>
+    <string name="setup_finished">Configurare terminată</string>
+    <string name="your_phone_will_upload_data">Telefonul tău va încărca date către Open Humans în curând.</string>
+    <string name="your_phone_is_upload_data">Telefonul tău încarcă date în Open Humans acum.</string>
+    <string name="setup_failed">Configurare eșuată</string>
+    <string name="there_was_an_error">A apărut o eroare. Te rugăm să încerci să te autentifici din nou pentru a continua. Ne pare rău. Mulțumim!</string>
+    <string name="open_humans_terms">Aceasta este un instrument open source care va copia datele tale în Open Humans. Nu avem dreptul sa împărtășim datele tale cu terțe părți fără autorizație explicită. Datele pe care le primesc proiectul și aplicația sunt identificate printr-un ID de utilizator aleatoriu și vor fi transmise în siguranță într-un cont Open Humans numai cu autorizarea acestui proces. Poți înceta încărcarea și șterge datele oricând folosind www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Înţeleg şi sunt de acord.</string>
+    <string name="login">Autentificare</string>
+    <string name="logout">Deconectare</string>
+    <string name="oh_logout_confirmation">Sigur doriți să vă deconectați și să încetați să donați date in scopuri științifice?</string>
+    <string name="project_member_id">ID Membru proiect: %s</string>
+    <string name="queue_size">Dimensiunea cozii: %d</string>
+    <string name="terms_of_use">Condiții de utilizare</string>
+    <string name="not_logged_in">Nu ești autentificat(ă)</string>
+    <string name="you_need_to_accept_the_of_use_first">Trebuie mai întâi să acceptați condițiile de utilizare.</string>
+    <string name="successfully_logged_in">Conectare reușită</string>
+    <string name="setup_will_continue_in_background">Setarea va fi finalizată în fundal acum. Vă mulțumim pentru încărcarea datelor.\n\nVă rugăm să păstrați acest plugin și telefonul pornit pentru o scurtă perioadă de timp astfel încât setarea să se finalizeze.</string>
+    <string name="completing_login">Finalizare autentificare…</string>
+    <string name="donate_your_data_to_science">Donează datele în scopuri științifice</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou dacă nu a fost intenționat.</string>
+    <string name="only_upload_if_connected_to_wifi">Încarcă numai pe conexiune WiFi</string>
+    <string name="only_upload_if_charging">Încărca numai dacă telefonul este la încărcat</string>
+    <string name="worker_state">Stare prelucrare: %s</string>
+    <string name="uploaded_data">Date încărcate</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Următoarele date vor fi încărcate în contul Open Humans: glicemii, evenimente careportal (cu excepția notelor), bolusuri extinse, schimbări de profil, doze zilnice totale, bazale temporare, ținte temporare, preferințe, versiunea aplicației, model dispozitiv și dimensiunile ecranului. Informațiile secrete sau private, cum ar fi URL-ul Nightscout sau secretul API, nu vor fi încărcate.</string>
 </resources>

@@ -24,7 +24,7 @@
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
     <string name="pumperror">Errore micro</string>
     <string name="lowbattery">Livello batteria basso</string>
-    <string name="basalcompare">Erogazione di una velocità basale inferiore rispetto alla preimpostata</string>
+    <string name="basalcompare">Erogazione inferiore rispetto alla velocità basale preimpostata</string>
     <string name="pumpshutdown">Arresto micro</string>
     <string name="batterydischarged">Batteria del micro scarica</string>
     <string name="occlusion">Occlusione</string>
@@ -47,7 +47,7 @@
     <string name="pairfirst">Associa il micro con il tuo telefono!</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="startingbolus">Avvio erogazione bolo</string>
-    <string name="waitingforestimatedbolusend">Attesa per la fine del bolo. Rimangono %1$d sec.</string>
+    <string name="waitingforestimatedbolusend">In attesa della fine del bolo. Rimangono %1$d sec.</string>
     <string name="stoppingtempbasal">Stop basale temporanea</string>
     <string name="settingextendedbolus">Impostazione bolo esteso</string>
     <string name="stoppingextendedbolus">Stop bolo esteso</string>

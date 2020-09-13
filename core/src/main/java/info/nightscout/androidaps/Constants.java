@@ -89,6 +89,9 @@ public class Constants {
     // Local profile
     public static final String LOCAL_PROFILE = "LocalProfile";
 
+    // Local Alerts
+    public static final int DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES = 30;
+    public static final int DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES = 30;
 
     // One Time Password
 

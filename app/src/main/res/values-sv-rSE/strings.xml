@@ -175,6 +175,9 @@ Eversense-appen.</string>
     <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>
     <string name="preferences_import_impossible">Kan inte importera inställningar!</string>
     <string name="goto_main_try_again">Vänligen gå tillbaka till huvudskärmen och försök igen.</string>
+    <string name="old_master_password">Gamla huvudlösenordet</string>
+    <string name="different_password_used">Den här filen har exporterats och krypterats med ett annat lösenord. Ange det gamla lösenordet för att dekryptera filen.</string>
+    <string name="master_password_will_be_replaced">OBS! Som ett resultat av en lyckad import, kommer det nuvarande huvudlösenordet att ersättas av det gamla huvudlösenordet!</string>
     <string name="preferences_import_list_title">Välj fil att importera</string>
     <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
     <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
@@ -227,7 +230,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_allowednumbers_summary">+4670XXXXXXX; +4670YYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">För att ge bolus %1$.2f enheter, svara med kod %2$s</string>
     <string name="smscommunicator_mealbolusreplywithcode">För att ge bolus %1$.2f enheter, svara med kod: %2$s</string>
-    <string name="smscommunicator_temptargetwithcode">För att sätta ett temporärt mål på %1$s, svara med kod: %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">För att sätta ett temporärt mål på %1$s svara med kod %2$s</string>
     <string name="smscommunicator_temptargetcancel">För att avbryta temporärt mål, svara med kod: %1$s</string>
     <string name="smscommunicator_stopsmswithcode">För att inaktivera fjärrkommandon via SMS, svara med kod: %1$s \n\nTänk på att måste ha tillgång till huvudtelefonen för att kunna återaktivera.</string>
     <string name="smscommunicator_stoppedsms">Fjärrkommandon via SMS stoppas. För att återaktivera detta, använd Konfigurationsverktyget på huvudtelefonen.</string>
@@ -560,6 +563,7 @@ Eversense-appen.</string>
     <string name="pump_unreachable">Pumpen kan inte nås</string>
     <string name="missed_bg_readings">BG-värden saknas</string>
     <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
+    <string name="gradually_increase_notification_volume">Öka volymen gradvis för larm och aviseringar</string>
     <string name="localalertsettings_title">Lokala larm</string>
     <string name="enable_missed_bg_readings_alert">Varna om BG-data saknas</string>
     <string name="enable_pump_unreachable_alert">Varna om pumpen inte går att nå</string>
@@ -1134,10 +1138,8 @@ Eversense-appen.</string>
     <string name="loop_tbrexecution_time_label">Basalförändring utförd</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">från autentiseringsapp för: %1$s</string>
     <string name="smscommunicator_otp_enabled">Aktivera autentiseraren</string>
     <string name="smscommunicator_otp_enabled_summary">Autentisera kommandon med hjälp av engångslösenord som genererats av Google Authenticator eller liknande appar för tvåfaktorsautentisering.</string>
-    <string name="smscommunicator_otp_pin">Extra PIN-kod</string>
     <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
     <string name="smscomunicator_tab_otp_label">Konfiguration av tvåfaktorsautentisering</string>
     <string name="smscommunicator_otp_verify_label">Engångslösenord att kontrollera:</string>
@@ -1178,4 +1180,34 @@ Eversense-appen.</string>
     <string name="formatwithweight">Ålder: %1$.0f Vikt: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% av basal</string>
     <string name="dpvdefaultprofile">DPV-standardprofil</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Slutför Open Humans-konfiguration…</string>
+    <string name="this_may_take_a_while">Det här kan ta ett tag. Avbryt inte den här processen.</string>
+    <string name="setup_finished">Konfigurationen slutförd</string>
+    <string name="your_phone_will_upload_data">Din telefon kommer att ladda upp data till Open Humans snart.</string>
+    <string name="your_phone_is_upload_data">Din telefon laddar upp data till Open Humans nu.</string>
+    <string name="setup_failed">Konfiguration misslyckades</string>
+    <string name="there_was_an_error">Ett fel uppstod. Försök att logga in igen för att fortsätta. Tack!</string>
+    <string name="open_humans_terms">Detta är ett open source-verktyg som kommer att ladda upp dina data till Open Humans. Vi förbehåller oss inga rättigheter att dela dina uppgifter med tredje part utan ditt uttryckliga tillstånd. De data som projektet och appen tar emot identifieras via ett slumpmässigt användar-ID och kommer endast att överföras på ett säkert sätt till ett Open Humans-konto om du tillåter det. Du kan när som helst sluta ladda upp och radera dina uppladdningsdata via www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Jag förstår och instämmer.</string>
+    <string name="login">Logga in</string>
+    <string name="logout">Logga ut</string>
+    <string name="oh_logout_confirmation">Vill du verkligen logga ut och sluta donera data till vetenskapen?</string>
+    <string name="project_member_id">Projektmedlems-ID: %s</string>
+    <string name="queue_size">Köstorlek: %d</string>
+    <string name="terms_of_use">Användarvillkor</string>
+    <string name="not_logged_in">Inte inloggad</string>
+    <string name="you_need_to_accept_the_of_use_first">Du måste acceptera användarvillkoren först.</string>
+    <string name="successfully_logged_in">Inloggning lyckades</string>
+    <string name="setup_will_continue_in_background">Konfigurationen kommer att slutföras i bakgrunden nu. Tack för att du laddade upp dina data.\n\nBehåll det här appen och din telefon påslagen en stund till för installationen ska slutföras helt.</string>
+    <string name="completing_login">Slutför inloggning…</string>
+    <string name="donate_your_data_to_science">Donera dina data till vetenskapen</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen om det inte var meningen.</string>
+    <string name="only_upload_if_connected_to_wifi">Ladda bara upp om ansluten till WiFi</string>
+    <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
+    <string name="worker_state">Jobbstatus: %s</string>
+    <string name="uploaded_data">Uppladdad data</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Följande data kommer att överföras till ditt Open Humans-konto: Glukosvärden, careportalhändelser (utom anteckningar), utökade bolusar, profilbyten, totala dagliga doser, temp basaler, temp mål, inställningar, appversion, enhetsmodell och skärmstorlek. Hemlig eller privat information, t. ex. din Nightscout-adress eller API-hemlighet, kommer inte att överföras.</string>
 </resources>

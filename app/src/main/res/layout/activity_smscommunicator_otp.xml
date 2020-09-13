@@ -46,6 +46,15 @@
                 style="@style/section_header_label"
                 android:text="@string/smscommunicator_otp_step3_test_header" />
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:paddingStart="15sp"
+                android:paddingEnd="15sp"
+                android:text="@string/smscommunicator_code_verify_info" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,13 +65,13 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/smscommunicator_otp_verify_label" />
+                    android:text="@string/smscommunicator_code_verify_label" />
 
                 <EditText
                     android:id="@+id/smscommunicator_otp_verify_edit"
                     android:layout_width="140sp"
                     android:layout_height="wrap_content"
-                    android:hint="000 000 000"
+                    android:hint="@string/smscommunicator_code_verify_hint"
                     android:inputType="number"
                     android:maxLength="12"
                     android:textAlignment="center"
