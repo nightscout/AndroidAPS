@@ -14,6 +14,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitPod
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.PodInfoFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.removepod.RemoveActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.WizardActivity
+import javax.inject.Scope
 
 @Module
 @Suppress("unused")
@@ -23,6 +25,10 @@ abstract class OmnipodModule {
     @ContributesAndroidInjector
     abstract fun contributesPodManagementActivity(): PodManagementActivity
     @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): PodHistoryActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [OmnipodWizardModule::class])
+    abstract fun contributesWizardActivity(): WizardActivity
 
     // Fragments
     @ContributesAndroidInjector abstract fun initActionFragment(): InitActionFragment
@@ -39,7 +45,20 @@ abstract class OmnipodModule {
     @ContributesAndroidInjector abstract fun rlHistoryItemOmnipod(): RLHistoryItemOmnipod
 
     companion object {
+
         @Provides
         fun podStateManagerProvider(aapsPodStateManager: AapsPodStateManager): PodStateManager = aapsPodStateManager
     }
 }
+
+// TODO: These annotations could be used globally -> move to core or app
+
+@MustBeDocumented
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ActivityScope
+
+@MustBeDocumented
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class FragmentScope
