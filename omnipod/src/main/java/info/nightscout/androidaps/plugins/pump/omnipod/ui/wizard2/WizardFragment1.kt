@@ -10,11 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.dagger.OmnipodPluginQualifier
 import javax.inject.Inject
 
 class WizardFragment1 : DaggerFragment() {
 
     @Inject
+    @OmnipodPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     lateinit var viewModel: WizardViewModel1
