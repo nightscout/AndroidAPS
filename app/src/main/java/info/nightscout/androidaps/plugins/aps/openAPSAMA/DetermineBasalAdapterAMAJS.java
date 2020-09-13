@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
@@ -45,6 +46,7 @@ public class DetermineBasalAdapterAMAJS {
     @Inject SP sp;
     @Inject ProfileFunction profileFunction;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject OpenHumansUploader openHumansUploader;
 
     private ScriptReader mScriptReader;
 
@@ -132,7 +134,9 @@ public class DetermineBasalAdapterAMAJS {
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
                 aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
-                    determineBasalResultAMA = new DetermineBasalResultAMA(injector, jsResult, new JSONObject(result));
+                    JSONObject resultJson = new JSONObject(result);
+                    openHumansUploader.enqueueAMAData(mProfile, mGlucoseStatus, mIobData, mMealData, mCurrentTemp, mAutosensData, resultJson);
+                    determineBasalResultAMA = new DetermineBasalResultAMA(injector, jsResult, resultJson);
                 } catch (JSONException e) {
                     aapsLogger.error(LTag.APS, "Unhandled exception", e);
                 }

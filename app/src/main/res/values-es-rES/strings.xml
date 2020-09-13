@@ -1133,10 +1133,8 @@
     <string name="loop_tbrexecution_time_label">Tiempo de ejecución para Temp Basal</string>
     <string name="insight_alert_notification_channel">Alertas de bomba Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de app de Autentificación a: %1$s</string>
     <string name="smscommunicator_otp_enabled">Habilitar autentificador</string>
     <string name="smscommunicator_otp_enabled_summary">Comandos de autentificación usando One Time Password de Google Autenticator o apps 2FA similar.</string>
-    <string name="smscommunicator_otp_pin">PIN adicional en token final</string>
     <string name="smscommunicator_otp_pin_summary">Los dígitos adicionales se deben memorizar y pegar al final de cada una de las contraseñas generadas por One Time Password</string>
     <string name="smscomunicator_tab_otp_label">Configuración de autentificación</string>
     <string name="smscommunicator_otp_verify_label">OTP para comprobar:</string>

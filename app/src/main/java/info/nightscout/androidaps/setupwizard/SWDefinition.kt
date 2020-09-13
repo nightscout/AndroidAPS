@@ -418,7 +418,7 @@ class SWDefinition @Inject constructor(
 
     private fun swDefinitionFull() { // List all the screens here
         add(screenSetupWizard)
-            .add(screenLanguage)
+            //.add(screenLanguage)
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionBt)
@@ -446,7 +446,7 @@ class SWDefinition @Inject constructor(
 
     private fun swDefinitionPumpControl() { // List all the screens here
         add(screenSetupWizard)
-            .add(screenLanguage)
+            //.add(screenLanguage)
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionBt)
@@ -470,7 +470,7 @@ class SWDefinition @Inject constructor(
 
     private fun swDefinitionNSClient() { // List all the screens here
         add(screenSetupWizard)
-            .add(screenLanguage)
+            //.add(screenLanguage)
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionStore)

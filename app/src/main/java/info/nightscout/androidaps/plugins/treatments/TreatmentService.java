@@ -42,6 +42,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
@@ -63,6 +64,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject RxBusWrapper rxBus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject DatabaseHelperInterface databaseHelper;
+    @Inject OpenHumansUploader openHumansUploader;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -107,14 +109,61 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
     }
 
-    public Dao<Treatment, Long> getDao() {
+    public TreatmentDaoWrapper getDao() {
         try {
-            return DaoManager.createDao(this.getConnectionSource(), Treatment.class);
+            return new TreatmentDaoWrapper(DaoManager.createDao(this.getConnectionSource(), Treatment.class));
         } catch (SQLException e) {
             aapsLogger.error("Cannot create Dao for Treatment.class");
         }
 
         return null;
+    }
+
+    class TreatmentDaoWrapper {
+        private final Dao<Treatment, Long> wrapped;
+
+        TreatmentDaoWrapper(Dao<Treatment, Long> wrapped) {
+            this.wrapped = wrapped;
+        }
+
+        public void executeRaw(String statement, String... arguments) throws SQLException {
+            wrapped.executeRaw(statement, arguments);
+        }
+
+        public List<Treatment> queryForAll() throws SQLException {
+            return wrapped.queryForAll();
+        }
+
+        public void delete(Treatment data) throws SQLException {
+            wrapped.delete(data);
+            openHumansUploader.enqueueTreatment(data, true);
+        }
+
+        public void create(Treatment data) throws SQLException {
+            wrapped.create(data);
+            openHumansUploader.enqueueTreatment(data);
+        }
+
+        public Treatment queryForId(long id) throws SQLException {
+            return wrapped.queryForId(id);
+        }
+
+        public void update(Treatment data) throws SQLException {
+            wrapped.update(data);
+            openHumansUploader.enqueueTreatment(data);
+        }
+
+        public QueryBuilder<Treatment, Long> queryBuilder() {
+            return wrapped.queryBuilder();
+        }
+
+        public List<Treatment> query(PreparedQuery<Treatment> data) throws SQLException {
+            return wrapped.query(data);
+        }
+
+        public long countOf() throws SQLException {
+            return wrapped.countOf();
+        }
     }
 
     @Override
@@ -250,6 +299,15 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return new ArrayList<>();
     }
 
+    public long count() {
+        try {
+            return this.getDao().countOf();
+        } catch (SQLException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+        return 0L;
+    }
+
     /*
     {
         "_id": "551ee3ad368e06e80856e6a9",
@@ -308,7 +366,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         //preserve carbs
                         if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
                             treatment.carbs = existingTreatment.carbs;
-                        // preserve insulin
+                            // preserve insulin
                         } else if (existingTreatment.isValid && existingTreatment.insulin > 0 && treatment.insulin == 0) {
                             treatment.insulin = existingTreatment.insulin;
                         }
@@ -702,7 +760,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Nullable
     public Treatment findByNSId(String _id) {
         try {
-            Dao<Treatment, Long> daoTreatments = getDao();
+            TreatmentDaoWrapper daoTreatments = getDao();
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             Where where = queryBuilder.where();
             where.eq("_id", _id);
@@ -724,7 +782,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
     public List<Treatment> getTreatmentDataFromTime(long mills, boolean ascending) {
         try {
-            Dao<Treatment, Long> daoTreatments = getDao();
+            TreatmentDaoWrapper daoTreatments = getDao();
             List<Treatment> treatments;
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             queryBuilder.orderBy("date", ascending);
@@ -741,7 +799,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
     public List<Treatment> getTreatmentDataFromTime(long from, long to, boolean ascending) {
         try {
-            Dao<Treatment, Long> daoTreatments = getDao();
+            TreatmentDaoWrapper daoTreatments = getDao();
             List<Treatment> treatments;
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             queryBuilder.orderBy("date", ascending);

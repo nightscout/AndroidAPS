@@ -20,6 +20,8 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTrigger
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansFragment
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansLoginActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorFragment
@@ -34,7 +36,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
@@ -66,22 +67,30 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
-    @ContributesAndroidInjector abstract fun contributesOmnipodFragment(): OmnipodFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
-    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
+    @ContributesAndroidInjector
+    abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
     @ContributesAndroidInjector abstract fun contributesWearFragment(): WearFragment
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
+
+    @ContributesAndroidInjector abstract fun contributesOpenHumansFragment(): OpenHumansFragment
 
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
@@ -106,9 +115,15 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
 
+    @ContributesAndroidInjector
+    abstract fun contributesExchangeAuthTokenDialot(): OpenHumansLoginActivity.ExchangeAuthTokenDialog
+
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusGeneral(): RileyLinkStatusGeneralFragment
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusHistoryFragment(): RileyLinkStatusHistoryFragment
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusDeviceMedtronic(): RileyLinkStatusDeviceMedtronic
+    @ContributesAndroidInjector
+    abstract fun contributesRileyLinkStatusGeneral(): RileyLinkStatusGeneralFragment
+    @ContributesAndroidInjector
+    abstract fun contributesRileyLinkStatusHistoryFragment(): RileyLinkStatusHistoryFragment
+    @ContributesAndroidInjector
+    abstract fun contributesRileyLinkStatusDeviceMedtronic(): RileyLinkStatusDeviceMedtronic
 }

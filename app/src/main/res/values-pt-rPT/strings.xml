@@ -168,12 +168,15 @@
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode administrar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode administrar de uma vez.</string>
-    <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestre, que será usada para encriptar preferências exportadas.</string>
-    <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
+    <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestra, que será usada para encriptar preferências exportadas.</string>
+    <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestra, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
     <string name="preferences_import_impossible">Não é possível importar as preferências!</string>
     <string name="goto_main_try_again">Por favor, volte ao ecrã principal e tente novamente.</string>
+    <string name="old_master_password">Senha mestra antiga</string>
+    <string name="different_password_used">Este ficheiro foi exportado e criptografado com senha mestra diferente. Forneça a senha mestra antiga para descriptografar o ficheiro.</string>
+    <string name="master_password_will_be_replaced">Como resultado da importação bem sucedida senha mestra actual VAI SER SUBSTITUÍDA com a antiga senha mestra!</string>
     <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
     <string name="check_preferences_before_import">Por favor, verifique as preferências antes da importação:</string>
     <string name="check_preferences_cannot_import">Preferências não podem ser importadas!</string>
@@ -208,7 +211,7 @@
     <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
     <string name="prefdecrypt_issue_modified">Ficheiro foi modificado após exportação!</string>
     <string name="prefdecrypt_issue_parsing">Erro Desencriptação, a análise de preferências falhou!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestre diferente.</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestra diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <string name="exported_today">exportado hoje</string>
@@ -1134,10 +1137,8 @@
     <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">a partir da app Autenticador para: %1$s</string>
     <string name="smscommunicator_otp_enabled">Activar Autenticador</string>
     <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Senha-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
-    <string name="smscommunicator_otp_pin">PIN adicional no token final</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_otp_verify_label">OTP para verificar:</string>
@@ -1159,7 +1160,7 @@
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="overview_show_absinsulin">Insulina absoluta</string>
     <string name="master_password_summary">Senha Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
-    <string name="current_master_password">Senha Mestre actual</string>
+    <string name="current_master_password">Senha Mestra actual</string>
     <string name="statuslights">Luzes de Estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="copyexistingvalues">Copiar definições do NS (se existir)?</string>
@@ -1178,4 +1179,21 @@
     <string name="formatwithweight">Idade: %1$.0f Peso: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">A terminar configuração Open Humans...</string>
+    <string name="setup_finished">Configuração terminada</string>
+    <string name="setup_failed">Falha na configuração</string>
+    <string name="i_understand_and_agree">Compreendo e concordo.</string>
+    <string name="login">Login</string>
+    <string name="logout">Terminar Sessão</string>
+    <string name="queue_size">Tamanho da Fila: %d</string>
+    <string name="terms_of_use">Termos de Utilização</string>
+    <string name="not_logged_in">Não tem sessão iniciada</string>
+    <string name="successfully_logged_in">Login bem sucedido</string>
+    <string name="completing_login">A completar o login…</string>
+    <string name="donate_your_data_to_science">Doar seus dados para a ciência</string>
+    <string name="open_humans_short">OH</string>
+    <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
+    <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
+    <string name="uploaded_data">Dados Enviados</string>
 </resources>

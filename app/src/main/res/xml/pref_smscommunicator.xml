@@ -35,19 +35,19 @@
             android:title="@string/smscommunicator_otp_enabled"
             app:isPreferenceVisible="false" />
 
-        <Preference
-            android:dependency="@string/key_smscommunicator_remotecommandsallowed"
-            android:key="otpsetup"
-            android:title="@string/smscomunicator_tab_otp_label">
-            <intent android:action="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
-        </Preference>
-
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:dependency="@string/key_smscommunicator_remotecommandsallowed"
             android:key="@string/key_smscommunicator_otp_password"
             android:summary="@string/smscommunicator_otp_pin_summary"
             android:title="@string/smscommunicator_otp_pin"
             validate:testType="pinStrength" />
+
+        <Preference
+            android:dependency="@string/key_smscommunicator_remotecommandsallowed"
+            android:key="otpsetup"
+            android:title="@string/smscomunicator_tab_otp_label">
+            <intent android:action="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+        </Preference>
 
     </PreferenceCategory>
 

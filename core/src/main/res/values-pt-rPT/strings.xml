@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pairing">A Emparelhar</string>
+    <!--    Keys-->
     <!--    General-->
     <string name="error">Erro</string>
     <string name="not_set_short">Não definido</string>
@@ -65,6 +65,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Watchdog BT</string>
     <string name="btwatchdog_summary">Desliga o bluetooth do telefone durante um segundo se nenhuma ligação com bomba for possível. Este parâmetro pode ser útil em alguns telefones, onde o bluetooth congela.</string>
+    <string name="pairing">A Emparelhar</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
