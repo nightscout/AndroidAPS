@@ -108,13 +108,13 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_button_resume_delivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandResumeDelivery(),
-                ErrorDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_delivery_resumed)))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_delivery_resumed)))
         }
 
         omnipod_button_refresh_status.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandGetPodStatus(),
-                ErrorDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_refresh_status), false))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_refresh_status), false))
         }
 
         omnipod_button_rileylink_stats.setOnClickListener {
@@ -128,28 +128,28 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_button_acknowledge_active_alerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandAcknowledgeAlerts(),
-                ErrorDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_acknowledge_alerts), false)
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_acknowledge_alerts), false)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_acknowledged_alerts)))
         }
 
         omnipod_button_suspend_delivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandSuspendDelivery(),
-                ErrorDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_suspend_delivery), true)
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_suspend_delivery), true)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_suspended_delivery)))
         }
 
         omnipod_button_set_time.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandHandleTimeChange(true),
-                ErrorDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_set_time), true)
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_set_time), true)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_time_on_pod_updated)))
         }
 
         omnipod_button_pulse_log.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandReadPulseLog(),
-                ErrorDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_retrieve_pulse_log), false))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_read_pulse_log), false))
         }
     }
 
@@ -511,105 +511,105 @@ class OmnipodFragment : DaggerFragment() {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
                     resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
             }).run()
-    }
-}
-
-private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-    context?.let {
-        val i = Intent(it, ErrorHelperActivity::class.java)
-        i.putExtra("soundid", if (withSound) R.raw.boluserror else 0)
-        i.putExtra("status", message)
-        i.putExtra("title", title)
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        it.startActivity(i)
-    }
-}
-
-private fun displayOkDialog(title: String, message: String) {
-    context?.let {
-        UIRunnable(Runnable {
-            OKDialog.show(it, title, message, null)
-        }).run()
-    }
-}
-
-private fun readableZonedTime(time: DateTime): String {
-    val timeAsJavaData = time.toLocalDateTime().toDate()
-    val timeZone = podStateManager.timeZone.toTimeZone()
-    if (timeZone == TimeZone.getDefault()) {
-        return dateUtil.dateAndTimeString(timeAsJavaData)
-    }
-
-    val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
-    val locale = resources.configuration.locales.get(0)
-    val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
-    return resourceHelper.gs(R.string.omnipod_pod_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData), timeZoneDisplayName)
-}
-
-private fun readableDuration(dateTime: DateTime): String {
-    val duration = Duration(dateTime, DateTime.now())
-    val hours = duration.standardHours.toInt()
-    val minutes = duration.standardMinutes.toInt()
-    val seconds = duration.standardSeconds.toInt()
-    when {
-        seconds < 10           -> {
-            return resourceHelper.gs(R.string.omnipod_moments_ago)
-        }
-
-        seconds < 60           -> {
-            return resourceHelper.gs(R.string.omnipod_less_than_a_minute_ago)
-        }
-
-        seconds < 60 * 60      -> { // < 1 hour
-            return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_minutes, minutes, minutes))
-        }
-
-        seconds < 24 * 60 * 60 -> { // < 1 day
-            val minutesLeft = minutes % 60
-            if (minutesLeft > 0)
-                return resourceHelper.gs(R.string.omnipod_time_ago,
-                    resourceHelper.gs(R.string.omnipod_composite_time, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_minutes, minutesLeft, minutesLeft)))
-            return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours))
-        }
-
-        else                   -> {
-            val days = hours / 24
-            val hoursLeft = hours % 24
-            if (hoursLeft > 0)
-                return resourceHelper.gs(R.string.omnipod_time_ago,
-                    resourceHelper.gs(R.string.omnipod_composite_time, resourceHelper.gq(R.plurals.omnipod_days, days, days), resourceHelper.gq(R.plurals.omnipod_hours, hoursLeft, hoursLeft)))
-            return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_days, days, days))
         }
     }
-}
 
-private fun isQueueEmpty(): Boolean {
-    return commandQueue.size() == 0 && commandQueue.performing() == null
-}
+    private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
+        context?.let {
+            val i = Intent(it, ErrorHelperActivity::class.java)
+            i.putExtra("soundid", if (withSound) R.raw.boluserror else 0)
+            i.putExtra("status", message)
+            i.putExtra("title", title)
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            it.startActivity(i)
+        }
+    }
 
-// FIXME ideally we should just have access to LocalAlertUtils here
-private fun getPumpUnreachableTimeout(): Duration {
-    return Duration.standardMinutes(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold_minutes), Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
-}
+    private fun displayOkDialog(title: String, message: String) {
+        context?.let {
+            UIRunnable(Runnable {
+                OKDialog.show(it, title, message, null)
+            }).run()
+        }
+    }
 
-inner class ErrorDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {
-    private var messageOnSuccess: String? = null
+    private fun readableZonedTime(time: DateTime): String {
+        val timeAsJavaData = time.toLocalDateTime().toDate()
+        val timeZone = podStateManager.timeZone.toTimeZone()
+        if (timeZone == TimeZone.getDefault()) {
+            return dateUtil.dateAndTimeString(timeAsJavaData)
+        }
 
-    override fun run() {
-        if (result.success) {
-            val messageOnSuccess = this.messageOnSuccess
-            if (messageOnSuccess != null) {
-                displayOkDialog(resourceHelper.gs(R.string.omnipod_confirmation), messageOnSuccess)
+        val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
+        val locale = resources.configuration.locales.get(0)
+        val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
+        return resourceHelper.gs(R.string.omnipod_pod_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData), timeZoneDisplayName)
+    }
+
+    private fun readableDuration(dateTime: DateTime): String {
+        val duration = Duration(dateTime, DateTime.now())
+        val hours = duration.standardHours.toInt()
+        val minutes = duration.standardMinutes.toInt()
+        val seconds = duration.standardSeconds.toInt()
+        when {
+            seconds < 10           -> {
+                return resourceHelper.gs(R.string.omnipod_moments_ago)
             }
-        } else {
-            displayErrorDialog(resourceHelper.gs(R.string.omnipod_warning), resourceHelper.gs(R.string.omnipod_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
+
+            seconds < 60           -> {
+                return resourceHelper.gs(R.string.omnipod_less_than_a_minute_ago)
+            }
+
+            seconds < 60 * 60      -> { // < 1 hour
+                return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_minutes, minutes, minutes))
+            }
+
+            seconds < 24 * 60 * 60 -> { // < 1 day
+                val minutesLeft = minutes % 60
+                if (minutesLeft > 0)
+                    return resourceHelper.gs(R.string.omnipod_time_ago,
+                        resourceHelper.gs(R.string.omnipod_composite_time, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours), resourceHelper.gq(R.plurals.omnipod_minutes, minutesLeft, minutesLeft)))
+                return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_hours, hours, hours))
+            }
+
+            else                   -> {
+                val days = hours / 24
+                val hoursLeft = hours % 24
+                if (hoursLeft > 0)
+                    return resourceHelper.gs(R.string.omnipod_time_ago,
+                        resourceHelper.gs(R.string.omnipod_composite_time, resourceHelper.gq(R.plurals.omnipod_days, days, days), resourceHelper.gq(R.plurals.omnipod_hours, hoursLeft, hoursLeft)))
+                return resourceHelper.gs(R.string.omnipod_time_ago, resourceHelper.gq(R.plurals.omnipod_days, days, days))
+            }
         }
     }
 
-    fun messageOnSuccess(message: String): ErrorDialogCallback {
-        messageOnSuccess = message
-        return this
+    private fun isQueueEmpty(): Boolean {
+        return commandQueue.size() == 0 && commandQueue.performing() == null
     }
-}
+
+    // FIXME ideally we should just have access to LocalAlertUtils here
+    private fun getPumpUnreachableTimeout(): Duration {
+        return Duration.standardMinutes(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold_minutes), Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
+    }
+
+    inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {
+        private var messageOnSuccess: String? = null
+
+        override fun run() {
+            if (result.success) {
+                val messageOnSuccess = this.messageOnSuccess
+                if (messageOnSuccess != null) {
+                    displayOkDialog(resourceHelper.gs(R.string.omnipod_confirmation), messageOnSuccess)
+                }
+            } else {
+                displayErrorDialog(resourceHelper.gs(R.string.omnipod_warning), resourceHelper.gs(R.string.omnipod_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
+            }
+        }
+
+        fun messageOnSuccess(message: String): DisplayResultDialogCallback {
+            messageOnSuccess = message
+            return this
+        }
+    }
 
 }

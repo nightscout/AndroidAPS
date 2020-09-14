@@ -145,7 +145,7 @@
     <string name="omnipod_suspend_delivery_short">Suspendare</string>
     <string name="omnipod_cmd_pair_and_prime">Împerechere și amorsare</string>
     <string name="omnipod_cmd_fill_cannula_set_basal_profile">Umpleţi canula şi setaţi profilul bazal</string>
-    <string name="omnipod_cmd_get_pulse_log">Obțineți jurnalul pulsurilor</string>
+    <string name="omnipod_cmd_read_pulse_log">Obțineți jurnalul pulsurilor</string>
     <string name="omnipod_uncertain_failure">Eroare necunoscută</string>
     <string name="omnipod_cancelled_old_tbr_failed_to_set_new">S-a anulat vechea bazală temporară, dar nu s-a putut seta o nouă bazală temporară</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Se setează o bazală temporară falsă deoarece Pod-ul este suspendat</string>

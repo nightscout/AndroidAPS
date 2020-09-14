@@ -119,7 +119,7 @@ public interface PumpInterface {
     List<CustomAction> getCustomActions();
 
     /**
-     * Executes a custom action. Please not that these actions will not be queued
+     * Executes a custom action. Please note that these actions will not be queued
      *
      * @param customActionType action to be executed
      */
@@ -127,7 +127,7 @@ public interface PumpInterface {
 
     /**
      * Executes a custom queued command
-     * To place a custom command on the queue, see {@link CommandQueueProvider#customCommand(CustomCommand, Callback)}
+     * See {@link CommandQueueProvider#customCommand(CustomCommand, Callback)} for queuing a custom command.
      *
      * @param customCommand the custom command to be executed
      * @return PumpEnactResult that represents the command execution result

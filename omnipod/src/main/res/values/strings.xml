@@ -176,7 +176,7 @@
     <string name="omnipod_suspend_delivery_short">Suspend</string>
     <string name="omnipod_cmd_pair_and_prime">Pair and prime</string>
     <string name="omnipod_cmd_fill_cannula_set_basal_profile">Fill cannula and set basal profile</string>
-    <string name="omnipod_cmd_get_pulse_log">Get pulse log</string>
+    <string name="omnipod_cmd_read_pulse_log">Read pulse log</string>
     <string name="omnipod_uncertain_failure">Uncertain failure</string>
     <string name="omnipod_cancelled_old_tbr_failed_to_set_new">Cancelled the old temporary basal, but failed to set new temporary basal</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
@@ -200,7 +200,7 @@
     <string name="omnipod_pod_time_on_pod">Time on Pod</string>
     <string name="omnipod_set_time">Set time</string>
     <string name="omnipod_unknown_custom_command">Unknown custom command: %1$s</string>
-    <string name="omnipod_failed_to_retrieve_pulse_log">Failed to retrieve Pulse Log</string>
+    <string name="omnipod_failed_to_read_pulse_log">Failed to read Pulse Log</string>
     <string name="omnipod_failed_to_refresh_status">Failed to refresh status</string>
     <string name="omnipod_failed_to_acknowledge_alerts">Failed to acknowledge alerts</string>
     <string name="omnipod_failed_to_suspend_delivery">Failed to suspend delivery</string>

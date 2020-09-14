@@ -59,7 +59,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.SingleSubject;
 
 public class OmnipodManager {
-    private static final int ACTION_VERIFICATION_TRIES = 3;
+    private static final int ACTION_VERIFICATION_TRIES = 2;
 
     private final OmnipodRileyLinkCommunicationManager communicationService;
     private PodStateManager podStateManager;
@@ -548,9 +548,9 @@ public class OmnipodManager {
         try {
             PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podStateManager, PodInfoType.RECENT_PULSE_LOG));
             PodInfoRecentPulseLog pulseLogInfo = (PodInfoRecentPulseLog) podInfoResponse.getPodInfo();
-            aapsLogger.info(LTag.PUMPCOMM, "Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
+            aapsLogger.info(LTag.PUMPCOMM, "Read pulse log from the pod: {}", pulseLogInfo.toString());
         } catch (Exception ex) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Failed to retrieve pulse log from the pod", ex);
+            aapsLogger.warn(LTag.PUMPCOMM, "Failed to read pulse log", ex);
         }
 
         try {

@@ -106,7 +106,7 @@ import io.reactivex.schedulers.Schedulers;
 public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
-    public static final int STARTUP_STATUS_REQUEST_TRIES = 3;
+    public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
@@ -447,7 +447,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     /**
-     * The only actual status requests we send here to the Pod are on startup (in initializeAfterRileyLinkConnection)
+     * The only actual status requests we send to the Pod here are on startup (in {@link #initializeAfterRileyLinkConnection() initializeAfterRileyLinkConnection()})
      * And when the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through {@link #executeCustomCommand(CustomCommand)})
      * We don't do periodical status requests because that could drain the Pod's battery
      */
@@ -921,8 +921,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private void initializeAfterRileyLinkConnection() {
         if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
-            PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
             for (int i = 0; STARTUP_STATUS_REQUEST_TRIES > i; i++) {
+                PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
                 if (result.success) {
                     aapsLogger.debug(LTag.PUMP, "Successfully retrieved Pod status on startup");
                     break;

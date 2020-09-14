@@ -209,8 +209,12 @@ class CommandQueueTest : TestBaseWithProfile() {
         Assert.assertTrue(queued2)
         Assert.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java))
         Assert.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java))
+        Assert.assertFalse(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java))
+
         Assert.assertTrue(commandQueue.isCustomCommandRunning(CustomCommand1::class.java))
         Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand2::class.java))
+        Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand3::class.java))
+
 
         Assert.assertEquals(1, commandQueue.size())
     }
