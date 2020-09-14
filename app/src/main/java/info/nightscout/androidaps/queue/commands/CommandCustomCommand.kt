@@ -3,7 +3,6 @@ package info.nightscout.androidaps.queue.commands
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.command.defs.CustomCommand
 import info.nightscout.androidaps.queue.Callback
 import javax.inject.Inject
 

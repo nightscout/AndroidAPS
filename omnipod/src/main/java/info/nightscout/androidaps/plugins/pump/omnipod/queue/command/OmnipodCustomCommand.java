@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.queue.command;
 
 import androidx.annotation.NonNull;
 
-import info.nightscout.androidaps.plugins.general.command.defs.CustomCommand;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 
 public abstract class OmnipodCustomCommand implements CustomCommand {
     private final OmnipodCustomCommandType type;
