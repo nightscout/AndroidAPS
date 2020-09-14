@@ -224,10 +224,6 @@ public class OmnipodManager {
                 suspendDelivery(acknowledgementBeep);
             }
 
-            // Store the new Basal schedule after successfully suspending delivery, so that if setting the Basal schedule fails,
-            // And we later try to resume delivery, the new schedule is used
-            podStateManager.setBasalSchedule(schedule);
-
             try {
                 executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
                         false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
@@ -248,6 +244,8 @@ public class OmnipodManager {
                     throw ex;
                 }
             }
+
+
         } finally {
             logCommandExecutionFinished("setBasalSchedule");
         }
@@ -420,7 +418,7 @@ public class OmnipodManager {
         bolusCommandExecutionSubject = null;
 
         disposables.add(Completable.complete() //
-                .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
+                .delay(estimatedRemainingBolusDuration.getMillis(), TimeUnit.MILLISECONDS) //
                 .observeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataMutex) {
@@ -432,9 +430,8 @@ public class OmnipodManager {
                                 StatusResponse statusResponse = getPodStatus();
                                 if (statusResponse.getDeliveryStatus().isBolusing()) {
                                     throw new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
-                                } else {
-                                    break;
                                 }
+                                break;
                             } catch (PodFaultException ex) {
                                 // Subtract units not delivered in case of a Pod failure
                                 bolusNotDelivered = ex.getFaultEvent().getBolusNotDelivered();

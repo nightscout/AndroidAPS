@@ -114,7 +114,7 @@
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
     <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away.</string>
     <string name="omnipod_init_pod_wizard_step2_title">Priming</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with the new Pod and prime it.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away it.</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with the new Pod and prime it.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please place the RileyLink in an upright position and place the Pod a few inches away from it.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Attach the Pod</string>
     <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare the infusion site. Remove the Pod\'s needle cap and adhesive backing and attach the Pod to the infusion site.\n\nIf the cannula sticks out, please press <b>Cancel</b> and discard your Pod.\n\nPress <b>Next</b> to insert the cannula and begin basal delivery.</string>
     <string name="omnipod_init_pod_wizard_step4_title">Inserting cannula</string>
@@ -145,6 +145,8 @@
     <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="omnipod_error_set_basal_failed_delivery_suspended">Setting basal profile failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Cancelling temp basal might have failed. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_error_suspend_delivery_failed_uncertain">Suspending delivery might have failed. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_error_suspend_delivery_failed">Suspending delivery failed.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
@@ -197,6 +199,21 @@
     <string name="omnipod_error_set_initial_basal_schedule_no_profile">No basal profile is active. Make sure to activate your basal profile.</string>
     <string name="omnipod_pod_time_on_pod">Time on Pod</string>
     <string name="omnipod_set_time">Set time</string>
+    <string name="omnipod_unknown_custom_command">Unknown custom command: %1$s</string>
+    <string name="omnipod_failed_to_retrieve_pulse_log">Failed to retrieve Pulse Log</string>
+    <string name="omnipod_failed_to_refresh_status">Failed to refresh status</string>
+    <string name="omnipod_failed_to_acknowledge_alerts">Failed to acknowledge alerts</string>
+    <string name="omnipod_failed_to_suspend_delivery">Failed to suspend delivery</string>
+    <string name="omnipod_failed_to_set_time">Failed to set time</string>
+    <string name="omnipod_failed_to_resume_delivery">Failed to resume delivery</string>
+    <string name="omnipod_pulse_log">Pulse log</string>
+    <string name="omnipod_pulse_log_value">Pulse Log (copied to clipboard)</string>
+    <string name="omnipod_two_strings_concatenated_by_colon" translatable="false">%1$s: %2$s</string>
+    <string name="omnipod_confirmation">Confirmation</string>
+    <string name="omnipod_time_on_pod_updated">The time on Pod updated.</string>
+    <string name="omnipod_suspended_delivery">All insulin delivery suspended.</string>
+    <string name="omnipod_acknowledged_alerts">Acknowledged alerts.</string>
+    <string name="omnipod_delivery_resumed">Insulin delivery resumed.</string>
 
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>

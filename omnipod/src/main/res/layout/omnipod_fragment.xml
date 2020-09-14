@@ -807,18 +807,6 @@
                     android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/omnipod_button_suspend_delivery"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_loop_disabled"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_suspend_delivery_short"
-                    android:visibility="gone" />
-
-                <Button
                     android:id="@+id/omnipod_button_set_time"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
@@ -840,6 +828,18 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_resume_delivery"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/omnipod_button_suspend_delivery"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_loop_disabled"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_suspend_delivery_short"
                     android:visibility="gone" />
 
             </LinearLayout>

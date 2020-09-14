@@ -26,4 +26,5 @@ abstract class CommandQueueModule {
     @ContributesAndroidInjector abstract fun commandTempBasalAbsoluteInjector(): CommandTempBasalAbsolute
     @ContributesAndroidInjector abstract fun commandTempBasalPercentInjector(): CommandTempBasalPercent
     @ContributesAndroidInjector abstract fun commandSetUserSettingsInjector(): CommandSetUserSettings
+    @ContributesAndroidInjector abstract fun commandCustomCommandInjector(): CommandCustomCommand
 }

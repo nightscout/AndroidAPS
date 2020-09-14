@@ -16,9 +16,9 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.androidaps.plugins.general.command.defs.CustomCommand
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -133,6 +133,11 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun executeCustomAction(customActionType: CustomActionType) {}
+
+    override fun executeCustomCommand(customCommand: CustomCommand?): PumpEnactResult? {
+        return null
+    }
+
     override fun isInitialized(): Boolean {
         return true
     }
