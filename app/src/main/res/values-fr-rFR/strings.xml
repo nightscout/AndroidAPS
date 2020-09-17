@@ -1138,10 +1138,15 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_tbrexecution_time_label">Heure d\'exécution basal temp</string>
     <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">depuis l\'application Authenticator pour : %1$s suivie du code PIN</string>
     <string name="smscommunicator_otp_enabled">Activer l\'Authentificateur</string>
     <string name="smscommunicator_otp_enabled_summary">Authentifier les commandes à l\'aide des mots de passe uniques (OTP) générés par Google Authenticator ou des applications 2FA similaires.</string>
+    <string name="smscommunicator_otp_pin">Code PIN obligatoire à la fin de l\'OTP</string>
     <string name="smscommunicator_otp_pin_summary">Chiffres supplémentaires qui doivent être mémorisés et collés à la fin de chaque OTP généré</string>
     <string name="smscomunicator_tab_otp_label">Configuration de l\'Authentificateur</string>
+    <string name="smscommunicator_code_verify_label">Code à vérifier :</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Le code de vérification est composé de 6 chiffres affichés par l\'application Authenticator (appelée OTP) suivi du code PIN obligatoire constitué de 3 chiffres ou plus.</string>
     <string name="smscommunicator_otp_verify_label">OTP à vérifier :</string>
     <string name="smscommunicator_otp_reset_btn">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
@@ -1209,4 +1214,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="only_upload_if_charging">Ne télécharger que si en charge</string>
     <string name="worker_state">État du travail : %s</string>
     <string name="uploaded_data">Données transférées</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Les données suivantes seront téléchargées sur votre compte Open Humans : glycémie, événements Careportal (sauf les notes), bolus étendus, changements de profil, doses quotidiennes totales, basales temporaires, cibles temporaires, préférences, version de l\'application, modèle de l\'appareil et dimensions de l\'écran. Les informations secrètes ou privées telles que votre URL Nightscout ou votre API secret ne seront pas téléchargés.</string>
 </resources>

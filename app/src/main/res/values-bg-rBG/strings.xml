@@ -174,6 +174,9 @@
     <string name="preferences_import_canceled">Импорт неуспешен! Настройките не са импортирани!</string>
     <string name="preferences_import_impossible">Импортирането неуспешно!</string>
     <string name="goto_main_try_again">Моля, върнете се на началния екран и опитайте отново.</string>
+    <string name="old_master_password">Стара главна парола</string>
+    <string name="different_password_used">Този файл е експортиран и шифрован с различна главна парола. Използвайте старата главна парола за декриптиране на файла.</string>
+    <string name="master_password_will_be_replaced">Вашата главна парола ЩЕ БЪДЕ ПОДМЕНЕНА с друга от импортирания файл!</string>
     <string name="preferences_import_list_title">Изберете файл</string>
     <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
     <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
@@ -1134,10 +1137,15 @@
     <string name="loop_tbrexecution_time_label">Продължителност на временни базали</string>
     <string name="insight_alert_notification_channel">Информация за Insight Pump</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">от приложението AUTHENTICATOR за: %1$s , последвано от PIN</string>
     <string name="smscommunicator_otp_enabled">Активиране на удостоверител</string>
     <string name="smscommunicator_otp_enabled_summary">Удостоверяване чрез еднократна парола, генерирана с Google Authenticator или подобна програма за 2-факторна оторизация.</string>
+    <string name="smscommunicator_otp_pin">Допълнителен PIN в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които следва да бъдат залепени в края на всяка генерирана еднократна парола</string>
     <string name="smscomunicator_tab_otp_label">Настройка на удостоверителя</string>
+    <string name="smscommunicator_code_verify_label">Код за проверка:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Кодът за проверката се състои от 6 цифри, от приложението за аудиентикация (известно като OTP), следвани от 3 или повече цифри на задължителния PIN.</string>
     <string name="smscommunicator_otp_verify_label">ОТР за проверка:</string>
     <string name="smscommunicator_otp_reset_btn">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_reset_title">Нулиране на ключва</string>
@@ -1176,4 +1184,34 @@
     <string name="formatwithweight">Възраст: %1$.0f Тегло: %2$.0f кг</string>
     <string name="basalpctfromtdd_label">% от базата</string>
     <string name="dpvdefaultprofile">Профил по подразбиране</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Довършване на Open Humans инсталация…</string>
+    <string name="this_may_take_a_while">Това може да отнеме време. Не изключвайте телефона или тази приставка.</string>
+    <string name="setup_finished">Настройката е завършена</string>
+    <string name="your_phone_will_upload_data">Телефонът ви скоро ще качва данни в \"Open Humans\".</string>
+    <string name="your_phone_is_upload_data">Телефонът ви качва данни в \"Open Humans\".</string>
+    <string name="setup_failed">Настройката е НЕУСПЕШНА</string>
+    <string name="there_was_an_error">Имаше грешка. Моля, опитайте се да влезете отново, за да продължите. Съжаляваме и ви благодарим!</string>
+    <string name="open_humans_terms">Това е отворен код, който ще копира данните ви в Open Humans. Ние не запазваме никакви права да споделяме вашите данни с трети страни без изричното ви разрешение. Данните, които проектът и приложението получават, се идентифицират чрез случаен идентификатор на потребител и ще бъдат надеждно предадени на Open Humans акаунт с вашето разрешение за този процес. Можете да спрете качването и да изтриете данните за качване по всяко време чрез www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Разбирам и съм съгласен.</string>
+    <string name="login">Вход</string>
+    <string name="logout">Изход</string>
+    <string name="oh_logout_confirmation">Наистина ли искате да излезете и да спрете да дарявате данни на науката?</string>
+    <string name="project_member_id">Project Member ID: %s</string>
+    <string name="queue_size">Големина на опашката: %d</string>
+    <string name="terms_of_use">Условия за ползване</string>
+    <string name="not_logged_in">Не сте влезнали в профила си</string>
+    <string name="you_need_to_accept_the_of_use_first">Трябва да се съгласите с условията за ползване.</string>
+    <string name="successfully_logged_in">Успешно влизане</string>
+    <string name="setup_will_continue_in_background">Настройката ще бъде завършена във фонов режим. Благодаря, че дарявате данните.\n\nМоля, задръжте този плъгин и телефона ви включени, докато настройката да завърши.</string>
+    <string name="completing_login">Завършване на вход…</string>
+    <string name="donate_your_data_to_science">Дарете данните си на науката.</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Излязохте от \"Open Humans\".</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Натиснете тук за да влезете отново, ако това не е било нарочно.</string>
+    <string name="only_upload_if_connected_to_wifi">Качване, само при свързано WiFi</string>
+    <string name="only_upload_if_charging">Качване само при зареждане</string>
+    <string name="worker_state">Статус: %s</string>
+    <string name="uploaded_data">Качени данни</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, други събития (с изключение на бележки), удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на приложение, модел на устройство и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
 </resources>
