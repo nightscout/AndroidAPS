@@ -227,6 +227,7 @@ public class OmnipodManager {
             try {
                 executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
                         false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
+                podStateManager.setBasalSchedule(schedule);
             } catch (OmnipodException ex) {
                 if (ex.isCertainFailure()) {
                     if (!wasSuspended) {
@@ -236,7 +237,9 @@ public class OmnipodManager {
                 }
 
                 // verifyDeliveryStatus will throw an exception if verification fails
-                if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                if (verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                    podStateManager.setBasalSchedule(schedule);
+                } else {
                     if (!wasSuspended) {
                         throw new CommandFailedAfterChangingDeliveryStatusException("Suspending delivery succeeded but setting the new basal schedule did not", ex);
                     }
