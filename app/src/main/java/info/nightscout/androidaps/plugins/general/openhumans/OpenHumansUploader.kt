@@ -510,7 +510,7 @@ class OpenHumansUploader @Inject constructor(
         applicationInfo.put("versionName", BuildConfig.VERSION_NAME)
         applicationInfo.put("versionCode", BuildConfig.VERSION_CODE)
         val hasGitInfo = !BuildConfig.HEAD.endsWith("NoGitSystemAvailable", true)
-        val customRemote = !BuildConfig.REMOTE.equals("https://github.com/MilosKozak/AndroidAPS.git", true)
+        val customRemote = !BuildConfig.REMOTE.equals("https://github.com/nightscout/AndroidAPS.git", true)
         applicationInfo.put("hasGitInfo", hasGitInfo)
         applicationInfo.put("customRemote", customRemote)
         applicationInfo.put("applicationId", appId.toString())

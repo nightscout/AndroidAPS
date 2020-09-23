@@ -49,7 +49,7 @@ class VersionCheckerUtils @Inject constructor(
     private fun checkVersion() = if (isConnected()) {
         Thread {
             try {
-                val version: String? = findVersion(URL("https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/build.gradle").readText())
+                val version: String? = findVersion(URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/build.gradle").readText())
                 compareWithCurrentVersion(version, BuildConfig.VERSION_NAME)
             } catch (e: IOException) {
                 aapsLogger.error(LTag.CORE, "Github master version check error: $e")
