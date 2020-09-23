@@ -8,7 +8,7 @@
     <string name="treatmentssafety_maxbolus_title">Max bolo consentito [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max CHO consentiti [g]</string>
     <string name="nav_preferences">Preferenze</string>
-    <string name="nav_refreshtreatments">Ricarica trattamenti da NS</string>
+    <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
     <string name="nav_resetdb">Resetta database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="nav_exit">Esci</string>
@@ -178,7 +178,7 @@
     <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
     <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
     <string name="preferences_import_list_title">Seleziona il file da importare</string>
-    <string name="check_preferences_before_import">Verifica le preferenze prima dell\'importazione:</string>
+    <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
     <string name="check_preferences_details_btn">Descrivi i problemi importazione…</string>
@@ -337,7 +337,7 @@
     <string name="openapsma_autosensdata_label">Dati autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usa la funzione Autosens</string>
-    <string name="refresheventsfromnightscout">Ricarica eventi da NS</string>
+    <string name="refresheventsfromnightscout">Aggiorna eventi da NS</string>
     <string name="deletefuturetreatments">Elimina trattamenti nel futuro</string>
     <string name="eatingsoon">Pasto a breve</string>
     <string name="hypo">Ipoglicemia</string>
@@ -603,7 +603,7 @@
     <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="combo_programming_bolus">Programmazione micro per erogazione</string>
-    <string name="combo_refresh">Ricarica</string>
+    <string name="combo_refresh">Aggiorna</string>
     <string name="combo_pump_state_label">Stato</string>
     <string name="combo_pump_activity_label">Attività</string>
     <string name="combo_no_pump_connection">Nessuna connessione per %1$d min</string>
@@ -635,7 +635,7 @@
     <string name="combo_error_no_connection_no_bolus_delivered">Il micro potrebbe non essere raggiungibile. Nessun bolo erogato</string>
     <string name="combo_error_no_bolus_delivered">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
     <string name="combo_error_partial_bolus_delivered">Solo la quantità di %1$.2f U del bolo richiesto di %2$.2f U è stata erogata a causa di un errore. Controlla il micro per verificare quanto accaduto e intraprendi le azioni necessarie.</string>
-    <string name="combo_error_bolus_verification_failed">Erogazione del bolo e verifica dello storico del micro fallite. Controllare il micro. Se è stato erogato un bolo, sarà aggiunto ai trattamenti durante la successiva connessione al micro.</string>
+    <string name="combo_error_bolus_verification_failed">Erogazione del bolo e verifica dello storico del micro fallite. Controlla il micro. Se è stato erogato un bolo, sarà aggiunto ai trattamenti durante la successiva connessione al micro.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Insulina nel serbatoio insufficiente per erogare il bolo</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="insightpump_shortname">Sight</string>
@@ -701,7 +701,7 @@
     <string name="not_eng_mode_or_release">Engineering mode non abilitata e non su \'release branch\'</string>
     <string name="combo_actvity_reading_basal_profile">Lettura profilo basale</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Lo storico del micro è cambiato dopo il calcolo del bolo. Il bolo non è stato erogato. Ricalcolare se un bolo è ancora necessario.</string>
-    <string name="combo_error_updating_treatment_record">Bolo erogato con successo, ma non è possibile aggiungere la voce ai trattamenti. Questo può accadere se due piccoli boli della stessa quantità sono stati somministrati negli ultimi due minuti. Verifica lo storico del micro e le voci della sezione Trattamenti e utilizza la sezione Portale per aggiungere eventuali voci mancanti. Assicurati di non aggiungere voci che si riferiscano al medesimo minuto e alla stessa quantità.</string>
+    <string name="combo_error_updating_treatment_record">Bolo erogato con successo, ma non è possibile aggiungere la voce ai trattamenti. Questo può accadere se due piccoli boli della stessa quantità sono stati somministrati negli ultimi due minuti. Controlla lo storico del micro e le voci della sezione Trattamenti e utilizza la sezione Portale per aggiungere eventuali voci mancanti. Assicurati di non aggiungere voci che si riferiscano al medesimo minuto e alla stessa quantità.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rifiuto basale temporanea \"alta\" in quanto il calcolo non ha considerato i cambiamenti recenti allo storico del micro</string>
     <string name="combo_activity_checking_pump_state">Aggiornamento stato micro</string>
     <string name="combo_warning_pump_basal_rate_changed">La velocità basale sul micro è cambiata e verrà aggiornata a breve</string>
@@ -908,7 +908,7 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U per %3$d min</string>
     <string name="enable_tbr_over_notification">Abilita notifica di fine TBR\n(impostazione micro)</string>
     <string name="disable_tbr_over_notification">Disabilita notifica di fine TBR\n(impostazione micro)</string>
-    <string name="refresh">Ricarica</string>
+    <string name="refresh">Aggiorna</string>
     <string name="description_pump_insight_local">Integrazione del microinfusore Accu-Chek Insight</string>
     <string name="not_inserted">Non inserito</string>
     <string name="short_status_last_connected">Ultima conn: %1$d min fa</string>
@@ -1143,6 +1143,7 @@
     <string name="smscommunicator_otp_pin">PIN obbligatorio aggiuntivo a fine token</string>
     <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
     <string name="smscomunicator_tab_otp_label">Configurazione autenticatore</string>
+    <string name="smscommunicator_code_verify_label">Codice controllo:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Il codice di verifica è composto da 6 cifre visualizzate dall\'app autenticatore (note come OTP) seguite da 3 o più cifre del PIN obbligatorio.</string>
     <string name="smscommunicator_otp_verify_label">OTP per verifica:</string>
