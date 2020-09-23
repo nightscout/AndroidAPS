@@ -1139,10 +1139,15 @@ Context | Edit Context</string>
     <string name="loop_tbrexecution_time_label">Время выполнения временной базальной скорости</string>
     <string name="insight_alert_notification_channel">Оповещения помпы Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">из приложения Authenticator для %1$s и дополните пином в конце</string>
     <string name="smscommunicator_otp_enabled">Включить аутентификатор</string>
     <string name="smscommunicator_otp_enabled_summary">Аутентифицировать команды с помощью одноразовых паролей, сгенерированных Google Authenticator или похожими приложениями 2FA.</string>
+    <string name="smscommunicator_otp_pin">Дополнительный обязательный пин-код в конце маркера</string>
     <string name="smscommunicator_otp_pin_summary">Дополнительные цифры, которые должны быть запомнены и добавлены в конце каждого сгенерированного одноразового пароля</string>
     <string name="smscomunicator_tab_otp_label">Настройка аутентификации</string>
+    <string name="smscommunicator_code_verify_label">Код для проверки:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + ПИН-код</string>
+    <string name="smscommunicator_code_verify_info">Проверочный код состоит из 6 цифр, отображаемых приложением Authenticator (известным как OTP), за которым следует 3 или более цифр обязательного PIN-кода.</string>
     <string name="smscommunicator_otp_verify_label">OTP для проверки:</string>
     <string name="smscommunicator_otp_reset_btn">Сбросить аутентификаторы</string>
     <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
