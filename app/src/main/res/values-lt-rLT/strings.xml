@@ -1213,5 +1213,4 @@
     <string name="only_upload_if_charging">Įkelti tik akumuliatoriaus įkrovimo metu</string>
     <string name="worker_state">Darbinė Būklė: %s</string>
     <string name="uploaded_data">Įkelti duomenis</string>
-    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Į jūsų Open Humans paskyrą bus įkelti šie duomenys: glikemijos reikšmės, priežiūros portalo įvykiai (išskyrus pastabas), ištęstiniai bolusai, profilio pakeitimai, visos paros dozės, laikinos valandinės bazės, laikini tikslai, nustatymai, programos versija, įrenginio modelis ir ekrano matmenys. Konfidenciali ar privati ​​informacija, pvz., Jūsų Nightscout URL arba API slaptažodis, nebus įkelta.</string>
 </resources>

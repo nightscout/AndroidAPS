@@ -1214,5 +1214,5 @@ Unerwartetes Verhalten.</string>
     <string name="only_upload_if_charging">Nur beim Laden hochladen</string>
     <string name="worker_state">Worker State: %s</string>
     <string name="uploaded_data">Daten hochgeladen</string>
-    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Die folgenden Daten werden auf Dein Open Humans-Konto hochgeladen: Glukosewerte, Careportal-Ereignisse (außer Notizen), erweiterte Boli, Profilwechsel, Gesamttagesdosen, temporäre Basalwerte, Temporäre Ziele, Einstellungen, Anwendungsversion, Gerätemodell und Bildschirmabmessungen. Vertrauliche oder private Informationen wie z.B. Deine Nightscout-URL oder Dein API-Secret werden nicht hochgeladen.</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Die folgenden Daten werden auf Dein Open Humans-Konto hochgeladen: Glukosewerte, Boli, Kohlenhydrate, Careportal-Ereignisse (außer Notizen), erweiterte Boli, Profilwechsel, Gesamttagesdosen, temporäre Basalwerte, Temporäre Ziele, Einstellungen, Anwendungsversion, Gerätemodell und Bildschirmabmessungen. Vertrauliche oder private Informationen wie z.B. Deine Nightscout-URL oder Dein API-Secret werden nicht hochgeladen.</string>
 </resources>

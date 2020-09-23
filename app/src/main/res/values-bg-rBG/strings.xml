@@ -1213,5 +1213,4 @@
     <string name="only_upload_if_charging">Качване само при зареждане</string>
     <string name="worker_state">Статус: %s</string>
     <string name="uploaded_data">Качени данни</string>
-    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, други събития (с изключение на бележки), удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на приложение, модел на устройство и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
 </resources>

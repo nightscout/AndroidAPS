@@ -1213,5 +1213,5 @@
     <string name="only_upload_if_charging">Odeslat pouze při nabíjení</string>
     <string name="worker_state">Stav procesu: %s</string>
     <string name="uploaded_data">Odeslaná data</string>
-    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Následující data budou nahrána do vašeho účtu Open Humans: hodnoty glykémie, události péče (kromě poznámek), rozložené bolusy, přepnutí profilu, celkové denní dávky, dočasné bazály, nastavení, verze aplikace, model zařízení a rozměry obrazovky. Tajné nebo soukromé informace, jako je URL nebo API heslo vašeho Nightscoutu, nahrány nebudou.</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Následující data budou nahrána do vašeho účtu Open Humans: hodnoty glykémie, bolusy, sacharidy, události péče (kromě poznámek), rozložené bolusy, přepnutí profilu, celkové denní dávky, dočasné bazály, nastavení, verze aplikace, model zařízení a rozměry obrazovky. Tajné nebo soukromé informace, jako je URL nebo API heslo vašeho Nightscoutu, nahrány nebudou.</string>
 </resources>
