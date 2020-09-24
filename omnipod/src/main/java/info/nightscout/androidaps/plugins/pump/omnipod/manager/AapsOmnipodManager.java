@@ -425,7 +425,6 @@ public class AapsOmnipodManager {
         try {
             executeCommand(() -> delegate.setTemporaryBasal(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled));
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
-            showNotification(getStringResource(R.string.omnipod_error_cancelled_old_tbr_failed_to_set_new), Notification.NORMAL, null);
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);

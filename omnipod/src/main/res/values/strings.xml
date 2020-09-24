@@ -115,7 +115,6 @@
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Failed to set basal profile: received an empty profile. Make sure to activate your basal profile.</string>
     <string name="omnipod_error_set_initial_basal_schedule_no_profile">No basal profile is active. Make sure to activate your basal profile.</string>
     <string name="omnipod_error_uncertain_failure">Uncertain failure</string>
-    <string name="omnipod_error_cancelled_old_tbr_failed_to_set_new">Cancelled the old temporary basal, but failed to set new temporary basal</string>
     <string name="omnipod_error_unknown_custom_command">Unknown custom command: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Failed to read Pulse Log</string>
     <string name="omnipod_error_failed_to_refresh_status">Failed to refresh status</string>
