@@ -11,12 +11,11 @@
     <string name="omnipod_frequency">Omnipod (433,91 MHz)</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_error_illegal_init_action_type">Neplatný atribút PodInitActionType: %1$s</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Došlo k neočakávanej chybe. Nahláste ju! (typ: %1$s).</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Komunikácia zlyhala: vyskytla sa neočakávaná chyba. Prosím, nahláste to!</string>
+    <string name="omnipod_error_communication_failed_unexpected_exception">Komunikácia zlyhala: vyskytla sa neočakávaná chyba. Prosím, nahláste to!</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_init_pod">Inicializovať Pod</string>
+    <string name="omnipod_button_init_pod">Inicializovať Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Deaktivovať Pod</string>
-    <string name="omnipod_cmd_pod_history_na">História Podu momentálne nie je dostupná.</string>
+    <string name="omnipod_history_history_not_available">História Podu momentálne nie je dostupná.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Naplňte Pod</string>
     <string name="omnipod_init_pod_wizard_step2_title">Plnenie</string>
     <string name="omnipod_init_pod_wizard_step3_title">Pripevni Pod</string>

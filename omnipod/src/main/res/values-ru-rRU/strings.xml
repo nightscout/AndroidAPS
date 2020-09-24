@@ -12,7 +12,7 @@
     <string name="omnipod_config_low_reservoir_alert_units">К-во единиц</string>
     <!-- Omnipod - Fragment -->
     <string name="omnipod_moments_ago">Только что</string>
-    <string name="omnipod_pod_mgmt">Управление помпой</string>
+    <string name="omnipod_button_pod_management">Управление помпой</string>
     <string name="omnipod_pod_status">Статус помпы</string>
     <string name="omnipod_total_delivered_label">Всего подано</string>
     <string name="omnipod_total_delivered">%1$.2f ед</string>
@@ -31,7 +31,7 @@
     <string name="omnipod_pod_status_inactive">Неактивирован</string>
     <string name="omnipod_pod_status_pod_fault_description">Ошибка Пода: %1$s %2$s</string>
     <string name="omnipod_pod_active_alerts">Активные оповещения помпы</string>
-    <string name="omnipod_acknowledge_active_alerts_short">Оповещения активны</string>
+    <string name="omnipod_button_acknowledge_active_alerts">Оповещения активны</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 МГц)</string>
     <!-- Omnipod - Error -->
@@ -40,25 +40,24 @@
     <string name="omnipod_error_operation_not_possible_no_profile">Операция невозможна.\n\n Подождите несколько минут, пока AAPS пытается задать профиль.</string>
     <string name="omnipod_error_illegal_init_action_type">Недопустимый тип инициализации: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Активная помпа не включена</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Командная верификация не состоялась</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Произошла непредвиденная ошибка. Пожалуйста, сообщите об ошибке! (сообщить:: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Ошибка связи: недопустимые входные параметры</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Ошибка связи: время ожидания истекло</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Ошибка связи: возникла непредвиденная ошибка. Пожалуйста, сообщите!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Ошибка связи: проверка целостности сообщения завершилась неудачно</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Ошибка связи: получен недопустимый пакет от Pod</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Ошибка связи: Pod находится в неверном состоянии</string>
-    <string name="omnipod_driver_error_invalid_response">Ошибка связи: недопустимый ответ от помпы</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Ошибка связи: получено сообщение с недопустимым порядковым номером от Pod</string>
-    <string name="omnipod_driver_error_invalid_message_address">Ошибка связи: получено сообщение с некорректным адресом от Pod</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Ошибка связи: не удалось декодировать сообщение от Pod</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Ошибка связи: не удалось выполнить повторную синхронизацию nonce</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Ошибка соединения: вне синхронизации</string>
-    <string name="omnipod_driver_error_not_enough_data">Ошибка связи: недостаточно данных от Pod</string>
+    <string name="omnipod_error_setup_action_verification_failed">Командная верификация не состоялась</string>
+    <string name="omnipod_error_invalid_parameters">Ошибка связи: недопустимые входные параметры</string>
+    <string name="omnipod_error_communication_failed_timeout">Ошибка связи: время ожидания истекло</string>
+    <string name="omnipod_error_communication_failed_unexpected_exception">Ошибка связи: возникла непредвиденная ошибка. Пожалуйста, сообщите!</string>
+    <string name="omnipod_error_crc_mismatch">Ошибка связи: проверка целостности сообщения завершилась неудачно</string>
+    <string name="omnipod_error_invalid_packet_type">Ошибка связи: получен недопустимый пакет от Pod</string>
+    <string name="omnipod_error_invalid_progress_state">Ошибка связи: Pod находится в неверном состоянии</string>
+    <string name="omnipod_error_invalid_response">Ошибка связи: недопустимый ответ от помпы</string>
+    <string name="omnipod_error_invalid_message_sequence_number">Ошибка связи: получено сообщение с недопустимым порядковым номером от Pod</string>
+    <string name="omnipod_error_invalid_message_address">Ошибка связи: получено сообщение с некорректным адресом от Pod</string>
+    <string name="omnipod_error_message_decoding_failed">Ошибка связи: не удалось декодировать сообщение от Pod</string>
+    <string name="omnipod_error_nonce_resync_failed">Ошибка связи: не удалось выполнить повторную синхронизацию nonce</string>
+    <string name="omnipod_error_nonce_out_of_sync">Ошибка соединения: вне синхронизации</string>
+    <string name="omnipod_error_not_enough_data">Ошибка связи: недостаточно данных от Pod</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_init_pod">Инициализировать Pod</string>
+    <string name="omnipod_button_init_pod">Инициализировать Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Деактивировать Pod</string>
-    <string name="omnipod_cmd_pod_history_na">В настоящее время история помпы недоступна.</string>
+    <string name="omnipod_history_history_not_available">В настоящее время история помпы недоступна.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Заполнить Pod</string>
     <string name="omnipod_init_pod_wizard_step2_title">Первичное заполнение инфузионной секции пода</string>
     <string name="omnipod_init_pod_wizard_step3_title">Подключить Под</string>

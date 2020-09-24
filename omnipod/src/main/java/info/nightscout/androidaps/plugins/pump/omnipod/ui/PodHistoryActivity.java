@@ -250,7 +250,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
                     case SET_TEMPORARY_BASAL: {
                         TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
-                        valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
+                        valueView.setText(resourceHelper.gs(R.string.omnipod_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
                     break;
 
@@ -265,9 +265,9 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     case SET_BOLUS: {
                         if (historyEntry.getData().contains(";")) {
                             String[] splitVal = historyEntry.getData().split(";");
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
+                            valueView.setText(resourceHelper.gs(R.string.omnipod_history_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
                         } else {
-                            valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
+                            valueView.setText(resourceHelper.gs(R.string.omnipod_history_bolus_value, Double.valueOf(historyEntry.getData())));
                         }
                     }
                     break;
@@ -281,7 +281,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     case CONFIGURE_ALERTS:
                     case CANCEL_BOLUS:
                     case DEACTIVATE_POD:
-                    case RESET_POD_STATE:
+                    case DISCARD_POD_STATE:
                     case ACKNOWLEDGE_ALERTS:
                     case SUSPEND_DELIVERY:
                     case RESUME_DELIVERY:

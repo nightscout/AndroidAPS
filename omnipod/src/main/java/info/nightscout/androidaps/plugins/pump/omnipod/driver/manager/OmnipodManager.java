@@ -41,7 +41,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.DeliveryStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
@@ -595,7 +594,7 @@ public class OmnipodManager {
         logStartingCommandExecution("verifyCommand");
         try {
             return supplier.get();
-        } catch (Exception originalException) {
+        } catch (OmnipodException originalException) {
             if (isCertainFailure(originalException)) {
                 throw originalException;
             } else {
@@ -608,18 +607,11 @@ public class OmnipodManager {
 
                     return statusResponse;
                 } catch (NonceOutOfSyncException verificationException) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
-
-                    if (originalException instanceof OmnipodException) {
-                        ((OmnipodException) originalException).setCertainFailure(true);
-                        throw originalException;
-                    } else {
-                        OmnipodException newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, originalException);
-                        newException.setCertainFailure(true);
-                        throw newException;
-                    }
+                    aapsLogger.info(LTag.PUMPCOMM, "Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
+                    originalException.setCertainFailure(true);
+                    throw originalException;
                 } catch (Exception verificationException) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Command unresolved (UNCERTAIN_FAILURE)", verificationException);
+                    aapsLogger.warn(LTag.PUMPCOMM, "Command unresolved (UNCERTAIN_FAILURE)", verificationException);
                     throw originalException;
                 }
             }

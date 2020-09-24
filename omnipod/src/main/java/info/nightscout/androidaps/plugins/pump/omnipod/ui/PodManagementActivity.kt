@@ -145,7 +145,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     private fun discardPodAction() {
         OKDialog.showConfirmation(this,
-            resourceHelper.gs(R.string.omnipod_cmd_discard_pod_desc), Thread {
+            resourceHelper.gs(R.string.omnipod_discard_pod_state_confirmation), Thread {
             aapsOmnipodManager.discardPodState()
             rxBus.send(EventOmnipodPumpValuesChanged())
         })

@@ -15,7 +15,7 @@
     <string name="omnipod_config_low_reservoir_alert_units">Numero di unità</string>
     <!-- Omnipod - Fragment -->
     <string name="omnipod_moments_ago">Momenti fa</string>
-    <string name="omnipod_pod_mgmt">GSTN pod</string>
+    <string name="omnipod_button_pod_management">GSTN pod</string>
     <string name="omnipod_pod_status">Stato pod</string>
     <string name="omnipod_total_delivered_label">Totale erogato</string>
     <string name="omnipod_total_delivered">%1$.2f U</string>
@@ -33,7 +33,7 @@
     <string name="omnipod_pod_status_inactive">Inattivo</string>
     <string name="omnipod_pod_status_pod_fault_description">Guasto pod: %1$s %2$s</string>
     <string name="omnipod_pod_active_alerts">Attiva avvisi pod</string>
-    <string name="omnipod_acknowledge_active_alerts_short">Conferma avvisi</string>
+    <string name="omnipod_button_acknowledge_active_alerts">Conferma avvisi</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
@@ -42,28 +42,27 @@
     <string name="omnipod_error_operation_not_possible_no_profile">Operazione non possibile.\n\n Devi attendere qualche minuto che AAPS imposti il profilo basale per la prima volta.</string>
     <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Nessun pod attivo</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Verifica comando fallita</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Si è verificato un errore imprevisto. Segnalalo! (%1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Comunicazione fallita: ricevuti parametri di input non validi</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Comunicazione fallita: timeout</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Comunicazione fallita: si è verificato un errore imprevisto. Segnalalo!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Comunicazione fallita: verifica dell\'integrità del messaggio fallita</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Comunicazione fallita: ricevuto un pacchetto non valido dal pod</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Comunicazione fallita: il pod è in uno stato non corretto</string>
-    <string name="omnipod_driver_error_invalid_response">Comunicazione fallita: ricevuta una risposta non valida dal pod</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Comunicazione fallita: ricevuto dal pod un messaggio con una sequenza numerica non valida</string>
-    <string name="omnipod_driver_error_invalid_message_address">Comunicazione fallita: ricevuto dal pod un messaggio con un indirizzo non valido</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Comunicazione fallita: non si è riuscito a decodificare il messaggio dal pod</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Comunicazione fallita: risincronizzazione \'nonce\' non riuscita</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Comunicazione fallita: \'nonce\' non sincronizzato</string>
-    <string name="omnipod_driver_error_not_enough_data">Comunicazione fallita: non abbastanza dati ricevuti dal pod</string>
-    <string name="omnipod_driver_error_pod_fault">È stato rilevato un guasto al pod (%1$03d %2$s). Disattiva il tuo pod e avviane uno nuovo</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Comunicazione fallita: il pod ha restituito una risposta di errore</string>
+    <string name="omnipod_error_setup_action_verification_failed">Verifica comando fallita</string>
+    <string name="omnipod_error_invalid_parameters">Comunicazione fallita: ricevuti parametri di input non validi</string>
+    <string name="omnipod_error_communication_failed_timeout">Comunicazione fallita: timeout</string>
+    <string name="omnipod_error_communication_failed_unexpected_exception">Comunicazione fallita: si è verificato un errore imprevisto. Segnalalo!</string>
+    <string name="omnipod_error_crc_mismatch">Comunicazione fallita: verifica dell\'integrità del messaggio fallita</string>
+    <string name="omnipod_error_invalid_packet_type">Comunicazione fallita: ricevuto un pacchetto non valido dal pod</string>
+    <string name="omnipod_error_invalid_progress_state">Comunicazione fallita: il pod è in uno stato non corretto</string>
+    <string name="omnipod_error_invalid_response">Comunicazione fallita: ricevuta una risposta non valida dal pod</string>
+    <string name="omnipod_error_invalid_message_sequence_number">Comunicazione fallita: ricevuto dal pod un messaggio con una sequenza numerica non valida</string>
+    <string name="omnipod_error_invalid_message_address">Comunicazione fallita: ricevuto dal pod un messaggio con un indirizzo non valido</string>
+    <string name="omnipod_error_message_decoding_failed">Comunicazione fallita: non si è riuscito a decodificare il messaggio dal pod</string>
+    <string name="omnipod_error_nonce_resync_failed">Comunicazione fallita: risincronizzazione \'nonce\' non riuscita</string>
+    <string name="omnipod_error_nonce_out_of_sync">Comunicazione fallita: \'nonce\' non sincronizzato</string>
+    <string name="omnipod_error_not_enough_data">Comunicazione fallita: non abbastanza dati ricevuti dal pod</string>
+    <string name="omnipod_error_pod_fault">È stato rilevato un guasto al pod (%1$03d %2$s). Disattiva il tuo pod e avviane uno nuovo</string>
+    <string name="omnipod_error_pod_returned_error_response">Comunicazione fallita: il pod ha restituito una risposta di errore</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Gestione pod</string>
-    <string name="omnipod_cmd_init_pod">Inizializza pod</string>
+    <string name="omnipod_pod_management_title">Gestione pod</string>
+    <string name="omnipod_button_init_pod">Inizializza pod</string>
     <string name="omnipod_cmd_deactivate_pod">Disattiva pod</string>
-    <string name="omnipod_cmd_pod_history">Storico pod</string>
+    <string name="omnipod_button_pod_history">Storico pod</string>
     <string name="omnipod_cmd_set_bolus">Imposta bolo</string>
     <string name="omnipod_cmd_set_tbr">Imposta basale temporanea</string>
     <string name="omnipod_cmd_set_basal_schedule">Imposta piano basale</string>
@@ -75,10 +74,10 @@
     <string name="omnipod_cmd_suspend_delivery">Sospendi erogazione</string>
     <string name="omnipod_cmd_resume_delivery">Riprendi erogazione</string>
     <string name="omnipod_cmd_unknown_entry">Inserimento sconosciuto</string>
-    <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Tasso: %1$.2f U, durata: %2$d min</string>
-    <string name="omnipod_cmd_pod_history_na">Storico pod non disponibile al momento.</string>
+    <string name="omnipod_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
+    <string name="omnipod_history_tbr_value">Tasso: %1$.2f U, durata: %2$d min</string>
+    <string name="omnipod_history_history_not_available">Storico pod non disponibile al momento.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Riempi il pod</string>
     <string name="omnipod_init_pod_wizard_step2_title">Caricamento</string>
     <string name="omnipod_init_pod_wizard_step3_title">Attacca il pod</string>
@@ -105,23 +104,23 @@
     <string name="omnipod_alert_low_reservoir">Livello serbatoio basso</string>
     <string name="omnipod_alert_unknown_alert">Avviso sconosciuto</string>
     <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Impostazione profilo basale non riuscita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
-    <string name="omnipod_rl_stats">Statistiche RL</string>
+    <string name="omnipod_button_riley_link_stats">Statistiche RL</string>
     <string name="omnipod_pod_firmware_version">Versione firmware</string>
     <string name="omnipod_errors">Errori</string>
-    <string name="omnipod_cmd_basal_profile_not_set_is_same">Il profilo basale è lo stesso, non sarà impostato di nuovo.</string>
+    <string name="omnipod_confirmation_basal_profile_not_set_is_same">Il profilo basale è lo stesso, non sarà impostato di nuovo.</string>
     <string name="omnipod_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
     <string name="omnipod_composite_time">%1$s e %2$s</string>
     <string name="omnipod_time_ago">%1$s fa</string>
     <string name="omnipod_waiting_for_rileylink_connection">Attesa connessione RileyLink...</string>
-    <string name="omnipod_bolus_did_not_succeed">Il bolo non è riuscito</string>
-    <string name="omnipod_refresh">Ricarica</string>
-    <string name="omnipod_resume_delivery">Riprendi erogazione</string>
-    <string name="omnipod_error_pod_suspended">Pod sospeso</string>
+    <string name="omnipod_error_bolus_did_not_succeed">Il bolo non è riuscito</string>
+    <string name="omnipod_button_refresh">Ricarica</string>
+    <string name="omnipod_button_resume_delivery">Riprendi erogazione</string>
+    <string name="omnipod_pod_suspended">Pod sospeso</string>
     <string name="omnipod_less_than_a_minute_ago">Meno di un minuto fa</string>
-    <string name="omnipod_suspend_delivery_short">Sospendi</string>
+    <string name="omnipod_button_suspend_delivery">Sospendi</string>
     <string name="omnipod_cmd_pair_and_prime">Associa e carica</string>
     <string name="omnipod_cmd_fill_cannula_set_basal_profile">Riempi cannula e imposta profilo basale</string>
-    <string name="omnipod_expiration_alerts_updated">Configurazione avviso aggiornata nel pod</string>
+    <string name="omnipod_confirmation_expiration_alerts_updated">Configurazione avviso aggiornata nel pod</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Altro</string>
     <string name="omnipod_preference_category_alerts">Avvisi</string>

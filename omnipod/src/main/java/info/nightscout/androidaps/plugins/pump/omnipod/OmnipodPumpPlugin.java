@@ -52,7 +52,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -87,6 +86,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLi
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -358,7 +358,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 rxBus.send(new EventNewNotification(notification));
             } else {
                 if (podStateManager.isSuspended()) {
-                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_error_pod_suspended), Notification.NORMAL);
+                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_pod_suspended), Notification.NORMAL);
                     rxBus.send(new EventNewNotification(notification));
                 }
             }
@@ -711,7 +711,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public PumpEnactResult executeCustomCommand(CustomCommand command) {
         if (!(command instanceof OmnipodCustomCommand)) {
             aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + command.getClass().getName());
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_unknown_custom_command, command.getClass().getName()));
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, command.getClass().getName()));
         }
 
         OmnipodCustomCommandType commandType = ((OmnipodCustomCommand) command).getType();
@@ -735,7 +735,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 return updateAlertConfiguration();
             default:
                 aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + commandType);
-                return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_unknown_custom_command, commandType));
+                return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, commandType));
         }
     }
 
@@ -777,7 +777,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
             Notification notification = new Notification(
                     Notification.OMNIPOD_POD_ALERTS_UPDATED,
-                    resourceHelper.gs(R.string.omnipod_expiration_alerts_updated),
+                    resourceHelper.gs(R.string.omnipod_confirmation_expiration_alerts_updated),
                     Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
         } else {
@@ -806,7 +806,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             if (!requestedByUser && aapsOmnipodManager.isTimeChangeEventEnabled()) {
                 Notification notification = new Notification(
                         Notification.TIME_OR_TIMEZONE_CHANGE,
-                        resourceHelper.gs(R.string.omnipod_time_or_timezone_change),
+                        resourceHelper.gs(R.string.omnipod_confirmation_time_or_timezone_change),
                         Notification.INFO, 60);
                 rxBus.send(new EventNewNotification(notification));
             }
@@ -819,7 +819,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     if (aapsOmnipodManager.isTimeChangeEventEnabled()) {
                         Notification notification = new Notification(
                                 Notification.TIME_OR_TIMEZONE_CHANGE,
-                                resourceHelper.gs(R.string.omnipod_time_or_timezone_change_failed),
+                                resourceHelper.gs(R.string.omnipod_error_automatic_time_or_timezone_change_failed),
                                 Notification.INFO, 60);
                         rxBus.send(new EventNewNotification(notification));
                     }
@@ -982,7 +982,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return true;
     }
 
-    private void incrementStatistics(String statsKey) {
+    private void incrementStatistics(int statsKey) {
         long currentCount = sp.getLong(statsKey, 0L);
         currentCount++;
         sp.putLong(statsKey, currentCount);

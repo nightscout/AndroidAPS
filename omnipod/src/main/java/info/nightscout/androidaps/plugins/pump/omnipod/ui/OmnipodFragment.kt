@@ -108,13 +108,13 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_button_resume_delivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandResumeDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_delivery_resumed)))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_delivery_resumed)))
         }
 
         omnipod_button_refresh_status.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandGetPodStatus(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_refresh_status), false))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
         }
 
         omnipod_button_rileylink_stats.setOnClickListener {
@@ -128,28 +128,28 @@ class OmnipodFragment : DaggerFragment() {
         omnipod_button_acknowledge_active_alerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandAcknowledgeAlerts(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_acknowledge_alerts), false)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_acknowledged_alerts)))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_acknowledge_alerts), false)
+                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_acknowledged_alerts)))
         }
 
         omnipod_button_suspend_delivery.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandSuspendDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_suspend_delivery), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_suspended_delivery)))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_suspend_delivery), true)
+                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_suspended_delivery)))
         }
 
         omnipod_button_set_time.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandHandleTimeChange(true),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_set_time), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_time_on_pod_updated)))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_set_time), true)
+                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_time_on_pod_updated)))
         }
 
         omnipod_button_pulse_log.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandReadPulseLog(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_failed_to_read_pulse_log), false))
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_read_pulse_log), false))
         }
     }
 
@@ -380,7 +380,7 @@ class OmnipodFragment : DaggerFragment() {
 
     private fun updateLastBolus() {
         if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
-            var text = resourceHelper.gs(R.string.omnipod_last_bolus, omnipodPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
+            var text = resourceHelper.gs(R.string.omnipod_last_bolus_value, omnipodPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
             val textColor: Int
 
             if (podStateManager.isLastBolusCertain) {
@@ -411,7 +411,7 @@ class OmnipodFragment : DaggerFragment() {
 
             var text: String
             val textColor: Int
-            text = resourceHelper.gs(R.string.omnipod_temp_basal, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
+            text = resourceHelper.gs(R.string.omnipod_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
             if (podStateManager.isTempBasalCertain) {
                 textColor = Color.WHITE
             } else {

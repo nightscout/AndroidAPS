@@ -11,12 +11,11 @@
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_error_illegal_init_action_type">type d\'action d\'init Pod non autorisée : %1$s</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Erreur inconnue. Veuillez signaler ! (type : %1$s).</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Échec de communication : Erreur inconnue. Veuillez signaler !</string>
+    <string name="omnipod_error_communication_failed_unexpected_exception">Échec de communication : Erreur inconnue. Veuillez signaler !</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_init_pod">Init Pod</string>
+    <string name="omnipod_button_init_pod">Init Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Désactiver Pod</string>
-    <string name="omnipod_cmd_pod_history_na">Historique Pod non disponible pour le moment.</string>
+    <string name="omnipod_history_history_not_available">Historique Pod non disponible pour le moment.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Remplir le Pod</string>
     <string name="omnipod_init_pod_wizard_step2_title">Amorçage</string>
     <string name="omnipod_init_pod_wizard_step3_title">Collez le Pod</string>

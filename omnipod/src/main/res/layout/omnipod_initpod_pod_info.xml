@@ -30,8 +30,7 @@
         android:layout_marginBottom="40dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        style="@style/WizardPagePodContent"
-         />
+        style="@style/WizardPagePodContent" />
 
     <LinearLayout
         style="@style/ButtonBar"
@@ -40,7 +39,8 @@
         android:orientation="horizontal">
 
 
-        <ListView android:id="@+id/podInfoList"
+        <ListView
+            android:id="@+id/podInfoList"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
