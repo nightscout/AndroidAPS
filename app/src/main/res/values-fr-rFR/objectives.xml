@@ -20,7 +20,9 @@
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>
     <string name="objectives_ama_objective">Activation de fonctionnalités supplémentaires en journée, comme l\'Aide au Repas Améliorée ARA (AMA)</string>
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
+    <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
+    <string name="objectives_auto_gate">Lisez la documentation comment l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
     <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
     <string name="objectives_manualenacts">Activation manuelle</string>

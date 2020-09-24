@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">SCAN</string>
+    <string name="rileylink_scanner_scan_stop">STOP</string>
+    <string name="rileylink_scanner_selected_device">Selected</string>
+    <string name="rileylink_scanner_title">RileyLink Scan</string>
+    <string name="location_yes">Enable</string>
+    <string name="location_no">No</string>
+    <string name="rileylink_scanner_scanning">Scanning</string>
+    <string name="rileylink_scanner_scanning_finished">Scanning finished</string>
+    <string name="rileylink_scanner_scanning_error">Scanning error: %1$d</string>
+    <string name="common_never">Never</string>
+
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Settings</string>
+    <string name="rileylink_settings_tab2">History</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pump Status</string>
+    <string name="title_activity_rileylink_settings">RileyLink Settings</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Configured Address</string>
+    <string name="rileylink_connected_device">Connected Device</string>
+    <string name="rileylink_connection_status">Connection Status</string>
+    <string name="rileylink_connection_error">Connection Error</string>
+    <string name="rileylink_device">Device</string>
+    <string name="rileylink_device_type">Device Type</string>
+    <string name="rileylink_device_model">Device Model</string>
+    <string name="rileylink_last_used_frequency">Last used frequency</string>
+    <string name="rileylink_last_device_contact">Last device contact</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
+
+
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth Initializing…</string>
+    <string name="rileylink_state_bt_error">Bluetooth Error</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Ready</string>
+    <string name="rileylink_state_not_started">Not Started</string>
+    <string name="rileylink_state_rl_init">RileyLink Initialization…</string>
+    <string name="rileylink_state_rl_error">RileyLink Error</string>
+    <string name="rileylink_state_pc_tune_up">Tuning up RileyLink and Pump</string>
+    <string name="rileylink_state_pc_error">Problem connecting to Pump</string>
+    <string name="rileylink_state_connected">Connected</string>
+    <string name="rileylink_state_rl_ready">RileyLink ready</string>
+
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Device is not RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink unreachable</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth disabled</string>
+    <string name="rileylink_error_no_bt_adapter">No Bluetooth Adapter</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp Failed</string>
+    <string name="rileylink_error_pump_unreachable">Pump unreachable</string>
+    <string name="rileylink_error_pod_unreachable">Pod unreachable</string>
+
+    <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
+
+    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
+    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
+
+    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+
+    <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
+
+    <plurals name="duration_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+
+
+</resources>

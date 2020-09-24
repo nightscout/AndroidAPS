@@ -1,29 +1,41 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_tempbasal.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.abs
 
 class TempBasalDialog : DialogFragmentWithDate() {
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var ctx: Context
+
     private var isPercentPump = true
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -42,8 +54,8 @@ class TempBasalDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
-        val profile = ProfileFunctions.getInstance().profile ?: return
+        val pumpDescription = activePlugin.activePump.pumpDescription
+        val profile = profileFunction.getProfile() ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
@@ -72,43 +84,43 @@ class TempBasalDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         var percent = 0
         var absolute = 0.0
-        val durationInMinutes = SafeParse.stringToInt(actions_tempbasal_duration.text)
-        val profile = ProfileFunctions.getInstance().profile ?: return false
+        val durationInMinutes = actions_tempbasal_duration.value.toInt()
+        val profile = profileFunction.getProfile() ?: return false
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(actions_tempbasal_basalpercentinput.text)
-            percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
-            actions.add(MainApp.gs(R.string.pump_tempbasal_label)+ ": $percent%")
-            actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
-            if (percent != basalPercentInput) actions.add(MainApp.gs(R.string.constraintapllied))
+            percent = constraintChecker.applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
+            actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": $percent%")
+            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
+            if (percent != basalPercentInput) actions.add(resourceHelper.gs(R.string.constraintapllied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(actions_tempbasal_basalabsoluteinput.text)
-            absolute = MainApp.getConstraintChecker().applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
-            actions.add(MainApp.gs(R.string.pump_tempbasal_label)+ ": " + MainApp.gs(R.string.pump_basebasalrate, absolute))
-            actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
+            absolute = constraintChecker.applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
+            actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
+            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.constraintapllied) + "</font>")
+                actions.add(resourceHelper.gs(R.string.constraintapllied).formatColor(resourceHelper, R.color.warning))
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, MainApp.gs(R.string.pump_tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
-                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
+                            i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            MainApp.instance().startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 }
                 if (isPercentPump) {
-                    log.debug("USER ENTRY: TEMP BASAL $percent% duration: $durationInMinutes")
-                    ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
+                    aapsLogger.debug("USER ENTRY: TEMP BASAL $percent% duration: $durationInMinutes")
+                    commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    log.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
-                    ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
+                    aapsLogger.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
+                    commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })
         }

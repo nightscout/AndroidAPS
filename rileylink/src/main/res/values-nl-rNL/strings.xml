@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">SCAN</string>
+    <string name="rileylink_scanner_scan_stop">STOP</string>
+    <string name="rileylink_scanner_selected_device">Geselecteerd</string>
+    <string name="rileylink_scanner_title">RileyLink Scan</string>
+    <string name="location_yes">Inschakelen</string>
+    <string name="rileylink_scanner_scanning">Scannen</string>
+    <string name="rileylink_scanner_scanning_finished">Scannen voltooid</string>
+    <string name="rileylink_scanner_scanning_error">Scanfout: %1$d</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Instellingen</string>
+    <string name="rileylink_settings_tab2">Geschiedenis</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pompstatus</string>
+    <string name="title_activity_rileylink_settings">RileyLink Instellingen</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Geconfigureerd Adres</string>
+    <string name="rileylink_connected_device">Aangesloten Apparaat</string>
+    <string name="rileylink_connection_status">Verbinding Status</string>
+    <string name="rileylink_connection_error">Verbindingsfout</string>
+    <string name="rileylink_device">Apparaat</string>
+    <string name="rileylink_device_type">Apparaat type</string>
+    <string name="rileylink_device_model">Apparaat model</string>
+    <string name="rileylink_last_used_frequency">Laatst gebruikte frequentie</string>
+    <string name="rileylink_last_device_contact">Laatste contact met apparaat</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth initialiseren…</string>
+    <string name="rileylink_state_bt_error">Bluetooth fout</string>
+    <string name="rileylink_state_bt_ready">Bluetooth gekoppeld</string>
+    <string name="rileylink_state_not_started">Niet gestart</string>
+    <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
+    <string name="rileylink_state_rl_error">RileyLink fout</string>
+    <string name="rileylink_state_pc_tune_up">Tuning van RileyLink en Pomp</string>
+    <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Apparaat is geen RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink onbereikbaar</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth is uitgeschakeld</string>
+    <string name="rileylink_error_no_bt_adapter">Geen Bluetooth Adapter</string>
+    <string name="rileylink_error_tuneup_failed">Verbinding maken mislukt</string>
+    <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
+    <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
+</resources>

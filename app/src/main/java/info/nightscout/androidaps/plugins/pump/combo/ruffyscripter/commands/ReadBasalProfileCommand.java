@@ -9,11 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 
 public class ReadBasalProfileCommand extends BaseCommand {
-    private static final Logger log = LoggerFactory.getLogger(ReadBasalProfileCommand.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(ReadBasalProfileCommand.class);
 
     @Override
     public void execute() {

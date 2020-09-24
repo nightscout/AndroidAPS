@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.food;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -16,8 +15,6 @@ import com.j256.ormlite.table.TableUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,14 +24,17 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNsFood;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -44,42 +44,30 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
-    private Logger log = LoggerFactory.getLogger(L.DATAFOOD);
+    @Inject AAPSLogger aapsLogger;
+    @Inject RxBusWrapper rxBus;
+    @Inject FabricPrivacy fabricPrivacy;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledFoodEventPost = null;
 
-    public FoodService() {
+    public FoodService(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
         onCreate();
         dbInitialize();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventNsFood.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     int mode = event.getMode();
-                    Bundle payload = event.getPayload();
-
-                    try {
-                        if (payload.containsKey("food")) {
-                            JSONObject json = new JSONObject(payload.getString("food"));
-                            if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
-                                this.createFoodFromJsonIfNotExists(json);
-                            else
-                                this.deleteNS(json);
-                        }
-
-                        if (payload.containsKey("foods")) {
-                            JSONArray array = new JSONArray(payload.getString("foods"));
-                            if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
-                                this.createFoodFromJsonIfNotExists(array);
-                            else
-                                this.deleteNS(array);
-                        }
-                    } catch (JSONException e) {
-                        log.error("Unhandled Exception", e);
-                    }
-                }, FabricPrivacy::logException)
+                    JSONArray array = event.getFoods();
+                    if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
+                        this.createFoodFromJsonIfNotExists(array);
+                    else
+                        this.deleteNS(array);
+                }, fabricPrivacy::logException)
         );
     }
 
@@ -105,7 +93,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             return DaoManager.createDao(this.getConnectionSource(), Food.class);
         } catch (SQLException e) {
-            log.error("Cannot create Dao for Food.class");
+            aapsLogger.error("Cannot create Dao for Food.class");
         }
 
         return null;
@@ -115,18 +103,16 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void onCreate() {
         super.onCreate();
         try {
-            if (L.isEnabled(L.DATAFOOD))
-                log.info("onCreate");
+            aapsLogger.info(LTag.DATAFOOD, "onCreate");
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Food.class);
         } catch (SQLException e) {
-            log.error("Can't create database", e);
+            aapsLogger.error("Can't create database", e);
             throw new RuntimeException(e);
         }
     }
 
     public void onUpgrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        if (L.isEnabled(L.DATAFOOD))
-            log.info("onUpgrade");
+        aapsLogger.info(LTag.DATAFOOD, "onUpgrade");
 //            this.resetFood();
     }
 
@@ -139,7 +125,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
             TableUtils.dropTable(this.getConnectionSource(), Food.class, true);
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Food.class);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleFoodChange();
     }
@@ -164,9 +150,8 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATAFOOD))
-                    log.debug("Firing EventFoodChange");
-                RxBus.INSTANCE.send(event);
+                aapsLogger.debug(LTag.DATAFOOD, "Firing EventFoodChange");
+                rxBus.send(event);
                 callback.setPost(null);
             }
         }
@@ -200,7 +185,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             return this.getDao().queryForAll();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
 
         return new ArrayList<>();
@@ -225,7 +210,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
             Food food = Food.createFromJson(json);
             this.createFoodFromJsonIfNotExists(food);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -237,7 +222,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                 this.createFoodFromJsonIfNotExists(food);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -250,7 +235,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
             String _id = json.getString("_id");
             this.deleteByNSId(_id);
         } catch (JSONException | SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -261,7 +246,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                 this.deleteNS(json);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -275,8 +260,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void deleteByNSId(String _id) throws SQLException {
         Food stored = this.findByNSId(_id);
         if (stored != null) {
-            if (L.isEnabled(L.DATAFOOD))
-                log.debug("Removing Food record from database: " + stored.toString());
+            aapsLogger.debug(LTag.DATAFOOD, "Removing Food record from database: " + stored.toString());
             this.delete(stored);
         }
     }
@@ -293,7 +277,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
             this.getDao().delete(food);
             this.scheduleFoodChange();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -329,10 +313,9 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void createOrUpdate(Food food) {
         try {
             this.getDao().createOrUpdate(food);
-            if (L.isEnabled(L.DATAFOOD))
-                log.debug("Created or Updated: " + food.toString());
+            aapsLogger.debug(LTag.DATAFOOD, "Created or Updated: " + food.toString());
         } catch (SQLException e) {
-            log.error("Unable to createOrUpdate Food", e);
+            aapsLogger.error("Unable to createOrUpdate Food", e);
         }
         this.scheduleFoodChange();
     }
@@ -340,10 +323,9 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void create(Food food) {
         try {
             this.getDao().create(food);
-            if (L.isEnabled(L.DATAFOOD))
-                log.debug("New record: " + food.toString());
+            aapsLogger.debug(LTag.DATAFOOD, "New record: " + food.toString());
         } catch (SQLException e) {
-            log.error("Unable to create Food", e);
+            aapsLogger.error("Unable to create Food", e);
         }
         this.scheduleFoodChange();
     }
@@ -363,7 +345,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                 return list.get(0);
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }

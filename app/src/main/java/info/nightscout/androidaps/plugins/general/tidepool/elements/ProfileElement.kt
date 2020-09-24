@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.InstanceId
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProfileElement private constructor(ps: ProfileSwitch)
+class ProfileElement(ps: ProfileSwitch, serialNumber: String)
     : BaseElement(ps.date, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.date).toByteArray()).toString()) {
 
     @Expose
@@ -25,11 +25,9 @@ class ProfileElement private constructor(ps: ProfileSwitch)
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
     @Expose
-    internal var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
-            ?: InstanceId.instanceId())
+    internal var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
     @Expose
-    internal var deviceSerialNumber: String = ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
-            ?: InstanceId.instanceId()
+    internal var deviceSerialNumber: String = serialNumber
     @Expose
     internal var clockDriftOffset: Long = 0
     @Expose
@@ -96,16 +94,6 @@ class ProfileElement private constructor(ps: ProfileSwitch)
             @field:Expose
             internal var amount: Double
     )
-
-    companion object {
-        @JvmStatic
-        fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
-            ProfileElement(ps)
-        } catch (e: Throwable) {
-            null
-        }
-    }
-
 }
 
 

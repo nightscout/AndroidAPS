@@ -19,14 +19,14 @@
     <string name="pref_on">On</string>
     <string name="pref_off">Off</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
-    <string name="pref_units_for_actions">Unità per Azioni</string>
+    <string name="pref_units_for_actions">Unità per azioni</string>
     <string name="pref_show_date">Mostra data</string>
     <string name="pref_show_iob">Mostra IOB</string>
     <string name="pref_show_cob">Mostra COB</string>
     <string name="pref_show_delta">Mostra delta</string>
     <string name="pref_show_avgdelta">Mostra AvgDelta</string>
     <string name="pref_show_phone_battery">Mostra batteria telefono</string>
-    <string name="pref_show_rig_battery">Mostra Batteria Rig</string>
+    <string name="pref_show_rig_battery">Mostra batteria rig</string>
     <string name="pref_show_basal_rate">Mostra velocità basale</string>
     <string name="pref_show_loop_status">Mostra stato loop</string>
     <string name="pref_show_bg">Mostra BG</string>
@@ -52,8 +52,8 @@
     <string name="pref_high">Alto</string>
     <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Numeri grandi</string>
-    <string name="pref_ring_history">Storico Ring</string>
-    <string name="pref_light_ring_history">Storico Light Ring</string>
+    <string name="pref_ring_history">Ring History</string>
+    <string name="pref_light_ring_history">Light Ring History</string>
     <string name="pref_animations">Animazioni</string>
     <string name="pref_wizard_in_menu">Wizard in Menu</string>
     <string name="pref_prime_in_menu">Carica in Menu</string>

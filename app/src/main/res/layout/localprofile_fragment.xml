@@ -63,7 +63,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/addnew"
-                android:src="@drawable/add" />
+                android:src="@drawable/ic_add" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_clone"
@@ -72,7 +72,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/clone_label"
-                android:src="@drawable/clone" />
+                android:src="@drawable/ic_clone" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_remove"
@@ -81,7 +81,9 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/remove_label"
-                android:src="@drawable/remove" />
+                android:scaleX="1"
+                android:scaleY="1"
+                android:src="@drawable/ic_remove" />
 
         </LinearLayout>
 
@@ -196,7 +198,7 @@
                     android:text="@string/dia"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <info.nightscout.androidaps.utils.NumberPicker
+                <info.nightscout.androidaps.utils.ui.NumberPicker
                     android:id="@+id/localprofile_dia"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -258,7 +260,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/activate_profile"
-            android:drawableStart="@drawable/icon_local_activate" />
+            android:drawableStart="@drawable/ic_local_activate" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -277,7 +279,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/icon_local_reset"
+                android:drawableStart="@drawable/ic_local_reset"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/reset" />
@@ -293,7 +295,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/icon_local_save"
+                android:drawableStart="@drawable/ic_local_save"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/save" />

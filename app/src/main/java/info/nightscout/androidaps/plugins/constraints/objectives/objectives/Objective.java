@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.util.Linkify;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -13,30 +12,34 @@ import androidx.annotation.StringRes;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public abstract class Objective {
+    @Inject public SP sp;
+    @Inject public ResourceHelper resourceHelper;
 
     private String spName;
-    @StringRes
-    private int objective;
-    @StringRes
-    private int gate;
+    @StringRes private int objective;
+    @StringRes private int gate;
     private long startedOn;
     private long accomplishedOn;
     List<Task> tasks = new ArrayList<>();
     public boolean hasSpecialInput = false;
 
-    public Objective(String spName, @StringRes int objective, @StringRes int gate) {
+    public Objective(HasAndroidInjector injector, String spName, @StringRes int objective, @StringRes int gate) {
+        injector.androidInjector().inject(this);
         this.spName = spName;
         this.objective = objective;
         this.gate = gate;
-        startedOn = SP.getLong("Objectives_" + spName + "_started", 0L);
-        accomplishedOn = SP.getLong("Objectives_" + spName + "_accomplished", 0L);
+        startedOn = sp.getLong("Objectives_" + spName + "_started", 0L);
+        accomplishedOn = sp.getLong("Objectives_" + spName + "_accomplished", 0L);
         if ((accomplishedOn - DateUtil.now()) > T.hours(3).msecs() || (startedOn - DateUtil.now()) > T.hours(3).msecs()) { // more than 3 hours in the future
             startedOn = 0;
             accomplishedOn = 0;
@@ -83,12 +86,12 @@ public abstract class Objective {
 
     public void setStartedOn(long startedOn) {
         this.startedOn = startedOn;
-        SP.putLong("Objectives_" + spName + "_started", startedOn);
+        sp.putLong("Objectives_" + spName + "_started", startedOn);
     }
 
     public void setAccomplishedOn(long accomplishedOn) {
         this.accomplishedOn = accomplishedOn;
-        SP.putLong("Objectives_" + spName + "_accomplished", accomplishedOn);
+        sp.putLong("Objectives_" + spName + "_accomplished", accomplishedOn);
     }
 
     public long getAccomplishedOn() {
@@ -103,9 +106,12 @@ public abstract class Objective {
         return tasks;
     }
 
-    public boolean specialActionEnabled() { return true; }
+    public boolean specialActionEnabled() {
+        return true;
+    }
 
-    public void specialAction(Activity activity, String input) {}
+    public void specialAction(Activity activity, String input) {
+    }
 
     public abstract class Task {
         @StringRes
@@ -126,10 +132,15 @@ public abstract class Objective {
         }
 
         public abstract boolean isCompleted();
-        public boolean isCompleted(long trueTime) { return isCompleted(); };
+
+        public boolean isCompleted(long trueTime) {
+            return isCompleted();
+        }
+
+        ;
 
         public String getProgress() {
-            return MainApp.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
+            return resourceHelper.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
         }
 
         Task hint(Hint hint) {
@@ -175,9 +186,9 @@ public abstract class Objective {
             int days = (int) Math.floor((double) duration / T.days(1).msecs());
             int hours = (int) Math.floor((double) duration / T.hours(1).msecs());
             int minutes = (int) Math.floor((double) duration / T.mins(1).msecs());
-            if (days > 0) return MainApp.gq(R.plurals.objective_days, days, days);
-            else if (hours > 0) return MainApp.gq(R.plurals.objective_hours, hours, hours);
-            else return MainApp.gq(R.plurals.objective_minutes, minutes, minutes);
+            if (days > 0) return resourceHelper.gq(R.plurals.objective_days, days, days);
+            else if (hours > 0) return resourceHelper.gq(R.plurals.objective_hours, hours, hours);
+            else return resourceHelper.gq(R.plurals.objective_minutes, minutes, minutes);
         }
     }
 
@@ -193,13 +204,13 @@ public abstract class Objective {
             super(task);
             this.question = question;
             this.spIdentifier = spIdentifier;
-            answered = SP.getBoolean("ExamTask_" + spIdentifier, false);
-            disabledTo = SP.getLong("DisabledTo_" + spIdentifier, 0L);
+            answered = sp.getBoolean("ExamTask_" + spIdentifier, false);
+            disabledTo = sp.getLong("DisabledTo_" + spIdentifier, 0L);
         }
 
         public void setDisabledTo(long newState) {
             disabledTo = newState;
-            SP.putLong("DisabledTo_" + spIdentifier, disabledTo);
+            sp.putLong("DisabledTo_" + spIdentifier, disabledTo);
         }
 
         public long getDisabledTo() {
@@ -212,7 +223,7 @@ public abstract class Objective {
 
         public void setAnswered(boolean newState) {
             answered = newState;
-            SP.putBoolean("ExamTask_" + spIdentifier, answered);
+            sp.putBoolean("ExamTask_" + spIdentifier, answered);
         }
 
         public boolean getAnswered() {

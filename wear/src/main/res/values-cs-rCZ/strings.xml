@@ -52,6 +52,8 @@
     <string name="pref_high">Vysoká</string>
     <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Velké číslice</string>
+    <string name="pref_ring_history">Kroužek Historie</string>
+    <string name="pref_light_ring_history">Světlý kroužek Historie</string>
     <string name="pref_animations">Animace</string>
     <string name="pref_wizard_in_menu">Kalkulačka v nabídce</string>
     <string name="pref_prime_in_menu">Plnění v nabídce</string>

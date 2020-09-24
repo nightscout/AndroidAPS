@@ -18,13 +18,17 @@ package info.nightscout.androidaps.utils;
 import android.os.SystemClock;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * {@hide}
@@ -38,31 +42,42 @@ import info.nightscout.androidaps.logging.L;
  * }
  * </pre>
  */
+@Singleton
 public class SntpClient {
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private final AAPSLogger aapsLogger;
+    private final DateUtil dateUtil;
+    
+    //private final int REFERENCE_TIME_OFFSET = 16;
+    private final int ORIGINATE_TIME_OFFSET = 24;
+    private final int RECEIVE_TIME_OFFSET = 32;
+    private final int TRANSMIT_TIME_OFFSET = 40;
+    private final int NTP_PACKET_SIZE = 48;
 
-    //private static final int REFERENCE_TIME_OFFSET = 16;
-    private static final int ORIGINATE_TIME_OFFSET = 24;
-    private static final int RECEIVE_TIME_OFFSET = 32;
-    private static final int TRANSMIT_TIME_OFFSET = 40;
-    private static final int NTP_PACKET_SIZE = 48;
+    private final int NTP_PORT = 123;
+    private final int NTP_MODE_CLIENT = 3;
+    private final int NTP_VERSION = 3;
 
-    private static final int NTP_PORT = 123;
-    private static final int NTP_MODE_CLIENT = 3;
-    private static final int NTP_VERSION = 3;
+    @Inject
+    public SntpClient(
+        AAPSLogger aapsLogger,
+        DateUtil dateUtil
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.dateUtil = dateUtil;
+    }
 
     // Number of seconds between Jan 1, 1900 and Jan 1, 1970
     // 70 years plus 17 leap days
-    private static final long OFFSET_1900_TO_1970 = ((365L * 70L) + 17L) * 24L * 60L * 60L;
+    private final long OFFSET_1900_TO_1970 = ((365L * 70L) + 17L) * 24L * 60L * 60L;
 
     // system time computed from NTP server response
-    private static long mNtpTime;
+    private long mNtpTime;
 
     // value of SystemClock.elapsedRealtime() corresponding to mNtpTime
-    private static long mNtpTimeReference;
+    private long mNtpTimeReference;
 
     // round trip time in milliseconds
-    private static long mRoundTripTime;
+    private long mRoundTripTime;
 
     public static abstract class Callback implements Runnable {
         public boolean networkConnected = false;
@@ -70,7 +85,7 @@ public class SntpClient {
         public long time = 0;
     }
 
-    public static synchronized void ntpTime(final Callback callback, boolean isConnected) {
+    public synchronized void ntpTime(final Callback callback, boolean isConnected) {
         callback.networkConnected = isConnected;
         if (callback.networkConnected) {
             new Thread(() -> doNtpTime(callback)).start();
@@ -79,11 +94,11 @@ public class SntpClient {
         }
     }
 
-    static void doNtpTime(final Callback callback) {
-        log.debug("Time detection started");
+    void doNtpTime(final Callback callback) {
+        aapsLogger.debug("Time detection started");
         callback.success = requestTime("time.google.com", 5000);
         callback.time = getNtpTime() + SystemClock.elapsedRealtime() - getNtpTimeReference();
-        log.debug("Time detection ended: " + callback.success + " " + DateUtil.dateAndTimeString(getNtpTime()));
+        aapsLogger.debug("Time detection ended: " + callback.success + " " + dateUtil.dateAndTimeString(getNtpTime()));
         callback.run();
     }
 
@@ -94,7 +109,7 @@ public class SntpClient {
      * @param timeout network timeout in milliseconds.
      * @return true if the transaction was successful.
      */
-    private static synchronized boolean requestTime(String host, int timeout) {
+    private synchronized boolean requestTime(String host, int timeout) {
         try {
             DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(timeout);
@@ -144,7 +159,7 @@ public class SntpClient {
             mNtpTimeReference = responseTicks;
             mRoundTripTime = roundTripTime;
         } catch (Exception e) {
-            log.debug("request time failed: " + e);
+            aapsLogger.debug("request time failed: " + e);
             return false;
         }
 
@@ -156,7 +171,7 @@ public class SntpClient {
      *
      * @return time value computed from NTP server response.
      */
-    private static long getNtpTime() {
+    private long getNtpTime() {
         return mNtpTime;
     }
 
@@ -166,7 +181,7 @@ public class SntpClient {
      *
      * @return reference clock corresponding to the NTP time.
      */
-    private static long getNtpTimeReference() {
+    private long getNtpTimeReference() {
         return mNtpTimeReference;
     }
 
@@ -182,7 +197,7 @@ public class SntpClient {
     /**
      * Reads an unsigned 32 bit big endian number from the given offset in the buffer.
      */
-    private static long read32(byte[] buffer, int offset) {
+    private long read32(byte[] buffer, int offset) {
         byte b0 = buffer[offset];
         byte b1 = buffer[offset + 1];
         byte b2 = buffer[offset + 2];
@@ -201,7 +216,7 @@ public class SntpClient {
      * Reads the NTP time stamp at the given offset in the buffer and returns
      * it as a system time (milliseconds since January 1, 1970).
      */
-    private static long readTimeStamp(byte[] buffer, int offset) {
+    private long readTimeStamp(byte[] buffer, int offset) {
         long seconds = read32(buffer, offset);
         long fraction = read32(buffer, offset + 4);
         return ((seconds - OFFSET_1900_TO_1970) * 1000) + ((fraction * 1000L) / 0x100000000L);
@@ -211,7 +226,7 @@ public class SntpClient {
      * Writes system time (milliseconds since January 1, 1970) as an NTP time stamp
      * at the given offset in the buffer.
      */
-    private static void writeTimeStamp(byte[] buffer, int offset, long time) {
+    private void writeTimeStamp(byte[] buffer, int offset, long time) {
         long seconds = time / 1000L;
         long milliseconds = time - seconds * 1000L;
         seconds += OFFSET_1900_TO_1970;

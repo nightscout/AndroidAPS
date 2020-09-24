@@ -4,10 +4,12 @@
     <string-array name="aps_modeArray">
         <item>@string/closedloop</item>
         <item>@string/openloop</item>
+        <item>@string/lowglucosesuspend</item>
     </string-array>
     <string-array name="aps_modeValues" translatable="false">
         <item>closed</item>
         <item>open</item>
+        <item>lgs</item>
     </string-array>
 
     <string-array name="unitsArray">
@@ -20,6 +22,7 @@
     </string-array>
 
     <string-array name="languagesArray">
+        <item>@string/default_lang</item>
         <item>@string/en_lang</item>
         <item>@string/af_lang</item>
         <item>@string/bg_lang</item>
@@ -43,6 +46,7 @@
         <item>@string/zh_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
+        <item>default</item>
         <item>en</item>
         <item>af</item>
         <item>bg</item>
@@ -77,17 +81,6 @@
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
         <item>@string/key_resistantadult</item>
-    </string-array>
-
-    <string-array name="danaSpeedArray">
-        <item>12 s/U</item>
-        <item>30 s/U</item>
-        <item>60 s/U</item>
-    </string-array>
-    <string-array name="danaSpeedValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
     </string-array>
 
     <string-array name="quickWizardYesNo">
@@ -191,6 +184,7 @@
         <item>@string/medtronic_pump_battery_alkaline</item>
         <item>@string/medtronic_pump_battery_lithium</item>
         <item>@string/medtronic_pump_battery_nizn</item>
+        <item>@string/medtronic_pump_battery_nimh</item>
     </string-array>
 
     <string-array name="medtronicBatteryTypeValues">
@@ -198,6 +192,7 @@
         <item>@string/key_medtronic_pump_battery_alkaline</item>
         <item>@string/key_medtronic_pump_battery_lithium</item>
         <item>@string/key_medtronic_pump_battery_nizn</item>
+        <item>@string/key_medtronic_pump_battery_nimh</item>
     </string-array>
 
     <string-array name="smbMaxMinutes">
@@ -211,6 +206,18 @@
         <item>120</item>
     </string-array>
 
-    key_medtronic_bolus_debug
+    <string-array name="protectiontype">
+        <item>@string/noprotection</item>
+        <item>@string/biometric</item>
+        <item>@string/master_password</item>
+        <item>@string/custom_password</item>
+    </string-array>
+
+    <string-array name="protectiontypeValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
 </resources>

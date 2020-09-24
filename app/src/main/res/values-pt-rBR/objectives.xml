@@ -18,40 +18,38 @@
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de Glic baixa, antes de baixar Glic</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, active o auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de hidratos de carbono</string>
-    <string name="objectives_ama_objective">A activar recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
-    <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
+    <string name="objectives_ama_objective">A ativar recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
+    <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
+    <string name="objectives_auto_objective">A ativar a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>
+    <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure primeiro regras simples. Em vez de ação deixe AAPS apresentar apenas a notificação. Quando tem certeza de automação é acionada no momento certo substitua a notificação por ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glic disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
     <string name="accomplished">Concluído: %1$s</string>
     <string name="objectives_usage_objective">Aprenda como controlar AndroidAPS</string>
-    <string name="objectives_usage_gate">Executar diferentes acções no AndroidAPS</string>
+    <string name="objectives_usage_gate">Executar diferentes ações no AndroidAPS</string>
     <string name="objectives_useprofileswitch">Definir perfil de 90% por 10 min (pressione longo no nome de perfil na Visão Geral)</string>
     <string name="objectives_usedisconnectpump">Simular chuveiro. Desligar a bomba de 1h (Pressione longo em Open Loop)</string>
     <string name="objectives_usereconnectpump">... e volte a ligar de volta da mesma forma</string>
-    <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo actual)</string>
-    <string name="objectives_useactions">No Configurador active o plugiin de Acções, torne-o visível e exiba o seu conteúdo no menu superior</string>
+    <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo atual)</string>
+    <string name="objectives_useactions">No Configurador ative o plugin de Ações, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
     <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se tiver pelo menos 3 meses de experiência com Close Loop com outros sistemas, pode-se qualificar para um código para ignorar objectivos. Ver https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
-    <string name="codeaccepted">Código aceite</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se tiver pelo menos 3 meses de experiência com Close Loop com outros sistemas, pode-se qualificar para um código para ignorar objetivos. Ver https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
+    <string name="codeaccepted">Código aceito</string>
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
-    <string name="objectives_exam_gate">Estude e responda as perguntas correctamente</string>
-    <string name="answerdisabledto">Responder desactivado até: %1$s</string>
+    <string name="objectives_exam_gate">Estude e responda as perguntas corretamente</string>
+    <string name="answerdisabledto">Resposta desativada para: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Próximo inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Não está ligado à internet</string>
     <string name="failedretrievetime">Falha ao recuperar tempo</string>
-    <string name="requirementnotmet">Requisitos de objectivo não cumpridos</string>
+    <string name="requirementnotmet">Requisitos de objetivo não cumpridos</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

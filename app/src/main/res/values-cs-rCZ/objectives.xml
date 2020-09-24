@@ -20,7 +20,9 @@
     <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
     <string name="objectives_ama_objective">Povolení doplňkový funkcí pro každodenní použití, jako např. pokročilý jídelní asistent (AMA)</string>
     <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
+    <string name="objectives_auto_objective">Povolení automatizace</string>
     <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximální IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
+    <string name="objectives_auto_gate">Přečtěte si na wiki, jak automatizace funguje. Nejdříve nastavte pouze jednoduchá pravidla. Namísto provádění akcí nechte AAPS zobrazovat pouze oznámení. Pokud jste si jistí, že je automatizace spouštěna v pravý čas, můžete oznámení nahradit prováděním akce. (https://androidaps.readdocs.io/en/latest/CROWDIN/cs/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glykémie dostupná v NS</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>

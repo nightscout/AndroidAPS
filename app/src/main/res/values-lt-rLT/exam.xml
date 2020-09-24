@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Koks atsakymas apie IVT yra teisingas?</string>
-    <string name="dia_label">Tema: Insulino veikimo trukmė</string>
+    <string name="dia_label_exam">Tema: Insulino veikimo trukmė</string>
     <string name="dia_minimumis3h">Mažiausia reikšmė - 3 valandos.</string>
     <string name="dia_minimumis5h">Mažiausia reikšmė - 5 valandos.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">Jis yra lygus IVT parametrui, kuris naudojamas pompoje.</string>
-    <string name="dia_valuemustbedetermined">Jūs turite nustatyti jūsų individualias vertes (bet ne mažiau kaip 5 valandas).</string>
+    <string name="dia_valuemustbedetermined">Jūs turite nustatyti savo individualią reikšmę (bet ne mažiau kaip 5 val.).</string>
     <string name="hypott_label">Tema: Hipo Laikinas tikslas</string>
     <string name="hypott_whenhypott">Kokia yra pagrindinė priežastis nustatyti hipo laikiną tikslą?</string>
     <string name="hypott_goinglow">Užkirsti kelią kristi gliukozės kiekiui kraujyje, kai jau veikia nulinė laikina bazė.</string>
@@ -122,7 +122,7 @@
     <string name="nsclient_looponiphone">Loop app iPhone telefone.</string>
     <string name="nsclient_spikeiphone">Spike iPhone telefone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
-    <string name="isf_label">Tema: Jautrumo Insulinui Faktorius</string>
+    <string name="isf_label_exam">Tema: Insulino jautrumo faktorius</string>
     <string name="isf_increasingvalue">Didesnė JIF reikšmė lemia mažesnį insulino tiekimą, kai AAPS koreguoja aukštą glikemiją.</string>
     <string name="isf_decreasingvalue">Mažesnė JIF reikšmė lemia mažesnį insulino tiekimą, kai AAPS koreguoja aukštą glikemiją.</string>
     <string name="isf_noeffect">JIF reikšmės pakeitimas neturi įtakos AAPS leidžiamo insulino kiekiui koreguojant aukštą glikemiją.</string>
@@ -130,7 +130,7 @@
     <string name="isf_profile">Jei profilyje pakeisite JIF vertę, Ciklas į pokytį iškart atsižvelgs.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label">Tema: IA santykis</string>
+    <string name="ic_label_exam">Tema: Insulino ir angliavandenių santykis</string>
     <string name="ic_increasingvalue">Didesnis insulino ir angliavandenių IA santykis reiškia, kad mažiau insulino reikia padengti tam tikram angliavandenių kiekiui.</string>
     <string name="ic_decreasingvalue">Mažesnis insulino ir angliavandenių IA santykis reiškia, kad mažiau insulino reikia padengti tam tikram angliavandenių kiekiui.</string>
     <string name="ic_noeffect">Jei turite 0 AAO (aktyvių angliavandenių organizme), pakeitus IA, glikemija bus koreguojama kitokiu insulino kiekiu.</string>
@@ -149,7 +149,7 @@
     <string name="profileswitch_targethigher">Tikslas bus 10% aukštesnis.</string>
     <string name="profileswitch_targetlower">Tikslas bus 10% žemesnis.</string>
     <string name="profileswitch_targetbottom">Tik apatinis tikslas bus 10% žemesnis.</string>
-    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitchtime_iwant">Jei atsibundate 1 valanda anksčiau nei įprastai, kaip turėtumėte pranešti AAPS apie savo tvarkaraščio pasikeitimą?</string>
     <string name="profileswitchtime_1">Perjunkite profilį su laiko poslinkiu +1</string>
     <string name="profileswitchtime__1">Perjunkite profilį su laiko poslinkiu -1</string>

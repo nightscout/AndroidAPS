@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">VYHLEDAT</string>
+    <string name="rileylink_scanner_scan_stop">ZASTAVIT</string>
+    <string name="rileylink_scanner_selected_device">Vybráno</string>
+    <string name="rileylink_scanner_title">Vyhledávání RileyLinku</string>
+    <string name="location_yes">Povolit</string>
+    <string name="location_no">Ne</string>
+    <string name="rileylink_scanner_scanning">Vyhledávání</string>
+    <string name="rileylink_scanner_scanning_finished">Vyhledávání dokončeno</string>
+    <string name="rileylink_scanner_scanning_error">Chyba při vyhledávání: %1$d</string>
+    <string name="common_never">Nikdy</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Nastavení</string>
+    <string name="rileylink_settings_tab2">Historie</string>
+    <string name="rileylink_status">Status RileyLink</string>
+    <string name="medtronic_pump_status">Stav pumpy</string>
+    <string name="title_activity_rileylink_settings">Nastavení RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Nastavená adresa</string>
+    <string name="rileylink_connected_device">Připojené zařízení</string>
+    <string name="rileylink_connection_status">Stav připojení</string>
+    <string name="rileylink_connection_error">Chyba spojení</string>
+    <string name="rileylink_device">Zařízení</string>
+    <string name="rileylink_device_type">Typ zařízení</string>
+    <string name="rileylink_device_model">Model zařízení</string>
+    <string name="rileylink_last_used_frequency">Poslední použitá frekvence</string>
+    <string name="rileylink_last_device_contact">Poslední spojení se zařízením</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth se incializuje…</string>
+    <string name="rileylink_state_bt_error">Chyba Bluetooth</string>
+    <string name="rileylink_state_bt_ready">Bluetooth připraven</string>
+    <string name="rileylink_state_not_started">Nezahájeno</string>
+    <string name="rileylink_state_rl_init">RileyLink inicializace…</string>
+    <string name="rileylink_state_rl_error">Chyba RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Spojování RileyLinku a pumpy</string>
+    <string name="rileylink_state_pc_error">Problém připojení k pumpě</string>
+    <string name="rileylink_state_connected">Připojeno</string>
+    <string name="rileylink_state_rl_ready">RileyLink připraven</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Zařízení není RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink nedostupný</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth je zakázáno</string>
+    <string name="rileylink_error_no_bt_adapter">Žádný Bluetooth adaptér</string>
+    <string name="rileylink_error_tuneup_failed">Spojování selhalo</string>
+    <string name="rileylink_error_pump_unreachable">Pumpa nedostupná</string>
+    <string name="rileylink_error_pod_unreachable">Pod nedostupný</string>
+    <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omipod</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d den</item>
+        <item quantity="few">%1$d dnů</item>
+        <item quantity="many">%1$d dnů</item>
+        <item quantity="other">%1$d dnů</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodin</item>
+        <item quantity="many">%1$d hodin</item>
+        <item quantity="other">%1$d hodin</item>
+    </plurals>
+</resources>

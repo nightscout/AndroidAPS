@@ -9,13 +9,12 @@ import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import java.util.*
 
-class OpenDatasetRequestMessage : BaseMessage() {
+class OpenDatasetRequestMessage (val serialNumber : String): BaseMessage() {
 
     @Expose
-    var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
-            ?: InstanceId.instanceId())
+    var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
     @Expose
-    var time = DateUtil.toISOAsUTC(DateUtil.now())
+    var time: String = DateUtil.toISOAsUTC(DateUtil.now())
     @Expose
     var timezoneOffset = (DateUtil.getTimeZoneOffsetMs() / T.mins(1).msecs()).toInt()
     @Expose
@@ -24,13 +23,13 @@ class OpenDatasetRequestMessage : BaseMessage() {
     @Expose
     var client = ClientInfo()
     @Expose
-    var computerTime = DateUtil.toISONoZone(DateUtil.now())
+    var computerTime: String = DateUtil.toISONoZone(DateUtil.now())
     @Expose
     var dataSetType = "continuous"
     @Expose
-    var deviceManufacturers = arrayOf(TidepoolUploader.PUMPTYPE)
+    var deviceManufacturers = arrayOf(TidepoolUploader.PUMP_TYPE)
     @Expose
-    var deviceModel = TidepoolUploader.PUMPTYPE
+    var deviceModel = TidepoolUploader.PUMP_TYPE
     @Expose
     var deviceTags = arrayOf("bgm", "cgm", "insulin-pump")
     @Expose
@@ -38,7 +37,7 @@ class OpenDatasetRequestMessage : BaseMessage() {
     @Expose
     var timeProcessing = "none"
     @Expose
-    var timezone = TimeZone.getDefault().id
+    var timezone: String = TimeZone.getDefault().id
     @Expose
     var version = BuildConfig.VERSION_NAME
 

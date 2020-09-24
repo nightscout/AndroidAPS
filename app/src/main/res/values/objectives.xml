@@ -32,7 +32,9 @@
     <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_ama_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
     <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
+    <string name="objectives_auto_objective">Enabling automation</string>
     <string name="objectives_smb_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
+    <string name="objectives_auto_gate">Read the docs how automation works. Setup your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG available in NS</string>
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>

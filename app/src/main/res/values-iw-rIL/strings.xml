@@ -11,16 +11,5 @@
     <string name="description_loop">להפעיל או לכבות את הלולאה.</string>
     <string name="description_ns_client">מסנכרן את הנתונים שלך עם Nightscout</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
-    <!-- Pump Abstract -->
-    <!-- Medtronic (MDT) - Base -->
-    <!-- MDT Configuration -->
-    <!-- RL BLE Scanning -->
-    <!-- RL Status Page -->
-    <!-- RL State -->
-    <!-- RL Errors -->
-    <!-- RL Target Device -->
-    <!-- MDT Errors -->
-    <!-- MDT History -->
-    <!-- MDT Pump Status -->
-    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

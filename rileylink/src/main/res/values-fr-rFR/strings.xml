@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">SCANNER</string>
+    <string name="rileylink_scanner_scan_stop">ARRÊT</string>
+    <string name="rileylink_scanner_selected_device">Sélectionné</string>
+    <string name="rileylink_scanner_title">Scanner RileyLink</string>
+    <string name="location_yes">Activer</string>
+    <string name="location_no">Non</string>
+    <string name="rileylink_scanner_scanning">Recherche en cours</string>
+    <string name="rileylink_scanner_scanning_finished">Recherche finie</string>
+    <string name="rileylink_scanner_scanning_error">Erreur de recherche : %1$d</string>
+    <string name="common_never">Jamais</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Paramètres</string>
+    <string name="rileylink_settings_tab2">Historique</string>
+    <string name="rileylink_status">État du RileyLink</string>
+    <string name="medtronic_pump_status">État de la pompe</string>
+    <string name="title_activity_rileylink_settings">Paramètres RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Adresse configurée</string>
+    <string name="rileylink_connected_device">Appareil connecté</string>
+    <string name="rileylink_connection_status">État de la connexion</string>
+    <string name="rileylink_connection_error">Erreur de Connexion</string>
+    <string name="rileylink_device">Appareil</string>
+    <string name="rileylink_device_type">Type d\'appareil</string>
+    <string name="rileylink_device_model">Modèle d’appareil</string>
+    <string name="rileylink_last_used_frequency">Dernière fréquence utilisée</string>
+    <string name="rileylink_last_device_contact">Dernier contact appareil</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Initialisation Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Erreur Bluetooth</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Prêt</string>
+    <string name="rileylink_state_not_started">Non démarré</string>
+    <string name="rileylink_state_rl_init">Initialisation du RileyLink…</string>
+    <string name="rileylink_state_rl_error">Erreur RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Association du RileyLink et de la Pompe</string>
+    <string name="rileylink_state_pc_error">Problème communication avec la pompe</string>
+    <string name="rileylink_state_connected">Connecté</string>
+    <string name="rileylink_state_rl_ready">RileyLink prêt</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">L\'appareil n\'est pas RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink non accessible</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth est désactivé</string>
+    <string name="rileylink_error_no_bt_adapter">Aucun adaptateur Bluetooth</string>
+    <string name="rileylink_error_tuneup_failed">Échec du réglage</string>
+    <string name="rileylink_error_pump_unreachable">Pompe hors de portée</string>
+    <string name="rileylink_error_pod_unreachable">Pod inaccessible</string>
+    <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Pompe Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d heure</item>
+        <item quantity="other">%1$d heures</item>
+    </plurals>
+</resources>

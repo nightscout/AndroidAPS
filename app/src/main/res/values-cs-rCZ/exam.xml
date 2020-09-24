@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Co je pravda o DIA?</string>
-    <string name="dia_label">Téma: Doba trvání účinku inzulínu</string>
+    <string name="dia_label_exam">Téma: Doba trvání účinku inzulínu</string>
     <string name="dia_minimumis3h">Minimální hodnota je 3 hodiny.</string>
     <string name="dia_minimumis5h">Minimální hodnota je 5 hodin.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Configuration/Config-Builder.html#inzulin</string>
@@ -122,7 +122,7 @@
     <string name="nsclient_looponiphone">Aplikace Loop na iPhone.</string>
     <string name="nsclient_spikeiphone">Aplikace Spike na iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Children/Children.html</string>
-    <string name="isf_label">Téma: Citlivost na inzulín</string>
+    <string name="isf_label_exam">Téma: Citlivost na inzulín</string>
     <string name="isf_increasingvalue">Vyšší hodnoty ISF vedou k menší dávce inzulínu při korigování vysoké glykémie.</string>
     <string name="isf_decreasingvalue">Nižší hodnoty ISF vedou k menší dávce inzulínu při korigování vysoké glykémie.</string>
     <string name="isf_noeffect">Změna hodnoty ISF nemá vliv na dávku inzulínu při korigování vysoké glykémie.</string>
@@ -130,7 +130,7 @@
     <string name="isf_profile">Změna hodnoty citlivosti ve vašem profilu postačuje k tomu, aby se tato změna použila.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#korekcni-faktor-citlivost-na-inzulin-isf-mmol-l-u-nebo-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html</string>
-    <string name="ic_label">Téma: Inzulino-sacharidový poměr</string>
+    <string name="ic_label_exam">Téma: Inzulino-sacharidový poměr</string>
     <string name="ic_increasingvalue">Vyšší hodnoty IC vedou k menší dávce inzulínu pro stejné množství sacharidů.</string>
     <string name="ic_decreasingvalue">Nižší hodnoty IC vedou k menší dávce inzulínu pro stejné množství sacharidů.</string>
     <string name="ic_noeffect">Pokud máte 0 COB změna inzulino-sacharidového poměru povede k jinému množství inzulínu vydanému pro korekci glykémie.</string>
@@ -149,7 +149,7 @@
     <string name="profileswitch_targethigher">Cíl bude o 10 % vyšší.</string>
     <string name="profileswitch_targetlower">Cíl bude o 10 % nižší.</string>
     <string name="profileswitch_targetbottom">Pouze dolní cíl bude o 10 % nižší.</string>
-    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html?highlight=p%C5%99epnut%C3%AD%20profilu</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html?highlight=p%C5%99epnut%C3%AD%20profilu</string>
     <string name="profileswitchtime_iwant">Pokud se probudíte o 1h dříve než obvykle, jak byste měli oznámit AAPS tuto změnu?</string>
     <string name="profileswitchtime_1">Proveďte přepnutí profilu s posunem času 1</string>
     <string name="profileswitchtime__1">Proveďte přepnutí profilu s posunem času -1</string>

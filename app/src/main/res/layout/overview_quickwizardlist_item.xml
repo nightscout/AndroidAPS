@@ -26,7 +26,7 @@
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:scaleType="fitStart"
-                card_view:srcCompat="@drawable/icon_quickwizard" />
+                card_view:srcCompat="@drawable/ic_quickwizard" />
 
             <LinearLayout
                 android:orientation="vertical"

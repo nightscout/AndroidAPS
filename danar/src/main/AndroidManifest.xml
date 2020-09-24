@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps.danar" >
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <application>
+        <service
+            android:name="info.nightscout.androidaps.danar.services.DanaRExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+</manifest>

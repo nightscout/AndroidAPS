@@ -78,7 +78,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
     private String sgvString = "--";
     private String externalStatusString = "no status";
     private TextView statusView;
-    private long sgvTapTime = 0l;
+    private long sgvTapTime = 0L;
 
     @Override
     public void onCreate() {

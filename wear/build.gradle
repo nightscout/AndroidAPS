@@ -1,14 +1,17 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
     dependencies {
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        //classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'com.hiya:jacoco-android:0.2'
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
+//apply plugin: 'jacoco-android'
+apply plugin: 'com.hiya.jacoco-android'
 
 jacoco {
     toolVersion = "0.8.3"
@@ -46,7 +49,7 @@ android {
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.2"
@@ -56,6 +59,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        firebaseDisable {
         }
     }
 
@@ -120,10 +125,10 @@ dependencies {
     implementation 'androidx.wear:wear:1.0.0'
     implementation('me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
-    
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.json:json:20140107"
-    testImplementation ("org.mockito:mockito-core:2.8.47") {
+
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.json:json:20200518'
+    testImplementation("org.mockito:mockito-core:2.8.47") {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
@@ -137,8 +142,8 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation "joda-time:joda-time:2.9.9"
-    testImplementation("com.google.truth:truth:0.39") {
+    testImplementation 'joda-time:joda-time:2.10.6'
+    testImplementation('com.google.truth:truth:1.0.1') {
         exclude group: "com.google.guava", module: "guava"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"

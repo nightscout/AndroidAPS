@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.activities.HistoryBrowseActivity">
+    tools:context="info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,65 +64,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/historyybrowse_bggraph"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent" />
-
-                    <ImageButton
-                        android:id="@+id/overview_chartMenuButton"
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:paddingTop="5dp"
-                        app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
-
-                    <TextView
-                        android:id="@+id/overview_iobcalculationprogess"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textSize="15sp" />
-
-                </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <com.jjoe64.graphview.GraphView
-                    android:id="@+id/historybrowse_iobgraph"
+                    android:id="@+id/historybrowse_bggraph"
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp" />
+                    android:layout_height="match_parent" />
 
-                <SeekBar
-                    android:id="@+id/historybrowse_seekBar"
-                    android:layout_width="match_parent"
+                <ImageButton
+                    android:id="@+id/overview_chartMenuButton"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:paddingTop="5dp"
+                    app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/overview_iobcalculationprogess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textSize="15sp" />
 
-            <ScrollView
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/history_iobgraph"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </FrameLayout>
-
-            </ScrollView>
         </LinearLayout>
 
     </LinearLayout>

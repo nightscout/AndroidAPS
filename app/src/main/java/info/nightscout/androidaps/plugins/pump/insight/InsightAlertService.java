@@ -2,26 +2,24 @@ package info.nightscout.androidaps.plugins.pump.insight;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.text.Html;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.MutableLiveData;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.DaggerService;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SnoozeAlertMessage;
@@ -33,14 +31,18 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
-import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtilsKt;
+import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
+import info.nightscout.androidaps.utils.HtmlHelper;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
-public class InsightAlertService extends Service implements InsightConnectionService.StateCallback {
+public class InsightAlertService extends DaggerService implements InsightConnectionService.StateCallback {
+
+    @Inject AAPSLogger aapsLogger;
+    @Inject ResourceHelper resourceHelper;
+    @Inject AlertUtils alertUtils;
 
     private static final int NOTIFICATION_ID = 31345;
-
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private LocalBinder localBinder = new LocalBinder();
     private boolean connectionRequested;
@@ -92,6 +94,7 @@ public class InsightAlertService extends Service implements InsightConnectionSer
 
     @Override
     public void onCreate() {
+        super.onCreate();
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         bindService(new Intent(this, InsightConnectionService.class), serviceConnection, BIND_AUTO_CREATE);
         alertLiveData.setValue(null);
@@ -192,11 +195,11 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                 connectionService.withdrawConnectionRequest(thread);
                 break;
             } catch (AppLayerErrorException e) {
-                log.info("Exception while fetching alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                aapsLogger.info(LTag.PUMP, "Exception while fetching alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
-                log.info("Exception while fetching alert: " + e.getClass().getSimpleName());
+                aapsLogger.info(LTag.PUMP, "Exception while fetching alert: " + e.getClass().getSimpleName());
             } catch (Exception e) {
-                log.error("Exception while fetching alert", e);
+                aapsLogger.error(LTag.PUMP, "Exception while fetching alert", e);
             }
             try {
                 Thread.sleep(1000);
@@ -243,13 +246,13 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                     connectionService.requestMessage(snoozeAlertMessage).await();
                 }
             } catch (AppLayerErrorException e) {
-                log.info("Exception while muting alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                aapsLogger.info(LTag.PUMP, "Exception while muting alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             } catch (InsightException e) {
-                log.info("Exception while muting alert: " + e.getClass().getSimpleName());
+                aapsLogger.info(LTag.PUMP, "Exception while muting alert: " + e.getClass().getSimpleName());
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             } catch (Exception e) {
-                log.error("Exception while muting alert", e);
+                aapsLogger.error(LTag.PUMP, "Exception while muting alert", e);
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             }
         }).start();
@@ -269,13 +272,13 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                     this.alert = null;
                 }
             } catch (AppLayerErrorException e) {
-                log.info("Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             } catch (InsightException e) {
-                log.info("Exception while confirming alert: " + e.getClass().getSimpleName());
+                aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.getClass().getSimpleName());
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             } catch (Exception e) {
-                log.error("Exception while confirming alert", e);
+                aapsLogger.error(LTag.PUMP, "Exception while confirming alert", e);
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             }
         }).start();
@@ -291,12 +294,12 @@ public class InsightAlertService extends Service implements InsightConnectionSer
         notificationBuilder.setOngoing(true);
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(false);
-        notificationBuilder.setSmallIcon(AlertUtilsKt.getAlertIcon(alert.getAlertCategory()));
+        notificationBuilder.setSmallIcon(alertUtils.getAlertIcon(alert.getAlertCategory()));
 
-        notificationBuilder.setContentTitle(AlertUtilsKt.getAlertCode(alert.getAlertType()) + " – " + AlertUtilsKt.getAlertTitle(alert.getAlertType()));
-        String description = AlertUtilsKt.getAlertDescription(alert);
+        notificationBuilder.setContentTitle(alertUtils.getAlertCode(alert.getAlertType()) + " – " + alertUtils.getAlertTitle(alert.getAlertType()));
+        String description = alertUtils.getAlertDescription(alert);
         if (description != null)
-            notificationBuilder.setContentText(Html.fromHtml(description).toString());
+            notificationBuilder.setContentText(HtmlHelper.INSTANCE.fromHtml(description).toString());
 
         Intent fullScreenIntent = new Intent(this, InsightAlertActivity.class);
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -306,11 +309,11 @@ public class InsightAlertService extends Service implements InsightConnectionSer
             case ACTIVE:
                 Intent muteIntent = new Intent(this, InsightAlertService.class).putExtra("command", "mute");
                 PendingIntent mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                notificationBuilder.addAction(0, MainApp.gs(R.string.mute_alert), mutePendingIntent);
+                notificationBuilder.addAction(0, resourceHelper.gs(R.string.mute_alert), mutePendingIntent);
             case SNOOZED:
                 Intent confirmIntent = new Intent(this, InsightAlertService.class).putExtra("command", "confirm");
                 PendingIntent confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                notificationBuilder.addAction(0, MainApp.gs(R.string.confirm), confirmPendingIntent);
+                notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent);
         }
 
         Notification notification = notificationBuilder.build();

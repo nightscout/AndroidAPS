@@ -27,82 +27,7 @@
 
                 </androidx.recyclerview.widget.RecyclerView>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/overview_looplayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@+id/overview_pumpstatuslayout"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/overview_notifications">
-
-                    <TextView
-                        android:id="@+id/overview_apsmode"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/openloop"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/overview_activeprofile"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <TextView
-                        android:id="@+id/overview_activeprofile"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/profile"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/overview_temptarget"
-                        app:layout_constraintStart_toEndOf="@+id/overview_apsmode"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/overview_temptarget"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/temptargetshort"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/mdtp_white"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/overview_activeprofile"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <LinearLayout
-                    android:id="@+id/overview_pumpstatuslayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp">
-
-                    <TextView
-                        android:id="@+id/overview_pumpstatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingBottom="3dp"
-                        android:paddingTop="3dp"
-                        android:text="@string/initializing"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-                </LinearLayout>
+                <include layout="@layout/overview_loop_pumpstatus_layout" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -119,17 +44,13 @@
                         android:textSize="90dp"
                         android:textStyle="bold" />
 
-                    <TextView
+                    <ImageView
                         android:id="@+id/overview_arrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginTop="-5dp"
-                        android:paddingLeft="-2dp"
-                        android:paddingRight="-2dp"
-                        android:text="→"
-                        android:textSize="50sp"
-                        android:textStyle="bold" />
+                        android:paddingTop="18dp"
+                        android:src="@drawable/ic_flat" />
 
                     <TextView
                         android:id="@+id/overview_deltashort"
@@ -208,8 +129,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -230,10 +151,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
 
@@ -256,8 +177,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -278,10 +199,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
 
@@ -304,8 +225,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -326,10 +247,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
                             <LinearLayout
@@ -351,8 +272,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -373,10 +294,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
                         </LinearLayout>
@@ -425,10 +346,10 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dip"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@color/listdelimiter" />
 
 
@@ -454,10 +375,10 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dip"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@color/listdelimiter" />
 
                         <LinearLayout
@@ -482,10 +403,10 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dip"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@color/listdelimiter" />
 
                     </LinearLayout>
@@ -512,8 +433,8 @@
                             android:id="@+id/overview_chartMenuButton"
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
                             android:paddingTop="5dp"
                             app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
@@ -526,10 +447,11 @@
 
                     </RelativeLayout>
 
-                    <com.jjoe64.graphview.GraphView
+                    <LinearLayout
                         android:id="@+id/overview_iobgraph"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
 
                 </LinearLayout>
 
@@ -550,7 +472,7 @@
                 android:orientation="horizontal"
                 android:paddingRight="5dp">
 
-                <info.nightscout.androidaps.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -564,14 +486,14 @@
                     android:textColor="@color/colorTreatmentButton"
                     android:textSize="10sp" />
 
-                <info.nightscout.androidaps.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_insulinbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginRight="-4dp"
                     android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_bolus"
+                    android:drawableTop="@drawable/ic_bolus"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/overview_insulin_label"
@@ -579,14 +501,14 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.androidaps.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_carbsbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginRight="-4dp"
                     android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_cp_bolus_carbs"
+                    android:drawableTop="@drawable/ic_cp_bolus_carbs"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/overview_carbs_label"
@@ -594,14 +516,14 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.androidaps.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginRight="-4dp"
                     android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_calculator"
+                    android:drawableTop="@drawable/ic_calculator"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/overview_calculator_label"
@@ -609,14 +531,14 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.androidaps.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginRight="-4dp"
                     android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_quickwizard"
+                    android:drawableTop="@drawable/ic_quickwizard"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="Quick wizard"

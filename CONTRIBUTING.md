@@ -42,7 +42,7 @@ Hints
 -----
 
 * Start small, it is easier to review smaller changes that affect fewer parts of code 
-* Take a look into Issues list (https://github.com/MilosKozak/AndroidAPS/issues) - maybe there is somthing you can fix or implement
+* Take a look into Issues list (https://github.com/nightscout/AndroidAPS/issues) - maybe there is something you can fix or implement
 * For new features, make sure there is Issue to track progress and have on-topic discussion
 * Reach out to community, discuss idea on Gitter (https://gitter.im/MilosKozak/AndroidAPS)
 * Speak with other developers to minimise merge conflicts. Find out who worked, working or plan to work on speciffic issue or part of app
