@@ -154,11 +154,11 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         objectivesPlugin.objectives[ObjectivesPlugin.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
-        Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
+        Assert.assertEquals(2, c.reasonList.size) // Safety & Objectives
         Assert.assertEquals(false, c.value())
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
         c = constraintChecker.isClosedLoopAllowed()
-        Assert.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
+        Assert.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
         Assert.assertEquals(false, c.value())
     }
 
