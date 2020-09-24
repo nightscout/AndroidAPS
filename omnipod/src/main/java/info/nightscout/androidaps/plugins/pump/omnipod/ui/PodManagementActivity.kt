@@ -20,11 +20,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProg
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.FullInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.ShortInitPodWizardModel
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -93,15 +91,11 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     private fun initPodAction() {
 
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(injector, PodActionType.INIT_POD)
-
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
         pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
         pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
         pagerSettings.setBackStringResourceId(R.string.cancel)
-        pagerSettings.cancelAction = refreshAction
-        pagerSettings.finishAction = refreshAction
         pagerSettings.pagerAdapterBehavior = FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 
         val wizardPagerContext = WizardPagerContext.getInstance()
@@ -121,15 +115,12 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     private fun deactivatePodAction() {
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(injector, PodActionType.DEACTIVATE_POD)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
         pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
         pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
         pagerSettings.setBackStringResourceId(R.string.cancel)
-        pagerSettings.cancelAction = refreshAction
-        pagerSettings.finishAction = refreshAction
         pagerSettings.pagerAdapterBehavior = FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 
         val wizardPagerContext = WizardPagerContext.getInstance();

@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitActionFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitPodTask
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.PodInfoFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.removepod.RemoveActionFragment
 
@@ -34,7 +33,6 @@ abstract class OmnipodModule {
     abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
 
     // Data
-    @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
     @ContributesAndroidInjector abstract fun initPodTask(): InitPodTask
     @ContributesAndroidInjector abstract fun rlHistoryItemOmnipod(): RLHistoryItemOmnipod
 

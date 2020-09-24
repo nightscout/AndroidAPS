@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.manager;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,15 +17,18 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -75,6 +80,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpVal
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.subjects.SingleSubject;
@@ -93,6 +99,8 @@ public class AapsOmnipodManager {
     private final OmnipodManager delegate;
     private final DatabaseHelperInterface databaseHelper;
     private final OmnipodAlertUtil omnipodAlertUtil;
+    private final NSUpload nsUpload;
+    private final ProfileFunction profileFunction;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -113,10 +121,10 @@ public class AapsOmnipodManager {
                               HasAndroidInjector injector,
                               ActivePluginProvider activePlugin,
                               DatabaseHelperInterface databaseHelper,
-                              OmnipodAlertUtil omnipodAlertUtil) {
-        if (podStateManager == null) {
-            throw new IllegalArgumentException("Pod state manager can not be null");
-        }
+                              OmnipodAlertUtil omnipodAlertUtil,
+                              NSUpload nsUpload,
+                              ProfileFunction profileFunction
+    ) {
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.aapsLogger = aapsLogger;
@@ -127,6 +135,8 @@ public class AapsOmnipodManager {
         this.activePlugin = activePlugin;
         this.databaseHelper = databaseHelper;
         this.omnipodAlertUtil = omnipodAlertUtil;
+        this.nsUpload = nsUpload;
+        this.profileFunction = profileFunction;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
 
@@ -184,6 +194,10 @@ public class AapsOmnipodManager {
             addFailureToHistory(PodHistoryEntryType.FILL_CANNULA_SET_BASAL_PROFILE, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
+
+        uploadCareportalEvent(System.currentTimeMillis() - 2000, CareportalEvent.PUMPBATTERYCHANGE);
+        uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
+        uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 
         rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
 
@@ -865,5 +879,30 @@ public class AapsOmnipodManager {
         }
 
         return new BasalSchedule(entries);
+    }
+
+    private void uploadCareportalEvent(long date, String event) {
+        if (databaseHelper.getCareportalEventFromTimestamp(date) != null)
+            return;
+        try {
+            JSONObject data = new JSONObject();
+            String enteredBy = sp.getString("careportal_enteredby", "");
+            if (enteredBy.isEmpty()) {
+                data.put("enteredBy", enteredBy);
+            }
+            data.put("created_at", DateUtil.toISOString(date));
+            data.put("mills", date);
+            data.put("eventType", event);
+            data.put("units", profileFunction.getUnits());
+            CareportalEvent careportalEvent = new CareportalEvent(injector);
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = event;
+            careportalEvent.json = data.toString();
+            databaseHelper.createOrUpdate(careportalEvent);
+            nsUpload.uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            aapsLogger.error(LTag.PUMPCOMM, "Unhandled exception when uploading SiteChange event.", e);
+        }
     }
 }
