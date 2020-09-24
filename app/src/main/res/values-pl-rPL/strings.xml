@@ -917,6 +917,7 @@
     <string name="short_status_extended">Przedłużony: %1$.2f / %2$.2f U na %3$d min</string>
     <string name="short_status_multiwave">Multiwave (zwykły + przedłużony): %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Zbiornik: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Max. czas odzyskiwania [s]</string>
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
@@ -1059,6 +1060,8 @@
     <string name="sendsmsactionlabel">Wyślij SMS: %1$s</string>
     <string name="sendsmsactiondescription">Wyślij SMS do wszystkich numerów</string>
     <string name="sendsmsactiontext">Wyślij SMS z tekstem</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
     <string name="deliverpartofboluswizard">Kreator bolusa wykonuje obliczenia, ale tylko ta część obliczonej dawki insuliny jest dostarczana. Pomocne z algorytmem SMB.</string>
@@ -1108,6 +1111,7 @@
     <string name="nav_survey">Ankieta</string>
     <string name="invalidage">Nieprawidłowy wpis wieku</string>
     <string name="invalidweight">Nieprawidłowy wpis wagi</string>
+    <string name="invalidpct">Nieprawidłowa wartość procentowa</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Od: <b>%2$02d%%</b> Cel: <b>%3$02d%%</b> Do: <b>%4$02d%%</b>]]></string>
     <string name="average">Średnio</string>
     <string name="tir">TIR</string>
@@ -1134,10 +1138,15 @@
     <string name="loop_tbrexecution_time_label">Czas wykonywania bazy tymczasowej</string>
     <string name="insight_alert_notification_channel">Alarmy pompy Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikacji Authenticator dla: %1$s, z doklejonym PIN-em</string>
     <string name="smscommunicator_otp_enabled">Włącz uwierzytelnianie</string>
     <string name="smscommunicator_otp_enabled_summary">Uwierzytelnianie komend za pomocą haseł jednorazowych generowanych przez aplikację Google Authenticator lub podobnych aplikacji 2FA.</string>
+    <string name="smscommunicator_otp_pin">Dodatkowy obowiązkowy PIN na końcu tokenu</string>
     <string name="smscommunicator_otp_pin_summary">Dodatkowe cyfry, które powinny być zapamiętywane i przyklejone na końcu każdego wygenerowanego hasła jednorazowego</string>
     <string name="smscomunicator_tab_otp_label">Ustawienia uwierzytelnienia</string>
+    <string name="smscommunicator_code_verify_label">Kod do sprawdzenia:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Kod weryfikacyjny składa się z 6 cyfr wyświetlanych przez aplikację uwierzytelniającą (tzw. OTP) po których następują co najmniej 3 cyfry obowiązkowego PIN-u.</string>
     <string name="smscommunicator_otp_verify_label">OTP do sprawdzenia:</string>
     <string name="smscommunicator_otp_reset_btn">Resetuj uwierzytelnianie</string>
     <string name="smscommunicator_otp_reset_title">Resetuj klucz uwierzytelniania</string>
@@ -1172,5 +1181,38 @@
     <string name="availableprofile">Dostępny profil</string>
     <string name="profiletype">Typ profilu</string>
     <string name="formatwithtdd">Wiek: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Wiek: %1$.0f TDD: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Wiek: %1$.0f Waga: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% bazy</string>
+    <string name="dpvdefaultprofile">Domyślny profil DPV</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Kończenie konfiguracji Open Humans…</string>
+    <string name="this_may_take_a_while">To może chwilę potrwać. Nie wyłączaj telefonu ani tej wtyczki.</string>
+    <string name="setup_finished">Konfiguracja zakończona</string>
+    <string name="your_phone_will_upload_data">Twój telefon wkrótce prześle dane do Open Humans.</string>
+    <string name="your_phone_is_upload_data">Twój telefon przesyła teraz dane do Open Humans.</string>
+    <string name="setup_failed">Konfiguracja nie powiodła się</string>
+    <string name="there_was_an_error">Wystąpił błąd. Spróbuj zalogować się ponownie, aby kontynuować. Przepraszamy &amp; dziękujemy!</string>
+    <string name="open_humans_terms">To jest narzędzie open source, które skopiuje Twoje dane do projektu Open Humans. Nie zachowujemy żadnych praw do dzielenia się Twoimi danymi z osobami trzecimi bez Twojej wyraźnej zgody. Dane, które otrzymują projekt i aplikacja są identyfikowane za pomocą losowego identyfikatora użytkownika i będą bezpiecznie przesyłane na konto Open Humans za Twoją zgodą dla tego procesu. Możesz zatrzymać przesyłanie i usunąć swoje już przesłane dane w dowolnym momencie za pośrednictwem strony www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Rozumiem i zgadzam się.</string>
+    <string name="login">Zaloguj się</string>
+    <string name="logout">Wyloguj się</string>
+    <string name="oh_logout_confirmation">Czy na pewno chcesz się wylogować i zaprzestać przekazywania danych na rzecz nauki?</string>
+    <string name="project_member_id">Identyfikator członka projektu: %s</string>
+    <string name="queue_size">Rozmiar kolejki: %d</string>
+    <string name="terms_of_use">Warunki użytkowania</string>
+    <string name="not_logged_in">Nie zalogowano</string>
+    <string name="you_need_to_accept_the_of_use_first">Najpierw musisz zaakceptować warunki użytkowania.</string>
+    <string name="successfully_logged_in">Pomyślnie zalogowano</string>
+    <string name="setup_will_continue_in_background">Konfiguracja zostanie teraz zakończona w tle. Dziękujemy za przesłanie swoich danych.\n\nProszę nie wyłączaj telefonu ani tej wtyczki jeszcze przez chwilę, aby umożliwić dokończenie się konfiguracji.</string>
+    <string name="completing_login">Kończenie logowania…</string>
+    <string name="donate_your_data_to_science">Przekaż swoje dane na rzecz nauki</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
+    <string name="only_upload_if_connected_to_wifi">Prześlij tylko jeśli połączono poprzez WiFi</string>
+    <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
+    <string name="worker_state">Stan procesu: %s</string>
+    <string name="uploaded_data">Przesłane dane</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Następujące dane zostaną przesłane na konto Open Humans: wartości Glikemii, bolusy, węglowodany, zdarzenia z portalu opieki (z wyjątkiem notatek), rozszerzone bolusy, przełączenia profilu, całkowite dawki dobowe, bazy tymczasowe, cele tymczasowe, preferencje, wersja aplikacji, model urządzenia i wymiary ekranu. Dane niejawne lub prywatne, takie jak adres URL strony Nightscout lub klucz autoryzacji API, nie zostaną przesłane.</string>
 </resources>
