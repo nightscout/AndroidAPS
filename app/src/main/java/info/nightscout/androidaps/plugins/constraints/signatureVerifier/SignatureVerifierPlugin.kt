@@ -48,7 +48,7 @@ class SignatureVerifierPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
-    private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
+    private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)
 
     private val lock: Any = arrayOfNulls<Any>(0)

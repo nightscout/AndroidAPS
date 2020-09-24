@@ -50,4 +50,8 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic помпа</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d часа</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
 </resources>

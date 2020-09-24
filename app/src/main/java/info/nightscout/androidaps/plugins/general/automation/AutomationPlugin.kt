@@ -70,10 +70,14 @@ class AutomationPlugin @Inject constructor(
 
     val automationEvents = ArrayList<AutomationEvent>()
     var executionLog: MutableList<String> = ArrayList()
-    var btConnects : MutableList<EventBTChange> = ArrayList()
+    var btConnects: MutableList<EventBTChange> = ArrayList()
 
-    private val loopHandler : Handler = Handler(HandlerThread(AutomationPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val loopHandler: Handler = Handler(HandlerThread(AutomationPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
+
+    companion object {
+        const val event = "{\"title\":\"Low\",\"enabled\":true,\"trigger\":\"{\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\\\",\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"bg\\\\\\\":4,\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\"}}\\\",\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"value\\\\\\\":-0.1,\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\",\\\\\\\"deltaType\\\\\\\":\\\\\\\"DELTA\\\\\\\",\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\"}}\\\"]}}\",\"actions\":[\"{\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget\\\",\\\"data\\\":{\\\"value\\\":8,\\\"units\\\":\\\"mmol\\\",\\\"durationInMinutes\\\":60}}\"]}"
+    }
 
     init {
         refreshLoop = Runnable {
@@ -162,7 +166,7 @@ class AutomationPlugin @Inject constructor(
     private fun loadFromSP() {
         automationEvents.clear()
         val data = sp.getString(keyAutomationEvents, "")
-        if (data != "") {
+        if (data != "")
             try {
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
@@ -173,7 +177,8 @@ class AutomationPlugin @Inject constructor(
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
-        }
+        else
+            automationEvents.add(AutomationEvent(injector).fromJSON(event))
     }
 
     @Synchronized
