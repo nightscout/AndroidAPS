@@ -20,30 +20,32 @@
             app:expanded="true"
             app:liftOnScroll="true">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:fitsSystemWindows="false"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:background="@color/transparent"
-                android:minHeight="?attr/actionBarSize"
-                app:contentInsetStart="4dp"
-                app:contentInsetEnd="4dp">
-
-                <LinearLayout
-                    android:id="@+id/overview_statuslights"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:fitsSystemWindows="false"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    android:background="@color/transparent"
+                    android:minHeight="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    android:elevation="4dp"
+                    app:contentInsetStart="4dp"
+                    app:contentInsetEnd="4dp">
 
-                    <include layout="@layout/status_fragment" />
+                    <LinearLayout
+                        android:id="@+id/overview_statuslights"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-                </LinearLayout>
+                        <include layout="@layout/status_fragment" />
 
-            </androidx.appcompat.widget.Toolbar>
+                    </LinearLayout>
+
+                </com.google.android.material.appbar.MaterialToolbar>
 
             <com.google.android.material.tabs.TabLayout
                 style="@style/Widget.MaterialComponents.TabLayout.Colored"
