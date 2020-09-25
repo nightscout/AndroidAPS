@@ -103,13 +103,15 @@ def allCommited = { ->
             commandLine 'git', 'status', '-s'
             standardOutput = stdout
         }
-        String commitObject = stdout.toString().trim()
-        stringBuilder.append(commitObject)
+        // ignore all changes done in .idea/codeStyles
+        String cleanedList = stdout.toString().replaceAll(/(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea\/codeStyles\/.*?\s*$/, "")
+        // ignore all files added to project dir but not staged/known to GIT
+        cleanedList = cleanedList.replaceAll(/(?m)^\s*(\?\?)\s*.*?\s*$/, "")
+        stringBuilder.append(cleanedList.trim())
     } catch (ignored) {
         return false // NoGitSystemAvailable
     }
     return stringBuilder.toString().isEmpty()
-
 }
 
 tasks.matching { it instanceof Test }.all {
