@@ -4,7 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="treatmentssafety_title">Säkerhetsbegränsningar för behandlingar</string>
+    <string name="treatmentssafety_title">Säkerhetsbegränsningar</string>
     <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH [g]</string>
     <string name="nav_preferences">Inställningar</string>
@@ -1138,10 +1138,15 @@ Eversense-appen.</string>
     <string name="loop_tbrexecution_time_label">Basalförändring utförd</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">från autentiseringsapp för: %1$s följt av PIN-kod</string>
     <string name="smscommunicator_otp_enabled">Aktivera autentiseraren</string>
     <string name="smscommunicator_otp_enabled_summary">Autentisera kommandon med hjälp av engångslösenord som genererats av Google Authenticator eller liknande appar för tvåfaktorsautentisering.</string>
+    <string name="smscommunicator_otp_pin">PIN-kod som läggs till på slutet</string>
     <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
     <string name="smscomunicator_tab_otp_label">Konfiguration av tvåfaktorsautentisering</string>
+    <string name="smscommunicator_code_verify_label">Kod att kontrollera:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN-kod</string>
+    <string name="smscommunicator_code_verify_info">Verifieringskoden består av sex siffror som visas av autentiseringsappen (känd som OTP) följt av 3 eller fler siffror som är en valbar PIN-kod.</string>
     <string name="smscommunicator_otp_verify_label">Engångslösenord att kontrollera:</string>
     <string name="smscommunicator_otp_reset_btn">Återställ autentiserare</string>
     <string name="smscommunicator_otp_reset_title">Återställ autentiseringsnyckel</string>

@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -658,6 +659,7 @@ class DanaRSPlugin @Inject constructor(
     override fun loadTDDs(): PumpEnactResult = loadHistory(info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_DAILY)
     override fun getCustomActions(): List<CustomAction>? = null
     override fun executeCustomAction(customActionType: CustomActionType) {}
+    override fun executeCustomCommand(customCommand: CustomCommand?): PumpEnactResult? = null
     override fun canHandleDST(): Boolean = false
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType?) {}
     override fun clearPairing() {

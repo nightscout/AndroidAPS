@@ -41,7 +41,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.DeliveryStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
@@ -59,7 +58,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.SingleSubject;
 
 public class OmnipodManager {
-    private static final int ACTION_VERIFICATION_TRIES = 3;
+    private static final int ACTION_VERIFICATION_TRIES = 2;
 
     private final OmnipodRileyLinkCommunicationManager communicationService;
     private PodStateManager podStateManager;
@@ -224,13 +223,10 @@ public class OmnipodManager {
                 suspendDelivery(acknowledgementBeep);
             }
 
-            // Store the new Basal schedule after successfully suspending delivery, so that if setting the Basal schedule fails,
-            // And we later try to resume delivery, the new schedule is used
-            podStateManager.setBasalSchedule(schedule);
-
             try {
                 executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podStateManager, schedule,
                         false, podStateManager.getScheduleOffset(), acknowledgementBeep)));
+                podStateManager.setBasalSchedule(schedule);
             } catch (OmnipodException ex) {
                 if (ex.isCertainFailure()) {
                     if (!wasSuspended) {
@@ -240,7 +236,9 @@ public class OmnipodManager {
                 }
 
                 // verifyDeliveryStatus will throw an exception if verification fails
-                if (!verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                if (verifyDeliveryStatus(DeliveryStatus.NORMAL, ex)) {
+                    podStateManager.setBasalSchedule(schedule);
+                } else {
                     if (!wasSuspended) {
                         throw new CommandFailedAfterChangingDeliveryStatusException("Suspending delivery succeeded but setting the new basal schedule did not", ex);
                     }
@@ -248,6 +246,8 @@ public class OmnipodManager {
                     throw ex;
                 }
             }
+
+
         } finally {
             logCommandExecutionFinished("setBasalSchedule");
         }
@@ -420,7 +420,7 @@ public class OmnipodManager {
         bolusCommandExecutionSubject = null;
 
         disposables.add(Completable.complete() //
-                .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
+                .delay(estimatedRemainingBolusDuration.getMillis(), TimeUnit.MILLISECONDS) //
                 .observeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataMutex) {
@@ -432,9 +432,8 @@ public class OmnipodManager {
                                 StatusResponse statusResponse = getPodStatus();
                                 if (statusResponse.getDeliveryStatus().isBolusing()) {
                                     throw new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
-                                } else {
-                                    break;
                                 }
+                                break;
                             } catch (PodFaultException ex) {
                                 // Subtract units not delivered in case of a Pod failure
                                 bolusNotDelivered = ex.getFaultEvent().getBolusNotDelivered();
@@ -551,9 +550,9 @@ public class OmnipodManager {
         try {
             PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podStateManager, PodInfoType.RECENT_PULSE_LOG));
             PodInfoRecentPulseLog pulseLogInfo = (PodInfoRecentPulseLog) podInfoResponse.getPodInfo();
-            aapsLogger.info(LTag.PUMPCOMM, "Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
+            aapsLogger.info(LTag.PUMPCOMM, "Read pulse log from the pod: {}", pulseLogInfo.toString());
         } catch (Exception ex) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Failed to retrieve pulse log from the pod", ex);
+            aapsLogger.warn(LTag.PUMPCOMM, "Failed to read pulse log", ex);
         }
 
         try {
@@ -595,7 +594,7 @@ public class OmnipodManager {
         logStartingCommandExecution("verifyCommand");
         try {
             return supplier.get();
-        } catch (Exception originalException) {
+        } catch (OmnipodException originalException) {
             if (isCertainFailure(originalException)) {
                 throw originalException;
             } else {
@@ -608,18 +607,11 @@ public class OmnipodManager {
 
                     return statusResponse;
                 } catch (NonceOutOfSyncException verificationException) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
-
-                    if (originalException instanceof OmnipodException) {
-                        ((OmnipodException) originalException).setCertainFailure(true);
-                        throw originalException;
-                    } else {
-                        OmnipodException newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, originalException);
-                        newException.setCertainFailure(true);
-                        throw newException;
-                    }
+                    aapsLogger.info(LTag.PUMPCOMM, "Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
+                    originalException.setCertainFailure(true);
+                    throw originalException;
                 } catch (Exception verificationException) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Command unresolved (UNCERTAIN_FAILURE)", verificationException);
+                    aapsLogger.warn(LTag.PUMPCOMM, "Command unresolved (UNCERTAIN_FAILURE)", verificationException);
                     throw originalException;
                 }
             }

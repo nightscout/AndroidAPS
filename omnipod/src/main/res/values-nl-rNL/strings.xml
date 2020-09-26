@@ -10,13 +10,11 @@
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433,91 MHz)</string>
     <!-- Omnipod - Error -->
-    <string name="omnipod_error_illegal_init_action_type">Ongeldig PodInitActionType: %1$s</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Er is een onverwachte fout opgetreden. Rapporteer dit alsjeblieft! (type: %1$s).</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Communicatie mislukt: er is een onvoorziene fout opgetreden. Rapporteer dit alsjeblieft!</string>
+    <string name="omnipod_error_communication_failed_unexpected_exception">Communicatie mislukt: er is een onvoorziene fout opgetreden. Rapporteer dit alsjeblieft!</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_init_pod">Initialiseer Pod</string>
+    <string name="omnipod_button_init_pod">Initialiseer Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Deactiveer Pod</string>
-    <string name="omnipod_cmd_pod_history_na">Pod Historie momenteel niet beschikbaar.</string>
+    <string name="omnipod_history_history_not_available">Pod Historie momenteel niet beschikbaar.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Vul de Pod</string>
     <string name="omnipod_init_pod_wizard_step2_title">Uitvullen</string>
     <string name="omnipod_init_pod_wizard_step3_title">Plaats de Pod</string>

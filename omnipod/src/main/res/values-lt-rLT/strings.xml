@@ -18,12 +18,11 @@
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_error_illegal_init_action_type">Neteisingas inicijavimo tipas:%1$s</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Įvyko netikėta klaida. Prašome pranešti! (tipas: %1$s).</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Ryšio klaida: įvyko netikėta klaida. Prašome pranešti!</string>
+    <string name="omnipod_error_communication_failed_unexpected_exception">Ryšio klaida: įvyko netikėta klaida. Prašome pranešti!</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_init_pod">Inicijuoti POD</string>
+    <string name="omnipod_button_init_pod">Inicijuoti POD</string>
     <string name="omnipod_cmd_deactivate_pod">Išjungti POD</string>
-    <string name="omnipod_cmd_pod_history_na">POD istorija šiuo metu nėra prieinama.</string>
+    <string name="omnipod_history_history_not_available">POD istorija šiuo metu nėra prieinama.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Užpildyti POD</string>
     <string name="omnipod_init_pod_wizard_step2_title">Užpildymas</string>
     <string name="omnipod_init_pod_wizard_step3_title">Prijunkite POD</string>
