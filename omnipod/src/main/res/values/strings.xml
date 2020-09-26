@@ -189,6 +189,7 @@
 
     <!-- Omnipod - Buttons -->
     <string name="omnipod_button_init_pod">Init Pod</string>
+    <string name="omnipod_button_replace_pod">Replace Pod (NEW)</string>
     <string name="omnipod_button_deactivate_pod">Deactivate Pod</string>
     <string name="omnipod_button_discard_pod">Discard Pod</string>
     <string name="omnipod_button_set_time">Set time</string>

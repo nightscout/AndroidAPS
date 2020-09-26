@@ -8,6 +8,6 @@ class WizardActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.omnipod_wizard_activity) // TODO: replace with DataBindingUtil.setContentView
+        setContentView(R.layout.omnipod_replace_pod_wizard_activity) // TODO: replace with DataBindingUtil.setContentView
     }
 }

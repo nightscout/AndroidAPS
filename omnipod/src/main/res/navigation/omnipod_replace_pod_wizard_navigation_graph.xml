@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/omnipod_replace_pod_navigation_graph"
+    app:startDestination="@id/deactivatePodInfoFragment">
+    <fragment
+        android:id="@+id/deactivatePodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.DeactivatePodInfoFragment"
+        android:label="DeactivatePodInfoFragment" >
+        <action
+            android:id="@+id/action_deactivatePodInfoFragment_to_deactivatePodActionFragment"
+            app:destination="@id/deactivatePodActionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deactivatePodActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action.DeactivatePodActionFragment"
+        android:label="DeactivatePodActionFragment" >
+        <action
+            android:id="@+id/action_deactivatePodActionFragment_to_podDeactivatedInfoFragment"
+            app:destination="@id/podDeactivatedInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/podDeactivatedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.PodDeactivatedInfoFragment"
+        android:label="PodDeactivatedInfoFragment" >
+        <action
+            android:id="@+id/action_podDeactivatedInfoFragment_to_fillPodInfoFragment"
+            app:destination="@id/fillPodInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fillPodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.FillPodInfoFragment"
+        android:label="FillPodInfoFragment" >
+        <action
+            android:id="@+id/action_fillPodInfoFragment_to_pairAndPrimePodActionFragment"
+            app:destination="@id/pairAndPrimePodActionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pairAndPrimePodActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action.PairAndPrimePodActionFragment"
+        android:label="PairAndPrimePodActionFragment" >
+        <action
+            android:id="@+id/action_pairAndPrimePodActionFragment_to_attachPodInfoFragment"
+            app:destination="@id/attachPodInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/attachPodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.AttachPodInfoFragment"
+        android:label="AttachPodInfoFragment" >
+        <action
+            android:id="@+id/action_attachPodInfoFragment_to_insertCannulaActionFragment"
+            app:destination="@id/insertCannulaActionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/insertCannulaActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action.InsertCannulaActionFragment"
+        android:label="InsertCannulaActionFragment" >
+        <action
+            android:id="@+id/action_insertCannulaActionFragment_to_podReplacedInfoFragment"
+            app:destination="@id/podReplacedInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/podReplacedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.PodReplacedInfoFragment"
+        android:label="PodReplacedInfoFragment" />
+</navigation>

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2
+package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.viewmodel
 
 import androidx.lifecycle.ViewModel
 import info.nightscout.androidaps.logging.AAPSLogger

@@ -7,8 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.WizardFragment1
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.WizardViewModel1
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.WizardFragment1
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.viewmodel.WizardViewModel1
 import javax.inject.Provider
 
 @Module
