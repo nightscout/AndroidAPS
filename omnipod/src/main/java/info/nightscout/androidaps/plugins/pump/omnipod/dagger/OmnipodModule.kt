@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitAct
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitPodTask
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.PodInfoFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.removepod.RemoveActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.WizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.ReplacePodWizardActivity
 
 @Module
 @Suppress("unused")
@@ -26,7 +26,7 @@ abstract class OmnipodModule {
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [OmnipodWizardModule::class])
-    abstract fun contributesWizardActivity(): WizardActivity
+    abstract fun contributesWizardActivity(): ReplacePodWizardActivity
 
     // Fragments
     @ContributesAndroidInjector abstract fun initActionFragment(): InitActionFragment

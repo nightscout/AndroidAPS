@@ -1,20 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.FragmentBase
 
-abstract class ActionFragmentBase : DaggerFragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.omnipod_replace_pod_wizard_action_page_fragment, container, false)
+abstract class ActionFragmentBase : FragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -22,4 +14,8 @@ abstract class ActionFragmentBase : DaggerFragment() {
     }
 
     abstract fun getText(): String
+
+    override fun getLayout(): Int {
+        return R.layout.omnipod_replace_pod_wizard_action_page_fragment
+    }
 }

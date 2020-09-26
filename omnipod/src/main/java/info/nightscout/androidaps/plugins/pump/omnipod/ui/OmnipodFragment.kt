@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateMa
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.*
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.WizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.ReplacePodWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
@@ -94,7 +94,7 @@ class OmnipodFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         omnipod_button_replace_pod.setOnClickListener {
-            startActivity(Intent(context, WizardActivity::class.java))
+            startActivity(Intent(context, ReplacePodWizardActivity::class.java))
         }
 
         omnipod_button_pod_mgmt.setOnClickListener {

@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManage
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.FullInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.ShortInitPodWizardModel
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.WizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.ReplacePodWizardActivity
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -58,7 +58,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         }
 
         initpod_replace_pod.setOnClickListener {
-            val myIntent = Intent(this@PodManagementActivity, WizardActivity::class.java)
+            val myIntent = Intent(this@PodManagementActivity, ReplacePodWizardActivity::class.java)
             this@PodManagementActivity.startActivity(myIntent)
         }
 

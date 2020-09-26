@@ -9,7 +9,7 @@
 
         <activity android:name=".ui.PodManagementActivity" />
         <activity android:name=".ui.PodHistoryActivity" />
-        <activity android:name=".ui.wizard2.WizardActivity" />
+        <activity android:name=".ui.wizard2.ReplacePodWizardActivity" />
         <activity
             android:name="com.atech.android.library.wizardpager.WizardPagerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
