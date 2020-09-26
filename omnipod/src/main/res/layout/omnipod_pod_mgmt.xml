@@ -78,7 +78,7 @@
                 android:text="" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/initpod_init_pod_new"
+                android:id="@+id/initpod_replace_pod"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

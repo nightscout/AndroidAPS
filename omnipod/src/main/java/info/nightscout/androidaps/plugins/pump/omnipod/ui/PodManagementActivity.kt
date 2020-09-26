@@ -57,7 +57,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
             initPodAction()
         }
 
-        initpod_init_pod_new.setOnClickListener {
+        initpod_replace_pod.setOnClickListener {
             val myIntent = Intent(this@PodManagementActivity, WizardActivity::class.java)
             this@PodManagementActivity.startActivity(myIntent)
         }

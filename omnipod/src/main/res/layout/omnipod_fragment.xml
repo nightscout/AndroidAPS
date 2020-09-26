@@ -751,6 +751,17 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/omnipod_button_replace_pod"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_actions_refill"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/omnipod_button_replace_pod" />
+
+                <Button
                     android:id="@+id/omnipod_button_refresh_status"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
