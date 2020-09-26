@@ -4,13 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <TextView
+        android:id="@+id/omnipod_wizard_info_page_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/omnipod_wizard_info_page_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
