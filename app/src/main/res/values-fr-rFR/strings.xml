@@ -290,7 +290,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_extendedcancelfailed">Échec de l\'annulation du Bolus étendu</string>
     <string name="smscommunicator_unknowncommand">Commande inconnue ou mauvaise réponse</string>
     <string name="quickwizard">Assistant Rapide</string>
-    <string name="quickwizardsettings">Paramètres de l\'Assistant Rapide</string>
+    <string name="quickwizardsettings">Assistant Rapide</string>
     <string name="overview_editquickwizard_buttontext">Texte du bouton :</string>
     <string name="overview_editquickwizard_carbs">Glucides:</string>
     <string name="overview_editquickwizard_valid">Valide:</string>
