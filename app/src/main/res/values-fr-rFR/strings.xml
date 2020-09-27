@@ -475,7 +475,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="xdripstatus">Barre d\'état pour xDrip (Montre)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Afficher l’Impact Glycémie</string>
-    <string name="wear_showbgi_summary">Ajouter l’IG sur la vue générale</string>
+    <string name="wear_showbgi_summary">Ajouter l’IGly sur la vue générale</string>
     <string name="ns_noupload">Pas de téléchargement vers NS</string>
     <string name="ns_noupload_summary">Toutes les données envoyées à NS sont abandonnées. AAPS est connecté à NS mais aucun changement n’est fait dans NS</string>
     <string name="overview_extendedbolus_cancel_button">Annuler Bolus étendu</string>
