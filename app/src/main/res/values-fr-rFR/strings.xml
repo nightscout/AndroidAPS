@@ -306,7 +306,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="primefill">Amorcer/Remplir</string>
     <string name="fillwarning">Veuillez à ce que la quantité corresponde aux caractéristiques de votre cathéter !</string>
     <string name="othersettings_title">Autres</string>
-    <string name="fillbolus_title">Quantité d\'insuline par défaut pour Amorcer/Remplir</string>
+    <string name="fillbolus_title">Insuline par défaut pour Amorcer/Remplir</string>
     <string name="button1">Bouton 1</string>
     <string name="button2">Bouton 2</string>
     <string name="button3">Bouton 3</string>
