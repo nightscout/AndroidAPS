@@ -160,8 +160,10 @@ public class ATProfile {
             else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
                 json.put("curve","rapid-acting");
             else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
-                json.put("curve", "bilinear");
-                json.put("insulinpeaktime",sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75));
+                int peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75);
+                json.put("curve", peaktime > 50 ? "rapid-acting" : "ultra-rapid");
+                json.put("useCustomPeakTime",true);
+                json.put("insulinPeakTime",peaktime);
             }
             jsonString= json.toString(2).replace("\\/", "/");
 
