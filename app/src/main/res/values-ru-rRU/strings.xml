@@ -478,7 +478,7 @@
     <string name="ns_noupload">данные не передаются в NS</string>
     <string name="ns_noupload_summary">данные передаваемые в NS не доходят. AAPS соединяется с NS но изменения туда не вносятся</string>
     <string name="overview_extendedbolus_cancel_button">Отмена удлиненного болюса</string>
-    <string name="careportal_sensorage_label">сенсор пропаботал</string>
+    <string name="careportal_sensorage_label">Сенсор проработал</string>
     <string name="careportal_canulaage_label">Катетер помпы проработал</string>
     <string name="careportal_insulinage_label">Инсулин проработал</string>
     <string name="doprofileswitch">Переключить профиль</string>
@@ -775,7 +775,7 @@
     <string name="value_unavailable_short">н/д</string>
     <string name="virtualpump_type">Тип виртуальной помпы</string>
     <string name="virtualpump_definition">Определение помпы</string>
-    <string name="virtualpump_pump_def">Болюс: Шаг =%1$s\nПродленный Болюс: [Шаг =%2$s, Длительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\ nTBR: %6$s (на %7$s), Длительность =%8$sмин -%9$sh\n%10$s</string>
+    <string name="virtualpump_pump_def">Болюс: Шаг =%1$s\nРастянутый Болюс: [Шаг =%2$s, Продолжительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\ nВБС: %6$s (на %7$s), Продолжительность =%8$sмин -%9$sh\n%10$s</string>
     <string name="ns_autobackfill_title">Автозаполнение пропущенных данных СК</string>
     <string name="wear_wizard_settings">Параметры мастера настройки смарт-часов wear</string>
     <string name="wear_wizard_settings_summary">Расчеты, включены в результат мастера настройки смарт-часов wear:</string>
