@@ -2,4 +2,5 @@
 <resources>
     <color name="black_overlay">#66000000</color>
     <color name="ribbonWarning">#f4d700</color>
+    <color name="replacePodWizardProgressBar">#0099CC</color>
 </resources>

@@ -6,4 +6,8 @@ class AttachPodInfoFragment : InfoFragmentBase() {
     override fun getText(): String = "Attach the Pod"
 
     override fun getNextPageActionId(): Int = R.id.action_attachPodInfoFragment_to_insertCannulaActionFragment
+
+    override fun getTitle(): String = "Attach Pod"
+
+    override fun getIndex(): Int = 6
 }

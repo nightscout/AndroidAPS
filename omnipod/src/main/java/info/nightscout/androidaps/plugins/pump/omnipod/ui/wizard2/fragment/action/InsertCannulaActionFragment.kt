@@ -6,4 +6,8 @@ class InsertCannulaActionFragment : ActionFragmentBase() {
     override fun getText(): String = "[insert cannula]"
 
     override fun getNextPageActionId(): Int = R.id.action_insertCannulaActionFragment_to_podReplacedInfoFragment
+
+    override fun getTitle(): String = "Insert cannula"
+
+    override fun getIndex(): Int = 7
 }

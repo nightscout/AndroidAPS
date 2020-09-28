@@ -15,7 +15,7 @@ abstract class ActionFragmentBase : FragmentBase() {
 
     abstract fun getText(): String
 
-    override fun getLayout(): Int {
+    override fun getLayoutId(): Int {
         return R.layout.omnipod_replace_pod_wizard_action_page_fragment
     }
 }

@@ -6,4 +6,8 @@ class PairAndPrimePodActionFragment : ActionFragmentBase() {
     override fun getText(): String = "[pair and prime Pod]"
 
     override fun getNextPageActionId(): Int = R.id.action_pairAndPrimePodActionFragment_to_attachPodInfoFragment
+
+    override fun getTitle(): String = "Pair and prime Pod"
+
+    override fun getIndex(): Int = 5
 }

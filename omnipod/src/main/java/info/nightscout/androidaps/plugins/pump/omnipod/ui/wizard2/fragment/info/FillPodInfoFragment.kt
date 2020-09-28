@@ -6,4 +6,8 @@ class FillPodInfoFragment : InfoFragmentBase() {
     override fun getText(): String = "Fill the Pod"
 
     override fun getNextPageActionId(): Int = R.id.action_fillPodInfoFragment_to_pairAndPrimePodActionFragment
+
+    override fun getTitle(): String = "Fill new Pod"
+
+    override fun getIndex(): Int = 4
 }

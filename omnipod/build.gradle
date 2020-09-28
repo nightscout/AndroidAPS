@@ -76,6 +76,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.1.1"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
     implementation "androidx.fragment:fragment:${fragmentVersion}"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'com.google.android.material:material:1.1.0'
 
     implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
@@ -102,6 +103,8 @@ dependencies {
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    implementation 'com.google.android.material:material:1.1.0'
 
     testImplementation 'junit:junit:4.13'
     testImplementation "org.mockito:mockito-core:2.8.47"

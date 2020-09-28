@@ -233,6 +233,10 @@
     <string name="omnipod_wizard_button_cancel">Cancel</string>
     <string name="omnipod_replace_pod_wizard_button_finish">Finish</string>
     <string name="omnipod_replace_pod_wizard_button_next">Next</string>
+    <string name="omnipod_replace_pod_wizard_exit_confirmation">You haven\'t finished replacing your pod yet. Are you sure you want to exit?</string>
+    <string name="omnipod_replace_pod_wizard_replace_pod">Replace Pod</string>
+    <string name="omnipod_yes">Yes</string>
+    <string name="omnipod_no">No</string>
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>

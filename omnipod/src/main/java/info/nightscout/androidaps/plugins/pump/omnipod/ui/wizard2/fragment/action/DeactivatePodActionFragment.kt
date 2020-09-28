@@ -6,4 +6,8 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
     override fun getText(): String = "[deactivate Pod]"
 
     override fun getNextPageActionId(): Int = R.id.action_deactivatePodActionFragment_to_podDeactivatedInfoFragment
+
+    override fun getTitle(): String = "Deactivate Pod"
+
+    override fun getIndex(): Int = 2
 }

@@ -28,4 +28,14 @@
         <item name="android:divider">@android:color/black</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
+
+    <style name="WizardPageTitle">
+        <item name="android:id">@android:id/title</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">@dimen/list_item_padding_left</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#0099CC</item>
+    </style>
 </resources>
