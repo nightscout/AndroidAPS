@@ -508,7 +508,7 @@
     <string name="careportal_pbage_label_short">ВозрБат</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">ЗАГРУЗ</string>
-    <string name="basal_short">БАЗ</string>
+    <string name="basal_short">БАЗАЛ</string>
     <string name="virtualpump_extendedbolus_label_short">УДЛИНН</string>
     <string name="keep_screen_on_title">Не отключать экран</string>
     <string name="keep_screen_on_summary">Не давать системе Android отключать экран. Это увеличит потребление энергии при отключенной сети питания.</string>
