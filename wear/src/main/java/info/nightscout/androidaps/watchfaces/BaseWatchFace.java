@@ -50,7 +50,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public TextView mTime, mHour, mMinute,mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate, mChartTap, mMainMenuTap;
@@ -126,7 +126,10 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 mTime = (TextView) stub.findViewById(R.id.watch_time);
+                mHour = (TextView) stub.findViewById(R.id.hour);
+                mMinute = (TextView) stub.findViewById(R.id.minute);
                 mDay = (TextView) stub.findViewById(R.id.day);
+                mDayName= (TextView) stub.findViewById(R.id.dayname);
                 mMonth = (TextView) stub.findViewById(R.id.month);
                 mDate = (LinearLayout) stub.findViewById(R.id.date_time);
                 mLoop = (TextView) stub.findViewById(R.id.loop);
@@ -468,8 +471,18 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         sHour = sdfHour.format(now);
         sMinute = sdfMinute.format(now);
 
+        if (mHour != null && mMinute != null ) {
+            mHour.setText(sHour);
+            mMinute.setText(sMinute);
+        }
+
         if (mDate != null && mDay != null && mMonth != null) {
             if (sharedPrefs.getBoolean("show_date", false)) {
+                if (mDayName != null ) {
+                    SimpleDateFormat sdfDayName = new SimpleDateFormat("E");
+                    mDayName.setText(sdfDayName.format(now));
+                }
+
                 SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
                 SimpleDateFormat sdfMonth = new SimpleDateFormat("MMM");
                 mDay.setText(sdfDay.format(now));
