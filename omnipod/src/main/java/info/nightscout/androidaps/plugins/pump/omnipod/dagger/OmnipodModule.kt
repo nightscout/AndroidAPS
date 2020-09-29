@@ -9,11 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsPodStateManag
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodManagementActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.initpod.InitPodTask
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.pages.PodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.removepod.RemoveActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.ReplacePodWizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.ChangePodWizardActivity
 
 @Module
 @Suppress("unused")
@@ -26,19 +22,13 @@ abstract class OmnipodModule {
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [OmnipodWizardModule::class])
-    abstract fun contributesWizardActivity(): ReplacePodWizardActivity
-
-    // Fragments
-    @ContributesAndroidInjector abstract fun initActionFragment(): InitActionFragment
-    @ContributesAndroidInjector abstract fun removeActionFragment(): RemoveActionFragment
-    @ContributesAndroidInjector abstract fun podInfoFragment(): PodInfoFragment
+    abstract fun contributesWizardActivity(): ChangePodWizardActivity
 
     // Service
     @ContributesAndroidInjector
     abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
 
     // Data
-    @ContributesAndroidInjector abstract fun initPodTask(): InitPodTask
     @ContributesAndroidInjector abstract fun rlHistoryItemOmnipod(): RLHistoryItemOmnipod
 
     companion object {

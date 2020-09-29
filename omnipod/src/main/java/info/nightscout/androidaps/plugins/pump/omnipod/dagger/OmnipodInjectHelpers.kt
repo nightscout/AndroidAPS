@@ -17,7 +17,6 @@ annotation class OmnipodPluginQualifier
 @MapKey
 internal annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
-
 // TODO: These annotations and Factories could be used globally -> move to core or app
 
 @Suppress("UNCHECKED_CAST")

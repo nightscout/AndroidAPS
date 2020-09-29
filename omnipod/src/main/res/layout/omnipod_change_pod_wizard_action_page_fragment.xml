@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/omnipod_change_pod_wizard_action_page_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:textAppearance="@style/ChangePodWizardText" />
+
+    <ProgressBar
+        android:id="@+id/omnipod_change_pod_wizard_action_progress_indication"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:layout_marginBottom="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/omnipod_change_pod_wizard_action_success"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:layout_marginBottom="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:src="@drawable/ic_toast_check"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/omnipod_change_pod_wizard_action_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:layout_marginBottom="@dimen/omnipod_change_pod_wizard_vertical_spacing"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:textAppearance="@style/ChangePodWizardError"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingEnd="50dp">
+
+        <Button
+            android:id="@+id/omnipod_change_pod_wizard_button_deactivate_pod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/omnipod_change_pod_wizard_button_deactivate_pod"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/omnipod_change_pod_wizard_button_discard_pod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/omnipod_change_pod_wizard_button_discard_pod"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/omnipod_change_pod_wizard_button_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/omnipod_change_pod_wizard_button_retry"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

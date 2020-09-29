@@ -2,32 +2,26 @@
 <resources>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
+    <string name="omnipod_pump_description">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
-    <string name="omnipod_reservoir_left">%1$.2f U restantes</string>
-    <string name="omnipod_reservoir_over50">Más De 50 U</string>
+    <string name="omnipod_overview_reservoir_value">%1$.2f U restantes</string>
+    <string name="omnipod_overview_reservoir_value_over50">Más De 50 U</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
-    <string name="omnipod_error_illegal_init_action_type">Ilegal PodInitActionType: %1$s</string>
-    <string name="omnipod_error_communication_failed_unexpected_exception">La comunicación ha fallado: error inesperado. ¡Por favor, Informe!</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_button_init_pod">Iniciar Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
-    <string name="omnipod_history_history_not_available">Historial del Pod no disponible en el momento.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Llenar el Pod</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Cebado</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Adherir el Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPreparar el sitio de infusión. Retire el capuchón de la aguja del Pod y el adhesivo y aplique el Pod al sitio de perfusión.\n\nSi la cánula se queda fuera, por favor presione <b>Cancel</b> y descarte su Pod.\n\nPress <b>Next</b> para insertar la cánula y comenzar la entrega basal.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Insertar cánula</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Intentando establecer la programación basal inicial e insertar la cánula.\n\nCuando todos los elementos están marcados, puede pulsar <b>Siguiente</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nEl Pod ahora está activo.\n\nSu horario basal ha sido programado y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si usted siente que no lo ha hecho.</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega insulina y desactivará el Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Desactivando el Pod</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, retire el Pod de su cuerpo y desecharlo.</string>
-    <string name="omnipod_init_pod_pair_pod">Emparejar Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Llenado de cánula del Pod</string>
+    <string name="omnipod_change_pod_wizard_fill_pod_title">Llenar el Pod</string>
+    <string name="omnipod_change_pod_wizard_activate_pod_title">Cebado</string>
+    <string name="omnipod_change_pod_wizard_attach_pod_title">Adherir el Pod</string>
+    <string name="omnipod_change_pod_wizard_attach_pod_text">\nPreparar el sitio de infusión. Retire el capuchón de la aguja del Pod y el adhesivo y aplique el Pod al sitio de perfusión.\n\nSi la cánula se queda fuera, por favor presione <b>Cancel</b> y descarte su Pod.\n\nPress <b>Next</b> para insertar la cánula y comenzar la entrega basal.</string>
+    <string name="omnipod_change_pod_wizard_insert_cannula_title">Insertar cánula</string>
+    <string name="omnipod_change_pod_wizard_insert_cannula_text">Intentando establecer la programación basal inicial e insertar la cánula.\n\nCuando todos los elementos están marcados, puede pulsar <b>Siguiente</b>.</string>
+    <string name="omnipod_change_pod_wizard_pod_changed_text">\nEl Pod ahora está activo.\n\nSu horario basal ha sido programado y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si usted siente que no lo ha hecho.</string>
+    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega insulina y desactivará el Pod.</string>
+    <string name="omnipod_change_pod_wizard_deactivating_pod_title">Desactivando el Pod</string>
+    <string name="omnipod_change_pod_wizard_pod_deactivated_text">Pod desactivado.\n\nPor favor, retire el Pod de su cuerpo y desecharlo.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_setup_reminder_reminder">Recordatorio de configuración finalizado</string>
     <string name="omnipod_alert_shutdown_imminent">El apagado es inminente</string>

@@ -22,6 +22,7 @@ import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -38,10 +39,9 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
+import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodHistoryEntryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Deliver
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
@@ -75,7 +76,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLin
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkUnreachableException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
@@ -153,57 +153,61 @@ public class AapsOmnipodManager {
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
     }
 
-    public PumpEnactResult pairAndPrime(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver) {
-        if (podInitActionType != PodInitActionType.PAIR_AND_PRIME_WIZARD_STEP) {
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
-        }
-
+    public PumpEnactResult activateNewPod() {
+        PumpEnactResult result = new PumpEnactResult(injector);
         try {
-            executeCommand(() -> delegate.pairAndPrime().subscribe(res -> //
-                    handleSetupActionResult(podInitActionType, podInitReceiver, res, System.currentTimeMillis(), null)));
+            Boolean res = executeCommand(delegate::pairAndPrime)
+                    .blockingGet();
 
-            return new PumpEnactResult(injector).success(true).enacted(true);
+            result.success(res).enacted(res);
+
+            if (!res) {
+                result.comment(R.string.omnipod_error_failed_to_activate_pod);
+            }
         } catch (Exception ex) {
-            String errorMessage = translateException(ex);
-            podInitReceiver.returnInitTaskStatus(podInitActionType, false, errorMessage);
-            addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.PAIR_AND_PRIME, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            result.success(false).enacted(false).comment(translateException(ex));
         }
+
+        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.ACTIVATE_POD, result.comment, result.success);
+
+        return result;
     }
 
-    public PumpEnactResult setInitialBasalScheduleAndInsertCannula(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
-        if (podInitActionType != PodInitActionType.FILL_CANNULA_SET_BASAL_PROFILE_WIZARD_STEP) {
-            String comment = getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name());
-            podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
-        }
+    public PumpEnactResult insertCannula(Profile profile) {
         if (profile == null) {
             String comment = getStringResource(R.string.omnipod_error_set_initial_basal_schedule_no_profile);
-            podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
+
+        PumpEnactResult result = new PumpEnactResult(injector);
 
         try {
             BasalSchedule basalSchedule = mapProfileToBasalSchedule(profile);
 
-            executeCommand(() -> delegate.insertCannula(basalSchedule, omnipodAlertUtil.getExpirationReminderTimeBeforeShutdown(), omnipodAlertUtil.getLowReservoirAlertUnits()).subscribe(res -> //
-                    handleSetupActionResult(podInitActionType, podInitReceiver, res, System.currentTimeMillis(), profile)));
+            Boolean res = executeCommand(() -> delegate.insertCannula(basalSchedule, omnipodAlertUtil.getExpirationReminderTimeBeforeShutdown(), omnipodAlertUtil.getLowReservoirAlertUnits())) //
+                    .blockingGet();
+
+            result.success(res).enacted(res);
+            if (!res) {
+                result.comment(R.string.omnipod_error_failed_to_insert_cannula);
+            }
         } catch (Exception ex) {
-            String errorMessage = translateException(ex);
-            podInitReceiver.returnInitTaskStatus(podInitActionType, false, errorMessage);
-            addFailureToHistory(PodHistoryEntryType.FILL_CANNULA_SET_BASAL_PROFILE, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            result.success(false).enacted(false).comment(translateException(ex));
         }
 
-        uploadCareportalEvent(System.currentTimeMillis() - 2000, CareportalEvent.PUMPBATTERYCHANGE);
-        uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
-        uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
+        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.comment, result.success);
 
-        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+        if (result.success) {
+            uploadCareportalEvent(System.currentTimeMillis() - 2000, CareportalEvent.PUMPBATTERYCHANGE);
+            uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
+            uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 
-        cancelSuspendedFakeTbrIfExists();
+            sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+            cancelSuspendedFakeTbrIfExists();
+        }
+
+        return result;
     }
 
     public PumpEnactResult configureAlerts(List<AlertConfiguration> alertConfigurations) {
@@ -234,19 +238,17 @@ public class AapsOmnipodManager {
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
 
-    public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
+    public PumpEnactResult deactivatePod() {
         try {
             executeCommand(delegate::deactivatePod);
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
-            podInitReceiver.returnInitTaskStatus(PodInitActionType.DEACTIVATE_POD_WIZARD_STEP, false, errorMessage);
             addFailureToHistory(PodHistoryEntryType.DEACTIVATE_POD, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.DEACTIVATE_POD, null);
         createSuspendedFakeTbrIfNotExists();
-        podInitReceiver.returnInitTaskStatus(PodInitActionType.DEACTIVATE_POD_WIZARD_STEP, true, null);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -297,7 +299,7 @@ public class AapsOmnipodManager {
 
         if (historyEntryType == PodHistoryEntryType.RESUME_DELIVERY) {
             cancelSuspendedFakeTbrIfExists();
-            rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+            sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
         }
         addSuccessToHistory(historyEntryType, profile.getBasalValues());
 
@@ -314,6 +316,9 @@ public class AapsOmnipodManager {
         addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.DISCARD_POD_STATE, null);
 
         createSuspendedFakeTbrIfNotExists();
+
+        sendEvent(new EventOmnipodPumpValuesChanged());
+        rxBus.send(new EventRefreshOverview("Omnipod command: " + OmnipodCommandType.DISCARD_POD, false));
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -694,7 +699,8 @@ public class AapsOmnipodManager {
         return addSuccessToHistory(System.currentTimeMillis(), entryType, data);
     }
 
-    private long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+    private long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object
+            data) {
         return addToHistory(requestTime, entryType, data, true);
     }
 
@@ -702,11 +708,13 @@ public class AapsOmnipodManager {
         return addFailureToHistory(System.currentTimeMillis(), entryType, data);
     }
 
-    private long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+    private long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object
+            data) {
         return addToHistory(requestTime, entryType, data, false);
     }
 
-    private long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
+    private long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data,
+                              boolean success) {
         OmnipodHistoryRecord omnipodHistoryRecord = new OmnipodHistoryRecord(requestTime, entryType.getCode());
 
         if (data != null) {
@@ -723,30 +731,6 @@ public class AapsOmnipodManager {
         databaseHelper.createOrUpdate(omnipodHistoryRecord);
 
         return omnipodHistoryRecord.getPumpId();
-    }
-
-    private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {
-        String comment = null;
-        switch (res.getResultType()) {
-            case FAILURE: {
-                aapsLogger.error(LTag.PUMP, "Setup action failed: illegal setup progress: {}", res.getPodProgressStatus());
-                comment = getStringResource(R.string.omnipod_error_invalid_progress_state, res.getPodProgressStatus());
-            }
-            break;
-            case VERIFICATION_FAILURE: {
-                aapsLogger.error(LTag.PUMP, "Setup action verification failed: caught exception", res.getException());
-                comment = getStringResource(R.string.omnipod_error_setup_action_verification_failed);
-            }
-            break;
-        }
-
-        if (podInitActionType == PodInitActionType.PAIR_AND_PRIME_WIZARD_STEP) {
-            addToHistory(time, PodHistoryEntryType.PAIR_AND_PRIME, comment, res.getResultType().isSuccess());
-        } else {
-            addToHistory(time, PodHistoryEntryType.FILL_CANNULA_SET_BASAL_PROFILE, res.getResultType().isSuccess() ? profile.getBasalValues() : comment, res.getResultType().isSuccess());
-        }
-
-        podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), comment);
     }
 
     private void executeCommand(Runnable runnable) {
@@ -772,7 +756,9 @@ public class AapsOmnipodManager {
             aapsLogger.error(LTag.PUMP, String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager", ((OmnipodException) ex).isCertainFailure()), ex);
             if (ex instanceof PodFaultException) {
                 FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
-                showPodFaultNotification(faultEventCode);
+                if (!(faultEventCode == FaultEventCode.NO_FAULTS && podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED)) {
+                    showPodFaultNotification(faultEventCode);
+                }
             }
         } else {
             aapsLogger.error(LTag.PUMP, "Caught an unexpected non-OmnipodException from OmnipodManager", ex);
@@ -827,10 +813,11 @@ public class AapsOmnipodManager {
     }
 
     private String createPodFaultErrorMessage(FaultEventCode faultEventCode) {
-        String comment;
-        comment = getStringResource(R.string.omnipod_error_pod_fault,
+        if (faultEventCode == FaultEventCode.NO_FAULTS && podStateManager.getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED) {
+            return getStringResource(R.string.omnipod_error_pod_fault_activation_time_exceeded);
+        }
+        return getStringResource(R.string.omnipod_error_pod_fault,
                 ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
-        return comment;
     }
 
     private void sendEvent(Event event) {

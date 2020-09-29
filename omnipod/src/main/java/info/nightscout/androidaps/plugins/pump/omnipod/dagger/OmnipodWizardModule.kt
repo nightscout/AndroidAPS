@@ -7,15 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action.DeactivatePodActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action.InsertCannulaActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.action.PairAndPrimePodActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.AttachPodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.DeactivatePodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.FillPodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.PodDeactivatedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.fragment.info.PodReplacedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard2.viewmodel.WizardViewModel1
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.fragment.action.DeactivatePodActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.fragment.action.InsertCannulaActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.fragment.action.PairAndPrimePodActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.fragment.info.*
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.viewmodel.DeactivatePodActionViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.viewmodel.InsertCannulaActionViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.viewmodel.PairAndPrimePodActionViewModel
 import javax.inject.Provider
 
 @Module
@@ -23,7 +21,6 @@ abstract class OmnipodWizardModule {
 
     companion object {
         @Provides
-        @JvmStatic
         @OmnipodPluginQualifier
         fun providesViewModelFactory(@OmnipodPluginQualifier viewModels: MutableMap<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory {
             return ViewModelFactory(viewModels)
@@ -34,12 +31,22 @@ abstract class OmnipodWizardModule {
     @Binds
     @IntoMap
     @OmnipodPluginQualifier
-    @ViewModelKey(WizardViewModel1::class)
-    internal abstract fun bindWizardViewModel1(viewModel: WizardViewModel1): ViewModel
-    // Add the rest of the view models
+    @ViewModelKey(PairAndPrimePodActionViewModel::class)
+    internal abstract fun pairAndPrimePodActionViewModel(viewModel: PairAndPrimePodActionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @OmnipodPluginQualifier
+    @ViewModelKey(InsertCannulaActionViewModel::class)
+    internal abstract fun insertCannulaActionViewModel(viewModel: InsertCannulaActionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @OmnipodPluginQualifier
+    @ViewModelKey(DeactivatePodActionViewModel::class)
+    internal abstract fun deactivatePodActionViewModel(viewModel: DeactivatePodActionViewModel): ViewModel
 
     // #### FRAGMENTS ##############################################################################
-
     @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun contributesDeactivatePodActionFragment(): DeactivatePodActionFragment
@@ -70,7 +77,11 @@ abstract class OmnipodWizardModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesPodReplacedInfoFragment(): PodReplacedInfoFragment
+    internal abstract fun contributesPodDiscardedInfoFragment(): PodDiscardedInfoFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesPodChangedInfoFragment(): PodChangedInfoFragment
 }
 
 
