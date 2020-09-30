@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
+import android.os.Vibrator;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-
 import androidx.core.content.ContextCompat;
-
+import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchMode;
-
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
@@ -115,14 +114,6 @@ public class RICTxWF01 extends BaseWatchFace {
         /* ToDo  Implement a configurable background image
          *  layoutView.setBackground();
          */
-
-
-        /* ToDo  Implement hourly vibartion
-        Boolean hourlyVibratePref = sharedPrefs.getBoolean("rictxwf01_vibrateHourly", false);
-        Log.i("hourlyVibratePref",Boolean.toString(hourlyVibratePref));
-        */
-
-
     }
 
     protected void setColorLowRes() {
@@ -137,4 +128,19 @@ public class RICTxWF01 extends BaseWatchFace {
         }
     }
 
+
+    @Override
+    protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
+        super.onTimeChanged(oldTime,newTime);
+
+        /* hourly vibration*/
+        Boolean hourlyVibratePref = sharedPrefs.getBoolean("rictxwf01_vibrateHourly", false);
+        if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
+            Log.i("hourlyVibratePref", "true --> " + newTime.toString());
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] vibrationPattern = {0, 300, 150, 150};
+            vibrator.vibrate(vibrationPattern, -1);
+        }
+
+    }
 }
