@@ -282,7 +282,7 @@ class ImportExportPrefs @Inject constructor(
         askToConfirmImport(activity, importFile) { password ->
 
             val format: PrefsFormat = when (importFile.handler) {
-                PrefsFormatsHandler.CLASSIC   -> classicPrefsFormat
+                PrefsFormatsHandler.CLASSIC -> classicPrefsFormat
                 PrefsFormatsHandler.ENCRYPTED -> encryptedPrefsFormat
             }
 
