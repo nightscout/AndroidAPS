@@ -89,6 +89,23 @@
     <string name="omnipod_cmd_pod_history_na">Pod historikken er ikke tilgjengelig for øyeblikket.</string>
     <string name="omnipod_init_pod_wizard_step1_title">Fyll Poden</string>
     <string name="omnipod_init_pod_wizard_step1_desc">\nFyll den nye stilen med nok insulin for 3 dager.\n\nLytt til to pip fra Poden under fyllingen. Disse indikerer at minste mengde 85U er satt inn. Pass på å tømme sprøyten helt, også etter å ha hørt de to pipene.\n\nEtter fylling av Poden, vennligst trykk <b>Neste</b>.\n\n<b>Merk:</b> Ikke fjern Poden\'s beskyttelseshette på dette tidspunktet.\n<b>Merk:</b> vennligst plasser RileyLinken i en stående posisjon og plasser Poden 5-10 cm unna.</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Fylling av insulin i Poden helt ut i injeksjonsnålen</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Prøver å parre med den nye Poden og klargjøre den.\n\nNår alle trinn er merket, kan du trykke <b>Neste</b>.\n\n<b>Merk:</b> plasser RileyLink i en stående posisjon og plasser Poden ac 5-10 cm vekk fra den.</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Fest poden</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nKlargjør infusjonsstedet. Fjern Podens beskyttelseshette og den heftende bakside og fest pumpen til infusjonsstedet.\n\nHvis kanylen stikker ut, trykk <b>Avbryt</b> og forkast tilpasningen.\n\nTrykk <b>Neste</b> for å sette inn kanyle og starte basallevering.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Kanyle blir satt inn</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Prøver å oppdatere første basalprofil og setter inn kanylen.\n\nNår alle punkter er avmerket, kan du trykke <b>Neste</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_title">Informasjon om Pod</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPod\'en er nå aktivt.\n\nDin basalprofil har blitt programmert og kanylen har blitt satt inn.\n\nVennligst kontroller at kanyle er satt inn riktig og erstatt pod\'en din hvis du føler at noe er feil.</string>
+    <string name="omnipod_remove_pod_wizard_step1_title">Deaktiviser Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nTrykk <b>Neste</b> for å deaktivere Pod\'en.\n\n<b>Merk:</b> Dette vil stoppe all insulintilførsel og deaktivere Pod\'en.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Pod\'en deaktiviseres</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Deaktiverer Pod\'en.\n\nNår alle punkter er avmerket, kan du trykke <b>Neste</b>.\n\n<b>Merk:</b> Hvis deaktiveringen kontinuerlig svikter, trykk <b>Avbryt</b> og bruk <b>Forkast Pod</b> valget for å tvinge reset av Pod\'en.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod er deaktivert.\n\nVennligst fjern Pod\'en fra kroppen din og kast den.</string>
+    <string name="omnipod_init_pod_pair_pod">Par Pod</string>
+    <string name="omnipod_init_pod_prime_pod">Klargjør insulintilførsel i Pod</string>
+    <string name="omnipod_init_pod_fill_cannula">Fyll kanyle</string>
+    <string name="omnipod_init_pod_set_basal_profile">Sett basalprofil</string>
     <string name="omnipod_deactivate_pod_cancel_delivery">Avbryt levering</string>
     <string name="omnipod_deactivate_pod_deactivate_pod">Deaktiver Pod</string>
     <!-- Omnipod - Base -->
@@ -140,4 +157,23 @@
     <string name="omnipod_preference_category_alerts">Varsler</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bekreftelse pip</string>
     <string name="omnipod_wizard_button_exit">Avslutt</string>
+    <string name="omnipod_wizard_button_previous">Foregående</string>
+    <string name="omnipod_wizard_button_next">Neste</string>
+    <string name="omnipod_wizard_button_finish">Fullfør</string>
+    <string name="omnipod_history_item_description">Beskrivelse</string>
+    <string name="omnipod_history_item_source">Kildekode</string>
+    <string name="omnipod_history_item_date">Dato</string>
+    <string name="omnipod_history_type">Type:</string>
+    <plurals name="omnipod_minutes">
+        <item quantity="one">%1$d minutt</item>
+        <item quantity="other">%1$d minutter</item>
+    </plurals>
+    <plurals name="omnipod_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="omnipod_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
 </resources>
