@@ -28,7 +28,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_marginStart="2dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="40dp"
             android:layout_toEndOf="@id/alertdialog_icon"
             android:ellipsize="marquee"
             android:focusable="true"
