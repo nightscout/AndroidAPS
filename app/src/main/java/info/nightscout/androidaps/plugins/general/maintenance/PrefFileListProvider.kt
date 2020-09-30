@@ -34,6 +34,7 @@ enum class PrefsImportDir {
 
 @Parcelize
 data class PrefsFile(
+    val name: String,
     val file: File,
     val baseDir: File,
     val dirKind: PrefsImportDir,
@@ -96,7 +97,7 @@ class PrefFileListProvider @Inject constructor(
             val detectedOld = !detectedNew && classicPrefsFormat.isPreferencesFile(it, contents)
             if (detectedNew || detectedOld) {
                 val formatHandler = if (detectedNew) PrefsFormatsHandler.ENCRYPTED else PrefsFormatsHandler.CLASSIC
-                prefFiles.add(PrefsFile(it, path, PrefsImportDir.ROOT_DIR, formatHandler, metadataFor(loadMetadata, formatHandler, contents)))
+                prefFiles.add(PrefsFile(it.name , it, path, PrefsImportDir.ROOT_DIR, formatHandler, metadataFor(loadMetadata, formatHandler, contents)))
             }
         }
 
@@ -104,7 +105,7 @@ class PrefFileListProvider @Inject constructor(
         aapsPath.walk().filter { it.isFile && it.name.endsWith(".json") }.forEach {
             val contents = storage.getFileContents(it)
             if (encryptedPrefsFormat.isPreferencesFile(it, contents)) {
-                prefFiles.add(PrefsFile(it, aapsPath, PrefsImportDir.AAPS_DIR, PrefsFormatsHandler.ENCRYPTED, metadataFor(loadMetadata, PrefsFormatsHandler.ENCRYPTED, contents)))
+                prefFiles.add(PrefsFile(it.name, it, aapsPath, PrefsImportDir.AAPS_DIR, PrefsFormatsHandler.ENCRYPTED, metadataFor(loadMetadata, PrefsFormatsHandler.ENCRYPTED, contents)))
             }
         }
 
