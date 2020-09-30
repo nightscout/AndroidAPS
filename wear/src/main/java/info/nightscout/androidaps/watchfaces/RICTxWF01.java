@@ -138,7 +138,7 @@ public class RICTxWF01 extends BaseWatchFace {
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
             Log.i("hourlyVibratePref", "true --> " + newTime.toString());
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            long[] vibrationPattern = {0, 300, 150, 150};
+            long[] vibrationPattern = {0, 150, 125, 100};
             vibrator.vibrate(vibrationPattern, -1);
         }
 
