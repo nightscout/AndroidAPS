@@ -1156,7 +1156,7 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
-    <string name="smscommunicator_otp_install_info">Installiere auf jedem Folloer-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_provisioning_warning">Diesen Code NICHT ONLINE TEILEN!\nVerwende ihn nur zur Einrichtung der Authenticator App auf den Follower-Phones.</string>
     <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="onconnect">Beim Verbinden</string>
