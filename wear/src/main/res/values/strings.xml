@@ -117,6 +117,18 @@
     <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
     <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
     <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">w</string>
+    <string name="pref_choose_your_style">Choose your style</string>
+    <string name="pref_vibrate_hourly">vibrate hourly</string>
+    <string name="color_name_deeppurple">deep purple</string>
+    <string name="color_name_red">red</string>
+    <string name="color_name_orange">orange</string>
+    <string name="color_name_lime">lime</string>
+    <string name="color_name_indigo">indigo</string>
+    <string name="style_nostyle">no style</string>
+    <string name="style_simplestyle">simple style</string>
+    <string name="color_name_bluegray">blue gray</string>
+    <string name="color_name_lightblue">light blue</string>
+    <string name="style_rainbowstyle">rainbow style</string>
 
 
 </resources>

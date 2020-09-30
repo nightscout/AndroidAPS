@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="rictxwf01_styles_name">
-        <item>Red</item>
-        <item>Purple</item>
-        <item>Indigo</item>
-        <item>Blue</item>
-        <item>Lime</item>
-        <item>Orange</item>
-        <item>BlueGray</item>
-        <item>Rainbow-Style</item>
-        <item>SIMPLE-Style</item>
-        <item>NO-Style</item>
+        <item>@string/color_name_red</item>
+        <item>@string/color_name_deeppurple</item>
+        <item>@string/color_name_indigo</item>
+        <item>@string/color_name_lightblue</item>
+        <item>@string/color_name_lime</item>
+        <item>@string/color_name_orange</item>
+        <item>@string/color_name_bluegray</item>
+        <item>@string/style_rainbowstyle</item>
+        <item>@string/style_simplestyle</item>
+        <item>@string/style_nostyle</item>
     </string-array>
     <string-array name="rictxwf01_styles_values">
         <item>red</item>

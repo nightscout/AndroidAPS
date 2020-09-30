@@ -4,33 +4,33 @@
 
 
     <ListPreference
+        android:key="rictxwf01_frameStyle"
+        android:title="@string/pref_choose_your_style"
         android:defaultValue="red"
         android:entries="@array/rictxwf01_styles_name"
-        android:entryValues="@array/rictxwf01_styles_values"
-        android:key="rictxwf01_frameStyle"
-        android:title="Choose frame color &amp; style" />
+        android:entryValues="@array/rictxwf01_styles_values"/>
 
     <CheckBoxPreference
-        android:defaultValue="true"
         android:key="show_date"
         android:title="@string/pref_show_date"
+        android:defaultValue="true"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <!--  Idea for future implementation  @ToDo Implement Background-Images
     <ListPreference
+        android:key="rictxwf01_backgroundImage"
+        android:title="Background Image"
         android:defaultValue="red"
         android:entries="@array/rictxwf01_backgroundimage_name"
-        android:entryValues="@array/rictxwf01_backgroundimage_values"
-        android:key="rictxwf01_backgroundImage"
-        android:title="Background Image" />
+        android:entryValues="@array/rictxwf01_backgroundimage_values" />
     -->
 
     <!--  Idea for future implementation  @ToDo Implement Hourly Vibration
     <CheckBoxPreference
         android:key="rictxwf01_vibrateHourly"
+        android:title="@string/pref_vibrate_hourly"
         android:defaultValue="false"
-        android:title="Hourly vibrate signal?"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
     -->
