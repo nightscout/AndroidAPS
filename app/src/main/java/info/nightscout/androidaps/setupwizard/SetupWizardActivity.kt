@@ -110,6 +110,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
                 updateButtons()
             }) { fabricPrivacy.logException(it) }
         )
+        updateButtons()
     }
 
     private fun generateLayout() {

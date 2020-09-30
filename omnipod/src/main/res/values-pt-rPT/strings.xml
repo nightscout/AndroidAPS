@@ -2,23 +2,18 @@
 <resources>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Integração de bomba para Omnipod, requer RileyLink (com pelo menos firmware 2.0) dispositivo.</string>
+    <string name="omnipod_pump_description">Integração de bomba para Omnipod, requer RileyLink (com pelo menos firmware 2.0) dispositivo.</string>
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
-    <string name="omnipod_total_delivered">%1$.2f U</string>
-    <string name="omnipod_reservoir_left">%1$.2f U restante</string>
-    <string name="omnipod_reservoir_over50">Mais de 50 U</string>
+    <string name="omnipod_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_overview_reservoir_value">%1$.2f U restante</string>
+    <string name="omnipod_overview_reservoir_value_over50">Mais de 50 U</string>
     <string name="omnipod_warning">Aviso</string>
     <string name="omnipod_pod_status_running">A correr</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
-    <string name="omnipod_error_illegal_init_action_type">PodInitActionType Ilegal: %1$s</string>
-    <string name="omnipod_error_setup_action_verification_failed">A verificação do comando falhou</string>
-    <string name="omnipod_error_invalid_parameters">Falha na comunicação: foram recebidos parâmetros de entrada inválidos</string>
-    <string name="omnipod_error_communication_failed_timeout">Falha na comunicação: tempo limite</string>
-    <string name="omnipod_error_communication_failed_unexpected_exception">Falha na comunicação: ocorreu um erro inesperado. Por favor, reporte!</string>
     <string name="omnipod_error_crc_mismatch">Falha na comunicação: mensagem de falha de verificação de integridade</string>
     <string name="omnipod_error_invalid_packet_type">Falha na comunicação: recebeu um pacote inválido do Pod</string>
     <string name="omnipod_error_invalid_progress_state">Falha na comunicação: o Pod está em um estado errado</string>
@@ -32,26 +27,21 @@
     <string name="omnipod_error_pod_fault">Uma falha de Pod (%1$03d %2$s) foi detectada. Por favor, desactive o Pod e inicie um novo</string>
     <string name="omnipod_error_pod_returned_error_response">Falha na comunicação: o Pod devolveu uma resposta de erro</string>
     <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_button_init_pod">Iniciar Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, HC=%2$.1f g</string>
-    <string name="omnipod_history_history_not_available">Histórico do Pod não disponível no momento.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Encher o Pod</string>
-    <string name="omnipod_init_pod_wizard_step2_title">A Purgar</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Anexar o Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e fixe o Pod no local de infusão.\n\nSe a canula sair, por favor, pressione <b>Cancelar</b> e descarte o seu Pod.\n\nPressione <b>Próximo</b> para inserir a canula e começar a administração da basal.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">A inserir canula</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">A tentar definir um plano da basal inicial e inserir canula.\n\nQuando todos os itens estiverem verificados, pode pressionar <b>Próximo</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Info Pod</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nO Pod está agora activo.\n\nO seu plano de basal foi programado e a canula foi inserida.\n\nPor favor, verifique se a canula foi inserida correctamente e substitua o seu Pod se você se sente que não.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Desactivar Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nPressione <b>Próximo</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">A Desactivar Pod</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
-    <string name="omnipod_init_pod_pair_pod">Emparelhar Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Purgar Pod</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_change_pod_wizard_fill_pod_title">Encher o Pod</string>
+    <string name="omnipod_change_pod_wizard_activate_pod_title">A Purgar</string>
+    <string name="omnipod_change_pod_wizard_attach_pod_title">Anexar o Pod</string>
+    <string name="omnipod_change_pod_wizard_attach_pod_text">\nPrepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e fixe o Pod no local de infusão.\n\nSe a canula sair, por favor, pressione <b>Cancelar</b> e descarte o seu Pod.\n\nPressione <b>Próximo</b> para inserir a canula e começar a administração da basal.</string>
+    <string name="omnipod_change_pod_wizard_insert_cannula_title">A inserir canula</string>
+    <string name="omnipod_change_pod_wizard_insert_cannula_text">A tentar definir um plano da basal inicial e inserir canula.\n\nQuando todos os itens estiverem verificados, pode pressionar <b>Próximo</b>.</string>
+    <string name="omnipod_change_pod_wizard_pod_changed_title">Info Pod</string>
+    <string name="omnipod_change_pod_wizard_pod_changed_text">\nO Pod está agora activo.\n\nO seu plano de basal foi programado e a canula foi inserida.\n\nPor favor, verifique se a canula foi inserida correctamente e substitua o seu Pod se você se sente que não.</string>
+    <string name="omnipod_change_pod_wizard_deactivate_pod_title">Desactivar Pod</string>
+    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nPressione <b>Próximo</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
+    <string name="omnipod_change_pod_wizard_deactivating_pod_title">A Desactivar Pod</string>
+    <string name="omnipod_change_pod_wizard_pod_deactivated_text">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>
@@ -60,18 +50,14 @@
     <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
     <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>
     <string name="omnipod_alert_unknown_alert">Alerta desconhecido</string>
-    <string name="omnipod_button_riley_link_stats">Estatísticas RL</string>
-    <string name="omnipod_errors">Erros</string>
-    <string name="omnipod_confirmation_basal_profile_not_set_is_same">Perfil Basal é o mesmo, então não será definido novamente.</string>
-    <string name="omnipod_button_refresh">Actualizar</string>
-    <string name="omnipod_button_suspend_delivery">Suspender</string>
-    <string name="omnipod_error_uncertain_failure">Falha incerta</string>
+    <string name="omnipod_overview_button_riley_link_stats">Estatísticas RL</string>
+    <string name="omnipod_overview_errors">Erros</string>
+    <string name="omnipod_overview_button_refresh">Actualizar</string>
+    <string name="omnipod_overview_button_suspend_delivery">Suspender</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Outro</string>
     <string name="omnipod_preference_category_alerts">Alertas</string>
-    <string name="omnipod_wizard_button_exit">Sair</string>
-    <string name="omnipod_wizard_button_previous">Anterior</string>
-    <string name="omnipod_wizard_button_next">Seguinte</string>
+    <string name="omnipod_change_pod_wizard_button_next">Seguinte</string>
     <string name="omnipod_history_item_description">Descrição</string>
     <string name="omnipod_history_item_source">Fonte</string>
     <string name="omnipod_history_item_date">Data</string>

@@ -13,8 +13,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R;
  */
 public enum PodHistoryEntryType {
 
-    PAIR_AND_PRIME(1, R.string.omnipod_init_pod_wizard_step2_title, PumpHistoryEntryGroup.Prime),
-    FILL_CANNULA_SET_BASAL_PROFILE(2, R.string.omnipod_init_pod_wizard_step4_title, PumpHistoryEntryGroup.Prime),
+    ACTIVATE_POD(1, R.string.omnipod_cmd_activate_pod, PumpHistoryEntryGroup.Prime),
+    INSERT_CANNULA(2, R.string.omnipod_cmd_insert_cannula, PumpHistoryEntryGroup.Prime),
     DEACTIVATE_POD(3, R.string.omnipod_cmd_deactivate_pod, PumpHistoryEntryGroup.Prime),
     DISCARD_POD_STATE(4, R.string.omnipod_cmd_discard_pod, PumpHistoryEntryGroup.Prime),
 
