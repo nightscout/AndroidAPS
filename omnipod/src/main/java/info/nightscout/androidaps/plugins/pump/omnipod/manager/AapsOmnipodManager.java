@@ -153,7 +153,7 @@ public class AapsOmnipodManager {
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
     }
 
-    public PumpEnactResult activateNewPod() {
+    public PumpEnactResult initializePod() {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
             Boolean res = executeCommand(delegate::pairAndPrime)
@@ -162,13 +162,13 @@ public class AapsOmnipodManager {
             result.success(res).enacted(res);
 
             if (!res) {
-                result.comment(R.string.omnipod_error_failed_to_activate_pod);
+                result.comment(R.string.omnipod_error_failed_to_initialize_pod);
             }
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
         }
 
-        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.ACTIVATE_POD, result.comment, result.success);
+        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INITIALIZE_POD, result.comment, result.success);
 
         return result;
     }
@@ -313,7 +313,7 @@ public class AapsOmnipodManager {
     public PumpEnactResult discardPodState() {
         podStateManager.discardState();
 
-        addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.DISCARD_POD_STATE, null);
+        addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.DISCARD_POD, null);
 
         createSuspendedFakeTbrIfNotExists();
 
