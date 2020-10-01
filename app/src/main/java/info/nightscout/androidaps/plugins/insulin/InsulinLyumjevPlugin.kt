@@ -10,11 +10,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Created by adrian on 14/08/17.
- */
 @Singleton
-class InsulinOrefRapidActingPlugin @Inject constructor(
+class InsulinLyumjevPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     profileFunction: ProfileFunction,
@@ -22,25 +19,17 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
 ) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
 
 
-    override fun getId(): Int {
-        return InsulinInterface.OREF_RAPID_ACTING
-    }
+    override fun getId(): Int = InsulinInterface.OREF_LYUMJEV
 
-    override fun getFriendlyName(): String {
-        return resourceHelper.gs(R.string.rapid_acting_oref)
-    }
+    override fun getFriendlyName(): String = resourceHelper.gs(R.string.lyumjev)
 
-    override fun commentStandardText(): String {
-        return resourceHelper.gs(R.string.fastactinginsulincomment)
-    }
+    override fun commentStandardText(): String = resourceHelper.gs(R.string.lyumjev)
 
-    override val peak = 75
+    override val peak = 45
 
     init {
         pluginDescription
-            .pluginName(R.string.rapid_acting_oref)
-            .description(R.string.description_insulin_rapid)
-            .setDefault()
-            .enableByDefault(true)
+            .pluginName(R.string.lyumjev)
+            .description(R.string.description_insulin_lyumjev)
     }
 }
