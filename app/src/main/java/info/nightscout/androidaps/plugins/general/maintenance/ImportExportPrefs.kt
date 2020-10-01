@@ -167,7 +167,7 @@ class ImportExportPrefs @Inject constructor(
         if (!prefsEncryptionIsDisabled() && !assureMasterPasswordSet(activity, R.string.nav_export)) return
 
         TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_export),
-            resourceHelper.gs(R.string.export_to) + " " + fileToExport + " ?",
+            resourceHelper.gs(R.string.export_to) + " " + fileToExport.name + " ?",
             resourceHelper.gs(R.string.password_preferences_encrypt_prompt), {
             askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
         }, null, R.drawable.ic_header_export)
@@ -177,9 +177,8 @@ class ImportExportPrefs @Inject constructor(
 
         if (fileToImport.handler == PrefsFormatsHandler.ENCRYPTED) {
             if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
-
             TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_import),
-                resourceHelper.gs(R.string.import_from) + " " + fileToImport.file + " ?",
+                resourceHelper.gs(R.string.import_from) + " " + fileToImport.name + " ?",
                 resourceHelper.gs(R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import)
@@ -283,7 +282,7 @@ class ImportExportPrefs @Inject constructor(
         askToConfirmImport(activity, importFile) { password ->
 
             val format: PrefsFormat = when (importFile.handler) {
-                PrefsFormatsHandler.CLASSIC   -> classicPrefsFormat
+                PrefsFormatsHandler.CLASSIC -> classicPrefsFormat
                 PrefsFormatsHandler.ENCRYPTED -> encryptedPrefsFormat
             }
 
