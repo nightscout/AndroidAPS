@@ -949,9 +949,10 @@
     <string name="bgsourcesetup">Configure BG source</string>
     <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Waiting for RileyLink connection\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Waiting for RileyLink connection…\n</string>
+    <string name="setupwizard_pump_waiting_for_pod_change">Waiting for Pod change…\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been initialized.\n</string>
-    <string name="setupwizard_pump_omnipod_init_pod">Init Pod</string>
+    <string name="setupwizard_pump_omnipod_change_pod">Change Pod</string>
     <string name="startobjective">Start your first objective</string>
     <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>

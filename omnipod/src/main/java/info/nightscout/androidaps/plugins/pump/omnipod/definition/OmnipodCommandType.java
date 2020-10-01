@@ -6,8 +6,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R;
  * Created by andy on 4.8.2019
  */
 public enum OmnipodCommandType {
-    PAIR_AND_PRIME_POD(R.string.omnipod_cmd_pair_and_prime), // First step of Pod activation
-    FILL_CANNULA_AND_SET_BASAL_PROFILE(R.string.omnipod_cmd_fill_cannula_set_basal_profile), // Second step of Pod activation
+    ACTIVATE_POD(R.string.omnipod_cmd_activate_pod), // First step of Pod change
+    INSERT_CANNULA(R.string.omnipod_cmd_insert_cannula), // Second step of Pod change
     DEACTIVATE_POD(R.string.omnipod_cmd_deactivate_pod), //
     SET_BASAL_PROFILE(R.string.omnipod_cmd_set_basal_schedule), //
     SET_BOLUS(R.string.omnipod_cmd_set_bolus), //

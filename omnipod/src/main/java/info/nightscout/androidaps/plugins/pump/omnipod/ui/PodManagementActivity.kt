@@ -4,11 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
-import androidx.fragment.app.FragmentStatePagerAdapter
-import com.atech.android.library.wizardpager.WizardPagerActivity
-import com.atech.android.library.wizardpager.WizardPagerContext
-import com.atech.android.library.wizardpager.data.WizardPagerSettings
-import com.atech.android.library.wizardpager.defs.WizardStepsWayType
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -16,20 +11,17 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.R
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.FullInitPodWizardModel
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.RemovePodWizardModel
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.model.ShortInitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.ChangePodWizardActivity
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
+import kotlinx.android.synthetic.main.omnipod_pod_management.*
 import javax.inject.Inject
 
 /**
@@ -50,21 +42,18 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.omnipod_pod_mgmt)
+        setContentView(R.layout.omnipod_pod_management)
 
-        initpod_init_pod.setOnClickListener {
-            initPodAction()
+        omnipod_pod_management_button_change_pod.setOnClickListener {
+            val myIntent = Intent(this@PodManagementActivity, ChangePodWizardActivity::class.java)
+            this@PodManagementActivity.startActivity(myIntent)
         }
 
-        initpod_remove_pod.setOnClickListener {
-            deactivatePodAction()
-        }
-
-        initpod_reset_pod.setOnClickListener {
+        omnipod_pod_management_button_discard_pod.setOnClickListener {
             discardPodAction()
         }
 
-        initpod_pod_history.setOnClickListener {
+        omnipod_pod_management_button_pod_history.setOnClickListener {
             showPodHistory()
         }
     }
@@ -88,57 +77,10 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         disposables.clear()
     }
 
-    private fun initPodAction() {
-
-        val pagerSettings = WizardPagerSettings()
-        pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
-        pagerSettings.setFinishStringResourceId(R.string.close)
-        pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
-        pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
-        pagerSettings.setBackStringResourceId(R.string.cancel)
-        pagerSettings.pagerAdapterBehavior = FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-
-        val wizardPagerContext = WizardPagerContext.getInstance()
-
-        wizardPagerContext.clearContext()
-        wizardPagerContext.pagerSettings = pagerSettings
-        val isFullInit = !podStateManager.isPodInitialized || podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)
-        if (isFullInit) {
-            wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
-        } else {
-            wizardPagerContext.wizardModel = ShortInitPodWizardModel(applicationContext)
-        }
-
-        val myIntent = Intent(this@PodManagementActivity, WizardPagerActivity::class.java)
-        this@PodManagementActivity.startActivity(myIntent)
-    }
-
-    private fun deactivatePodAction() {
-        val pagerSettings = WizardPagerSettings()
-
-        pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
-        pagerSettings.setFinishStringResourceId(R.string.close)
-        pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
-        pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
-        pagerSettings.setBackStringResourceId(R.string.cancel)
-        pagerSettings.pagerAdapterBehavior = FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-
-        val wizardPagerContext = WizardPagerContext.getInstance();
-
-        wizardPagerContext.clearContext()
-        wizardPagerContext.pagerSettings = pagerSettings
-        wizardPagerContext.wizardModel = RemovePodWizardModel(applicationContext)
-
-        val myIntent = Intent(this@PodManagementActivity, WizardPagerActivity::class.java)
-        this@PodManagementActivity.startActivity(myIntent)
-
-    }
-
     private fun discardPodAction() {
         OKDialog.showConfirmation(this,
-            resourceHelper.gs(R.string.omnipod_discard_pod_state_confirmation), Thread {
+            resourceHelper.gs(R.string.omnipod_pod_management_discard_pod_state_confirmation), Thread {
             aapsOmnipodManager.discardPodState()
-            rxBus.send(EventOmnipodPumpValuesChanged())
         })
     }
 
@@ -147,20 +89,17 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     private fun refreshButtons() {
-        initpod_init_pod.isEnabled = !podStateManager.isPodActivationCompleted
-        initpod_remove_pod.isEnabled = podStateManager.isPodInitialized
-        initpod_reset_pod.isEnabled = podStateManager.hasPodState()
+        omnipod_pod_management_button_change_pod.isEnabled = true
+        omnipod_pod_management_button_discard_pod.isEnabled = podStateManager.hasPodState()
 
-        val waitingForRlView = findViewById<LinearLayout>(R.id.initpod_waiting_for_rl_layout)
+        val waitingForRlLayout = findViewById<LinearLayout>(R.id.omnipod_pod_management_waiting_for_rl_layout)
 
         if (rileyLinkServiceData.rileyLinkServiceState.isReady) {
-            waitingForRlView.visibility = View.GONE
+            waitingForRlLayout.visibility = View.GONE
         } else {
-            // if rileylink is not running we disable all operations that require a RL connection
-            waitingForRlView.visibility = View.VISIBLE
-            initpod_init_pod.isEnabled = false
-            initpod_remove_pod.isEnabled = false
-            initpod_reset_pod.isEnabled = false
+            waitingForRlLayout.visibility = View.VISIBLE
+            omnipod_pod_management_button_change_pod.isEnabled = false
+            omnipod_pod_management_button_discard_pod.isEnabled = false
         }
     }
 

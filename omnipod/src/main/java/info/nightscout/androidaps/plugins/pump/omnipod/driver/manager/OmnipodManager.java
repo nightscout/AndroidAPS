@@ -48,6 +48,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalP
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodProgressStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.Completable;
@@ -86,7 +87,7 @@ public class OmnipodManager {
         this.podStateManager = podStateManager;
     }
 
-    public synchronized Single<SetupActionResult> pairAndPrime() {
+    public synchronized Single<Boolean> pairAndPrime() {
         logStartingCommandExecution("pairAndPrime");
 
         try {
@@ -128,11 +129,11 @@ public class OmnipodManager {
         long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_PRIME_BOLUS_UNITS, OmnipodConstants.POD_PRIMING_DELIVERY_RATE).getMillis();
 
         return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
-                .map(o -> verifySetupAction(PodProgressStatus.PRIMING_COMPLETED)) //
-                .observeOn(Schedulers.io());
+                .map(o -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED)) //
+                .subscribeOn(Schedulers.io());
     }
 
-    public synchronized Single<SetupActionResult> insertCannula(
+    public synchronized Single<Boolean> insertCannula(
             BasalSchedule basalSchedule, Duration expirationReminderTimeBeforeShutdown, Integer lowReservoirAlertUnits) {
         if (!podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
             throw new IllegalPodProgressException(PodProgressStatus.PRIMING_COMPLETED, !podStateManager.isPodInitialized() ? null : podStateManager.getPodProgressStatus());
@@ -156,8 +157,8 @@ public class OmnipodManager {
         long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConstants.POD_CANNULA_INSERTION_DELIVERY_RATE).getMillis();
 
         return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
-                .map(o -> verifySetupAction(PodProgressStatus.ABOVE_FIFTY_UNITS)) //
-                .observeOn(Schedulers.io());
+                .map(o -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS)) //
+                .subscribeOn(Schedulers.io());
     }
 
     public synchronized StatusResponse getPodStatus() {
@@ -400,7 +401,7 @@ public class OmnipodManager {
             long progressReportInterval = estimatedRemainingBolusDuration.getMillis() / numberOfProgressReports;
 
             disposables.add(Flowable.intervalRange(0, numberOfProgressReports + 1, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
-                    .observeOn(Schedulers.io()) //
+                    .subscribeOn(Schedulers.io()) //
                     .subscribe(count -> {
                         int percentage = (int) ((double) count / numberOfProgressReports * 100);
                         double estimatedUnitsDelivered = activeBolusData == null ? 0 : activeBolusData.estimateUnitsDelivered();
@@ -421,7 +422,7 @@ public class OmnipodManager {
 
         disposables.add(Completable.complete() //
                 .delay(estimatedRemainingBolusDuration.getMillis(), TimeUnit.MILLISECONDS) //
-                .observeOn(Schedulers.io()) //
+                .subscribeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataMutex) {
                         double bolusNotDelivered = 0.0d;
@@ -626,26 +627,36 @@ public class OmnipodManager {
         }
     }
 
-    private SetupActionResult verifySetupAction(PodProgressStatus expectedPodProgressStatus) {
-        SetupActionResult result = null;
+    /**
+     * @param expectedPodProgressStatus expected Pod progress status
+     * @return true if the Pod's progress status matches the expected status, otherwise false
+     * @throws PodProgressStatusVerificationFailedException in case reading the Pod status fails
+     */
+    private boolean verifyPodProgressStatus(PodProgressStatus expectedPodProgressStatus) {
+        Boolean result = null;
+        Throwable lastException = null;
+
         for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
             try {
                 StatusResponse statusResponse = getPodStatus();
 
                 if (statusResponse.getPodProgressStatus().equals(expectedPodProgressStatus)) {
-                    result = new SetupActionResult(SetupActionResult.ResultType.SUCCESS);
-                    break;
+                    return true;
                 } else {
-                    result = new SetupActionResult(SetupActionResult.ResultType.FAILURE) //
-                            .podProgressStatus(statusResponse.getPodProgressStatus());
-                    break;
+                    result = false;
                 }
             } catch (Exception ex) {
-                result = new SetupActionResult(SetupActionResult.ResultType.VERIFICATION_FAILURE) //
-                        .exception(ex);
+                lastException = ex;
             }
         }
-        return result;
+
+        if (result != null) {
+            return result;
+        }
+
+        final Throwable ex = lastException;
+
+        throw new PodProgressStatusVerificationFailedException(expectedPodProgressStatus, ex);
     }
 
     /**

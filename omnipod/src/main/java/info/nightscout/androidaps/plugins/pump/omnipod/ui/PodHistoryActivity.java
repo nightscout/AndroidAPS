@@ -254,7 +254,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     }
                     break;
 
-                    case FILL_CANNULA_SET_BASAL_PROFILE:
+                    case INSERT_CANNULA:
                     case SET_BASAL_SCHEDULE: {
                         if (historyEntry.getData() != null) {
                             setProfileValue(historyEntry.getData(), valueView);
@@ -275,7 +275,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     case GET_POD_STATUS:
                     case GET_POD_INFO:
                     case SET_TIME:
-                    case PAIR_AND_PRIME:
+                    case ACTIVATE_POD:
                     case CANCEL_TEMPORARY_BASAL_BY_DRIVER:
                     case CANCEL_TEMPORARY_BASAL:
                     case CONFIGURE_ALERTS:

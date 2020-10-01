@@ -241,6 +241,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         byte[] receivedMessageData = response.getEncodedMessage();
         while (receivedMessage == null) {
             try {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Attempting to decode message: {}", ByteUtil.shortHexStringWithoutSpaces(receivedMessageData));
                 receivedMessage = OmnipodMessage.decodeMessage(receivedMessageData);
                 if (receivedMessage.getAddress() != message.getAddress()) {
                     throw new IllegalMessageAddressException(message.getAddress(), receivedMessage.getAddress());

@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="WizardPagePodContent">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingRight">20dp</item>
+    <style name="ChangePodWizardTitle">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#0099CC</item>
+    </style>
+
+    <style name="ChangePodWizardText" parent="@android:style/TextAppearance">
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="WizardPagePodListItem">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="android:paddingLeft">60dp</item>
-        <item name="android:paddingRight">60dp</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="PodInfoListView" parent="@android:style/Widget.ListView">
-        <item name="android:background">@color/colorLightGray</item>
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:divider">@android:color/black</item>
-        <item name="android:dividerHeight">1dp</item>
+    <style name="ChangePodWizardError" parent="@style/ChangePodWizardText">
+        <item name="android:textColor">#FFE91E63</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
