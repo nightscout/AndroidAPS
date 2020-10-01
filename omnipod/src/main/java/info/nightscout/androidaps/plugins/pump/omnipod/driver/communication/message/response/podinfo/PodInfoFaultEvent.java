@@ -71,7 +71,15 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
         faultAccessingTables = encodedData[16] == 0x02;
         int i = ByteUtil.convertUnsignedByteToInt(encodedData[17]);
         byte value = (byte) (i >>> 4);
+
+        // FIXME below line DOES NOT MATCH the OpenOmni Wiki description of the type 2 pod info response
+        // See https://github.com/openaps/openomni/wiki/Command-02-Pod-Information-Response#type-2
+        // Example of an observed message from the Pod that makes below line throw an IllegalArgumentException:
+        // 1F0F038F20180216020D00000000000012FFFF03FF00160000879A070000012E
+        // the LogEventErrorCode class doesn't make any sense and should be removed. Instead, the a, bb and c bits in byte 17
+        // should be decoded independently as per the response description on the OpenOmni Wiki
         logEventErrorType = LogEventErrorCode.fromByte(value);
+
         logEventErrorPodProgressStatus = PodProgressStatus.fromByte((byte) (encodedData[17] & 0x0f));
         receiverLowGain = (byte) (ByteUtil.convertUnsignedByteToInt(encodedData[18]) >>> 6);
         radioRSSI = (byte) (encodedData[18] & 0x3f);
