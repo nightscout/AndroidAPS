@@ -4,5 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="treatmentssafety_title">Sikkerhetsbegrensninger for behandlinger</string>
+    <string name="treatmentssafety_maxbolus_title">Maks tillat bolus [U]</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
