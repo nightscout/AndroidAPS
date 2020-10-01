@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (widok rozszerzony)</string>
     <string name="medtronic_bolus_debugging">Bolus/Leczenie - debugowanie</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Błędy</string>
     <string name="medtronic_error_serial_not_set">Numer seryjny # nie ustawiony.</string>
     <string name="medtronic_error_serial_invalid">Numer seryjny # nieprawidłowy.</string>
     <string name="medtronic_error_pump_type_not_set">Tyo pompy nie ustawiony.</string>
@@ -47,6 +48,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Historia pompy Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Anulowałeś bolus po jego ustawieniu na pompie. Ponieważ pompa Medtronic nie wspiera polecenia anuluj, musisz wprowadzić zmianę ręcznie. Wprowadź pompę w stan zawieszenia, a następnie przywróć jej działanie (jeżeli wciąż chcesz anulować). Aplikacja pobierze zmiany przy następnym uaktualnieniu (poniżej 5 minut).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nie udało się odczytać aktualnej dawki tymczasowej (TBR).</string>
@@ -68,8 +70,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Pobierz tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_tbr">Ustaw tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_bolus">Ustaw bolus</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pompa nieosiągalna</string>
+    <string name="medtronic_warning">Ostrzeżenie</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Teraz</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">temu</string>
+    <string name="medtronic_notification_check_time_date">Potrzebna aktualizacja zegara pompy</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Włącz</string>
+    <string name="common_off">Wyłącz</string>
     <string name="pump_time_updated">Czas pompy uaktualniony</string>
 </resources>

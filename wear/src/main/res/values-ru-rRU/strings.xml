@@ -15,7 +15,7 @@
     <string name="label_warning_since">Длится с: %1$s</string>
     <string name="label_warning_sync_aaps">Синхронизация с ААПС!</string>
     <string name="msg_warning_sync">Нет данных начиная с %1$s! Убедитесь, что AAPS на телефоне отправляет данные на часы</string>
-    <string name="msg_warning_old">Старые данные AAPS от %1$s! Проверьте сенсор, xDrip +, NS, конфигурацию AAPS, другое!</string>
+    <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_on">Вкл.</string>
     <string name="pref_off">Выкл.</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
