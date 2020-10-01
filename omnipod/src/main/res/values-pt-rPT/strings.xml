@@ -5,10 +5,16 @@
     <string name="description_pump_omnipod">Integração de bomba para Omnipod, requer RileyLink (com pelo menos firmware 2.0) dispositivo.</string>
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
+    <string name="omnipod_pod_mgmt">Gestão Pod</string>
+    <string name="omnipod_pod_status">Estado do Pod</string>
+    <string name="omnipod_total_delivered_label">Total Administrado</string>
     <string name="omnipod_total_delivered">%1$.2f U</string>
     <string name="omnipod_reservoir_left">%1$.2f U restante</string>
     <string name="omnipod_reservoir_over50">Mais de 50 U</string>
+    <string name="omnipod_pod_address">Endereço do Pod</string>
+    <string name="omnipod_pod_expiry">Pod Expira</string>
     <string name="omnipod_warning">Aviso</string>
+    <string name="omnipod_pod_status_no_active_pod">Nenhum Pod Activo</string>
     <string name="omnipod_pod_status_running">A correr</string>
     <string name="omnipod_pod_status_suspended">Suspenso</string>
     <string name="omnipod_pod_status_pod_fault">Falha no Pod</string>
@@ -75,6 +81,9 @@
     <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
     <string name="omnipod_init_pod_pair_pod">Emparelhar Pod</string>
     <string name="omnipod_init_pod_prime_pod">Purgar Pod</string>
+    <string name="omnipod_init_pod_fill_cannula">Preencher Canula</string>
+    <string name="omnipod_init_pod_set_basal_profile">Definir Perfil Basal</string>
+    <string name="omnipod_deactivate_pod_cancel_delivery">Cancelar Administração</string>
     <string name="omnipod_deactivate_pod_deactivate_pod">Desactivar Pod</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
@@ -91,6 +100,7 @@
     <string name="omnipod_composite_time">%1$s e %2$s</string>
     <string name="omnipod_time_ago">%1$s atrás</string>
     <string name="omnipod_refresh">Actualizar</string>
+    <string name="omnipod_resume_delivery">Retomar Administração</string>
     <string name="omnipod_error_pod_suspended">Pod suspenso</string>
     <string name="omnipod_suspend_delivery_short">Suspender</string>
     <string name="omnipod_cmd_pair_and_prime">Emparelhar e Purgar</string>
