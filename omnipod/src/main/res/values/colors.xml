@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="changePodWizardProgressBar">#0099CC</color>
+    <color name="omnipodWizardProgressBar">#0099CC</color>
     <color name="review_green">#ff669900</color>
 </resources>

@@ -30,18 +30,18 @@
     <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, HC=%2$.1f g</string>
-    <string name="omnipod_change_pod_wizard_fill_pod_title">Encher o Pod</string>
-    <string name="omnipod_change_pod_wizard_activate_pod_title">A Purgar</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_title">Anexar o Pod</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_text">\nPrepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e fixe o Pod no local de infusão.\n\nSe a canula sair, por favor, pressione <b>Cancelar</b> e descarte o seu Pod.\n\nPressione <b>Próximo</b> para inserir a canula e começar a administração da basal.</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_title">A inserir canula</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_text">A tentar definir um plano da basal inicial e inserir canula.\n\nQuando todos os itens estiverem verificados, pode pressionar <b>Próximo</b>.</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_title">Info Pod</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_text">\nO Pod está agora activo.\n\nO seu plano de basal foi programado e a canula foi inserida.\n\nPor favor, verifique se a canula foi inserida correctamente e substitua o seu Pod se você se sente que não.</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_title">Desactivar Pod</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nPressione <b>Próximo</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
-    <string name="omnipod_change_pod_wizard_deactivating_pod_title">A Desactivar Pod</string>
-    <string name="omnipod_change_pod_wizard_pod_deactivated_text">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Encher o Pod</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">A Purgar</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Anexar o Pod</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">\nPrepare o local de infusão. Remova a tampa da agulha do Pod e o adesivo e fixe o Pod no local de infusão.\n\nSe a canula sair, por favor, pressione <b>Cancelar</b> e descarte o seu Pod.\n\nPressione <b>Próximo</b> para inserir a canula e começar a administração da basal.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">A inserir canula</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">A tentar definir um plano da basal inicial e inserir canula.\n\nQuando todos os itens estiverem verificados, pode pressionar <b>Próximo</b>.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_title">Info Pod</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nO Pod está agora activo.\n\nO seu plano de basal foi programado e a canula foi inserida.\n\nPor favor, verifique se a canula foi inserida correctamente e substitua o seu Pod se você se sente que não.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Desactivar Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nPressione <b>Próximo</b> para desactivar o Pod.\n\n<b>Nota:</b> Isto irá suspender toda a administração de insulina e desactivar o Pod.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">A Desactivar Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>
@@ -57,7 +57,7 @@
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Outro</string>
     <string name="omnipod_preference_category_alerts">Alertas</string>
-    <string name="omnipod_change_pod_wizard_button_next">Seguinte</string>
+    <string name="omnipod_wizard_button_next">Seguinte</string>
     <string name="omnipod_history_item_description">Descrição</string>
     <string name="omnipod_history_item_source">Fonte</string>
     <string name="omnipod_history_item_date">Data</string>

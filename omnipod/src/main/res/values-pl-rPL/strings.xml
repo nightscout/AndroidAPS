@@ -12,16 +12,16 @@
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_cmd_deactivate_pod">Odłącz Pod</string>
-    <string name="omnipod_change_pod_wizard_fill_pod_title">Napełnij Pod</string>
-    <string name="omnipod_change_pod_wizard_activate_pod_title">Wypełnianie</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_title">Przymocuj Poda</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_text">\nPrzygotowanie miejsca do infuzji. Zdjąć osłonkę igły i zabezpieczenie plastra i przykleić Pod do skóry w miejscu wkłucia.\n\nJeśli kaniula odkleja się, proszę wcisnąć <b>Anuluj</b> i odczepić Pod.\n\nNaciśnij <b>Następny</b> w celu wprowadzenia kaniuli i rozpoczęcia podawania bazy.</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_title">Wprowadzanie kaniuli</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_text">Próba ustawienia początkowego planu bazowego i wprowadzeia kaniuli.\n\nKiedy wszystkie elementy są sprawdzane, można nacisnąć <b>Następny</b>.</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_text">\nPod jest teraz aktywny.\n\nTwój plan dawki bazowej został zaprogramowany i wprowadzono kaniulę w miejsce wkłucia.\n\nSprawdź, czy kaniula została prawidłowo włożona i wymień swój Pod, jeśli czujesz, że nie.</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nNaciśnij <b>Następny</b> w celu odłączenia Poda.\n\n<b>Uwaga:</b> To spowoduje zawieszenie wszystkich dostaw insuliny i dezaktywację Poda.</string>
-    <string name="omnipod_change_pod_wizard_deactivating_pod_title">Odłączanie Poda</string>
-    <string name="omnipod_change_pod_wizard_pod_deactivated_text">Pod odłączony.\n\nProszę odkleić Pod od ciała i wyrzucić go.</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Napełnij Pod</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Wypełnianie</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Przymocuj Poda</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">\nPrzygotowanie miejsca do infuzji. Zdjąć osłonkę igły i zabezpieczenie plastra i przykleić Pod do skóry w miejscu wkłucia.\n\nJeśli kaniula odkleja się, proszę wcisnąć <b>Anuluj</b> i odczepić Pod.\n\nNaciśnij <b>Następny</b> w celu wprowadzenia kaniuli i rozpoczęcia podawania bazy.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Wprowadzanie kaniuli</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">Próba ustawienia początkowego planu bazowego i wprowadzeia kaniuli.\n\nKiedy wszystkie elementy są sprawdzane, można nacisnąć <b>Następny</b>.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nPod jest teraz aktywny.\n\nTwój plan dawki bazowej został zaprogramowany i wprowadzono kaniulę w miejsce wkłucia.\n\nSprawdź, czy kaniula została prawidłowo włożona i wymień swój Pod, jeśli czujesz, że nie.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nNaciśnij <b>Następny</b> w celu odłączenia Poda.\n\n<b>Uwaga:</b> To spowoduje zawieszenie wszystkich dostaw insuliny i dezaktywację Poda.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Odłączanie Poda</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod odłączony.\n\nProszę odkleić Pod od ciała i wyrzucić go.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_setup_reminder_reminder">Zakończ przypomnienie o konfiguracji</string>
     <string name="omnipod_alert_shutdown_imminent">Wyłączenie jest nieuchronne</string>

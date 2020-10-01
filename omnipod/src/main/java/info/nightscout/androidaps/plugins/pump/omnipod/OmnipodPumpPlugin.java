@@ -319,12 +319,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return rileyLinkServiceData.rileyLinkServiceState.isReady();
     }
 
-    public boolean needsPodActivation() {
-        // don't use PodStateManager.isActivationCompleted() because that returns false for PodProgressStatus.ACTIVATION_TIME_EXCEEDED
-        // which indicates that the pod should be deactivated rather then activated
-        return !podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.ABOVE_FIFTY_UNITS);
-    }
-
     private void updateAapsTbr() {
         // As per the characteristics of the Omnipod, we only know whether or not a TBR is currently active
         // But it doesn't tell us the duration or amount, so we can only update TBR status in AAPS if

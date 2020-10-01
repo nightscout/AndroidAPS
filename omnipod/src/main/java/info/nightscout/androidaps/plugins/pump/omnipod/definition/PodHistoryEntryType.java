@@ -13,10 +13,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R;
  */
 public enum PodHistoryEntryType {
 
-    ACTIVATE_POD(1, R.string.omnipod_cmd_activate_pod, PumpHistoryEntryGroup.Prime),
+    INITIALIZE_POD(1, R.string.omnipod_cmd_initialize_pod, PumpHistoryEntryGroup.Prime),
     INSERT_CANNULA(2, R.string.omnipod_cmd_insert_cannula, PumpHistoryEntryGroup.Prime),
     DEACTIVATE_POD(3, R.string.omnipod_cmd_deactivate_pod, PumpHistoryEntryGroup.Prime),
-    DISCARD_POD_STATE(4, R.string.omnipod_cmd_discard_pod, PumpHistoryEntryGroup.Prime),
+    DISCARD_POD(4, R.string.omnipod_cmd_discard_pod, PumpHistoryEntryGroup.Prime),
 
     SET_TEMPORARY_BASAL(10, R.string.omnipod_cmd_set_tbr, PumpHistoryEntryGroup.Basal),
     CANCEL_TEMPORARY_BASAL_BY_DRIVER(11, R.string.omnipod_cmd_cancel_tbr_by_driver, PumpHistoryEntryGroup.Basal),
