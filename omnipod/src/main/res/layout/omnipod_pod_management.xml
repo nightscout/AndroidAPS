@@ -15,11 +15,10 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:text="@string/omnipod_pod_management_title"
@@ -38,15 +37,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginLeft="25dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginRight="25dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="3dp"
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:text="@string/omnipod_pod_management_waiting_for_rileylink_connection"
@@ -55,24 +54,30 @@
             </LinearLayout>
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/omnipod_pod_management_button_change_pod"
+                android:id="@+id/omnipod_pod_management_button_activate_pod"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_cp_pump_canula"
-                android:text="@string/omnipod_pod_management_button_change_pod"
+                android:text="@string/omnipod_pod_management_button_activate_pod"
                 android:textAllCaps="false" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/omnipod_pod_management_button_deactivate_pod"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
-                android:text="" />
+                android:drawableTop="@drawable/ic_actions_temptarget"
+                android:text="@string/omnipod_pod_management_button_deactivate_pod"
+                android:textAllCaps="false" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/omnipod_pod_management_button_discard_pod"
@@ -80,19 +85,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_toast_delete_confirm"
                 android:text="@string/omnipod_pod_management_button_discard_pod"
                 android:textAllCaps="false" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_weight="0.5"
-                android:text="" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/omnipod_pod_management_button_pod_history"
@@ -100,9 +98,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginBottom="3dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_danarhistory"
                 android:text="@string/omnipod_pod_management_button_pod_history"

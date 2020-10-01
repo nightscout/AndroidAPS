@@ -77,22 +77,22 @@
     <string name="omnipod_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <string name="omnipod_history_tbr_value">Rata: %1$.2f U, Durata: %2$d min</string>
-    <string name="omnipod_change_pod_wizard_discard_pod_confirmation">Dacă apăsați <b>OK</b>, statusul Pod-ului va fi resetat forțat și nu veți mai putea comunica cu Pod-ul. Faceți acest lucru numai dacă nu mai se poate comunica deloc cu Pod-ul. Dacă se mai poate comunica cu Pod-ul, va rugam sa folosiți opțiunea <b>Dezactivare Pod</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați, de asemenea, ca îndepărtați Pod-ul de pe corpul dvs.</string>
-    <string name="omnipod_change_pod_wizard_fill_pod_title">Umpleţi Pod-ul</string>
-    <string name="omnipod_change_pod_wizard_fill_pod_text">\nUmpleți noul Pod cu suficientă insulină pentru 3 zile.\n\nAr trebui sa auziți două bipuri de la Pod în timpul procesului de umplere. Acestea indică faptul că, cantitatea minimă de 85U a fost introdusă. Asigurați-vă ca ați golit complet seringa de umplere, chiar și după ce ați auzit două bipuri.\n\nDupă umplerea Pod-ului, vă rugăm să apăsați <b>Următorul</b>.\n\n<b>Notă:</b> Nu scoateți capacul transparent al acului in acest moment.\n<b>Notă:</b> Va rugam sa puneți RileyLink în poziție verticala și plasați Pod-ul la o distanta de câțiva centimetri.</string>
-    <string name="omnipod_change_pod_wizard_activate_pod_title">Amorsare</string>
-    <string name="omnipod_change_pod_wizard_activate_pod_text">Încercare de împerechere cu noul Pod și amorsare.\n\nAtunci când toate etapele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Vă rugăm sa puneți RileyLInk in poziție verticala si sa plasați Pod-ul la câțiva centimetri distanta.</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_title">Atașați Pod-ul</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_text">\nPregătiți setul de infuzie. Scoateți capacul acului și suport adeziv și atașați Pod-ul la locul de infuzie.\n\nDacă, canula pare in neregulă, apăsați <b>Anulare</b> și aruncați Pod-ul.\n\nApăsați <b>Următorul</b> pentru a introduce canula și a începe livrarea bazalei.</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_title">Inserare canulă</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_text">Încercare de programare inițială a ratelor bazale si de insertie a canulei.\n\nCând toate elementele sunt gata, puteți apăsa <b>Următorul</b>.</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_title">Informații Pod</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_text">\nPod-ul este acum activ.\n\nRatele bazale au fost programate și canula a fost introdusă.\n\nVă rugăm să verificați că acul a fost introdus corect. Dacă considerați ca nu, înlocuiți Pod-ul.</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_title">Dezactivare Pod</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nApăsați <b>Următorul</b> pentru a dezactiva Pod-ul.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva Pod-ul.</string>
-    <string name="omnipod_change_pod_wizard_deactivating_pod_title">Dezactivare Pod</string>
-    <string name="omnipod_change_pod_wizard_deactivating_pod_text">Dezactivare Pod.\n\nAtunci când toate elementele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Dacă dezactivarea eșuează continuu, vă rugăm să apăsați <b>Anulează</b> și folosiți opțiunea <b>Resetare Pod</b> pentru a forța resetarea Pod-ului.</string>
-    <string name="omnipod_change_pod_wizard_pod_deactivated_text">Pod dezactivat.\n\nScoateți Pod-ul și aruncați-l.</string>
+    <string name="omnipod_pod_deactivation_wizard_discard_pod_confirmation">Dacă apăsați <b>OK</b>, statusul Pod-ului va fi resetat forțat și nu veți mai putea comunica cu Pod-ul. Faceți acest lucru numai dacă nu mai se poate comunica deloc cu Pod-ul. Dacă se mai poate comunica cu Pod-ul, va rugam sa folosiți opțiunea <b>Dezactivare Pod</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați, de asemenea, ca îndepărtați Pod-ul de pe corpul dvs.</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Umpleţi Pod-ul</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_text">\nUmpleți noul Pod cu suficientă insulină pentru 3 zile.\n\nAr trebui sa auziți două bipuri de la Pod în timpul procesului de umplere. Acestea indică faptul că, cantitatea minimă de 85U a fost introdusă. Asigurați-vă ca ați golit complet seringa de umplere, chiar și după ce ați auzit două bipuri.\n\nDupă umplerea Pod-ului, vă rugăm să apăsați <b>Următorul</b>.\n\n<b>Notă:</b> Nu scoateți capacul transparent al acului in acest moment.\n<b>Notă:</b> Va rugam sa puneți RileyLink în poziție verticala și plasați Pod-ul la o distanta de câțiva centimetri.</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Amorsare</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_text">Încercare de împerechere cu noul Pod și amorsare.\n\nAtunci când toate etapele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Vă rugăm sa puneți RileyLInk in poziție verticala si sa plasați Pod-ul la câțiva centimetri distanta.</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Atașați Pod-ul</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">\nPregătiți setul de infuzie. Scoateți capacul acului și suport adeziv și atașați Pod-ul la locul de infuzie.\n\nDacă, canula pare in neregulă, apăsați <b>Anulare</b> și aruncați Pod-ul.\n\nApăsați <b>Următorul</b> pentru a introduce canula și a începe livrarea bazalei.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Inserare canulă</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">Încercare de programare inițială a ratelor bazale si de insertie a canulei.\n\nCând toate elementele sunt gata, puteți apăsa <b>Următorul</b>.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_title">Informații Pod</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nPod-ul este acum activ.\n\nRatele bazale au fost programate și canula a fost introdusă.\n\nVă rugăm să verificați că acul a fost introdus corect. Dacă considerați ca nu, înlocuiți Pod-ul.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Dezactivare Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nApăsați <b>Următorul</b> pentru a dezactiva Pod-ul.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva Pod-ul.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Dezactivare Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">Dezactivare Pod.\n\nAtunci când toate elementele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Dacă dezactivarea eșuează continuu, vă rugăm să apăsați <b>Anulează</b> și folosiți opțiunea <b>Resetare Pod</b> pentru a forța resetarea Pod-ului.</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod dezactivat.\n\nScoateți Pod-ul și aruncați-l.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_pairing_reminder">Notificare Finalizare împerechere</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>
@@ -127,7 +127,7 @@
     <string name="omnipod_confirmation_pod_suspended">Pod suspendat</string>
     <string name="omnipod_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspendare</string>
-    <string name="omnipod_cmd_activate_pod">Împerechere și amorsare</string>
+    <string name="omnipod_cmd_initialize_pod">Împerechere și amorsare</string>
     <string name="omnipod_cmd_insert_cannula">Umpleţi canula şi setaţi profilul bazal</string>
     <string name="omnipod_cmd_read_pulse_log">Obțineți jurnalul pulsurilor</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Se setează o bazală temporară falsă deoarece Pod-ul este suspendat</string>
@@ -138,7 +138,7 @@
     <string name="omnipod_preference_category_other">Altele</string>
     <string name="omnipod_preference_category_alerts">Alerte</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bip-uri de confirmare</string>
-    <string name="omnipod_change_pod_wizard_button_next">Următor</string>
+    <string name="omnipod_wizard_button_next">Următor</string>
     <string name="omnipod_history_item_description">Descriere</string>
     <string name="omnipod_history_item_source">Sursă</string>
     <string name="omnipod_history_item_date">Data</string>

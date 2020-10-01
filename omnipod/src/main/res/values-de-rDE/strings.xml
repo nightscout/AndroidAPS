@@ -74,17 +74,17 @@
     <string name="omnipod_cmd_unknown_entry">Unbekannte Eingabe</string>
     <string name="omnipod_history_bolus_value">%1$.2f IE</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f IE, CH=%2$.1f g</string>
-    <string name="omnipod_change_pod_wizard_fill_pod_title">Befülle den Pod</string>
-    <string name="omnipod_change_pod_wizard_activate_pod_title">Befüllen</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_title">Befestige den Pod</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_text">\nBereite die Infusionsstelle vor. Entferne den Nadelschutz des Pods und die Schutzfolie über dem Kleber. Klebe dann den Pod an die gewünschte Körperstelle.\n\nFalls die Kanüle herausragt, klicke <b>Abbrechen</b> und verwirf den Pod.\n\nKlicke <b>Weiter</b>; um die Kanüle zu setzen und die Insulinabgabe zu beginnen.</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_title">Kanüle setzen</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_text">Erste Basalrate und Kanüle werden nun gesetzt.\n\nWenn alle Häkchen gesetzt sind, kannst Du <b>Weiter</b> klicken.</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_text">\nDer Pod ist jetzt aktiv.\n\nDeine Basalrate ist programmiert und die Kanüle wurde gesetzt.\n\nBitte überprüfe, ob die Kanüle korrekt gesetzt wurde und ersetze den Pod, wenn Du das Gefühl hast, dass dies nicht erfolgreich war.</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_title">Pod deaktivieren</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nDrücke <b>Weiter</b> um den Pod zu deaktivieren.\n\n<b>Hinweis:</b> Dies unterbricht die gesamte Insulinabgabe und deaktiviert den Pod.</string>
-    <string name="omnipod_change_pod_wizard_deactivating_pod_title">Deaktiviere den Pod</string>
-    <string name="omnipod_change_pod_wizard_pod_deactivated_text">Pod deaktiviert.\n\nBitte entferne den Pod von Deinem Körper und entsorge ihn.</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Befülle den Pod</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Befüllen</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Befestige den Pod</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">\nBereite die Infusionsstelle vor. Entferne den Nadelschutz des Pods und die Schutzfolie über dem Kleber. Klebe dann den Pod an die gewünschte Körperstelle.\n\nFalls die Kanüle herausragt, klicke <b>Abbrechen</b> und verwirf den Pod.\n\nKlicke <b>Weiter</b>; um die Kanüle zu setzen und die Insulinabgabe zu beginnen.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Kanüle setzen</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">Erste Basalrate und Kanüle werden nun gesetzt.\n\nWenn alle Häkchen gesetzt sind, kannst Du <b>Weiter</b> klicken.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nDer Pod ist jetzt aktiv.\n\nDeine Basalrate ist programmiert und die Kanüle wurde gesetzt.\n\nBitte überprüfe, ob die Kanüle korrekt gesetzt wurde und ersetze den Pod, wenn Du das Gefühl hast, dass dies nicht erfolgreich war.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Pod deaktivieren</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nDrücke <b>Weiter</b> um den Pod zu deaktivieren.\n\n<b>Hinweis:</b> Dies unterbricht die gesamte Insulinabgabe und deaktiviert den Pod.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Deaktiviere den Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod deaktiviert.\n\nBitte entferne den Pod von Deinem Körper und entsorge ihn.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Erinnerung Setup beendet</string>
@@ -98,7 +98,7 @@
     <string name="omnipod_overview_button_suspend_delivery">Unterbrechungen</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Andere</string>
-    <string name="omnipod_change_pod_wizard_button_next">Weiter</string>
+    <string name="omnipod_wizard_button_next">Weiter</string>
     <string name="omnipod_history_item_description">Beschreibung</string>
     <string name="omnipod_history_item_date">Datum</string>
     <plurals name="omnipod_minutes">

@@ -9,7 +9,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsPodStateManag
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.PodManagementActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.ChangePodWizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.PodActivationWizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.PodDeactivationWizardActivity
 
 @Module
 @Suppress("unused")
@@ -22,7 +23,11 @@ abstract class OmnipodModule {
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [OmnipodWizardModule::class])
-    abstract fun contributesWizardActivity(): ChangePodWizardActivity
+    abstract fun contributesActivationWizardActivity(): PodActivationWizardActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [OmnipodWizardModule::class])
+    abstract fun contributesDeactivationWizardActivity(): PodDeactivationWizardActivity
 
     // Service
     @ContributesAndroidInjector

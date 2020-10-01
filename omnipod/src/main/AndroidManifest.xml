@@ -9,6 +9,7 @@
 
         <activity android:name=".ui.PodManagementActivity" />
         <activity android:name=".ui.PodHistoryActivity" />
-        <activity android:name=".ui.wizard.ChangePodWizardActivity" />
+        <activity android:name=".ui.wizard.activation.PodActivationWizardActivity" />
+        <activity android:name=".ui.wizard.deactivation.PodDeactivationWizardActivity" />
     </application>
 </manifest>

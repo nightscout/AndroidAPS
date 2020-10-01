@@ -19,16 +19,16 @@
     <!-- Omnipod - Error -->
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_cmd_deactivate_pod">Išjungti POD</string>
-    <string name="omnipod_change_pod_wizard_fill_pod_title">Užpildyti POD</string>
-    <string name="omnipod_change_pod_wizard_activate_pod_title">Užpildymas</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_title">Prijunkite POD</string>
-    <string name="omnipod_change_pod_wizard_attach_pod_text">\nParuoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir užklijuokite POD ant infuzijos vietos.\n\nJei kaniulė atšoks, paspauskite <b>Atšaukti</b> ir pakeiskite POD.\n\nSpauskite <b>Kitas</b>, norėdami įvesti kaniulę ir pradėti leisti insuliną.</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_title">Įvedama kaniulė</string>
-    <string name="omnipod_change_pod_wizard_insert_cannula_text">Mėginkite nustatyti pradinį bazės profilį ir įvesti kaniulę.\n\nKai visi elementai yra patikrinti, galite paspausti <b>Kitas</b>.</string>
-    <string name="omnipod_change_pod_wizard_pod_changed_text">\nPOD yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė buvo tinkamai įvesta, ir, jei jaučiate, kad taip nėra, pakeiskite POD.</string>
-    <string name="omnipod_change_pod_wizard_deactivate_pod_text">\nSpustelėkite<b>Kitas</b>, kad išjungtumėte POD.\n\n<b>Pastaba:</b> Tai sustabdys insulino leidimą ir išjungs POD.</string>
-    <string name="omnipod_change_pod_wizard_deactivating_pod_title">POD išjungimas</string>
-    <string name="omnipod_change_pod_wizard_pod_deactivated_text">POD išjungtas.\n\nNuimkite POD nuo odos ir jį išmeskite.</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Užpildyti POD</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Užpildymas</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Prijunkite POD</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">\nParuoškite infuzijos vietą. Nuimkite adatos apsauginį dangtelį, pleistro apsaugą ir užklijuokite POD ant infuzijos vietos.\n\nJei kaniulė atšoks, paspauskite <b>Atšaukti</b> ir pakeiskite POD.\n\nSpauskite <b>Kitas</b>, norėdami įvesti kaniulę ir pradėti leisti insuliną.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Įvedama kaniulė</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">Mėginkite nustatyti pradinį bazės profilį ir įvesti kaniulę.\n\nKai visi elementai yra patikrinti, galite paspausti <b>Kitas</b>.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nPOD yra aktyvus.\n\nJūsų bazės profilis yra suprogramuotas ir kaniulė įvesta.\n\nPatikrinkite, ar kaniulė buvo tinkamai įvesta, ir, jei jaučiate, kad taip nėra, pakeiskite POD.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nSpustelėkite<b>Kitas</b>, kad išjungtumėte POD.\n\n<b>Pastaba:</b> Tai sustabdys insulino leidimą ir išjungs POD.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">POD išjungimas</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">POD išjungtas.\n\nNuimkite POD nuo odos ir jį išmeskite.</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_setup_reminder_reminder">Priminimas apie sąrankos pabaigą</string>
     <string name="omnipod_alert_shutdown_imminent">Išjungimas yra neišvengiamas</string>
