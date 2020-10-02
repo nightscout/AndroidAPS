@@ -799,6 +799,8 @@
     <string name="bgsourcesetup">Configura sorgente BG</string>
     <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino dovresti utilizzare il profilo di NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per utilizzarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio profilo\"</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Attesa connessione RileyLink…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato inizializzato.\n</string>
     <string name="startobjective">Avvia il tuo primo obiettivo</string>
     <string name="permission">Autorizzazione</string>
     <string name="askforpermission">Chiedi l\'autorizzazione</string>
