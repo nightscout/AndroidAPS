@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.LogEventErrorCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -43,7 +42,7 @@ public class PodInfoResponseTest {
 
         PodInfoFaultEvent podInfo = (PodInfoFaultEvent) podInfoResponse.getPodInfo();
         assertFalse(podInfo.isFaultAccessingTables());
-        assertEquals(LogEventErrorCode.INTERNAL_2_BIT_VARIABLE_SET_AND_MANIPULATED_IN_MAIN_LOOP_ROUTINES_2, podInfo.getLogEventErrorType());
+        assertEquals(0x01, podInfo.getLoggedFaultEventInternal2bitMainLoopRoutinesVariable());
     }
 
     @Test
