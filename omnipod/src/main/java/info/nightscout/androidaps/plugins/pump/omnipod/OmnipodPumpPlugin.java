@@ -12,15 +12,13 @@ import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,6 +42,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
@@ -53,7 +52,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -71,7 +69,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCustomActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStatusRequestType;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.ExpirationReminderBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
@@ -81,10 +78,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateMa
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandHandleTimeChange;
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandUpdateAlertConfiguration;
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLinkOmnipodService;
-import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodFragment;
+import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -104,6 +106,7 @@ import io.reactivex.schedulers.Schedulers;
 public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
+    public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
@@ -112,6 +115,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final RileyLinkUtil rileyLinkUtil;
     private final OmnipodAlertUtil omnipodAlertUtil;
+    private final ProfileFunction profileFunction;
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ActivePluginProvider activePlugin;
@@ -124,8 +128,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
-    private final List<CustomAction> customActions = new ArrayList<>();
-    private final List<OmnipodStatusRequestType> statusRequestList = new ArrayList<>();
+    private final List<CustomAction> customActions = Collections.singletonList(new CustomAction(
+            R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, true));
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     // variables for handling statuses and history
@@ -136,12 +140,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private boolean busy = false;
     private int timeChangeRetries;
     private long nextPodCheck;
-    private boolean sentIdToFirebase;
     private long lastConnectionTimeMillis;
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
-    private OmnipodCommandType currentCommand;
+    private boolean isCancelTempBasalRunning;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -161,15 +164,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             DateUtil dateUtil,
             AapsOmnipodUtil aapsOmnipodUtil,
             RileyLinkUtil rileyLinkUtil,
-            OmnipodAlertUtil omnipodAlertUtil
+            OmnipodAlertUtil omnipodAlertUtil,
+            ProfileFunction profileFunction
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
-                        .fragmentClass(OmnipodFragment.class.getName()) //
+                        .fragmentClass(OmnipodOverviewFragment.class.getName()) //
                         .pluginName(R.string.omnipod_name) //
                         .shortName(R.string.omnipod_name_short) //
                         .preferencesId(R.xml.pref_omnipod) //
-                        .description(R.string.description_pump_omnipod), //
+                        .description(R.string.omnipod_pump_description), //
                 injector, aapsLogger, resourceHelper, commandQueue);
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -186,11 +190,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodAlertUtil = omnipodAlertUtil;
+        this.profileFunction = profileFunction;
 
         pumpDescription = new PumpDescription(pumpType);
-
-        customActions.add(new CustomAction(
-                R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, true));
 
         this.serviceConnection = new ServiceConnection() {
             @Override
@@ -228,14 +230,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
                 }
 
-                if (!getCommandQueue().statusInQueue()) {
-                    if (!OmnipodPumpPlugin.this.statusRequestList.isEmpty()) {
-                        getCommandQueue().readStatus("Status Refresh Requested", null);
-                    } else if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
-                        getCommandQueue().readStatus("Date or Time Zone Changed", null);
-                    } else if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
-                        getCommandQueue().readStatus("Expiration Alerts Changed", null);
-                    }
+                if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
+                    getCommandQueue().customCommand(new CommandHandleTimeChange(false), null);
+                }
+                if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
+                    getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                 }
 
                 doPodCheck();
@@ -288,7 +287,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_units)) {
                         if (!verifyPodAlertConfiguration() && !getCommandQueue().statusInQueue()) {
-                            getCommandQueue().readStatus("Expiration Alerts Changed", null);
+                            getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
                     }
                 }, fabricPrivacy::logException)
@@ -316,13 +315,17 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         );
     }
 
+    public boolean isRileyLinkReady() {
+        return rileyLinkServiceData.rileyLinkServiceState.isReady();
+    }
+
     private void updateAapsTbr() {
         // As per the characteristics of the Omnipod, we only know whether or not a TBR is currently active
         // But it doesn't tell us the duration or amount, so we can only update TBR status in AAPS if
         // The pod is not running a TBR, while AAPS thinks it is
         if (!podStateManager.isTempBasalRunning()) {
             // Only report TBR cancellations if they haven't been explicitly requested
-            if (currentCommand != OmnipodCommandType.CANCEL_TEMPORARY_BASAL) {
+            if (!isCancelTempBasalRunning) {
                 if (activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
                     aapsOmnipodManager.reportCancelledTbr();
                 }
@@ -348,13 +351,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, resourceHelper.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 rxBus.send(new EventNewNotification(notification));
             } else {
-                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
-
                 if (podStateManager.isSuspended()) {
-                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_error_pod_suspended), Notification.NORMAL);
+                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_confirmation_pod_suspended), Notification.NORMAL);
                     rxBus.send(new EventNewNotification(notification));
-                } else {
-                    rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
                 }
             }
 
@@ -362,7 +361,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         }
     }
 
-    // TODO is this correct?
     @Override
     public boolean isInitialized() {
         return isConnected() && podStateManager.isPodActivationCompleted();
@@ -442,109 +440,23 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         lastConnectionTimeMillis = System.currentTimeMillis();
     }
 
-    // We abuse getPumpStatus to squeeze commands in the queue
-    // The only actual status requests we send to the Pod are on startup (in initializeAfterRileyLinkConnection)
-    // And when the user explicitly requested it by clicking the Refresh button on the Omnipod tab
-    // We don't do periodical status requests because that can drain the Pod's battery
-    // However that should be fine because we get a StatusResponse from all insulin commands sent to the Pod
+    /**
+     * The only actual status requests we send to the Pod here are on startup (in {@link #initializeAfterRileyLinkConnection() initializeAfterRileyLinkConnection()})
+     * And when the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through {@link #executeCustomCommand(CustomCommand)})
+     * We don't do periodical status requests because that could drain the Pod's battery
+     */
     @Override
     public void getPumpStatus() {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
-        } else if (!statusRequestList.isEmpty()) {
-            Iterator<OmnipodStatusRequestType> iterator = statusRequestList.iterator();
-
-            while (iterator.hasNext()) {
-                OmnipodStatusRequestType statusRequest = iterator.next();
-                switch (statusRequest) {
-                    case GET_PULSE_LOG:
-                        try {
-                            PodInfoRecentPulseLog result = executeCommand(OmnipodCommandType.GET_POD_PULSE_LOG, aapsOmnipodManager::readPulseLog);
-                            Intent i = new Intent(context, ErrorHelperActivity.class);
-                            i.putExtra("soundid", 0);
-                            i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
-                            i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
-                            i.putExtra("clipboardContent", result.toString());
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                        } catch (Exception ex) {
-                            aapsLogger.warn(LTag.PUMP, "Failed to retrieve pulse log", ex);
-                            Intent i = new Intent(context, ErrorHelperActivity.class);
-                            i.putExtra("soundid", 0);
-                            i.putExtra("status", "Failed to retrieve pulse log");
-                            i.putExtra("title", resourceHelper.gs(R.string.omnipod_warning));
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                        }
-                        break;
-                    case ACKNOWLEDGE_ALERTS:
-                        executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodManager::acknowledgeAlerts);
-                        break;
-                    case GET_POD_STATE:
-                        executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
-                        break;
-                    case SUSPEND_DELIVERY:
-                        executeCommand(OmnipodCommandType.SUSPEND_DELIVERY, aapsOmnipodManager::suspendDelivery);
-                        break;
-                    default:
-                        aapsLogger.error(LTag.PUMP, "Unknown status request: " + statusRequest.name());
-                }
-                iterator.remove();
-            }
-        } else if (this.hasTimeDateOrTimeZoneChanged) {
-            PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TIME, aapsOmnipodManager::setTime);
-
-            if (result.success) {
-                this.hasTimeDateOrTimeZoneChanged = false;
-                timeChangeRetries = 0;
-
-                Notification notification = new Notification(
-                        Notification.TIME_OR_TIMEZONE_CHANGE,
-                        resourceHelper.gs(R.string.omnipod_time_or_timezone_change),
-                        Notification.INFO, 60);
-                rxBus.send(new EventNewNotification(notification));
-
-            } else {
-                timeChangeRetries++;
-
-                if (timeChangeRetries > 3) {
-                    this.hasTimeDateOrTimeZoneChanged = false;
-                    timeChangeRetries = 0;
-                }
-            }
-        } else if (!verifyPodAlertConfiguration()) {
-            Duration expirationReminderTimeBeforeShutdown = omnipodAlertUtil.getExpirationReminderTimeBeforeShutdown();
-            Integer lowReservoirAlertUnits = omnipodAlertUtil.getLowReservoirAlertUnits();
-
-            List<AlertConfiguration> alertConfigurations = new ExpirationReminderBuilder(podStateManager) //
-                    .expirationAdvisory(expirationReminderTimeBeforeShutdown != null,
-                            Optional.ofNullable(expirationReminderTimeBeforeShutdown).orElse(Duration.ZERO)) //
-                    .lowReservoir(lowReservoirAlertUnits != null, Optional.ofNullable(lowReservoirAlertUnits).orElse(0)) //
-                    .build();
-
-            PumpEnactResult result = executeCommand(OmnipodCommandType.CONFIGURE_ALERTS, () -> aapsOmnipodManager.configureAlerts(alertConfigurations));
-
-            if (result.success) {
-                aapsLogger.info(LTag.PUMP, "Successfully configured alerts in Pod");
-
-                podStateManager.setExpirationAlertTimeBeforeShutdown(expirationReminderTimeBeforeShutdown);
-                podStateManager.setLowReservoirAlertUnits(lowReservoirAlertUnits);
-
-                Notification notification = new Notification(
-                        Notification.OMNIPOD_POD_ALERTS_UPDATED,
-                        resourceHelper.gs(R.string.omnipod_expiration_alerts_updated),
-                        Notification.INFO, 60);
-                rxBus.send(new EventNewNotification(notification));
-            } else {
-                aapsLogger.warn(LTag.PUMP, "Failed to configure alerts in Pod");
-            }
+            firstRun = false;
         }
     }
 
-    @NotNull
+    @NonNull
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodManager.setBasalProfile(profile));
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success);
 
@@ -563,7 +475,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public long lastDataTime() {
-        return podStateManager.isPodActivationCompleted() ? podStateManager.getLastSuccessfulCommunication().getMillis() : 0;
+        return podStateManager.isPodInitialized() ? podStateManager.getLastSuccessfulCommunication().getMillis() : 0;
     }
 
     @Override
@@ -618,7 +530,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         executeCommand(OmnipodCommandType.CANCEL_BOLUS, aapsOmnipodManager::cancelBolus);
     }
 
-    // if enforceNew===true current temp basal is cancelled and new TBR set (duration is prolonged),
+    // if enforceNew is true, current temp basal is cancelled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
@@ -660,7 +572,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
+        isCancelTempBasalRunning = true;
+        try {
+            return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
+        } finally {
+            isCancelTempBasalRunning = false;
+        }
     }
 
     // TODO improve (i8n and more)
@@ -719,12 +636,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return pumpType.getManufacturer();
     }
 
-    @Override @NotNull
+    @Override @NonNull
     public PumpType model() {
         return pumpType;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public String serialNumber() {
         return podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
@@ -779,18 +696,145 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 break;
 
             default:
-                aapsLogger.warn(LTag.PUMP, "Unknown custom action: {}" + mcat);
+                aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + mcat);
                 break;
         }
+    }
+
+    @Override
+    public PumpEnactResult executeCustomCommand(CustomCommand command) {
+        if (!(command instanceof OmnipodCustomCommand)) {
+            aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + command.getClass().getName());
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, command.getClass().getName()));
+        }
+
+        OmnipodCustomCommandType commandType = ((OmnipodCustomCommand) command).getType();
+
+        aapsLogger.debug(LTag.PUMP, "Executing custom command: " + commandType);
+
+        switch (commandType) {
+            case ACKNOWLEDGE_ALERTS:
+                return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodManager::acknowledgeAlerts);
+            case GET_POD_STATUS:
+                return executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+            case READ_PULSE_LOG:
+                return retrievePulseLog();
+            case SUSPEND_DELIVERY:
+                return executeCommand(OmnipodCommandType.SUSPEND_DELIVERY, aapsOmnipodManager::suspendDelivery);
+            case RESUME_DELIVERY:
+                return executeCommand(OmnipodCommandType.RESUME_DELIVERY, () -> aapsOmnipodManager.setBasalProfile(profileFunction.getProfile(), false));
+            case DEACTIVATE_POD:
+                return executeCommand(OmnipodCommandType.DEACTIVATE_POD, aapsOmnipodManager::deactivatePod);
+            case HANDLE_TIME_CHANGE:
+                return handleTimeChange(((CommandHandleTimeChange) command).isRequestedByUser());
+            case UPDATE_ALERT_CONFIGURATION:
+                return updateAlertConfiguration();
+            default:
+                aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + commandType);
+                return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, commandType));
+        }
+    }
+
+    private PumpEnactResult retrievePulseLog() {
+        PodInfoRecentPulseLog result;
+        try {
+            result = executeCommand(OmnipodCommandType.READ_POD_PULSE_LOG, aapsOmnipodManager::readPulseLog);
+        } catch (Exception ex) {
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(aapsOmnipodManager.translateException(ex));
+        }
+
+        Intent i = new Intent(context, ErrorHelperActivity.class);
+        i.putExtra("soundid", 0);
+        i.putExtra("status", resourceHelper.gs(R.string.omnipod_pulse_log_value) + ":\n" + result.toString());
+        i.putExtra("title", resourceHelper.gs(R.string.omnipod_pulse_log));
+        i.putExtra("clipboardContent", result.toString());
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+        return new PumpEnactResult(getInjector()).success(true).enacted(false);
+    }
+
+    @NonNull private PumpEnactResult updateAlertConfiguration() {
+        Duration expirationReminderTimeBeforeShutdown = omnipodAlertUtil.getExpirationReminderTimeBeforeShutdown();
+        Integer lowReservoirAlertUnits = omnipodAlertUtil.getLowReservoirAlertUnits();
+
+        List<AlertConfiguration> alertConfigurations = new ExpirationReminderBuilder(podStateManager) //
+                .expirationAdvisory(expirationReminderTimeBeforeShutdown != null,
+                        Optional.ofNullable(expirationReminderTimeBeforeShutdown).orElse(Duration.ZERO)) //
+                .lowReservoir(lowReservoirAlertUnits != null, Optional.ofNullable(lowReservoirAlertUnits).orElse(0)) //
+                .build();
+
+        PumpEnactResult result = executeCommand(OmnipodCommandType.CONFIGURE_ALERTS, () -> aapsOmnipodManager.configureAlerts(alertConfigurations));
+
+        if (result.success) {
+            aapsLogger.info(LTag.PUMP, "Successfully configured alerts in Pod");
+
+            podStateManager.setExpirationAlertTimeBeforeShutdown(expirationReminderTimeBeforeShutdown);
+            podStateManager.setLowReservoirAlertUnits(lowReservoirAlertUnits);
+
+            Notification notification = new Notification(
+                    Notification.OMNIPOD_POD_ALERTS_UPDATED,
+                    resourceHelper.gs(R.string.omnipod_confirmation_expiration_alerts_updated),
+                    Notification.INFO, 60);
+            rxBus.send(new EventNewNotification(notification));
+        } else {
+            aapsLogger.warn(LTag.PUMP, "Failed to configure alerts in Pod");
+        }
+
+        return result;
+    }
+
+    @NonNull private PumpEnactResult handleTimeChange(boolean requestedByUser) {
+        aapsLogger.debug(LTag.PUMP, "Setting time, requestedByUser={}", requestedByUser);
+
+        PumpEnactResult result;
+        if (requestedByUser || aapsOmnipodManager.isTimeChangeEventEnabled()) {
+            result = executeCommand(OmnipodCommandType.SET_TIME, () -> aapsOmnipodManager.setTime(!requestedByUser));
+        } else {
+            // Even if automatically changing the time is disabled, we still want to at least do a GetStatus request,
+            // in order to update the Pod's activation time, which we need for calculating the time on the Pod
+            result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+        }
+
+        if (result.success) {
+            this.hasTimeDateOrTimeZoneChanged = false;
+            timeChangeRetries = 0;
+
+            if (!requestedByUser && aapsOmnipodManager.isTimeChangeEventEnabled()) {
+                Notification notification = new Notification(
+                        Notification.TIME_OR_TIMEZONE_CHANGE,
+                        resourceHelper.gs(R.string.omnipod_confirmation_time_on_pod_updated),
+                        Notification.INFO, 60);
+                rxBus.send(new EventNewNotification(notification));
+            }
+
+        } else {
+            if (!requestedByUser) {
+                timeChangeRetries++;
+
+                if (timeChangeRetries > 3) {
+                    if (aapsOmnipodManager.isTimeChangeEventEnabled()) {
+                        Notification notification = new Notification(
+                                Notification.TIME_OR_TIMEZONE_CHANGE,
+                                resourceHelper.gs(R.string.omnipod_error_automatic_time_or_timezone_change_failed),
+                                Notification.INFO, 60);
+                        rxBus.send(new EventNewNotification(notification));
+                    }
+                    this.hasTimeDateOrTimeZoneChanged = false;
+                    timeChangeRetries = 0;
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
         aapsLogger.warn(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
 
-        if (aapsOmnipodManager.isTimeChangeEventEnabled() && podStateManager.isPodRunning()) {
+        if (podStateManager.isPodRunning()) {
             aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed event received and will be consumed by driver.");
-            this.hasTimeDateOrTimeZoneChanged = true;
+            hasTimeDateOrTimeZoneChanged = true;
         }
     }
 
@@ -817,10 +861,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         }
 
         return false;
-    }
-
-    public void addPodStatusRequest(OmnipodStatusRequestType pumpStatusRequest) {
-        statusRequestList.add(pumpStatusRequest);
     }
 
     @Override
@@ -853,50 +893,47 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
-    @NotNull @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer
+    @NonNull @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer
             durationInMinutes, Profile profile, boolean enforceNew) {
         aapsLogger.debug(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
-    @NotNull @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer
+    @NonNull @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer
             durationInMinutes) {
         aapsLogger.debug(LTag.PUMP, "setExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
-    @NotNull @Override public PumpEnactResult cancelExtendedBolus() {
+    @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
         aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
-    @NotNull @Override public PumpEnactResult loadTDDs() {
+    @NonNull @Override public PumpEnactResult loadTDDs() {
         aapsLogger.debug(LTag.PUMP, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
     private void initializeAfterRileyLinkConnection() {
         if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
-            PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
-            if (result.success) {
-                aapsLogger.debug(LTag.PUMP, "Successfully retrieved Pod status on startup");
-            } else {
-                aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
+            for (int i = 0; STARTUP_STATUS_REQUEST_TRIES > i; i++) {
+                PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+                if (result.success) {
+                    aapsLogger.debug(LTag.PUMP, "Successfully retrieved Pod status on startup");
+                    break;
+                } else {
+                    aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
+                }
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running");
         }
 
-        if (!sentIdToFirebase) {
-            Bundle params = new Bundle();
-            params.putString("version", BuildConfig.VERSION);
+        Bundle params = new Bundle();
+        params.putString("version", BuildConfig.VERSION);
 
-            fabricPrivacy.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
-
-            sentIdToFirebase = true;
-        }
-
-        this.firstRun = false;
+        fabricPrivacy.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
     }
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
@@ -914,19 +951,14 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private <T> T executeCommand(OmnipodCommandType commandType, Supplier<T> supplier) {
         try {
-            currentCommand = commandType;
             aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(getInjector(), commandType));
 
-            T pumpEnactResult = supplier.get();
-
+            return supplier.get();
+        } finally {
             rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
             rxBus.send(new EventOmnipodPumpValuesChanged());
-
-            return pumpEnactResult;
-        } finally {
-            currentCommand = null;
         }
     }
 
@@ -946,7 +978,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return true;
     }
 
-    private void incrementStatistics(String statsKey) {
+    private void incrementStatistics(int statsKey) {
         long currentCount = sp.getLong(statsKey, 0L);
         currentCount++;
         sp.putLong(statsKey, currentCount);

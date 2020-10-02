@@ -69,7 +69,9 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
 
         unacknowledgedAlerts = new AlertSet(encodedData[15]);
         faultAccessingTables = encodedData[16] == 0x02;
-        logEventErrorType = LogEventErrorCode.fromByte((byte) (encodedData[17] >>> 4));
+        int i = ByteUtil.convertUnsignedByteToInt(encodedData[17]);
+        byte value = (byte) (i >>> 4);
+        logEventErrorType = LogEventErrorCode.fromByte(value);
         logEventErrorPodProgressStatus = PodProgressStatus.fromByte((byte) (encodedData[17] & 0x0f));
         receiverLowGain = (byte) (ByteUtil.convertUnsignedByteToInt(encodedData[18]) >>> 6);
         radioRSSI = (byte) (encodedData[18] & 0x3f);

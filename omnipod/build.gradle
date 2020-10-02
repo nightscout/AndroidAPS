@@ -78,6 +78,8 @@ dependencies {
     implementation "com.google.android.material:material:${materialVersion}"
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${swiperefreshVersion}"
+    implementation "androidx.fragment:fragment:${fragmentVersion}"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
     implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
 
@@ -88,12 +90,9 @@ dependencies {
 
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
 
-    // Omnipod - start
-    implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'net.danlew:android.joda:2.10.6'
     implementation "com.google.code.gson:gson:2.8.6"
-    implementation(name: "com.atech-software.android.library.wizardpager-1.1.4", ext: "aar")
-    // Omnipod - end
 
     implementation "com.google.dagger:dagger-android:$dagger_android_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_android_support_version"
@@ -101,6 +100,12 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    implementation 'com.google.android.material:material:1.1.0'
 
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:3.5.10'

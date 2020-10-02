@@ -5,16 +5,28 @@
     <string name="description_pump_omnipod">Integração de bomba para Omnipod, requer RileyLink (com pelo menos firmware 2.0) dispositivo.</string>
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
+    <string name="omnipod_pod_mgmt">Gestão Pod</string>
+    <string name="omnipod_pod_status">Estado do Pod</string>
+    <string name="omnipod_total_delivered_label">Total Administrado</string>
     <string name="omnipod_total_delivered">%1$.2f U</string>
     <string name="omnipod_reservoir_left">%1$.2f U restante</string>
     <string name="omnipod_reservoir_over50">Mais de 50 U</string>
+    <string name="omnipod_pod_address">Endereço do Pod</string>
+    <string name="omnipod_pod_expiry">Pod Expira</string>
     <string name="omnipod_warning">Aviso</string>
+    <string name="omnipod_pod_status_no_active_pod">Nenhum Pod Activo</string>
     <string name="omnipod_pod_status_running">A correr</string>
+    <string name="omnipod_pod_status_suspended">Suspenso</string>
+    <string name="omnipod_pod_status_pod_fault">Falha no Pod</string>
+    <string name="omnipod_pod_status_inactive">Inactivo</string>
+    <string name="omnipod_pod_status_pod_fault_description">Falha no Pod: %1$s %2$s</string>
+    <string name="omnipod_acknowledge_active_alerts_short">Reco Alertas</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
     <string name="omnipod_error_illegal_init_action_type">PodInitActionType Ilegal: %1$s</string>
+    <string name="omnipod_error_pod_not_attached">Nenhum Pod Activo</string>
     <string name="omnipod_driver_error_setup_action_verification_failed">A verificação do comando falhou</string>
     <string name="omnipod_driver_error_unexpected_exception_type">Ocorreu um erro inesperado. Por favor reporte! (digite: %1$s).</string>
     <string name="omnipod_driver_error_invalid_parameters">Falha na comunicação: foram recebidos parâmetros de entrada inválidos</string>
@@ -33,8 +45,25 @@
     <string name="omnipod_driver_error_pod_fault">Uma falha de Pod (%1$03d %2$s) foi detectada. Por favor, desactive o Pod e inicie um novo</string>
     <string name="omnipod_driver_error_pod_returned_error_response">Falha na comunicação: o Pod devolveu uma resposta de erro</string>
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_pod_mgmt_title">Gestão Pod</string>
     <string name="omnipod_cmd_init_pod">Iniciar Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_cmd_discard_pod">Descartar Pod</string>
+    <string name="omnipod_cmd_pod_history">Histórico do Pod</string>
+    <string name="omnipod_cmd_set_bolus">Definir Bólus</string>
+    <string name="omnipod_cmd_cancel_bolus">Cancelar Bólus</string>
+    <string name="omnipod_cmd_set_tbr">Definir Basal Temporária</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Cancelar Basal Temporária (intermanente pelo controlador)</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancelar Basal Temporária</string>
+    <string name="omnipod_cmd_set_basal_schedule">Definir Programação Basal</string>
+    <string name="omnipod_cmd_get_pod_status">Obter Estado do Pod</string>
+    <string name="omnipod_cmd_get_pod_info">Obter Info do Pod</string>
+    <string name="omnipod_cmd_set_time">Definir hora</string>
+    <string name="omnipod_cmd_configure_alerts">Configurar Alertas</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Reconhecer Alertas</string>
+    <string name="omnipod_cmd_suspend_delivery">Suspender Administração</string>
+    <string name="omnipod_cmd_resume_delivery">Retomar Administração</string>
+    <string name="omnipod_cmd_unknown_entry">Entrada Desconhecida</string>
     <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
     <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, HC=%2$.1f g</string>
     <string name="omnipod_cmd_pod_history_na">Histórico do Pod não disponível no momento.</string>
@@ -52,6 +81,9 @@
     <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, remova o Pod do seu corpo e descarte-o.</string>
     <string name="omnipod_init_pod_pair_pod">Emparelhar Pod</string>
     <string name="omnipod_init_pod_prime_pod">Purgar Pod</string>
+    <string name="omnipod_init_pod_fill_cannula">Preencher Canula</string>
+    <string name="omnipod_init_pod_set_basal_profile">Definir Perfil Basal</string>
+    <string name="omnipod_deactivate_pod_cancel_delivery">Cancelar Administração</string>
     <string name="omnipod_deactivate_pod_deactivate_pod">Desactivar Pod</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
@@ -62,17 +94,27 @@
     <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>
     <string name="omnipod_alert_unknown_alert">Alerta desconhecido</string>
     <string name="omnipod_rl_stats">Estatísticas RL</string>
+    <string name="omnipod_pod_firmware_version">Versão do Firmware</string>
     <string name="omnipod_errors">Erros</string>
     <string name="omnipod_cmd_basal_profile_not_set_is_same">Perfil Basal é o mesmo, então não será definido novamente.</string>
+    <string name="omnipod_composite_time">%1$s e %2$s</string>
+    <string name="omnipod_time_ago">%1$s atrás</string>
     <string name="omnipod_refresh">Actualizar</string>
+    <string name="omnipod_resume_delivery">Retomar Administração</string>
+    <string name="omnipod_error_pod_suspended">Pod suspenso</string>
     <string name="omnipod_suspend_delivery_short">Suspender</string>
+    <string name="omnipod_cmd_pair_and_prime">Emparelhar e Purgar</string>
+    <string name="omnipod_cmd_fill_cannula_set_basal_profile">Preencher canula e definir perfil basal</string>
     <string name="omnipod_uncertain_failure">Falha incerta</string>
+    <string name="omnipod_uncertain">incerto</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Outro</string>
     <string name="omnipod_preference_category_alerts">Alertas</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Beeps de confirmação</string>
     <string name="omnipod_wizard_button_exit">Sair</string>
     <string name="omnipod_wizard_button_previous">Anterior</string>
     <string name="omnipod_wizard_button_next">Seguinte</string>
+    <string name="omnipod_wizard_button_finish">Terminar</string>
     <string name="omnipod_history_item_description">Descrição</string>
     <string name="omnipod_history_item_source">Fonte</string>
     <string name="omnipod_history_item_date">Data</string>

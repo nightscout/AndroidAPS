@@ -11,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertCo
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
@@ -26,10 +25,10 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
     public InsertCannulaAction(PodStateManager podStateManager, BasalSchedule initialBasalSchedule,
                                Duration expirationReminderTimeBeforeShutdown, Integer lowReservoirAlertUnits) {
         if (podStateManager == null) {
-            throw new ActionInitializationException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Pod state manager cannot be null");
         }
         if (initialBasalSchedule == null) {
-            throw new ActionInitializationException("Initial basal schedule cannot be null");
+            throw new IllegalArgumentException("Initial basal schedule cannot be null");
         }
         this.podStateManager = podStateManager;
         this.initialBasalSchedule = initialBasalSchedule;

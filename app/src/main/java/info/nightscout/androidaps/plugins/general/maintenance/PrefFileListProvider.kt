@@ -47,6 +47,7 @@ data class PrefsFile(
 class PrefsFileContract : ActivityResultContract<Void, PrefsFile>() {
 
     companion object {
+
         const val OUTPUT_PARAM = "prefs_file"
     }
 
@@ -75,6 +76,7 @@ class PrefFileListProvider @Inject constructor(
 ) {
 
     companion object {
+
         private val path = File(Environment.getExternalStorageDirectory().toString())
         private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
@@ -97,7 +99,7 @@ class PrefFileListProvider @Inject constructor(
             val detectedOld = !detectedNew && classicPrefsFormat.isPreferencesFile(it, contents)
             if (detectedNew || detectedOld) {
                 val formatHandler = if (detectedNew) PrefsFormatsHandler.ENCRYPTED else PrefsFormatsHandler.CLASSIC
-                prefFiles.add(PrefsFile(it.name , it, path, PrefsImportDir.ROOT_DIR, formatHandler, metadataFor(loadMetadata, formatHandler, contents)))
+                prefFiles.add(PrefsFile(it.name, it, path, PrefsImportDir.ROOT_DIR, formatHandler, metadataFor(loadMetadata, formatHandler, contents)))
             }
         }
 
