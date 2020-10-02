@@ -799,6 +799,8 @@
     <string name="bgsourcesetup">Konfigurer BS kilde</string>
     <string name="setupwizard_profile_description">Vennligst velg kilde for din profil. Hvis pasienten er et barn anbefales det å bruke NS profil. Hvis ingen følger deg på Nightscout anbefales det å bruke en Lokal Profil. Husk at du her kun velger hvor profilen din ligger lagret. For å bruke den må du velge Profilbytte</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Venter på RileyLink tilkobling...\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er initialisert.\n</string>
     <string name="startobjective">Start første læringsmål</string>
     <string name="permission">Tillatelse</string>
     <string name="askforpermission">Spør om tillatelse</string>
