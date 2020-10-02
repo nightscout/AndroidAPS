@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mes
 
 import org.joda.time.Duration;
 
-import java.util.Arrays;
-
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
@@ -189,7 +187,7 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
                 ", receiverLowGain=" + receiverLowGain +
                 ", radioRSSI=" + radioRSSI +
                 ", podProgressStatusAtTimeOfFirstLoggedFaultEvent=" + podProgressStatusAtTimeOfFirstLoggedFaultEvent +
-                ", unknownValue=" + Arrays.toString(unknownValue) +
+                ", unknownValue=" + ByteUtil.shortHexString(unknownValue) +
                 '}';
     }
 }
