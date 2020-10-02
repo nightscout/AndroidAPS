@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedul
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.DeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.TempBasalDeliverySchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandInitializationException;
 
 public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
 
@@ -51,12 +50,12 @@ public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
     // Temp basal
     public SetInsulinScheduleCommand(int nonce, double tempBasalRate, Duration duration) {
         if (tempBasalRate < 0D) {
-            throw new CommandInitializationException("Rate should be >= 0");
+            throw new IllegalArgumentException("Rate should be >= 0");
         } else if (tempBasalRate > OmnipodConstants.MAX_BASAL_RATE) {
-            throw new CommandInitializationException("Rate exceeds max basal rate");
+            throw new IllegalArgumentException("Rate exceeds max basal rate");
         }
         if (duration.isLongerThan(OmnipodConstants.MAX_TEMP_BASAL_DURATION)) {
-            throw new CommandInitializationException("Duration exceeds max temp basal duration");
+            throw new IllegalArgumentException("Duration exceeds max temp basal duration");
         }
         int pulsesPerHour = (int) Math.round(tempBasalRate / OmnipodConstants.POD_PULSE_SIZE);
         int pulsesPerSegment = pulsesPerHour / 2;

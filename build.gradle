@@ -13,7 +13,8 @@ buildscript {
         coroutinesVersion = '1.3.7'
         activityVersion = '1.2.0-alpha06'
         fragmentVersion = '1.3.0-alpha07'
-        ormLiteVersion = "4.46"
+        ormLiteVersion = '4.46'
+        nav_version = '2.3.0'
     }
     repositories {
         google()
