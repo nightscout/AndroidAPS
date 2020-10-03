@@ -900,7 +900,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
             absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue);
-            aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
+            aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
             return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
         }
     }
