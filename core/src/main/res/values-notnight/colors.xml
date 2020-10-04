@@ -98,10 +98,10 @@
     <color name="colorActive">#25912e</color>
 
     <!--  Informationenline -->
-    <color name="notificationAnnouncement">#f0a30a</color>
-    <color name="notificationUrgent">#f0a30a</color>
-    <color name="notificationNormal">#00a3e8</color>
-    <color name="notificationLow">#f0a30a</color>
+    <color name="notificationAnnouncement">#FF8C00</color>
+    <color name="notificationUrgent">#ff0400</color>
+    <color name="notificationNormal">#ff5e55</color>
+    <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
 
     <!---Graph Color for deviation-->
