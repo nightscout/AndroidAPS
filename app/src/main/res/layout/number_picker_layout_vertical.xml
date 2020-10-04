@@ -12,7 +12,7 @@
         android:background="@null"
         android:padding="0dp"
         android:text="+"
-        android:textSize="25sp" />
+        android:textSize="25dp" />
 
     <EditText
         android:id="@+id/display"
