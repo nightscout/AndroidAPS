@@ -801,6 +801,8 @@ Context | Edit Context</string>
     <string name="bgsourcesetup">Настройте источник СК</string>
     <string name="setupwizard_profile_description">Пожалуйста выберите источник профиля. Если пациент ребенок пользуйтесь профилем Nightscout. Если никто не отслеживает ваш СК на NS, вы вероятно предпочтете Локальный профиль. Напоминание - вы всего лишь выбираете профиль. Активируйте его \"Переключателем профиля\"</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Ожидание соединения RileyLink\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы вы можете продолжить установку\n</string>
     <string name="startobjective">Начните первую Цель</string>
     <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>
