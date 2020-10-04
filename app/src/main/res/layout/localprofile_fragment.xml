@@ -85,6 +85,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/profile_buttons"
         android:orientation="vertical">
 
         <LinearLayout
@@ -225,7 +226,7 @@
             android:id="@+id/localprofile_ic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
         <LinearLayout
@@ -257,65 +258,39 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="80dp"
             android:gravity="bottom"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal">
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="vertical">
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/localprofile_profileswitch"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
-                app:icon="@drawable/ic_local_activate"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/activate_profile"
-                app:cornerRadius="20dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/localprofile_reset"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="3dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="0dp"
                     android:layout_weight="1"
-                    app:icon="@drawable/icon_local_reset"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
+                    app:icon="@drawable/ic_local_reset"
                     android:text="@string/reset"
-                    app:cornerRadius="20dp" />
+                    app:cornerRadius="16dp" />
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/localprofile_save"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="3dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="0dp"
                     android:layout_weight="1"
                     app:icon="@drawable/icon_local_save"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
                     android:text="@string/save"
-                    app:cornerRadius="20dp" />
-            </LinearLayout>
+                    app:cornerRadius="16dp" />
 
         </LinearLayout>
 

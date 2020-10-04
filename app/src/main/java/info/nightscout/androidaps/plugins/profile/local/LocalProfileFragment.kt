@@ -130,7 +130,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         // activate DIA tab
         //processVisibilityOnClick(dia_tab)
-        updateGUI()
+        updateGUI("")
         localprofile_dia_placeholder.visibility = View.VISIBLE
     }
 
@@ -171,10 +171,10 @@ class LocalProfileFragment : DaggerFragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (localProfilePlugin.isEdited) {
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.doyouwantswitchprofile), Runnable {
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.doyouwantswitchprofile), {
                             localProfilePlugin.currentProfileIndex = position
                             build()
-                        }, Runnable {
+                        }, {
                             spinner?.setSelection(localProfilePlugin.currentProfileIndex)
                         })
                     }
@@ -192,12 +192,6 @@ class LocalProfileFragment : DaggerFragment() {
         @Suppress("SetTextI18n")
         localprofile_units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
 
-        localprofile_profileswitch.setOnClickListener {
-            ProfileSwitchDialog()
-                .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
-                .show(childFragmentManager, "NewNSTreatmentDialog")
-        }
-
         localprofile_reset.setOnClickListener {
             localProfilePlugin.loadSettings()
             build()
@@ -210,7 +204,7 @@ class LocalProfileFragment : DaggerFragment() {
             localProfilePlugin.storeSettings(activity)
             build()
         }
-        updateGUI()
+        updateGUI("")
     }
 
     private val clickListener: View.OnClickListener = View.OnClickListener { view ->
@@ -220,12 +214,12 @@ class LocalProfileFragment : DaggerFragment() {
                     ViewAnimation.showIn(fabNewProfile)
                     ViewAnimation.showIn(fabCloneProfile)
                     ViewAnimation.showIn(fabDeleteProfile)
-                    updateGUI()
+                    updateGUI("onMenue")
                 } else if ( fabNewProfile.visibility == View.VISIBLE) {
                     ViewAnimation.showOut(fabNewProfile)
                     ViewAnimation.showOut(fabCloneProfile)
                     ViewAnimation.showOut(fabDeleteProfile)
-                    ViewAnimation.showOut(fabActivateProfile)
+                    if( fabActivateProfile.visibility == View.VISIBLE ) ViewAnimation.showOut(fabActivateProfile)
                 }
             }
             R.id.fabNewProfile -> {
@@ -238,7 +232,7 @@ class LocalProfileFragment : DaggerFragment() {
                 ViewAnimation.showOut(fabNewProfile)
                 ViewAnimation.showOut(fabCloneProfile)
                 ViewAnimation.showOut(fabDeleteProfile)
-                ViewAnimation.showOut(fabActivateProfile)
+                if( fabActivateProfile.visibility == View.VISIBLE )  ViewAnimation.showOut(fabActivateProfile)
             }
             R.id.fabCloneProfile          -> {
                 if (localProfilePlugin.isEdited) {
@@ -265,8 +259,9 @@ class LocalProfileFragment : DaggerFragment() {
                 ViewAnimation.showOut(fabActivateProfile)
             }
             R.id.fabActivateProfile             -> {
-                // TODO: select in dialog localProfilePlugin.currentProfileIndex
-                ProfileSwitchDialog().show(childFragmentManager, "NewNSTreatmentDialog")
+                ProfileSwitchDialog()
+                    .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
+                    .show(childFragmentManager, "NewNSTreatmentDialog")
                 ViewAnimation.showOut(fabNewProfile)
                 ViewAnimation.showOut(fabCloneProfile)
                 ViewAnimation.showOut(fabDeleteProfile)
@@ -296,11 +291,10 @@ class LocalProfileFragment : DaggerFragment() {
 
     fun doEdit() {
         localProfilePlugin.isEdited = true
-        updateGUI()
+        updateGUI("")
     }
 
-    fun updateGUI() {
-        if (localprofile_profileswitch == null) return
+    fun updateGUI(calledFrom : String) {
         val isValid = localProfilePlugin.isValidEditState()
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
@@ -308,18 +302,15 @@ class LocalProfileFragment : DaggerFragment() {
 
             if (isEdited) {
                 //edited profile -> save first
-                ViewAnimation.showOut(fabActivateProfile)
-                localprofile_profileswitch.visibility = View.GONE
+                if ( fabActivateProfile.visibility ==  View.VISIBLE ) ViewAnimation.showOut(fabActivateProfile)
                 localprofile_save.visibility = View.VISIBLE
             } else {
-                if ( fabNewProfile.visibility == View.VISIBLE)  ViewAnimation.showIn(fabActivateProfile)
-                localprofile_profileswitch.visibility = View.VISIBLE
+                if ( calledFrom == "onMenue" )   ViewAnimation.showIn(fabActivateProfile)
                 localprofile_save.visibility = View.GONE
             }
         } else {
             this.view?.setBackgroundColor(resourceHelper.gc(R.color.error_background))
-            ViewAnimation.showOut(fabActivateProfile)
-            fabActivateProfile.visibility = View.VISIBLE
+            if ( calledFrom == "" )   fabActivateProfile.visibility =  View.GONE
             localprofile_save.visibility = View.GONE //don't save an invalid profile
         }
 
