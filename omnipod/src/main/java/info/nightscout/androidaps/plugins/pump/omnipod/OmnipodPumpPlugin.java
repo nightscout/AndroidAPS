@@ -97,6 +97,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+
 /**
  * Created by andy on 23.04.18.
  *
@@ -536,6 +538,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
             durationInMinutes, Profile profile, boolean enforceNew) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
+
+        if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
+            return new PumpEnactResult(getInjector()).success(false).comment("TBR duration must be greater than zero and a multiple of " + BASAL_STEP_DURATION.getStandardMinutes() + " minutes.");
+        }
 
         // read current TBR
         TemporaryBasal tbrCurrent = readTBR();
