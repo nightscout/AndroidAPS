@@ -895,8 +895,14 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @NonNull @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer
             durationInMinutes, Profile profile, boolean enforceNew) {
-        aapsLogger.debug(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        if (percent == 0) {
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+        } else {
+            double absoluteValue = profile.getBasal() * (percent / 100.0d);
+            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue);
+            aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+        }
     }
 
     @NonNull @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer

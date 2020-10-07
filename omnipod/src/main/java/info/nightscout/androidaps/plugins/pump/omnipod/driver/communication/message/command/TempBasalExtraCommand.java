@@ -27,7 +27,10 @@ public class TempBasalExtraCommand extends MessageBlock {
         } else if (rate > OmnipodConstants.MAX_BASAL_RATE) {
             throw new IllegalArgumentException("Rate exceeds max basal rate");
         }
-        if (duration.isLongerThan(OmnipodConstants.MAX_TEMP_BASAL_DURATION)) {
+
+        if (duration.isShorterThan(Duration.ZERO) || duration.equals(Duration.ZERO)) {
+            throw new IllegalArgumentException("Duration should be > 0");
+        } else if (duration.isLongerThan(OmnipodConstants.MAX_TEMP_BASAL_DURATION)) {
             throw new IllegalArgumentException("Duration exceeds max temp basal duration");
         }
 
