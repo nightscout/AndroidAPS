@@ -535,6 +535,7 @@
     <string name="free_peak_oref">Oref Vârf-Liber</string>
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
     <string name="ultrarapid_oref">Oref Insulină-UltraRapidă</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <string name="activate_profile">Activează profil</string>
     <string name="invalid">INVALID</string>
