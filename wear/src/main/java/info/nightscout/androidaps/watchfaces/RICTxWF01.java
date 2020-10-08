@@ -6,7 +6,10 @@ import android.os.Vibrator;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
 
 import com.ustwo.clockwise.common.WatchFaceTime;
@@ -131,6 +134,25 @@ public class RICTxWF01 extends BaseWatchFace {
             }
 
         }
+
+        /* optimize font-size  --> when date is off then increase font-size of time */
+        Boolean isShowDate = sharedPrefs.getBoolean("show_date", true);
+        if (!isShowDate) {
+            layoutView.findViewById(R.id.date_time).setVisibility(View.GONE);
+            mHour.setTextSize(62);
+            mMinute.setTextSize(40);
+            mHour.setLetterSpacing((float) -0.066);
+            mMinute.setLetterSpacing((float) -0.066);
+        } else {
+            layoutView.findViewById(R.id.date_time).setVisibility(View.VISIBLE);
+            mHour.setTextSize(40);
+            mMinute.setTextSize(26);
+            mHour.setLetterSpacing((float) 0);
+            mMinute.setLetterSpacing((float) 0);
+        }
+
+        /* @ToDo optimize font-size  --> when direction and time-ago is off, increase font-size of sgv */
+
     }
 
     protected void setColorLowRes() {
