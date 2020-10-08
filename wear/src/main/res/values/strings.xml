@@ -152,5 +152,6 @@
     <string name="pref_choose_your_color">Choose your color</string>
     <string name="pref_choose_your_color_saturation">Choose your color saturation</string>
     <string name="pref_vibrate_hourly">vibrate hourly</string>
+    <string name="pref_show_weeknumber">Show Week number</string>
 
 </resources>

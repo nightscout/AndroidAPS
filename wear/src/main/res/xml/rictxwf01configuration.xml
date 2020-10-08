@@ -31,6 +31,13 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
+        android:key="show_weeknumber"
+        android:title="@string/pref_show_weeknumber"
+        android:defaultValue="false"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
         android:key="rictxwf01_vibrateHourly"
         android:title="@string/pref_vibrate_hourly"
         android:defaultValue="false"
