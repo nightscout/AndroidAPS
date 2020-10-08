@@ -540,7 +540,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
-            return new PumpEnactResult(getInjector()).success(false).comment("TBR duration must be greater than zero and a multiple of " + BASAL_STEP_DURATION.getStandardMinutes() + " minutes.");
+            return new PumpEnactResult(getInjector()).success(false).comment(resourceHelper.gs(R.string.omnipod_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
         }
 
         // read current TBR

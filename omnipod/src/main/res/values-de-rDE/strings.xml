@@ -53,6 +53,10 @@
     <string name="omnipod_error_not_enough_data">Kommunikation fehlgeschlagen: Nicht genügend Daten vom Pod empfangen</string>
     <string name="omnipod_error_pod_fault">Ein Pod-Fehler (%1$03d %2$s) wurde festgestellt. Bitte deaktiviere den Pod und starte einen neuen</string>
     <string name="omnipod_error_pod_returned_error_response">Kommunikation fehlgeschlagen: Fehlerhafte Antwort vom Pod</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Das Setzen der temporären Basalrate war nicht erfolgreich. Falls eine TBR im Gange war, wurde sie mögicherweise abgebrochen. Bitte aktualisieren Sie den Pod Status im Omnipod Tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Das Setzen der temporären Basalrate war möglicherweise nicht erfolgreich. Falls eine TBR im Gange war, wurde sie abgebrochen. Bitte aktualisieren Sie den Pod Status im Omnipod Tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">TBR Dauer muss grösser als null und ein Mehrfaches von %1$s Minuten sein.</string>
+
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_management_title">Pod Management</string>
     <string name="omnipod_cmd_deactivate_pod">Pod deaktivieren</string>
