@@ -308,14 +308,32 @@
 
                         <TextView
                             android:id="@+id/dayname"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_weight="5"
                             android:fontFamily="@font/roboto_condensed_regular"
                             android:text="DDD"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
                             android:textFontWeight="400"
                             android:textSize="18sp" />
+                        <TextView
+                            android:id="@+id/weeknumber"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:fontFamily="@font/roboto_condensed_light"
+                            android:text="ww"
+                            android:textAllCaps="true"
+                            android:textColor="@color/light_grey"
+                            android:textFontWeight="400"
+                            android:textSize="18sp"
+                            android:letterSpacing="-0.1"
+                            android:visibility="gone"/>
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3" />
                     </LinearLayout>
 
                     <!-- day number + month (short)-->

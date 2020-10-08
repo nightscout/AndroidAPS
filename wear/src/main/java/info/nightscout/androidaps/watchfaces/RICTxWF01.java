@@ -14,6 +14,10 @@ import androidx.core.content.ContextCompat;
 
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchMode;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
@@ -149,7 +153,20 @@ public class RICTxWF01 extends BaseWatchFace {
             mMinute.setTextSize(26);
             mHour.setLetterSpacing((float) 0);
             mMinute.setLetterSpacing((float) 0);
+
+            /* display week number */
+            Boolean isShowWeekNumber = sharedPrefs.getBoolean("show_weeknumber", false);
+            Log.i("---------------------------------","weeknumber refresh ");
+            TextView mWeekNumber= layoutView.findViewById(R.id.weeknumber);
+            if (isShowWeekNumber) {
+                mWeekNumber.setVisibility(View.VISIBLE);
+                mWeekNumber.setText("(" + (new SimpleDateFormat("ww")).format(new Date()) + ")");
+            } else {
+                mWeekNumber.setVisibility(View.GONE);
+                mWeekNumber.setText("");
+            }
         }
+
 
         /* @ToDo optimize font-size  --> when direction and time-ago is off, increase font-size of sgv */
 
