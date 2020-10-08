@@ -15,7 +15,7 @@
         android:id="@+id/shapes_elements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rictxwf01_bg_red_round"
+        android:background="@drawable/rictxwf01_bg_full_round"
         android:contentDescription="round-shape-elements"
         android:orientation="horizontal" />
 

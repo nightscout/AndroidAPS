@@ -1,12 +1,14 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Vibrator;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import androidx.core.content.ContextCompat;
+
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchMode;
 import info.nightscout.androidaps.R;
@@ -101,19 +103,34 @@ public class RICTxWF01 extends BaseWatchFace {
         LinearLayout mShapesElements = layoutView.findViewById(R.id.shapes_elements);
         if (mShapesElements != null) {
             String displayFormatType = (mShapesElements.getContentDescription().toString().startsWith("round") ? "round" : "rect");
-            String styleDrawableName = "rictxwf01_bg_" + sharedPrefs.getString("rictxwf01_frameStyle", "red") + "_" + displayFormatType;
-            Log.d("rictxwf01_frameStyle", styleDrawableName);
+            String displayStyle=sharedPrefs.getString("rictxwf01_frameStyle", "full");
+            String displayFrameColor=sharedPrefs.getString("rictxwf01_frameColor", "red");
+            String displayFrameColorSaturation=sharedPrefs.getString("rictxwf01_frameColorSaturation", "500");
+
+            // Load image with shapes
+            String styleDrawableName = "rictxwf01_bg_" + displayStyle + "_" + displayFormatType;
             try {
                 mShapesElements.setBackground(getResources().getDrawable(getResources().getIdentifier(styleDrawableName, "drawable", getApplicationContext().getPackageName())));
             } catch (Exception e) {
                 Log.e("rictxwf01_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
             }
+
+            // set background-tint-color
+            if (displayStyle.equalsIgnoreCase("rainbow") || displayStyle.equalsIgnoreCase("none")) {
+                mShapesElements.setBackgroundTintList(null);
+            } else {
+                String strColorName =((   displayFrameColor.equals("white") || displayFrameColor.equals("black")  )?displayFrameColor:displayFrameColor+"_"+displayFrameColorSaturation);
+                Log.v("rictxwf01_strColorName",strColorName);
+                try {
+                    ColorStateList colorStateList = ContextCompat.getColorStateList(getApplicationContext(), getResources().getIdentifier(strColorName, "color", getApplicationContext().getPackageName()));
+                    mShapesElements.setBackgroundTintList(colorStateList);
+                } catch (Exception e) {
+                    mShapesElements.setBackgroundTintList(null);
+                    Log.e("rictxwf01_ColorName", "COLOR NOT FOUND >> " + strColorName);
+                }
+            }
+
         }
-
-
-        /* ToDo  Implement a configurable background image
-         *  layoutView.setBackground();
-         */
     }
 
     protected void setColorLowRes() {

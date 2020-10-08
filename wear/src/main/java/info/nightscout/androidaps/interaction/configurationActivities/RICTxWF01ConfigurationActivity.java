@@ -16,6 +16,7 @@ public class RICTxWF01ConfigurationActivity extends WearPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("watchface");
         addPreferencesFromResource(R.xml.rictxwf01configuration);
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         removeBackgroundRecursively(view);

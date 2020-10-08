@@ -6,9 +6,22 @@
     <ListPreference
         android:key="rictxwf01_frameStyle"
         android:title="@string/pref_choose_your_style"
-        android:defaultValue="red"
+        android:defaultValue="full"
         android:entries="@array/rictxwf01_styles_name"
         android:entryValues="@array/rictxwf01_styles_values"/>
+
+    <ListPreference
+        android:key="rictxwf01_frameColor"
+        android:title="@string/pref_choose_your_color"
+        android:defaultValue="red"
+        android:entries="@array/rictxwf01_color_name"
+        android:entryValues="@array/rictxwf01_color_values"/>
+    <ListPreference
+        android:key="rictxwf01_frameColorSaturation"
+        android:title="@string/pref_choose_your_color_saturation"
+        android:defaultValue="700"
+        android:entries="@array/rictxwf01_color_saturation"
+        android:entryValues="@array/rictxwf01_color_saturation"/>
 
     <CheckBoxPreference
         android:key="show_date"
@@ -16,15 +29,6 @@
         android:defaultValue="true"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
-
-    <!--  Idea for future implementation  @ToDo Implement Background-Images
-    <ListPreference
-        android:key="rictxwf01_backgroundImage"
-        android:title="Background Image"
-        android:defaultValue="red"
-        android:entries="@array/rictxwf01_backgroundimage_name"
-        android:entryValues="@array/rictxwf01_backgroundimage_values" />
-    -->
 
     <CheckBoxPreference
         android:key="rictxwf01_vibrateHourly"

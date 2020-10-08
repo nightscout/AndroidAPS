@@ -2,12 +2,12 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".watchfaces.Home2"
-    tools:deviceIds="wear_square"
     android:background="@color/black"
-    android:id="@+id/main_layout">
+    tools:context=".watchfaces.RICTxWF01"
+    tools:deviceIds="wear_square">
 
 
     <!-- background-image with shapes elements-->
@@ -15,7 +15,7 @@
         android:id="@+id/shapes_elements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rictxwf01_bg_red_rect"
+        android:background="@drawable/rictxwf01_bg_full_rect"
         android:contentDescription="rect-shape-elements"
         android:orientation="horizontal" />
 
