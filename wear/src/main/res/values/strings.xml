@@ -140,18 +140,20 @@
     <string name="color_name_bluegray">blue gray</string>
     <string name="color_name_white">white</string>
     <string name="color_name_black">black</string>
-
+    <string name="color_name_multicolor">multicolor</string>
 
 
     <string name="pref_choose_your_style">Choose your style</string>
     <string name="style_none">no style</string>
     <string name="style_minimal">minimal style</string>
+    <string name="style_shape">shape style</string>
     <string name="style_full">full style</string>
-    <string name="style_rainbow">rainbow style</string>
+
 
     <string name="pref_choose_your_color">Choose your color</string>
     <string name="pref_choose_your_color_saturation">Choose your color saturation</string>
-    <string name="pref_vibrate_hourly">vibrate hourly</string>
+    <string name="pref_choose_your_color_opacity">Choose your color opacity</string>
+    <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
 
 </resources>

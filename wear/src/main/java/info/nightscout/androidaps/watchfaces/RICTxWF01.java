@@ -113,6 +113,7 @@ public class RICTxWF01 extends BaseWatchFace {
             String displayStyle=sharedPrefs.getString("rictxwf01_frameStyle", "full");
             String displayFrameColor=sharedPrefs.getString("rictxwf01_frameColor", "red");
             String displayFrameColorSaturation=sharedPrefs.getString("rictxwf01_frameColorSaturation", "500");
+            String displayFrameColorOpacity=sharedPrefs.getString("rictxwf01_frameColorOpacity", "1");
 
             // Load image with shapes
             String styleDrawableName = "rictxwf01_bg_" + displayStyle + "_" + displayFormatType;
@@ -123,7 +124,7 @@ public class RICTxWF01 extends BaseWatchFace {
             }
 
             // set background-tint-color
-            if (displayStyle.equalsIgnoreCase("rainbow") || displayStyle.equalsIgnoreCase("none")) {
+            if (displayFrameColor.equalsIgnoreCase("multicolor") || displayStyle.equalsIgnoreCase("none")) {
                 mShapesElements.setBackgroundTintList(null);
             } else {
                 String strColorName =((   displayFrameColor.equals("white") || displayFrameColor.equals("black")  )?displayFrameColor:displayFrameColor+"_"+displayFrameColorSaturation);
@@ -137,10 +138,13 @@ public class RICTxWF01 extends BaseWatchFace {
                 }
             }
 
+            // set opacity of shapes
+            mShapesElements.setAlpha(Float.parseFloat(displayFrameColorOpacity));
+
         }
 
         /* optimize font-size  --> when date is off then increase font-size of time */
-        Boolean isShowDate = sharedPrefs.getBoolean("show_date", true);
+        Boolean isShowDate = sharedPrefs.getBoolean("show_date", false);
         if (!isShowDate) {
             layoutView.findViewById(R.id.date_time).setVisibility(View.GONE);
             mHour.setTextSize(62);

@@ -3,14 +3,14 @@
     <string-array name="rictxwf01_styles_name">
         <item>@string/style_none</item>
         <item>@string/style_minimal</item>
+        <item>@string/style_shape</item>
         <item>@string/style_full</item>
-        <item>@string/style_rainbow</item>
     </string-array>
     <string-array name="rictxwf01_styles_values">
         <item>none</item>
         <item>minimal</item>
+        <item>shape</item>
         <item>full</item>
-        <item>rainbow</item>
     </string-array>
 
     <string-array name="rictxwf01_color_name">
@@ -34,6 +34,7 @@
         <item>@string/color_name_gray</item>
         <item>@string/color_name_bluegray</item>
         <item>@string/color_name_white</item>
+        <item>@string/color_name_multicolor</item>
     </string-array>
     <string-array name="rictxwf01_color_values">
         <item>red</item>
@@ -56,6 +57,7 @@
         <item>gray</item>
         <item>bluegray</item>
         <item>white</item>
+        <item>multicolor</item>
     </string-array>
 
 
@@ -65,5 +67,32 @@
         <item>700</item>
         <item>900</item>
     </string-array>
+
+
+    <string-array name="rictxwf01_color_opacity_name">
+        <item>10%</item>
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+        <item>100%</item>
+    </string-array>
+    <string-array name="rictxwf01_color_opacity_value">
+        <item>0.1</item>
+        <item>0.2</item>
+        <item>0.3</item>
+        <item>0.4</item>
+        <item>0.5</item>
+        <item>0.6</item>
+        <item>0.7</item>
+        <item>0.8</item>
+        <item>0.9</item>
+        <item>1</item>
+    </string-array>
+
 
 </resources>

@@ -23,6 +23,13 @@
         android:entries="@array/rictxwf01_color_saturation"
         android:entryValues="@array/rictxwf01_color_saturation"/>
 
+    <ListPreference
+        android:key="rictxwf01_frameColorOpacity"
+        android:title="@string/pref_choose_your_color_opacity"
+        android:defaultValue="1"
+        android:entries="@array/rictxwf01_color_opacity_name"
+        android:entryValues="@array/rictxwf01_color_opacity_value"/>
+
     <CheckBoxPreference
         android:key="show_date"
         android:title="@string/pref_show_date"
