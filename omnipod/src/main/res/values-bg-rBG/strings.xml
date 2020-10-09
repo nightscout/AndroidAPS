@@ -172,4 +172,8 @@
         <item quantity="one">%1$d часа</item>
         <item quantity="other">%1$d часа</item>
     </plurals>
+    <plurals name="omnipod_days">
+        <item quantity="one">%1$d ден</item>
+        <item quantity="other">%1$d дни</item>
+    </plurals>
 </resources>
