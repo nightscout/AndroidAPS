@@ -13,6 +13,7 @@ public interface InsulinInterface {
     int OREF_RAPID_ACTING = 2;
     int OREF_ULTRA_RAPID_ACTING = 3;
     int OREF_FREE_PEAK = 4;
+    int OREF_LYUMJEV = 5;
 
 
     int getId();
