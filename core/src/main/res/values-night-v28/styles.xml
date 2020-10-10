@@ -91,6 +91,7 @@
         <item name="colorPrimary">@color/plastic_grey</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:windowBackground">@drawable/black_carded</item>
     </style>
 
     <style name="AppTheme.LIME" parent="AppTheme.NoActionBar">

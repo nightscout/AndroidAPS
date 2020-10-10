@@ -279,7 +279,7 @@
         <item name="colorOnSecondary">@color/black_alpha_80</item>
         <item name="colorSurface">@color/white_alpha_70</item>
         <item name="android:popupBackground">@color/white_alpha_80</item>
-        <item name="android:windowBackground">@drawable/minions1</item>
+        <item name="android:windowBackground">@drawable/minions2</item>
         <item name="iconColorbottomAppbar">@color/black_alpha_60</item>
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/white_alpha_40</item>
@@ -316,6 +316,7 @@
         <item name="overviewPillColor">@color/overviewPillColorDeepOrange</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="iconColorbottomAppbar">@color/white</item>
+        <item name="android:windowBackground">@drawable/orange</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 

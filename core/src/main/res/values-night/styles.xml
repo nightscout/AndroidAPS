@@ -105,6 +105,7 @@
         <item name="colorPrimary">@color/plastic_grey</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:windowBackground">@drawable/black_carded</item>
     </style>
 
     <style name="AppTheme.RED" parent="AppTheme.NoActionBar">
@@ -138,6 +139,7 @@
         <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="overviewPillColor">@color/overviewPillColorPink</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="android:windowBackground">@drawable/black_pink</item>
         <item name="PillColorStart">@color/primaryColorPinkVariant</item>
         <item name="PillColorEnd">@color/primaryColorPink</item>
     </style>
@@ -159,6 +161,8 @@
         <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <item name="fragmentbackground">@color/black_alpha_10</item>
+        <item name="android:windowBackground">@drawable/stone_wall</item>
         <item name="overviewPillColor">@color/overviewPillColorPurple</item>
     </style>
 
@@ -210,6 +214,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorLightBlue</item>
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
         <item name="overviewPillColor">@color/overviewPillColorLightBlue</item>
+        <item name="android:windowBackground">@drawable/black_blue</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -263,6 +268,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorGreen</item>
         <item name="colorAccent">@color/secondaryColorGreen</item>
         <item name="overviewPillColor">@color/overviewPillColorGreen</item>
+        <item name="android:windowBackground">@drawable/buggati</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -339,6 +345,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorBrown</item>
         <item name="colorAccent">@color/secondaryColorBrown</item>
         <item name="overviewPillColor">@color/overviewPillColorBrown</item>
+        <item name="android:windowBackground">@drawable/darkblue_gold</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -348,6 +355,7 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorGray</item>
         <item name="colorAccent">@color/secondaryColorGray</item>
         <item name="overviewPillColor">@color/overviewPillColorGray</item>
+        <item name="android:windowBackground">@drawable/stone</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
