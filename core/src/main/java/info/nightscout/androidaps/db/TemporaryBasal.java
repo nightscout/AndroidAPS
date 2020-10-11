@@ -299,6 +299,62 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         return result;
     }
 
+    // Add specific calculation for Autotune (reference basal is not profile basal but 4 hours average basal rate from pumpprofile)
+    public IobTotal iobCalc(long time, Profile profile, double currentBasal) {
+
+        if (isFakeExtended) {
+            aapsLogger.error("iobCalc should only be called on Extended boluses separately");
+            return new IobTotal(time);
+        }
+
+        IobTotal result = new IobTotal(time);
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
+
+        int realDuration = getDurationToTime(time);
+        double netBasalAmount = 0d;
+
+        if (realDuration > 0) {
+            double netBasalRate;
+            double dia = profile.getDia();
+            double dia_ago = time - dia * 60 * 60 * 1000;
+            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
+            double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
+
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
+                // find middle of the interval
+                long calcdate = (long) (date + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
+
+                double basalRate = profile.getBasal(calcdate);
+
+                if (isAbsolute) {
+                    netBasalRate = absoluteRate - currentBasal;
+                } else {
+                    netBasalRate = percentRate / 100d * basalRate - currentBasal ;
+                }
+
+                if (calcdate > dia_ago && calcdate <= time) {
+                    double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
+                    netBasalAmount += tempBolusSize;
+
+                    Treatment tempBolusPart = new Treatment();
+                    tempBolusPart.insulin = tempBolusSize;
+                    tempBolusPart.date = calcdate;
+
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
+                    result.basaliob += aIOB.iobContrib;
+                    result.activity += aIOB.activityContrib;
+                    result.netbasalinsulin += tempBolusPart.insulin;
+                    if (tempBolusPart.insulin > 0) {
+                        result.hightempinsulin += tempBolusPart.insulin;
+                    }
+                }
+                result.netRatio = netBasalRate; // ratio at the end of interval
+            }
+        }
+        result.netInsulin = netBasalAmount;
+        return result;
+    }
+
     public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
 
         if (isFakeExtended) {
