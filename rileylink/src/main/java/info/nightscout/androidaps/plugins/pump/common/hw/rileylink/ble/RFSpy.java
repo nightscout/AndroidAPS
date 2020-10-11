@@ -8,13 +8,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.Reset;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetHardwareEncoding;
@@ -34,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
-
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -212,24 +209,22 @@ public class RFSpy {
         if (rawResponse == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: No response from RileyLink");
             notConnectedCount++;
+        } else if (resp.wasInterrupted()) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted");
+        } else if (resp.wasTimeout()) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout");
+            notConnectedCount++;
+        } else if (resp.isOK()) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "writeToData: RileyLink reports OK");
+            resetNotConnectedCount();
         } else {
-            if (resp.wasInterrupted()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted");
-            } else if (resp.wasTimeout()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout");
-                notConnectedCount++;
-            } else if (resp.isOK()) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "writeToData: RileyLink reports OK");
+            if (resp.looksLikeRadioPacket()) {
+                // RadioResponse radioResp = resp.getRadioResponse();
+                // byte[] responsePayload = radioResp.getPayload();
+                aapsLogger.debug(LTag.PUMPBTCOMM, "writeToData: received radio response. Will decode at upper level");
                 resetNotConnectedCount();
-            } else {
-                if (resp.looksLikeRadioPacket()) {
-                    // RadioResponse radioResp = resp.getRadioResponse();
-                    // byte[] responsePayload = radioResp.getPayload();
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeToData: received radio response. Will decode at upper level");
-                    resetNotConnectedCount();
-                }
-                // Log.i(TAG, "writeToData: raw response is " + ByteUtil.shortHexString(rawResponse));
             }
+            // Log.i(TAG, "writeToData: raw response is " + ByteUtil.shortHexString(rawResponse));
         }
         return resp;
     }
