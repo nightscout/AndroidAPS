@@ -409,7 +409,7 @@
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
     <string name="adult">Osoba dorosła</string>
-    <string name="resistantadult">Osoba dorosła insulino odporna</string>
+    <string name="resistantadult">Osoba dorosła insulinooporna</string>
     <string name="patientage_summary">Proszę wybierz wiek pacjenta w celu ustawienia wartości limitów bezpieczeństwa</string>
     <string name="patient_name">Nazwa pacjenta</string>
     <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
