@@ -85,12 +85,12 @@
     <string name="overview">Przegląd</string>
     <string name="nsprofile">Profil Nightscout</string>
     <string name="simpleprofile">Prosty profil</string>
-    <string name="treatments">Leczenie</string>
+    <string name="treatments">Terapia</string>
     <string name="virtualpump">Pompa wirtualna</string>
     <string name="careportal">PortalOpieki</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz wykorzystać do AndroidAPS?</string>
-    <string name="configbuilder_treatments">Leczenie</string>
+    <string name="configbuilder_treatments">Terapia</string>
     <string name="configbuilder_treatments_description">Która wtyczka powinna być używana do obsługi leczenia?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Który profil będzie używany w AndroidAPS?</string>
@@ -114,7 +114,7 @@
     <string name="treatmentdeliveryerror">Błąd podania bolusa</string>
     <string name="overview_newtempbasal_basalpercent">Wartość bazy [%]</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
-    <string name="overview_treatment_label">Leczenie</string>
+    <string name="overview_treatment_label">Terapia</string>
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="constraintapllied">Ograniczenie nałożone!</string>
     <string name="sms_bolus">Bolus:</string>
@@ -656,7 +656,7 @@
     <string name="enablesmbwithhightemptarget">Włącz SMB z wysokim tymczasowym poziomem docelowym</string>
     <string name="enablesmbwithhightemptarget_summary">Włącz SMB, gdy aktywowano wysoki cel tymczasowy (Ćwiczenia, powyżej 100 mg/dl lub 5, 5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Węglowod.</string>
+    <string name="overview_carbs_label">Węglowodany</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwartego okna kalibracji G5</string>
     <string name="show_cgm_button_summary">Otwiera xDrip+, przycisk \"cofnij\" przywraca do AAPS</string>
