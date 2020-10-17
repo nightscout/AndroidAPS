@@ -482,7 +482,10 @@ public class AapsOmnipodManager {
 
         addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return new PumpEnactResult(injector)
+                .duration(tempBasalPair.getDurationMinutes())
+                .absolute(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()))
+                .success(true).enacted(true);
     }
 
     public PumpEnactResult cancelTemporaryBasal() {
