@@ -53,4 +53,8 @@ class TomatoPlugin @Inject constructor(
             nsUpload.sendToXdrip(bgReading)
         }
     }
+
+    override fun getSensorBatteryLevel(): Int {
+        return -1
+    }
 }

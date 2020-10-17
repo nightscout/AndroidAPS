@@ -145,6 +145,10 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
+    override fun getSensorBatteryLevel(): Int {
+        return -1
+    }
+
     companion object {
         private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
             "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",

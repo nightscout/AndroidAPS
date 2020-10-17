@@ -9,4 +9,6 @@ public interface BgSourceInterface {
     boolean advancedFilteringSupported();
 
     void handleNewData(Intent intent);
+
+    int getSensorBatteryLevel();
 }
