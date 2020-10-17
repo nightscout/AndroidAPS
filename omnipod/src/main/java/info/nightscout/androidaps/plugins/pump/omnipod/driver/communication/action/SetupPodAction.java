@@ -8,10 +8,10 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.SetupPodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.VersionResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
@@ -40,7 +40,7 @@ public class SetupPodAction implements OmnipodAction<Void> {
             throw new IllegalPodProgressException(PodProgressStatus.REMINDER_INITIALIZED, podStateManager.isPodInitialized() ? podStateManager.getPodProgressStatus() : null);
         }
 
-        if (podStateManager.getSetupProgress().needsPairing()) {
+        if (podStateManager.getActivationProgress().needsPairing()) {
             DateTime activationDate = DateTime.now(podStateManager.getTimeZone());
 
             SetupPodCommand setupPodCommand = new SetupPodCommand(podStateManager.getAddress(), activationDate,
@@ -67,7 +67,7 @@ public class SetupPodAction implements OmnipodAction<Void> {
                 }
             }
 
-            podStateManager.setSetupProgress(SetupProgress.PAIRING_COMPLETED);
+            podStateManager.setActivationProgress(ActivationProgress.PAIRING_COMPLETED);
         }
 
         return null;

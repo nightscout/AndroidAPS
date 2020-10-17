@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.ExpirationReminderBuilder;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalActivationProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -37,29 +37,29 @@ public class InsertCannulaAction implements OmnipodAction<Void> {
 
     @Override
     public Void execute(OmnipodRileyLinkCommunicationManager communicationService) {
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_COMPLETED)) {
-            throw new IllegalSetupProgressException(SetupProgress.PRIMING_COMPLETED, podStateManager.getSetupProgress());
+        if (podStateManager.getActivationProgress().isBefore(ActivationProgress.PRIMING_COMPLETED)) {
+            throw new IllegalActivationProgressException(ActivationProgress.PRIMING_COMPLETED, podStateManager.getActivationProgress());
         }
 
-        if (podStateManager.getSetupProgress().needsBasalSchedule()) {
+        if (podStateManager.getActivationProgress().needsBasalSchedule()) {
             podStateManager.setBasalSchedule(initialBasalSchedule);
             communicationService.executeAction(new SetBasalScheduleAction(podStateManager, initialBasalSchedule,
                     true, podStateManager.getScheduleOffset(), false));
-            podStateManager.setSetupProgress(SetupProgress.BASAL_INITIALIZED);
+            podStateManager.setActivationProgress(ActivationProgress.BASAL_INITIALIZED);
         }
 
-        if (podStateManager.getSetupProgress().needsExpirationReminders()) {
+        if (podStateManager.getActivationProgress().needsExpirationReminders()) {
             communicationService.executeAction(new ConfigureAlertsAction(podStateManager, buildAlertConfigurations()));
 
             podStateManager.setExpirationAlertTimeBeforeShutdown(expirationReminderTimeBeforeShutdown);
             podStateManager.setLowReservoirAlertUnits(lowReservoirAlertUnits);
-            podStateManager.setSetupProgress(SetupProgress.EXPIRATION_REMINDERS_SET);
+            podStateManager.setActivationProgress(ActivationProgress.EXPIRATION_REMINDERS_SET);
         }
 
-        if (podStateManager.getSetupProgress().needsCannulaInsertion()) {
+        if (podStateManager.getActivationProgress().needsCannulaInsertion()) {
             communicationService.executeAction(new BolusAction(podStateManager, OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS,
                     Duration.standardSeconds(1), false, false));
-            podStateManager.setSetupProgress(SetupProgress.INSERTING_CANNULA);
+            podStateManager.setActivationProgress(ActivationProgress.INSERTING_CANNULA);
         }
 
         return null;

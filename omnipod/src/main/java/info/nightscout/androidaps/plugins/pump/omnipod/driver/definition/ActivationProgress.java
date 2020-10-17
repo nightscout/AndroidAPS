@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.definition;
 
-public enum SetupProgress {
+public enum ActivationProgress {
     NONE,
     PAIRING_COMPLETED,
     TAB_5_SUB_16_AND_17_DISABLED,
@@ -52,15 +52,15 @@ public enum SetupProgress {
         return this == COMPLETED;
     }
 
-    public boolean isBefore(SetupProgress other) {
+    public boolean isBefore(ActivationProgress other) {
         return ordinal() < other.ordinal();
     }
 
-    public boolean isAtLeast(SetupProgress other) {
+    public boolean isAtLeast(ActivationProgress other) {
         return ordinal() >= other.ordinal();
     }
 
-    public boolean isAfter(SetupProgress other) {
+    public boolean isAfter(ActivationProgress other) {
         return ordinal() > other.ordinal();
     }
 }

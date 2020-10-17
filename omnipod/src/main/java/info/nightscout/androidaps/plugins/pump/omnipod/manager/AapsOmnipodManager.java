@@ -62,7 +62,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalM
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalActivationProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
@@ -774,7 +774,7 @@ public class AapsOmnipodManager {
             comment = getStringResource(R.string.omnipod_error_crc_mismatch);
         } else if (ex instanceof IllegalPacketTypeException) {
             comment = getStringResource(R.string.omnipod_error_invalid_packet_type);
-        } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalSetupProgressException ||
+        } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalActivationProgressException ||
                 ex instanceof IllegalDeliveryStatusException) {
             comment = getStringResource(R.string.omnipod_error_invalid_progress_state);
         } else if (ex instanceof IllegalVersionResponseTypeException) {

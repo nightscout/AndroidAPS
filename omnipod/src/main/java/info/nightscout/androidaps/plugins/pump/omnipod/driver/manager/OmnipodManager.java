@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
@@ -38,13 +39,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Deliver
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.DeliveryStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalActivationProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
@@ -89,16 +89,16 @@ public class OmnipodManager {
 
     public synchronized Single<Boolean> pairAndPrime() {
         if (podStateManager.isPodInitialized()) {
-            if (podStateManager.getSetupProgress().isAfter(SetupProgress.PRIMING)) {
+            if (podStateManager.getActivationProgress().isAfter(ActivationProgress.PRIMING)) {
                 return Single.just(true);
             }
-            if (podStateManager.getSetupProgress().needsPrimingVerification()) {
-                return Single.fromCallable(() -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED, SetupProgress.PRIMING_COMPLETED));
+            if (podStateManager.getActivationProgress().needsPrimingVerification()) {
+                return Single.fromCallable(() -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED, ActivationProgress.PRIMING_COMPLETED));
             }
         }
 
         // Always send both 0x07 and 0x03 on retries
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PAIRING_COMPLETED)) {
+        if (podStateManager.getActivationProgress().isBefore(ActivationProgress.PAIRING_COMPLETED)) {
             communicationService.executeAction(
                     new AssignAddressAction(podStateManager, aapsLogger));
 
@@ -110,22 +110,22 @@ public class OmnipodManager {
         long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_PRIME_BOLUS_UNITS, OmnipodConstants.POD_PRIMING_DELIVERY_RATE).getMillis();
 
         return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
-                .map(o -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED, SetupProgress.PRIMING_COMPLETED)) //
+                .map(o -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED, ActivationProgress.PRIMING_COMPLETED)) //
                 .subscribeOn(Schedulers.io());
     }
 
     public synchronized Single<Boolean> insertCannula(
             BasalSchedule basalSchedule, Duration expirationReminderTimeBeforeShutdown, Integer lowReservoirAlertUnits) {
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_COMPLETED)) {
-            throw new IllegalSetupProgressException(SetupProgress.PRIMING_COMPLETED, podStateManager.getSetupProgress());
+        if (podStateManager.getActivationProgress().isBefore(ActivationProgress.PRIMING_COMPLETED)) {
+            throw new IllegalActivationProgressException(ActivationProgress.PRIMING_COMPLETED, podStateManager.getActivationProgress());
         }
 
         if (podStateManager.isPodInitialized()) {
-            if (podStateManager.getSetupProgress().isCompleted()) {
+            if (podStateManager.getActivationProgress().isCompleted()) {
                 return Single.just(true);
             }
-            if (podStateManager.getSetupProgress().needsCannulaInsertionVerification()) {
-                return Single.fromCallable(() -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS, SetupProgress.COMPLETED));
+            if (podStateManager.getActivationProgress().needsCannulaInsertionVerification()) {
+                return Single.fromCallable(() -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS, ActivationProgress.COMPLETED));
             }
         }
 
@@ -134,7 +134,7 @@ public class OmnipodManager {
         long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConstants.POD_CANNULA_INSERTION_DELIVERY_RATE).getMillis();
 
         return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
-                .map(o -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS, SetupProgress.COMPLETED)) //
+                .map(o -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS, ActivationProgress.COMPLETED)) //
                 .subscribeOn(Schedulers.io());
     }
 
@@ -545,7 +545,7 @@ public class OmnipodManager {
      * @return true if the Pod's progress status matches the expected status, otherwise false
      * @throws PodProgressStatusVerificationFailedException in case reading the Pod status fails
      */
-    private boolean verifyPodProgressStatus(PodProgressStatus expectedPodProgressStatus, SetupProgress setupProgress) {
+    private boolean verifyPodProgressStatus(PodProgressStatus expectedPodProgressStatus, ActivationProgress activationProgress) {
         Boolean result = null;
         Throwable lastException = null;
 
@@ -554,7 +554,7 @@ public class OmnipodManager {
                 StatusResponse statusResponse = getPodStatus();
 
                 if (statusResponse.getPodProgressStatus().equals(expectedPodProgressStatus)) {
-                    podStateManager.setSetupProgress(setupProgress);
+                    podStateManager.setActivationProgress(activationProgress);
                     return true;
                 } else {
                     result = false;

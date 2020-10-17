@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.PrimeService;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalActivationProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -24,24 +24,24 @@ public class PrimeAction implements OmnipodAction<Void> {
 
     @Override
     public Void execute(OmnipodRileyLinkCommunicationManager communicationService) {
-        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PAIRING_COMPLETED)) {
-            throw new IllegalSetupProgressException(SetupProgress.PAIRING_COMPLETED, podStateManager.getSetupProgress());
+        if (podStateManager.getActivationProgress().isBefore(ActivationProgress.PAIRING_COMPLETED)) {
+            throw new IllegalActivationProgressException(ActivationProgress.PAIRING_COMPLETED, podStateManager.getActivationProgress());
         }
 
-        if (podStateManager.getSetupProgress().needsDisableTab5Sub16And17()) {
+        if (podStateManager.getActivationProgress().needsDisableTab5Sub16And17()) {
             // FaultConfigCommand sets internal pod variables to effectively disable $6x faults which occur more often with a 0 TBR
             service.executeDisableTab5Sub16And17FaultConfigCommand(communicationService, podStateManager);
-            podStateManager.setSetupProgress(SetupProgress.TAB_5_SUB_16_AND_17_DISABLED);
+            podStateManager.setActivationProgress(ActivationProgress.TAB_5_SUB_16_AND_17_DISABLED);
         }
 
-        if (podStateManager.getSetupProgress().needsSetupReminders()) {
+        if (podStateManager.getActivationProgress().needsSetupReminders()) {
             service.executeFinishSetupReminderAlertCommand(communicationService, podStateManager);
-            podStateManager.setSetupProgress(SetupProgress.SETUP_REMINDERS_SET);
+            podStateManager.setActivationProgress(ActivationProgress.SETUP_REMINDERS_SET);
         }
 
-        if (podStateManager.getSetupProgress().needsPriming()) {
+        if (podStateManager.getActivationProgress().needsPriming()) {
             service.executePrimeBolusCommand(communicationService, podStateManager);
-            podStateManager.setSetupProgress(SetupProgress.PRIMING);
+            podStateManager.setActivationProgress(ActivationProgress.PRIMING);
         }
 
         return null;

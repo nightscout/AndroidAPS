@@ -23,6 +23,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertType;
@@ -32,7 +33,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Firmwar
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 
 // TODO add nullchecks on some setters
@@ -82,7 +82,7 @@ public abstract class PodStateManager {
      * @return true if we have a Pod state and the Pod activation has been completed. The pod could also be dead at this point
      */
     public final boolean isPodActivationCompleted() {
-        return getSetupProgress().isCompleted();
+        return getActivationProgress().isCompleted();
     }
 
     /**
@@ -337,15 +337,15 @@ public abstract class PodStateManager {
         return activatedAt == null ? null : activatedAt.withZone(getSafe(() -> podState.getTimeZone())).plus(OmnipodConstants.NOMINAL_POD_LIFE);
     }
 
-    public final SetupProgress getSetupProgress() {
+    public final ActivationProgress getActivationProgress() {
         if (hasPodState()) {
-            return Optional.ofNullable(podState.getSetupProgress()).orElse(SetupProgress.NONE);
+            return Optional.ofNullable(podState.getActivationProgress()).orElse(ActivationProgress.NONE);
         }
-        return SetupProgress.NONE;
+        return ActivationProgress.NONE;
     }
 
-    public final void setSetupProgress(SetupProgress setupProgress) {
-        setAndStore(() -> podState.setSetupProgress(setupProgress));
+    public final void setActivationProgress(ActivationProgress activationProgress) {
+        setAndStore(() -> podState.setActivationProgress(activationProgress));
     }
 
     public final PodProgressStatus getPodProgressStatus() {
@@ -655,7 +655,7 @@ public abstract class PodStateManager {
         private Integer totalTicksDelivered;
         private boolean suspended;
         private NonceState nonceState;
-        private SetupProgress setupProgress = SetupProgress.NONE;
+        private ActivationProgress activationProgress = ActivationProgress.NONE;
         private PodProgressStatus podProgressStatus;
         private DeliveryStatus lastDeliveryStatus;
         private AlertSet activeAlerts;
@@ -824,12 +824,12 @@ public abstract class PodStateManager {
             this.nonceState = nonceState;
         }
 
-        SetupProgress getSetupProgress() {
-            return setupProgress;
+        ActivationProgress getActivationProgress() {
+            return activationProgress;
         }
 
-        void setSetupProgress(SetupProgress setupProgress) {
-            this.setupProgress = setupProgress;
+        void setActivationProgress(ActivationProgress activationProgress) {
+            this.activationProgress = activationProgress;
         }
 
         PodProgressStatus getPodProgressStatus() {
@@ -968,7 +968,7 @@ public abstract class PodStateManager {
                     ", totalTicksDelivered=" + totalTicksDelivered +
                     ", suspended=" + suspended +
                     ", nonceState=" + nonceState +
-                    ", setupProgress=" + setupProgress +
+                    ", activationProgress=" + activationProgress +
                     ", podProgressStatus=" + podProgressStatus +
                     ", lastDeliveryStatus=" + lastDeliveryStatus +
                     ", activeAlerts=" + activeAlerts +

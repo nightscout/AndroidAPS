@@ -38,7 +38,7 @@ public class AssignAddressAction implements OmnipodAction<Void> {
             podStateManager.initState(generateRandomAddress());
         }
 
-        if (podStateManager.getSetupProgress().needsPairing()) {
+        if (podStateManager.getActivationProgress().needsPairing()) {
             AssignAddressCommand assignAddress = new AssignAddressCommand(podStateManager.getAddress());
             OmnipodMessage assignAddressMessage = new OmnipodMessage(OmnipodConstants.DEFAULT_ADDRESS,
                     Collections.singletonList(assignAddress), podStateManager.getMessageNumber());

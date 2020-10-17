@@ -23,9 +23,9 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
@@ -346,7 +346,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             if (!podStateManager.isPodInitialized) {
                 resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
             } else {
-                if (podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_COMPLETED)) {
+                if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
                 } else {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_cannula_insertion)
@@ -453,7 +453,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.setupProgress.isAtLeast(SetupProgress.PAIRING_COMPLETED)
+        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
             && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
     }
 
