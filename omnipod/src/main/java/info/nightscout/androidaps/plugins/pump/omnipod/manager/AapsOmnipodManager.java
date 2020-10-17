@@ -50,9 +50,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Deliver
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalScheduleEntry;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActivationTimeExceededException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.DeliveryStatusVerificationFailedException;
@@ -62,6 +62,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalM
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalActivationProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceOutOfSyncException;
@@ -758,10 +759,8 @@ public class AapsOmnipodManager {
         if (ex instanceof OmnipodException) {
             aapsLogger.error(LTag.PUMP, String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager", ((OmnipodException) ex).isCertainFailure()), ex);
             if (ex instanceof PodFaultException) {
-                FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
-                if (!(faultEventCode == FaultEventCode.NO_FAULTS && podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED)) {
-                    showPodFaultNotification(faultEventCode);
-                }
+                FaultEventCode faultEventCode = ((PodFaultException) ex).getDetailedStatus().getFaultEventCode();
+                showPodFaultNotification(faultEventCode);
             }
         } else {
             aapsLogger.error(LTag.PUMP, "Caught an unexpected non-OmnipodException from OmnipodManager", ex);
@@ -775,7 +774,8 @@ public class AapsOmnipodManager {
             comment = getStringResource(R.string.omnipod_error_crc_mismatch);
         } else if (ex instanceof IllegalPacketTypeException) {
             comment = getStringResource(R.string.omnipod_error_invalid_packet_type);
-        } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalDeliveryStatusException) {
+        } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalActivationProgressException ||
+                ex instanceof IllegalDeliveryStatusException) {
             comment = getStringResource(R.string.omnipod_error_invalid_progress_state);
         } else if (ex instanceof IllegalVersionResponseTypeException) {
             comment = getStringResource(R.string.omnipod_error_invalid_response);
@@ -794,8 +794,10 @@ public class AapsOmnipodManager {
         } else if (ex instanceof NotEnoughDataException) {
             comment = getStringResource(R.string.omnipod_error_not_enough_data);
         } else if (ex instanceof PodFaultException) {
-            FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
+            FaultEventCode faultEventCode = ((PodFaultException) ex).getDetailedStatus().getFaultEventCode();
             comment = createPodFaultErrorMessage(faultEventCode);
+        } else if (ex instanceof ActivationTimeExceededException) {
+            comment = getStringResource(R.string.omnipod_error_pod_fault_activation_time_exceeded);
         } else if (ex instanceof PodReturnedErrorResponseException) {
             comment = getStringResource(R.string.omnipod_error_pod_returned_error_response);
         } else if (ex instanceof RileyLinkUnreachableException) {
@@ -816,9 +818,6 @@ public class AapsOmnipodManager {
     }
 
     private String createPodFaultErrorMessage(FaultEventCode faultEventCode) {
-        if (faultEventCode == FaultEventCode.NO_FAULTS && podStateManager.getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED) {
-            return getStringResource(R.string.omnipod_error_pod_fault_activation_time_exceeded);
-        }
         return getStringResource(R.string.omnipod_error_pod_fault,
                 ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
     }

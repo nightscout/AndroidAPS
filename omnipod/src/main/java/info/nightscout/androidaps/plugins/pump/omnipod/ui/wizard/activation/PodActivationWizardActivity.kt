@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation
 import android.os.Bundle
 import androidx.annotation.IdRes
 import info.nightscout.androidaps.plugins.pump.omnipod.R
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.activity.OmnipodWizardActivityBase
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
         setContentView(R.layout.omnipod_pod_activation_wizard_activity)
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.fillPodInfoFragment)
-            ?: if (!podStateManager.isPodInitialized || podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
+            ?: if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
                 R.id.fillPodInfoFragment
             } else {
                 R.id.attachPodInfoFragment
