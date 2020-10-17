@@ -573,8 +573,8 @@
     <string name="careportal_canula_label">Canula</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pump battery</string>
-    <string name="careportal_age_label">Age:</string>
-    <string name="careportal_level_label">Level:</string>
+    <string name="careportal_age_label">age:</string>
+    <string name="careportal_level_label">level:</string>
     <string name="ns_alarmoptions">Alarm options</string>
     <string name="key_ns_announcements" translatable="false">ns_announcements</string>
     <string name="key_ns_alarms" translatable="false">ns_alarms</string>
