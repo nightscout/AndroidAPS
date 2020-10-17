@@ -57,7 +57,7 @@ class EversensePlugin @Inject constructor(
         if (bundle.containsKey("glucoseTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamp: " + dateUtil.dateAndTimeString(bundle.getLong("glucoseTimestamp")))
         if (bundle.containsKey("batteryLevel")) {
             aapsLogger.debug(LTag.BGSOURCE, "batteryLevel: " + bundle.getString("batteryLevel"))
-            sensorBatteryLevel = bundle.getString("batteryLevel").toInt()       // TODO: Philoul: Line to check I don't have eversens so I don't know what kind of information is sent...
+            //sensorBatteryLevel = bundle.getString("batteryLevel").toInt()       // TODO: Philoul: Line to check I don't have eversens so I don't know what kind of information is sent...
         }
         if (bundle.containsKey("signalStrength")) aapsLogger.debug(LTag.BGSOURCE, "signalStrength: " + bundle.getString("signalStrength"))
         if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
