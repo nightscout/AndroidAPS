@@ -65,7 +65,8 @@ public class OmnipodPumpPluginTest {
         when(activePluginProvider.getActiveTreatments().getTempBasalFromHistory(anyLong())).thenReturn(null);
         when(rileyLinkUtil.getRileyLinkHistory()).thenReturn(new ArrayList<>());
         when(injector.androidInjector()).thenReturn(new AndroidInjector<Object>() {
-            @Override public void inject(Object instance) {}
+            @Override public void inject(Object instance) {
+            }
         });
         Profile profile = mock(Profile.class);
 
@@ -118,7 +119,7 @@ public class OmnipodPumpPluginTest {
         // When treatment
         result1 = plugin.setTempBasalPercent(80, 30, profile, false);
         // Then return sane values
-        assertEquals(result1.absolute, PumpType.Insulet_Omnipod.determineCorrectBasalSize(500d  * 0.8), 0.01d);
+        assertEquals(result1.absolute, PumpType.Insulet_Omnipod.determineCorrectBasalSize(500d * 0.8), 0.01d);
         assertEquals(result1.duration, 30);
 
         // Given weird basal

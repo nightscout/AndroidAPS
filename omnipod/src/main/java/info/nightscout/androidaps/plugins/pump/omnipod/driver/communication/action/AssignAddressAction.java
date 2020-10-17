@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.VersionResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActivationTimeExceededException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalVersionResponseTypeException;
@@ -51,6 +52,10 @@ public class AssignAddressAction implements OmnipodAction<VersionResponse> {
 
         podStateManager.setInitializationParameters(assignAddressResponse.getLot(), assignAddressResponse.getTid(), //
                 assignAddressResponse.getPiVersion(), assignAddressResponse.getPmVersion(), DateTimeZone.getDefault(), assignAddressResponse.getPodProgressStatus());
+
+        if (podStateManager.isPodActivationTimeExceeded()) {
+            throw new ActivationTimeExceededException();
+        }
 
         return assignAddressResponse;
     }

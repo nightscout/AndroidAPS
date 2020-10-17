@@ -272,8 +272,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 })
             }
 
-            if (podStateManager.hasFaultEvent()) {
-                val faultEventCode = podStateManager.faultEvent.faultEventCode
+            if (podStateManager.isFaulted) {
+                val faultEventCode = podStateManager.faultEventCode
                 errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
 
@@ -345,7 +345,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             if (!podStateManager.isPodInitialized) {
                 resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
             } else {
-                if (PodProgressStatus.ACTIVATION_TIME_EXCEEDED == podStateManager.podProgressStatus) {
+                if (podStateManager.isPodActivationTimeExceeded) {
                     resourceHelper.gs(R.string.omnipod_pod_status_activation_time_exceeded)
                 } else if (podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)

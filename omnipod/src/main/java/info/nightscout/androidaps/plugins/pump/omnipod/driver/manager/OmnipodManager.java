@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketT
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActivationTimeExceededException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.DeliveryStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalDeliveryStatusException;
@@ -88,11 +89,18 @@ public class OmnipodManager {
     }
 
     public synchronized Single<Boolean> pairAndPrime() {
+        if (podStateManager.isPodActivationTimeExceeded()) {
+            throw new ActivationTimeExceededException();
+        }
+        if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAfter(PodProgressStatus.PRIMING)) {
+            return Single.just(true);
+        }
+
         logStartingCommandExecution("pairAndPrime");
 
         try {
+            // Always send both 0x07 and 0x03 on retries
             if (!podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PAIRING_COMPLETED)) {
-                // Always send both 0x07 and 0x03 on retries
                 try {
                     communicationService.executeAction(
                             new AssignAddressAction(podStateManager));
@@ -109,28 +117,29 @@ public class OmnipodManager {
                     communicationService.executeAction(new SetupPodAction(podStateManager));
                 } catch (IllegalPacketTypeException ex) {
                     if (PacketType.ACK.equals(ex.getActual())) {
-                        // TODO is this true for the SetupPodCommand?
                         // Pod is already configured
                         aapsLogger.debug("Received ACK instead of response in SetupPodAction. Ignoring");
                     }
                 }
-            } else if (podStateManager.getPodProgressStatus().isAfter(PodProgressStatus.PRIMING)) {
-                throw new IllegalPodProgressException(PodProgressStatus.PAIRING_COMPLETED, podStateManager.getPodProgressStatus());
+            } else {
+                // Make sure we have an up to date PodProgressStatus
+                getPodStatus();
+
+                if (podStateManager.isPodActivationTimeExceeded()) {
+                    throw new ActivationTimeExceededException();
+                }
             }
 
-            // Make sure we have an up to date PodProgressStatus
-            getPodStatus();
-
             communicationService.executeAction(new PrimeAction(new PrimeService(), podStateManager));
+
+            long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_PRIME_BOLUS_UNITS, OmnipodConstants.POD_PRIMING_DELIVERY_RATE).getMillis();
+
+            return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
+                    .map(o -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED)) //
+                    .subscribeOn(Schedulers.io());
         } finally {
             logCommandExecutionFinished("pairAndPrime");
         }
-
-        long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_PRIME_BOLUS_UNITS, OmnipodConstants.POD_PRIMING_DELIVERY_RATE).getMillis();
-
-        return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
-                .map(o -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED)) //
-                .subscribeOn(Schedulers.io());
     }
 
     public synchronized Single<Boolean> insertCannula(
@@ -139,26 +148,30 @@ public class OmnipodManager {
             throw new IllegalPodProgressException(PodProgressStatus.PRIMING_COMPLETED, !podStateManager.isPodInitialized() ? null : podStateManager.getPodProgressStatus());
         }
 
-        // Make sure we have the latest PodProgressStatus
-        getPodStatus();
-
-        if (podStateManager.getPodProgressStatus().isAfter(PodProgressStatus.INSERTING_CANNULA)) {
-            throw new IllegalPodProgressException(PodProgressStatus.PRIMING_COMPLETED, podStateManager.getPodProgressStatus());
-        }
-
         logStartingCommandExecution("insertCannula [basalSchedule=" + basalSchedule + "]");
 
         try {
+            // Make sure we have the latest PodProgressStatus
+            getPodStatus();
+
+            if (podStateManager.isPodActivationTimeExceeded()) {
+                throw new ActivationTimeExceededException();
+            }
+            if (podStateManager.getPodProgressStatus().isAfter(PodProgressStatus.INSERTING_CANNULA)) {
+                return Single.just(true);
+            }
+
             communicationService.executeAction(new InsertCannulaAction(podStateManager, basalSchedule, expirationReminderTimeBeforeShutdown, lowReservoirAlertUnits));
+
+            long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConstants.POD_CANNULA_INSERTION_DELIVERY_RATE).getMillis();
+
+            return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
+                    .map(o -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS)) //
+                    .subscribeOn(Schedulers.io());
+
         } finally {
             logCommandExecutionFinished("insertCannula");
         }
-
-        long delayInMillis = calculateEstimatedBolusDuration(DateTime.now().minus(OmnipodConstants.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION), OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConstants.POD_CANNULA_INSERTION_DELIVERY_RATE).getMillis();
-
-        return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
-                .map(o -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS)) //
-                .subscribeOn(Schedulers.io());
     }
 
     public synchronized StatusResponse getPodStatus() {
@@ -437,7 +450,7 @@ public class OmnipodManager {
                                 break;
                             } catch (PodFaultException ex) {
                                 // Subtract units not delivered in case of a Pod failure
-                                bolusNotDelivered = ex.getFaultEvent().getBolusNotDelivered();
+                                bolusNotDelivered = ex.getDetailedStatus().getBolusNotDelivered();
 
                                 aapsLogger.debug(LTag.PUMPCOMM, "Caught PodFaultException in bolus completion verification", ex);
                                 break;
@@ -473,7 +486,7 @@ public class OmnipodManager {
                 StatusResponse statusResponse = cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
                 discardActiveBolusData(statusResponse.getBolusNotDelivered());
             } catch (PodFaultException ex) {
-                discardActiveBolusData(ex.getFaultEvent().getBolusNotDelivered());
+                discardActiveBolusData(ex.getDetailedStatus().getBolusNotDelivered());
                 throw ex;
             } finally {
                 logCommandExecutionFinished("cancelBolus");

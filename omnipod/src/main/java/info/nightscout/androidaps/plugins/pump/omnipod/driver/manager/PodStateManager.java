@@ -21,11 +21,12 @@ import java.util.function.Supplier;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
@@ -79,7 +80,7 @@ public abstract class PodStateManager {
      * @return true if we have a Pod state and the Pod activation has been completed. The pod could also be dead at this point
      */
     public final boolean isPodActivationCompleted() {
-        return isPodInitialized() && podState.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS) && podState.getPodProgressStatus() != PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
+        return isPodInitialized() && podState.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS) && !isPodActivationTimeExceeded();
     }
 
     /**
@@ -95,6 +96,13 @@ public abstract class PodStateManager {
      */
     public final boolean isPodFaulted() {
         return isPodInitialized() && podState.getPodProgressStatus().equals(PodProgressStatus.FAULT_EVENT_OCCURRED);
+    }
+
+    /**
+     * @return true if the Pod's activation time has been exceeded
+     */
+    public boolean isPodActivationTimeExceeded() {
+        return isPodInitialized() && getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
     }
 
     /**
@@ -232,16 +240,12 @@ public abstract class PodStateManager {
      * a fault event, this does NOT necessarily mean that the Pod is not faulted. For a reliable
      * indication on whether or not the pod is faulted, see {@link #isPodFaulted() isPodFaulted()}
      */
-    public final boolean hasFaultEvent() {
-        return podState != null && podState.getFaultEvent() != null;
+    public final boolean isFaulted() {
+        return podState != null && podState.getFaultEventCode() != null;
     }
 
-    public final PodInfoFaultEvent getFaultEvent() {
-        return getSafe(() -> podState.getFaultEvent());
-    }
-
-    public final void setFaultEvent(PodInfoFaultEvent faultEvent) {
-        setAndStore(() -> podState.setFaultEvent(faultEvent));
+    public final FaultEventCode getFaultEventCode() {
+        return getSafe(() -> podState.getFaultEventCode());
     }
 
     public final AlertType getConfiguredAlertType(AlertSlot alertSlot) {
@@ -513,20 +517,20 @@ public abstract class PodStateManager {
     /**
      * Does not automatically store pod state in order to decrease I/O load
      */
-    public final void updateFromResponse(StatusUpdatableResponse statusResponse) {
+    public final void updateFromResponse(StatusUpdatableResponse status) {
         setSafe(() -> {
             if (podState.getActivatedAt() == null) {
-                DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(statusResponse.getTimeActive());
+                DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(status.getTimeActive());
                 podState.setActivatedAt(activatedAtCalculated);
             }
-            podState.setSuspended(statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
-            podState.setActiveAlerts(statusResponse.getUnacknowledgedAlerts());
-            podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
-            podState.setReservoirLevel(statusResponse.getReservoirLevel());
-            podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
-            podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
-            podState.setTimeActive(statusResponse.getTimeActive());
-            if (statusResponse.getDeliveryStatus().isTbrRunning()) {
+            podState.setSuspended(status.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
+            podState.setActiveAlerts(status.getUnacknowledgedAlerts());
+            podState.setLastDeliveryStatus(status.getDeliveryStatus());
+            podState.setReservoirLevel(status.getReservoirLevel());
+            podState.setTotalTicksDelivered(status.getTicksDelivered());
+            podState.setPodProgressStatus(status.getPodProgressStatus());
+            podState.setTimeActive(status.getTimeActive());
+            if (status.getDeliveryStatus().isTbrRunning()) {
                 if (!isTempBasalCertain() && isTempBasalRunning()) {
                     podState.setTempBasalCertain(true);
                 }
@@ -535,6 +539,13 @@ public abstract class PodStateManager {
                 setTempBasal(null, null, null, true, false);
             }
             podState.setLastUpdatedFromResponse(DateTime.now());
+
+            if (status instanceof PodInfoDetailedStatus) {
+                PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) status;
+                if (detailedStatus.isFaulted()) {
+                    podState.setFaultEventCode(detailedStatus.getFaultEventCode());
+                }
+            }
         });
     }
 
@@ -626,7 +637,7 @@ public abstract class PodStateManager {
         private DateTimeZone timeZone;
         private DateTime activatedAt;
         private Duration timeActive;
-        private PodInfoFaultEvent faultEvent;
+        private FaultEventCode faultEventCode;
         private Double reservoirLevel;
         private Integer totalTicksDelivered;
         private boolean suspended;
@@ -751,12 +762,12 @@ public abstract class PodStateManager {
             this.timeActive = timeActive;
         }
 
-        PodInfoFaultEvent getFaultEvent() {
-            return faultEvent;
+        FaultEventCode getFaultEventCode() {
+            return faultEventCode;
         }
 
-        void setFaultEvent(PodInfoFaultEvent faultEvent) {
-            this.faultEvent = faultEvent;
+        void setFaultEventCode(FaultEventCode faultEventCode) {
+            this.faultEventCode = faultEventCode;
         }
 
         Double getReservoirLevel() {
@@ -930,7 +941,7 @@ public abstract class PodStateManager {
                     ", timeZone=" + timeZone +
                     ", activatedAt=" + activatedAt +
                     ", timeActive=" + timeActive +
-                    ", faultEvent=" + faultEvent +
+                    ", faultEvent=" + faultEventCode +
                     ", reservoirLevel=" + reservoirLevel +
                     ", totalTicksDelivered=" + totalTicksDelivered +
                     ", suspended=" + suspended +

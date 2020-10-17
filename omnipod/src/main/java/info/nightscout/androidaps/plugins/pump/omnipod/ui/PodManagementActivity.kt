@@ -93,7 +93,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         omnipod_pod_management_waiting_for_rl_layout.visibility = (!rileyLinkServiceData.rileyLinkServiceState.isReady).toVisibility()
 
         if (rileyLinkServiceData.rileyLinkServiceState.isReady) {
-            omnipod_pod_management_button_activate_pod.isEnabled = !podStateManager.isPodActivationCompleted
+            omnipod_pod_management_button_activate_pod.isEnabled = !podStateManager.isPodActivationCompleted && !podStateManager.isPodActivationTimeExceeded
             omnipod_pod_management_button_deactivate_pod.isEnabled = podStateManager.isPodInitialized
             if (discardButtonEnabled) {
                 omnipod_pod_management_button_discard_pod.isEnabled = true

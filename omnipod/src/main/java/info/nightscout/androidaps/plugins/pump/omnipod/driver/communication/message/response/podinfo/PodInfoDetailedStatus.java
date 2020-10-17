@@ -2,16 +2,19 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mes
 
 import org.joda.time.Duration;
 
+import java.util.Arrays;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ErrorEventInfo;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 
-public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableResponse {
+public class PodInfoDetailedStatus extends PodInfo implements StatusUpdatableResponse {
     private static final int MINIMUM_MESSAGE_LENGTH = 21;
 
     private final PodProgressStatus podProgressStatus;
@@ -26,16 +29,13 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
     private final Duration timeActive;
     private final AlertSet unacknowledgedAlerts;
     private final boolean faultAccessingTables;
-    private final boolean loggedFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging;
-    private final byte loggedFaultEventInternal2bitMainLoopRoutinesVariable;
-    private final boolean loggedFaultEventImmediateBolusInProgressDuringError;
-    private final PodProgressStatus loggedFaultEventErrorPodProgressStatus;
+    private final ErrorEventInfo errorEventInfo;
     private final byte receiverLowGain;
     private final byte radioRSSI;
-    private final PodProgressStatus podProgressStatusAtTimeOfFirstLoggedFaultEvent;
+    private final PodProgressStatus previousPodProgressStatus;
     private final byte[] unknownValue;
 
-    public PodInfoFaultEvent(byte[] encodedData) {
+    public PodInfoDetailedStatus(byte[] encodedData) {
         super(encodedData);
 
         if (encodedData.length < MINIMUM_MESSAGE_LENGTH) {
@@ -70,20 +70,33 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
 
         unacknowledgedAlerts = new AlertSet(encodedData[15]);
         faultAccessingTables = encodedData[16] == 0x02;
-        int loggedFaultEventInfo = ByteUtil.convertUnsignedByteToInt(encodedData[17]);
-        loggedFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging = (loggedFaultEventInfo & 0x80) == 0x80;
-        loggedFaultEventInternal2bitMainLoopRoutinesVariable = (byte) ((loggedFaultEventInfo >>> 5) & 0x03);
-        loggedFaultEventImmediateBolusInProgressDuringError = (loggedFaultEventInfo & 0x10) == 0x10;
-        loggedFaultEventErrorPodProgressStatus = PodProgressStatus.fromByte((byte) (loggedFaultEventInfo & 0x0f));
+        byte rawErrorEventInfo = encodedData[17];
+        if (rawErrorEventInfo == 0x00) {
+            errorEventInfo = null;
+        } else {
+            errorEventInfo = ErrorEventInfo.fromByte(rawErrorEventInfo);
+        }
         receiverLowGain = (byte) (ByteUtil.convertUnsignedByteToInt(encodedData[18]) >>> 6);
         radioRSSI = (byte) (encodedData[18] & 0x3f);
-        podProgressStatusAtTimeOfFirstLoggedFaultEvent = PodProgressStatus.fromByte((byte) (encodedData[19] & 0x0f));
+        if (ByteUtil.convertUnsignedByteToInt(encodedData[19]) == 0xff) { // this byte is not valid (no fault has occurred)
+            previousPodProgressStatus = null;
+        } else {
+            previousPodProgressStatus = PodProgressStatus.fromByte((byte) (encodedData[19] & 0x0f));
+        }
         unknownValue = ByteUtil.substring(encodedData, 20, 2);
     }
 
     @Override
     public PodInfoType getType() {
-        return PodInfoType.FAULT_EVENT;
+        return PodInfoType.DETAILED_STATUS;
+    }
+
+    public boolean isFaulted() {
+        return faultEventCode != null;
+    }
+
+    public boolean isActivationTimeExceeded() {
+        return podProgressStatus == PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
     }
 
     @Override public PodProgressStatus getPodProgressStatus() {
@@ -134,20 +147,8 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
         return faultAccessingTables;
     }
 
-    public boolean isLoggedFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging() {
-        return loggedFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging;
-    }
-
-    public byte getLoggedFaultEventInternal2bitMainLoopRoutinesVariable() {
-        return loggedFaultEventInternal2bitMainLoopRoutinesVariable;
-    }
-
-    public boolean isLoggedFaultEventImmediateBolusInProgressDuringError() {
-        return loggedFaultEventImmediateBolusInProgressDuringError;
-    }
-
-    public PodProgressStatus getLoggedFaultEventErrorPodProgressStatus() {
-        return loggedFaultEventErrorPodProgressStatus;
+    public ErrorEventInfo getErrorEventInfo() {
+        return errorEventInfo;
     }
 
     public byte getReceiverLowGain() {
@@ -158,8 +159,8 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
         return radioRSSI;
     }
 
-    public PodProgressStatus getLoggedFaultEventPodProgressStatus() {
-        return podProgressStatusAtTimeOfFirstLoggedFaultEvent;
+    public PodProgressStatus getPreviousPodProgressStatus() {
+        return previousPodProgressStatus;
     }
 
     public byte[] getUnknownValue() {
@@ -167,7 +168,7 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
     }
 
     @Override public String toString() {
-        return "PodInfoFaultEvent{" +
+        return "PodInfoDetailedStatus{" +
                 "podProgressStatus=" + podProgressStatus +
                 ", deliveryStatus=" + deliveryStatus +
                 ", bolusNotDelivered=" + bolusNotDelivered +
@@ -180,14 +181,11 @@ public class PodInfoFaultEvent extends PodInfo implements StatusUpdatableRespons
                 ", timeActive=" + timeActive +
                 ", unacknowledgedAlerts=" + unacknowledgedAlerts +
                 ", faultAccessingTables=" + faultAccessingTables +
-                ", loggedFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging=" + loggedFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging +
-                ", loggedFaultEventInternal2bitMainLoopRoutinesVariable=" + loggedFaultEventInternal2bitMainLoopRoutinesVariable +
-                ", loggedFaultEventImmediateBolusInProgressDuringError=" + loggedFaultEventImmediateBolusInProgressDuringError +
-                ", loggedFaultEventErrorPodProgressStatus=" + loggedFaultEventErrorPodProgressStatus +
+                ", errorEventInfo=" + errorEventInfo +
                 ", receiverLowGain=" + receiverLowGain +
                 ", radioRSSI=" + radioRSSI +
-                ", podProgressStatusAtTimeOfFirstLoggedFaultEvent=" + podProgressStatusAtTimeOfFirstLoggedFaultEvent +
-                ", unknownValue=" + ByteUtil.shortHexString(unknownValue) +
+                ", previousPodProgressStatus=" + previousPodProgressStatus +
+                ", unknownValue=" + Arrays.toString(unknownValue) +
                 '}';
     }
 }
