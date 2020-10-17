@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.ExpirationReminderBuilder;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
-public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
+public class InsertCannulaAction implements OmnipodAction<Void> {
 
     private final PodStateManager podStateManager;
     private final BasalSchedule initialBasalSchedule;
@@ -37,31 +36,33 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
-        if (!podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
-            throw new IllegalPodProgressException(PodProgressStatus.PRIMING_COMPLETED, podStateManager.isPodInitialized() ? podStateManager.getPodProgressStatus() : null);
+    public Void execute(OmnipodRileyLinkCommunicationManager communicationService) {
+        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PRIMING_COMPLETED)) {
+            throw new IllegalSetupProgressException(SetupProgress.PRIMING_COMPLETED, podStateManager.getSetupProgress());
         }
 
-        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.BASAL_INITIALIZED)) {
+        if (podStateManager.getSetupProgress().needsBasalSchedule()) {
             podStateManager.setBasalSchedule(initialBasalSchedule);
             communicationService.executeAction(new SetBasalScheduleAction(podStateManager, initialBasalSchedule,
                     true, podStateManager.getScheduleOffset(), false));
+            podStateManager.setSetupProgress(SetupProgress.BASAL_INITIALIZED);
         }
 
-        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.INSERTING_CANNULA)) {
+        if (podStateManager.getSetupProgress().needsExpirationReminders()) {
             communicationService.executeAction(new ConfigureAlertsAction(podStateManager, buildAlertConfigurations()));
 
             podStateManager.setExpirationAlertTimeBeforeShutdown(expirationReminderTimeBeforeShutdown);
             podStateManager.setLowReservoirAlertUnits(lowReservoirAlertUnits);
-
-            return communicationService.executeAction(new BolusAction(podStateManager, OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS,
-                    Duration.standardSeconds(1), false, false));
-        } else if (podStateManager.getPodProgressStatus().equals(PodProgressStatus.INSERTING_CANNULA)) {
-            // Check status
-            return communicationService.executeAction(new GetStatusAction(podStateManager));
-        } else {
-            throw new IllegalPodProgressException(null, podStateManager.getPodProgressStatus());
+            podStateManager.setSetupProgress(SetupProgress.EXPIRATION_REMINDERS_SET);
         }
+
+        if (podStateManager.getSetupProgress().needsCannulaInsertion()) {
+            communicationService.executeAction(new BolusAction(podStateManager, OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS,
+                    Duration.standardSeconds(1), false, false));
+            podStateManager.setSetupProgress(SetupProgress.INSERTING_CANNULA);
+        }
+
+        return null;
     }
 
     private List<AlertConfiguration> buildAlertConfigurations() {

@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -31,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Firmwar
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
 
 // TODO add nullchecks on some setters
@@ -80,7 +82,7 @@ public abstract class PodStateManager {
      * @return true if we have a Pod state and the Pod activation has been completed. The pod could also be dead at this point
      */
     public final boolean isPodActivationCompleted() {
-        return isPodInitialized() && podState.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS) && !isPodActivationTimeExceeded();
+        return getSetupProgress().isCompleted();
     }
 
     /**
@@ -333,6 +335,17 @@ public abstract class PodStateManager {
     public final DateTime getExpiresAt() {
         DateTime activatedAt = getSafe(() -> podState.getActivatedAt());
         return activatedAt == null ? null : activatedAt.withZone(getSafe(() -> podState.getTimeZone())).plus(OmnipodConstants.NOMINAL_POD_LIFE);
+    }
+
+    public final SetupProgress getSetupProgress() {
+        if (hasPodState()) {
+            return Optional.ofNullable(podState.getSetupProgress()).orElse(SetupProgress.NONE);
+        }
+        return SetupProgress.NONE;
+    }
+
+    public final void setSetupProgress(SetupProgress setupProgress) {
+        setAndStore(() -> podState.setSetupProgress(setupProgress));
     }
 
     public final PodProgressStatus getPodProgressStatus() {
@@ -642,6 +655,7 @@ public abstract class PodStateManager {
         private Integer totalTicksDelivered;
         private boolean suspended;
         private NonceState nonceState;
+        private SetupProgress setupProgress = SetupProgress.NONE;
         private PodProgressStatus podProgressStatus;
         private DeliveryStatus lastDeliveryStatus;
         private AlertSet activeAlerts;
@@ -810,6 +824,14 @@ public abstract class PodStateManager {
             this.nonceState = nonceState;
         }
 
+        SetupProgress getSetupProgress() {
+            return setupProgress;
+        }
+
+        void setSetupProgress(SetupProgress setupProgress) {
+            this.setupProgress = setupProgress;
+        }
+
         PodProgressStatus getPodProgressStatus() {
             return podProgressStatus;
         }
@@ -941,11 +963,12 @@ public abstract class PodStateManager {
                     ", timeZone=" + timeZone +
                     ", activatedAt=" + activatedAt +
                     ", timeActive=" + timeActive +
-                    ", faultEvent=" + faultEventCode +
+                    ", faultEventCode=" + faultEventCode +
                     ", reservoirLevel=" + reservoirLevel +
                     ", totalTicksDelivered=" + totalTicksDelivered +
                     ", suspended=" + suspended +
                     ", nonceState=" + nonceState +
+                    ", setupProgress=" + setupProgress +
                     ", podProgressStatus=" + podProgressStatus +
                     ", lastDeliveryStatus=" + lastDeliveryStatus +
                     ", activeAlerts=" + activeAlerts +

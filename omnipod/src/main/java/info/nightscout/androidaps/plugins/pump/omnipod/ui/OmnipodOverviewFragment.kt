@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
@@ -345,9 +346,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             if (!podStateManager.isPodInitialized) {
                 resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
             } else {
-                if (podStateManager.isPodActivationTimeExceeded) {
-                    resourceHelper.gs(R.string.omnipod_pod_status_activation_time_exceeded)
-                } else if (podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
+                if (podStateManager.setupProgress.isBefore(SetupProgress.PRIMING_COMPLETED)) {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
                 } else {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_cannula_insertion)
@@ -454,7 +453,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
+        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.setupProgress.isAtLeast(SetupProgress.PAIRING_COMPLETED)
             && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
     }
 

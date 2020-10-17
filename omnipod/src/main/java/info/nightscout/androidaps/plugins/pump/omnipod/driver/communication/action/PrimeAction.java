@@ -1,13 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.PrimeService;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPodProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
-public class PrimeAction implements OmnipodAction<StatusResponse> {
+public class PrimeAction implements OmnipodAction<Void> {
 
     private final PrimeService service;
     private final PodStateManager podStateManager;
@@ -24,21 +23,27 @@ public class PrimeAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
-        if (!podStateManager.isPodInitialized() || podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PAIRING_COMPLETED)) {
-            throw new IllegalPodProgressException(PodProgressStatus.PAIRING_COMPLETED, podStateManager.isPodInitialized() ? podStateManager.getPodProgressStatus() : null);
+    public Void execute(OmnipodRileyLinkCommunicationManager communicationService) {
+        if (podStateManager.getSetupProgress().isBefore(SetupProgress.PAIRING_COMPLETED)) {
+            throw new IllegalSetupProgressException(SetupProgress.PAIRING_COMPLETED, podStateManager.getSetupProgress());
         }
-        if (podStateManager.getPodProgressStatus().isBefore(PodProgressStatus.PRIMING)) {
+
+        if (podStateManager.getSetupProgress().needsDisableTab5Sub16And17()) {
             // FaultConfigCommand sets internal pod variables to effectively disable $6x faults which occur more often with a 0 TBR
             service.executeDisableTab5Sub16And17FaultConfigCommand(communicationService, podStateManager);
-
-            service.executeFinishSetupReminderAlertCommand(communicationService, podStateManager);
-            return service.executePrimeBolusCommand(communicationService, podStateManager);
-        } else if (podStateManager.getPodProgressStatus().equals(PodProgressStatus.PRIMING)) {
-            // Check status
-            return communicationService.executeAction(new GetStatusAction(podStateManager));
-        } else {
-            throw new IllegalPodProgressException(null, podStateManager.getPodProgressStatus());
+            podStateManager.setSetupProgress(SetupProgress.TAB_5_SUB_16_AND_17_DISABLED);
         }
+
+        if (podStateManager.getSetupProgress().needsSetupReminders()) {
+            service.executeFinishSetupReminderAlertCommand(communicationService, podStateManager);
+            podStateManager.setSetupProgress(SetupProgress.SETUP_REMINDERS_SET);
+        }
+
+        if (podStateManager.getSetupProgress().needsPriming()) {
+            service.executePrimeBolusCommand(communicationService, podStateManager);
+            podStateManager.setSetupProgress(SetupProgress.PRIMING);
+        }
+
+        return null;
     }
 }

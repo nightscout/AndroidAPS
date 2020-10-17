@@ -74,6 +74,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.acti
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
@@ -253,6 +254,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
         podStateManager.loadPodState();
+
+        // BS @ 2020-10-17 FIXME: for backwards compatibility; remove before release
+        if (podStateManager.isPodInitialized() &&
+                podStateManager.getSetupProgress() == SetupProgress.NONE &&
+                podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS)) {
+            podStateManager.setSetupProgress(SetupProgress.COMPLETED);
+        }
 
         lastConnectionTimeMillis = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
@@ -922,7 +930,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void initializeAfterRileyLinkConnection() {
-        if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
+        if (podStateManager.getSetupProgress().isAtLeast(SetupProgress.PAIRING_COMPLETED)) {
             for (int i = 0; STARTUP_STATUS_REQUEST_TRIES > i; i++) {
                 PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
                 if (result.success) {
