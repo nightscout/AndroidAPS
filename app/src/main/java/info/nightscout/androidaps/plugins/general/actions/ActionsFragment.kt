@@ -233,17 +233,21 @@ class ActionsFragment : DaggerFragment() {
                 actions_canceltempbasal?.visibility = View.GONE
             }
         }
-
+        val activeBgSource = activePlugin.activeBgSource
         actions_historybrowser.visibility = (profile != null).toVisibility()
         actions_fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized && !pump.isSuspended).toVisibility()
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
         if (!config.NSCLIENT)
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel,  careportal_pbage, careportal_batterylevel)
         else
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
         checkPumpCustomActions()
+        if (activeBgSource.sensorBatteryLevel == -1)
+            careportal_senslevellabel?.text = ""
+        else
+            careportal_senslevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
     }
 
     private fun checkPumpCustomActions() {

@@ -191,12 +191,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/careportal_sensorage"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -215,7 +215,7 @@
 
             <TextView
                 android:id="@+id/careportal_insulinage"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -234,7 +234,7 @@
 
             <TextView
                 android:id="@+id/careportal_canulaage"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -253,7 +253,7 @@
 
             <TextView
                 android:id="@+id/careportal_pbage"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -284,9 +284,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp"
+                android:paddingStart="15dp"
                 android:paddingRight="5dp"
-                android:text=""
+                android:text="@string/careportal_level_label"
                 android:textSize="14sp" />
 
             <View
@@ -304,7 +304,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp"
+                android:paddingStart="15dp"
                 android:paddingRight="5dp"
                 android:text="@string/careportal_level_label"
                 android:textSize="14sp" />
@@ -324,7 +324,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp"
+                android:paddingStart="15dp"
                 android:paddingRight="5dp"
 
                 android:textSize="14sp" />
@@ -345,7 +345,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp"
+                android:paddingStart="15dp"
                 android:paddingRight="5dp"
                 android:text="@string/careportal_level_label"
                 android:textSize="14sp" />
@@ -363,7 +363,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:orientation="vertical">
 
             <TextView
