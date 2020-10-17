@@ -37,7 +37,7 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
-import kotlinx.android.synthetic.main.careportal_stats_fragment.*
+import kotlinx.android.synthetic.main.careportal_stats_fragment2.*
 import java.util.*
 import javax.inject.Inject
 
@@ -239,8 +239,10 @@ class ActionsFragment : DaggerFragment() {
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
+        if (!config.NSCLIENT)
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
+        else
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
         checkPumpCustomActions()
     }
 
