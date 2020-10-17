@@ -9,7 +9,7 @@ public class IllegalActivationProgressException extends OmnipodException {
     private final ActivationProgress actual;
 
     public IllegalActivationProgressException(ActivationProgress expected, ActivationProgress actual) {
-        super(String.format(Locale.getDefault(), "Illegal setup progress: %s, expected: %s", actual, expected), true);
+        super(String.format(Locale.getDefault(), "Illegal activation progress: %s, expected: %s", actual, expected), true);
         this.expected = expected;
         this.actual = actual;
     }

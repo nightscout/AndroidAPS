@@ -9,6 +9,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 open class EventRileyLinkDeviceStatusChange : EventStatus {
 
+    var rileyLinkTargetDevice: RileyLinkTargetDevice? = null
     var rileyLinkServiceState: RileyLinkServiceState? = null
     var rileyLinkError: RileyLinkError? = null
 
@@ -18,7 +19,8 @@ open class EventRileyLinkDeviceStatusChange : EventStatus {
     constructor() {
     }
 
-    constructor(rileyLinkServiceState: RileyLinkServiceState?, rileyLinkError: RileyLinkError?) {
+    constructor(rileyLinkTargetDevice: RileyLinkTargetDevice, rileyLinkServiceState: RileyLinkServiceState?, rileyLinkError: RileyLinkError?) {
+        this.rileyLinkTargetDevice = rileyLinkTargetDevice
         this.rileyLinkServiceState = rileyLinkServiceState
         this.rileyLinkError = rileyLinkError
     }
@@ -38,7 +40,8 @@ open class EventRileyLinkDeviceStatusChange : EventStatus {
         val rileyLinkError = this.rileyLinkError
 
         if (rileyLinkServiceState.isError && rileyLinkError != null) {
-            return resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
+            val rileyLinkTargetDevice = this.rileyLinkTargetDevice ?: return ""
+            return resourceHelper.gs(rileyLinkError.getResourceId(rileyLinkTargetDevice))
         }
 
         return resourceHelper.gs(resourceId)

@@ -25,7 +25,7 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
         setContentView(R.layout.omnipod_pod_activation_wizard_activity)
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.fillPodInfoFragment)
-            ?: if (!podStateManager.isPodInitialized || podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
+            ?: if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
                 R.id.fillPodInfoFragment
             } else {
                 R.id.attachPodInfoFragment
