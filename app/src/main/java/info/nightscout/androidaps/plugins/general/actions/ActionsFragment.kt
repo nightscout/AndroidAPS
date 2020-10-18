@@ -37,7 +37,7 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
-import kotlinx.android.synthetic.main.careportal_stats_fragment2.*
+import kotlinx.android.synthetic.main.careportal_stats_fragment.*
 import java.util.*
 import javax.inject.Inject
 
@@ -239,15 +239,22 @@ class ActionsFragment : DaggerFragment() {
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-        if (!config.NSCLIENT)
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel,  careportal_pbage, careportal_batterylevel)
-        else
+        if (!config.NSCLIENT) {
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
+            if (activeBgSource.sensorBatteryLevel == -1)
+                careportal_senslevellabel?.text = ""
+            else
+                careportal_senslevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
+            careportal_inslevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
+            careportal_pblevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
+        } else {
             statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
-        checkPumpCustomActions()
-        if (activeBgSource.sensorBatteryLevel == -1)
             careportal_senslevellabel?.text = ""
-        else
-            careportal_senslevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
+            careportal_inslevellabel?.text = ""
+            careportal_pblevellabel?.text = ""
+        }
+        checkPumpCustomActions()
+
     }
 
     private fun checkPumpCustomActions() {
