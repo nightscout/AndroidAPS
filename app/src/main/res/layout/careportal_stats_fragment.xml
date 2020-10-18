@@ -55,7 +55,7 @@
 
             <TextView
                 android:id="@+id/careportal_sensorlevel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
@@ -127,7 +127,7 @@
 
             <TextView
                 android:id="@+id/careportal_reservoirlevel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
@@ -195,10 +195,11 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
+                android:text=""
                 android:paddingLeft="0dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
@@ -266,7 +267,7 @@
 
             <TextView
                 android:id="@+id/careportal_batterylevel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
