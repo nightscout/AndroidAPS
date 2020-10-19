@@ -45,8 +45,4 @@ class GlimpPlugin @Inject constructor(
         bgReading.raw = 0.0
         MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP")
     }
-
-    override fun getSensorBatteryLevel(): Int {
-        return -1
-    }
 }

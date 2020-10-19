@@ -10,5 +10,7 @@ public interface BgSourceInterface {
 
     void handleNewData(Intent intent);
 
-    int getSensorBatteryLevel();
+    default int getSensorBatteryLevel() {
+        return -1;
+    }
 }

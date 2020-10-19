@@ -100,9 +100,4 @@ class RandomBgPlugin @Inject constructor(
         }
         aapsLogger.debug(LTag.BGSOURCE, "Generated BG: $bgReading")
     }
-
-
-    override fun getSensorBatteryLevel(): Int {
-        return -1
-    }
 }

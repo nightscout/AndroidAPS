@@ -91,8 +91,4 @@ class NSClientSourcePlugin @Inject constructor(
             lastBGTimeStamp = timeStamp
         }
     }
-
-    override fun getSensorBatteryLevel(): Int {
-        return -1
-    }
 }

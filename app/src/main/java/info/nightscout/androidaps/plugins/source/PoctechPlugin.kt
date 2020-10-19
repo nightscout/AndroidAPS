@@ -69,8 +69,4 @@ class PoctechPlugin @Inject constructor(
             aapsLogger.error("Exception: ", e)
         }
     }
-
-    override fun getSensorBatteryLevel(): Int {
-        return -1
-    }
 }

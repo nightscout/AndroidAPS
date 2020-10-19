@@ -65,8 +65,4 @@ class MM640gPlugin @Inject constructor(
             }
         }
     }
-
-    override fun getSensorBatteryLevel(): Int {
-        return -1
-    }
 }
