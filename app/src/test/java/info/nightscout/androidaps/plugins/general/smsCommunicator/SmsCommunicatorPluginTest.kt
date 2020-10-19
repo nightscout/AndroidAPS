@@ -190,7 +190,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
         `when`(resourceHelper.gs(R.string.wrongformat)).thenReturn("Wrong format")
-        `when`(resourceHelper.gs(eq(R.string.wrongTbrDuration), any())).thenAnswer({ i: InvocationOnMock -> "TBR duration must a multiple of " + i.getArguments()[1] + " minutes and greater than 0."})
+        `when`(resourceHelper.gs(eq(R.string.wrongTbrDuration), any())).thenAnswer({ i: InvocationOnMock -> "TBR duration must be a multiple of " + i.getArguments()[1] + " minutes and greater than 0."})
         `when`(resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
@@ -782,14 +782,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BASAL 10% 0")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 10% 0", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("TBR duration must a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
 
         //BASAL 20% 20
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 20% 20")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 20% 20", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("TBR duration must a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(Constraint<Int>(20))
 
         //BASAL 20% 30
@@ -815,7 +815,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BASAL 1 0")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 1 0", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("TBR duration must a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(Constraint<Double>(1.0))
 
         //BASAL 1 20
@@ -823,7 +823,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         sms = Sms("1234", "BASAL 1 20")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 1 20", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("TBR duration must a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(Constraint<Double>(1.0))
 
         //BASAL 1 30
