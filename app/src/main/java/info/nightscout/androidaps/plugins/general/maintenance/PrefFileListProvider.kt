@@ -1,20 +1,18 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
 import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.Storage
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
@@ -53,8 +51,8 @@ class PrefsFileContract : ActivityResultContract<Void, PrefsFile>() {
 
     override fun parseResult(resultCode: Int, intent: Intent?): PrefsFile? {
         return when (resultCode) {
-            Activity.RESULT_OK -> intent?.getParcelableExtra(OUTPUT_PARAM)
-            else               -> null
+            FragmentActivity.RESULT_OK -> intent?.getParcelableExtra(OUTPUT_PARAM)
+            else                       -> null
         }
     }
 

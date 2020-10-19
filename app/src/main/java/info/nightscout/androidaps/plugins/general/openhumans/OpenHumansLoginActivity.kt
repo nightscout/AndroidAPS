@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.openhumans
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
@@ -128,7 +128,7 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
                 .setCancelable(false)
                 .setPositiveButton(R.string.close) { _, _ ->
                     requireActivity().run {
-                        setResult(Activity.RESULT_OK)
+                        setResult(FragmentActivity.RESULT_OK)
                         requireActivity().finish()
                     }
                 }
