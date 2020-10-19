@@ -1176,6 +1176,7 @@
     <string name="storage">internal storage constraint</string>
     <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
     <string name="wrongformat">Wrong format</string>
+    <string name="wrongTbrDuration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
