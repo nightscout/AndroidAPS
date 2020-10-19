@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -63,7 +64,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/addnew"
-                android:src="@drawable/ic_add" />
+                app:srcCompat="@drawable/ic_add" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_clone"
@@ -72,7 +73,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@string/clone_label"
-                android:src="@drawable/ic_clone" />
+                app:srcCompat="@drawable/ic_clone" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_remove"
@@ -83,7 +84,7 @@
                 android:contentDescription="@string/remove_label"
                 android:scaleX="1"
                 android:scaleY="1"
-                android:src="@drawable/ic_remove" />
+                app:srcCompat="@drawable/ic_remove" />
 
         </LinearLayout>
 

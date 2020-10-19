@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.Manifest
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -344,7 +344,7 @@ class ImportExportPrefs @Inject constructor(
         show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
             log.debug(TAG, "Exiting")
             rxBus.send(EventAppExit())
-            if (context is Activity) {
+            if (context is AppCompatActivity) {
                 context.finish()
             }
             System.runFinalization()

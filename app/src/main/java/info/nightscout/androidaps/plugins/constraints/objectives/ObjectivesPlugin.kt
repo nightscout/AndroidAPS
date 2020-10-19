@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.constraints.objectives
 
-import android.app.Activity
 import androidx.fragment.app.FragmentActivity
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
