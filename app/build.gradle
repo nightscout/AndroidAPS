@@ -252,9 +252,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
-    implementation 'com.google.firebase:firebase-core:17.4.3'
-    implementation 'com.google.firebase:firebase-auth:19.4.0'
-    implementation 'com.google.firebase:firebase-database:19.5.0'
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
 
     implementation "androidx.appcompat:appcompat:$appcompat_verison"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -266,7 +267,7 @@ dependencies {
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
-    implementation "androidx.fragment:fragment:${fragmentVersion}"
+    implementation "androidx.fragment:fragment-ktx:${fragmentktx_version}"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"

@@ -933,7 +933,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         Bundle params = new Bundle();
         params.putString("version", BuildConfig.VERSION);
 
-        fabricPrivacy.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
+        fabricPrivacy.logCustom("OmnipodPumpInit", params);
     }
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
