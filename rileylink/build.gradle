@@ -48,12 +48,12 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.appcompat:appcompat:$appcompat_verison"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "com.google.android.material:material:$material_version"
 
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
@@ -63,7 +63,7 @@ dependencies {
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
 
     // rileylink - start
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation "org.apache.commons:commons-lang3:$commonslang3_version"
     implementation 'net.danlew:android.joda:2.10.6'
     implementation 'org.slf4j:slf4j-api:1.7.30'
     // rileylink - end
@@ -75,7 +75,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation "junit:junit:$junit_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
