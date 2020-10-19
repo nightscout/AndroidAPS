@@ -585,7 +585,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val profile = profileFunction.getProfile()
             if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.noprofile)))
             else if (tempBasalPct == 0 && splitted[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, String.format(resourceHelper.gs(R.string.wrongTbrDuration), durationStep)))
+            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongTbrDuration, durationStep)))
             else {
                 tempBasalPct = constraintChecker.applyBasalPercentConstraints(Constraint(tempBasalPct), profile).value()
                 val passCode = generatePasscode()
@@ -618,7 +618,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val profile = profileFunction.getProfile()
             if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.noprofile)))
             else if (tempBasal == 0.0 && splitted[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, String.format(resourceHelper.gs(R.string.wrongTbrDuration), durationStep)))
+            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongTbrDuration, durationStep)))
             else {
                 tempBasal = constraintChecker.applyBasalConstraints(Constraint(tempBasal), profile).value()
                 val passCode = generatePasscode()
