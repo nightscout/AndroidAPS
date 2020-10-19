@@ -25,6 +25,7 @@
 
 
             <TextView
+                android:id="@+id/careportal_sensoragelabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -97,6 +98,7 @@
 
 
             <TextView
+                android:id="@+id/careportal_insulinagelabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -167,8 +169,8 @@
                 android:text="@string/careportal_canula_label"
                 android:textSize="14sp" />
 
-
             <TextView
+                android:id="@+id/careportal_canulaagelabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -227,6 +229,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/careportal_pblabel"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:drawableLeft="@drawable/ic_cp_age_battery"
@@ -238,6 +241,7 @@
 
 
             <TextView
+                android:id="@+id/careportal_pbagelabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"

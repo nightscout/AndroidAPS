@@ -239,14 +239,29 @@ class ActionsFragment : DaggerFragment() {
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+        val shortlabel = sp.getBoolean(R.string.key_short_cp_label,false)
+        if (shortlabel) {
+            careportal_pblabel?.text = resourceHelper.gs(R.string.pump)
+            careportal_sensoragelabel?.text = ""
+            careportal_insulinagelabel?.text = ""
+            careportal_canulaagelabel?.text = ""
+            careportal_pbagelabel?.text = ""
+        } else {
+            careportal_pblabel.text = resourceHelper.gs(R.string.careportal_pb_label)
+            careportal_sensoragelabel.text = resourceHelper.gs(R.string.careportal_age_label)
+            careportal_insulinagelabel.text =resourceHelper.gs(R.string.careportal_age_label)
+            careportal_canulaagelabel.text =resourceHelper.gs(R.string.careportal_age_label)
+            careportal_pbagelabel.text =resourceHelper.gs(R.string.careportal_age_label)
+        }
+
         if (!config.NSCLIENT) {
             statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
             if (activeBgSource.sensorBatteryLevel == -1)
                 careportal_senslevellabel?.text = ""
             else
-                careportal_senslevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
-            careportal_inslevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
-            careportal_pblevellabel?.text = resourceHelper.gs(R.string.careportal_level_label)
+                careportal_senslevellabel?.text = if (shortlabel) "|" else  resourceHelper.gs(R.string.careportal_level_label)
+            careportal_inslevellabel?.text = if (shortlabel) "|" else resourceHelper.gs(R.string.careportal_level_label)
+            careportal_pblevellabel?.text = if (shortlabel) "|" else resourceHelper.gs(R.string.careportal_level_label)
         } else {
             statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
             careportal_senslevellabel?.text = ""
