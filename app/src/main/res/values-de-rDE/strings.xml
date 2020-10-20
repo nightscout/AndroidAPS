@@ -991,6 +991,7 @@ Unerwartetes Verhalten.</string>
     <string name="storage">interne Speicherbegrenzung</string>
     <string name="diskfull">Mindestens %1$d MB freier interer Speicher benötigt! Loop abgeschaltet!</string>
     <string name="wrongformat">Falsches Format</string>
+    <string name="wrongTbrDuration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
     <string name="sms_wrongcode">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="notconfigured">Nicht konfiguriert</string>
     <string name="profileswitchcreated">Profilwechsel wurde erstellt</string>
