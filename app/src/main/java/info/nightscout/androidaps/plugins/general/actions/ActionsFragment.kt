@@ -262,9 +262,9 @@ class ActionsFragment : DaggerFragment() {
             if (activeBgSource.sensorBatteryLevel == -1)
                 careportal_senslevellabel?.text = ""
             else
-                careportal_senslevellabel?.text = if (shortlabel) "|" else  resourceHelper.gs(R.string.careportal_level_label)
-            careportal_inslevellabel?.text = if (shortlabel) "|" else resourceHelper.gs(R.string.careportal_level_label)
-            careportal_pblevellabel?.text = if (shortlabel) "|" else resourceHelper.gs(R.string.careportal_level_label)
+                careportal_senslevellabel?.text = if (shortlabel) "" else  resourceHelper.gs(R.string.careportal_level_label)
+            careportal_inslevellabel?.text = if (shortlabel) "" else resourceHelper.gs(R.string.careportal_level_label)
+            careportal_pblevellabel?.text = if (shortlabel) "" else resourceHelper.gs(R.string.careportal_level_label)
         } else {
             statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
             careportal_senslevellabel?.text = ""
