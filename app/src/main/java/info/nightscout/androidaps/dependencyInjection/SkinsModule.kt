@@ -9,6 +9,7 @@ import info.nightscout.androidaps.skins.SkinButtonsOn
 import info.nightscout.androidaps.skins.SkinClassic
 import info.nightscout.androidaps.skins.SkinInterface
 import info.nightscout.androidaps.skins.SkinLargeDisplay
+import info.nightscout.androidaps.skins.SkinLowRes
 import javax.inject.Qualifier
 
 @Module
@@ -31,6 +32,12 @@ open class SkinsModule {
     @IntoMap
     @IntKey(20)
     fun bindsSkinLargeDisplay(skinLargeDisplay: SkinLargeDisplay): SkinInterface = skinLargeDisplay
+
+    @Provides
+    @Skin
+    @IntoMap
+    @IntKey(30)
+    fun bindsSkinLowRes(skinLowRes: SkinLowRes): SkinInterface = skinLowRes
 
     @Qualifier
     annotation class Skin

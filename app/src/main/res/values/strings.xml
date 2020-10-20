@@ -403,7 +403,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Shorten tab titles</string>
-    <string name="short_cp_label">Shorten Careportal labels in Actions tab</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="key_advancedsettings" translatable="false">key_advancedsettings</string>
@@ -1032,7 +1031,6 @@
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
-    <string name="key_short_cp_label" translatable="false">short_cplabel</string>
     <string name="searching_for_devices">Searching for devices…</string>
     <string name="pairing_completed">Pairing completed</string>
     <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>
@@ -1410,6 +1408,7 @@
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
     <string name="classic_description">Original skin</string>
+    <string name="lowres_description">Low Resolution skin</string>
     <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
     <string name="largedisplay_description">Large display</string>
     <string name="key_skin" translatable="false">skin</string>

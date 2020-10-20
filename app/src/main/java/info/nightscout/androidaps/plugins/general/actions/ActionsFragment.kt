@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -54,6 +55,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -239,7 +241,8 @@ class ActionsFragment : DaggerFragment() {
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-        val shortlabel = sp.getBoolean(R.string.key_short_cp_label,false)
+
+        val shortlabel = skinProvider.activeSkin().description == R.string.lowres_description
         if (shortlabel) {
             careportal_pblabel?.text = resourceHelper.gs(R.string.pump)
             careportal_sensoragelabel?.text = ""
