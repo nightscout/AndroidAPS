@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:contentDescription="@string/overview_insulin_label"
-                android:tint="?attr/iconColorDialog"
+                app:tint="?attr/iconColorDialog"
                 android:src="@drawable/ic_bolus" />
 
             <TextView
@@ -87,7 +87,7 @@
                 android:width="120dp"
                 android:padding="10dp"
                 android:text="@string/time"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -120,7 +120,7 @@
                 android:width="120dp"
                 android:padding="10dp"
                 android:text="@string/overview_insulin_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker

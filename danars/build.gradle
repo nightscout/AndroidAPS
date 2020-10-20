@@ -52,9 +52,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation "androidx.appcompat:appcompat:${appcompatVersion}"
-    implementation "androidx.core:core-ktx:${coreVersion}"
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
     implementation "com.google.android.material:material:${materialVersion}"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${swiperefreshVersion}"
@@ -74,8 +74,8 @@ dependencies {
     //RxBus
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 

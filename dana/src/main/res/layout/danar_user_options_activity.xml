@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/danar_pump_settings"
-                android:src="@drawable/ic_danar_useropt" />
+                app:srcCompat="@drawable/ic_danar_useropt" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -336,4 +336,3 @@
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
-

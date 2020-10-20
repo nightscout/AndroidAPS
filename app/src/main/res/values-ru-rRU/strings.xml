@@ -33,8 +33,8 @@
     <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
     <string name="description_profile_nightscout">Содержит профиль, заданный в Nightscout</string>
     <string name="description_profile_simple">Определите профиль только в одном блоке времени.</string>
-    <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия установленного алгоритма</string>
-    <string name="description_pump_mdi">Интеграция с помпой для тех, кто делает многочисленные подколки для компенсации диабета</string>
+    <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия утилиты Ruffy</string>
+    <string name="description_pump_mdi">Интеграция с помпой для тех, кто для компенсации диабета пользуется инъекциями шприц-ручек</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
     <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
@@ -801,6 +801,8 @@ Context | Edit Context</string>
     <string name="bgsourcesetup">Настройте источник СК</string>
     <string name="setupwizard_profile_description">Пожалуйста выберите источник профиля. Если пациент ребенок пользуйтесь профилем Nightscout. Если никто не отслеживает ваш СК на NS, вы вероятно предпочтете Локальный профиль. Напоминание - вы всего лишь выбираете профиль. Активируйте его \"Переключателем профиля\"</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Ожидание соединения RileyLink\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы вы можете продолжить установку\n</string>
     <string name="startobjective">Начните первую Цель</string>
     <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>

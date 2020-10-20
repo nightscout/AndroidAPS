@@ -26,7 +26,7 @@ ext {
     powermockVersion = "2.0.7"
     dexmakerVersion = "1.2"
     retrofit2Version = '2.9.0'
-    okhttp3Version = '4.8.1'
+    okhttp3Version = '4.9.0'
 }
 
 
@@ -254,13 +254,20 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation "com.google.android.gms:play-services-location:17.0.0"
+    implementation "com.google.android.gms:play-services-location:17.1.0"
     implementation 'com.google.firebase:firebase-core:17.5.0'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.firebase:firebase-database:19.4.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
 
     implementation "androidx.appcompat:appcompat:${appcompatVersion}"
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
+
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -268,15 +275,17 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
     implementation "androidx.fragment:fragment:${fragmentVersion}"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    implementation "com.google.android.material:material:${materialVersion}"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${swiperefreshVersion}"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.fragment:fragment-ktx:${fragmentktx_version}"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    implementation "com.google.android.material:material:$materialVersion"
 
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
@@ -285,7 +294,7 @@ dependencies {
     implementation("com.github.tony19:logback-android-classic:1.1.1-6") {
         exclude group: "com.google.android", module: "android"
     }
-    implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation "org.apache.commons:commons-lang3:$commonslang3_version"
     implementation 'org.slf4j:slf4j-api:1.7.30'
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
@@ -299,7 +308,7 @@ dependencies {
         exclude group: "org.json", module: "json"
     }
     implementation "com.google.code.gson:gson:2.8.6"
-    implementation('com.google.guava:guava:29.0-jre') {
+    implementation('com.google.guava:guava:30.0-jre') {
         exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
@@ -313,7 +322,7 @@ dependencies {
     implementation 'com.github.kenglxn.QRGen:android:2.6.0'
     implementation 'com.eatthepath:java-otp:0.2.0'
 
-    testImplementation "junit:junit:4.13"
+    testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20200518'
     testImplementation "org.mockito:mockito-core:3.5.10"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"

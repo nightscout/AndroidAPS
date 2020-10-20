@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.activity
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity

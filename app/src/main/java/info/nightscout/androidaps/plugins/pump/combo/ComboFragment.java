@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.fragment.app.FragmentActivity;
 
 import javax.inject.Inject;
 
@@ -120,7 +121,7 @@ public class ComboFragment extends DaggerFragment {
     }
 
     private void runOnUiThread(Runnable action) {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(action);
         }

@@ -126,6 +126,7 @@
     <string name="omnipod_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Veuillez vérifier manuellement que votre Pod est en train de délivrer un bolus en écoutant des clics. <b>Si vous êtes sûr que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée bolus des traitements, même si vous cliquez sur \'Annuler bolus\' maintenant !</b></string>
     <string name="omnipod_bolus_failed_uncertain_smb">Impossible de vérifier si le bolus SMB (%1$.2f U) a réussi. <b>Si vous êtes certain que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée SMB des traitements.</b></string>
     <string name="omnipod_rl_stats">Stats RL</string>
+    <string name="omnipod_read_pulse_log_short">Enreg. Pulse</string>
     <string name="omnipod_pod_lot">LOT</string>
     <string name="omnipod_pod_tid">TID</string>
     <string name="omnipod_pod_firmware_version">Version du firmware</string>
@@ -144,6 +145,7 @@
     <string name="omnipod_suspend_delivery_short">Arrêter</string>
     <string name="omnipod_cmd_pair_and_prime">Appairer et amorcer</string>
     <string name="omnipod_cmd_fill_cannula_set_basal_profile">Remplir la canule et définir le profil de basal</string>
+    <string name="omnipod_cmd_get_pulse_log">Récupérer les journaux des pulses</string>
     <string name="omnipod_uncertain_failure">Erreur inconnue</string>
     <string name="omnipod_cancelled_old_tbr_failed_to_set_new">Ancien débit de basal temporaire annulé, mais impossible de définir le nouveau débits de basal temporaire</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Définir un faux débit de basal temporaire car le Pod est suspendu</string>

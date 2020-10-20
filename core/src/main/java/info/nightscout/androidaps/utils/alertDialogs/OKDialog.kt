@@ -11,6 +11,7 @@ import android.text.Spanned
 import android.view.ContextThemeWrapper
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.extensions.runOnUiThread

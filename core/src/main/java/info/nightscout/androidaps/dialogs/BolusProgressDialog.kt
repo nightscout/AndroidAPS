@@ -199,7 +199,6 @@ class BolusProgressDialog : BlurDialogFragment() {
         Thread(Runnable {
             SystemClock.sleep(5000)
             bolusEnded = true
-            val activity: Activity? = activity
             activity?.runOnUiThread {
                 if (running) {
                     aapsLogger.debug(LTag.UI, "executing")

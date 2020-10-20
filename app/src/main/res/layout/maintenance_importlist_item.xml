@@ -28,7 +28,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="1dp"
-                android:src="@drawable/ic_meta_format"
+                card_view:srcCompat="@drawable/ic_meta_format"
                 android:tint="@color/importListFileName" />
 
             <TextView
@@ -89,7 +89,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
-                android:src="@drawable/ic_meta_name"
+                card_view:srcCompat="@drawable/ic_meta_name"
                 android:tint="@color/importListAdditionalInfo" />
 
             <TextView
@@ -121,7 +121,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
-                android:src="@drawable/ic_meta_date"
+                card_view:srcCompat="@drawable/ic_meta_date"
                 android:tint="@color/importListAdditionalInfo" />
 
             <TextView

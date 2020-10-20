@@ -120,7 +120,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
                     profileview_units.text = profileFunction.getUnits()
-                    profileview_dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile1.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
+                    profileview_dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
                     val profileNames =profileName!!.split("\n").toTypedArray()
                     profileview_activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
                     profileview_date.text = date

@@ -70,18 +70,19 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation "androidx.appcompat:appcompat:${appcompatVersion}"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation "androidx.core:core-ktx:${coreVersion}"
     implementation "androidx.preference:preference-ktx:1.1.1"
-    implementation "androidx.activity:activity-ktx:${activityVersion}"
-    implementation "com.google.android.material:material:${materialVersion}"
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${swiperefreshVersion}"
-    implementation "androidx.fragment:fragment:${fragmentVersion}"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-
     implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
+    implementation "androidx.activity:activity-ktx:${activityVersion}"
+    implementation "androidx.fragment:fragment-ktx:${fragmentktx_version}"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    implementation "com.google.android.material:material:$materialVersion"
 
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
@@ -90,7 +91,7 @@ dependencies {
 
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
 
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation "org.apache.commons:commons-lang3:$commonslang3_version"
     implementation 'net.danlew:android.joda:2.10.6'
     implementation "com.google.code.gson:gson:2.8.6"
 
@@ -105,10 +106,10 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "com.google.android.material:material:$materialVersion"
 
-    testImplementation 'junit:junit:4.13'
-    testImplementation 'org.mockito:mockito-core:3.5.10'
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:2.8.47"
     testImplementation "org.powermock:powermock-api-mockito2:$powermockVersion"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
