@@ -990,6 +990,7 @@
     <string name="storage">omezení vnitřního úložiště</string>
     <string name="diskfull">Uvolněte alespoň %1$d MB z vnitřního úložiště! Smyčka zakázána!</string>
     <string name="wrongformat">Chybný formát</string>
+    <string name="wrongTbrDuration">Trvání dočasného bazálu musí být násobkem %1$d minut a musí být větší než 0.</string>
     <string name="sms_wrongcode">Nesprávný kód. Příkaz zrušen.</string>
     <string name="notconfigured">Není nakonfigurováno</string>
     <string name="profileswitchcreated">Přepnutí profilu vytvořeno</string>
