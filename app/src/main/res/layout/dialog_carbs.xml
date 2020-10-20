@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/carbs"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/ic_cp_bolus_carbs" />
+                app:srcCompat="@drawable/ic_cp_bolus_carbs" />
 
             <TextView
                 android:layout_width="match_parent"

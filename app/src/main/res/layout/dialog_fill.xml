@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/primefill"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/ic_cp_pump_canula" />
+                app:srcCompat="@drawable/ic_cp_pump_canula" />
 
             <TextView
                 android:layout_width="match_parent"

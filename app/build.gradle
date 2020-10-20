@@ -375,9 +375,9 @@ dependencies {
     //Color Picker
     implementation "com.github.skydoves:colorpickerview:2.1.7"
     //WorkManager
-    implementation 'androidx.work:work-runtime:2.4.0'
-    implementation 'androidx.work:work-runtime-ktx:2.4.0'
-    implementation 'androidx.work:work-rxjava2:2.4.0'
+    implementation "androidx.work:work-runtime:$work_version"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-rxjava2:$work_version"
 
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0'
 

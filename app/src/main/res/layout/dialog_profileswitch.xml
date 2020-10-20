@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_profileswitch"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/ic_actions_profileswitch" />
+                app:srcCompat="@drawable/ic_actions_profileswitch" />
 
             <TextView
                 android:layout_width="match_parent"

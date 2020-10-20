@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_calibration"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/ic_calibration" />
+                app:srcCompat="@drawable/ic_calibration" />
 
             <TextView
                 android:id="@+id/actions_care_title"

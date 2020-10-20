@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/virtualpump_extendedbolus_label"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/ic_actions_startextbolus" />
+                app:srcCompat="@drawable/ic_actions_startextbolus" />
 
             <TextView
                 android:layout_width="match_parent"

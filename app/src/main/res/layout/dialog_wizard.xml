@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
                 android:tint="?attr/iconColorDialog"
-                android:src="@drawable/ic_calculator" />
+                app:srcCompat="@drawable/ic_calculator" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -300,7 +300,7 @@
                 android:contentDescription="@string/show_calculation"
                 android:layout_gravity="center_vertical"
                 android:tint="?attr/iconColorToolbar"
-                android:src="@drawable/ic_visibility" />
+                app:srcCompat="@drawable/ic_visibility" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel"
