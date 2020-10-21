@@ -93,7 +93,7 @@
     <string name="omnipod_error_nonce_resync_failed">Communication failed: nonce resync failed</string>
     <string name="omnipod_error_nonce_out_of_sync">Communication failed: nonce out of sync</string>
     <string name="omnipod_error_not_enough_data">Communication failed: not enough data received from the Pod</string>
-    <string name="omnipod_error_pod_fault">A Pod fault (%1$03d %2$s) has been detected. Please deactivate your Pod and start a new one</string>
+    <string name="omnipod_error_pod_fault">A Pod fault (%1$03d %2$s) has been detected. Please deactivate your Pod and activate a new one</string>
     <string name="omnipod_error_pod_returned_error_response">Communication failed: the Pod returned an error response</string>
     <string name="omnipod_error_communication_failed_no_response_from_riley_link">No response from RileyLink</string>
     <string name="omnipod_error_communication_failed_riley_link_interrupted">RileyLink interrupted</string>
