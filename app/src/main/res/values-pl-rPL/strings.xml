@@ -21,6 +21,7 @@
     <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
     <string name="description_insulin_rapid">Profil insulinowy dla Humalog i Novorapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Profil insulinowy dla Fiasp</string>
+    <string name="description_insulin_lyumjev">Profil insulinowy dla Lyumjev</string>
     <string name="description_insulin_free_peak">Pozwala na określenie czasu wartości szczytowej działania insuliny i powinno być używane tylko przez zaawansowanych użytkowników</string>
     <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
     <string name="description_ns_client">Synchronizuje twoje dane z Nightscout</string>
@@ -84,12 +85,12 @@
     <string name="overview">Przegląd</string>
     <string name="nsprofile">Profil Nightscout</string>
     <string name="simpleprofile">Prosty profil</string>
-    <string name="treatments">Leczenie</string>
+    <string name="treatments">Terapia</string>
     <string name="virtualpump">Pompa wirtualna</string>
     <string name="careportal">PortalOpieki</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz wykorzystać do AndroidAPS?</string>
-    <string name="configbuilder_treatments">Leczenie</string>
+    <string name="configbuilder_treatments">Terapia</string>
     <string name="configbuilder_treatments_description">Która wtyczka powinna być używana do obsługi leczenia?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Który profil będzie używany w AndroidAPS?</string>
@@ -113,7 +114,7 @@
     <string name="treatmentdeliveryerror">Błąd podania bolusa</string>
     <string name="overview_newtempbasal_basalpercent">Wartość bazy [%]</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
-    <string name="overview_treatment_label">Leczenie</string>
+    <string name="overview_treatment_label">Terapia</string>
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="constraintapllied">Ograniczenie nałożone!</string>
     <string name="sms_bolus">Bolus:</string>
@@ -156,6 +157,7 @@
     <string name="overview_tempbasal_button">BazaTymczasowa</string>
     <string name="overview_extendedbolus_button">Bolus Przedłużony</string>
     <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
+    <string name="missing_carbs">Brakuje %1$d g</string>
     <string name="exported">Ustawienia wyeksportowane</string>
     <string name="export_to">Eksportuj ustawienia do</string>
     <string name="import_from">Importuj ustawienia z</string>
@@ -171,6 +173,11 @@
     <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych preferencji.</string>
     <string name="preferences_export_canceled">Eksportowanie anulowane! Ustawienia NIE zostały wyeksportowane!</string>
     <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
+    <string name="preferences_import_impossible">Nie można zaimportować ustawień!</string>
+    <string name="goto_main_try_again">Wróć do ekranu głównego i spróbuj ponownie.</string>
+    <string name="old_master_password">Stare hasło główne</string>
+    <string name="different_password_used">Ten plik zaszyfrowano innym hasłem głównym. Podaj te stare hasło główne którego używałeś do eksportu, aby odszyfrować plik.</string>
+    <string name="master_password_will_be_replaced">W efekcie udanego importu bieżące hasło główne ZOSTANIE ZASTĄPIONE starym hasłem głównym z importowanych ustawień!</string>
     <string name="preferences_import_list_title">Wybierz plik do zaimportowania</string>
     <string name="check_preferences_before_import">Proszę sprawdzić ustawienia przed importem:</string>
     <string name="check_preferences_cannot_import">Ustawienia nie mogą być zaimportowane!</string>
@@ -232,6 +239,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimalna liczba minut która musi upłynąć pomiędzy jednym a drugim zdalnie podawanym bolusem</string>
     <string name="smscommunicator_remotebolusmindistance">Ile co najmniej minut musi upłynąć pomiędzy jednym a drugim bolusem</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Dla twojego bezpieczeństwa, aby zmienić to ustawienie musisz dodać co najmniej 2 numery telefonów.</string>
+    <string name="bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
+    <string name="bolusrequested">Zamierzam podać %1$.2f U</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
+    <string name="smscommunicator_mealbolusdelivered">Pomyślnie podano %1$.2f U bolusa posiłkowego</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Cel %1$s na %2$d minut</string>
     <string name="smscommunicator_tt_set">Pomyślnie ustawiono cel %1$s na %2$d minuty</string>
     <string name="smscommunicator_tt_canceled">Pomyślnie anulowano cel tymczasowy</string>
@@ -255,7 +266,9 @@
     <string name="smscommunicator_reconnect">Pompa ponownie podłączona</string>
     <string name="smscommunicator_remotecommandnotallowed">Zdalne komendy nie są dozwolone</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus zdalny niedostępny. Spróbuj ponownie później.</string>
+    <string name="smscommunicator_basalreplywithcode">Aby rozpocząć bazę %1$.2f U/h przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Aby przełączyć profil na %1$s %2$d%% odpowiedz kodem %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Aby rozpocząć bolus przedłużony %1$.2f U przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Aby wprowadzić %1$dg o %2$s odeślij w SMS kod %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Aby rozpocząć bolus przedłużony %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Aby wstrzymać pętle na %1$d minut odpowiedz kodem %2$s</string>
@@ -264,6 +277,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Aby wyłączyć pętlę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_tempbasalset">Tymczasowa baza %1$.2fU/h przez %2$d min rozpoczęta</string>
     <string name="smscommunicator_extendedset">Bolus przedłużony %1$.2fU na %2$d min. rozpoczęty pomyślnie</string>
+    <string name="smscommunicator_carbsset">Pomyślnie wprowadzono %1$d g węglowodanów</string>
     <string name="smscommunicator_carbsfailed">Próba wprowadzenia %1$dg węglowodanów nie powiodła się</string>
     <string name="smscommunicator_tempbasalset_percent">Tymczasowa baza %1$d%% przez %2$d min. pomyślnie rozpoczęta</string>
     <string name="smscommunicator_tempbasalfailed">Rozpoczęcie tymczasowej bazy nie powiodło się</string>
@@ -395,7 +409,7 @@
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
     <string name="adult">Osoba dorosła</string>
-    <string name="resistantadult">Osoba dorosła insulino odporna</string>
+    <string name="resistantadult">Osoba dorosła insulinooporna</string>
     <string name="patientage_summary">Proszę wybierz wiek pacjenta w celu ustawienia wartości limitów bezpieczeństwa</string>
     <string name="patient_name">Nazwa pacjenta</string>
     <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
@@ -523,6 +537,7 @@
     <string name="free_peak_oref">Swobodny-Pik Oref</string>
     <string name="rapid_acting_oref">Szybko-Działający Oref</string>
     <string name="ultrarapid_oref">Ultra-Szybki Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA %1$f zbyt krótki - przyjmuję %2$f w zamian!</string>
     <string name="activate_profile">Aktywuj profil</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
@@ -550,6 +565,7 @@
     <string name="pump_unreachable">Pompa nieosiągalna</string>
     <string name="missed_bg_readings">Pominięte odczyty BG</string>
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
+    <string name="gradually_increase_notification_volume">Stopniowo zwiększaj głośność ostrzeżeń i powiadomień</string>
     <string name="localalertsettings_title">Alarmy lokalne</string>
     <string name="enable_missed_bg_readings_alert">Alarm, jeśli nie są odbierane odczyty BG</string>
     <string name="enable_pump_unreachable_alert">Alarm, gdy pompa jest nieosiągalna</string>
@@ -638,8 +654,9 @@
     <string name="enablesmbwithtemptarget">Włącz SMB z tymczasowym poziomem docelowym (TT)</string>
     <string name="enablesmbwithtemptarget_summary">Włącz SMB gdy tymczasowy poziom docelowy (TT) jest aktywny (TT WkrótcePosiłek, TT ćwiczenia)</string>
     <string name="enablesmbwithhightemptarget">Włącz SMB z wysokim tymczasowym poziomem docelowym</string>
+    <string name="enablesmbwithhightemptarget_summary">Włącz SMB, gdy aktywowano wysoki cel tymczasowy (Ćwiczenia, powyżej 100 mg/dl lub 5, 5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Węglowod.</string>
+    <string name="overview_carbs_label">Węglowodany</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwartego okna kalibracji G5</string>
     <string name="show_cgm_button_summary">Otwiera xDrip+, przycisk \"cofnij\" przywraca do AAPS</string>
@@ -671,6 +688,7 @@
     <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
+    <string name="bolusrecordedonly">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="ns_autobackfill_summary">Automatycznie wypełnij brakujące BG z NS</string>
     <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
     <string name="overview_show_activity">Aktywność</string>
@@ -782,11 +800,14 @@
     <string name="bgsourcesetup">Skonfiguruj źródło BG</string>
     <string name="setupwizard_profile_description">Proszę wybrać źródło profilu. Jeśli pacjent jest dzieckiem, należy skorzystać z profilu Nightscout. Jeśli nikt nie obserwuje twojej terapii przez Nightscout, prawdopodobnie wolisz profil Lokalny. Przypomnienie - wybierasz tylko źródło profilu. Musisz go później aktywować za pomocą \"Przełącznika profilu\"</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Oczekiwanie na połączenie RileyLink…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po zainicjowaniu pompy.\n</string>
     <string name="startobjective">Rozpocznij swoje pierwsze Zadanie</string>
     <string name="permission">Uprawnienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
     <string name="needsystemwindowpermission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
     <string name="needlocationpermission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
+    <string name="needstoragepermission">Aplikacja wymaga zgody na zapis do pamięci, aby móc przechować pliki logów i eksportować ustawienia</string>
     <string name="request">Żądanie</string>
     <string name="insulinsourcesetup">Skonfiguruj wtyczkę insuliny</string>
     <string name="exit">Wyjście</string>
@@ -842,6 +863,7 @@
     <string name="code_compare">Czy kody wyświetlone na tym urządzeniu i na twojej pompie pasują?</string>
     <string name="insight_pairing">Parowanie Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">podano %1$.2f U / %2$.2f U</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Dren zmieniony</string>
     <string name="pump_time_updated">Czas pompy uaktualniony</string>
@@ -899,6 +921,7 @@
     <string name="short_status_extended">Przedłużony: %1$.2f / %2$.2f U na %3$d min</string>
     <string name="short_status_multiwave">Multiwave (zwykły + przedłużony): %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Zbiornik: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Max. czas odzyskiwania [s]</string>
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
@@ -1041,6 +1064,8 @@
     <string name="sendsmsactionlabel">Wyślij SMS: %1$s</string>
     <string name="sendsmsactiondescription">Wyślij SMS do wszystkich numerów</string>
     <string name="sendsmsactiontext">Wyślij SMS z tekstem</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
     <string name="deliverpartofboluswizard">Kreator bolusa wykonuje obliczenia, ale tylko ta część obliczonej dawki insuliny jest dostarczana. Pomocne z algorytmem SMB.</string>
@@ -1090,6 +1115,7 @@
     <string name="nav_survey">Ankieta</string>
     <string name="invalidage">Nieprawidłowy wpis wieku</string>
     <string name="invalidweight">Nieprawidłowy wpis wagi</string>
+    <string name="invalidpct">Nieprawidłowa wartość procentowa</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Od: <b>%2$02d%%</b> Cel: <b>%3$02d%%</b> Do: <b>%4$02d%%</b>]]></string>
     <string name="average">Średnio</string>
     <string name="tir">TIR</string>
@@ -1116,10 +1142,15 @@
     <string name="loop_tbrexecution_time_label">Czas wykonywania bazy tymczasowej</string>
     <string name="insight_alert_notification_channel">Alarmy pompy Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikacji Authenticator dla: %1$s, z doklejonym PIN-em</string>
     <string name="smscommunicator_otp_enabled">Włącz uwierzytelnianie</string>
     <string name="smscommunicator_otp_enabled_summary">Uwierzytelnianie komend za pomocą haseł jednorazowych generowanych przez aplikację Google Authenticator lub podobnych aplikacji 2FA.</string>
+    <string name="smscommunicator_otp_pin">Dodatkowy obowiązkowy PIN na końcu tokenu</string>
     <string name="smscommunicator_otp_pin_summary">Dodatkowe cyfry, które powinny być zapamiętywane i przyklejone na końcu każdego wygenerowanego hasła jednorazowego</string>
     <string name="smscomunicator_tab_otp_label">Ustawienia uwierzytelnienia</string>
+    <string name="smscommunicator_code_verify_label">Kod do sprawdzenia:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Kod weryfikacyjny składa się z 6 cyfr wyświetlanych przez aplikację uwierzytelniającą (tzw. OTP) po których następują co najmniej 3 cyfry obowiązkowego PIN-u.</string>
     <string name="smscommunicator_otp_verify_label">OTP do sprawdzenia:</string>
     <string name="smscommunicator_otp_reset_btn">Resetuj uwierzytelnianie</string>
     <string name="smscommunicator_otp_reset_title">Resetuj klucz uwierzytelniania</string>
@@ -1154,5 +1185,38 @@
     <string name="availableprofile">Dostępny profil</string>
     <string name="profiletype">Typ profilu</string>
     <string name="formatwithtdd">Wiek: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Wiek: %1$.0f TDD: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Wiek: %1$.0f Waga: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% bazy</string>
+    <string name="dpvdefaultprofile">Domyślny profil DPV</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Kończenie konfiguracji Open Humans…</string>
+    <string name="this_may_take_a_while">To może chwilę potrwać. Nie wyłączaj telefonu ani tej wtyczki.</string>
+    <string name="setup_finished">Konfiguracja zakończona</string>
+    <string name="your_phone_will_upload_data">Twój telefon wkrótce prześle dane do Open Humans.</string>
+    <string name="your_phone_is_upload_data">Twój telefon przesyła teraz dane do Open Humans.</string>
+    <string name="setup_failed">Konfiguracja nie powiodła się</string>
+    <string name="there_was_an_error">Wystąpił błąd. Spróbuj zalogować się ponownie, aby kontynuować. Przepraszamy &amp; dziękujemy!</string>
+    <string name="open_humans_terms">To jest narzędzie open source, które skopiuje Twoje dane do projektu Open Humans. Nie zachowujemy żadnych praw do dzielenia się Twoimi danymi z osobami trzecimi bez Twojej wyraźnej zgody. Dane, które otrzymują projekt i aplikacja są identyfikowane za pomocą losowego identyfikatora użytkownika i będą bezpiecznie przesyłane na konto Open Humans za Twoją zgodą dla tego procesu. Możesz zatrzymać przesyłanie i usunąć swoje już przesłane dane w dowolnym momencie za pośrednictwem strony www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Rozumiem i zgadzam się.</string>
+    <string name="login">Zaloguj się</string>
+    <string name="logout">Wyloguj się</string>
+    <string name="oh_logout_confirmation">Czy na pewno chcesz się wylogować i zaprzestać przekazywania danych na rzecz nauki?</string>
+    <string name="project_member_id">Identyfikator członka projektu: %s</string>
+    <string name="queue_size">Rozmiar kolejki: %d</string>
+    <string name="terms_of_use">Warunki użytkowania</string>
+    <string name="not_logged_in">Nie zalogowano</string>
+    <string name="you_need_to_accept_the_of_use_first">Najpierw musisz zaakceptować warunki użytkowania.</string>
+    <string name="successfully_logged_in">Pomyślnie zalogowano</string>
+    <string name="setup_will_continue_in_background">Konfiguracja zostanie teraz zakończona w tle. Dziękujemy za przesłanie swoich danych.\n\nProszę nie wyłączaj telefonu ani tej wtyczki jeszcze przez chwilę, aby umożliwić dokończenie się konfiguracji.</string>
+    <string name="completing_login">Kończenie logowania…</string>
+    <string name="donate_your_data_to_science">Przekaż swoje dane na rzecz nauki</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
+    <string name="only_upload_if_connected_to_wifi">Prześlij tylko jeśli połączono poprzez WiFi</string>
+    <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
+    <string name="worker_state">Stan procesu: %s</string>
+    <string name="uploaded_data">Przesłane dane</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Następujące dane zostaną przesłane na konto Open Humans: wartości Glikemii, bolusy, węglowodany, zdarzenia z portalu opieki (z wyjątkiem notatek), rozszerzone bolusy, przełączenia profilu, całkowite dawki dobowe, bazy tymczasowe, cele tymczasowe, preferencje, wersja aplikacji, model urządzenia i wymiary ekranu. Dane niejawne lub prywatne, takie jak adres URL strony Nightscout lub klucz autoryzacji API, nie zostaną przesłane.</string>
 </resources>

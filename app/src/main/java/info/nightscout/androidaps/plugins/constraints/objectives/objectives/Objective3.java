@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
-import android.app.Activity;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class Objective3 extends Objective {
     }
 
     @Override
-    public void specialAction(Activity activity, String input) {
+    public void specialAction(FragmentActivity activity, String input) {
         objectivesPlugin.completeObjectives(activity, input);
     }
 }

@@ -21,6 +21,7 @@
     <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
     <string name="description_insulin_rapid">Insulinprofil für Humalog und NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulinprofil für Fiasp</string>
+    <string name="description_insulin_lyumjev">Insulin-Voreinstellung für Lyumjev</string>
     <string name="description_insulin_free_peak">Erlaubt dir, das Wirkmaximum der Insulinaktivität zu definieren, und sollte nur von erfahrenen Anwendern genutzt werden</string>
     <string name="description_loop">Aktiviere oder deaktiviere die Anwendung, die den Loop ausführt.</string>
     <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
@@ -535,6 +536,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
     <string name="activate_profile">Aktiviere Profil</string>
     <string name="invalid">Ungültig</string>
@@ -797,6 +799,8 @@
     <string name="bgsourcesetup">BZ-Quelle konfigurieren</string>
     <string name="setupwizard_profile_description">Wähle eine Profilquelle aus. Verwende für ein Kind das NS-Profil. Wenn Dir niemand auf Nightscout folgt, wirst Du wahrscheinlich das lokale Profil bevorzugen. Beachte, dass hier nur die Profilquelle festgelegt wird. Damit das Profil verwendet werden kann, muss es mit einem \"Profil-Wechsel\" aktiviert werden.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Warte auf Verbindung mit RileyLink…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
     <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
@@ -819,7 +823,7 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Niedrige temporäre Ziele senken die Sensitivität</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Senke die Sensitivität für temporäre Ziele < 100.]]></string>
-    <string name="resistance_lowers_target_title">Resistenz senkt Zielwert</string>
+    <string name="resistance_lowers_target_title">Resistenz senkt den Zielwert</string>
     <string name="resistance_lowers_target_summary">Wenn Resistenz festgestellt wird, senke den Glukose-Zielwert</string>
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
@@ -1156,7 +1160,7 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
-    <string name="smscommunicator_otp_install_info">Installiere auf jedem Folloer-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_provisioning_warning">Diesen Code NICHT ONLINE TEILEN!\nVerwende ihn nur zur Einrichtung der Authenticator App auf den Follower-Phones.</string>
     <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="onconnect">Beim Verbinden</string>
@@ -1193,7 +1197,7 @@ Unerwartetes Verhalten.</string>
     <string name="your_phone_is_upload_data">Dein Telefon lädt nun Daten zu Open Human hoch.</string>
     <string name="setup_failed">Einrichtung fehlgeschlagen</string>
     <string name="there_was_an_error">Es gab einen Fehler. Bitte logge Dich erneut ein, um fortzufahren. Entschuldigung &amp; Danke!</string>
-    <string name="open_humans_terms">Dies ist ein Open-Source-Tool, das Deine Daten nach Open Humans kopiert. Wir behalten uns keine Rechte vor, Deine Daten ohne Deine ausdrückliche Genehmigung an Dritte weiterzugeben. Die Daten, die das Projekt und die Anwendung erhalten, werden über eine zufällige Benutzer-ID identifiziert und nur dann sicher auf ein Open Humans-Konto übertragen, wenn Du diesem Vorgang zugestimmt habst. Du kannst das Hochladen beenden und Deine hochgeladenen Daten jederzeit über www.openhumans.org löschen.</string>
+    <string name="open_humans_terms">Dies ist ein Open-Source-Tool, das Deine Daten zu Open Humans hochlädt. Wir behalten uns keine Rechte vor, Deine Daten ohne Deine ausdrückliche Genehmigung an Dritte weiterzugeben. Die Daten, die das Projekt und die Anwendung erhalten, werden über eine zufällige Benutzer-ID identifiziert und nur nach Deiner Zustimmung sicher auf ein Open Humans-Konto übertragen. Du kannst das Hochladen beenden und Deine hochgeladenen Daten jederzeit über www.openhumans.org löschen.</string>
     <string name="i_understand_and_agree">Verstanden und akzeptiert. </string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>

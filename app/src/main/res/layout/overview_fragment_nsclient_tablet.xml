@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:paddingTop="18dp"
-                        android:src="@drawable/ic_flat" />
+                        app:srcCompat="@drawable/ic_flat" />
 
                     <TextView
                         android:id="@+id/overview_deltashort"

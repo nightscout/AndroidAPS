@@ -2,26 +2,33 @@
 <resources>
     <!-- Omnipod -->
     <!-- Omnipod - Base -->
-    <string name="omnipod_pump_description">Pumpintegrering för Omnipod. Kräver Riley Link med minst v2-firmware.</string>
+    <string name="description_pump_omnipod">Pumpintegrering för Omnipod. Kräver Riley Link med minst v2-firmware.</string>
     <!-- Omnipod Configuration -->
     <!-- Omnipod - Fragment -->
-    <string name="omnipod_overview_reservoir_value">%1$.2f U återstår</string>
-    <string name="omnipod_overview_reservoir_value_over50">Över 50 U</string>
+    <string name="omnipod_reservoir_left">%1$.2f U återstår</string>
+    <string name="omnipod_reservoir_over50">Över 50 U</string>
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_illegal_init_action_type">Ogiltig PodInitActionType: %1$s</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">Ett oväntat fel uppstod. Vänligen rapportera! (typ: %1$s).</string>
+    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Kommunikationsfel: Ett oväntat fel inträffade. Rapportera!</string>
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_init_pod">Initiera pod</string>
     <string name="omnipod_cmd_deactivate_pod">Inaktivera pod</string>
-    <string name="omnipod_pod_activation_wizard_fill_pod_title">Fyll pod</string>
-    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Förfyllning</string>
-    <string name="omnipod_pod_activation_wizard_attach_pod_title">Fäst podden</string>
-    <string name="omnipod_pod_activation_wizard_attach_pod_text">\nFörbered infusionsplatsen. Ta bort poddens nålskydd och fäst podden på infusionsplatsen.\n\nOm kanylen sticker ut, tryck på <b>Avbryt</b> och kasta din pod.\n\nTryck <b>Nästa</b> för att skjuta in kanylen och påbörja basaldoseringen.</string>
-    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Skjuter in kanylen</string>
-    <string name="omnipod_pod_activation_wizard_insert_cannula_text">Försöker att ställa in basaldoser och skjuta in kanylen.\n\nNär alla steg är slutförda, kan du trycka på <b>Nästa</b>.</string>
-    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nPodden är nu aktiverad.\n\nDina basaldoser har programmerats och kanylen har skjutits in in.\n\nKontrollera att kanylen sitter på rätt sätt och byt pod om den inte gjort det.</string>
-    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nTryck på <b>Nästa</b> för att inaktivera podden.\n\n<b>OBS!</b> Det här stoppar all insulintillförsel och inaktiverar podden.</string>
-    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Inaktiverar pod</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod inaktiverad.\n\nTa bort podden och kasta den.</string>
+    <string name="omnipod_cmd_pod_history_na">Pod-historik är inte tillgänglig för tillfället.</string>
+    <string name="omnipod_init_pod_wizard_step1_title">Fyll pod</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Förfyllning</string>
+    <string name="omnipod_init_pod_wizard_step3_title">Fäst podden</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nFörbered infusionsplatsen. Ta bort poddens nålskydd och fäst podden på infusionsplatsen.\n\nOm kanylen sticker ut, tryck på <b>Avbryt</b> och kasta din pod.\n\nTryck <b>Nästa</b> för att skjuta in kanylen och påbörja basaldoseringen.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Skjuter in kanylen</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Försöker att ställa in basaldoser och skjuta in kanylen.\n\nNär alla steg är slutförda, kan du trycka på <b>Nästa</b>.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPodden är nu aktiverad.\n\nDina basaldoser har programmerats och kanylen har skjutits in in.\n\nKontrollera att kanylen sitter på rätt sätt och byt pod om den inte gjort det.</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nTryck på <b>Nästa</b> för att inaktivera podden.\n\n<b>OBS!</b> Det här stoppar all insulintillförsel och inaktiverar podden.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Inaktiverar pod</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod inaktiverad.\n\nTa bort podden och kasta den.</string>
+    <string name="omnipod_init_pod_pair_pod">Parkoppla pod</string>
+    <string name="omnipod_init_pod_prime_pod">Förfyll pod</string>
     <!-- Omnipod - Base -->
     <string name="omnipod_alert_finish_setup_reminder_reminder">Påminnelse att slutföra installation</string>
     <string name="omnipod_alert_expiration">Pod löper snart ut</string>

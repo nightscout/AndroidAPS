@@ -21,6 +21,7 @@
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
     <string name="description_insulin_rapid">Predefinição de Insulina Humalog e NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Predefinição de Insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Predefinição para Insulina Lyumjev</string>
     <string name="description_insulin_free_peak">Permite definir o pico de atividade da insulina e deve ser usado somente por usuários avançados</string>
     <string name="description_loop">Activar ou desactivar a aplicação que desencadeia o loop.</string>
     <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
@@ -535,6 +536,7 @@
     <string name="free_peak_oref">Oref Pico-Livre</string>
     <string name="rapid_acting_oref">Oref Acção Rápida</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <string name="activate_profile">Activar perfil</string>
     <string name="invalid">INVÁLIDO</string>
@@ -1141,6 +1143,7 @@
     <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Senha-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
+    <string name="smscommunicator_code_verify_label">Código para verificar:</string>
     <string name="smscommunicator_otp_verify_label">OTP para verificar:</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>

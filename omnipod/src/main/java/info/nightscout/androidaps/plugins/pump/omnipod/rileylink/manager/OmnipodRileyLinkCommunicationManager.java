@@ -23,12 +23,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.ErrorResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfo;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActivationTimeExceededException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageSequenceNumberException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
@@ -156,12 +157,21 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                             podStateManager.setLastFailedCommunication(DateTime.now());
                             throw new PodReturnedErrorResponseException(error);
                         }
-                    } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
-                        PodInfoFaultEvent faultEvent = (PodInfoFaultEvent) ((PodInfoResponse) responseMessageBlock).getPodInfo();
-                        podStateManager.setFaultEvent(faultEvent);
-                        // Treat as successful communication as the user will get notified and can work with this response
-                        podStateManager.setLastSuccessfulCommunication(DateTime.now());
-                        throw new PodFaultException(faultEvent);
+                    } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.DETAILED_STATUS) {
+                        PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) ((PodInfoResponse) responseMessageBlock).getPodInfo();
+                        if (detailedStatus.isFaulted()) {
+                            // Treat as successful communication in order to prevent false positive pump unreachable alarms
+                            podStateManager.setLastSuccessfulCommunication(DateTime.now());
+                            throw new PodFaultException(detailedStatus);
+                        } else if (detailedStatus.isActivationTimeExceeded()) {
+                            // Treat as successful communication in order to prevent false positive pump unreachable alarms
+                            podStateManager.setLastSuccessfulCommunication(DateTime.now());
+                            throw new ActivationTimeExceededException();
+                        } else {
+                            // Shouldn't happen
+                            podStateManager.setLastFailedCommunication(DateTime.now());
+                            throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
+                        }
                     } else {
                         podStateManager.setLastFailedCommunication(DateTime.now());
                         throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
@@ -174,6 +184,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         } finally {
             podStateManager.storePodState();
         }
+
     }
 
     private MessageBlock transportMessages(PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {

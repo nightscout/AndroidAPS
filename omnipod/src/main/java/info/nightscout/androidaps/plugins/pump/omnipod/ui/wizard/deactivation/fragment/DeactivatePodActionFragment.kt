@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -35,16 +35,18 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         omnipod_wizard_button_discard_pod.setOnClickListener {
-            AlertDialog.Builder(context)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(getString(R.string.omnipod_pod_deactivation_wizard_discard_pod))
-                .setMessage(getString(R.string.omnipod_pod_deactivation_wizard_discard_pod_confirmation))
-                .setPositiveButton(getString(R.string.omnipod_yes)) { _, _ ->
-                    aapsOmnipodManager.discardPodState()
-                    findNavController().navigate(R.id.action_deactivatePodActionFragment_to_podDiscardedInfoFragment)
-                }
-                .setNegativeButton(getString(R.string.omnipod_no), null)
-                .show()
+            context?.let {
+                AlertDialog.Builder(it)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(getString(R.string.omnipod_pod_deactivation_wizard_discard_pod))
+                    .setMessage(getString(R.string.omnipod_pod_deactivation_wizard_discard_pod_confirmation))
+                    .setPositiveButton(getString(R.string.omnipod_yes)) { _, _ ->
+                        aapsOmnipodManager.discardPodState()
+                        findNavController().navigate(R.id.action_deactivatePodActionFragment_to_podDiscardedInfoFragment)
+                    }
+                    .setNegativeButton(getString(R.string.omnipod_no), null)
+                    .show()
+            }
         }
     }
 

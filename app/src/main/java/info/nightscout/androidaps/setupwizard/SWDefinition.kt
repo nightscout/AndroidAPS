@@ -30,6 +30,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
@@ -324,6 +325,12 @@ class SWDefinition @Inject constructor(
                     val activePump = activePlugin.activePump
                     activePump is OmnipodPumpPlugin && !activePump.isRileyLinkReady
                 }))
+        .add( // Omnipod only
+            SWEventListener(injector, EventRileyLinkDeviceStatusChange::class.java)
+                .label(R.string.setupwizard_pump_riley_link_status)
+                .visibility(SWValidator {
+                    activePlugin.activePump is OmnipodPumpPlugin
+                }))
         .add(SWButton(injector)
             .text(R.string.readstatus)
             .action(Runnable { commandQueue.readStatus("Clicked connect to pump", null) })
@@ -332,7 +339,8 @@ class SWDefinition @Inject constructor(
                 // Getting the status might not be possible
                 activePlugin.activePump !is OmnipodPumpPlugin
             }))
-        .add(SWEventListener(injector, EventPumpStatusChanged::class.java))
+        .add(SWEventListener(injector, EventPumpStatusChanged::class.java)
+            .visibility(SWValidator { activePlugin.activePump !is OmnipodPumpPlugin }))
         .validator(SWValidator {
             isPumpInitialized()
         })

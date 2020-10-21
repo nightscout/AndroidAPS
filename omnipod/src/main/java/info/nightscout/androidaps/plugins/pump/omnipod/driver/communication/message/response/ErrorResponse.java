@@ -12,9 +12,11 @@ public class ErrorResponse extends MessageBlock {
     private static final int MESSAGE_LENGTH = 5;
 
     private final byte errorResponseCode;
-    private Integer nonceSearchKey; // only valid for BAD_NONCE
-    private FaultEventCode faultEventCode; // valid for all but BAD_NONCE
-    private PodProgressStatus podProgressStatus; // valid for all but BAD_NONCE
+
+    private final Integer nonceSearchKey; // only valid for BAD_NONCE
+    private final FaultEventCode faultEventCode; // valid for all but BAD_NONCE
+
+    private final PodProgressStatus podProgressStatus; // valid for all but BAD_NONCE
 
     public ErrorResponse(byte[] encodedData) {
         if (encodedData.length < MESSAGE_LENGTH) {
@@ -24,11 +26,16 @@ public class ErrorResponse extends MessageBlock {
 
         errorResponseCode = encodedData[2];
 
-        if (this.errorResponseCode == ERROR_RESPONSE_CODE_BAD_NONCE) {
+        if (errorResponseCode == ERROR_RESPONSE_CODE_BAD_NONCE) {
             nonceSearchKey = ByteUtil.makeUnsignedShort(encodedData[3], encodedData[4]);
+
+            faultEventCode = null;
+            podProgressStatus = null;
         } else {
             faultEventCode = FaultEventCode.fromByte(encodedData[3]);
             podProgressStatus = PodProgressStatus.fromByte(encodedData[4]);
+
+            nonceSearchKey = null;
         }
     }
 
@@ -53,8 +60,7 @@ public class ErrorResponse extends MessageBlock {
         return nonceSearchKey;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "ErrorResponse{" +
                 "errorResponseCode=" + errorResponseCode +
                 ", nonceSearchKey=" + nonceSearchKey +

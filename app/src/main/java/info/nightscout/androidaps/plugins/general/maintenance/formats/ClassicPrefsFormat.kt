@@ -22,7 +22,7 @@ class ClassicPrefsFormat @Inject constructor(
 
     override fun isPreferencesFile(file: File, preloadedContents: String?): Boolean {
         val contents = preloadedContents ?: storage.getFileContents(file)
-        return contents.contains("units::" + Constants.MGDL) || contents.contains("units::" + Constants.MMOL)
+        return contents.contains("units::" + Constants.MGDL) || contents.contains("units::" + Constants.MMOL) || contents.contains("language::") || contents.contains("I_understand::")
     }
 
     override fun savePreferences(file: File, prefs: Prefs, masterPassword: String?) {

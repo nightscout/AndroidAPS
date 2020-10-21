@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.Manifest
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -122,7 +122,7 @@ class ImportExportPrefs @Inject constructor(
     private fun prefsEncryptionIsDisabled() =
         buildHelper.isEngineeringMode() && !sp.getBoolean(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs), true)
 
-    private fun askForMasterPass(activity: Activity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
+    private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { password ->
             then(password)
         }, {
@@ -130,7 +130,7 @@ class ImportExportPrefs @Inject constructor(
         })
     }
 
-    private fun askForEncryptionPass(activity: Activity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
+    private fun askForEncryptionPass(activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
                                      @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)) {
         passwordCheck.queryAnyPassword(activity, passwordName, R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
             then(password)
@@ -139,7 +139,7 @@ class ImportExportPrefs @Inject constructor(
         })
     }
 
-    private fun askForMasterPassIfNeeded(activity: Activity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
+    private fun askForMasterPassIfNeeded(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         if (prefsEncryptionIsDisabled()) {
             then("")
         } else {
@@ -147,7 +147,7 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun assureMasterPasswordSet(activity: Activity, @StringRes wrongPwdTitle: Int): Boolean {
+    private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
         if (!sp.contains(R.string.key_master_password) || (sp.getString(R.string.key_master_password, "") == "")) {
             WarningDialog.showWarning(activity,
                 resourceHelper.gs(wrongPwdTitle),
@@ -163,23 +163,22 @@ class ImportExportPrefs @Inject constructor(
         return true
     }
 
-    private fun askToConfirmExport(activity: Activity, fileToExport: File, then: ((password: String) -> Unit)) {
+    private fun askToConfirmExport(activity: FragmentActivity, fileToExport: File, then: ((password: String) -> Unit)) {
         if (!prefsEncryptionIsDisabled() && !assureMasterPasswordSet(activity, R.string.nav_export)) return
 
         TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_export),
-            resourceHelper.gs(R.string.export_to) + " " + fileToExport + " ?",
+            resourceHelper.gs(R.string.export_to) + " " + fileToExport.name + " ?",
             resourceHelper.gs(R.string.password_preferences_encrypt_prompt), {
             askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
         }, null, R.drawable.ic_header_export)
     }
 
-    private fun askToConfirmImport(activity: Activity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
+    private fun askToConfirmImport(activity: FragmentActivity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
 
         if (fileToImport.handler == PrefsFormatsHandler.ENCRYPTED) {
             if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
-
             TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_import),
-                resourceHelper.gs(R.string.import_from) + " " + fileToImport.file + " ?",
+                resourceHelper.gs(R.string.import_from) + " " + fileToImport.name + " ?",
                 resourceHelper.gs(R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import)
@@ -191,7 +190,7 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun promptForDecryptionPasswordIfNeeded(activity: Activity, prefs: Prefs, importOk: Boolean,
+    private fun promptForDecryptionPasswordIfNeeded(activity: FragmentActivity, prefs: Prefs, importOk: Boolean,
                                                     format: PrefsFormat, importFile: PrefsFile, then: ((prefs: Prefs, importOk: Boolean) -> Unit)) {
 
         // current master password was not the one used for decryption, so we prompt for old password...
@@ -213,7 +212,7 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun exportSharedPreferences(activity: Activity) {
+    private fun exportSharedPreferences(activity: FragmentActivity) {
 
         prefFileList.ensureExportDirExists()
         val legacyFile = prefFileList.legacyFile()
@@ -278,7 +277,7 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun importSharedPreferences(activity: Activity, importFile: PrefsFile) {
+    private fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
 
         askToConfirmImport(activity, importFile) { password ->
 
@@ -345,7 +344,7 @@ class ImportExportPrefs @Inject constructor(
         show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
             log.debug(TAG, "Exiting")
             rxBus.send(EventAppExit())
-            if (context is Activity) {
+            if (context is AppCompatActivity) {
                 context.finish()
             }
             System.runFinalization()

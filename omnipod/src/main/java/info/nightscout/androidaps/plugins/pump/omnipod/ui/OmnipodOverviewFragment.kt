@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
@@ -272,8 +273,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 })
             }
 
-            if (podStateManager.hasFaultEvent()) {
-                val faultEventCode = podStateManager.faultEvent.faultEventCode
+            if (podStateManager.isFaulted) {
+                val faultEventCode = podStateManager.faultEventCode
                 errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
 
@@ -345,9 +346,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             if (!podStateManager.isPodInitialized) {
                 resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
             } else {
-                if (PodProgressStatus.ACTIVATION_TIME_EXCEEDED == podStateManager.podProgressStatus) {
-                    resourceHelper.gs(R.string.omnipod_pod_status_activation_time_exceeded)
-                } else if (podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
+                if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
                 } else {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_cannula_insertion)
@@ -454,7 +453,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
+        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
             && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
     }
 
