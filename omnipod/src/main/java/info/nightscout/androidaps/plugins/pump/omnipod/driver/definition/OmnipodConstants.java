@@ -14,6 +14,7 @@ public class OmnipodConstants {
     public static final double MAX_RESERVOIR_READING = 50.0;
     public static final double MAX_BOLUS = 30.0;
     public static final double MAX_BASAL_RATE = 30.0;
+    public static final Duration BASAL_STEP_DURATION = Duration.standardMinutes(30);
     public static final Duration MAX_TEMP_BASAL_DURATION = Duration.standardHours(12);
     public static final int DEFAULT_ADDRESS = 0xffffffff;
 
