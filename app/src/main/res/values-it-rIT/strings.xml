@@ -990,6 +990,7 @@
     <string name="storage">vincolo di archiviazione interna</string>
     <string name="diskfull">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <string name="wrongformat">Formato errato</string>
+    <string name="wrongTbrDuration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
     <string name="sms_wrongcode">Codice errato. Comando cancellato.</string>
     <string name="notconfigured">Non configurato</string>
     <string name="profileswitchcreated">Cambio profilo creato</string>
