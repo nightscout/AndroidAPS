@@ -1176,7 +1176,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="classic_description">Thème d\'origine</string>
-    <string name="buttonson_description">Les boutons sont toujours affichés en bas de l\'écran</string>
+    <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
     <string name="comapareprofile">Comparer les profils</string>
