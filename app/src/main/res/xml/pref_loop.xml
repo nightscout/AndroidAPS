@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="aps_general"
+        app:initialExpandedChildrenCount="0"
         android:title="@string/loop">
 
         <ListPreference
-            android:title="@string/apsmode_title"
-            android:key="@string/key_aps_mode"
             android:defaultValue="open"
             android:entries="@array/aps_modeArray"
-            android:entryValues="@array/aps_modeValues"/>
+            android:entryValues="@array/aps_modeValues"
+            android:key="@string/key_aps_mode"
+            android:title="@string/apsmode_title" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="20"
             android:dialogMessage="@string/loop_openmode_min_change_summary"
             android:digits="0123456789"
@@ -28,4 +29,5 @@
             validate:testType="numericRange" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+
+</androidx.preference.PreferenceScreen>

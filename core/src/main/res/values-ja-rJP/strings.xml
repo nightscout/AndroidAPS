@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <!--    BlePreCheck-->
+    <!--    DateUtil-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    PumpType-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    TDD-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+</resources>

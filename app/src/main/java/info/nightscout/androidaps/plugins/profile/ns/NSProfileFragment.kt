@@ -6,23 +6,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
-import info.nightscout.androidaps.MainApp
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.close.*
 import kotlinx.android.synthetic.main.nsprofile_fragment.*
 import kotlinx.android.synthetic.main.profileviewer_fragment.*
+import javax.inject.Inject
 
-class NSProfileFragment : Fragment() {
+class NSProfileFragment : DaggerFragment() {
+
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsProfilePlugin: NSProfilePlugin
+
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +48,12 @@ class NSProfileFragment : Fragment() {
 
         nsprofile_profileswitch.setOnClickListener {
             val name = nsprofile_spinner.selectedItem?.toString() ?: ""
-            NSProfilePlugin.getPlugin().profile?.let { store ->
+            nsProfilePlugin.profile?.let { store ->
                 store.getSpecificProfile(name)?.let {
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.nsprofile),
-                            MainApp.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
-                            ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nsprofile),
+                            resourceHelper.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
+                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                         })
                     }
                 }
@@ -69,15 +80,15 @@ class NSProfileFragment : Fragment() {
 
                 nsprofile_profileswitch.visibility = View.GONE
 
-                NSProfilePlugin.getPlugin().profile?.let { store ->
+                nsProfilePlugin.profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->
                         profileview_units.text = profile.units
-                        profileview_dia.text = MainApp.gs(R.string.format_hours, profile.dia)
+                        profileview_dia.text = resourceHelper.gs(R.string.format_hours, profile.dia)
                         profileview_activeprofile.text = name
                         profileview_ic.text = profile.icList
                         profileview_isf.text = profile.isfList
                         profileview_basal.text = profile.basalList
-                        profileview_basaltotal.text = String.format(MainApp.gs(R.string.profile_total), DecimalFormatter.to2Decimal(profile.baseBasalSum()))
+                        profileview_basaltotal.text = String.format(resourceHelper.gs(R.string.profile_total), DecimalFormatter.to2Decimal(profile.baseBasalSum()))
                         profileview_target.text = profile.targetList
                         basal_graph.show(profile)
                         if (profile.isValid("NSProfileFragment")) {
@@ -96,11 +107,10 @@ class NSProfileFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable.add(RxBus
+        disposable += rxBus
             .toObservable(EventNSProfileUpdateGUI::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
-        )
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         updateGUI()
     }
 
@@ -115,13 +125,13 @@ class NSProfileFragment : Fragment() {
         if (profileview_noprofile == null) return
         profileview_noprofile.visibility = View.VISIBLE
 
-        NSProfilePlugin.getPlugin().profile?.let { profileStore ->
+        nsProfilePlugin.profile?.let { profileStore ->
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context!!, R.layout.spinner_centered, profileList)
             nsprofile_spinner.adapter = adapter
             // set selected to actual profile
             for (p in profileList.indices) {
-                if (profileList[p] == ProfileFunctions.getInstance().profileName)
+                if (profileList[p] == profileFunction.getProfileName())
                     nsprofile_spinner.setSelection(p)
             }
             profileview_noprofile.visibility = View.GONE

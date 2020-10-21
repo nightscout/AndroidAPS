@@ -135,7 +135,7 @@
                 android:layout_weight="2"
                 android:gravity="end"
                 android:layout_marginEnd="5dp"
-                android:text="@string/nsprofileview_units_label"
+                android:text="@string/units_label"
                 android:textSize="14sp" />
 
             <TextView
@@ -180,7 +180,7 @@
                 android:layout_weight="2"
                 android:gravity="end"
                 android:layout_marginEnd="5dp"
-                android:text="@string/nsprofileview_dia_label"
+                android:text="@string/dia_label"
                 android:textSize="14sp" />
 
             <TextView
@@ -225,7 +225,7 @@
                 android:layout_weight="2"
                 android:gravity="end"
                 android:layout_marginEnd="5dp"
-                android:text="@string/nsprofileview_ic_label"
+                android:text="@string/ic_label"
                 android:textSize="14sp" />
 
             <TextView
@@ -270,7 +270,7 @@
                 android:layout_weight="2"
                 android:gravity="end"
                 android:layout_marginEnd="5dp"
-                android:text="@string/nsprofileview_isf_label"
+                android:text="@string/isf_label"
                 android:textSize="14sp" />
 
             <TextView
@@ -315,7 +315,7 @@
                 android:layout_weight="2"
                 android:gravity="end"
                 android:layout_marginEnd="5dp"
-                android:text="@string/nsprofileview_basal_label"
+                android:text="@string/basal_label"
                 android:textSize="14sp" />
 
             <TextView
@@ -402,7 +402,7 @@
                 android:layout_weight="2"
                 android:gravity="end"
                 android:layout_marginEnd="5dp"
-                android:text="@string/nsprofileview_target_label"
+                android:text="@string/target_label"
                 android:textSize="14sp" />
 
             <TextView

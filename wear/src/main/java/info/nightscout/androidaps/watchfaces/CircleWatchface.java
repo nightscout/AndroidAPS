@@ -216,7 +216,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     public String getMinutes() {
         String minutes = "--\'";
         if (getDatetime() != 0) {
-            minutes = ((int) Math.floor((System.currentTimeMillis() - getDatetime()) / 60000)) + "\'";
+            minutes = ((int) Math.floor((System.currentTimeMillis() - getDatetime()) / 60000.0)) + "\'";
         }
         return minutes;
     }
@@ -669,7 +669,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         }
 
         float offsetMultiplier = (((displaySize.x / 2f) - PADDING) / 12f);
-        float offset = (float) Math.max(1, Math.ceil((System.currentTimeMillis() - entry.timestamp) / (1000 * 60 * 5)));
+        float offset = (float) Math.max(1, Math.ceil((System.currentTimeMillis() - entry.timestamp) / (1000 * 60 * 5.0)));
         size = bgToAngle((float) entry.sgv);
         addArch(canvas, offset * offsetMultiplier + 10, color, (float) size);
         addArch(canvas, (float) size, offset * offsetMultiplier + 10, getBackgroundColor(), (float) (360 - size));
@@ -695,7 +695,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             barColor = darken(getLowColor(), .5);
         }
         float offsetMultiplier = (((displaySize.x / 2f) - PADDING) / 12f);
-        float offset = (float) Math.max(1, Math.ceil((System.currentTimeMillis() - entry.timestamp) / (1000 * 60 * 5)));
+        float offset = (float) Math.max(1, Math.ceil((System.currentTimeMillis() - entry.timestamp) / (1000 * 60 * 5.0)));
         size = bgToAngle((float) entry.sgv);
         addArch(canvas, offset * offsetMultiplier + 11, barColor, (float) size - 2); // Dark Color Bar
         addArch(canvas, (float) size - 2, offset * offsetMultiplier + 11, indicatorColor, 2f); // Indicator at end of bar

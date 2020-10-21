@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps.plugins.pump.medtronic">
+
+    <application>
+        <service
+            android:name=".service.RileyLinkMedtronicService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".dialog.MedtronicHistoryActivity" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+    </application>
+
+</manifest>

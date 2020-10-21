@@ -3,14 +3,14 @@ package info.nightscout.androidaps.plugins.general.nsclient.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class NSTreatment {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
     private JSONObject data;
     private String action = null; // "update", "remove" or null (add)
@@ -81,15 +81,47 @@ public class NSTreatment {
         return ret;
     }
 
-    public String getAction() { return action; }
-    public JSONObject getData() { return data; }
-    public String get_id() { return getStringOrNull("_id"); }
-    public String getEnteredBy() { return getStringOrNull("enteredBy"); }
-    public String getEventType() { return getStringOrNull("eventType"); }
-    public Integer getHapp_id() { return getIntegerOrNull("happ_id"); }
-    public Integer getDuration() { return getIntegerOrNull("duration"); }
-    public Integer getMgdl() { return getIntegerOrNull("mgdl"); }
-    public Double getAbsolute() { return getDoubleOrNull("absolute"); }
-    public Long getMills() { return getLongOrNull("mills"); }
-    public Date getCreated_at() { return getDateOrNull("created_at"); }
+    public String getAction() {
+        return action;
+    }
+
+    public JSONObject getData() {
+        return data;
+    }
+
+    public String get_id() {
+        return getStringOrNull("_id");
+    }
+
+    public String getEnteredBy() {
+        return getStringOrNull("enteredBy");
+    }
+
+    public String getEventType() {
+        return getStringOrNull("eventType");
+    }
+
+    public Integer getHapp_id() {
+        return getIntegerOrNull("happ_id");
+    }
+
+    public Integer getDuration() {
+        return getIntegerOrNull("duration");
+    }
+
+    public Integer getMgdl() {
+        return getIntegerOrNull("mgdl");
+    }
+
+    public Double getAbsolute() {
+        return getDoubleOrNull("absolute");
+    }
+
+    public Long getMills() {
+        return getLongOrNull("mills");
+    }
+
+    public Date getCreated_at() {
+        return getDateOrNull("created_at");
+    }
 }

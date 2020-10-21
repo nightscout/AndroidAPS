@@ -1,16 +1,19 @@
 package info.nightscout.androidaps.plugins.general.tidepool.utils
 
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object RateLimit {
+@Singleton
+class RateLimit @Inject constructor(
+    val aapsLogger: AAPSLogger
+) {
 
     private val rateLimits = HashMap<String, Long>()
-
-    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
     // return true if below rate limit
     @Synchronized
@@ -18,8 +21,7 @@ object RateLimit {
         // check if over limit
         rateLimits[name]?.let {
             if (DateUtil.now() - it < T.secs(seconds.toLong()).msecs()) {
-                if (L.isEnabled(L.TIDEPOOL))
-                    log.debug("$name rate limited: $seconds seconds")
+                aapsLogger.debug(LTag.TIDEPOOL, "$name rate limited: $seconds seconds")
                 return false
             }
         }

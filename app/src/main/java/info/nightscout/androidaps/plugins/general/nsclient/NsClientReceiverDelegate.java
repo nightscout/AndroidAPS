@@ -1,50 +1,58 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
+import java.util.Arrays;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.receivers.ChargingStateReceiver;
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.receivers.ReceiverStatusStore;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
+@Singleton
 class NsClientReceiverDelegate {
 
     private boolean allowedChargingState = true;
     private boolean allowedNetworkState = true;
     boolean allowed = true;
 
+    private RxBusWrapper rxBus;
+    private ResourceHelper resourceHelper;
+    private SP sp;
+    private ReceiverStatusStore receiverStatusStore;
+
+    @Inject
+    public NsClientReceiverDelegate(
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper,
+            SP sp,
+            ReceiverStatusStore receiverStatusStore
+    ) {
+        this.rxBus = rxBus;
+        this.resourceHelper = resourceHelper;
+        this.sp = sp;
+        this.receiverStatusStore = receiverStatusStore;
+    }
+
     void grabReceiversState() {
-        Context context = MainApp.instance().getApplicationContext();
 
-        EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(context);
-        if (event != null) RxBus.INSTANCE.send(event);
-
-        EventChargingState eventChargingState = ChargingStateReceiver.grabChargingState(context);
-        if (eventChargingState != null) RxBus.INSTANCE.send(eventChargingState);
-
+        receiverStatusStore.updateNetworkStatus();
     }
 
     void onStatusEvent(EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_ns_wifionly) ||
-                ev.isChanged(R.string.key_ns_wifi_ssids) ||
-                ev.isChanged(R.string.key_ns_allowroaming)
+        if (ev.isChanged(resourceHelper, R.string.key_ns_wifionly) ||
+                ev.isChanged(resourceHelper, R.string.key_ns_wifi_ssids) ||
+                ev.isChanged(resourceHelper, R.string.key_ns_allowroaming)
         ) {
-            EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
-            if (event != null)
-                RxBus.INSTANCE.send(event);
-        } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
-            EventChargingState event = ChargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
-            if (event != null)
-                RxBus.INSTANCE.send(event);
+            receiverStatusStore.updateNetworkStatus();
+            onStatusEvent(receiverStatusStore.getLastNetworkEvent());
+        } else if (ev.isChanged(resourceHelper, R.string.key_ns_chargingonly)) {
+            receiverStatusStore.broadcastChargingState();
         }
     }
 
@@ -70,12 +78,12 @@ class NsClientReceiverDelegate {
         boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
-            RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+            rxBus.send(new EventPreferenceChange(resourceHelper.gs(R.string.key_nsclientinternal_paused)));
         }
     }
 
     boolean calculateStatus(final EventChargingState ev) {
-        boolean chargingOnly = SP.getBoolean(R.string.key_ns_chargingonly, false);
+        boolean chargingOnly = sp.getBoolean(R.string.key_ns_chargingonly, false);
         boolean newAllowedState = true;
 
         if (!ev.isCharging() && chargingOnly) {
@@ -86,15 +94,16 @@ class NsClientReceiverDelegate {
     }
 
     boolean calculateStatus(final EventNetworkChange ev) {
-        boolean wifiOnly = SP.getBoolean(R.string.key_ns_wifionly, false);
-        String allowedSSIDs = SP.getString(R.string.key_ns_wifi_ssids, "");
-        boolean allowRoaming = SP.getBoolean(R.string.key_ns_allowroaming, true);
+        boolean wifiOnly = sp.getBoolean(R.string.key_ns_wifionly, false);
+        String allowedSSIDstring = sp.getString(R.string.key_ns_wifi_ssids, "");
+        String[] allowedSSIDs = allowedSSIDstring.split(";");
+        if (allowedSSIDstring.isEmpty()) allowedSSIDs = new String[0];
+        boolean allowRoaming = sp.getBoolean(R.string.key_ns_allowroaming, true);
 
         boolean newAllowedState = true;
 
         if (ev.getWifiConnected()) {
-            if (!allowedSSIDs.trim().isEmpty() &&
-                    (!allowedSSIDs.contains(ev.connectedSsid()) && !allowedSSIDs.contains(ev.getSsid()))) {
+            if (allowedSSIDs.length != 0 && !Arrays.asList(allowedSSIDs).contains(ev.getSsid())) {
                 newAllowedState = false;
             }
         } else {

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -17,29 +18,42 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.toSignedString
+import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_insulin.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var ctx: Context
+    @Inject lateinit var config: Config
 
     companion object {
         private const val PLUS1_DEFAULT = 0.5
         private const val PLUS2_DEFAULT = 1.0
         private const val PLUS3_DEFAULT = 2.0
     }
-
-    private val maxInsulin = MainApp.getConstraintChecker().maxBolusAllowed.value()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -51,13 +65,14 @@ class InsulinDialog : DialogFragmentWithDate() {
     }
 
     private fun validateInputs() {
+        val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (abs(overview_insulin_time.value.toInt()) > 12 * 60) {
             overview_insulin_time.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.constraintapllied))
         }
         if (overview_insulin_amount.value > maxInsulin) {
             overview_insulin_amount.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.bolusconstraintapplied))
+            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.bolusconstraintapplied))
         }
     }
 
@@ -76,27 +91,33 @@ class InsulinDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (config.NSCLIENT) {
+            overview_insulin_record_only.isChecked = true
+            overview_insulin_record_only.isEnabled = false
+        }
+        val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
+
         overview_insulin_time.setParams(savedInstanceState?.getDouble("overview_insulin_time")
             ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_insulin_amount.setParams(savedInstanceState?.getDouble("overview_insulin_amount")
-            ?: 0.0, 0.0, maxInsulin, ConfigBuilderPlugin.getPlugin().activePump!!.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, ok, textWatcher)
 
-        overview_insulin_plus05.text = toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
+        overview_insulin_plus05.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
         overview_insulin_plus05.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
-                + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
+                + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus10.text = toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
+        overview_insulin_plus10.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
         overview_insulin_plus10.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
-                + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
+                + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus20.text = toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
+        overview_insulin_plus20.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
         overview_insulin_plus20.setOnClickListener {
-            overview_insulin_amount.value = Math.max(0.0, overview_insulin_amount.value
-                + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
+            overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
+                + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
             validateInputs()
         }
 
@@ -106,56 +127,50 @@ class InsulinDialog : DialogFragmentWithDate() {
         }
     }
 
-    private fun toSignedString(value: Double): String {
-        val formatted = DecimalFormatter.toPumpSupportedBolus(value)
-        return if (value > 0) "+$formatted" else formatted
-    }
-
     override fun submit(): Boolean {
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription
-            ?: return false
+        val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(overview_insulin_amount.text)
-        val insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(insulin)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
-        val units = ProfileFunctions.getSystemUnits()
-        val unitLabel = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
+        val units = profileFunction.getUnits()
+        val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
         val recordOnlyChecked = overview_insulin_record_only.isChecked
         val eatingSoonChecked = overview_insulin_start_eating_soon_tt.isChecked
 
         if (insulinAfterConstraints > 0) {
-            actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + MainApp.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.bolus))
             if (recordOnlyChecked)
-                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>")
+                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.warning))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), insulin, insulinAfterConstraints))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
         }
-        val eatingSoonTTDuration = DefaultValueHelper.determineEatingSoonTTDuration()
-        val eatingSoonTT = DefaultValueHelper.determineEatingSoonTT()
+        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
+        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
-            actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + eatingSoonTTDuration + " " + MainApp.gs(R.string.unit_minute_short) + ")</font>")
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
 
         val timeOffset = overview_insulin_time.value.toInt()
         val time = DateUtil.now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
-            actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 
         val notes = notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
 
         if (insulinAfterConstraints > 0 || eatingSoonChecked) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, MainApp.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (eatingSoonChecked) {
-                        log.debug("USER ENTRY: TEMPTARGET EATING SOON $eatingSoonTT duration: $eatingSoonTTDuration")
+                        aapsLogger.debug("USER ENTRY: TEMPTARGET EATING SOON $eatingSoonTT duration: $eatingSoonTTDuration")
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
                             .duration(eatingSoonTTDuration)
-                            .reason(MainApp.gs(R.string.eatingsoon))
+                            .reason(resourceHelper.gs(R.string.eatingsoon))
                             .source(Source.USER)
-                            .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
-                            .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                            .low(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
+                            .high(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
+                        activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
@@ -165,21 +180,21 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
-                            log.debug("USER ENTRY: BOLUS RECORD ONLY $insulinAfterConstraints")
+                            aapsLogger.debug("USER ENTRY: BOLUS RECORD ONLY $insulinAfterConstraints")
                             detailedBolusInfo.date = time
-                            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false)
+                            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                         } else {
-                            log.debug("USER ENTRY: BOLUS $insulinAfterConstraints")
+                            aapsLogger.debug("USER ENTRY: BOLUS $insulinAfterConstraints")
                             detailedBolusInfo.date = DateUtil.now()
-                            ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                            commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                                        val i = Intent(ctx, ErrorHelperActivity::class.java)
                                         i.putExtra("soundid", R.raw.boluserror)
                                         i.putExtra("status", result.comment)
-                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror))
+                                        i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        MainApp.instance().startActivity(i)
+                                        ctx.startActivity(i)
                                     }
                                 }
                             })
@@ -189,7 +204,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, MainApp.gs(R.string.bolus), MainApp.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.bolus), resourceHelper.gs(R.string.no_action_selected))
             }
         return true
     }

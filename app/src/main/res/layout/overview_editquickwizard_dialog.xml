@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_buttontext"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
                 android:id="@+id/overview_editquickwizard_button_edit"
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_carbs"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
                 android:id="@+id/overview_editquickwizard_carbs_edit"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_valid"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usebg"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usebg_spinner"
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usebolusiob"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usebolusiob_spinner"
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usebasaliob"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usebasaliob_spinner"
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usecob"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usecob_spinner"
@@ -118,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usetrend"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usetrend_spinner"
@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usesuperbolus"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usesuperbolus_spinner"
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usetemptarget"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
                 android:id="@+id/overview_editquickwizard_usetemptarget_spinner"

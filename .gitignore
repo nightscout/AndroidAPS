@@ -8,7 +8,6 @@
 build/
 .idea/*
 !.idea/codeStyles/
-app/src/main/jniLibs
 full/
 debug/
 release/

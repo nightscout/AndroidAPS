@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.events
 
-import android.os.Bundle
+import org.json.JSONArray
 
 /**
  * Event which is published with data fetched from NightScout specific for the
@@ -10,7 +10,8 @@ import android.os.Bundle
  * subscriber.
  */
 
-class EventNsFood(val mode: Int, val payload: Bundle) : Event() {
+class EventNsFood(val mode: Int, val foods: JSONArray) : Event() {
+
     companion object {
         val ADD = 0
         val UPDATE = 1

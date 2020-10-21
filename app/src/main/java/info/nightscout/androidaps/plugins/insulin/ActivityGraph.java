@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 
 /**
@@ -49,8 +49,8 @@ public class ActivityGraph extends GraphView {
 
         for (long time = 0; time <= hours * 60 * 60 * 1000; time += 5 * 60 * 1000L) {
             Iob iob = t.iobCalc(time, dia);
-            activityArray.add(new DataPoint(time / 60 / 1000, iob.activityContrib));
-            iobArray.add(new DataPoint(time / 60 / 1000, iob.iobContrib));
+            activityArray.add(new DataPoint(time / 60.0 / 1000, iob.activityContrib));
+            iobArray.add(new DataPoint(time / 60.0 / 1000, iob.iobContrib));
         }
 
         DataPoint[] activityDataPoints = new DataPoint[activityArray.size()];
