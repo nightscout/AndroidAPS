@@ -3,8 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fra
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import info.nightscout.androidaps.plugins.pump.omnipod.R
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragment.ActionFragmentBase
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.PodDeactivationWizardActivity
@@ -27,8 +26,7 @@ abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
     }
 
     override fun onActionFailure() {
-        if (podStateManager.isPodInitialized && podStateManager.podProgressStatus == PodProgressStatus.ACTIVATION_TIME_EXCEEDED) {
-            omnipod_wizard_action_error.setText(R.string.omnipod_error_pod_fault_activation_time_exceeded)
+        if (podStateManager.isPodActivationTimeExceeded && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
             omnipod_wizard_button_retry.visibility = View.GONE
             omnipod_wizard_button_deactivate_pod.visibility = View.VISIBLE
         }
