@@ -1004,7 +1004,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun areMoreNumbers(allowednumbers: String?): Boolean {
         return allowednumbers?.let {
-            var countNumbers = 0
+            val knownNumbers = HashSet<String>()
             val substrings = it.split(";").toTypedArray()
             for (number in substrings) {
                 var cleaned = number.replace(Regex("\\s+"), "")
@@ -1012,9 +1012,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                 cleaned = cleaned.replace("+", "")
                 cleaned = cleaned.replace("-", "")
                 if (!cleaned.matches(Regex("[0-9]+"))) continue
-                countNumbers++
+                knownNumbers.add(cleaned)
             }
-            countNumbers > 1
+            knownNumbers.size > 1
         } ?: false
     }
 }
