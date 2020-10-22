@@ -1376,6 +1376,10 @@
     <string name="smscommunicator_otp_reset_prompt">Are you sure to reset Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
     <string name="smscommunicator_otp_reset_successful">New Authenticator Key was generated! Please use updated QRCode to provision authenticators.</string>
 
+    <string name="smscommunicator_otp_export_title">Exporting OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Are you sure you want to copy OTP secret to clipboard?\n\nYou may only need that if your authenticator app have issues scanning QRCode, you want to enter it manually or you want to configure hardware OTP token using dedicated app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (in Base32 format) exported and copied into clipboard. Paste it into authenticator or hardware OTP burner!</string>
+
     <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AndroidAPS OTP codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>

@@ -121,4 +121,10 @@ class OneTimePassword @Inject constructor(
     fun provisioningURI(): String? =
         key?.let { "otpauth://totp/AndroidAPS:" + URLEncoder.encode(name(), "utf-8").replace("+", "%20") + "?secret=" + BaseEncoding.base32().encode(it.encoded).replace("=", "") + "&issuer=AndroidAPS" }
 
+    /**
+     * Return secret used to provision Authenticator apps, in Base32 format
+     */
+    fun provisioningSecret(): String? =
+        key?.let { BaseEncoding.base32().encode(it.encoded).replace("=", "") }
+
 }
