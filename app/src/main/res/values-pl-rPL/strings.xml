@@ -991,6 +991,7 @@
     <string name="storage">limit wielkości pamięci wewnętrznej</string>
     <string name="diskfull">Zwolnij co najmniej %1$d MB z pamięci wewnętrznej! Pętla zatrzymana!</string>
     <string name="wrongformat">Błędny format</string>
+    <string name="wrongTbrDuration">Czas trwania TBR musi być wielokrotnością %1$d minut i większy niż 0.</string>
     <string name="sms_wrongcode">Zły kod. Polecenie anulowano.</string>
     <string name="notconfigured">Nie skonfigurowano</string>
     <string name="profileswitchcreated">Zmiana profilu wykonana</string>
