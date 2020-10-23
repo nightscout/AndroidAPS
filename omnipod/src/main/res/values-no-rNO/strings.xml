@@ -52,6 +52,7 @@
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Endring av midlertidig basal kan ha vært mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være kansellert! Oppdater statusen manuelt fra fanen Omnipod og gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er sperret! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
+    <string name="omnipod_error_failed_to_read_pulse_log">Feilet i å lese Pulsloggen</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deaktiviser Pod</string>
