@@ -76,6 +76,8 @@
     <string name="omnipod_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_initial_basal_schedule_no_profile">Nessun profilo basale è attivo. Assicurati di attivare il tuo profilo basale.</string>
     <string name="omnipod_error_unknown_custom_command">Comando personalizzato sconosciuto: %1$s</string>
+    <string name="omnipod_error_failed_to_set_time">Impossibile impostare l\'ora</string>
+    <string name="omnipod_error_failed_to_resume_delivery">Impossibile riprendere l\'erogazione</string>
     <string name="omnipod_error_bolus_failed_uncertain">Impossibile verificare che il bolo sia riuscito. Verifica manualmente che il tuo pod stia erogando insulina ascoltando i click. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento del bolo dalla sezione Trattamenti, anche se fai click su \'Cancella bolo\' in questo momento!</b></string>
     <string name="omnipod_error_bolus_failed_uncertain_smb">Impossibile verificare che il bolo SMB (%1$.2f U) sia riuscito. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento dalla sezione Trattamenti.</b></string>
     <string name="omnipod_error_bolus_did_not_succeed">Il bolo non è riuscito.</string>
