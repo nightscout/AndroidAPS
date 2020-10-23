@@ -74,12 +74,17 @@
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">L\'Impostazione dell\'ora potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione dalla scheda Omnipod.</string>
+    <string name="omnipod_error_set_initial_basal_schedule_no_profile">Nessun profilo basale è attivo. Assicurati di attivare il tuo profilo basale.</string>
     <string name="omnipod_error_unknown_custom_command">Comando personalizzato sconosciuto: %1$s</string>
+    <string name="omnipod_error_bolus_failed_uncertain">Impossibile verificare che il bolo sia riuscito. Verifica manualmente che il tuo pod stia erogando insulina ascoltando i click. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento del bolo dalla sezione Trattamenti, anche se fai click su \'Cancella bolo\' in questo momento!</b></string>
+    <string name="omnipod_error_bolus_failed_uncertain_smb">Impossibile verificare che il bolo SMB (%1$.2f U) sia riuscito. <b>Se sei sicuro che il bolo non sia riuscito, dovresti eliminare manualmente l\'inserimento dalla sezione Trattamenti.</b></string>
     <string name="omnipod_error_bolus_did_not_succeed">Il bolo non è riuscito.</string>
     <string name="omnipod_error_failed_to_initialize_pod">Inizializzazione pod fallita</string>
     <string name="omnipod_error_failed_to_insert_cannula">Inserimento cannula fallito</string>
+    <string name="omnipod_error_pod_fault_activation_time_exceeded">Il tempo di attivazione del pod è stato superato. Questo pod non può più essere attivato.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Conferma</string>
+    <string name="omnipod_confirmation_time_or_timezone_change">Ora e/o fuso orario cambiati nel pod.</string>
     <string name="omnipod_confirmation_suspended_delivery">Tutta l\'erogazione di insulina è stata sospesa.</string>
     <string name="omnipod_confirmation_delivery_resumed">L\'erogazione di insulina è ripresa.</string>
     <string name="omnipod_confirmation_pod_suspended">Pod sospeso</string>
@@ -102,6 +107,7 @@
     <string name="omnipod_cmd_unknown_entry">Inserimento sconosciuto</string>
     <string name="omnipod_cmd_initialize_pod">Inizializza pod</string>
     <string name="omnipod_cmd_insert_cannula">Inserisci cannula</string>
+    <string name="omnipod_cmd_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Imposta basale temporanea fittizia perché il pod è sospeso</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
     <!-- Omnipod - Pod Management -->
@@ -152,6 +158,8 @@
     <string name="omnipod_overview_pod_expiry_date">Scadenza pod</string>
     <string name="omnipod_overview_last_connection">Ultima connessione</string>
     <string name="omnipod_overview_last_bolus">Ultimo bolo</string>
+    <string name="omnipod_overview_temp_basal_rate">Velocità basale temporanea</string>
+    <string name="omnipod_overview_base_basal_rate">Velocità basale originale</string>
     <string name="omnipod_overview_reservoir">Serbatoio</string>
     <string name="omnipod_overview_pod_active_alerts">Attiva avvisi pod</string>
     <string name="omnipod_overview_firmware_version">Versione firmware</string>
