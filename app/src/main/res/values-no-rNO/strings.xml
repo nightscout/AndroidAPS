@@ -1219,4 +1219,5 @@
     <string name="worker_state">Fremdrift: %s</string>
     <string name="uploaded_data">Opplastede data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Følgende data vil bli lastet opp til din Open Humans konto: glukoseverdier, boluser, karbohydrater, careportalhendelser (bortsett fra merknader), forlengede boluser, profilbytter, totale daglige doser, temp basaler, endringer i BS mål, innstillinger, app versjon, mobilmerke og skjermstørrelser. Hemmelig eller privat informasjon som din Nightscout URL eller API secret vil ikke bli lastet opp.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
 </resources>
