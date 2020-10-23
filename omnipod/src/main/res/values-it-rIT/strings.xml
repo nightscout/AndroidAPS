@@ -80,6 +80,8 @@
     <string name="omnipod_error_failed_to_insert_cannula">Inserimento cannula fallito</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Conferma</string>
+    <string name="omnipod_confirmation_suspended_delivery">Tutta l\'erogazione di insulina è stata sospesa.</string>
+    <string name="omnipod_confirmation_delivery_resumed">L\'erogazione di insulina è ripresa.</string>
     <string name="omnipod_confirmation_pod_suspended">Pod sospeso</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Disattiva pod</string>
@@ -99,6 +101,7 @@
     <string name="omnipod_cmd_resume_delivery">Riprendi erogazione</string>
     <string name="omnipod_cmd_unknown_entry">Inserimento sconosciuto</string>
     <string name="omnipod_cmd_initialize_pod">Inizializza pod</string>
+    <string name="omnipod_cmd_insert_cannula">Inserisci cannula</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Imposta basale temporanea fittizia perché il pod è sospeso</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
     <!-- Omnipod - Pod Management -->
@@ -119,15 +122,18 @@
     <string name="omnipod_wizard_exit_confirmation_title">Esci</string>
     <!-- Omnipod - Pod activation Wizard -->
     <string name="omnipod_pod_activation_wizard_fill_pod_title">Riempi pod</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_text">Riempi un nuovo pod con abbastanza insulina per 3 giorni.\n\nResta in ascolto di due bip dal pod durante il processo di riempimento. Questi indicano che è stata inserita la quantità minima di 85U. Assicurati di svuotare completamente la siringa di riempimento, anche dopo aver sentito i due segnali acustici.\n\nDopo il riempimento del pod, premi <b>Avanti</b>.\n\n<b>Nota:</b> non rimuovere la protezione dell\'ago del pod in questo momento.\n<b>Nota:</b> colloca il RileyLink in posizione verticale e il pod a pochi centimetri di distanza.</string>
     <string name="omnipod_pod_activation_wizard_initialize_pod_title">Inizializza pod</string>
     <string name="omnipod_pod_activation_wizard_initialize_pod_text">Tentativo di associazione nuovo pod e caricamento.\n\nQuando il processo di inizializzazione è stato completato con successo, puoi premere <b>Avanti</b>.\n\n<b>Nota:</b> colloca il RileyLink in posizione verticale e il pod a pochi centimetri di distanza.</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_title">Inserisci cannula</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod attivato</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">Il nuovo pod è ora attivo.\n\nIl tuo piano basale è stato programmato e la cannula è stata inserita.\n\nVerifica che la cannula sia stata inserita correttamente e sostituisci il tuo pod se avverti il contrario.</string>
     <!-- Omnipod - Pod deactivation Wizard -->
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Disattiva pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">Premi <b>Avanti</b> per disattivare il pod.\n\n<b>Nota:</b> Questo sospenderà tutta l\'erogazione di insulina e disattiverà il pod.</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Disattivazione pod</string>
     <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod disattivato</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Il tuo pod è stato disattivato.\n\nRimuovi il pod dal tuo corpo e gettalo.</string>
     <string name="omnipod_pod_deactivation_wizard_pod_discarded_title">Pod scartato</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Scarta pod</string>
     <!-- Omnipod - Overview -->
