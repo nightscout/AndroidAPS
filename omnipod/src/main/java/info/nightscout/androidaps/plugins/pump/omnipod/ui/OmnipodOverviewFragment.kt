@@ -31,11 +31,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpVal
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -64,10 +64,10 @@ class OmnipodOverviewFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
-    @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: AapsOmnipodUtil
+    @Inject lateinit var omnipodAlertUtil: OmnipodAlertUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var omnipodManager: AapsOmnipodManager
@@ -299,8 +299,15 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value_over50)
                 omnipod_overview_reservoir.setTextColor(Color.WHITE)
             } else {
+                val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
+                    ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
+
                 omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value, podStateManager.reservoirLevel)
-                warnColors.setColorInverse(omnipod_overview_reservoir, podStateManager.reservoirLevel, 50.0, 20.0)
+                omnipod_overview_reservoir.setTextColor(if (podStateManager.reservoirLevel < lowReservoirThreshold) {
+                    Color.RED
+                } else {
+                    Color.WHITE
+                })
             }
 
             omnipod_overview_pod_active_alerts.text = if (podStateManager.hasActiveAlerts()) {
