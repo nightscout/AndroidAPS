@@ -45,9 +45,9 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Low reservoir alert enabled</string>
     <string name="omnipod_config_low_reservoir_alert_units">Number of units</string>
-    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Enable sound for uncertain TBR notifications</string>
-    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Enable sound for uncertain SMB notifications</string>
-    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Enable sound for uncertain bolus notifications</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Other</string>
     <string name="omnipod_preference_category_alerts">Alerts</string>
