@@ -4,20 +4,100 @@
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_waiting_for_activation">Setup wordt uitgevoerd (in afwachting van Pod activering)</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
     <string name="omnipod_alert_shutdown_imminent">Schakelt zeer binnenkort uit</string>
     <string name="omnipod_alert_low_reservoir">Laag reservoir</string>
     <string name="omnipod_alert_unknown_alert">Onbekend alarm</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_history_title">Pod historie</string>
+    <string name="omnipod_history_bolus_value">%1$.2f E</string>
+    <string name="omnipod_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
+    <string name="omnipod_history_tbr_value">Basaal: %1$.2f E, Duur: %2$d min</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_error_unexpected_exception">Er is een onverwachte fout opgetreden. A.u.b rapporteren! (%1$s: %2$s).</string>
+    <string name="omnipod_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd</string>
+    <string name="omnipod_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod</string>
+    <string name="omnipod_error_invalid_progress_state">Communicatie mislukt: de Pod bevindt zich in een verkeerde staat</string>
+    <string name="omnipod_error_invalid_response">Communicatie mislukt: ongeldig antwoord ontvangen van de Pod</string>
+    <string name="omnipod_error_invalid_message_sequence_number">Communicatie mislukt: bericht met ongeldig volgnummer ontvangen van de Pod</string>
+    <string name="omnipod_error_invalid_message_address">Communicatie mislukt: bericht met ongeldig adres ontvangen van de Pod</string>
+    <string name="omnipod_error_message_decoding_failed">Communicatie is mislukt: kon bericht van de Pod niet decoderen</string>
+    <string name="omnipod_error_nonce_resync_failed">Communicatie mislukt: nonce resync is mislukt</string>
+    <string name="omnipod_error_nonce_out_of_sync">Communicatie mislukt: nonce out of sync</string>
+    <string name="omnipod_error_not_enough_data">Communicatie mislukt: onvoldoende gegevens ontvangen van de Pod</string>
+    <string name="omnipod_error_pod_fault">Een Podfout (%1$03d %2$s) is gedetecteerd. Deactiveer de Pod en activeer een nieuwe</string>
+    <string name="omnipod_error_pod_returned_error_response">Communicatie mislukt: de Pod heeft een foutrespons gegeven</string>
+    <string name="omnipod_error_communication_failed_no_response_from_riley_link">Geen reactie van RileyLink</string>
+    <string name="omnipod_error_communication_failed_riley_link_interrupted">RileyLink onderbroken</string>
+    <string name="omnipod_error_communication_failed_no_response_from_pod">Geen reactie van de Pod</string>
+    <string name="omnipod_error_set_basal_failed">Instellen van basaal profiel mislukt.</string>
+    <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Het annuleren van de tijdelijk basaal is mogelijk mislukt. Vernieuw de Pod-status handmatig vanaf het Omnipod-tabblad.</string>
+    <string name="omnipod_error_failed_to_set_profile_empty_profile">Het instellen van het basaal profiel is mislukt: geen profiel ontvangen. Controleer of je profiel geactiveerd is.</string>
+    <string name="omnipod_error_set_initial_basal_schedule_no_profile">Er is geen basaal profiel actief. Activeer een profiel.</string>
+    <string name="omnipod_error_unknown_custom_command">Onbekend commando: %1$s</string>
+    <string name="omnipod_error_failed_to_read_pulse_log">Lezen van Pulslog is mislukt</string>
+    <string name="omnipod_error_failed_to_refresh_status">Verversen van status is mislukt</string>
+    <string name="omnipod_error_failed_to_acknowledge_alerts">Bevestigen van waarschuwingen is mislukt</string>
+    <string name="omnipod_error_failed_to_suspend_delivery">Onderbreken van insulinetoediening is mislukt</string>
+    <string name="omnipod_error_failed_to_set_time">Instellen van de tijd mislukt</string>
+    <string name="omnipod_error_failed_to_resume_delivery">Hervatten van insulinetoediening is mislukt</string>
+    <string name="omnipod_error_automatic_time_or_timezone_change_failed">Het automatisch wijzigen van de tijd op de Pod is mislukt. Synchroniseer de tijd handmatig via het Omnipod-tabblad.</string>
+    <string name="omnipod_error_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer handmatig of de Pod aan het bolussen is door te luisteren naar klik-geluidjes van de Pod. <b>Als je zeker weet dat de bolus niet is geslaagd, moet je deze bolus handmatig uit \'Behandelingen\' verwijderen, zelfs als je nu op \'Annuleren\' drukt!</b></string>
+    <string name="omnipod_error_bolus_failed_uncertain_smb">Kan niet controleren of SMB bolus (%1$.2f U) geslaagd is. <b>Als je zeker weet dat de bolus niet geslaagd is, moet je deze handmatig verwijderen uit \'Behandelingen\'.</b></string>
+    <string name="omnipod_error_bolus_did_not_succeed">Bolus mislukt.</string>
+    <string name="omnipod_error_failed_to_initialize_pod">Het initialiseren van de Pod is mislukt</string>
+    <string name="omnipod_error_failed_to_insert_cannula">Het inbrengen van de canule is mislukt</string>
+    <string name="omnipod_error_pod_fault_activation_time_exceeded">De activeringstijd van de pod is overschreden. Deze Pod kan niet meer geactiveerd worden.</string>
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_confirmation">Bevestiging</string>
+    <string name="omnipod_confirmation_time_or_timezone_change">Tijd en/of tijdzone gewijzigd op de Pod.</string>
+    <string name="omnipod_confirmation_expiration_alerts_updated">De instellingen voor meldingen zijn bijgewerkt in de Pod.</string>
+    <string name="omnipod_confirmation_time_on_pod_updated">De tijd in de Pod is geüpdatet.</string>
+    <string name="omnipod_confirmation_suspended_delivery">Alle insulinetoediening is onderbroken.</string>
+    <string name="omnipod_confirmation_acknowledged_alerts">Actieve meldingen zijn bevestigd.</string>
+    <string name="omnipod_confirmation_delivery_resumed">Insulinetoediening is hervat.</string>
+    <string name="omnipod_confirmation_pod_suspended">Pod onderbroken</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deactiveer Pod</string>
+    <string name="omnipod_cmd_initialize_pod">Pod initialiseren</string>
+    <string name="omnipod_cmd_insert_cannula">Canule inbrengen</string>
+    <string name="omnipod_cmd_read_pulse_log">Pulslog lezen</string>
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_pod_management_title">Pod beheer</string>
+    <string name="omnipod_pod_management_waiting_for_rileylink_connection">Wachten op verbinding met RileyLink…</string>
+    <string name="omnipod_pod_management_button_activate_pod">Activeer Pod</string>
+    <string name="omnipod_pod_management_button_deactivate_pod">Deactiveer Pod</string>
+    <string name="omnipod_pod_management_button_discard_pod">Pod verwerpen</string>
+    <string name="omnipod_pod_management_button_pod_history">Pod historie</string>
+    <string name="omnipod_pod_management_discard_pod_state_confirmation">Als je de Pod verwerpt, kun je er niet meer mee communiceren. Doe dit alleen alle communicatie met de Pod aanhoudend mislukt. Als je nog steeds kunt communiceren met de Pod, gebruik dan de <b>Pod deactiveren</b> optie.\n\nVerwijder de Pod van de huid als je ervoor kiest om door te gaan!</string>
     <!-- Omnipod - Wizard common -->
+    <string name="omnipod_wizard_button_cancel">Annuleren</string>
+    <string name="omnipod_wizard_button_retry">Opnieuw proberen</string>
+    <string name="omnipod_wizard_button_deactivate_pod">Deactiveer Pod</string>
+    <string name="omnipod_wizard_button_discard_pod">Pod verwerpen</string>
+    <string name="omnipod_wizard_exit_confirmation_text">Je hebt nog niet alle stappen voltooid. Weet je zeker dat je wilt afsluiten?</string>
+    <string name="omnipod_wizard_exit_confirmation_title">Afsluiten</string>
     <!-- Omnipod - Pod activation Wizard -->
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Pod vullen</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_text">\nVul de nieuwe Pod met voldoende insuline voor 3 dagen.\n\nLuister of je twee piepjes hoort tijdens het vullen. Deze geven aan dat de minimum hoeveelheid van 85 eenheden is bereikt. Ook als je de twee piepjes hebt gehoord ga je verder met vullen totdat de vulspuit volledig leeg is.\n\nNa het vullen van de Pod druk je op <b>Volgende</b>.\n\n<b>Opmerking:</b> verwijder de beschermkap van de naald nog niet!\n<b>Opmerking:</b> zet de RileyLink rechtop en leg de Pod er ongeveer 10 centimeter vandaan.</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Pod initialiseren</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_text">Er wordt nu geprobeerd om de Pod te koppelen en uit te vullen.\n\nWanneer deze stap successvol is afgerond, kan er op <b>Volgende</b> worden gedrukt.\n\n<b>Opmerking:</b> zet de RileyLink rechtop en leg de Pod er ongeveer 10 centimeter vandaan.</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Plaats de Pod</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">Bereid het plaatsen voor. Verwijder de beschermkap van de naald en haal de papiertjes van de sticker.\n\nMocht je zien dat de canule uitsteekt, druk dan op <b>Annuleren</b> en begin opnieuw met een andere Pod.\n\nBevestig de Pod op de huid. Druk op <b>Volgende</b> om de canule te gaan inschieten en de insulinetoediening te laten starten.</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Als je op <b>OK</b>drukt, wordt de canule ingebracht. Zorg ervoor dat de Pod op de huid geplakt is.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Canule inbrengen</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">De basaalstand wordt ingesteld en de canule wordt ingebracht.\n\nWanneer de canule succesvol is ingebracht, kun je op <b>Volgende</b> drukken.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod geactiveerd</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">De nieuwe Pod is nu actief.\n\nJe basaalprofiel is ingeladen in de Pod en de canule is ingebracht.\n\nControleer of de canule correct is geplaatst en vervang de Pod als je denkt dat er iets is misgegaan.</string>
     <!-- Omnipod - Pod deactivation Wizard -->
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Deactiveer Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">Druk op <b>Volgende</b> om de Pod te deactiveren.\n\n<b>Opmerking:</b> Hiermee wordt de insulinetoediening gestopt en wordt de Pod gedeactiveerd.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Pod wordt gedeactiveerd</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">De Pod wordt gedeactiveerd.\n\nWanneer de Pod succesvol gedeactiveerd is, kan er op <b>Volgende</b> worden gedrukt.</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod gedeactiveerd</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod gedeactiveerd.\n\nVerwijder de Pod van je lichaam en recycle deze.</string>
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
