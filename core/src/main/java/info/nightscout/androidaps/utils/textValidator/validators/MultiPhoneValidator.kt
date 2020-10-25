@@ -7,9 +7,13 @@ class MultiPhoneValidator(val _customErrorMessage: String?) : Validator(_customE
 
     override fun isValid(editText: EditText): Boolean {
         val substrings = editText.text.split(";").toTypedArray()
+        val knownNumbers = HashSet<String>()
         for (number in substrings) {
             if (!PatternValidator(_customErrorMessage, Patterns.PHONE).isValid(number))
                 return false
+            if (knownNumbers.contains(number))
+                return false
+            knownNumbers.add(number)
         }
         return substrings.isNotEmpty()
     }

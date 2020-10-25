@@ -1,11 +1,15 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator.activities
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import info.nightscout.androidaps.R
@@ -15,8 +19,8 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicato
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.activity_smscommunicator_otp.*
 import net.glxn.qrgen.android.QRCode
@@ -31,6 +35,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_smscommunicator_otp)
 
         smscommunicator_otp_verify_edit.addTextChangedListener(object : TextWatcher {
@@ -64,8 +69,22 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                 Runnable {
                     otp.ensureKey(true)
                     updateGui()
-                    ToastUtils.showToastInUiThread(this, R.string.smscommunicator_otp_reset_successful)
+                    ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_reset_successful))
                 })
+        }
+
+        smscommunicator_otp_provisioning.setOnLongClickListener {
+            OKDialog.showConfirmation(this,
+                resourceHelper.gs(R.string.smscommunicator_otp_export_title),
+                resourceHelper.gs(R.string.smscommunicator_otp_export_prompt),
+                Runnable {
+                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
+                    clipboard.primaryClip = clip
+                    ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_export_successful))
+                })
+
+            true
         }
     }
 
