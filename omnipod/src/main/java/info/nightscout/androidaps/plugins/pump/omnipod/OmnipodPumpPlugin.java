@@ -284,13 +284,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if ((event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled))) {
+                    if (event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled)) {
                         aapsOmnipodManager.reloadSettings();
                     } else if (event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
