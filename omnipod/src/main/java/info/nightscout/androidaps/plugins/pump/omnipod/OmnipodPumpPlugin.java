@@ -98,6 +98,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+
 /**
  * Created by andy on 23.04.18.
  *
@@ -282,13 +284,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if ((event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled))) {
+                    if (event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled)) {
                         aapsOmnipodManager.reloadSettings();
                     } else if (event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
@@ -544,6 +549,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
             durationInMinutes, Profile profile, boolean enforceNew) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
+
+        if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
+            return new PumpEnactResult(getInjector()).success(false).comment(resourceHelper.gs(R.string.omnipod_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
+        }
 
         // read current TBR
         TemporaryBasal tbrCurrent = readTBR();
