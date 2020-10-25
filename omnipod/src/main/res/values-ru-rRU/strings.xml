@@ -47,6 +47,9 @@
     <string name="omnipod_error_rileylink_address_invalid">Недопустимый адрес RileyLink.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Операция невозможна.\n\n Сначала нужно настроить помпу Omnipod.</string>
     <string name="omnipod_error_pod_not_attached">Активная помпа не включена</string>
+    <string name="omnipod_error_nonce_resync_failed">Ошибка связи: не удалось выполнить контрольную синхронизацию</string>
+    <string name="omnipod_error_nonce_out_of_sync">Ошибка соединения: вне синхронизации</string>
+    <string name="omnipod_error_not_enough_data">Ошибка связи: недостаточно данных от Pod</string>
     <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Не удалось задать базовый профиль. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите процесс подачи.</string>
     <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Возможно не удалось задать базовый профиль. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите процесс подачи.</string>
     <string name="omnipod_error_set_basal_failed_delivery_suspended">Не удалось задать базовый профиль. Подача инсулина приостановлена! Вручную возобновите подачу с вкладки Omnipod.</string>
