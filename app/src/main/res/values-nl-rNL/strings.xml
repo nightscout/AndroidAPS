@@ -1146,4 +1146,5 @@
     <string name="largedisplay_description">Groot scherm</string>
     <string name="skin">Skin</string>
     <string name="nav_profilehelper">Profiel hulp</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
 </resources>
