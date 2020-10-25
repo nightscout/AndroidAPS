@@ -16,6 +16,7 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="ko_lang" translatable="false">Korean</string>
     <string name="lt_lang" translatable="false">Lithuanian</string>
+    <string name="no_lang" translatable="false">Norwegian</string>
     <string name="pl_lang" translatable="false">Polish</string>
     <string name="pt_lang" translatable="false">Portuguese</string>
     <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
