@@ -129,7 +129,7 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Deactiveer Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Pod verwerpen</string>
     <string name="omnipod_pod_management_button_pod_history">Pod historie</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Als je de Pod verwerpt, kun je er niet meer mee communiceren. Doe dit alleen alle communicatie met de Pod aanhoudend mislukt. Als je nog steeds kunt communiceren met de Pod, gebruik dan de <b>Pod deactiveren</b> optie.\n\nVerwijder de Pod van de huid als je ervoor kiest om door te gaan!</string>
+    <string name="omnipod_pod_management_discard_pod_state_confirmation">Als je de Pod verwerpt, kun je er niet meer mee communiceren. Doe dit alleen als communicatie met de Pod aanhoudend mislukt. Als je nog steeds kunt communiceren met de Pod, gebruik dan de <b>Pod deactiveren</b> optie.\n\nVerwijder de Pod van de huid als je ervoor kiest om door te gaan!</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Annuleren</string>
     <string name="omnipod_wizard_button_finish">Voltooien</string>
