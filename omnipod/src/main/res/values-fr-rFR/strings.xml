@@ -8,7 +8,7 @@
     <string name="omnipod_config_smb_beeps_enabled">Bips SMB activés</string>
     <string name="omnipod_config_tbr_beeps_enabled">Bips DBT activés</string>
     <string name="omnipod_config_suspend_delivery_button_enabled">Bouton Suspendre l\'injection activé</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Bouton Enreg. Pulse activé</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Bouton Journal d\'impulsions activé</string>
     <string name="omnipod_config_time_change_enabled">Changement de Zone/Heure Activé</string>
     <string name="omnipod_config_expiration_reminder_enabled">Rappel d\'expiration activé</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Heures avant arrêt</string>
