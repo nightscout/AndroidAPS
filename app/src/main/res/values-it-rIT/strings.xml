@@ -990,6 +990,7 @@
     <string name="storage">vincolo di archiviazione interna</string>
     <string name="diskfull">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <string name="wrongformat">Formato errato</string>
+    <string name="wrongTbrDuration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
     <string name="sms_wrongcode">Codice errato. Comando cancellato.</string>
     <string name="notconfigured">Non configurato</string>
     <string name="profileswitchcreated">Cambio profilo creato</string>
@@ -1218,4 +1219,5 @@
     <string name="worker_state">Worker State: %s</string>
     <string name="uploaded_data">Dati caricati</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">I seguenti dati verranno caricati sul tuo account Open Humans: valori glicemia, boli, carboidrati, eventi portale (eccetto note), boli estesi, cambi profilo, dosi giornaliere totali (TDD), basali temporanee, target temporanei, preferenze, versione dell\'applicazione, modello del dispositivo e dimensioni dello schermo. Informazioni segrete o private come l\'URL di Nightscout o l\'API secret non verranno caricate.</string>
+    <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
 </resources>

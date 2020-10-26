@@ -992,6 +992,7 @@ Context | Edit Context</string>
     <string name="storage">ограничение по объему карты памяти</string>
     <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <string name="wrongformat">Неверный формат</string>
+    <string name="wrongTbrDuration">Длительность временного базала TBR должна быть кратной %1$d минутам и больше 0.</string>
     <string name="sms_wrongcode">Неверный код. Команда отменена.</string>
     <string name="notconfigured">Не сконфигурировано</string>
     <string name="profileswitchcreated">Переключатель профиля создан</string>
@@ -1220,4 +1221,5 @@ Context | Edit Context</string>
     <string name="worker_state">Рабочее состояние: %s</string>
     <string name="uploaded_data">Загруженные данные</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">На ваш аккаунт Open Humans будут загружены следующие данные: значения ГК, события careportal (за исключением примечаний), пролонгированные болюсы, переключения профиля, суммарные суточные дозы, временные базалы, временные цели, настройки, версии приложения, модель устройства и размеры экрана. Секретная или конфиденциальная информация, такая как адрес вашего сайта Nightscout или API secret, не будет загружена.</string>
+    <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
 </resources>
