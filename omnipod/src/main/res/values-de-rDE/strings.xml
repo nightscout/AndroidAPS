@@ -14,10 +14,14 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Stunden bis zum Podende</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Warnung niedriger Reservoirstand aktiviert</string>
     <string name="omnipod_config_low_reservoir_alert_units">Anzahl der Einheiten</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Ton für unsichere SMB-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Ton für unsichere Bolus-Benachrichtigungen aktiviert</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Andere</string>
     <string name="omnipod_preference_category_alerts">Alarme</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bestätigungstöne</string>
+    <string name="omnipod_preference_category_notifications">Benachrichtigungen</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Kein aktiver Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Einrichtung im Gange (Warten auf Pod-Aktivierung)</string>
@@ -73,6 +77,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Abbruch der temporären Basalrate evtl. fehlgeschlagen. Aktualisiere den Pod Status manuell im Omnipod Tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">TBR konnte nicht gesetzt werden. Falls zuvor eine andere TBR aktiv war, wurde diese evtl. abgebrochen. Aktualisiere bitte manuell den Pod Status im Omnipod Tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">TBR konnte evtl. nicht gesetzt werden. Falls zuvor eine andere TBR aktiv war, wurde diese evtl. abgebrochen. Aktualisiere bitte manuell den Pod Status im Omnipod Tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">TBR Dauer muss größer null und ein Vielfaches von %1$s Minuten sein.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Zeit konnte evtl. nicht eingestellt werden. Insulinabgabe wird evtl. unterbrochen. Aktualisiere den Pod Status bitte manuell im Omnipod Tab und starte die Abgabe falls notwendig neu. </string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Zeit konnte nicht eingestellt werden. Insulinabgabe wurde unterbrochen. Bitte starte die Abgabe manuell im Omnipod Tab neu. </string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Fehler beim Festlegen des Basalprofils: Ein leeres Profil wurde empfangen. Akiviere Dein Basalprofil.</string>
