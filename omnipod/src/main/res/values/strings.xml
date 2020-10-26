@@ -15,6 +15,9 @@
     <string name="key_omnipod_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
     <string name="key_omnipod_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
     <string name="key_omnipod_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
+    <string name="key_omnipod_notification_uncertain_tbr_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_tbr_sound_enabled</string>
+    <string name="key_omnipod_notification_uncertain_smb_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_smb_sound_enabled</string>
+    <string name="key_omnipod_notification_uncertain_bolus_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_bolus_sound_enabled</string>
     <string name="key_omnipod_tbrs_set" translatable="false">AAPS.Omnipod.tbrs_set</string>
     <string name="key_omnipod_std_boluses_delivered" translatable="false">AAPS.Omnipod.std_boluses_delivered</string>
     <string name="key_omnipod_smb_boluses_delivered" translatable="false">AAPS.Omnipod.smb_boluses_delivered</string>
@@ -42,10 +45,14 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Low reservoir alert enabled</string>
     <string name="omnipod_config_low_reservoir_alert_units">Number of units</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Other</string>
     <string name="omnipod_preference_category_alerts">Alerts</string>
     <string name="omnipod_preference_category_confirmation_beeps">Confirmation beeps</string>
+    <string name="omnipod_preference_category_notifications">Notifications</string>
 
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">No active Pod</string>
@@ -93,7 +100,7 @@
     <string name="omnipod_error_nonce_resync_failed">Communication failed: nonce resync failed</string>
     <string name="omnipod_error_nonce_out_of_sync">Communication failed: nonce out of sync</string>
     <string name="omnipod_error_not_enough_data">Communication failed: not enough data received from the Pod</string>
-    <string name="omnipod_error_pod_fault">A Pod fault (%1$03d %2$s) has been detected. Please deactivate your Pod and start a new one</string>
+    <string name="omnipod_error_pod_fault">A Pod fault (%1$03d %2$s) has been detected. Please deactivate your Pod and activate a new one</string>
     <string name="omnipod_error_pod_returned_error_response">Communication failed: the Pod returned an error response</string>
     <string name="omnipod_error_communication_failed_no_response_from_riley_link">No response from RileyLink</string>
     <string name="omnipod_error_communication_failed_riley_link_interrupted">RileyLink interrupted</string>
@@ -105,6 +112,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Cancelling temp basal might have failed. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">TBR duration must be greater than zero and a multiple of %1$s minutes.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Failed to set basal profile: received an empty profile. Make sure to activate your basal profile.</string>

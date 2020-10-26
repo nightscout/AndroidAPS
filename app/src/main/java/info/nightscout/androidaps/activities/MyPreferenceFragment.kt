@@ -175,7 +175,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !config.NSCLIENT)
+            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)

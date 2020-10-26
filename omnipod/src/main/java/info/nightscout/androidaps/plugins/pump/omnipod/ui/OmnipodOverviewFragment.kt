@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
@@ -30,11 +31,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpVal
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -63,10 +64,10 @@ class OmnipodOverviewFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
-    @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: AapsOmnipodUtil
+    @Inject lateinit var omnipodAlertUtil: OmnipodAlertUtil
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var omnipodManager: AapsOmnipodManager
@@ -272,8 +273,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 })
             }
 
-            if (podStateManager.hasFaultEvent()) {
-                val faultEventCode = podStateManager.faultEvent.faultEventCode
+            if (podStateManager.isFaulted) {
+                val faultEventCode = podStateManager.faultEventCode
                 errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
 
@@ -298,10 +299,18 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value_over50)
                 omnipod_overview_reservoir.setTextColor(Color.WHITE)
             } else {
-                omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value, podStateManager.reservoirLevel)
-                warnColors.setColorInverse(omnipod_overview_reservoir, podStateManager.reservoirLevel, 50.0, 20.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
-                resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
-                resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
+                val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
+                    ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
+
+               // omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value, podStateManager.reservoirLevel)
+               // warnColors.setColorInverse(omnipod_overview_reservoir, podStateManager.reservoirLevel, 50.0, 20.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+               // resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+               // resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
+                omnipod_overview_reservoir.setTextColor(if (podStateManager.reservoirLevel < lowReservoirThreshold) {
+                    Color.RED
+                } else {
+                    Color.WHITE
+                })
             }
 
             omnipod_overview_pod_active_alerts.text = if (podStateManager.hasActiveAlerts()) {
@@ -347,9 +356,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             if (!podStateManager.isPodInitialized) {
                 resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
             } else {
-                if (PodProgressStatus.ACTIVATION_TIME_EXCEEDED == podStateManager.podProgressStatus) {
-                    resourceHelper.gs(R.string.omnipod_pod_status_activation_time_exceeded)
-                } else if (podStateManager.podProgressStatus.isBefore(PodProgressStatus.PRIMING_COMPLETED)) {
+                if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_activation)
                 } else {
                     resourceHelper.gs(R.string.omnipod_pod_status_waiting_for_cannula_insertion)
@@ -456,7 +463,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.podProgressStatus.isAtLeast(PodProgressStatus.PAIRING_COMPLETED)
+        omnipod_overview_button_refresh_status.isEnabled = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
             && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
     }
 

@@ -270,7 +270,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                     isTempTarget,
                     smbAllowed.value(),
                     uam.value(),
-                    advancedFiltering.value()
+                    advancedFiltering.value(),
+                    activePlugin.getActiveBgSource().getClass().getSimpleName().equals("DexcomPlugin")
             );
         } catch (JSONException e) {
             fabricPrivacy.logException(e);
