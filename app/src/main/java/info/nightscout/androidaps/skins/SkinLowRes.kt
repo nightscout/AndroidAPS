@@ -19,5 +19,9 @@ class SkinLowRes @Inject constructor(private val config: Config): SkinInterface 
             isSmallHeight || isLandscape -> R.layout.overview_fragment_landscape
             else                         -> R.layout.overview_fragment
         }
-
+    override fun actionsLayout(isLandscape : Boolean, isSmallWidth : Boolean): Int =
+        when {
+            isLandscape || !isSmallWidth -> R.layout.actions_fragment
+            else                         -> R.layout.actions_fragment_lowres
+        }
 }

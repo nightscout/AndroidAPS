@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.actions
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -62,10 +64,23 @@ class ActionsFragment : DaggerFragment() {
 
     private val pumpCustomActions = HashMap<String, CustomAction>()
     private val pumpCustomButtons = ArrayList<SingleClickButton>()
+    private var smallWidth = false
+    private var smallHeight = false
+    private lateinit var dm: DisplayMetrics
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.actions_fragment, container, false)
+        //check screen width
+        dm = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+
+        val screenWidth = dm.widthPixels
+        val screenHeight = dm.heightPixels
+        smallWidth = screenWidth <= Constants.SMALL_WIDTH
+        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
+        val landscape = screenHeight < screenWidth
+
+        return inflater.inflate(skinProvider.activeSkin().actionsLayout(landscape, smallWidth), container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -242,29 +257,9 @@ class ActionsFragment : DaggerFragment() {
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
-        val shortlabel = skinProvider.activeSkin().description == R.string.lowres_description
-        if (shortlabel) {
-            careportal_pblabel?.text = resourceHelper.gs(R.string.pump)
-            careportal_sensoragelabel?.text = ""
-            careportal_insulinagelabel?.text = ""
-            careportal_canulaagelabel?.text = ""
-            careportal_pbagelabel?.text = ""
-        } else {
-            careportal_pblabel.text = resourceHelper.gs(R.string.careportal_pb_label)
-            careportal_sensoragelabel.text = resourceHelper.gs(R.string.careportal_age_label)
-            careportal_insulinagelabel.text =resourceHelper.gs(R.string.careportal_age_label)
-            careportal_canulaagelabel.text =resourceHelper.gs(R.string.careportal_age_label)
-            careportal_pbagelabel.text =resourceHelper.gs(R.string.careportal_age_label)
-        }
-
         if (!config.NSCLIENT) {
             statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
-            if (activeBgSource.sensorBatteryLevel == -1)
-                careportal_senslevellabel?.text = ""
-            else
-                careportal_senslevellabel?.text = if (shortlabel) "" else  resourceHelper.gs(R.string.careportal_level_label)
-            careportal_inslevellabel?.text = if (shortlabel) "" else resourceHelper.gs(R.string.careportal_level_label)
-            careportal_pblevellabel?.text = if (shortlabel) "" else resourceHelper.gs(R.string.careportal_level_label)
+            careportal_senslevellabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
         } else {
             statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
             careportal_senslevellabel?.text = ""
