@@ -257,7 +257,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:17.1.0"
     implementation 'com.google.firebase:firebase-core:17.5.1'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
-    implementation 'com.google.firebase:firebase-database:19.50'
+    implementation 'com.google.firebase:firebase-database:19.5.0'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
     implementation "androidx.appcompat:appcompat:${appcompatVersion}"
