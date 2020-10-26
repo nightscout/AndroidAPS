@@ -1156,6 +1156,9 @@
     <string name="smscommunicator_otp_reset_title">Tilbakestill Authenticator nøkkel</string>
     <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil tilbakestille Authenticator nøkkel? Dette vil gjøre alle lagrede Authenticators ugyldige, og du må sette dem opp på nytt igjen.</string>
     <string name="smscommunicator_otp_reset_successful">Ny Authenticator nøkkel ble generert! Vennligst bruk oppdatert QR kode til å aktivere autentiserere.</string>
+    <string name="smscommunicator_otp_export_title">Eksporterer OTP hemmelig kode</string>
+    <string name="smscommunicator_otp_export_prompt">Er du sikker på at du vil kopiere OTP hemmelig kode til utklippstavlen?\n\nDu trenger bare det hvis din Authenticator app har problemer med skanning av QRCode og du ønsker å legge den inn manuelt, eller du ønsker å konfigurere maskinvare OTP-kode ved hjelp av dedikert app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP hemmelig kode (i base32-format) er eksportert og kopiert til utklippstavlen. Lim den inn i Authenticator app eller hardware OTP system!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installer Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skann kode for å sette opp AndroidAPS OTP koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>
