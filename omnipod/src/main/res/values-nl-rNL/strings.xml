@@ -14,10 +14,14 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Aantal uur voordat de Pod stopt</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Pieptonen voor \"Reservoir bijna leeg\" ingeschakeld</string>
     <string name="omnipod_config_low_reservoir_alert_units">Aantal eenheden</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Geluid voor onzekere TBR notificaties ingeschakeld</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Geluid voor onzekere SMB notificaties ingeschakeld</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Geluid voor onzekere bolus notificaties ingeschakeld</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Overige</string>
     <string name="omnipod_preference_category_alerts">Waarschuwingen</string>
     <string name="omnipod_preference_category_confirmation_beeps">Pieptonen</string>
+    <string name="omnipod_preference_category_notifications">Notificaties</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Geen actieve Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Setup wordt uitgevoerd (in afwachting van Pod activering)</string>
@@ -73,6 +77,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Het annuleren van de tijdelijk basaal is mogelijk mislukt. Vernieuw de Pod-status handmatig vanaf het Omnipod-tabblad.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Het instellen van een tijdelijke basaal is mislukt. Als een tijdelijk basaal eerder actief was, is deze mogelijk geannuleerd. Vernieuw de Pod-status handmatig vanaf het Omnipod tabblad.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Het instellen van tijdelijk basaal is misschien mislukt. Als een tijdelijke basaal eerder actief was, is deze geannuleerd. Vernieuw de Pod-status handmatig vanaf het Omnipod tabblad.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Instellen van de tijd is misschien mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod tabblad en hervat de toediening indien nodig.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Het instellen van de tijd is mislukt. Insulinetoediening is onderbroken! Hervat de toediening handmatig vanaf het Omnipod tabblad.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Het instellen van het basaal profiel is mislukt: geen profiel ontvangen. Controleer of je profiel geactiveerd is.</string>
