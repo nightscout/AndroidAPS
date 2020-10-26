@@ -180,8 +180,6 @@ open class DanaRS_Packet_APS_History_Events(
 
             DanaPump.PRIME             -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT PRIME (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
-                if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
-                    nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump))
                 status = "PRIME " + dateUtil.timeString(datetime)
             }
 
@@ -203,6 +201,8 @@ open class DanaRS_Packet_APS_History_Events(
 
             DanaPump.PRIMECANNULA      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
+                    nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump))
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }
 

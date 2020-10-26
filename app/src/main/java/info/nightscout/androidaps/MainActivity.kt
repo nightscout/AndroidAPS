@@ -50,6 +50,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
+import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
@@ -130,6 +132,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var overviewMenus: OverviewMenus
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -171,6 +174,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
+        it?.let {
+            importExportPrefs.importSharedPreferences(this, it)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // sets the main theme and color
