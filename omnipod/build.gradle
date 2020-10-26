@@ -23,8 +23,8 @@ android {
         buildConfigField "String", "VERSION", '"2.7.0-omnipod-0.4.0"'
         // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
         buildConfigField "String", "DEV_VERSION", '"2.7.0-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"6682e02c974127266ae755f700c46d7cfefb2607"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"21.10.2020"' // 21nd of October
+        buildConfigField "String", "DEV_VERSION_COMMIT", '"78ad3816841ac9075e02e58522325ce6993f8bb5"'
+        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"26.10.2020"' // 26th of October
     }
 
     kotlinOptions {
