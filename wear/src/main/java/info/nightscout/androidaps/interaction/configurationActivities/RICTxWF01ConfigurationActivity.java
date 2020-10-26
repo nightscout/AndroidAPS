@@ -7,10 +7,6 @@ import android.view.ViewGroup;
 import info.nightscout.androidaps.R;
 import preference.WearPreferenceActivity;
 
-/**
- * Created by rICTx-T1D on 28/Sep/20  (see https://github.com/rICTx-T1D)
- */
-
 public class RICTxWF01ConfigurationActivity extends WearPreferenceActivity {
 
     @Override

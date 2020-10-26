@@ -21,10 +21,6 @@ import java.util.Date;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
-/**
- * Created by rICTx-T1D on 16/Sep/20  (see https://github.com/rICTx-T1D)
- */
-
 public class RICTxWF01 extends BaseWatchFace {
     private long chartTapTime = 0;
     private long sgvTapTime = 0;
@@ -87,13 +83,6 @@ public class RICTxWF01 extends BaseWatchFace {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
         }
 
-        /* not be implement
-        if (loopLevel == 1) {
-            mLoop.setBackgroundResource(R.drawable.loop_green_25);
-        } else {
-            mLoop.setBackgroundResource(R.drawable.loop_red_25);
-        }
-        */
 
         if (chart != null) {
             highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
@@ -171,8 +160,6 @@ public class RICTxWF01 extends BaseWatchFace {
             }
         }
 
-
-        /* @ToDo optimize font-size  --> when direction and time-ago is off, increase font-size of sgv */
 
     }
 
