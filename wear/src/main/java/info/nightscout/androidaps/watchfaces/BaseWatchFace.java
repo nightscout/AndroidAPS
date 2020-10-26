@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
@@ -233,6 +234,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             setDataFields();
             setColor();
             missedReadingAlert();
+            checkVibrateHourly(oldTime,newTime);
 
             mRelativeLayout.measure(specW, specH);
             if (forceSquareCanvas) {
@@ -241,6 +243,16 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
             }
             invalidate();
+        }
+    }
+
+    private void checkVibrateHourly(WatchFaceTime oldTime, WatchFaceTime newTime){
+        Boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
+        if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
+            Log.i("hourlyVibratePref", "true --> " + newTime.toString());
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] vibrationPattern = {0, 150, 125, 100};
+            vibrator.vibrate(vibrationPattern, -1);
         }
     }
 

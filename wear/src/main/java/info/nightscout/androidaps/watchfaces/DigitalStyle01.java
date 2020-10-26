@@ -170,28 +170,6 @@ public class DigitalStyle01 extends BaseWatchFace {
     protected void setColorLowRes() {
         setColorDark();
     }
+    protected void setColorBright() { setColorDark();   /* getCurrentWatchMode() == WatchMode.AMBIENT or WatchMode.INTERACTIVE */}
 
-    protected void setColorBright() {
-        if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            setColorDark();
-        } else {
-            setColorDark();
-        }
-    }
-
-
-    @Override
-    protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
-        super.onTimeChanged(oldTime,newTime);
-
-        /* hourly vibration*/
-        Boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
-        if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
-            Log.i("hourlyVibratePref", "true --> " + newTime.toString());
-            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            long[] vibrationPattern = {0, 150, 125, 100};
-            vibrator.vibrate(vibrationPattern, -1);
-        }
-
-    }
 }
