@@ -16,6 +16,7 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="ko_lang" translatable="false">Korean</string>
     <string name="lt_lang" translatable="false">Lithuanian</string>
+    <string name="no_lang" translatable="false">Norwegian</string>
     <string name="pl_lang" translatable="false">Polish</string>
     <string name="pt_lang" translatable="false">Portuguese</string>
     <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
@@ -920,6 +921,7 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
+    <string name="key_virtualpump_uploadstatus" translatable="false">virtualpump_uploadstatus</string>
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
@@ -1375,6 +1377,10 @@
     <string name="smscommunicator_otp_reset_title">Reset Authenticator Key</string>
     <string name="smscommunicator_otp_reset_prompt">Are you sure to reset Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
     <string name="smscommunicator_otp_reset_successful">New Authenticator Key was generated! Please use updated QRCode to provision authenticators.</string>
+
+    <string name="smscommunicator_otp_export_title">Exporting OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Are you sure you want to copy OTP secret to clipboard?\n\nYou may only need that if your authenticator app have issues scanning QRCode, you want to enter it manually or you want to configure hardware OTP token using dedicated app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (in Base32 format) exported and copied into clipboard. Paste it into authenticator or hardware OTP burner!</string>
 
     <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AndroidAPS OTP codes</string>
