@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.util;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
@@ -34,6 +32,13 @@ public class TimeUtilTest {
     @Test
     public void testDateTimeToDurationAtDstReverseChange() {
         DateTime dateTime = new DateTime(2020, 3, 29, 23, 5, 1);
+
+        assertEquals(83101, TimeUtil.toDuration(dateTime).getStandardSeconds());
+    }
+
+    @Test
+    public void testDateTimeInOtherZone() {
+        DateTime dateTime = new DateTime(2020, 3, 29, 23, 5, 1, DateTimeZone.forID("America/Los_Angeles"));
 
         assertEquals(83101, TimeUtil.toDuration(dateTime).getStandardSeconds());
     }
