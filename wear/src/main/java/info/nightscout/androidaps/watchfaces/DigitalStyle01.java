@@ -21,7 +21,8 @@ import java.util.Date;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
-public class RICTxWF01 extends BaseWatchFace {
+public class DigitalStyle01 extends BaseWatchFace {
+    private static final long TIME_TAP_THRESHOLD = 800;
     private long chartTapTime = 0;
     private long sgvTapTime = 0;
 
@@ -29,7 +30,7 @@ public class RICTxWF01 extends BaseWatchFace {
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        layoutView = inflater.inflate(R.layout.activity_rictxwf01, null);
+        layoutView = inflater.inflate(R.layout.activity_digitalstyle01, null);
         performViewSetup();
     }
 
@@ -40,7 +41,7 @@ public class RICTxWF01 extends BaseWatchFace {
         Log.d("onTapCommand: DeviceWidth x DeviceHeight   ///  x , y, TapType  >> ", Integer.toString(getWidth()) + " x " + Integer.toString(getHeight()) + " ///  " + Integer.toString(x) + " , " + Integer.toString(y) + " , " + Integer.toString(tapType));
 
         if (tapType == TAP_TYPE_TAP) {
-            if (eventTime - sgvTapTime < 800) {
+            if (eventTime - sgvTapTime < TIME_TAP_THRESHOLD) {
                 Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -93,23 +94,26 @@ public class RICTxWF01 extends BaseWatchFace {
             basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
             pointSize = 1;
             setupCharts();
+            setWatchfaceStyle();
         }
+    }
 
+    private void setWatchfaceStyle(){
         /* frame styles*/
         LinearLayout mShapesElements = layoutView.findViewById(R.id.shapes_elements);
         if (mShapesElements != null) {
             String displayFormatType = (mShapesElements.getContentDescription().toString().startsWith("round") ? "round" : "rect");
-            String displayStyle=sharedPrefs.getString("rictxwf01_frameStyle", "full");
-            String displayFrameColor=sharedPrefs.getString("rictxwf01_frameColor", "red");
-            String displayFrameColorSaturation=sharedPrefs.getString("rictxwf01_frameColorSaturation", "500");
-            String displayFrameColorOpacity=sharedPrefs.getString("rictxwf01_frameColorOpacity", "1");
+            String displayStyle=sharedPrefs.getString("digitalstyle01_frameStyle", "full");
+            String displayFrameColor=sharedPrefs.getString("digitalstyle01_frameColor", "red");
+            String displayFrameColorSaturation=sharedPrefs.getString("digitalstyle01_frameColorSaturation", "500");
+            String displayFrameColorOpacity=sharedPrefs.getString("digitalstyle01_frameColorOpacity", "1");
 
             // Load image with shapes
-            String styleDrawableName = "rictxwf01_bg_" + displayStyle + "_" + displayFormatType;
+            String styleDrawableName = "digitalstyle01_bg_" + displayStyle + "_" + displayFormatType;
             try {
                 mShapesElements.setBackground(getResources().getDrawable(getResources().getIdentifier(styleDrawableName, "drawable", getApplicationContext().getPackageName())));
             } catch (Exception e) {
-                Log.e("rictxwf01_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
+                Log.e("digitalstyle01_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
             }
 
             // set background-tint-color
@@ -117,13 +121,13 @@ public class RICTxWF01 extends BaseWatchFace {
                 mShapesElements.setBackgroundTintList(null);
             } else {
                 String strColorName =((   displayFrameColor.equals("white") || displayFrameColor.equals("black")  )?displayFrameColor:displayFrameColor+"_"+displayFrameColorSaturation);
-                Log.v("rictxwf01_strColorName",strColorName);
+                Log.v("digitalstyle01_strColorName",strColorName);
                 try {
                     ColorStateList colorStateList = ContextCompat.getColorStateList(getApplicationContext(), getResources().getIdentifier(strColorName, "color", getApplicationContext().getPackageName()));
                     mShapesElements.setBackgroundTintList(colorStateList);
                 } catch (Exception e) {
                     mShapesElements.setBackgroundTintList(null);
-                    Log.e("rictxwf01_ColorName", "COLOR NOT FOUND >> " + strColorName);
+                    Log.e("digitalstyle01_colorName", "COLOR NOT FOUND >> " + strColorName);
                 }
             }
 
@@ -181,7 +185,7 @@ public class RICTxWF01 extends BaseWatchFace {
         super.onTimeChanged(oldTime,newTime);
 
         /* hourly vibration*/
-        Boolean hourlyVibratePref = sharedPrefs.getBoolean("rictxwf01_vibrateHourly", false);
+        Boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
             Log.i("hourlyVibratePref", "true --> " + newTime.toString());
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);

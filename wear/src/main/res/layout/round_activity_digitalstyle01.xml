@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".watchfaces.RICTxWF01"
+    tools:context=".watchfaces.DigitalStyle01"
     tools:deviceIds="wear_round">
 
 
@@ -15,7 +15,7 @@
         android:id="@+id/shapes_elements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rictxwf01_bg_full_round"
+        android:background="@drawable/digitalstyle01_bg_full_round"
         android:contentDescription="round-shape-elements"
         android:orientation="horizontal" />
 

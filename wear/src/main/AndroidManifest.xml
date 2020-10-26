@@ -163,19 +163,19 @@
         </service>
 
         <service
-            android:name=".watchfaces.RICTxWF01"
+            android:name=".watchfaces.DigitalStyle01"
             android:allowEmbedded="true"
-            android:label="AAPS (rICTx_WF01)"
+            android:label="AAPS (DigitalStyle01)"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/watchface_rictxwf01" />
+                android:resource="@drawable/watchface_digitalstyle01" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="info.nightscout.androidaps.interaction.configurationActivities.RICTxWF01ConfigurationActivity" />
+                android:value="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyle01ConfigAct" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -507,9 +507,9 @@
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:label="@string/menu_tempt" />
-        <activity android:name=".interaction.configurationActivities.RICTxWF01ConfigurationActivity">
+        <activity android:name=".interaction.configurationActivities.DigitalStyle01ConfigAct">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.interaction.configurationActivities.RICTxWF01ConfigurationActivity" />
+                <action android:name="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyle01ConfigAct" />
 
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />

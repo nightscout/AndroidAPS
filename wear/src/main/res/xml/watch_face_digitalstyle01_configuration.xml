@@ -4,31 +4,31 @@
 
 
     <ListPreference
-        android:key="rictxwf01_frameStyle"
+        android:key="digitalstyle01_frameStyle"
         android:title="@string/pref_choose_your_style"
         android:defaultValue="full"
-        android:entries="@array/rictxwf01_styles_name"
-        android:entryValues="@array/rictxwf01_styles_values"/>
+        android:entries="@array/digitalstyle01_styles_name"
+        android:entryValues="@array/digitalstyle01_styles_values"/>
 
     <ListPreference
-        android:key="rictxwf01_frameColor"
+        android:key="digitalstyle01_frameColor"
         android:title="@string/pref_choose_your_color"
         android:defaultValue="red"
-        android:entries="@array/rictxwf01_color_name"
-        android:entryValues="@array/rictxwf01_color_values"/>
+        android:entries="@array/digitalstyle01_color_name"
+        android:entryValues="@array/digitalstyle01_color_values"/>
     <ListPreference
-        android:key="rictxwf01_frameColorSaturation"
+        android:key="digitalstyle01_frameColorSaturation"
         android:title="@string/pref_choose_your_color_saturation"
         android:defaultValue="700"
-        android:entries="@array/rictxwf01_color_saturation"
-        android:entryValues="@array/rictxwf01_color_saturation"/>
+        android:entries="@array/digitalstyle01_color_saturation"
+        android:entryValues="@array/digitalstyle01_color_saturation"/>
 
     <ListPreference
-        android:key="rictxwf01_frameColorOpacity"
+        android:key="digitalstyle01_frameColorOpacity"
         android:title="@string/pref_choose_your_color_opacity"
         android:defaultValue="1"
-        android:entries="@array/rictxwf01_color_opacity_name"
-        android:entryValues="@array/rictxwf01_color_opacity_value"/>
+        android:entries="@array/digitalstyle01_color_opacity_name"
+        android:entryValues="@array/digitalstyle01_color_opacity_value"/>
 
     <CheckBoxPreference
         android:key="show_date"
@@ -45,7 +45,7 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
-        android:key="rictxwf01_vibrateHourly"
+        android:key="vibrate_Hourly"
         android:title="@string/pref_vibrate_hourly"
         android:defaultValue="false"
         app:wear_iconOff="@drawable/settings_off"
