@@ -1156,6 +1156,9 @@
     <string name="smscommunicator_otp_reset_title">Reset Authentificatie-sleutel</string>
     <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Autentificatie-sleutel wilt resetten? Met deze actie maak je alle Authentificatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
     <string name="smscommunicator_otp_reset_successful">Er is een nieuwe Authentificatie-sleutel gegenereerd! Gebruik de nieuwe QR-Code voor het instellen van geautoriseerde telefoons.</string>
+    <string name="smscommunicator_otp_export_title">OTP-secret wordt geëxporteerd</string>
+    <string name="smscommunicator_otp_export_prompt">Weet je zeker dat je het OTP-secret naar het klembord wilt kopiëren?\n\nJe hebt dit alleen nodig als je Authenticator-app problemen heeft met het scannen van QR-codes, als je het handmatig wilt invullen of als je een hardware OTP-token met een speciale app wilt configureren.</string>
+    <string name="smscommunicator_otp_export_successful">OTP-secret (in Base32-formaat) is geëxporteerd en gekopieerd naar het klembord. Plak het in de Authenticator-app of de app van de hardware OTP-token!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AndroidAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
