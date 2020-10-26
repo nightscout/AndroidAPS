@@ -12,8 +12,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -261,14 +263,12 @@ class ImportExportPrefs @Inject constructor(
     }
 
     fun importSharedPreferences(activity: FragmentActivity) {
-        val callForPrefFile = activity.registerForActivityResult(PrefsFileContract()) {
-            it?.let {
-                importSharedPreferences(activity, it)
-            }
-        }
 
         try {
-            callForPrefFile.launch(null)
+            if (activity is SingleFragmentActivity)
+                activity.callForPrefFile.launch(null)
+            if (activity is MainActivity)
+                activity.callForPrefFile.launch(null)
         } catch (e: IllegalArgumentException) {
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
@@ -277,12 +277,12 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
+    public fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
 
         askToConfirmImport(activity, importFile) { password ->
 
             val format: PrefsFormat = when (importFile.handler) {
-                PrefsFormatsHandler.CLASSIC   -> classicPrefsFormat
+                PrefsFormatsHandler.CLASSIC -> classicPrefsFormat
                 PrefsFormatsHandler.ENCRYPTED -> encryptedPrefsFormat
             }
 
