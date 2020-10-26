@@ -991,6 +991,7 @@
     <string name="storage">limit wielkości pamięci wewnętrznej</string>
     <string name="diskfull">Zwolnij co najmniej %1$d MB z pamięci wewnętrznej! Pętla zatrzymana!</string>
     <string name="wrongformat">Błędny format</string>
+    <string name="wrongTbrDuration">Czas trwania TBR musi być wielokrotnością %1$d minut i większy niż 0.</string>
     <string name="sms_wrongcode">Zły kod. Polecenie anulowano.</string>
     <string name="notconfigured">Nie skonfigurowano</string>
     <string name="profileswitchcreated">Zmiana profilu wykonana</string>
@@ -1156,6 +1157,9 @@
     <string name="smscommunicator_otp_reset_title">Resetuj klucz uwierzytelniania</string>
     <string name="smscommunicator_otp_reset_prompt">Czy na pewno zresetować klucz uwierzytelniający? Spowoduje to, że wszystkie aktualnie skonfigurowane uwierzytelniania będą niepoprawne i konieczne będzie ponowne ich skonfigurowanie.</string>
     <string name="smscommunicator_otp_reset_successful">Nowy klucz uwierzytelniający został wygenerowany! Proszę użyć zaktualizowanego kodu QRCode do potwierdzenia uwierzytelniania.</string>
+    <string name="smscommunicator_otp_export_title">Eksportowanie sekretu OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Czy na pewno chcesz skopiować klucz tajny OTP do schowka?\n\nMożesz tego potrzebować jeśli Twoja aplikacja uwierzytelniająca (authenticator) ma problemy ze skanowaniem kodu QR, chcesz wprowadzić klucz ręcznie lub chcesz skonfigurować sprzętowy token OTP za pomocą dedykowanej aplikacji.</string>
+    <string name="smscommunicator_otp_export_successful">Klucz tajny OTP (w formacie Base32) został wyeksportowany i skopiowany do schowka. Wklej go przy ręcznym dodawaniu konta w aplikacji authenticator lub użyj w aplikacji konfigurującej tokeny sprzętowe!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Zainstaluj uwierzytelnianie</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Zeskanuj kod, aby skonfigurować kody OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Sprawdź hasło jednorazowe</string>
@@ -1219,4 +1223,5 @@
     <string name="worker_state">Stan procesu: %s</string>
     <string name="uploaded_data">Przesłane dane</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Następujące dane zostaną przesłane na konto Open Humans: wartości Glikemii, bolusy, węglowodany, zdarzenia z portalu opieki (z wyjątkiem notatek), rozszerzone bolusy, przełączenia profilu, całkowite dawki dobowe, bazy tymczasowe, cele tymczasowe, preferencje, wersja aplikacji, model urządzenia i wymiary ekranu. Dane niejawne lub prywatne, takie jak adres URL strony Nightscout lub klucz autoryzacji API, nie zostaną przesłane.</string>
+    <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
 </resources>

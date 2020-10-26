@@ -991,6 +991,7 @@ Unerwartetes Verhalten.</string>
     <string name="storage">interne Speicherbegrenzung</string>
     <string name="diskfull">Mindestens %1$d MB freier interer Speicher benötigt! Loop abgeschaltet!</string>
     <string name="wrongformat">Falsches Format</string>
+    <string name="wrongTbrDuration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
     <string name="sms_wrongcode">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="notconfigured">Nicht konfiguriert</string>
     <string name="profileswitchcreated">Profilwechsel wurde erstellt</string>
@@ -1156,6 +1157,9 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_reset_title">Authentifikatorschlüssel zurücksetzen</string>
     <string name="smscommunicator_otp_reset_prompt">Willst Du wirklich den Authentifikatorschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
     <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
+    <string name="smscommunicator_otp_export_title">OTP-Secret exportieren</string>
+    <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
+    <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
@@ -1219,4 +1223,5 @@ Unerwartetes Verhalten.</string>
     <string name="worker_state">Worker State: %s</string>
     <string name="uploaded_data">Daten hochgeladen</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Die folgenden Daten werden auf Dein Open Humans-Konto hochgeladen: Glukosewerte, Boli, Kohlenhydrate, Careportal-Ereignisse (außer Notizen), erweiterte Boli, Profilwechsel, Gesamttagesdosen, temporäre Basalwerte, Temporäre Ziele, Einstellungen, Anwendungsversion, Gerätemodell und Bildschirmabmessungen. Vertrauliche oder private Informationen wie z.B. Deine Nightscout-URL oder Dein API-Secret werden nicht hochgeladen.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
 </resources>

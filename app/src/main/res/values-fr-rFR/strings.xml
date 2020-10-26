@@ -991,6 +991,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="storage">stockage interne limité</string>
     <string name="diskfull">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <string name="wrongformat">Format incorrect</string>
+    <string name="wrongTbrDuration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
     <string name="sms_wrongcode">Code incorrect. Commande annulée.</string>
     <string name="notconfigured">Non configuré</string>
     <string name="profileswitchcreated">Changement de profil effectué</string>
@@ -1175,7 +1176,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="classic_description">Thème d\'origine</string>
-    <string name="buttonson_description">Les boutons sont toujours affichés en bas de l\'écran</string>
+    <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
     <string name="comapareprofile">Comparer les profils</string>
@@ -1219,4 +1220,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="worker_state">État du travail : %s</string>
     <string name="uploaded_data">Données transférées</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Les données suivantes seront téléchargées sur votre compte Open Humans : glycémie, bolus, glucides, événements Careportal (sauf les notes), bolus étendus, changements de profil, doses quotidiennes totales, basales temporaires, cibles temporaires, préférences, version de l\'application, modèle de l\'appareil et dimensions de l\'écran. Les informations secrètes ou privées telles que votre URL Nightscout ou votre API secret ne seront pas téléchargés.</string>
+    <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
 </resources>

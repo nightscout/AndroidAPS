@@ -21,6 +21,7 @@
     <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
     <string name="description_insulin_rapid">Setări prestabilite pentru insulinele Humalog sau NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Setări prestabilite pentru Fiasp</string>
+    <string name="description_insulin_lyumjev">Setări prestabilite pentru Lyumjev</string>
     <string name="description_insulin_free_peak">Vă permite definirea vârfului activităţii insulinei şi ar trebui folosit doar de către utilizatorii avansaţi</string>
     <string name="description_loop">Activare sau dezactivare a implementării declanşatoare pentru buclă.</string>
     <string name="description_ns_client">Sincronizare a datelor cu Nightscout</string>
@@ -798,6 +799,8 @@
     <string name="bgsourcesetup">Configurați sursa glicemiilor</string>
     <string name="setupwizard_profile_description">Selectați sursa sau profilul. Dacă pacientul este copil, ar fi bine să alegeți un profil NS. Dacă nu aveți profil NS, puteți alege profil local. De aici alegeți doar sursa profilului; pentru a utiliza acest profil, trebuie să îl activați prin executarea unei \"Schimbări de profil\"</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Se așteaptă conexiunea la RileyLink…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
     <string name="permission">Permisiune</string>
     <string name="askforpermission">Solicitați permisiunea</string>
@@ -987,6 +990,7 @@
     <string name="storage">restricție de stocare internă</string>
     <string name="diskfull">Eliberați cel puțin %1$d MB din spațiunl de stocare al telefonlui! Buclă dezactivată!</string>
     <string name="wrongformat">Format greșit</string>
+    <string name="wrongTbrDuration">Durata RBT trebuie să fie un multiplu de %1$d minute și mai mare de 0.</string>
     <string name="sms_wrongcode">Cod greșit. Comandă anulată.</string>
     <string name="notconfigured">Nu este configurat</string>
     <string name="profileswitchcreated">Schimbare de profil creată</string>
