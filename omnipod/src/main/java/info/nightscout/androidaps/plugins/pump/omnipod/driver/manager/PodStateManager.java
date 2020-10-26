@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Omnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 
 // TODO add nullchecks on some setters
 public abstract class PodStateManager {
@@ -365,8 +366,7 @@ public abstract class PodStateManager {
     }
 
     public final Duration getScheduleOffset() {
-        DateTime now = getTime();
-        return new Duration(now.withTimeAtStartOfDay(), now);
+        return TimeUtil.toDuration(getTime());
     }
 
     public final BasalSchedule getBasalSchedule() {
@@ -503,7 +503,7 @@ public abstract class PodStateManager {
         if (isTempBasalRunningAt(time)) {
             return getTempBasalAmount();
         }
-        Duration offset = new Duration(time.withTimeAtStartOfDay(), time);
+        Duration offset = TimeUtil.toDuration(time);
         return basalSchedule.rateAt(offset);
     }
 
