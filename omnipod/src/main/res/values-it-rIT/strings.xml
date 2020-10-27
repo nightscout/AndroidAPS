@@ -18,6 +18,7 @@
     <string name="omnipod_preference_category_other">Altro</string>
     <string name="omnipod_preference_category_alerts">Avvisi</string>
     <string name="omnipod_preference_category_confirmation_beeps">Beep di conferma</string>
+    <string name="omnipod_preference_category_notifications">Notifiche</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Nessun pod attivo</string>
     <string name="omnipod_pod_status_waiting_for_activation">Configurazione in corso (attesa attivazione pod)</string>
@@ -73,6 +74,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">La cancellazione della basale temporanea potrebbe essere fallita. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">L\'Impostazione dell\'ora potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione dalla scheda Omnipod.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Impossibile impostare il profilo basale: ricevuto un profilo vuoto. Assicurati di attivare il tuo profilo basale.</string>
@@ -80,6 +82,7 @@
     <string name="omnipod_error_unknown_custom_command">Comando personalizzato sconosciuto: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Impossibile leggere il log impulsi</string>
     <string name="omnipod_error_failed_to_refresh_status">Impossibile aggiornare lo stato</string>
+    <string name="omnipod_error_failed_to_acknowledge_alerts">Impossibile confermare gli avvisi</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Impossibile sospendere l\'erogazione</string>
     <string name="omnipod_error_failed_to_set_time">Impossibile impostare l\'ora</string>
     <string name="omnipod_error_failed_to_resume_delivery">Impossibile riprendere l\'erogazione</string>
@@ -93,8 +96,10 @@
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Conferma</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Ora e/o fuso orario cambiati nel pod.</string>
+    <string name="omnipod_confirmation_expiration_alerts_updated">La configurazione degli avvisi è stata aggiornata nel pod.</string>
     <string name="omnipod_confirmation_time_on_pod_updated">L\'ora nel pod è stata aggiornata.</string>
     <string name="omnipod_confirmation_suspended_delivery">Tutta l\'erogazione di insulina è stata sospesa.</string>
+    <string name="omnipod_confirmation_acknowledged_alerts">Gli avvisi attivi sono stati confermati.</string>
     <string name="omnipod_confirmation_delivery_resumed">L\'erogazione di insulina è ripresa.</string>
     <string name="omnipod_confirmation_pod_suspended">Pod sospeso</string>
     <!-- Omnipod - Commands -->
