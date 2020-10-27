@@ -1156,6 +1156,7 @@
     <string name="smscommunicator_otp_reset_title">Resetovat klíč pro autentikátory</string>
     <string name="smscommunicator_otp_reset_prompt">Opravdu chcete obnovit ověřovací klíč? Vyresetujete všechny aktuálně nakonfigurované autentikátory a budete je muset znovu nastavit.</string>
     <string name="smscommunicator_otp_reset_successful">Byl vygenerován nový klíč autentikátoru! Prosím, použijte aktualizovaný QR kód pro nastavení autentikátorů.</string>
+    <string name="smscommunicator_otp_export_title">Export OTP tajného klíče</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainstalujte Autentikátor</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pro nastavení kódů OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
