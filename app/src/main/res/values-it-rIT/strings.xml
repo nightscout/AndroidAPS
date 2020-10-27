@@ -1156,6 +1156,7 @@
     <string name="smscommunicator_otp_reset_title">Resetta chiave autenticatore</string>
     <string name="smscommunicator_otp_reset_prompt">Sei sicuro di resettare la chiave autenticatore? Renderà non validi tutti gli autenticatori attualmente configurati e sarà necessario configurarli nuovamente.</string>
     <string name="smscommunicator_otp_reset_successful">La nuova chiave autenticatore è stata generata! Utilizza il QRCode aggiornato per fornire gli autenticatori.</string>
+    <string name="smscommunicator_otp_export_title">Esportazione OTP secret</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installa l\'autenticatore</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scansione il codice per configurare i codici OTP di AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testa OTP</string>
