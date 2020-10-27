@@ -10,19 +10,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
@@ -30,8 +31,9 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.OKDialog;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -39,7 +41,17 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mike on 13/01/17.
  */
 
-public class TreatmentsTempTargetFragment extends Fragment {
+public class TreatmentsTempTargetFragment extends DaggerFragment {
+    @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject SP sp;
+    @Inject RxBusWrapper rxBus;
+    @Inject ProfileFunction profileFunction;
+    @Inject ResourceHelper resourceHelper;
+    @Inject NSUpload nsUpload;
+    @Inject UploadQueue uploadQueue;
+    @Inject FabricPrivacy fabricPrivacy;
+    @Inject DateUtil dateUtil;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private RecyclerView recyclerView;
@@ -63,18 +75,18 @@ public class TreatmentsTempTargetFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
-            String units = ProfileFunctions.getSystemUnits();
+            String units = profileFunction.getUnits();
             TempTarget tempTarget = tempTargetList.getReversed(position);
             holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(tempTarget._id) ? View.VISIBLE : View.GONE);
             if (!tempTarget.isEndingEvent()) {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTarget.originalEnd()));
+                holder.date.setText(dateUtil.dateAndTimeString(tempTarget.date) + " - " + dateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
                 holder.low.setText(tempTarget.lowValueToUnitsToString(units));
                 holder.high.setText(tempTarget.highValueToUnitsToString(units));
                 holder.reason.setText(tempTarget.reason);
             } else {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date));
+                holder.date.setText(dateUtil.dateAndTimeString(tempTarget.date));
                 holder.duration.setText(R.string.cancel);
                 holder.low.setText("");
                 holder.high.setText("");
@@ -83,9 +95,9 @@ public class TreatmentsTempTargetFragment extends Fragment {
                 holder.reasonColon.setText("");
             }
             if (tempTarget.isInProgress() && tempTarget == currentlyActiveTarget) {
-                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                holder.date.setTextColor(resourceHelper.gc(R.color.colorActive));
             } else if (tempTarget.date > DateUtil.now()) {
-                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorScheduled));
+                holder.date.setTextColor(resourceHelper.gc(R.color.colorScheduled));
             } else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
             }
@@ -130,15 +142,15 @@ public class TreatmentsTempTargetFragment extends Fragment {
                 remove = itemView.findViewById(R.id.temptargetrange_remove);
                 remove.setOnClickListener(v -> {
                     final TempTarget tempTarget = (TempTarget) v.getTag();
-                    OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.removerecord),
-                            MainApp.gs(R.string.careportal_temporarytarget) + ": " + tempTarget.friendlyDescription(ProfileFunctions.getSystemUnits()) +
-                                    "\n" + DateUtil.dateAndTimeString(tempTarget.date),
+                    OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.removerecord),
+                            resourceHelper.gs(R.string.careportal_temporarytarget) + ": " + tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper) +
+                                    "\n" + dateUtil.dateAndTimeString(tempTarget.date),
                             (dialog, id) -> {
                                 final String _id = tempTarget._id;
                                 if (NSUpload.isIdValid(_id)) {
-                                    NSUpload.removeCareportalEntryFromNS(_id);
+                                    nsUpload.removeCareportalEntryFromNS(_id);
                                 } else {
-                                    UploadQueue.removeID("dbAdd", _id);
+                                    uploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(tempTarget);
                             }, null);
@@ -158,17 +170,17 @@ public class TreatmentsTempTargetFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTempTargetsFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(treatmentsPlugin.getTempTargetsFromHistory());
         recyclerView.setAdapter(adapter);
 
         Button refreshFromNS = view.findViewById(R.id.temptargetrange_refreshfromnightscout);
         refreshFromNS.setOnClickListener(v ->
-                OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.refresheventsfromnightscout) + " ?", () -> {
+                OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", () -> {
                     MainApp.getDbHelper().resetTempTargets();
-                    RxBus.INSTANCE.send(new EventNSClientRestart());
+                    rxBus.send(new EventNSClientRestart());
                 }));
 
-        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, true);
+        boolean nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true);
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
 
@@ -178,10 +190,10 @@ public class TreatmentsTempTargetFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), fabricPrivacy::logException)
         );
         updateGui();
     }
@@ -193,6 +205,6 @@ public class TreatmentsTempTargetFragment extends Fragment {
     }
 
     private void updateGui() {
-        recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTempTargetsFromHistory()), false);
+        recyclerView.swapAdapter(new RecyclerViewAdapter(treatmentsPlugin.getTempTargetsFromHistory()), false);
     }
 }

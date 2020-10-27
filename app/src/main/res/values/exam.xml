@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">What is true about DIA?</string>
-    <string name="dia_label">Topic: Duration of Insulin Action</string>
+    <string name="dia_label_exam">Topic: Duration of Insulin Action</string>
     <string name="dia_minimumis3h">The minimum value is 3 hours.</string>
     <string name="dia_minimumis5h">The minimum value is 5 hours.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
@@ -122,7 +122,7 @@
     <string name="nsclient_looponiphone">Loop app on iPhone.</string>
     <string name="nsclient_spikeiphone">Spike app on iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
-    <string name="isf_label">Topic: Insulin Sensitivity Factor</string>
+    <string name="isf_label_exam">Topic: Insulin Sensitivity Factor</string>
     <string name="isf_increasingvalue">Higher ISF values lead to less insulin delivery when AAPS corrects for high BG.</string>
     <string name="isf_decreasingvalue">Lower ISF values lead to less insulin delivery when AAPS corrects for high BG.</string>
     <string name="isf_noeffect">Changing ISF values has no effect on the amount of insulin delivered when AAPS corrects for high BG.</string>
@@ -130,7 +130,7 @@
     <string name="isf_profile">Changing the ISF value in your profile is enough to apply the change.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label">Topic: The IC Ratio</string>
+    <string name="ic_label_exam">Topic: The IC Ratio</string>
     <string name="ic_increasingvalue">Higher IC ratios lead to less insulin delivered for a given amount of carbs.</string>
     <string name="ic_decreasingvalue">Lower IC ratios lead to less insulin delivered for a given amount of carbs.</string>
     <string name="ic_noeffect">If you have 0 COB, changing the IC ratio will lead to a different amount of insulin to correct a given BG value.</string>
@@ -149,7 +149,7 @@
     <string name="profileswitch_targethigher">Target wiil be 10% higher.</string>
     <string name="profileswitch_targetlower">Target will be 10% lower.</string>
     <string name="profileswitch_targetbottom">Only bottom target will be 10% lower.</string>
-    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitchtime_iwant">If you wake up 1h earlier than usual, how should you notify AAPS of the change in your schedule?</string>
     <string name="profileswitchtime_1">Initiate a profile switch with a timeshift of 1</string>
     <string name="profileswitchtime__1">Initiate a profile switch with a timeshift of -1</string>

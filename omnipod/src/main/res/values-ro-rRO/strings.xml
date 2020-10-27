@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Non translatable -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_bolus_beeps_enabled">Bip pentru Bolus activat</string>
+    <string name="omnipod_config_basal_beeps_enabled">Bip pentru Bazală activat</string>
+    <string name="omnipod_config_smb_beeps_enabled">Bip pentru SMB activat</string>
+    <string name="omnipod_config_tbr_beeps_enabled">Bip pentru TBR activat</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Butonul \"Suspendare Livrare\" activat</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Butonul \"Pulse Log\" activat</string>
+    <string name="omnipod_config_time_change_enabled">Detectare fusului orar activată</string>
+    <string name="omnipod_config_expiration_reminder_enabled">Notificare expirare activat</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Numar de ore înainte de oprire</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Alertă rezervor aproape gol activată</string>
+    <string name="omnipod_config_low_reservoir_alert_units">Număr unități</string>
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Altele</string>
+    <string name="omnipod_preference_category_alerts">Alerte</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Bip-uri de confirmare</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Niciun Pod activ</string>
+    <string name="omnipod_pod_status_waiting_for_cannula_insertion">Inițializarea este în curs (se așteaptă inserarea canulei)</string>
+    <string name="omnipod_pod_status_running">Rulează</string>
+    <string name="omnipod_pod_status_suspended">Suspendat</string>
+    <string name="omnipod_pod_status_pod_fault">Defecțiune Pod</string>
+    <string name="omnipod_pod_status_activation_time_exceeded">Timp de activare depăşit</string>
+    <string name="omnipod_pod_status_inactive">Inactiv</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod defect: %1$s %2$s</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_pairing_reminder">Notificare Finalizare împerechere</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>
+    <string name="omnipod_alert_expiration">Pod-ul va expira în curând</string>
+    <string name="omnipod_alert_expiration_advisory">Pod-ul va expira în curând</string>
+    <string name="omnipod_alert_shutdown_imminent">Oprirea este iminentă</string>
+    <string name="omnipod_alert_low_reservoir">Nivel rezervor scăzut</string>
+    <string name="omnipod_alert_unknown_alert">Alertă necunoscută</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_history_item_description">Descriere</string>
+    <string name="omnipod_history_item_source">Sursă</string>
+    <string name="omnipod_history_item_date">Data</string>
+    <string name="omnipod_history_type">Tip:</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_warning">Atenție</string>
+    <string name="omnipod_error_rileylink_address_invalid">Adresa RileyLink invalidă.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operațiunea nu este posibilă.\n\nTrebuie să configuraţi Omnipod înainte de a putea efectua această operațiune.</string>
+    <string name="omnipod_error_pod_not_attached">Niciun Pod activ</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setarea profilului bazal a eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Setarea profilului bazal s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_suspended">Setarea profilului basal a eşuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setarea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, ar fi putut fi anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setarea bazalei temporare s-ar putea sa fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setarea timpului s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_error_set_time_failed_delivery_suspended">Setarea timpului a eșuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
+    <!-- Omnipod - Confirmation -->
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_cmd_deactivate_pod">Dezactivare Pod</string>
+    <string name="omnipod_cmd_discard_pod">Baandonare Pod</string>
+    <string name="omnipod_cmd_set_bolus">Setează bolus</string>
+    <string name="omnipod_cmd_cancel_bolus">Anulează bolus</string>
+    <string name="omnipod_cmd_set_tbr">Setează bazala temporară</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Anulați bazală temporară (de către driver)</string>
+    <string name="omnipod_cmd_cancel_tbr">Anulează bazala temporară</string>
+    <string name="omnipod_cmd_set_basal_schedule">Setează programul bazalei</string>
+    <string name="omnipod_cmd_get_pod_status">Obțineți Status Pod</string>
+    <string name="omnipod_cmd_get_pod_info">Obțineți Informații Pod</string>
+    <string name="omnipod_cmd_set_time">Setați ora</string>
+    <string name="omnipod_cmd_configure_alerts">Configurare alerte</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Confirmare alerte</string>
+    <string name="omnipod_cmd_suspend_delivery">Suspendați livrarea</string>
+    <string name="omnipod_cmd_resume_delivery">Reluați livrarea</string>
+    <string name="omnipod_cmd_unknown_entry">Inregistrare nerecunoscută</string>
+    <string name="omnipod_cmd_set_fake_suspended_tbr">Se setează o bazală temporară falsă deoarece Pod-ul este suspendat</string>
+    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Anulează bazala temporară falsă creată pentru că Pod-ul a fost suspendat</string>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Wizard common -->
+    <string name="omnipod_wizard_button_finish">Finalizare</string>
+    <string name="omnipod_wizard_button_next">Următor</string>
+    <!-- Omnipod - Pod activation Wizard -->
+    <!-- Omnipod - Pod deactivation Wizard -->
+    <!-- Omnipod - Overview -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
+    <string name="omnipod_uncertain">incert</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_moments_ago">Acum câteva momente</string>
+    <string name="omnipod_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
+    <string name="omnipod_composite_time">%1$s și %2$s</string>
+    <string name="omnipod_time_ago">%1$s în urmă</string>
+    <plurals name="omnipod_minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
+    <plurals name="omnipod_hours">
+        <item quantity="one">%1$d oră</item>
+        <item quantity="few">%1$d ore</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="omnipod_days">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d zile</item>
+    </plurals>
+</resources>

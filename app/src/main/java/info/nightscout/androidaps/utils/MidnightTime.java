@@ -21,6 +21,17 @@ public class MidnightTime {
         return c.getTimeInMillis();
     }
 
+    public static long calcPlusMinutes(int minutes) {
+        int h = minutes / 60;
+        int m = minutes % 60;
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, h);
+        c.set(Calendar.MINUTE, m);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTimeInMillis();
+    }
+
     public static long calc(long time) {
         Long m;
         synchronized (times) {

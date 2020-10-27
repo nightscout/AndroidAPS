@@ -28,6 +28,10 @@
         android:title="@string/nav_survey" />
 -->
     <item
+        android:id="@+id/nav_defaultprofile"
+        app:showAsAction="never"
+        android:title="@string/nav_profilehelper" />
+    <item
         android:id="@+id/nav_about"
         app:showAsAction="never"
         android:title="@string/nav_about" />

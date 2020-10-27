@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns2="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleColor">@color/dialog_title_color</item>
+        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="AppThemeWarningDialog" parent="AppTheme">
+        <item name="alertDialogTheme">@style/AppThemeWarningDialogTheme</item>
+        <item name="dialogTitleBackground">@color/warningAlertBackground</item>
+        <item name="dialogTitleColor">@color/warningAlertHeaderText</item>
+        <item name="dialogTitleIconTint">@color/warningAlertHeaderText</item>
+    </style>
+
+    <style name="AppThemeWarningDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
+        <item name="android:windowBackground">@drawable/alert_border_warning</item>
+        <item name="colorAccent">@color/warningAlertBackground</item>
+    </style>
+
+    <style name="AppThemeErrorDialog" parent="AppTheme">
+        <item name="alertDialogTheme">@style/AppThemeErrorDialogTheme</item>
+        <item name="dialogTitleBackground">@color/errorAlertBackground</item>
+        <item name="dialogTitleColor">@color/errorAlertHeaderText</item>
+        <item name="dialogTitleIconTint">@color/errorAlertHeaderText</item>
+    </style>
+
+    <style name="AppThemeErrorDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
+        <item name="android:windowBackground">@drawable/alert_border_error</item>
+        <item name="colorAccent">@color/errorAlertBackground</item>
+    </style>
+
+    <style name="ButtonSmallFontStyle">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="ButtonMediumFontStyle">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!--    Buttons from MaterialDateTimePicker    -->
+    <dimen name="mdtp_material_button_height">48dp</dimen>
+    <dimen name="mdtp_material_button_textsize">14sp</dimen>
+    <dimen name="mdtp_material_button_minwidth">64dp</dimen>
+    <dimen name="mdtp_material_button_textpadding_horizontal">8dp</dimen>
+
+    <style name="mdtp_ActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/mdtp_material_button_height</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="mdtp_ActionButton.Text" ns2:ignore="NewApi">
+        <item name="android:textSize">@dimen/mdtp_material_button_textsize</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:background">@drawable/mdtp_material_button_background</item>
+        <item name="android:minWidth">@dimen/mdtp_material_button_minwidth</item>
+        <item name="android:paddingLeft">@dimen/mdtp_material_button_textpadding_horizontal</item>
+        <item name="android:paddingRight">@dimen/mdtp_material_button_textpadding_horizontal</item>
+        <item name="android:textColor">@color/mdtp_button_color</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+</resources>

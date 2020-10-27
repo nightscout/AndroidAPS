@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Non translatable -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Outro</string>
+    <string name="omnipod_preference_category_alerts">Alertas</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Beeps de confirmação</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Nenhum Pod Activo</string>
+    <string name="omnipod_pod_status_running">A correr</string>
+    <string name="omnipod_pod_status_suspended">Suspenso</string>
+    <string name="omnipod_pod_status_pod_fault">Falha no Pod</string>
+    <string name="omnipod_pod_status_inactive">Inactivo</string>
+    <string name="omnipod_pod_status_pod_fault_description">Falha no Pod: %1$s %2$s</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>
+    <string name="omnipod_alert_expiration">Pod vai expirar em breve</string>
+    <string name="omnipod_alert_expiration_advisory">Pod vai expirar em breve</string>
+    <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
+    <string name="omnipod_alert_low_reservoir">Reservatório baixo</string>
+    <string name="omnipod_alert_unknown_alert">Alerta desconhecido</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_history_item_description">Descrição</string>
+    <string name="omnipod_history_item_source">Fonte</string>
+    <string name="omnipod_history_item_date">Data</string>
+    <string name="omnipod_history_type">Tipo:</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_warning">Aviso</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
+    <string name="omnipod_error_pod_not_attached">Nenhum Pod Activo</string>
+    <!-- Omnipod - Confirmation -->
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_cmd_discard_pod">Descartar Pod</string>
+    <string name="omnipod_cmd_set_bolus">Definir Bólus</string>
+    <string name="omnipod_cmd_cancel_bolus">Cancelar Bólus</string>
+    <string name="omnipod_cmd_set_tbr">Definir Basal Temporária</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Cancelar Basal Temporária (intermanente pelo controlador)</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancelar Basal Temporária</string>
+    <string name="omnipod_cmd_set_basal_schedule">Definir Programação Basal</string>
+    <string name="omnipod_cmd_get_pod_status">Obter Estado do Pod</string>
+    <string name="omnipod_cmd_get_pod_info">Obter Info do Pod</string>
+    <string name="omnipod_cmd_set_time">Definir hora</string>
+    <string name="omnipod_cmd_configure_alerts">Configurar Alertas</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Reconhecer Alertas</string>
+    <string name="omnipod_cmd_suspend_delivery">Suspender Administração</string>
+    <string name="omnipod_cmd_resume_delivery">Retomar Administração</string>
+    <string name="omnipod_cmd_unknown_entry">Entrada Desconhecida</string>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Wizard common -->
+    <string name="omnipod_wizard_button_finish">Terminar</string>
+    <string name="omnipod_wizard_button_next">Seguinte</string>
+    <!-- Omnipod - Pod activation Wizard -->
+    <!-- Omnipod - Pod deactivation Wizard -->
+    <!-- Omnipod - Overview -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_uncertain">incerto</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_composite_time">%1$s e %2$s</string>
+    <string name="omnipod_time_ago">%1$s atrás</string>
+    <plurals name="omnipod_minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <plurals name="omnipod_hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="omnipod_days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
+    </plurals>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Non translatable -->
+    <!-- Omnipod - Preferences -->
+    <!-- Omnipod - Pod Status -->
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Recordatorio de configuración finalizado</string>
+    <string name="omnipod_alert_shutdown_imminent">El apagado es inminente</string>
+    <string name="omnipod_alert_low_reservoir">Reservorio bajo</string>
+    <string name="omnipod_alert_unknown_alert">Alerta desconocida</string>
+    <!-- Omnipod - History -->
+    <!-- Omnipod - Error -->
+    <!-- Omnipod - Confirmation -->
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Wizard common -->
+    <!-- Omnipod - Pod activation Wizard -->
+    <!-- Omnipod - Pod deactivation Wizard -->
+    <!-- Omnipod - Overview -->
+    <!-- Omnipod - Other -->
+    <!-- Omnipod - Times -->
+</resources>

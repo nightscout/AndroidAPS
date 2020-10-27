@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="visibility">
+    <path fill="#FFFFFF" d="M12,4.531c-4.971,0-9.209,3.1-10.912,7.469C2.791,16.368,7.029,19.469,12,19.469s9.209-3.1,10.912-7.469
+        C21.209,7.632,16.971,4.531,12,4.531z M12,17.063c-2.796,0-5.063-2.267-5.063-5.063S9.204,6.938,12,6.938S17.063,9.204,17.063,12
+        S14.796,17.063,12,17.063z"/>
+    <circle fill="#FFFFFF" cx="12" cy="12" r="2.938"/>
+</g>
+</svg>

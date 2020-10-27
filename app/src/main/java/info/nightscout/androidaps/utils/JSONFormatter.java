@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.utils;
 
-import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -8,47 +7,42 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 11.07.2016.
  */
 public class JSONFormatter {
-    private static Logger log = LoggerFactory.getLogger(JSONFormatter.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(JSONFormatter.class);
 
     public static Spanned format(final String jsonString) {
         final JsonVisitor visitor = new JsonVisitor(1, '\t');
         try {
             if (jsonString.equals("undefined"))
-                return Html.fromHtml("undefined");
+                return HtmlHelper.INSTANCE.fromHtml("undefined");
             else if (jsonString.getBytes()[0] == '[')
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0), Html.FROM_HTML_MODE_COMPACT);
-                } else {
-                    return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
-                }
-            else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0), Html.FROM_HTML_MODE_COMPACT);
-                } else {
-                    return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
-                }
-            }
+                return HtmlHelper.INSTANCE.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
+            else
+                return HtmlHelper.INSTANCE.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            return Html.fromHtml("");
+            return HtmlHelper.INSTANCE.fromHtml("");
         }
     }
 
     public static Spanned format(final JSONObject object) {
         final JsonVisitor visitor = new JsonVisitor(1, '\t');
         try {
-            return Html.fromHtml(visitor.visit(object, 0));
+            return HtmlHelper.INSTANCE.fromHtml(visitor.visit(object, 0));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            return Html.fromHtml("");
+            return HtmlHelper.INSTANCE.fromHtml("");
         }
     }
 
@@ -93,6 +87,7 @@ public class JSONFormatter {
 
         private String visit(final Object object, final int indent) throws JSONException {
             String ret = "";
+            Long n;
             if (object instanceof JSONArray) {
                 ret += visit((JSONArray) object, indent);
             } else if (object instanceof JSONObject) {
@@ -101,7 +96,19 @@ public class JSONFormatter {
                 if (object instanceof String) {
                     ret += write("\"" + ((String) object).replace("<", "&lt;").replace(">", "&gt;") + "\"", indent);
                 } else {
-                    ret += write(String.valueOf(object), indent);
+                    // try to detect Date as milliseconds
+                    if (object instanceof Long) {
+                        n = (Long) object;
+                        if (n > 1580000000000L && n < 2000000000000L) { // from 2020.01.26 to 2033.05.18 it is with high probability a date object
+                            Date date = new Date(n);
+                            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            ret += write(formatter.format(date), indent);
+                        } else {
+                            ret += write(String.valueOf(object), indent);
+                        }
+                    } else {
+                        ret += write(String.valueOf(object), indent);
+                    }
                 }
             }
             return ret;

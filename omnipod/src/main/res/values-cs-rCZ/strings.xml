@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Non translatable -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_bolus_beeps_enabled">Pípnutí při bolusu povoleno</string>
+    <string name="omnipod_config_basal_beeps_enabled">Pípnutí při bazálu povoleno</string>
+    <string name="omnipod_config_smb_beeps_enabled">Pípnutí při SMB povoleno</string>
+    <string name="omnipod_config_tbr_beeps_enabled">Pípnutí při TBR povoleno</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Tlačítko Pozastavit doručení povoleno</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Tlačítko Pulse Log je zapnuto</string>
+    <string name="omnipod_config_time_change_enabled">Letní čas / Detekce časového pásma povoleno</string>
+    <string name="omnipod_config_expiration_reminder_enabled">Připomenutí vypršení platnosti povoleno</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hodiny před vypnutím</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Upozornění na nízký stav zásobníku povoleno</string>
+    <string name="omnipod_config_low_reservoir_alert_units">Počet jednotek</string>
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Jiné</string>
+    <string name="omnipod_preference_category_alerts">Varování</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Potvrzovací pípnutí</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Žádný aktivní Pod</string>
+    <string name="omnipod_pod_status_waiting_for_cannula_insertion">Instalace probíhá (čeká se na vložení kanyly)</string>
+    <string name="omnipod_pod_status_running">Běží</string>
+    <string name="omnipod_pod_status_suspended">Pozastaveno</string>
+    <string name="omnipod_pod_status_pod_fault">Chyba Podu</string>
+    <string name="omnipod_pod_status_activation_time_exceeded">Byl překročen čas aktivace</string>
+    <string name="omnipod_pod_status_inactive">Neaktivní</string>
+    <string name="omnipod_pod_status_pod_fault_description">Chyba Podu: %1$s %2$s</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_pairing_reminder">Upomínka dokončení párování</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Upomínka dokončení nastavení</string>
+    <string name="omnipod_alert_expiration">Životnost Podu brzy skončí</string>
+    <string name="omnipod_alert_expiration_advisory">Pod brzy vyprší</string>
+    <string name="omnipod_alert_shutdown_imminent">Blíží se vypnutí</string>
+    <string name="omnipod_alert_low_reservoir">Nízký stav zásobníku</string>
+    <string name="omnipod_alert_unknown_alert">Neznámá výstraha</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_history_item_description">Popis</string>
+    <string name="omnipod_history_item_source">Zdroj</string>
+    <string name="omnipod_history_item_date">Datum</string>
+    <string name="omnipod_history_type">Typ:</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_warning">Varování</string>
+    <string name="omnipod_error_rileylink_address_invalid">Chybná adresa RileyLinku.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operace není možná.\n\nNejdříve je nutné nakonfigurovat Omnipod, než bude možné tuto funkci použít.</string>
+    <string name="omnipod_error_pod_not_attached">Žádný aktivní Pod</string>
+    <!-- Omnipod - Confirmation -->
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_cmd_deactivate_pod">Deaktivovat Pod</string>
+    <string name="omnipod_cmd_discard_pod">Vyřadit Pod</string>
+    <string name="omnipod_cmd_set_bolus">Nastavit bolus</string>
+    <string name="omnipod_cmd_cancel_bolus">Zrušit bolus</string>
+    <string name="omnipod_cmd_set_tbr">Nastavit dočasný bazál</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Zrušit dočasný bazál (interně ovladačem)</string>
+    <string name="omnipod_cmd_cancel_tbr">Zrušit dočasný bazál</string>
+    <string name="omnipod_cmd_set_basal_schedule">Nastavit plán bazálu</string>
+    <string name="omnipod_cmd_get_pod_status">Zjistit stav Podu</string>
+    <string name="omnipod_cmd_get_pod_info">Zjistit informace o Podu</string>
+    <string name="omnipod_cmd_set_time">Nastavit čas</string>
+    <string name="omnipod_cmd_configure_alerts">Konfigurovat výstrahy</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Potvrdit výstrahy</string>
+    <string name="omnipod_cmd_suspend_delivery">Pozastavit dodávání inzulínu</string>
+    <string name="omnipod_cmd_resume_delivery">Obnovit dodávání inzulínu</string>
+    <string name="omnipod_cmd_unknown_entry">Neznámá položka</string>
+    <string name="omnipod_cmd_set_fake_suspended_tbr">Nastavit falešný dočasný bazál, protože Pod je pozastaven</string>
+    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Zrušit falešný dočasný bazál který byl vytvořen, protože Pod byl pozastaven</string>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Wizard common -->
+    <string name="omnipod_wizard_button_finish">Konec</string>
+    <string name="omnipod_wizard_button_next">Další</string>
+    <!-- Omnipod - Pod activation Wizard -->
+    <!-- Omnipod - Pod deactivation Wizard -->
+    <!-- Omnipod - Overview -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_custom_action_reset_rileylink">Resetovat konfiguraci RileyLinku</string>
+    <string name="omnipod_uncertain">neznámé</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_moments_ago">před chvílí</string>
+    <string name="omnipod_less_than_a_minute_ago">Před méně než minutou</string>
+    <string name="omnipod_composite_time">%1$s a %2$s</string>
+    <string name="omnipod_time_ago">před %1$s</string>
+    <plurals name="omnipod_minutes">
+        <item quantity="one">%1$d minuta</item>
+        <item quantity="few">%1$d minut</item>
+        <item quantity="many">%1$d minut</item>
+        <item quantity="other">%1$d minut</item>
+    </plurals>
+    <plurals name="omnipod_hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodin</item>
+        <item quantity="many">%1$d hodin</item>
+        <item quantity="other">%1$d hodin</item>
+    </plurals>
+    <plurals name="omnipod_days">
+        <item quantity="one">%1$d den</item>
+        <item quantity="few">%1$d dnů</item>
+        <item quantity="many">%1$d dnů</item>
+        <item quantity="other">%1$d dnů</item>
+    </plurals>
+</resources>

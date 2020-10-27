@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.services;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -8,88 +7,90 @@ import android.provider.Telephony;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
+import dagger.android.DaggerIntentService;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.BundleLogger;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
-import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
-import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
-import info.nightscout.androidaps.plugins.source.SourceMM640gPlugin;
-import info.nightscout.androidaps.plugins.source.SourceNSClientPlugin;
-import info.nightscout.androidaps.plugins.source.SourcePoctechPlugin;
-import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
-import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.source.DexcomPlugin;
+import info.nightscout.androidaps.plugins.source.EversensePlugin;
+import info.nightscout.androidaps.plugins.source.GlimpPlugin;
+import info.nightscout.androidaps.plugins.source.MM640gPlugin;
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin;
+import info.nightscout.androidaps.plugins.source.PoctechPlugin;
+import info.nightscout.androidaps.plugins.source.TomatoPlugin;
+import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.utils.JsonHelper;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
-public class DataService extends IntentService {
-    private Logger log = LoggerFactory.getLogger(L.DATASERVICE);
+public class DataService extends DaggerIntentService {
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
+    @Inject RxBusWrapper rxBus;
+    @Inject NSUpload nsUpload;
+    @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject DexcomPlugin dexcomPlugin;
+    @Inject EversensePlugin eversensePlugin;
+    @Inject GlimpPlugin glimpPlugin;
+    @Inject MM640gPlugin mm640GPlugin;
+    @Inject NSClientSourcePlugin nsClientSourcePlugin;
+    @Inject PoctechPlugin poctechPlugin;
+    @Inject TomatoPlugin tomatoPlugin;
+    @Inject XdripPlugin xdripPlugin;
+    @Inject NSProfilePlugin nsProfilePlugin;
+    @Inject ActivePluginProvider activePlugin;
+    @Inject Config config;
 
     public DataService() {
         super("DataService");
     }
 
+
     @Override
     protected void onHandleIntent(final Intent intent) {
-        if (L.isEnabled(L.DATASERVICE)) {
-            log.debug("onHandleIntent " + intent);
-            log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-        }
+        aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent " + intent);
+        aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent " + BundleLogger.log(intent.getExtras()));
 
-        boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, true);
-        Bundle bundles = intent.getExtras();
+
+        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
-            SourceXdripPlugin.getPlugin().handleNewData(intent);
+            xdripPlugin.handleNewData(intent);
         } else if (Intents.NS_EMULATOR.equals(action)) {
-            SourceMM640gPlugin.getPlugin().handleNewData(intent);
+            mm640GPlugin.handleNewData(intent);
         } else if (Intents.GLIMP_BG.equals(action)) {
-            SourceGlimpPlugin.getPlugin().handleNewData(intent);
+            glimpPlugin.handleNewData(intent);
         } else if (Intents.DEXCOM_BG.equals(action)) {
-            SourceDexcomPlugin.INSTANCE.handleNewData(intent);
+            dexcomPlugin.handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
-            SourcePoctechPlugin.getPlugin().handleNewData(intent);
+            poctechPlugin.handleNewData(intent);
         } else if (Intents.TOMATO_BG.equals(action)) {
-            SourceTomatoPlugin.getPlugin().handleNewData(intent);
+            tomatoPlugin.handleNewData(intent);
         } else if (Intents.EVERSENSE_BG.equals(action)) {
-            SourceEversensePlugin.getPlugin().handleNewData(intent);
+            eversensePlugin.handleNewData(intent);
         } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-            SourceNSClientPlugin.getPlugin().handleNewData(intent);
+            nsClientSourcePlugin.handleNewData(intent);
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {
             // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
-            NSProfilePlugin.getPlugin().handleNewData(intent);
-        } else if (Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
-            NSDeviceStatus.getInstance().handleNewData(intent);
-        } else if (Intents.ACTION_NEW_STATUS.equals(action)) {
-            NSSettingsStatus.getInstance().handleNewData(intent);
-        } else if (Intents.ACTION_NEW_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), bundles);
-            RxBus.INSTANCE.send(evt);
-        } else if (Intents.ACTION_CHANGED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), bundles);
-            RxBus.INSTANCE.send(evt);
-        } else if (Intents.ACTION_REMOVED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), bundles);
-            RxBus.INSTANCE.send(evt);
+            nsProfilePlugin.handleNewData(intent);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
@@ -99,11 +100,10 @@ public class DataService extends IntentService {
         ) {
             handleNewDataFromNSClient(intent);
         } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
-            SmsCommunicatorPlugin.INSTANCE.handleNewData(intent);
+            smsCommunicatorPlugin.handleNewData(intent);
         }
 
-        if (L.isEnabled(L.DATASERVICE))
-            log.debug("onHandleIntent exit " + intent);
+        aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent exit " + intent);
         DataReceiver.completeWakefulIntent(intent);
     }
 
@@ -115,8 +115,7 @@ public class DataService extends IntentService {
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
-        if (L.isEnabled(L.DATASERVICE))
-            log.debug("Got intent: " + intent.getAction());
+        aapsLogger.debug(LTag.DATASERVICE, "Got intent: " + intent.getAction());
 
 
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
@@ -134,7 +133,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
             }
         }
 
@@ -155,7 +154,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
             }
         }
 
@@ -176,7 +175,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
             }
         }
     }
@@ -184,7 +183,7 @@ public class DataService extends IntentService {
     private void handleRemovedTreatmentFromNS(JSONObject json) {
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
-        RxBus.INSTANCE.send(evtTreatment);
+        rxBus.send(evtTreatment);
         // old DB model
         String _id = JsonHelper.safeGetString(json, "_id");
         MainApp.getDbHelper().deleteTempTargetById(_id);
@@ -201,15 +200,12 @@ public class DataService extends IntentService {
         double carbs = JsonHelper.safeGetDouble(json, "carbs");
         String eventType = JsonHelper.safeGetString(json, "eventType");
         if (eventType == null) {
-            log.debug("Wrong treatment. Ignoring : " + json.toString());
+            aapsLogger.debug(LTag.DATASERVICE, "Wrong treatment. Ignoring : " + json.toString());
             return;
         }
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
-            RxBus.INSTANCE.send(evtTreatment);
-        } else if (json.has(DanaRNSHistorySync.DANARSIGNATURE)) {
-            // old DB model
-            MainApp.getDbHelper().updateDanaRHistoryRecordId(json);
+            rxBus.send(evtTreatment);
         } else if (eventType.equals(CareportalEvent.TEMPORARYTARGET)) {
             MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.TEMPBASAL)) {
@@ -217,7 +213,7 @@ public class DataService extends IntentService {
         } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
             MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
-            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(json);
+            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePlugin, nsUpload, json);
         } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
                 eventType.equals(CareportalEvent.INSULINCHANGE) ||
                 eventType.equals(CareportalEvent.SENSORCHANGE) ||
@@ -238,9 +234,12 @@ public class DataService extends IntentService {
             String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
             String notes = JsonHelper.safeGetString(json, "notes", "");
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
-                    && !enteredBy.equals(SP.getString("careportal_enteredby", "AndroidAPS"))) {
-                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
-                RxBus.INSTANCE.send(new EventNewNotification(announcement));
+                    && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
+                boolean defaultVal = config.getNSCLIENT();
+                if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
+                    Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
+                    rxBus.send(new EventNewNotification(announcement));
+                }
             }
         }
     }
@@ -249,8 +248,7 @@ public class DataService extends IntentService {
         NSMbg nsMbg = new NSMbg(mbgJson);
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
-        if (L.isEnabled(L.DATASERVICE))
-            log.debug("Adding/Updating new MBG: " + careportalEvent.toString());
+        aapsLogger.debug(LTag.DATASERVICE, "Adding/Updating new MBG: " + careportalEvent.toString());
     }
 
 }

@@ -8,19 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.toVisibility
+import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.datetime.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
 
-abstract class DialogFragmentWithDate : DialogFragment() {
-    val log = LoggerFactory.getLogger(DialogFragmentWithDate::class.java)
+abstract class DialogFragmentWithDate : DaggerDialogFragment() {
+
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
+    @Inject lateinit var dateUtil: DateUtil
 
     var eventTime = DateUtil.now()
     var eventTimeChanged = false
@@ -29,6 +35,7 @@ abstract class DialogFragmentWithDate : DialogFragment() {
     private var okClicked: Boolean = false
 
     companion object {
+
         private var seconds: Int = (Math.random() * 59.0).toInt()
     }
 
@@ -54,7 +61,7 @@ abstract class DialogFragmentWithDate : DialogFragment() {
         eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
         overview_eventdate?.text = DateUtil.dateString(eventTime)
-        overview_eventtime?.text = DateUtil.timeString(eventTime)
+        overview_eventtime?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -89,7 +96,7 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventtime?.text = DateUtil.timeString(eventTime)
+            overview_eventtime?.text = dateUtil.timeString(eventTime)
         }
 
         overview_eventtime?.setOnClickListener {
@@ -104,12 +111,12 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             }
         }
 
-        notes_layout?.visibility = SP.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        notes_layout?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         ok.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked) {
-                    log.debug("guarding: ok already clicked")
+                    aapsLogger.warn(LTag.UI, "guarding: ok already clicked")
                 } else {
                     okClicked = true
                     if (submit()) dismiss()
@@ -118,6 +125,17 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             }
         }
         cancel.setOnClickListener { dismiss() }
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        try {
+            manager.beginTransaction().let {
+                it.add(this, tag)
+                it.commitAllowingStateLoss()
+            }
+        } catch (e: IllegalStateException) {
+            aapsLogger.debug(e.localizedMessage)
+        }
     }
 
     abstract fun submit(): Boolean
