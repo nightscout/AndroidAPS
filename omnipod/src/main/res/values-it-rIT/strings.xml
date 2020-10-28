@@ -149,6 +149,7 @@
     <string name="omnipod_pod_activation_wizard_initialize_pod_title">Inizializza pod</string>
     <string name="omnipod_pod_activation_wizard_initialize_pod_text">Tentativo di associazione nuovo pod e caricamento.\n\nQuando il processo di inizializzazione è stato completato con successo, puoi premere <b>Avanti</b>.\n\n<b>Nota:</b> colloca il RileyLink in posizione verticale e il pod a pochi centimetri di distanza.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Collega pod</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Quando premi <b>OK</b>, la cannula verrà inserita. Assicurati di aver collegato il pod al sito di infusione.</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_title">Inserisci cannula</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_text">Tentativo di impostare il piano basale iniziale e inserire la cannula.\n\nQuando la cannula è stata inserita con successo, puoi premere <b>Avanti</b>.</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod attivato</string>
