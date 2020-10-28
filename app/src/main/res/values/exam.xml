@@ -134,8 +134,8 @@
     <string name="ic_increasingvalue">Higher IC ratios lead to less insulin delivered for a given amount of carbs.</string>
     <string name="ic_decreasingvalue">Lower IC ratios lead to less insulin delivered for a given amount of carbs.</string>
     <string name="ic_noeffect">If you have 0 COB, changing the IC ratio will lead to a different amount of insulin to correct a given BG value.</string>
-    <string name="ic_different">IC will be different if you count bread unit as 10g or 12g.</string>
-    <string name="ic_meaning">IC meaning is: How many bread units are covered by 1U of insulin.</string>
+    <string name="ic_different">IC will be different if you count bread (exchange) unit as 10g or 12g.</string>
+    <string name="ic_meaning">IC meaning is: How many bread (exchange) units are covered by 1U of insulin.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Topic: Profile Switching</string>
     <string name="profileswitch_pctwillchange"> When specifying 90% in profile switch…</string>
