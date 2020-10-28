@@ -14,10 +14,14 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часов до выключения</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Предупреждение о низком уровне в резервуаре включено</string>
     <string name="omnipod_config_low_reservoir_alert_units">К-во единиц</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Звук для неопределенных TBR уведомлений включен</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Звук для неопределенных SMB уведомлений включен</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Звук для неопределенных уведомлений болюса включен</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Другое</string>
     <string name="omnipod_preference_category_alerts">Оповещения</string>
     <string name="omnipod_preference_category_confirmation_beeps">Звуковые сигналы подтверждения</string>
+    <string name="omnipod_preference_category_notifications">Уведомления</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Активная помпа не выбрана</string>
     <string name="omnipod_pod_status_waiting_for_activation">Выполняется настройка (ожидание активации Pod)</string>
@@ -73,6 +77,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Возможно, отмена временного базала завершилась неудачно. Обновите вручную состояние Pod на вкладке Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Не удалось задать временный базал. Если ранее был запущен временный базал, он мог быть отменен. Обновите вручную состояние Pod на вкладке Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Не удалось задать временный базал. Если ранее был запущен временный базал, он мог быть отменен. Обновите вручную состояние Pod на вкладке Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">Продолжительность TBR должна быть больше нуля и кратной %1$s минутам.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Возможно, не удалось задать время. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите подачу.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Не удалось задать время. Подача инсулина приостановлена! Вручную возобновите подачу с вкладки Omnipod.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Не удалось задать базальный профиль: получен пустой профиль. Активируйте профиль базала.</string>
