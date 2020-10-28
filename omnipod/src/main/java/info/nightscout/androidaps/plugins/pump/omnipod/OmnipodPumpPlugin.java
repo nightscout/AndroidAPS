@@ -76,6 +76,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Activat
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
@@ -497,9 +498,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return 0.0d;
         }
 
-        DateTime now = DateTime.now();
-        Duration offset = new Duration(now.withTimeAtStartOfDay(), now);
-        return podStateManager.getBasalSchedule().rateAt(offset);
+        return podStateManager.getBasalSchedule().rateAt(TimeUtil.toDuration(DateTime.now()));
     }
 
     @Override
