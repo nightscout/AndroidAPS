@@ -14,6 +14,9 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Avviso livello serbatoio basso abilitato</string>
     <string name="omnipod_config_low_reservoir_alert_units">Numero di unità</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Suono notifiche TBR incerto abilitato</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Suono notifiche SMB incerto abilitato</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Suono notifiche bolo incerto abilitato</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Altro</string>
     <string name="omnipod_preference_category_alerts">Avvisi</string>
