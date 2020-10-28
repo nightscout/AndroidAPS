@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">What is true about DIA?</string>
-    <string name="dia_label_exam">Topic: Duration of Insulin Action</string>
-    <string name="dia_minimumis3h">The minimum value is 3 hours.</string>
-    <string name="dia_minimumis5h">The minimum value is 5 hours.</string>
+    <string name="dia_label_exam">Topic 3: Duration of Insulin Action (DIA)</string>
+    <string name="dia_profile">You should set the value for DIA in your profile.</string>
+    <string name="dia_minimumis5h">The minimum allowed value is 5 hours.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">The meaning is equal to the DIA parameter used in your pump.</string>
-    <string name="dia_valuemustbedetermined">You have to determine your individual value (but not less than 5 hours).</string>
-    <string name="hypott_label">Topic: Hypo Temp-Target</string>
-    <string name="hypott_whenhypott">What is primary reason to set a hypo TT?</string>
+    <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump prior to AndroidAPS worked well, there is no need to change this when you start looping..</string>
+    <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
+    <string name="hypott_label">Topic 6: Hypo Temp-Target</string>
+    <string name="hypott_whenhypott">What is primary reason to set a hypo  temp target?</string>
     <string name="hypott_goinglow">To prevent BG from going low if there is already zero temp running.</string>
-    <string name="hypott_preventoversmb">To prevent AAPS from dosing too much insulin after a rise caused by fast-acting carbs used to treat a low.</string>
+    <string name="hypott_preventoversmb">To prevent AndroidAPS from overcorrecting for a blood glucose rise caused by the fast acting carbs used to treat a hypo.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Which profile can be used and configured offline?</string>
     <string name="offlineprofile_label">Topic: Offline Profile</string>
@@ -162,8 +162,8 @@
     <string name="basalhelp_diabetesteam">Your diabetes team</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
-    <string name="other_medication_label">Other Medication</string>
-    <string name="other_medication_text">AAPS reduces BR to raise blood sugar. Drugs from the group of SGLT2 inhibitors (gliflozins) can prevent the expected increase in BG and thus may produce a dangerous insulin deficiency (DKA).
-\nCommon brand names are: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI hereby promise that I will not take such drugs when using AAPS or will deactivate the loop before using these drugs.</string>
+    <string name="other_medication_label">Topic 21: Other Medication. Please read the statement below and then check the box to accept the declaration.</string>
+    <string name="other_medication_text">AndroidAPS reduces basal rates or suspends insulin delivery to raise blood sugar. Drugs in the class SGLT2 inhibitors (gliflozins) can prevent increases in blood glucose and therefore can produce a dangerous insulin deficiency leading to DKA.
+\nCommon brand names are: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI hereby promise that I will not take such drugs when using AndroidAPS or will deactivate the loop before using such drugs.</string>
 
 </resources>

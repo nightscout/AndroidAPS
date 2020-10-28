@@ -20,7 +20,7 @@ public class Objective2 extends Objective {
     @Override
     protected void setupTasks(List<Task> tasks) {
         tasks.add(new ExamTask(R.string.dia_label_exam, R.string.dia_whatmeansdia,"dia")
-                .option(new Option(R.string.dia_minimumis3h, false))
+                .option(new Option(R.string.dia_profile, true))
                 .option(new Option(R.string.dia_minimumis5h, true))
                 .option(new Option(R.string.dia_meaningisequaltodiapump, false))
                 .option(new Option(R.string.dia_valuemustbedetermined, true))
