@@ -131,6 +131,7 @@
     <string name="omnipod_error_failed_to_initialize_pod">Failed to initialize the Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Failed to insert cannula</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">The Pod\'s activation time has been exceeded. This Pod can no longer be activated.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
 
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
