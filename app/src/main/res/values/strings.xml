@@ -469,11 +469,13 @@
     <string name="teenage">Teenage</string>
     <string name="adult">Adult</string>
     <string name="resistantadult">Insulin resistant adult</string>
+    <string name="pregnant">Pregnancy</string>
     <string name="key_age" translatable="false">age</string>
     <string name="key_child" translatable="false">child</string>
     <string name="key_teenage" translatable="false">teenage</string>
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
+    <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
