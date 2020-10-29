@@ -11,5 +11,6 @@
     <string name="description_loop">להפעיל או לכבות את הלולאה.</string>
     <string name="description_ns_client">מסנכרן את הנתונים שלך עם Nightscout</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
+    <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo מחייב התקנת ruffy</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
