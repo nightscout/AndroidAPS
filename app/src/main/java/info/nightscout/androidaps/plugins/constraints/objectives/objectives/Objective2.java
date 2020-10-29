@@ -39,7 +39,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.offlineprofile_nsprofile, true))
                 .hint(new Hint(R.string.offlineprofile_hint1))
         );
-        tasks.add(new ExamTask(R.string.pumpdisconnect_label,"pumpdisconnect")
+        tasks.add(new ExamTask(R.string.pumpdisconnect_label, R.string.pumpdisconnect_label,"pumpdisconnect")
                 .option(new Option(R.string.pumpdisconnect_unnecessary, false))
                 .option(new Option(R.string.pumpdisconnect_missinginsulin, true))
                 .option(new Option(R.string.pumpdisconnect_notstop, false))
