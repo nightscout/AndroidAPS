@@ -67,7 +67,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.hypott_preventoversmb, true))
                 .option(new Option(R.string.hypott_exercise, false))
                 .option(new Option(R.string.hypott_wrongbasal, false))
-                .option(new Option(R.string.hypott_goinglow, false))
+                .option(new Option(R.string.hypott_0basal, false))
                 .hint(new Hint(R.string.hypott_hint1))
         );
         tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitch_pctwillchange,"profileswitch")
