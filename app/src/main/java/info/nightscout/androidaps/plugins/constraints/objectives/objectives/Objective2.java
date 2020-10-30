@@ -83,7 +83,6 @@ public class Objective2 extends Objective {
                         .option(new Option(R.string.profileswitch2_bgunchanged, true))
                         .option(new Option(R.string.profileswitch2_isfhigher, false))
                         .hint(new Hint(R.string.profileswitch_hint1))
-
         );
         tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitchtime_iwant,"profileswitchtime")
                 .option(new Option(R.string.profileswitchtime_2, false))
@@ -175,36 +174,6 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.iob_hightemp, false))
                 .option(new Option(R.string.iob_negiob, true))
                 .option(new Option(R.string.iob_posiob, true))
-
-
-        );
-        tasks.add(new ExamTask(R.string.offlineprofile_label, R.string.offlineprofile_whatprofile,"offlineprofile")
-                .option(new Option(R.string.localprofile, true))
-                .option(new Option(R.string.nsprofile, false))
-                .option(new Option(R.string.offlineprofile_nsprofile, true))
-                .hint(new Hint(R.string.offlineprofile_hint1))
-
-        );
-        tasks.add(new ExamTask(R.string.noisycgm_label, R.string.noisycgm_whattodo,"noisycgm")
-                .option(new Option(R.string.nothing, false))
-                .option(new Option(R.string.disconnectpumpfor1h, false))
-                .option(new Option(R.string.noisycgm_pause, true))
-                .option(new Option(R.string.noisycgm_replacesensor, true))
-                .option(new Option(R.string.noisycgm_turnoffphone, false))
-                .option(new Option(R.string.noisycgm_checksmoothing, true))
-                .hint(new Hint(R.string.noisycgm_hint1))
-
-        );
-       tasks.add(new ExamTask(R.string.suspendloop_label, R.string.suspendloop_doigetinsulin,"suspendloop")
-                .option(new Option(R.string.suspendloop_yes, true))
-                .option(new Option(R.string.suspendloop_no, false))
-        );
-
-       tasks.add(new ExamTask(R.string.basalhelp_label, R.string.basalhelp_where,"basalhelp")
-                .option(new Option(R.string.basalhelp_diabetesteam, true))
-                .option(new Option(R.string.basalhelp_google, false))
-                .option(new Option(R.string.basalhelp_facebook, false))
-                 .hint(new Hint(R.string.basalhelp_hint1))
         );
         tasks.add(new ExamTask(R.string.extendedcarbs_label, R.string.extendedcarbs_handling,"extendedcarbs")
                 .option(new Option(R.string.extendedcarbs_future, true))

@@ -53,7 +53,7 @@
     <string name="codeaccepted">Code accepted</string>
     <string name="codeinvalid">Code invalid</string>
     <string name="objectives_exam_objective">Prove your knowledge</string>
-    <string name="objectives_exam_gate">Study the questions.  You are given four possible answers for each question. There may be more than one correct answer. Please check all those that are correct.</string>
+    <string name="objectives_exam_gate">Study the questions.  You are given four possible answers for each question. There may be more than one correct answer. Please check all those that are correct and select VERIFY.</string>
     <string name="answerdisabledto">Answering disabled until: %1$s</string>
     <string name="wronganswer">Wrong answer!</string>
     <string name="unfinshed_button">Next unfinished</string>
