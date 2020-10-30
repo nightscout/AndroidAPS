@@ -4,12 +4,21 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [יחידות]</string>
+    <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [גרם]</string>
+    <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
+    <string name="nav_resetdb">איפוס מסדי נתונים</string>
+    <string name="reset_db_confirm">אתה בטוח שאתה רוצה לאפס את מסדי הנתונים?</string>
+    <string name="nav_exit">יציאה</string>
+    <string name="ns_sync_use_absolute_title">השתמש תמיד בערכים בזאלים מוחלטים</string>
     <string name="alert_dialog_storage_permission_text">בבקשה אתחל את הסמרטפון שלך או תרענן את אפלקצית AndroidAPS בהגדרות המערכת
 אחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב אחר ולוודא כי האלגוריתמים פועלים כראוי)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
+    <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
+    <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
     <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
     <string name="description_loop">להפעיל או לכבות את הלולאה.</string>
-    <string name="description_ns_client">מסנכרן את הנתונים שלך עם Nightscout</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
     <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo מחייב התקנת ruffy</string>
     <!-- SMS Communicator & OTP Authenticator -->
