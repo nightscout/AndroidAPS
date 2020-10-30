@@ -64,10 +64,10 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.ic_hint1))
         );
         tasks.add(new ExamTask(R.string.hypott_label, R.string.hypott_whenhypott,"hypott")
-                .option(new Option(R.string.hypott_goinglow, false))
-                .option(new Option(R.string.hypott_exercise, false))
                 .option(new Option(R.string.hypott_preventoversmb, true))
-                .option(new Option(R.string.hypott_0basal, false))
+                .option(new Option(R.string.hypott_exercise, false))
+                .option(new Option(R.string.hypott_wrongbasal, false))
+                .option(new Option(R.string.hypott_goinglow, false))
                 .hint(new Hint(R.string.hypott_hint1))
         );
         tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitch_pctwillchange,"profileswitch")
@@ -215,22 +215,11 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.nsclient_label, R.string.nsclient_howcanyou,"nsclient")
                 .option(new Option(R.string.nsclient_nightscout, true))
-                .option(new Option(R.string.nsclientinternal, true))
-                .option(new Option(R.string.nsclient_dexcomfollow, true))
-                .option(new Option(R.string.nsclient_dexcomfollowxdrip, false))
-                .option(new Option(R.string.nsclient_xdripfollower, true))
-                .option(new Option(R.string.nsclient_looponiphone, false))
-                .option(new Option(R.string.nsclient_spikeiphone, true))
-                .hint(new Hint(R.string.nsclient_hint1))
-        );
-        tasks.add(new ExamTask(R.string.nsclient_label, R.string.nsclient_howcanyou,"nsclient")
-                .option(new Option(R.string.nsclient_nightscout, true))
                 .option(new Option(R.string.nsclient_dexcomfollow, true))
                 .option(new Option(R.string.nsclient_data, true))
                 .option(new Option(R.string.nsclient_fullcontrol, false))
                 .hint(new Hint(R.string.nsclient_hint1))
         );
-
         tasks.add(new ExamTask(R.string.other_medication_label, R.string.other_medication_text,"otherMedicationWarning")
                 .option(new Option(R.string.yes, true))
                 .option(new Option(R.string.no, false))

@@ -9,7 +9,7 @@
     <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
     <string name="hypott_label">Topic 6: Hypo Temp-Target</string>
     <string name="hypott_whenhypott">What is primary reason to set a hypo  temp target?</string>
-    <string name="hypott_goinglow">To prevent BG from going low if there is already zero temp running.</string>
+    <string name="hypott_wrongbasal">To correct for hypos caused by incorrect basal rate settings.</string>
     <string name="hypott_preventoversmb">To prevent AndroidAPS from overcorrecting for a blood glucose rise caused by the fast acting carbs used to treat a hypo.</string>
     <string name="hypott_exercise">To correct for a hypo induced as a result of exercise.</string>
     <string name="hypott_0basal">To prevent blood glucose from going low of there is already a 0% temporary basal rate running.</string>
