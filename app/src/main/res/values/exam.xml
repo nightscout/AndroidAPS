@@ -136,7 +136,8 @@
     <string name="iob_hightemp">High temp basal will not be given when your blood sugar is below target.</string>
     <string name="iob_negiob">Negative IOB for a substantial period in the absence of exercise suggests your profile is too strong and less insulin is needed in your settings.</string>
     <string name="iob_posiob">Positive IOB for a substantial period suggests insulin resistance or unannounced meals.</string>
-    <string name="extendedcarbs_label">Topic 19: What could you use e-carbs (extended carbs) for?</string>
+    <string name="extendedcarbs_label">Topic 19: e-carbs</string>
+    <string name="extendedcarbs_handling">What could you use e-carbs (extended carbs) for?</string>
     <string name="extendedcarbs_future">To schedule carbs in the future, possibly distributed over an interval (similar to an extended bolus distributing insulin over an interval).</string>
     <string name="extendedcarbs_free">For logging \'free\' exercise carbs you want to hide from AndroidAPS.</string>
     <string name="extendedcarbs_fat">e-carbs (distributed in the future) can assist AndroidAPS in dealing with high fat/protein meals.</string>
