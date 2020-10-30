@@ -43,8 +43,6 @@
     <string name="noisycgm_turnoffphone">Turn off the phone.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="noisycgm_checksmoothing">Verify that your CGM app smoothes BG data.</string>
-
-
     <string name="exerciseprofile_label">Topic 8: Exercise and Profiles.</string>
     <string name="exerciseprofile_whattodo">How can you use profiles to best help the system deal with aerobic exercise?</string>
     <string name="exerciseprofile_switchprofilebelow100">Do a profile switch to more than 100%.</string>
@@ -52,8 +50,6 @@
     <string name="exercisprofilee_leaveat100">Leave the profile set to 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspend the loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-
-
     <string name="exercise_label">Topic 9: Exercise and Temporary Targets.</string>
     <string name="exercise_whattodo">How can you use temporary targets to best help the system deal with aerobic exercise?</string>
     <string name="exercise_settt">Set an activity blood glucose target starting a suitable time before beginning exercise.</string>
@@ -61,21 +57,6 @@
     <string name="exercise_setunchanged">Leave your blood glucose target unchanged.</string>
     <string name="exercise_15g">Wait until blood glucose drops below your hypo temp target and then eat 15 g of fast acting carbohydrates.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <string name="suspendloop_label">Topic: Disabled/Suspended loop</string>
     <string name="suspendloop_doigetinsulin">Do I receive insulin when the loop is disabled/suspended?</string>
     <string name="suspendloop_yes">Yes, basal insulin continues to be delivered.</string>
@@ -87,7 +68,7 @@
     <string name="basaltest_weekly">At least once per week.</string>
     <string name="basaltest_fixed">Once set and validated, these values should not change over time.</string>
     <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#androidaps-settings</string>
-    <string name="prerequisites_label">Topic: Prerequisites</string>
+    <string name="prerequisites_label">Topic 1: Prerequisites</string>
     <string name="prerequisites_what">What is essential to set up and use AndroidAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Validated profile information (Basal, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">A computer with Android Studio installed and configured.</string>
@@ -102,7 +83,7 @@
     <string name="prerequisites_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="prerequisites_smartwatch">A Smartwatch.</string>
     <string name="prerequisites_supportedcgm">A Supported CGM.</string>
-    <string name="prerequisites2_label">Topic: More Prerequisites</string>
+    <string name="prerequisites2_label">Topic 1: More Prerequisites</string>
     <string name="prerequisites2_what">What is essential to set up and use AndroidAPS?</string>
     <string name="prerequisites2_profile">Validated information to set up a profile (ISF, I:C ratio, basal rates, DIA etc.).</string>
     <string name="prerequisites2_device">A compatible Android device (e.g. mobile/cell phone, full Android watch, or tablet).</string>
@@ -137,28 +118,36 @@
     <string name="sensitivity_which">Which sensitivity algorithm has a configurable time range?</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivityuam_which">Which sensitivity plugin must be used for the UAM feature?</string>
-
-
-
-
-    <string name="wrongcarbs_label">Topic: Carb Entry Errors</string>
+    <string name="wrongcarbs_label">Topic 16: Carb Entry Errors</string>
     <string name="wrongcarbs_whattodo">What should you do if you’ve made an incorrect carb entry?</string>
-    <string name="wrongcarbs_treatmentstab">In Treatments, delete the incorrect carb entry. Enter new carbs.</string>
+    <string name="wrongcarbs_treatmentstab">Delete the incorrect entry in Treatments and enter the correct new carb value.</string>
     <string name="wrongcarbs_addfakeinsulin">Add fake insulin by using Refill function</string>
-    <string name="extendedcarbs_label">Topic: Food with Fat and Protein</string>
-    <string name="extendedcarbs_handling">What to do if your food contains a large amount of fat and\/or proteins?</string>
-    <string name="extendedcarbs_useextendedcarbs">Recalculate fat and proteins to carbs and use \"Extended carbs\" feature.</string>
-    <string name="extendedcarbs_add">Recalculate fat and proteins to carbs and add it to bolus calculation.</string>
-    <string name="extendedcarbs_useextendedbolus">Use extended bolus to cover fat and proteins.</string>
+    <string name="wrongcarbs_donothing">Add fake insulin by using Refill function</string>
+    <string name="wrongcarbs_bolus">Add fake insulin by using Refill function</string>
+    <string name="wronginsulin_label">Topic 17: Insulin delivery/entry errors</string>
+    <string name="wronginsulin_whattodo">What should you do if you received less insulin than the pump history suggests e.g. due to an occlusion, a failed cannula or forgetting to reattach the pump after a shower? </string>
+    <string name="wronginsulin_careportal">Delete insulin data from Nightscout Careportal to remove it from the pump history.</string>
+    <string name="wronginsulin_bolus">Bolus the missing insulin using the Insulin button in Overview.</string>
+    <string name="wronginsulin_prime">Bolus a proportion of your calculated ‘missed’ insulin by either syringe/pen or using a prime.</string>
+    <string name="wronginsulin_donothing">Do nothing and allow AndroidAPS to correct any resulting high blood glucose level.</string>
+    <string name="iob_label">Topic 18: Insulin on Board (IOB)</string>
+    <string name="iob_which">Check all the correct answers.</string>
+    <string name="iob_deviation">IOB describes the current deviation from expected insulin required based on your profile and settings.</string>
+    <string name="iob_hightemp">High temp basal will not be given when your blood sugar is below target.</string>
+    <string name="iob_negiob">Negative IOB for a substantial period in the absence of exercise suggests your profile is too strong and less insulin is needed in your settings.</string>
+    <string name="iob_posiob">Positive IOB for a substantial period suggests insulin resistance or unannounced meals.</string>
+    <string name="extendedcarbs_label">Topic 19: What could you use e-carbs (extended carbs) for?</string>
+    <string name="extendedcarbs_future">To schedule carbs in the future, possibly distributed over an interval (similar to an extended bolus distributing insulin over an interval).</string>
+    <string name="extendedcarbs_free">For logging \'free\' exercise carbs you want to hide from AndroidAPS.</string>
+    <string name="extendedcarbs_fat">e-carbs (distributed in the future) can assist AndroidAPS in dealing with high fat/protein meals.</string>
+    <string name="extendedcarbs_rescue">For logging rescue carbs you use to treat low blood glucose. </string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
-    <string name="nsclient_label">Topic: Remote Monitoring</string>
-    <string name="nsclient_howcanyou">How can you monitor AAPS of your child remotely?</string>
-    <string name="nsclient_nightscout">Using a Nightscout site.</string>
-    <string name="nsclient_dexcomfollow">Dexcom Follow app if you are using the original Dexcom app (BG only).</string>
-    <string name="nsclient_dexcomfollowxdrip">Dexcom Follow if you are using the xDrip app.</string>
-    <string name="nsclient_xdripfollower">xDrip running in follower mode.</string>
-    <string name="nsclient_looponiphone">Loop app on iPhone.</string>
-    <string name="nsclient_spikeiphone">Spike app on iPhone.</string>
+    <string name="nsclient_label">Topic 20: Remote Monitoring</string>
+    <string name="nsclient_howcanyou">How can you monitor AndroidAPS (for example for your child) remotely?</string>
+    <string name="nsclient_nightscout">NS Client app, Nightscout app and Nightscout webpage all allow you to follow AndroidAPS remotely.</string>
+    <string name="nsclient_dexcomfollow">Other apps (e.g. Dexcom follow, xDrip running in follow mode) allow you to follow some parameters (e.g. blood glucose/sensor values) remotely, but use different algorithms so may have inaccurate IOB or COB values..</string>
+    <string name="nsclient_data">To follow AndroidAPS remotely, both devices must have internet access (e.g. via Wi-Fi or mobile/cellular network data).</string>
+    <string name="nsclient_fullcontrol">NS Client used as a remote follower will both monitor and provide full control of AndroidAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Topic 4: Insulin Sensitivity Factor (ISF)</string>
     <string name="isf_increasingvalue">Raising ISF values will lead to more insulin delivery to cover a specific amount of carbs.</string>
@@ -175,24 +164,23 @@
     <string name="ic_isf">If you change your ISF in your profile you should always change your I:C ratio too.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Topic 7: Profile Switching</string>
-    <string name="profileswitch_pctwillchange"> When specifying 90% in profile switch…</string>
-    <string name="profileswitch_basalhigher">Basals will be 10% higher.</string>
-    <string name="profileswitch_basallower">Basals will be 10% lower.</string>
-    <string name="profileswitch_ichigher">IC value will be 10% higher.</string>
-    <string name="profileswitch_iclower">IC value will be 10% lower.</string>
-    <string name="profileswitch_isfhigher">ISF value will be 10% higher.</string>
-    <string name="profileswitch_isflower">ISF value will be 10% lower.</string>
-    <string name="profileswitch_overall">You will get around 10% less insulin in total.</string>
-    <string name="profileswitch_targethigher">Target wiil be 10% higher.</string>
-    <string name="profileswitch_targetlower">Target will be 10% lower.</string>
-    <string name="profileswitch_targetbottom">Only bottom target will be 10% lower.</string>
+    <string name="profileswitch_pctwillchange"> When specifying a 90% profile switch, which answers are true?</string>
+    <string name="profileswitch_basalhigher">Basal rates will be 10% higher.</string>
+    <string name="profileswitch_basallower">Basal rates will be 10% lower.</string>
+    <string name="profileswitch_iclower">I:C ratios will be 10% lower.</string>
+    <string name="profileswitch_unchanged">ISF and I:C rations will be unchanged.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch2_pctwillchange"> When specifying a 120% profile switch, which answers are true?</string>
+    <string name="profileswitch2_bghigher">Target blood glucose will be 20% higher.</string>
+    <string name="profileswitch2_basalhigher">Basal rates will be 20% higher.</string>
+    <string name="profileswitch2_bgunchanged">Target blood glucose will be unchanged.</string>
+    <string name="profileswitch2_isfhigher">ISF will be 20% higher.</string>
     <string name="profileswitchtime_iwant">If you get up 2 hours earlier than usual, how should you notify AndroidAPS of the change in your schedule?</string>
-    <string name="profileswitchtime_2">Initiate a profile switch with a timeshift of 1</string>
-    <string name="profileswitchtime__2">Initiate a profile switch with a timeshift of -1</string>
-    <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitchtime_2">Initiate a profile switch with a timeshift of 2</string>
+    <string name="profileswitchtime__2">Initiate a profile switch with a timeshift of -2</string>
     <string name="profileswitchtime_tt">Set an eating soon temporary target.</string>
     <string name="profileswitchtime_100">Do a profile switch to more than 100%. </string>
+    <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Topic: Help with basal rates</string>
     <string name="basalhelp_where">Where to go for help with basalrate etc.</string>
