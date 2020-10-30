@@ -6,7 +6,15 @@
     <!-- Omnipod - Pod Status -->
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - History -->
+    <string name="omnipod_history_item_date">תאריך</string>
+    <string name="omnipod_history_type">סוג:</string>
+    <string name="omnipod_history_bolus_value">%1$.2f יח\'</string>
+    <string name="omnipod_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_warning">אזהרה</string>
+    <string name="omnipod_error_rileylink_address_invalid">כתובת ריילילינק לא חוקית.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\n יש להגדיר קודם את אומניפוד על מנת לבצע פעולה זו.</string>
+    <string name="omnipod_error_unexpected_exception">אירעה שגיאה לא צפויה. נא לדווח! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Commands -->
     <!-- Omnipod - Pod Management -->
