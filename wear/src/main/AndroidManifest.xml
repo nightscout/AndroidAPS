@@ -175,7 +175,7 @@
                 android:resource="@drawable/watchface_digitalstyle" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyle01ConfigAct" />
+                android:value="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyleConfigAct" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -509,7 +509,7 @@
             android:label="@string/menu_tempt" />
         <activity android:name=".interaction.configurationActivities.DigitalStyleConfigAct">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyle01ConfigAct" />
+                <action android:name="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyleConfigAct" />
 
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
