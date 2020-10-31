@@ -2,7 +2,6 @@ package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.os.Vibrator;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,16 +11,13 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import com.ustwo.clockwise.common.WatchFaceTime;
-import com.ustwo.clockwise.common.WatchMode;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
-public class DigitalStyle01 extends BaseWatchFace {
+public class DigitalStyle extends BaseWatchFace {
     private static final long TIME_TAP_THRESHOLD = 800;
     private long chartTapTime = 0;
     private long sgvTapTime = 0;
@@ -30,7 +26,7 @@ public class DigitalStyle01 extends BaseWatchFace {
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        layoutView = inflater.inflate(R.layout.activity_digitalstyle01, null);
+        layoutView = inflater.inflate(R.layout.activity_digitalstyle, null);
         performViewSetup();
     }
 
@@ -103,17 +99,17 @@ public class DigitalStyle01 extends BaseWatchFace {
         LinearLayout mShapesElements = layoutView.findViewById(R.id.shapes_elements);
         if (mShapesElements != null) {
             String displayFormatType = (mShapesElements.getContentDescription().toString().startsWith("round") ? "round" : "rect");
-            String displayStyle=sharedPrefs.getString("digitalstyle01_frameStyle", "full");
-            String displayFrameColor=sharedPrefs.getString("digitalstyle01_frameColor", "red");
-            String displayFrameColorSaturation=sharedPrefs.getString("digitalstyle01_frameColorSaturation", "500");
-            String displayFrameColorOpacity=sharedPrefs.getString("digitalstyle01_frameColorOpacity", "1");
+            String displayStyle=sharedPrefs.getString("digitalstyle_frameStyle", "full");
+            String displayFrameColor=sharedPrefs.getString("digitalstyle_frameColor", "red");
+            String displayFrameColorSaturation=sharedPrefs.getString("digitalstyle_frameColorSaturation", "500");
+            String displayFrameColorOpacity=sharedPrefs.getString("digitalstyle_frameColorOpacity", "1");
 
             // Load image with shapes
-            String styleDrawableName = "digitalstyle01_bg_" + displayStyle + "_" + displayFormatType;
+            String styleDrawableName = "digitalstyle_bg_" + displayStyle + "_" + displayFormatType;
             try {
                 mShapesElements.setBackground(getResources().getDrawable(getResources().getIdentifier(styleDrawableName, "drawable", getApplicationContext().getPackageName())));
             } catch (Exception e) {
-                Log.e("digitalstyle01_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
+                Log.e("digitalstyle_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
             }
 
             // set background-tint-color
@@ -121,13 +117,13 @@ public class DigitalStyle01 extends BaseWatchFace {
                 mShapesElements.setBackgroundTintList(null);
             } else {
                 String strColorName =((   displayFrameColor.equals("white") || displayFrameColor.equals("black")  )?displayFrameColor:displayFrameColor+"_"+displayFrameColorSaturation);
-                Log.v("digitalstyle01_strColorName",strColorName);
+                Log.v("digitalstyle_strColorName",strColorName);
                 try {
                     ColorStateList colorStateList = ContextCompat.getColorStateList(getApplicationContext(), getResources().getIdentifier(strColorName, "color", getApplicationContext().getPackageName()));
                     mShapesElements.setBackgroundTintList(colorStateList);
                 } catch (Exception e) {
                     mShapesElements.setBackgroundTintList(null);
-                    Log.e("digitalstyle01_colorName", "COLOR NOT FOUND >> " + strColorName);
+                    Log.e("digitalstyle_colorName", "COLOR NOT FOUND >> " + strColorName);
                 }
             }
 

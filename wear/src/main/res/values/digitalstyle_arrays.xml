@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="digitalstyle01_styles_name">
-        <item>@string/style_none</item>
-        <item>@string/style_minimal</item>
-        <item>@string/style_shape</item>
-        <item>@string/style_full</item>
+    <string-array name="digitalstyle_styles_name">
+        <item>@string/digitalstyle_style_none</item>
+        <item>@string/digitalstyle_style_minimal</item>
+        <item>@string/digitalstyle_style_shape</item>
+        <item>@string/digitalstyle_style_full</item>
     </string-array>
-    <string-array name="digitalstyle01_styles_values">
+    <string-array name="digitalstyle_styles_values">
         <item>none</item>
         <item>minimal</item>
         <item>shape</item>
         <item>full</item>
     </string-array>
 
-    <string-array name="digitalstyle01_color_name">
+    <string-array name="digitalstyle_color_name">
         <item>@string/color_name_red</item>
         <item>@string/color_name_pink</item>
         <item>@string/color_name_purple</item>
@@ -36,7 +36,7 @@
         <item>@string/color_name_white</item>
         <item>@string/color_name_multicolor</item>
     </string-array>
-    <string-array name="digitalstyle01_color_values">
+    <string-array name="digitalstyle_color_values">
         <item>red</item>
         <item>pink</item>
         <item>purple</item>
@@ -61,7 +61,7 @@
     </string-array>
 
 
-    <string-array name="digitalstyle01_color_saturation">
+    <string-array name="digitalstyle_color_saturation">
         <item>100</item>
         <item>500</item>
         <item>700</item>
@@ -69,7 +69,7 @@
     </string-array>
 
 
-    <string-array name="digitalstyle01_color_opacity_name">
+    <string-array name="digitalstyle_color_opacity_name">
         <item>10%</item>
         <item>20%</item>
         <item>30%</item>
@@ -81,7 +81,7 @@
         <item>90%</item>
         <item>100%</item>
     </string-array>
-    <string-array name="digitalstyle01_color_opacity_value">
+    <string-array name="digitalstyle_color_opacity_value">
         <item>0.1</item>
         <item>0.2</item>
         <item>0.3</item>

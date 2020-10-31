@@ -7,7 +7,7 @@
     android:id="@+id/watch_view_stub"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:rectLayout="@layout/rect_activity_digitalstyle01"
-    app:roundLayout="@layout/round_activity_digitalstyle01"
+    app:rectLayout="@layout/rect_activity_digitalstyle"
+    app:roundLayout="@layout/round_activity_digitalstyle"
     tools:context=".watchfaces.Home"
     tools:deviceIds="wear"/>

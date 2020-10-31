@@ -163,16 +163,16 @@
         </service>
 
         <service
-            android:name=".watchfaces.DigitalStyle01"
+            android:name=".watchfaces.DigitalStyle"
             android:allowEmbedded="true"
-            android:label="AAPS (DigitalStyle01)"
+            android:label="@string/label_digitalstyle"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/watchface_digitalstyle01" />
+                android:resource="@drawable/watchface_digitalstyle" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
                 android:value="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyle01ConfigAct" />
@@ -507,7 +507,7 @@
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:label="@string/menu_tempt" />
-        <activity android:name=".interaction.configurationActivities.DigitalStyle01ConfigAct">
+        <activity android:name=".interaction.configurationActivities.DigitalStyleConfigAct">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyle01ConfigAct" />
 

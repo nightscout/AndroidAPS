@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import info.nightscout.androidaps.R;
 import preference.WearPreferenceActivity;
 
-public class DigitalStyle01ConfigAct extends WearPreferenceActivity {
+public class DigitalStyleConfigAct extends WearPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("watchface");
-        addPreferencesFromResource(R.xml.watch_face_digitalstyle01_configuration);
+        addPreferencesFromResource(R.xml.watch_face_digitalstyle_configuration);
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         removeBackgroundRecursively(view);
         view.setBackground(getResources().getDrawable(R.drawable.settings_background));

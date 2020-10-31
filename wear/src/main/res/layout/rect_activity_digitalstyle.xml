@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".watchfaces.DigitalStyle01"
-    tools:deviceIds="wear_round">
+    tools:context=".watchfaces.DigitalStyle"
+    tools:deviceIds="wear_square">
 
 
     <!-- background-image with shapes elements-->
@@ -15,8 +15,8 @@
         android:id="@+id/shapes_elements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/digitalstyle01_bg_full_round"
-        android:contentDescription="round-shape-elements"
+        android:background="@drawable/digitalstyle_bg_full_rect"
+        android:contentDescription="rect-shape-elements"
         android:orientation="horizontal" />
 
     <!-- root-element-->
@@ -426,12 +426,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
                 android:gravity="left|top"
                 android:orientation="vertical"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
                 android:weightSum="10">
 
                 <!--  right side bottom - statusbar  2/10 -->
@@ -536,7 +536,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2" />
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -551,5 +550,6 @@
         android:layout_weight="0"
         android:text=""
         android:visibility="gone" />
+
 
 </RelativeLayout>

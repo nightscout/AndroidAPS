@@ -12,6 +12,7 @@
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
 
     <string name="label_warning_sync">No data!</string>
     <string name="label_warning_old">Old data!</string>
@@ -143,17 +144,19 @@
     <string name="color_name_multicolor">multicolor</string>
 
 
-    <string name="pref_choose_your_style">Choose your style</string>
-    <string name="style_none">no style</string>
-    <string name="style_minimal">minimal style</string>
-    <string name="style_shape">shape style</string>
-    <string name="style_full">full style</string>
-
-
-    <string name="pref_choose_your_color">Choose your color</string>
-    <string name="pref_choose_your_color_saturation">Choose your color saturation</string>
-    <string name="pref_choose_your_color_opacity">Choose your color opacity</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+
+    <string name="digitalstyle_pref_your_style">Your style:</string>
+    <string name="digitalstyle_style_none">no style</string>
+    <string name="digitalstyle_style_minimal">minimal style</string>
+    <string name="digitalstyle_style_shape">shape style</string>
+    <string name="digitalstyle_style_full">full style</string>
+
+    <string name="digitalstyle_pref_your_color">Your color:</string>
+    <string name="digitalstyle_pref_your_color_saturation">Your color saturation:</string>
+    <string name="digitalstyle_pref_your_color_opacity">Your color opacity:</string>
+
+
 
 </resources>

@@ -4,31 +4,31 @@
 
 
     <ListPreference
-        android:key="digitalstyle01_frameStyle"
-        android:title="@string/pref_choose_your_style"
+        android:key="digitalstyle_frameStyle"
+        android:title="@string/digitalstyle_pref_your_style"
         android:defaultValue="full"
-        android:entries="@array/digitalstyle01_styles_name"
-        android:entryValues="@array/digitalstyle01_styles_values"/>
+        android:entries="@array/digitalstyle_styles_name"
+        android:entryValues="@array/digitalstyle_styles_values"/>
 
     <ListPreference
-        android:key="digitalstyle01_frameColor"
-        android:title="@string/pref_choose_your_color"
+        android:key="digitalstyle_frameColor"
+        android:title="@string/digitalstyle_pref_your_color"
         android:defaultValue="red"
-        android:entries="@array/digitalstyle01_color_name"
-        android:entryValues="@array/digitalstyle01_color_values"/>
+        android:entries="@array/digitalstyle_color_name"
+        android:entryValues="@array/digitalstyle_color_values"/>
     <ListPreference
-        android:key="digitalstyle01_frameColorSaturation"
-        android:title="@string/pref_choose_your_color_saturation"
+        android:key="digitalstyle_frameColorSaturation"
+        android:title="@string/digitalstyle_pref_your_color_saturation"
         android:defaultValue="700"
-        android:entries="@array/digitalstyle01_color_saturation"
-        android:entryValues="@array/digitalstyle01_color_saturation"/>
+        android:entries="@array/digitalstyle_color_saturation"
+        android:entryValues="@array/digitalstyle_color_saturation"/>
 
     <ListPreference
-        android:key="digitalstyle01_frameColorOpacity"
-        android:title="@string/pref_choose_your_color_opacity"
+        android:key="digitalstyle_frameColorOpacity"
+        android:title="@string/digitalstyle_pref_your_color_opacity"
         android:defaultValue="1"
-        android:entries="@array/digitalstyle01_color_opacity_name"
-        android:entryValues="@array/digitalstyle01_color_opacity_value"/>
+        android:entries="@array/digitalstyle_color_opacity_name"
+        android:entryValues="@array/digitalstyle_color_opacity_value"/>
 
     <CheckBoxPreference
         android:key="show_date"
