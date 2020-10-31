@@ -16,10 +16,10 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
@@ -30,12 +30,14 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -313,11 +315,44 @@ class SWDefinition @Inject constructor(
                 }, null)
             })
             .visibility(SWValidator { (activePlugin.activePump as PluginBase).preferencesId > 0 }))
+        .add(SWInfotext(injector)
+            .label(R.string.setupwizard_pump_pump_not_initialized)
+            .visibility(SWValidator { !isPumpInitialized() }))
+        .add( // Omnipod only
+            SWInfotext(injector)
+                .label(R.string.setupwizard_pump_waiting_for_riley_link_connection)
+                .visibility(SWValidator {
+                    val activePump = activePlugin.activePump
+                    activePump is OmnipodPumpPlugin && !activePump.isRileyLinkReady
+                }))
+        .add( // Omnipod only
+            SWEventListener(injector, EventRileyLinkDeviceStatusChange::class.java)
+                .label(R.string.setupwizard_pump_riley_link_status)
+                .visibility(SWValidator {
+                    activePlugin.activePump is OmnipodPumpPlugin
+                }))
         .add(SWButton(injector)
             .text(R.string.readstatus)
-            .action(Runnable { commandQueue.readStatus("Clicked connect to pump", null) }))
-        .add(SWEventListener(injector, EventPumpStatusChanged::class.java))
-        .validator(SWValidator { activePlugin.activePump.isInitialized })
+            .action(Runnable { commandQueue.readStatus("Clicked connect to pump", null) })
+            .visibility(SWValidator {
+                // Hide for Omnipod, because as we don't require a Pod to be paired in the setup wizard,
+                // Getting the status might not be possible
+                activePlugin.activePump !is OmnipodPumpPlugin
+            }))
+        .add(SWEventListener(injector, EventPumpStatusChanged::class.java)
+            .visibility(SWValidator { activePlugin.activePump !is OmnipodPumpPlugin }))
+        .validator(SWValidator {
+            isPumpInitialized()
+        })
+
+    private fun isPumpInitialized(): Boolean {
+        val activePump = activePlugin.activePump
+
+        // For Omnipod, consider the pump initialized when a RL has been configured successfully
+        // Users will be prompted to activate a Pod after completing the setup wizard.
+        return activePump.isInitialized || (activePump is OmnipodPumpPlugin && activePump.isRileyLinkReady)
+    }
+
     private val screenAps = SWScreen(injector, R.string.configbuilder_aps)
         .skippable(false)
         .add(SWInfotext(injector)

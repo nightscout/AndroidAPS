@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.profile.local
 
-import android.app.Activity
+import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -93,7 +93,7 @@ class LocalProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun storeSettings(activity: Activity? = null) {
+    fun storeSettings(activity: FragmentActivity? = null) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
                 val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"

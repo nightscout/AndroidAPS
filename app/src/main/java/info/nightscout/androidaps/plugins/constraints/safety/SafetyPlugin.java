@@ -37,17 +37,17 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
-    private SP sp;
-    private RxBusWrapper rxBus;
-    private ConstraintChecker constraintChecker;
-    private OpenAPSAMAPlugin openAPSAMAPlugin;
-    private OpenAPSSMBPlugin openAPSSMBPlugin;
-    private SensitivityOref1Plugin sensitivityOref1Plugin;
-    private ActivePluginProvider activePlugin;
-    private HardLimits hardLimits;
-    private BuildHelper buildHelper;
-    private TreatmentsPlugin treatmentsPlugin;
-    private Config config;
+    private final SP sp;
+    private final RxBusWrapper rxBus;
+    private final ConstraintChecker constraintChecker;
+    private final OpenAPSAMAPlugin openAPSAMAPlugin;
+    private final OpenAPSSMBPlugin openAPSSMBPlugin;
+    private final SensitivityOref1Plugin sensitivityOref1Plugin;
+    private final ActivePluginProvider activePlugin;
+    private final HardLimits hardLimits;
+    private final BuildHelper buildHelper;
+    private final TreatmentsPlugin treatmentsPlugin;
+    private final Config config;
 
     @Inject
     public SafetyPlugin(

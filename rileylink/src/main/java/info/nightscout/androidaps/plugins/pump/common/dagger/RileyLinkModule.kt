@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.common.dagger
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen
@@ -14,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 @Module
 @Suppress("unused")
 abstract class RileyLinkModule {
-    @ContributesAndroidInjector abstract fun rileyLinkCommunicationManagerProvider(): RileyLinkCommunicationManager
     @ContributesAndroidInjector abstract fun serviceTaskProvider(): ServiceTask
     @ContributesAndroidInjector abstract fun pumpTaskProvider(): PumpTask
     @ContributesAndroidInjector abstract fun discoverGattServicesTaskProvider(): DiscoverGattServicesTask

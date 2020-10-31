@@ -7,17 +7,12 @@
     <string name="label_xdrip_big_chart">AAPS(GroteGrafiek)</string>
     <string name="label_xdrip_no_chart">AAPS(GeenGrafiek)</string>
     <string name="label_xdrip_circle">AAPS(Cirkel)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_warning_sync">Geen gegevens!</string>
     <string name="label_warning_old">Oude gegevens!</string>
     <string name="label_warning_since">Sinds %1$s</string>
     <string name="label_warning_sync_aaps">Synchroniseer met AAPS!</string>
     <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens verstuurt naar horloge</string>
     <string name="msg_warning_old">AAPS gegevens zijn %1$s oud! Controleer je sensor, xDrip+, NS, AAPS instellingen of andere!</string>
-    <string name="pref_on">Aan</string>
-    <string name="pref_off">Uit</string>
     <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>
     <string name="pref_units_for_actions">Eenheden voor acties</string>
     <string name="pref_show_date">Toon datum</string>
@@ -86,10 +81,7 @@
     <string name="action_preset_3">Voorinstelling 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Vrije hoeveelheid</string>
     <string name="action_confirm">BEVESTIGEN</string>
-    <string name="action_status_pump">STATUS POMP</string>
-    <string name="action_status_loop">STATUS LOOP</string>
     <string name="action_timeshift">tijdsverschuiving</string>
-    <string name="action_tdd_weighted">Gewogen TDD</string>
     <string name="action_bolus">bolus</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
@@ -98,12 +90,4 @@
     <string name="activity_carb">Khd</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">geen status</string>
-    <string name="unit_mg_dl">mg/dl</string>
-    <string name="unit_mmol_l">mmol/l</string>
-    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
-    <string name="unit_u" comment="Shortcut for: insulin Unit">E</string>
-    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">E/u</string>
-    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">u</string>
-    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
-    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">w</string>
 </resources>

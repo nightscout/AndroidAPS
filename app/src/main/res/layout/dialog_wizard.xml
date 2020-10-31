@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
-                android:src="@drawable/ic_calculator" />
+                app:srcCompat="@drawable/ic_calculator" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -62,7 +63,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:text="@string/treatments_wizard_bg_label"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -92,7 +93,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:text="@string/treatments_wizard_carbs_label"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -123,7 +124,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:text="@string/treatments_wizard_correction_label"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -153,7 +154,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:text="@string/careportal_newnstreatment_carbtime_label"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -186,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/careportal_newnstreatment_profile_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <Spinner
@@ -252,7 +253,7 @@
                 android:labelFor="@+id/treatment_wizard_notes"
                 android:padding="10dp"
                 android:text="@string/careportal_newnstreatment_notes_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <EditText
@@ -289,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/show_calculation"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_visibility" />
+                app:srcCompat="@drawable/ic_visibility" />
 
             <Button
                 android:id="@+id/cancel"

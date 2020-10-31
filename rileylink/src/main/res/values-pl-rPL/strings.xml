@@ -6,9 +6,11 @@
     <string name="rileylink_scanner_selected_device">Wybrany</string>
     <string name="rileylink_scanner_title">Skan RileyLink</string>
     <string name="location_yes">Uruchom</string>
+    <string name="location_no">Nie</string>
     <string name="rileylink_scanner_scanning">Skanowanie</string>
     <string name="rileylink_scanner_scanning_finished">Skanowanie zakończono</string>
     <string name="rileylink_scanner_scanning_error">Błąd skanowania: %1$d</string>
+    <string name="common_never">Nigdy</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Ustawienia</string>
     <string name="rileylink_settings_tab2">Historia</string>
@@ -35,14 +37,29 @@
     <string name="rileylink_state_rl_error">Błąd RileyLink</string>
     <string name="rileylink_state_pc_tune_up">Dostrojenie RileyLink i pompy</string>
     <string name="rileylink_state_pc_error">Problem z połączeniem z pompą</string>
+    <string name="rileylink_state_connected">Połączono</string>
+    <string name="rileylink_state_rl_ready">RileyLink gotowy</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Urządzenie to nie RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink nie osiągalny</string>
     <string name="rileylink_error_bt_disabled">Bluetooth wyłączony</string>
     <string name="rileylink_error_no_bt_adapter">Brak modułu Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Dostrojenie nie powiodło się</string>
+    <string name="rileylink_error_pump_unreachable">Pompa nieosiągalna</string>
     <string name="rileylink_error_pod_unreachable">Pod nieosiągalny</string>
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dzień</item>
+        <item quantity="few">%1$d dni</item>
+        <item quantity="many">%1$d dni</item>
+        <item quantity="other">%1$d dni</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d godzina</item>
+        <item quantity="few">%1$d godziny</item>
+        <item quantity="many">%1$d godzin</item>
+        <item quantity="other">%1$d godzin</item>
+    </plurals>
 </resources>

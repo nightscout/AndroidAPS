@@ -655,7 +655,7 @@
     <string name="apssetup">Konfigureer APS plugin</string>
     <string name="sensitivitysetup">Konfigureer Sensitiwiteits plugin</string>
     <string name="setupwizard_sensitivity_description">Sensitiwiteit plugin vir sensitiwiteit opsporing en KAB berekening. Vir meer inligting besoek:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="diawarning">Onthou asseblief: dat nuwe insulien profiele vereis DIA van minstens 5h. DIA 5 – 6h op nuwe profiel is gelyk aan DIA 3h op ou insulien profiele.</string>
     <string name="bgsourcesetup">Konfigureer BG bron</string>
     <string name="setupwizard_profile_description">Kies asseblief bron van profiel. As Pasiënt \'n kind is gebruik NS profiel. As niemand jou volg op Nightscout sal jy waarskynlik plaaslike profiel kies. Onthou asseblief dat jy net die bron kies van profiel. Om dit te gebruik moet jy dit aktiveer deur uitvoering \"Profiel skakelaar\"</string>

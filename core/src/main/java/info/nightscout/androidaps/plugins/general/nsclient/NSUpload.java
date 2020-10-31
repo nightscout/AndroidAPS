@@ -106,7 +106,7 @@ public class NSUpload {
 
     public void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal, Profile profile) {
         try {
-            boolean useAbsolute = sp.getBoolean("ns_sync_use_absolute", false);
+            boolean useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;

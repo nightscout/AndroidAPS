@@ -114,7 +114,6 @@ class DanaRSService : DaggerService() {
 
     fun readPumpStatus() {
         try {
-            val now = System.currentTimeMillis()
             val pump = activePlugin.activePump
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
             sendMessage(DanaRS_Packet_Etc_Keep_Connection(injector)) // test encryption for v3

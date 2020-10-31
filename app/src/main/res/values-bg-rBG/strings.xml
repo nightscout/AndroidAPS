@@ -21,6 +21,7 @@
     <string name="description_food">Показва въведените в Nightscout храни</string>
     <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
+    <string name="description_insulin_lyumjev">Действие на инсулин Lyumjev</string>
     <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
@@ -535,6 +536,7 @@
     <string name="free_peak_oref">Със свободен пик по Oref</string>
     <string name="rapid_acting_oref">Бързодействащ по Oref</string>
     <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="invalid">НЕВАЛИДНО</string>
@@ -797,6 +799,8 @@
     <string name="bgsourcesetup">Конфигуриране на източник на КЗ</string>
     <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Изчакване на RileyLink връзка…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
     <string name="startobjective">Започнете първа цел</string>
     <string name="permission">Разрешение</string>
     <string name="askforpermission">Питане за разрешение</string>
@@ -1213,4 +1217,5 @@
     <string name="only_upload_if_charging">Качване само при зареждане</string>
     <string name="worker_state">Статус: %s</string>
     <string name="uploaded_data">Качени данни</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, болуси, въглехидрати, удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на AAPS, модел на телефона и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
 </resources>

@@ -65,6 +65,7 @@ public class DetermineBasalAdapterSMBJS {
     private boolean mMicrobolusAllowed;
     private boolean mSMBAlwaysAllowed;
     private long mCurrentTime;
+    private boolean mIsSaveCgmSource;
 
     private String storedCurrentTemp = null;
     private String storedIobData = null;
@@ -108,6 +109,7 @@ public class DetermineBasalAdapterSMBJS {
         aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
         aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
         aapsLogger.debug(LTag.APS, "CurrentTime: " + (storedCurrentTime = "" + mCurrentTime));
+        aapsLogger.debug(LTag.APS, "isSaveCgmSource: " + mIsSaveCgmSource);
 
 
         DetermineBasalResultSMB determineBasalResultSMB = null;
@@ -237,7 +239,8 @@ public class DetermineBasalAdapterSMBJS {
                         boolean tempTargetSet,
                         boolean microBolusAllowed,
                         boolean uamAllowed,
-                        boolean advancedFiltering
+                        boolean advancedFiltering,
+                        boolean isSaveCgmSource
     ) throws JSONException {
 
         String units = profile.getUnits();
@@ -282,7 +285,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
 
         boolean smbEnabled = sp.getBoolean(resourceHelper.gs(R.string.key_use_smb), false);
-        mProfile.put("SMBInterval", sp.getInt("key_smbinterval", SMBDefaults.SMBInterval));
+        mProfile.put("SMBInterval", sp.getInt(R.string.key_smbinterval, SMBDefaults.SMBInterval));
         mProfile.put("enableSMB_with_COB", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", smbEnabled && sp.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
@@ -354,6 +357,7 @@ public class DetermineBasalAdapterSMBJS {
 
         mCurrentTime = now;
 
+        mIsSaveCgmSource = isSaveCgmSource;
     }
 
     private Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
