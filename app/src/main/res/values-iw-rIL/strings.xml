@@ -26,7 +26,6 @@
     <string name="description_profile_local">הגדירו פרופיל זמין במצב לא מקוון.</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
     <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo מחייב התקנת ruffy</string>
-    <string name="description_pump_mdi">שילוב משאבה לאנשים המשתמשים בזריקות</string>
     <string name="description_pump_virtual">שילוב משאבה עבור משאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
