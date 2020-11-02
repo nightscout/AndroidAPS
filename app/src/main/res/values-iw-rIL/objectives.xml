@@ -8,6 +8,7 @@
     <string name="objectivenotfinished">משימה %1$d לא בוצעה במלואה</string>
     <string name="objectives_0_objective">הגדרת חיזוי ופיקוח, וניתוח קצב בסיסי ויחסים</string>
     <string name="objectives_0_gate">ודא כי רמת סוכר זמינה ב- Nightscout, ושנתוני האינסולין מהמשאבה נשלחים</string>
+    <string name="objectives_openloop_objective">התחל לולאה פתוחה</string>
     <string name="objectives_openloop_gate">השתמשו במצב לולאה פתוחה במשך מס\' ימים, וקבעו באופן ידני מס\' רב של פרופילי בזאלי זמניים. הגדירו והשתמשו במטרות זמניות ובמטרות ברירת מחדל (לדוגמא פעילות גופנית, או מתן פחמימות בהיפו)</string>
     <string name="objectives_maxbasal_objective">הבנה של הלולאה הפתוחה שלך, לרבות הבזאלים הזמניים וההמלצות</string>
     <string name="objectives_maxbasal_gate">בהתבסס על ניסיון זה, קבעו את הערך הבזאלי המקסימלי והגדירו אותו במשאבה</string>
@@ -15,8 +16,20 @@
     <string name="objectives_maxiobzero_gate">הרץ בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם מעט ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעל במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
+    <string name="objectives_autosens_objective">במידת הצורך, בצע התאמת בזאלי ויחסים, ולאחר מכן הפעל Auto-sens</string>
     <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך היום, עם הוספת ערכי פחמימות רגילים</string>
     <string name="objectives_ama_objective">הפעלת פונקציות נוספות לשימוש במשך היום, לדוגמה AMA (סיוע ארוחות מתקדם)</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
+    <string name="objectives_bgavailableinns">ערך הסוכר זמין ב-Nightscout</string>
+    <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין ב-Nightscout</string>
+    <string name="objectives_manualenacts">קביעות ידניות</string>
+    <string name="accomplished">הושלמו: %1$s</string>
+    <string name="objectives_usage_objective">למדו כיצד לשלוט ב-AndoridAPS</string>
+    <string name="objectives_usage_gate">בצעו פעולות שונות ב-AndroidAPS</string>
+    <string name="objectives_useprofileswitch">הגדירו פרופיל 90% למשך 10 דקות (לחיצה ארוכה על שם הפרופיל במסך הסקירה הכללית)</string>
+    <string name="objectives_usedisconnectpump">דמו מקלחת. הגדירו ניתוק משאבה במשך שעה אחת (לחיצה ארוכה על לולאה פתוחה)</string>
+    <string name="objectives_usereconnectpump">... והתחברו מחדש באותה הדרך</string>
+    <string name="objectives_usetemptarget">צרו ערך מטרה זמני מותאם אישית במשך 10 דקות (לחיצה ארוכה על ערך המטרה הנוכחי)</string>
+    <string name="objectives_useactions">ב-בונה התצורה יש להפעיל את תוסף הפעולות, להפוך אותו לגלוי ולהציג את תוכנו בתפריט העליון</string>
 </resources>
