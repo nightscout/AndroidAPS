@@ -8,15 +8,22 @@
     <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
     <string name="invalidinput">Ongeldige invoer</string>
     <string name="tempbasaldeliveryerror">Storing toedienen tijdelijk basaal</string>
+    <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="connectingfor">Verbinding maken gedurende %1$d s</string>
+    <string name="bolusdelivering">%1$.2f E worden toegediend</string>
     <string name="handshaking">Handshaking</string>
     <string name="connecting">Verbining maken</string>
     <string name="connected">Verbonden</string>
     <string name="disconnected">Verbinding verbroken</string>
     <string name="disconnecting">Verbinding aan het verbreken</string>
     <string name="androidaps_start">AndroidAPS gestart</string>
+    <string name="formatinsulinunits1">%1$.1f E</string>
+    <string name="formatinsulinunits">%1$.2f E</string>
+    <string name="formatsignedinsulinunits">%1$+.2f E</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
+    <string name="pump_basebasalrate">%1$.2f E/uur</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="format_mins">%1$d minuten</string>
     <string name="pumpbusy">Pomp is bezig</string>
@@ -78,6 +85,8 @@
     <string name="location_not_found_title">Locatie is niet ingeschakeld</string>
     <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d m geleden</string>
+    <string name="hoursago">%1$.1f u geleden</string>
     <string name="shorthour">u</string>
     <string name="days">dagen</string>
     <string name="hours">uren</string>
@@ -94,6 +103,8 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <!--    Protection-->
+    <string name="wrongpassword">Verkeerd wachtwoord</string>
+    <string name="passwords_dont_match">Wachtwoorden komen niet overeen</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %1$s</string>
@@ -115,9 +126,13 @@
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ongeldig profiel: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Koolh. <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">BG Controle</string>
+    <string name="careportal_mbg">Handmatige BG of calibratie</string>
     <string name="careportal_announcement">Mededeling</string>
     <string name="careportal_note">Notitie</string>
     <string name="careportal_question">Vraag</string>
@@ -155,6 +170,7 @@
     <string name="waitingforpumpresult">Wachtend op resultaat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%d g extra koolhydraten nodig binnen %d minuten</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistieken</string>
     <string name="cumulative_tdd">Cumulatieve TDD</string>
@@ -171,10 +187,31 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Tijd detectie</string>
+    <string name="format_hour_minute">%1$du %2$dm</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Bewerking niet ondersteund door pomp en/of driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operatie NU nog niet ondersteund door pomp.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nooit verbonden</string>
+    <string name="pump_status_waking_up">Ontwaken</string>
+    <string name="pump_status_error_comm">Communicatiefout</string>
+    <string name="pump_status_timeout_comm">Time-out op de communicatie</string>
+    <string name="pump_status_pump_unreachable">Pomp niet beschikbaar</string>
+    <string name="pump_status_invalid_config">Ongeldige configuratie</string>
+    <string name="pump_status_active">Actief</string>
+    <string name="pump_status_sleeping">Slapen</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basalen</string>
+    <string name="history_group_configuration">Instellingen</string>
+    <string name="history_group_notification">Meldingen</string>
+    <string name="history_group_statistic">Statistieken</string>
+    <string name="history_group_unknown">Onbekend</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Bolussen</string>
+    <string name="history_group_prime">Vullen</string>
+    <string name="history_group_alarm">Alarmen</string>
+    <string name="history_group_glucose">Glucose</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

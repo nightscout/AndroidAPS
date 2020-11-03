@@ -6,7 +6,16 @@ import android.content.Intent
 import android.os.SystemClock
 import android.util.Base64
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
+import info.nightscout.androidaps.danars.activities.EnterPinActivity
+import info.nightscout.androidaps.danars.activities.PairingHelperActivity
+import info.nightscout.androidaps.danars.comm.DanaRSMessageHashTable
+import info.nightscout.androidaps.danars.comm.DanaRS_Packet
+import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
+import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -15,15 +24,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danars.activities.EnterPinActivity
-import info.nightscout.androidaps.danars.activities.PairingHelperActivity
-import info.nightscout.androidaps.danars.comm.DanaRSMessageHashTable
-import info.nightscout.androidaps.danars.comm.DanaRS_Packet
-import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
-import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.notify
@@ -133,12 +134,18 @@ class BLEComm @Inject internal constructor(
         if (!encryptedDataRead && encryptedCommandSent && v3Encryption) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
-            aapsLogger.error("Clearing pairing keys !!!")
-            sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
-            sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
-            sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
-            ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
-            danaRSPlugin.changePump()
+            val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
+            if (lastClearRequest != 0L && DateUtil.isOlderThan(lastClearRequest, 5)) {
+                aapsLogger.error("Clearing pairing keys !!!")
+                sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
+                sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
+                sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
+                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                danaRSPlugin.changePump()
+            } else if (lastClearRequest == 0L) {
+                aapsLogger.error("Clearing pairing keys postponed")
+                sp.putLong(R.string.key_rs_last_clear_key_request, DateUtil.now())
+            }
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection
         scheduledDisconnection?.cancel(false)
@@ -320,7 +327,10 @@ class BLEComm @Inject internal constructor(
 
         // decrypt 2nd level after successful connection
         val incomingBuffer = if (v3Encryption && isConnected)
-            bleEncryption.decryptSecondLevelPacket(receivedData).also { encryptedDataRead = true }
+            bleEncryption.decryptSecondLevelPacket(receivedData).also {
+                encryptedDataRead = true
+                sp.putLong(R.string.key_rs_last_clear_key_request, 0L)
+            }
         else receivedData
         addToReadBuffer(incomingBuffer)
 

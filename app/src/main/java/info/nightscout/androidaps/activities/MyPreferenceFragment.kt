@@ -175,7 +175,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !config.NSCLIENT)
+            addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
@@ -249,6 +250,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 show(it, title = title, message = message)
             }
         }
+    }
+
+    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
+        if (enabled) addPreferencesFromResource(preferencesResId, key)
     }
 
     @SuppressLint("RestrictedApi")

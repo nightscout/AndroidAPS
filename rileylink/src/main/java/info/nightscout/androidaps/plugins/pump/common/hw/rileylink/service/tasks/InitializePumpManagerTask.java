@@ -65,7 +65,7 @@ public class InitializePumpManagerTask extends ServiceTask {
             lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
 
-        RileyLinkCommunicationManager rileyLinkCommunicationManager = ((RileyLinkPumpDevice) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
+        RileyLinkCommunicationManager<?> rileyLinkCommunicationManager = ((RileyLinkPumpDevice) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
 
         if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Medtronic) {
 

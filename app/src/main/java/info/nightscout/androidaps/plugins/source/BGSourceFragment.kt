@@ -62,6 +62,7 @@ class BGSourceFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateGUI() }) { fabricPrivacy.logException(it) }
         )
+        updateGUI()
     }
 
     @Synchronized

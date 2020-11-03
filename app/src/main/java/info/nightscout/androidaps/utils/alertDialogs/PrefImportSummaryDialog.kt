@@ -66,7 +66,7 @@ object PrefImportSummaryDialog {
                 rowLayout.setOnClickListener {
                     val msg = "[${context.getString(metaKey.label)}] ${metaEntry.info}"
                     when (metaEntry.status) {
-                        PrefsStatus.WARN  -> ToastUtils.Long.warnToast(context, msg)
+                        PrefsStatus.WARN -> ToastUtils.Long.warnToast(context, msg)
                         PrefsStatus.ERROR -> ToastUtils.Long.errorToast(context, msg)
                         else              -> ToastUtils.Long.infoToast(context, msg)
                     }
@@ -132,6 +132,9 @@ object PrefImportSummaryDialog {
         }
 
         val dialog = builder.show()
+        val textView = dialog.findViewById<View>(android.R.id.message) as TextView?
+        textView?.textSize = 12f
+        textView?.setPadding(10,0,0,0)
         dialog.setCanceledOnTouchOutside(false)
     }
 

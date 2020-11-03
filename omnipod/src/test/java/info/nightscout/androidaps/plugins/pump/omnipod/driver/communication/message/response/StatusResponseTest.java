@@ -55,7 +55,7 @@ public class StatusResponseTest {
     }
 
     @Test
-    public void testWithSampleCaptureWithReplacePodSoonAlert() {
+    public void testWithSampleCaptureWithChangePodSoonAlert() {
         byte[] bytes = ByteUtil.fromHexString("1d19061f6800044295e8"); // From https://github.com/openaps/openomni/wiki/Status-Response-1D-long-run-%28Lytrix%29
         StatusResponse statusResponse = new StatusResponse(bytes);
 

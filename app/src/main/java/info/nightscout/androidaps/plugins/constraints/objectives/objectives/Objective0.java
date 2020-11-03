@@ -48,7 +48,7 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.virtualpump_uploadstatus_title) {
             @Override
             public boolean isCompleted() {
-                return sp.getBoolean("virtualpump_uploadstatus", false);
+                return sp.getBoolean(R.string.key_virtualpump_uploadstatus, false);
             }
 
             @Override

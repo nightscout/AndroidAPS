@@ -21,7 +21,7 @@ public class PodInfoActiveAlertsTest {
     }
 
     @Test
-    public void testReplacePodAfter3Days() {
+    public void testChangePodAfter3Days() {
         byte[] encodedMessage = ByteUtil.fromHexString("010000000000000000000000000000000010e1"); // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/PodInfoTests.swift
         PodInfoActiveAlerts podInfoActiveAlerts = new PodInfoActiveAlerts(encodedMessage);
 

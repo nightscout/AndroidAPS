@@ -21,6 +21,7 @@
     <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
     <string name="description_insulin_rapid">Nustatymai Humalog ir NovoRapid / NovoLog insulinams</string>
     <string name="description_insulin_ultra_rapid">Nustatymai Fiasp insulinui</string>
+    <string name="description_insulin_lyumjev">Nustatymai Lyumjev insulinui</string>
     <string name="description_insulin_free_peak">Leidžia pasirinkti insulino veikimo piką ir turėtų būti naudojama tik patyrusių vartotojų</string>
     <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
     <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout</string>
@@ -535,6 +536,7 @@
     <string name="free_peak_oref">Oref be piko</string>
     <string name="rapid_acting_oref">Greito veikimo Oref</string>
     <string name="ultrarapid_oref">Staigaus veikimo Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="invalid">KLAIDA</string>
@@ -797,6 +799,8 @@
     <string name="bgsourcesetup">Sukonfigūruoti KG šaltinį</string>
     <string name="setupwizard_profile_description">Prašome pasirinkti profilį. Jei pacientas yra vaikas, turite naudoti NS profilį. Jei niekas neseka jūsų Nightscout platformoje, tada geriau pasirinkti Vietinį profilį. Atminkite, kad čia Jūs tik pasirenkate profilio šaltinį. Norėdami jį aktyvuoti, turite atlikti Profilio keitimą</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Laukiama RileyLink ryšio...\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b> Pastaba:</b> sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
     <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
@@ -1213,4 +1217,5 @@
     <string name="only_upload_if_charging">Įkelti tik akumuliatoriaus įkrovimo metu</string>
     <string name="worker_state">Darbinė Būklė: %s</string>
     <string name="uploaded_data">Įkelti duomenis</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Į jūsų Open Humans paskyrą bus įkelti šie duomenys: glikemijos reikšmės, bolusai, angliavandeniai, priežiūros portalo įvykiai (išskyrus pastabas), ištęstiniai bolusai, profilio pakeitimai, visos paros dozės, laikinos valandinės bazės, laikini tikslai, nustatymai, programos versija, įrenginio modelis ir ekrano matmenys. Konfidenciali ar privati ​​informacija, pvz., Jūsų Nightscout URL arba API slaptažodis, nebus įkelta.</string>
 </resources>

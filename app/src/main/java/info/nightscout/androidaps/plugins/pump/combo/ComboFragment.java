@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import javax.inject.Inject;
 
@@ -98,7 +99,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
     }
 
     private void runOnUiThread(Runnable action) {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(action);
         }

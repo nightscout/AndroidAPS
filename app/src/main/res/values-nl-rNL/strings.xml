@@ -21,6 +21,7 @@
     <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
     <string name="description_insulin_rapid">Insuline instelling voor Humalog en NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insuline instelling voor Fiasp</string>
+    <string name="description_insulin_lyumjev">Insuline instelling voor Lyumjev</string>
     <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren en deze mag alleen worden gebruikt door gevorderde gebruikers</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
@@ -156,6 +157,7 @@
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
+    <string name="missing_carbs">Er ontbreekt %1$d g</string>
     <string name="exported">Instellingen geëxporteerd</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="import_from">Importeer instellingen van</string>
@@ -171,6 +173,11 @@
     <string name="password_preferences_decrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geïmporteerde instellingen ontsleuteld.</string>
     <string name="preferences_export_canceled">Exporteren geannuleerd! Instellingen zijn NIET geëxporteerd!</string>
     <string name="preferences_import_canceled">Importeren geannuleerd! Instellingen zijn NIET geïmporteerd!</string>
+    <string name="preferences_import_impossible">Kan voorkeuren niet importeren!</string>
+    <string name="goto_main_try_again">Ga terug naar het hoofdscherm en probeer opnieuw.</string>
+    <string name="old_master_password">Oud hoofdwachtwoord</string>
+    <string name="different_password_used">Dit bestand is geëxporteerd en gecodeerd met een ander hoofdwachtwoord. Geef het oude hoofdwachtwoord op om het bestand te kunnen decoderen.</string>
+    <string name="master_password_will_be_replaced">Als gevolg van het importeren, zal het huidige hoofdwachtwoord worden vervangen door het oude hoofdwachtwoord!</string>
     <string name="preferences_import_list_title">Kies bestand om te importeren</string>
     <string name="check_preferences_before_import">Controleer instellingen voor het importeren:</string>
     <string name="check_preferences_cannot_import">Instellingen kunnen niet worden geïmporteerd!</string>
@@ -232,6 +239,10 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimum aantal minuten dat moet verstrijken tussen de ene bolus op afstand en de volgende</string>
     <string name="smscommunicator_remotebolusmindistance">Hoeveel minuten er ten minste moeten verstrijken tussen de ene bolus en de volgende</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Voor de veiligheid moet je ten minste 2 telefoonnummers toevoegen om deze instelling te kunnen bijwerken.</string>
+    <string name="bolusdelivered">Bolus van %1$.2f E succesvol toegediend</string>
+    <string name="bolusrequested">%1$.2f E toedienen</string>
+    <string name="smscommunicator_bolusdelivered">Bolus van %1$.2f E succesvol toegediend</string>
+    <string name="smscommunicator_mealbolusdelivered">Maaltijdbolus van %1$.2f E succesvol toegediend</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Streefdoel %1$s gedurende %2$d minuten</string>
     <string name="smscommunicator_tt_set">Streefdoel %1$s gedurende %2$d minuten succesvol ingesteld</string>
     <string name="smscommunicator_tt_canceled">Tijdelijk streefdoel is geannuleerd</string>
@@ -255,7 +266,9 @@
     <string name="smscommunicator_reconnect">Pomp opnieuw verbonden</string>
     <string name="smscommunicator_remotecommandnotallowed">Commando\'s op afstand zijn niet toegestaan</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus op afstand niet beschikbaar. Probeer het later opnieuw.</string>
+    <string name="smscommunicator_basalreplywithcode">Om een basaal van %1$.2f E/uur voor %2$d min te starten, antwoord met code %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Om naar profiel %1$s %2$d%% te wisselen antwoord met code %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Om een vertraagde bolus van %1$.2f E voor %2$d min te starten, antwoord met code %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Antwoord met code %3$s om %1$dg in te voeren op %2$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Om een basaal van %1$d%% voor %2$d min te starten antwoord met code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
@@ -264,6 +277,7 @@
     <string name="smscommunicator_loopdisablereplywithcode">Om loop uit te schakelen antwoord met code %1$s</string>
     <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_extendedset">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>
+    <string name="smscommunicator_carbsset">Koolhydraten %1$d g succesvol ingevoerd</string>
     <string name="smscommunicator_carbsfailed">Invoeren van %1$dg koolhydraten is mislukt</string>
     <string name="smscommunicator_tempbasalset_percent">Tijdelijk basaal van %1$d%% voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_tempbasalfailed">Start tijdelijk basaal mislukt</string>
@@ -522,6 +536,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Snel-werkende Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA van %1$f te kort - %2$f wordt inplaats gebruikt!</string>
     <string name="activate_profile">Activeer profiel</string>
     <string name="invalid">Ongeldig</string>
@@ -549,6 +564,7 @@
     <string name="pump_unreachable">Pomp niet beschikbaar</string>
     <string name="missed_bg_readings">Geen BG metingen</string>
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
+    <string name="gradually_increase_notification_volume">Volume van notificaties en meldingen geleidelijk verhogen</string>
     <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
     <string name="enable_missed_bg_readings_alert">Alarm als er geen BG gegevens ontvangen zijn</string>
     <string name="enable_pump_unreachable_alert">Waarschuwing bij niet bereikbare pomp</string>
@@ -637,6 +653,7 @@
     <string name="enablesmbwithtemptarget">Gebruik SMB met tijdelijke streefdoelen</string>
     <string name="enablesmbwithtemptarget_summary">Gebruik SMB bij een actief tijdelijk streefdoel (eet binnenkort, activiteit)</string>
     <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk streefdoel</string>
+    <string name="enablesmbwithhightemptarget_summary">Schakel SMB in wanneer er een hoog tijdelijk doel actief is (uitvoeren boven 100 mg/dl of 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_carbs_label">Koolhydraten</string>
     <string name="overview_buttons_selection">Knoppen</string>
@@ -670,6 +687,7 @@
     <string name="do_not_bolus_record_only">Geen bolus toedienen enkel in behandelingen zetten</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
+    <string name="bolusrecordedonly">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="ns_autobackfill_summary">Automatische onbekende BGs aanvullen van NS</string>
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_activity">Activiteit</string>
@@ -781,11 +799,14 @@
     <string name="bgsourcesetup">BG bron configureren</string>
     <string name="setupwizard_profile_description">Kies een bron van het profiel. Als de patiënt een kind is, moet u het NS-profiel gebruiken. Als er niemand is die je volgt op Nightscout, zul je waarschijnlijk een lokaal profiel prefereren. Onthoud dat u alleen de profielbron selecteert. Om het te gebruiken, moet u het activeren door \"Profiel wisselen\" uit te voeren</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Wachten op verbinding met RileyLink…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> je kunt de setup voortzetten zodra de pomp geïnitialiseerd is.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vragen om toestemming</string>
     <string name="needsystemwindowpermission">Toepassing vereist systeemvenstermachtiging voor meldingen</string>
     <string name="needlocationpermission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
+    <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>
     <string name="request">Verzoek</string>
     <string name="insulinsourcesetup">Gevoeligheid plugin configureren</string>
     <string name="exit">Afsluiten</string>
@@ -841,6 +862,7 @@
     <string name="code_compare">Worden dezelfde codes weergegeven op dit apparaat als op je pomp?</string>
     <string name="insight_pairing">Insight koppelen</string>
     <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2f E / %2$.2f E toegediend</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang vervangen</string>
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
@@ -898,6 +920,7 @@
     <string name="short_status_extended">Vertraagd: %1$.2f / %2$.2f U gedurende %3$d min</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f E gedurende %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Reservoir: %1$.2f E</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="max_recovery_duration">Max. herstel duur [s]</string>
     <string name="min_recovery_duration">Min. herstel duur [s]</string>
@@ -967,6 +990,7 @@
     <string name="storage">interne opslag bijna vol</string>
     <string name="diskfull">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <string name="wrongformat">Verkeerde invoer</string>
+    <string name="wrongTbrDuration">Tijdelijk basaal duur moet een veelvoud van %1$d minuten en groter dan 0 zijn.</string>
     <string name="sms_wrongcode">Verkeerde code. Opdracht geannuleerd.</string>
     <string name="notconfigured">Niet ingesteld</string>
     <string name="profileswitchcreated">Profiel wissel aangemaakt</string>
@@ -1040,6 +1064,8 @@
     <string name="sendsmsactionlabel">Stuur SMS: %1$s</string>
     <string name="sendsmsactiondescription">SMS verzenden naar alle nummers</string>
     <string name="sendsmsactiontext">Stuur SMS met tekst</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="bolusconstraintappliedwarn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="partialboluswizard">Voer dit deel van het bolus wizard resultaat uit [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
@@ -1075,6 +1101,7 @@
     <string name="clone_label">Dupliceren</string>
     <string name="saveorresetchangesfirst">Huidige wijzigingen eerst opslaan of ongedaan maken</string>
     <string name="deletecurrentprofile">Huidige profiel verwijderen?</string>
+    <string name="copytolocalprofile">Nieuw lokaal profiel aanmaken van dit profiel?</string>
     <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
@@ -1088,6 +1115,7 @@
     <string name="nav_survey">Enquête</string>
     <string name="invalidage">Ongeldige leeftijd invoer</string>
     <string name="invalidweight">Ongeldige gewicht invoer</string>
+    <string name="invalidpct">Ongeldig % invoer</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Laag: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Hoog: <b>%4$02d%%</b>]]></string>
     <string name="average">Gemiddelde</string>
     <string name="tir">TIR</string>
@@ -1114,15 +1142,23 @@
     <string name="loop_tbrexecution_time_label">Tijdelijke basaal uitvoering tijd</string>
     <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">van de Authenticator-app voor: %1$s gevolgd door PIN</string>
     <string name="smscommunicator_otp_enabled">Authentificatie inschakelen</string>
     <string name="smscommunicator_otp_enabled_summary">Authentificeer SMS commando\'s met behulp van One Time Passwords (OTPs, eenmalige wachtwoorden) gegenereerd door Google Authenticator of soortgelijke 2FA apps.</string>
+    <string name="smscommunicator_otp_pin">Extra verplichte PIN aan einde van token</string>
     <string name="smscommunicator_otp_pin_summary">Extra cijfers die je moet onthouden, en aan het eind van elk gegenereerd eenmalig wachtwoord moet toevoegen.</string>
     <string name="smscomunicator_tab_otp_label">Authentificatie instellingen</string>
+    <string name="smscommunicator_code_verify_label">Te controleren code:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">De verificatiecode bestaat uit 6 cijfers die worden afgebeeld door de Authenticator-app (bekend als OTP), gevolgd door 3 of meer cijfers van de verplichte PIN-code.</string>
     <string name="smscommunicator_otp_verify_label">Te controleren OTP:</string>
     <string name="smscommunicator_otp_reset_btn">Reset Authentificatie</string>
     <string name="smscommunicator_otp_reset_title">Reset Authentificatie-sleutel</string>
     <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Autentificatie-sleutel wilt resetten? Met deze actie maak je alle Authentificatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
     <string name="smscommunicator_otp_reset_successful">Er is een nieuwe Authentificatie-sleutel gegenereerd! Gebruik de nieuwe QR-Code voor het instellen van geautoriseerde telefoons.</string>
+    <string name="smscommunicator_otp_export_title">OTP-secret wordt geëxporteerd</string>
+    <string name="smscommunicator_otp_export_prompt">Weet je zeker dat je het OTP-secret naar het klembord wilt kopiëren?\n\nJe hebt dit alleen nodig als je Authenticator-app problemen heeft met het scannen van QR-codes, als je het handmatig wilt invullen of als je een hardware OTP-token met een speciale app wilt configureren.</string>
+    <string name="smscommunicator_otp_export_successful">OTP-secret (in Base32-formaat) is geëxporteerd en gekopieerd naar het klembord. Plak het in de Authenticator-app of de app van de hardware OTP-token!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AndroidAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
@@ -1145,5 +1181,46 @@
     <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
     <string name="largedisplay_description">Groot scherm</string>
     <string name="skin">Skin</string>
+    <string name="comapareprofile">Vergelijk profielen</string>
     <string name="nav_profilehelper">Profiel hulp</string>
+    <string name="motoldefaultprofile">Basis profiel</string>
+    <string name="currentprofile">Huidig profiel</string>
+    <string name="availableprofile">Beschikbaar profiel</string>
+    <string name="profiletype">Profieltype</string>
+    <string name="formatwithtdd">Duur: %1$.0f TDD: %2$.0f E</string>
+    <string name="formatwittddandpct">Leeftijd: %1$.0f TDD: %2$.0f E %3$d%%</string>
+    <string name="formatwithweight">Leeftijd: %1$.0f gewicht: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% van basaal</string>
+    <string name="dpvdefaultprofile">DPV Basis profiel</string>
+    <string name="open_humans">Open Humans</string>
+    <string name="finishing_open_humans_setup">Setup van Open Humans voltooien…</string>
+    <string name="this_may_take_a_while">Dit kan even duren. Zet de telefoon of plugin niet uit.</string>
+    <string name="setup_finished">Setup voltooid</string>
+    <string name="your_phone_will_upload_data">Je telefoon zal binnenkort data gaan uploaden naar Open Humans.</string>
+    <string name="your_phone_is_upload_data">Je telefoon is data aan het uploaden naar Open Humans.</string>
+    <string name="setup_failed">Setup mislukt</string>
+    <string name="there_was_an_error">Er is een fout opgetreden. Probeer opnieuw in te loggen. Sorry &amp; bedankt!</string>
+    <string name="open_humans_terms">Dit is een open source tool die je data uploadt naar Open Humans. Wij behouden geen rechten om je gegevens te delen met derden zonder jouw uitdrukkelijke toestemming. De gegevens die het project en de app ontvangen, worden geïdentificeerd aan de hand van een willekeurig gebruikers-ID en worden uitsluitend veilig verzonden naar een Open Humans account met jouw toestemming voor dat proces. Je kunt op elk gewenst moment stoppen met uploaden en je data verwijderen via www.openhumans.org.</string>
+    <string name="i_understand_and_agree">Ik begrijp het en ga akkoord.</string>
+    <string name="login">Inloggen</string>
+    <string name="logout">Uitloggen</string>
+    <string name="oh_logout_confirmation">Weet je zeker dat je uit wilt loggen en wilt stoppen met het doneren van gegevens aan de wetenschap?</string>
+    <string name="project_member_id">Projectlid-ID: %s</string>
+    <string name="queue_size">Grootte wachtrij: %d</string>
+    <string name="terms_of_use">Gebruiksvoorwaarden</string>
+    <string name="not_logged_in">Niet ingelogd</string>
+    <string name="you_need_to_accept_the_of_use_first">Je moet eerst instemmen met de voorwaarden.</string>
+    <string name="successfully_logged_in">Succesvol ingelogd</string>
+    <string name="setup_will_continue_in_background">De setup wordt nu op de achtergrond voltooid. Bedankt voor het uploaden van je gegevens.\n\nHoud deze plugin en je telefoon even ingeschakeld om de setup te voltooien.</string>
+    <string name="completing_login">Login voltooien…</string>
+    <string name="donate_your_data_to_science">Doneer je gegevens aan de wetenschap</string>
+    <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Je bent uitgelogd van Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik hier om opnieuw in te loggen als dit niet opzettelijk was.</string>
+    <string name="only_upload_if_connected_to_wifi">Alleen uploaden indien verbonden met WiFi</string>
+    <string name="only_upload_if_charging">Alleen uploaden tijdens opladen</string>
+    <string name="worker_state">Werkstatus: %s</string>
+    <string name="uploaded_data">Geüploade gegevens</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">De volgende gegevens worden geüpload naar je Open Humans account: glucosewaarden, bolussen, koolhydraten, careportal-events (met uitzondering van notities), verlengde bolussen, profielwissels, totale dagelijkse doses, tijdelijke basaalstanden, tijdelijke doelen, voorkeuren, app-versie, apparaatmodel en schermafmetingen. Geheime of persoonlijke gegevens zoals je Nightscout-URL of API-secret worden niet geüpload.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
 </resources>

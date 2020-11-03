@@ -28,7 +28,7 @@
         app:layout_constraintStart_toEndOf="@+id/overview_bg"
         app:layout_constraintTop_toTopOf="@+id/overview_bg"
         android:paddingTop="18dp"
-        android:src="@drawable/ic_flat" />
+        app:srcCompat="@drawable/ic_flat" />
 
     <LinearLayout
         android:id="@+id/overview_deltas_llayout"
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="-4dp"
-            android:src="@drawable/ic_loop_closed" />
+            app:srcCompat="@drawable/ic_loop_closed" />
 
         <TextView
             android:id="@+id/overview_apsmode_text"
@@ -150,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_bolus" />
+            app:srcCompat="@drawable/ic_bolus" />
 
         <TextView
             android:id="@+id/overview_iob"
@@ -208,7 +208,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_cp_basal_no_tbr" />
+            app:srcCompat="@drawable/ic_cp_basal_no_tbr" />
 
         <TextView
             android:id="@+id/overview_basebasal"
@@ -236,7 +236,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_actions_startextbolus" />
+            app:srcCompat="@drawable/ic_actions_startextbolus" />
 
         <TextView
             android:id="@+id/overview_extendedbolus"
@@ -265,7 +265,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_swap_vert_black_48dp_green" />
+            app:srcCompat="@drawable/ic_swap_vert_black_48dp_green" />
 
         <TextView
             android:id="@+id/overview_sensitivity"

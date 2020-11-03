@@ -50,9 +50,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "androidx.core:core-ktx:${coreVersion}"
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.appcompat:appcompat:$appcompat_verison"
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
 
     // Graphview cannot be upgraded
@@ -70,7 +70,7 @@ dependencies {
     //RxBus
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation "junit:junit:$junit_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
