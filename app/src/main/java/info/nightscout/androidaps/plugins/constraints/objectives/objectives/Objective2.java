@@ -78,7 +78,7 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.profileswitch_hint1))
         );
         tasks.add(new ExamTask(R.string.profileswitch2_label, R.string.profileswitch2_pctwillchange,"profileswitch2")
-                        .option(new Option(R.string.profileswitch2_bghigher, true))
+                        .option(new Option(R.string.profileswitch2_bghigher, false))
                         .option(new Option(R.string.profileswitch2_basalhigher, true))
                         .option(new Option(R.string.profileswitch2_bgunchanged, true))
                         .option(new Option(R.string.profileswitch2_isfhigher, false))
@@ -95,17 +95,17 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.exerciseprofile_switchprofileabove100, false))
                 .option(new Option(R.string.exerciseprofile_switchprofilebelow100, true))
                 .option(new Option(R.string.exerciseprofile_suspendloop, false))
-                .option(new Option(R.string.exerciseprofile_suspendloop, false))
+                .option(new Option(R.string.exerciseprofile_leaveat100, false))
                 .hint(new Hint(R.string.exerciseprofile_hint1))
         );
         tasks.add(new ExamTask(R.string.exercise_label, R.string.exercise_whattodo,"exercise2")
-                .option(new Option(R.string.exercise_settt, false))
-                .option(new Option(R.string.exercise_setfinished, true))
+                .option(new Option(R.string.exercise_settt, true))
+                .option(new Option(R.string.exercise_setfinished, false))
                 .option(new Option(R.string.exercise_setunchanged, false))
                 .option(new Option(R.string.exercise_15g, false))
                 .hint(new Hint(R.string.exercise_hint1))
         );
-        tasks.add(new ExamTask(R.string.pumpdisconnect_label, R.string.pumpdisconnect_whattodo,"pumpdisconnect")
+        tasks.add(new ExamTask(R.string.pumpdisconnect_label, R.string.blank,"pumpdisconnect")
                 .option(new Option(R.string.pumpdisconnect_unnecessary, false))
                 .option(new Option(R.string.pumpdisconnect_missinginsulin, true))
                 .option(new Option(R.string.pumpdisconnect_notstop, false))
@@ -119,7 +119,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.insulin_fiasp, true))
                 .hint(new Hint(R.string.insulin_hint1))
         );
-        tasks.add(new ExamTask(R.string.sensitivity_label, R.string.sensitivity_which,"sensitivity")
+        tasks.add(new ExamTask(R.string.sensitivity_label, R.string.blank,"sensitivity")
                 .option(new Option(R.string.sensitivity_adjust, true))
                 .option(new Option(R.string.sensitivity_edit, false))
                 .option(new Option(R.string.sensitivity_cannula, true))
@@ -180,7 +180,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.extendedcarbs_future, true))
                 .option(new Option(R.string.extendedcarbs_free, false))
                 .option(new Option(R.string.extendedcarbs_fat, true))
-                .option(new Option(R.string.extendedcarbs_fat, false))
+                .option(new Option(R.string.extendedcarbs_rescue, false))
                 .hint(new Hint(R.string.extendedcarbs_hint1))
         );
         tasks.add(new ExamTask(R.string.nsclient_label, R.string.nsclient_howcanyou,"nsclient")

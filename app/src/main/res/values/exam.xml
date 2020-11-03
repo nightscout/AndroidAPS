@@ -5,7 +5,7 @@
     <string name="dia_profile">You should set the value for DIA in your profile.</string>
     <string name="dia_minimumis5h">The minimum allowed value is 5 hours.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump prior to AndroidAPS worked well, there is no need to change this when you start looping..</string>
+    <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump prior to AndroidAPS worked well, there is no need to change this when you start looping.</string>
     <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
     <string name="hypott_label">Topic 6: Hypo Temp-Target</string>
     <string name="hypott_whenhypott">What is primary reason to set a hypo  temp target?</string>
@@ -33,7 +33,7 @@
     <string name="objectives_afterchange">Export your settings after changing any of your settings.</string>
     <string name="objectives_afterinitialsetup">Export your settings after you finish your initial set-up and have set your Preferences.</string>
     <string name="objectives2_maintenance">Export your settings locally using the maintenance menu.</string>
-    <string name="objectives2_internalstorage">Your settings file is found in the folder Internal Storage/AndroidAPS/preferences on your phone.</string>
+    <string name="objectives2_internalstorage">Your settings file is found in the folder Internal Storage/AAPS/preferences on your phone.</string>
     <string name="objectives2_cloud">Copy your preferences file to a safe location outside of your phone (e.g. by using a cloud drive, connecting a cable to a computer, email, etc.)</string>
     <string name="objectives2_easyrestore">If your phone is damaged or lost, there are easy ways to remotely recover your settings without a backup.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
@@ -48,9 +48,9 @@
     <string name="noisycgm_checksmoothing">Verify that your CGM app smoothes BG data.</string>
     <string name="exerciseprofile_label">Topic 8: Exercise and Profiles</string>
     <string name="exerciseprofile_whattodo">How can you use profiles to best help the system deal with aerobic exercise?</string>
-    <string name="exerciseprofile_switchprofilebelow100">Do a profile switch to more than 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Do a profile switch to less than 100%. </string>
-    <string name="exercisprofilee_leaveat100">Leave the profile set to 100%.</string>
+    <string name="exerciseprofile_switchprofilebelow100">Do a profile switch to less than 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">Do a profile switch to more than 100%. </string>
+    <string name="exerciseprofile_leaveat100">Leave the profile set to 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspend the loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_label">Topic 9: Exercise and Temporary Targets</string>
@@ -64,7 +64,7 @@
     <string name="suspendloop_doigetinsulin">Do I receive insulin when the loop is disabled/suspended?</string>
     <string name="suspendloop_yes">Yes, basal insulin continues to be delivered.</string>
     <string name="suspendloop_no">No, delivery of insulin is stopped.</string>
-    <string name="basaltest_label">Topic 2: Basal, ISF, and IC Testing</string>
+    <string name="basaltest_label">Topic 2: Basal, ISF, and I:C Testing</string>
     <string name="basaltest_when">When should these values be validated?</string>
     <string name="basaltest_beforeloop">Before starting looping.</string>
     <string name="basaltest_havingregularhighlow">When experiencing frequent high or low blood glucose.</string>
@@ -152,7 +152,7 @@
     <string name="nsclient_label">Topic 20: Remote Monitoring</string>
     <string name="nsclient_howcanyou">How can you monitor AndroidAPS (for example for your child) remotely?</string>
     <string name="nsclient_nightscout">NS Client app, Nightscout app and Nightscout webpage all allow you to follow AndroidAPS remotely.</string>
-    <string name="nsclient_dexcomfollow">Other apps (e.g. Dexcom follow, xDrip running in follow mode) allow you to follow some parameters (e.g. blood glucose/sensor values) remotely, but use different algorithms so may have inaccurate IOB or COB values..</string>
+    <string name="nsclient_dexcomfollow">Other apps (e.g. Dexcom follow, xDrip running in follow mode) allow you to follow some parameters (e.g. blood glucose/sensor values) remotely, but use different algorithms so may have inaccurate IOB or COB values.</string>
     <string name="nsclient_data">To follow AndroidAPS remotely, both devices must have internet access (e.g. via Wi-Fi or mobile/cellular network data).</string>
     <string name="nsclient_fullcontrol">NS Client used as a remote follower will both monitor and provide full control of AndroidAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
