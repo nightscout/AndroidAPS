@@ -26,7 +26,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.prerequisites_beanandroiddeveloper, false))
                 .hint(new Hint(R.string.prerequisites_hint1))
         );
-        tasks.add(new ExamTask(R.string.prerequisites2_label, R.string.prerequisites2_what, "prerequisites")
+        tasks.add(new ExamTask(R.string.prerequisites2_label, R.string.prerequisites2_what, "prerequisites2")
                 .option(new Option(R.string.prerequisites2_profile, true))
                 .option(new Option(R.string.prerequisites2_device, true))
                 .option(new Option(R.string.prerequisites2_internet, false))
@@ -98,7 +98,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.exerciseprofile_suspendloop, false))
                 .hint(new Hint(R.string.exerciseprofile_hint1))
         );
-        tasks.add(new ExamTask(R.string.exercise_label, R.string.exercise_whattodo,"exercise")
+        tasks.add(new ExamTask(R.string.exercise_label, R.string.exercise_whattodo,"exercise2")
                 .option(new Option(R.string.exercise_settt, false))
                 .option(new Option(R.string.exercise_setfinished, true))
                 .option(new Option(R.string.exercise_setunchanged, false))
