@@ -170,7 +170,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.wronginsulin_prime, true))
                 .option(new Option(R.string.wrongcarbs_donothing, false))
         );
-        tasks.add(new ExamTask(R.string.iob_label, R.string.iob_which,"iob")
+        tasks.add(new ExamTask(R.string.iob_label, R.string.blank,"iob")
                 .option(new Option(R.string.iob_deviation, true))
                 .option(new Option(R.string.iob_hightemp, false))
                 .option(new Option(R.string.iob_negiob, true))
