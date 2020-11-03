@@ -77,14 +77,14 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.profileswitch_unchanged, false))
                 .hint(new Hint(R.string.profileswitch_hint1))
         );
-        tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitch2_pctwillchange,"profileswitch2")
+        tasks.add(new ExamTask(R.string.profileswitch2_label, R.string.profileswitch2_pctwillchange,"profileswitch2")
                         .option(new Option(R.string.profileswitch2_bghigher, true))
                         .option(new Option(R.string.profileswitch2_basalhigher, true))
                         .option(new Option(R.string.profileswitch2_bgunchanged, true))
                         .option(new Option(R.string.profileswitch2_isfhigher, false))
                         .hint(new Hint(R.string.profileswitch_hint1))
         );
-        tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitchtime_iwant,"profileswitchtime")
+        tasks.add(new ExamTask(R.string.profileswitchtime_label, R.string.profileswitchtime_iwant,"profileswitchtime")
                 .option(new Option(R.string.profileswitchtime_2, false))
                 .option(new Option(R.string.profileswitchtime__2, true))
                 .option(new Option(R.string.profileswitchtime_tt, false))
@@ -134,11 +134,11 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.objectives_hint1))
                 .hint(new Hint(R.string.objectives_hint2))
         );
-        tasks.add(new ExamTask(R.string.objectives_label, R.string.objectives_howtosave,"objectives2")
-                .option(new Option(R.string.objectives_maintenance, true))
-                .option(new Option(R.string.objectives_internalstorage, true))
-                .option(new Option(R.string.objectives_cloud, true))
-                .option(new Option(R.string.objectives_easyrestore, false))
+        tasks.add(new ExamTask(R.string.objectives2_label, R.string.objectives_howtosave,"objectives2")
+                .option(new Option(R.string.objectives2_maintenance, true))
+                .option(new Option(R.string.objectives2_internalstorage, true))
+                .option(new Option(R.string.objectives2_cloud, true))
+                .option(new Option(R.string.objectives2_easyrestore, false))
                 .hint(new Hint(R.string.objectives_hint1))
                 .hint(new Hint(R.string.objectives_hint2))
         );
