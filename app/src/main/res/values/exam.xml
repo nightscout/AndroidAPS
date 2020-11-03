@@ -32,7 +32,7 @@
     <string name="objectives_afterchange">Export your settings after changing any of your settings.</string>
     <string name="objectives_afterinitialsetup">Export your settings after you finish your initial set-up and have set your Preferences.</string>
     <string name="objectives_maintenance">Export your settings locally using the maintenance menu.</string>
-    <string name="objectives_internalstorage">Your settings file is found in the folder Internal Storage\AndroidAPS\preferences on your phone.</string>
+    <string name="objectives_internalstorage">Your settings file is found in the folder Internal Storage/AndroidAPS/preferences on your phone.</string>
     <string name="objectives_cloud">Copy your preferences file to a safe location outside of your phone (e.g. by using a cloud drive, connecting a cable to a computer, email, etc.)</string>
     <string name="objectives_easyrestore">If your phone is damaged or lost, there are easy ways to remotely recover your settings without a backup.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
@@ -90,7 +90,7 @@
     <string name="prerequisites2_profile">Validated information to set up a profile (ISF, I:C ratio, basal rates, DIA etc.).</string>
     <string name="prerequisites2_device">A compatible Android device (e.g. mobile/cell phone, full Android watch, or tablet).</string>
     <string name="prerequisites2_internet">AndroidAPS requires an internet connection in order to run in closed loop.</string>
-    <string name="prerequisites2_supportedcgm">A Supported CGM and appropriate app to receive blood glucose values on the phone/device.</string>
+    <string name="prerequisites2_supportedcgm">A supported CGM and appropriate app to receive blood glucose values on the phone/device.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">Topic 14: Updating AndroidAPS</string>
     <string name="whatistrue">Check all correct answers.</string>
@@ -126,9 +126,9 @@
     <string name="wrongcarbs_label">Topic 16: Carb Entry Errors</string>
     <string name="wrongcarbs_whattodo">What should you do if you’ve made an incorrect carb entry?</string>
     <string name="wrongcarbs_treatmentstab">Delete the incorrect entry in Treatments and enter the correct new carb value.</string>
-    <string name="wrongcarbs_addfakeinsulin">Add fake insulin by using Refill function</string>
-    <string name="wrongcarbs_donothing">Add fake insulin by using Refill function</string>
-    <string name="wrongcarbs_bolus">Add fake insulin by using Refill function</string>
+    <string name="wrongcarbs_addinsulin">Bolus with insulin using the Insulin (bolus) button in Overview. </string>
+    <string name="wrongcarbs_donothing">Do nothing – AndroidAPS will make the appropriate adjustments.</string>
+    <string name="wrongcarbs_bolus">Bolus with insulin using the Insulin (bolus) button in Overview.</string>
     <string name="wronginsulin_label">Topic 17: Insulin delivery/entry errors</string>
     <string name="wronginsulin_whattodo">What should you do if you received less insulin than the pump history suggests e.g. due to an occlusion, a failed cannula or forgetting to reattach the pump after a shower? </string>
     <string name="wronginsulin_careportal">Delete insulin data from Nightscout Careportal to remove it from the pump history.</string>
@@ -193,6 +193,7 @@
     <string name="basalhelp_diabetesteam">Your diabetes team</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="blank"></string>
     <string name="other_medication_label">Topic 21: Other Medication. Please read the statement below and then check the box to accept the declaration.</string>
     <string name="other_medication_text">AndroidAPS reduces basal rates or suspends insulin delivery to raise blood sugar. Drugs in the class SGLT2 inhibitors (gliflozins) can prevent increases in blood glucose and therefore can produce a dangerous insulin deficiency leading to DKA.
 \nCommon brand names are: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI hereby promise that I will not take such drugs when using AndroidAPS or will deactivate the loop before using such drugs.</string>

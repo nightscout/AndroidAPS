@@ -47,7 +47,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.dia_valuemustbedetermined, true))
                 .hint(new Hint(R.string.dia_hint1))
         );
-        tasks.add(new ExamTask(R.string.isf_label_exam, R.string.whatistrue,"isf")
+        tasks.add(new ExamTask(R.string.isf_label_exam, R.string.blank,"isf")
                 .option(new Option(R.string.isf_decreasingvalue, true))
                 .option(new Option(R.string.isf_preferences, false))
                 .option(new Option(R.string.isf_increasingvalue, false))
@@ -56,7 +56,7 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.isf_hint1))
                 .hint(new Hint(R.string.isf_hint2))
         );
-        tasks.add(new ExamTask(R.string.ic_label_exam, R.string.whatistrue,"ic")
+        tasks.add(new ExamTask(R.string.ic_label_exam, R.string.blank,"ic")
                 .option(new Option(R.string.ic_increasingvalue, false))
                 .option(new Option(R.string.ic_decreasingvalue, true))
                 .option(new Option(R.string.ic_multiple, true))
@@ -77,7 +77,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.profileswitch_unchanged, false))
                 .hint(new Hint(R.string.profileswitch_hint1))
         );
-        tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitch_pctwillchange,"profileswitch2")
+        tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitch2_pctwillchange,"profileswitch2")
                         .option(new Option(R.string.profileswitch2_bghigher, true))
                         .option(new Option(R.string.profileswitch2_basalhigher, true))
                         .option(new Option(R.string.profileswitch2_bgunchanged, true))
@@ -91,7 +91,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.profileswitchtime_100, false))
                 .hint(new Hint(R.string.profileswitchtime_hint1))
         );
-        tasks.add(new ExamTask(R.string.exerciseprofile_label, R.string.exercise_whattodo,"exercise")
+        tasks.add(new ExamTask(R.string.exerciseprofile_label, R.string.exerciseprofile_whattodo,"exercise")
                 .option(new Option(R.string.exerciseprofile_switchprofileabove100, false))
                 .option(new Option(R.string.exerciseprofile_switchprofilebelow100, true))
                 .option(new Option(R.string.exerciseprofile_suspendloop, false))
@@ -142,11 +142,11 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.objectives_hint1))
                 .hint(new Hint(R.string.objectives_hint2))
         );
-        tasks.add(new ExamTask(R.string.update_label, R.string.whatistrue,"update")
+        tasks.add(new ExamTask(R.string.update_label, R.string.blank,"update")
                 .option(new Option(R.string.update_git, true))
                 .option(new Option(R.string.update_askfriend, false))
                 .option(new Option(R.string.update_keys, true))
-                .option(new Option(R.string.update_asap, false))
+                .option(new Option(R.string.update_asap, true))
                 .hint(new Hint(R.string.update_hint1))
         );
         tasks.add(new ExamTask(R.string.troubleshooting_label, R.string.troubleshooting_wheretoask,"troubleshooting")
@@ -159,7 +159,7 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.troubleshooting_hint3))
         );
         tasks.add(new ExamTask(R.string.wrongcarbs_label, R.string.wrongcarbs_whattodo,"wrongcarbs")
-                .option(new Option(R.string.wrongcarbs_addfakeinsulin, false))
+                .option(new Option(R.string.wrongcarbs_addinsulin, false))
                 .option(new Option(R.string.wrongcarbs_treatmentstab, true))
                 .option(new Option(R.string.wrongcarbs_donothing, false))
                 .option(new Option(R.string.wrongcarbs_bolus, false))
