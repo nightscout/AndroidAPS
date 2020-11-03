@@ -6,9 +6,11 @@
     <string name="rileylink_scanner_selected_device">Geselecteerd</string>
     <string name="rileylink_scanner_title">RileyLink Scan</string>
     <string name="location_yes">Inschakelen</string>
+    <string name="location_no">Nee</string>
     <string name="rileylink_scanner_scanning">Scannen</string>
     <string name="rileylink_scanner_scanning_finished">Scannen voltooid</string>
     <string name="rileylink_scanner_scanning_error">Scanfout: %1$d</string>
+    <string name="common_never">Nooit</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Instellingen</string>
     <string name="rileylink_settings_tab2">Geschiedenis</string>
@@ -35,14 +37,25 @@
     <string name="rileylink_state_rl_error">RileyLink fout</string>
     <string name="rileylink_state_pc_tune_up">Tuning van RileyLink en Pomp</string>
     <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
+    <string name="rileylink_state_connected">Verbonden</string>
+    <string name="rileylink_state_rl_ready">RileyLink gereed</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Apparaat is geen RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink onbereikbaar</string>
     <string name="rileylink_error_bt_disabled">Bluetooth is uitgeschakeld</string>
     <string name="rileylink_error_no_bt_adapter">Geen Bluetooth Adapter</string>
     <string name="rileylink_error_tuneup_failed">Verbinding maken mislukt</string>
+    <string name="rileylink_error_pump_unreachable">Pomp niet beschikbaar</string>
     <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagen</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d uren</item>
+    </plurals>
 </resources>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">Integrare pompa pentru Omnipod, necesită dispozitivul RileyLink (cu versiune firmware de cel puțin 2.0).</string>
-    <!-- Omnipod Configuration -->
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Non translatable -->
+    <!-- Omnipod - Preferences -->
     <string name="omnipod_config_bolus_beeps_enabled">Bip pentru Bolus activat</string>
     <string name="omnipod_config_basal_beeps_enabled">Bip pentru Bazală activat</string>
     <string name="omnipod_config_smb_beeps_enabled">Bip pentru SMB activat</string>
@@ -15,19 +14,12 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Numar de ore înainte de oprire</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Alertă rezervor aproape gol activată</string>
     <string name="omnipod_config_low_reservoir_alert_units">Număr unități</string>
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_moments_ago">Acum câteva momente</string>
-    <string name="omnipod_pod_mgmt">Managementul POD-ului</string>
-    <string name="omnipod_pod_status">Statusul POD-ului</string>
-    <string name="omnipod_total_delivered_label">Total livrat</string>
-    <string name="omnipod_total_delivered">%1$.2f U</string>
-    <string name="omnipod_reservoir_left">%1$.2f U rămase</string>
-    <string name="omnipod_reservoir_over50">Peste 50 U</string>
-    <string name="omnipod_pod_address">Adresă Pod</string>
-    <string name="omnipod_pod_expiry">Pod-ul expiră</string>
-    <string name="omnipod_warning">Atenție</string>
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Altele</string>
+    <string name="omnipod_preference_category_alerts">Alerte</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Bip-uri de confirmare</string>
+    <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Niciun Pod activ</string>
-    <string name="omnipod_pod_status_waiting_for_pair_and_prime">Inițializarea este în curs (se așteaptă împerecherea și amorsarea)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Inițializarea este în curs (se așteaptă inserarea canulei)</string>
     <string name="omnipod_pod_status_running">Rulează</string>
     <string name="omnipod_pod_status_suspended">Suspendat</string>
@@ -35,39 +27,35 @@
     <string name="omnipod_pod_status_activation_time_exceeded">Timp de activare depăşit</string>
     <string name="omnipod_pod_status_inactive">Inactiv</string>
     <string name="omnipod_pod_status_pod_fault_description">Pod defect: %1$s %2$s</string>
-    <string name="omnipod_pod_active_alerts">Alerte active Pod</string>
-    <string name="omnipod_acknowledge_active_alerts_short">Confirmare alerte</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_pairing_reminder">Notificare Finalizare împerechere</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>
+    <string name="omnipod_alert_expiration">Pod-ul va expira în curând</string>
+    <string name="omnipod_alert_expiration_advisory">Pod-ul va expira în curând</string>
+    <string name="omnipod_alert_shutdown_imminent">Oprirea este iminentă</string>
+    <string name="omnipod_alert_low_reservoir">Nivel rezervor scăzut</string>
+    <string name="omnipod_alert_unknown_alert">Alertă necunoscută</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_history_item_description">Descriere</string>
+    <string name="omnipod_history_item_source">Sursă</string>
+    <string name="omnipod_history_item_date">Data</string>
+    <string name="omnipod_history_type">Tip:</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_warning">Atenție</string>
     <string name="omnipod_error_rileylink_address_invalid">Adresa RileyLink invalidă.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operațiunea nu este posibilă.\n\nTrebuie să configuraţi Omnipod înainte de a putea efectua această operațiune.</string>
-    <string name="omnipod_error_operation_not_possible_no_profile">Operaţiunea nu este posibilă.\n\n Trebuie să aşteptaţi câteva minute până când AAPS încearcă să seteze profilul bazal pentru prima dată.</string>
-    <string name="omnipod_error_illegal_init_action_type">Acțiune PodInitActionType ilegala: %1$s</string>
     <string name="omnipod_error_pod_not_attached">Niciun Pod activ</string>
-    <string name="omnipod_driver_error_setup_action_verification_failed">Verificarea comenzii a eşuat</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">A apărut o eroare neașteptată. Vă rugăm să o raportați! (tip: %1$s).</string>
-    <string name="omnipod_driver_error_invalid_parameters">Comunicarea a eșuat: s-au primit parametri de intrare incorecți</string>
-    <string name="omnipod_driver_error_communication_failed_timeout">Comunicarea a eșuat: timpul a expirat</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">Comunicarea a eşuat: a apărut o eroare neaşteptată. Vă rugăm să o raportaţi!</string>
-    <string name="omnipod_driver_error_crc_mismatch">Comunicarea a eşuat: verificarea integrităţii mesajului a eşuat</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Comunicarea a eşuat: a fost primit un pachet invalid de la Pod</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Comunicarea a eșuat: Pod-ul este într-o stare incorectă</string>
-    <string name="omnipod_driver_error_invalid_response">Comunicarea a eșuat: s-a primit un răspuns incorect de la Pod</string>
-    <string name="omnipod_driver_error_invalid_message_sequence_number">Comunicarea a eșuat: s-a primit un mesaj cu un număr de secvență invalid de la Pod</string>
-    <string name="omnipod_driver_error_invalid_message_address">Comunicarea a eșuat: s-a primit un mesaj cu o adresă invalidă de la Pod</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Comunicarea a eșuat: nu s-a reușit decodarea mesajului de la Pod</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Comunicarea a eșuat: resincronizarea cheii de securitate nu a reușit</string>
-    <string name="omnipod_driver_error_nonce_out_of_sync">Comunicarea a eșuat: cheia de securitate nu poate fi sincronizată</string>
-    <string name="omnipod_driver_error_not_enough_data">Comunicarea a eşuat: nu s-au primit suficiente date de la Pod</string>
-    <string name="omnipod_driver_error_pod_fault">A fost detectată o eroare a Pod-ului (%1$03d %2$s). Vă rugăm să îl dezactivați pe acesta și să activați unul nou</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Comunicarea a eșuat: Pod-ul a returnat un răspuns de eroare</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_pod_mgmt_title">Management Pod</string>
-    <string name="omnipod_cmd_init_pod">Inițializare Pod</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setarea profilului bazal a eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Setarea profilului bazal s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_suspended">Setarea profilului basal a eşuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setarea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, ar fi putut fi anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setarea bazalei temporare s-ar putea sa fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setarea timpului s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="omnipod_error_set_time_failed_delivery_suspended">Setarea timpului a eșuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
+    <!-- Omnipod - Confirmation -->
+    <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Dezactivare Pod</string>
     <string name="omnipod_cmd_discard_pod">Baandonare Pod</string>
-    <string name="omnipod_cmd_pod_history">Istoric Pod</string>
     <string name="omnipod_cmd_set_bolus">Setează bolus</string>
     <string name="omnipod_cmd_cancel_bolus">Anulează bolus</string>
     <string name="omnipod_cmd_set_tbr">Setează bazala temporară</string>
@@ -82,88 +70,23 @@
     <string name="omnipod_cmd_suspend_delivery">Suspendați livrarea</string>
     <string name="omnipod_cmd_resume_delivery">Reluați livrarea</string>
     <string name="omnipod_cmd_unknown_entry">Inregistrare nerecunoscută</string>
-    <string name="omnipod_cmd_bolus_value">%1$.2f U</string>
-    <string name="omnipod_cmd_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
-    <string name="omnipod_cmd_tbr_value">Rata: %1$.2f U, Durata: %2$d min</string>
-    <string name="omnipod_cmd_discard_pod_desc">Dacă apăsați <b>OK</b>, statusul Pod-ului va fi resetat forțat și nu veți mai putea comunica cu Pod-ul. Faceți acest lucru numai dacă nu mai se poate comunica deloc cu Pod-ul. Dacă se mai poate comunica cu Pod-ul, va rugam sa folosiți opțiunea <b>Dezactivare Pod</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați, de asemenea, ca îndepărtați Pod-ul de pe corpul dvs.</string>
-    <string name="omnipod_cmd_pod_history_na">Istoricul Pod-ului nu este disponibil momentan.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Umpleţi Pod-ul</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nUmpleți noul Pod cu suficientă insulină pentru 3 zile.\n\nAr trebui sa auziți două bipuri de la Pod în timpul procesului de umplere. Acestea indică faptul că, cantitatea minimă de 85U a fost introdusă. Asigurați-vă ca ați golit complet seringa de umplere, chiar și după ce ați auzit două bipuri.\n\nDupă umplerea Pod-ului, vă rugăm să apăsați <b>Următorul</b>.\n\n<b>Notă:</b> Nu scoateți capacul transparent al acului in acest moment.\n<b>Notă:</b> Va rugam sa puneți RileyLink în poziție verticala și plasați Pod-ul la o distanta de câțiva centimetri.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Amorsare</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Încercare de împerechere cu noul Pod și amorsare.\n\nAtunci când toate etapele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Vă rugăm sa puneți RileyLInk in poziție verticala si sa plasați Pod-ul la câțiva centimetri distanta.</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Atașați Pod-ul</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPregătiți setul de infuzie. Scoateți capacul acului și suport adeziv și atașați Pod-ul la locul de infuzie.\n\nDacă, canula pare in neregulă, apăsați <b>Anulare</b> și aruncați Pod-ul.\n\nApăsați <b>Următorul</b> pentru a introduce canula și a începe livrarea bazalei.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Inserare canulă</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Încercare de programare inițială a ratelor bazale si de insertie a canulei.\n\nCând toate elementele sunt gata, puteți apăsa <b>Următorul</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_title">Informații Pod</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nPod-ul este acum activ.\n\nRatele bazale au fost programate și canula a fost introdusă.\n\nVă rugăm să verificați că acul a fost introdus corect. Dacă considerați ca nu, înlocuiți Pod-ul.</string>
-    <string name="omnipod_remove_pod_wizard_step1_title">Dezactivare Pod</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nApăsați <b>Următorul</b> pentru a dezactiva Pod-ul.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva Pod-ul.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Dezactivare Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Dezactivare Pod.\n\nAtunci când toate elementele sunt gata, puteți apăsa <b>Următorul</b>.\n\n<b>Notă:</b> Dacă dezactivarea eșuează continuu, vă rugăm să apăsați <b>Anulează</b> și folosiți opțiunea <b>Resetare Pod</b> pentru a forța resetarea Pod-ului.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod dezactivat.\n\nScoateți Pod-ul și aruncați-l.</string>
-    <string name="omnipod_init_pod_pair_pod">Împerechere Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Amorsare Pod</string>
-    <string name="omnipod_init_pod_fill_cannula">Umplere canulă</string>
-    <string name="omnipod_init_pod_set_basal_profile">Setare profil bazala</string>
-    <string name="omnipod_deactivate_pod_cancel_delivery">Anulare livrare</string>
-    <string name="omnipod_deactivate_pod_deactivate_pod">Dezactivare Pod</string>
-    <!-- Omnipod - Base -->
-    <string name="omnipod_alert_finish_pairing_reminder">Notificare Finalizare împerechere</string>
-    <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>
-    <string name="omnipod_alert_expiration">Pod-ul va expira în curând</string>
-    <string name="omnipod_alert_expiration_advisory">Pod-ul va expira în curând</string>
-    <string name="omnipod_alert_shutdown_imminent">Oprirea este iminentă</string>
-    <string name="omnipod_alert_low_reservoir">Nivel rezervor scăzut</string>
-    <string name="omnipod_alert_unknown_alert">Alertă necunoscută</string>
-    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Setarea profilului bazal a eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
-    <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Setarea profilului bazal s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
-    <string name="omnipod_error_set_basal_failed_delivery_suspended">Setarea profilului basal a eşuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setarea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, ar fi putut fi anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setarea bazalei temporare s-ar putea sa fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
-    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setarea timpului s-ar putea sa fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
-    <string name="omnipod_error_set_time_failed_delivery_suspended">Setarea timpului a eșuat. Livrarea este suspendată! Vă rugăm să reluați manual livrarea din secțiunea Omnipod.</string>
-    <string name="omnipod_bolus_failed_uncertain">Nu se poate verifica dacă bolusul a reuşit. Vă rugăm să verificați manual că Pod-ul poate bolusa ascultand click-urile. <b>Daca ești sigur ca bolus nu a reusit, ar trebui să stergi manual intrarea bolus din Tratamente, chiar dacă dai click pe \'Oprește bolus\' acum!</b></string>
-    <string name="omnipod_bolus_failed_uncertain_smb">Nu s-a putut verifica dacă bolusul SMB (%1$.2f U) a reușit. <b>Daca ești sigur ca bolusul nu a reușit, ar trebui să ștergi manual intrarea SMB din Tratamente.</b></string>
-    <string name="omnipod_rl_stats">Statistici RL</string>
-    <string name="omnipod_read_pulse_log_short">Jurnal Pulsuri</string>
-    <string name="omnipod_pod_lot">LOT</string>
-    <string name="omnipod_pod_tid">TID</string>
-    <string name="omnipod_pod_firmware_version">Versiune firmware</string>
-    <string name="omnipod_errors">Erori</string>
-    <string name="omnipod_cmd_basal_profile_not_set_is_same">Profilul bazal este la fel cu cel existent și nu va fi reincărcat.</string>
-    <string name="omnipod_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
-    <string name="omnipod_time_or_timezone_change">Schimbare oră și/sau fus orar în Pod</string>
-    <string name="omnipod_composite_time">%1$s și %2$s</string>
-    <string name="omnipod_time_ago">%1$s în urmă</string>
-    <string name="omnipod_waiting_for_rileylink_connection">Aşteptare conexiune RileyLink...</string>
-    <string name="omnipod_bolus_did_not_succeed">Bolusul nu a reușit</string>
-    <string name="omnipod_refresh">Actualizează</string>
-    <string name="omnipod_resume_delivery">Reluați livrarea</string>
-    <string name="omnipod_error_pod_suspended">Pod suspendat</string>
-    <string name="omnipod_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
-    <string name="omnipod_suspend_delivery_short">Suspendare</string>
-    <string name="omnipod_cmd_pair_and_prime">Împerechere și amorsare</string>
-    <string name="omnipod_cmd_fill_cannula_set_basal_profile">Umpleţi canula şi setaţi profilul bazal</string>
-    <string name="omnipod_cmd_get_pulse_log">Obțineți jurnalul pulsurilor</string>
-    <string name="omnipod_uncertain_failure">Eroare necunoscută</string>
-    <string name="omnipod_cancelled_old_tbr_failed_to_set_new">S-a anulat vechea bazală temporară, dar nu s-a putut seta o nouă bazală temporară</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Se setează o bazală temporară falsă deoarece Pod-ul este suspendat</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Anulează bazala temporară falsă creată pentru că Pod-ul a fost suspendat</string>
-    <string name="omnipod_uncertain">incert</string>
-    <string name="omnipod_expiration_alerts_updated">Setarile de alertă actualizate în Pod</string>
-    <string name="omnipod_preference_category_rileylink">RileyLink</string>
-    <string name="omnipod_preference_category_other">Altele</string>
-    <string name="omnipod_preference_category_alerts">Alerte</string>
-    <string name="omnipod_preference_category_confirmation_beeps">Bip-uri de confirmare</string>
-    <string name="omnipod_wizard_button_exit">Ieșire</string>
-    <string name="omnipod_wizard_button_previous">Precedent</string>
-    <string name="omnipod_wizard_button_next">Următor</string>
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_finish">Finalizare</string>
-    <string name="omnipod_history_item_description">Descriere</string>
-    <string name="omnipod_history_item_source">Sursă</string>
-    <string name="omnipod_history_item_date">Data</string>
-    <string name="omnipod_history_type">Tip:</string>
+    <string name="omnipod_wizard_button_next">Următor</string>
+    <!-- Omnipod - Pod activation Wizard -->
+    <!-- Omnipod - Pod deactivation Wizard -->
+    <!-- Omnipod - Overview -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
+    <string name="omnipod_uncertain">incert</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_moments_ago">Acum câteva momente</string>
+    <string name="omnipod_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
+    <string name="omnipod_composite_time">%1$s și %2$s</string>
+    <string name="omnipod_time_ago">%1$s în urmă</string>
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minut</item>
         <item quantity="few">%1$d minute</item>
