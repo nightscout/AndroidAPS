@@ -314,20 +314,35 @@
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
+    <string name="mdi">זריקות יומיות מרובות (MDI)</string>
+    <string name="MM640g">Minimed 640G</string>
     <string name="ongoingnotificaction">הודעה קבועה</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="sms_minago">לפני %1$d דקות</string>
+    <string name="localprofile">פרופיל מקומי</string>
     <string name="openapsama">OpenAPS AMA</string>
+    <string name="short_avgdelta">דלתא ממוצעת קצרה</string>
+    <string name="long_avgdelta">דלתא ממוצעת ארוכה</string>
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
+    <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
+    <string name="openapsma_scriptdebugdata_label">תיקון באגים בסקריפט</string>
+    <string name="openapsama_useautosens">שימוש בפונקציית חישוב רגישות אוטומטית (Autosens)</string>
     <string name="refresheventsfromnightscout">רענן אירועים מ-Nightscout</string>
+    <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
+    <string name="eatingsoon">אכילה בקרוב</string>
     <string name="hypo">היפו</string>
     <string name="activity">פעילות</string>
     <string name="removerecord">מחיקת רשומה</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="configbuilder_shortname">CONF</string>
+    <string name="loop_shortname">לולאה</string>
+    <string name="virtualpump_shortname">VPUMP</string>
+    <string name="profileviewer_shortname">NSPROFILE</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="profile">פרופיל</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
-    <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלה להמכפיל של autosens (ובקרוב autotune) שמגדירה 20%% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
+    <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של autosens (ובקרוב autotune) שמגדירה 20%% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
     <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
     <string name="openapsama_autosens_adjusttargets_summary">ערך ברירת מחדל: התאמה מדויקת\n נועד לאפשר ל-Autosens לשנות את המטרה של ערכי הסוכר, בנוסף ליחס התיקון והבזאלים.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">ערך ברירת מחדל: 2\n מעכב בולוס מופעל אחרי שאתם מזריקים בולוס ארוחה, כך שהלולאה לא תפצה ע\"י בזאלי זמני נמוך אחרי הארוחה. הדוגמה כאן וברירת המחדל היא 2; כך שהגדרה של משך פעילות אינסולין של 3 שעות משמעה שהעיכוב יחלוף בהדרגה בתוך 1.5 שעות (3 ש\' לחלק ל-2).</string>
@@ -347,6 +362,7 @@
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">כתובת URL:</string>
+    <string name="nsclientinternal_autoscroll">גלילה אוטומטית</string>
     <string name="restart">הפעל מחדש</string>
     <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">כתובת Nightscout</string>
@@ -355,6 +371,7 @@
     <string name="nsclientinternal_secret_dialogtitle">קוד API של NS</string>
     <string name="nsclientinternal_secret_dialogmessage">הזינו את קוד ה-API של Nightscout (מינימום 12 תווים)</string>
     <string name="deliver_now">ספק עכשיו</string>
+    <string name="queue">תור:</string>
     <string name="status">סטטוס: </string>
     <string name="paused">מושהה</string>
     <string name="clearlog">נקה יומן</string>
@@ -370,6 +387,7 @@
     <string name="patient_name">שם מטופל</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="needwhitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
+    <string name="loopsuspended">לולאה מושהית</string>
     <string name="loopsuspendedfor">מושהה (%1$d ד\')</string>
     <string name="suspendloop">השהה לולאה</string>
     <string name="suspendloopfor1h">השהה לולאה לשעה אחת</string>
@@ -381,7 +399,9 @@
     <string name="disconnectpumpfor1h">נתק את המשאבה למשך שעה</string>
     <string name="disconnectpumpfor2h">נתק את המשאבה למשך שעתיים</string>
     <string name="disconnectpumpfor3h">נתק את המשאבה למשך שלוש שעות</string>
+    <string name="resume">הפעלה מחדש</string>
     <string name="reconnect">חיבור משאבה מחדש</string>
+    <string name="smscommunicator_wrongduration">משך שגוי</string>
     <string name="smscommunicator_loopsuspended">לולאה מושהית</string>
     <string name="smscommunicator_loopresumed">לולאה חודשה</string>
     <string name="treatments_wizard_bgtrend_label">מגמה 15 דקות</string>
@@ -399,5 +419,18 @@
     <string name="statuslights_cage_critical">סף התראה קריטית לתוקף העירוי [h]</string>
     <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
     <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
+    <string name="iob">אינ\' פעיל</string>
+    <string name="nav_about">אודות</string>
+    <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
+    <string name="xdripstatus_settings">מצב xDrip (שעון)</string>
+    <string name="doprofileswitch">החלפת פרופיל</string>
+    <string name="pump">משאבה</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="sensitivityoref0">רגישות Oref0</string>
+    <string name="sensitivityaaps">רגישות AAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="sensitivityweightedaverage">רגישות משוקללת ממוצעת</string>
+    <string name="mdtp_ok">אישור</string>
+    <string name="mdtp_cancel">ביטול</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
