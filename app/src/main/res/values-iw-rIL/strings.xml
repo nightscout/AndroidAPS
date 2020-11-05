@@ -389,5 +389,11 @@
     <string name="fastactinginsulin">אינסולין מהיר</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <string name="insulin_shortname">אינסולין</string>
+    <string name="enablesuperbolus">אפשר סופר בולוס באשף</string>
+    <string name="statuslights_cage_warning">סף התראה לתוקף העירוי [h]</string>
+    <string name="statuslights_cage_critical">סף התראה קריטית לתוקף העירוי [h]</string>
+    <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
+    <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
