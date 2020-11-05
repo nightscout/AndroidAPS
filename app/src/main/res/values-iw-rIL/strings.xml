@@ -59,6 +59,7 @@
     <string name="treatments_wizard_bg_label">ערכי סוכר בדם</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">פחמימות</string>
+    <string name="treatments_wizard_correction_label">תיקון</string>
     <string name="treatments_wizard_bolusiob_label">בולוס פעיל</string>
     <string name="openapsma_run">בצע כעת</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
@@ -94,6 +95,7 @@
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
     <string name="configbuilder_general">כללי</string>
     <string name="configbuilder_general_description">מס\' תוספים כלליים שעשויים להיות יעילים.</string>
+    <string name="configbuilder_constraints_description">אילו הגבלות פעילות?</string>
     <string name="constraints">מגבלות</string>
     <string name="loop">לולאה</string>
     <string name="configbuilder_loop">לולאה</string>
@@ -158,6 +160,8 @@
     <string name="filenotfound">הקובץ לא נמצא</string>
     <string name="nav_export">ייצא הגדרות</string>
     <string name="nav_import">יבא הגדרות</string>
+    <string name="openapsma_maxbasal_title">מינון בזאלי זמני מקסימלי (יח\'\שעה)</string>
+    <string name="openapsma_maxbasal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
     <string name="password_preferences_encrypt_prompt">תתבקש להזין סיסמה ראשית לצורך הצפנת ההעדפות המיוצאות.</string>
     <string name="password_preferences_decrypt_prompt">תתבקש להזין סיסמה ראשית לצורך קריאת ההעדפות המיובאות.</string>
     <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
