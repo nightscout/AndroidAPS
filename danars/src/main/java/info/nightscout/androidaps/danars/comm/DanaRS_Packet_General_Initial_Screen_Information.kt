@@ -57,8 +57,8 @@ class DanaRS_Packet_General_Initial_Screen_Information(
             //protocol 10+
             dataIndex += dataSize
             dataSize = 1
-            danaPump.errorState = info.nightscout.androidaps.dana.DanaPump.ErrorState[byteArrayToInt(getBytes(data, dataIndex, dataSize))]
-                ?: info.nightscout.androidaps.dana.DanaPump.ErrorState.NONE
+            danaPump.errorState = DanaPump.ErrorState[byteArrayToInt(getBytes(data, dataIndex, dataSize))]
+                ?: DanaPump.ErrorState.NONE
             aapsLogger.debug(LTag.PUMPCOMM, "ErrorState: " + danaPump.errorState.name)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Pump suspended: " + danaPump.pumpSuspended)
