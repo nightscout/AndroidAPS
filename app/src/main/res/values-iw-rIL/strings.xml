@@ -593,6 +593,7 @@
     <string name="start_hypo_tt">הפעלת היפו TT</string>
     <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
     <string name="combo_actvity_reading_basal_profile">קריאת פרופיל בזאלי</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">היסטוריית המשאבה השתנתה לאחר ביצוע חישוב הבולוס. הבולוס לא הוזרק. אנא חשב מחדש אם יש עדיין צורך בבולוס.</string>
     <string name="combo_bolus_count">ספירת בולוסים</string>
     <string name="combo_tbr_count">ספירת TBR</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
