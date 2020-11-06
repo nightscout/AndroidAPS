@@ -14,6 +14,7 @@
     <string name="msg_warning_sync">לא התקבלו נתונים מאז %1$s! בדקו אם AAPS בטלפון שולח נתונים לשעון</string>
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
+    <string name="pref_units_for_actions">יחידות עבור פעולות</string>
     <string name="pref_show_date">הצג תאריך</string>
     <string name="pref_show_iob">הצג אינסולין IOB</string>
     <string name="pref_show_cob">הצג COB</string>
@@ -28,6 +29,7 @@
     <string name="pref_show_ago">הצג עבר</string>
     <string name="pref_dark" comment="Enables dark visual theme">כהה</string>
     <string name="pref_highlight_basals">הדגש בזאלים</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">מחיצות מותאמות</string>
     <string name="pref_chart_timeframe">מסגרת זמן התרשים</string>
     <string name="pref_1_hour">שעה</string>
     <string name="pref_2_hours">שעתיים</string>
@@ -38,14 +40,22 @@
     <string name="pref_default">ברירת מחדל</string>
     <string name="pref_quick_righty">ימני מהיר</string>
     <string name="pref_quick_lefty">שמאלי מהיר</string>
+    <string name="pref_modern_sparse">מינימלי מודרני</string>
+    <string name="pref_delta_granularity">מפורט (סטימפאנק)</string>
     <string name="pref_low">נמוך</string>
     <string name="pref_medium">בינוני</string>
     <string name="pref_high">גבוה</string>
     <string name="pref_auto">אוטומטי</string>
     <string name="pref_big_numbers">מספרים גדולים</string>
+    <string name="pref_ring_history">היסטוריית צלצולים</string>
+    <string name="pref_light_ring_history">היסטוריה של טבעת אור</string>
     <string name="pref_animations">אנימציות</string>
     <string name="pref_wizard_in_menu">אשף בתפריט</string>
     <string name="pref_prime_in_menu">מילוי בתפריט</string>
+    <string name="pref_single_target">מטרה יחידה</string>
+    <string name="pref_wizard_percentage">אחוז אשף</string>
+    <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
+    <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
     <string name="menu_tempt">מטרה זמנית</string>
     <string name="menu_wizard">אשף</string>
