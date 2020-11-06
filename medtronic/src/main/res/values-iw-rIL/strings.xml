@@ -2,6 +2,10 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <string name="medtronic_pump_battery_alkaline">אלקליין (תצוגה מורחבת)</string>
+    <string name="medtronic_pump_battery_lithium">ליתיום (תצוגה מורחבת)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
     <!-- MDT Errors -->
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
