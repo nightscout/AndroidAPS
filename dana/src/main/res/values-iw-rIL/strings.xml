@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danars_pairing">מזווג</string>
+    <string name="danars_nodeviceavailable">לא נמצאו מכשירים עד כה</string>
+    <string name="danars_pairingok">הזיווג הצליח</string>
+    <string name="danars_pairingtimedout">הזיווג חרג ממגבלת הזמן</string>
+    <string name="danars_waitingforpairing">מחכה לזיווג עם משאבה</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">חיבור משאבת DANA Diabecare RS</string>
+    <string name="maxbolusviolation">בולוס גבוה מדי</string>
+    <string name="commanderror">שגיאת פקודה</string>
+    <string name="speederror">שגיאת מהירות</string>
+    <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
+    <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
+    <string name="danar_valuenotsetproperly">ערך לא מוגדר כראוי</string>
+</resources>
