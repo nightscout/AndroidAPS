@@ -108,10 +108,10 @@
     <string name="wrongcarbs_treatmentstab">ב\"טיפולים\", מחקו את רשומת הפחימות השגויה. רשמו פחמימות מחדש.</string>
     <string name="wrongcarbs_addfakeinsulin">הזרק אינסולין מדומה באמצעות הפונקציה \"מילוי חדש\".</string>
     <string name="extendedcarbs_label">נושא: מזון עם שומן וחלבון</string>
-    <string name="extendedcarbs_handling">מה לעשות אם האוכל שלך מכיל כמות גדולה של שומן ו//או חלבונים?</string>
+    <string name="extendedcarbs_handling">מה לעשות אם האוכל שלך מכיל כמות גדולה של שומן ו\או חלבונים?</string>
     <string name="extendedcarbs_useextendedcarbs">לחשב מחדש שומן וחלבונים כפחמימות והשתמש בפונקציית \"פחמימות ממושכות\".</string>
-    <string name="extendedcarbs_add">חשב חישוב נוסף לתרגם את השומן והחלבונים לפחמימות והוסף לבולוס.</string>
-    <string name="extendedcarbs_useextendedbolus">השתמש בבולוס מורחב לכיסוי שומן וחלבונים.</string>
+    <string name="extendedcarbs_add">חשב מחדש את השומן והחלבונים כפחמימות והוסף לבולוס.</string>
+    <string name="extendedcarbs_useextendedbolus">השתמש בבולוס ממושך לכיסוי שומן וחלבונים.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">נושא: ניטור מרוחק</string>
     <string name="nsclient_howcanyou">איך אתה יכול לפקח על AAPS של הילד שלך מרחוק?</string>
