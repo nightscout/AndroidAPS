@@ -3,6 +3,7 @@
     <!--    Keys-->
     <!--    General-->
     <string name="reload">טען מחדש</string>
+    <string name="virtualpump_extendedbolus_label">בולוס ממושך</string>
     <string name="btwatchdog_summary">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן לתקשר עם המשאבה. זה עשוי לעזור במס\' דגמי טלפונים שבהם מערכת הבלוטות\' קופאת.</string>
     <string name="pairing">מזווג</string>
     <!--    Constraints-->
@@ -37,6 +38,7 @@
     <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בהערכים המינימליים שנתמכים: %1$s</string>
     <!--    ProfileFunction-->
     <!--    PumpType-->
+    <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
