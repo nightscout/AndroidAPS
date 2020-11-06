@@ -13,7 +13,7 @@
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">אזהרה</string>
     <string name="omnipod_error_rileylink_address_invalid">כתובת ריילילינק לא חוקית.</string>
-    <string name="omnipod_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\n יש להגדיר קודם את אומניפוד על מנת לבצע פעולה זו.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\nיש להגדיר קודם את אומניפוד על מנת לבצע פעולה זו.</string>
     <string name="omnipod_error_unexpected_exception">אירעה שגיאה לא צפויה. נא לדווח! (%1$s: %2$s).</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">כשל בהגדרת הפרופיל הבזאלי: התקבל פרופיל ריק. נא להפעיל את הפרופיל שלכם.</string>
     <string name="omnipod_error_set_initial_basal_schedule_no_profile">אין פרופיל בזאלי פעיל. נא להפעיל את הפרופיל הבזאלי שלכם.</string>
