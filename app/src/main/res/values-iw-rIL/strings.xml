@@ -150,7 +150,7 @@
     <string name="careportal_newnstreatment_glucosetype">סוג גלוקוז</string>
     <string name="noprofile">פרופיל Nightscout טרם נטען</string>
     <string name="overview_tempbasal_button">בזאלי זמני</string>
-    <string name="overview_extendedbolus_button">בולוס מורחב</string>
+    <string name="overview_extendedbolus_button">בולוס ממושך</string>
     <string name="configbuilder_nightscoutversion_label">גירסת Nightscout:</string>
     <string name="missing_carbs">חסרים %1$d גר\'</string>
     <string name="exported">ההעדפות יוצאו</string>
@@ -259,7 +259,7 @@
     <string name="smscommunicator_remotebolusnotallowed">בולוס מרחוק אינו זמין. נסו שוב מאוחר יותר.</string>
     <string name="smscommunicator_basalreplywithcode">להפעלת בזאלי %1$.2f יח\' לשעה למשך %2$d דקות הקש קוד %3$s</string>
     <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d% הקש קוד %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">למתן בולוס מורחב %1$.2f יח\' למשך %2$d דקות הקש קוד %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">למתן בולוס ממושך %1$.2f יח\' למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">למתן %1$d גר\' ב-%2$s הקש קוד %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">להפעלת בזאלי %1$d%% למשך %2$d דקות הקש קוד %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">להשהיית הלולאה למשך %1$d דקות הקש קוד %2$s</string>
@@ -267,18 +267,18 @@
     <string name="smscommunicator_loopenablereplywithcode">כדי להפעיל את הלולאה הקש קוד %1$s</string>
     <string name="smscommunicator_loopdisablereplywithcode">להשבתת הלולאה הקש קוד %1$s</string>
     <string name="smscommunicator_tempbasalset">בזאלי זמני %1$.2f יחידות/שעה למשך %2$d דקות הופעל בהצלחה</string>
-    <string name="smscommunicator_extendedset">בולוס מורחב %1$.2f יחידות למשך %2$d דקות הופעל בהצלחה</string>
+    <string name="smscommunicator_extendedset">בולוס ממושך %1$.2f יחידות למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_carbsset">%1$d גר\' פחמימות נקלטו בהצלחה</string>
     <string name="smscommunicator_carbsfailed">קליטת %1$d גר\' פחמימות נכשלה</string>
     <string name="smscommunicator_tempbasalset_percent">בזאלי זמני %1$d%% למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_tempbasalfailed">הפעלת בזאלי זמני נכשלה</string>
-    <string name="smscommunicator_extendedfailed">הפעלת בולוס מורחב נכשלה</string>
+    <string name="smscommunicator_extendedfailed">הפעלת בולוס ממושך נכשלה</string>
     <string name="smscommunicator_basalstopreplywithcode">להפסקת בזאלי זמני הקש קוד %1$s </string>
-    <string name="smscommunicator_extendedstopreplywithcode">להפסקת בולוס ממושך הקש קוד %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">להפסקת בולוס ממושך יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">בזאלי זמני בוטל</string>
-    <string name="smscommunicator_extendedcanceled">בולוס מורחב בוטל</string>
+    <string name="smscommunicator_extendedcanceled">בולוס ממושך בוטל</string>
     <string name="smscommunicator_tempbasalcancelfailed">ביטול בזאלי זמני ניכשל</string>
-    <string name="smscommunicator_extendedcancelfailed">ביטול בולוס מורחב נכשל</string>
+    <string name="smscommunicator_extendedcancelfailed">ביטול בולוס ממושך נכשל</string>
     <string name="smscommunicator_unknowncommand">פקודה לא מוכרת או תגובה שגויה</string>
     <string name="quickwizard">אשף מהיר</string>
     <string name="quickwizardsettings">הגדרות אשף מהיר</string>
@@ -433,6 +433,7 @@
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
     <string name="xdripstatus_settings">מצב xDrip (שעון)</string>
+    <string name="overview_extendedbolus_cancel_button">ביטול בולוס ממושך</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="careportal_pbage_label">גיל סוללת המשאבה</string>
     <string name="ns_alarmoptions">אפשרויות התראה</string>
@@ -450,6 +451,7 @@
     <string name="sensitivityoref0">רגישות Oref0</string>
     <string name="sensitivityaaps">רגישות AAPS</string>
     <string name="openaps_short">OAPS</string>
+    <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="sensitivityweightedaverage">רגישות משוקללת ממוצעת</string>
     <string name="mdtp_ok">אישור</string>
     <string name="mdtp_cancel">ביטול</string>
@@ -486,6 +488,7 @@
     <string name="combo_tbr_remaining">%1$d%% (%2$d דק\' נותרו)</string>
     <string name="combo_pump_state_running">פועל</string>
     <string name="combo_pump_action_cancelling_tbr">ביטול בזאלי זמני</string>
+    <string name="combo_low_suspend_forced_notification">שימוש לא בטוח: בולוס ממושך או רב שלבי פעיל. מצב הלולאה הוגדר למושהה עקב סוכר נמוך למשך 6 שעות. רק בולוסים רגילים נתמכים במצב לולאה</string>
     <string name="combo_pump_connected_now">עכשיו</string>
     <string name="combo_activity_reading_pump_history">קריאת היסטוריית המשאבה</string>
     <string name="combo_activity_setting_basal_profile">הגדרת פרופיל בזאלי</string>
@@ -493,6 +496,7 @@
     <string name="combo_reservoir_low">נמוך</string>
     <string name="combo_warning">אזהרה</string>
     <string name="combo_error_partial_bolus_delivered">רק %1$.2f מתוך %2$.2f יח\' מהבולוס המבוקש הוזרקו בשל שגיאה. בדקו את המשאבה כדי לוודא זאת ולבצע את הפעולות המתאימות.</string>
+    <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="ago">לפני</string>
     <string name="enablesmbalways">הפעלת SMB תמיד</string>
     <string name="enablesmbaftercarbs">הפעלת SMB אחרי פחמימות</string>
@@ -501,5 +505,15 @@
     <string name="enablesmbwithhightemptarget">הפעלת SMB עם ערכי מטרה גבוהים</string>
     <string name="overview_insulin_label">אינסולין</string>
     <string name="overview_carbs_label">פחמימות</string>
+    <string name="limitingextendedbolus">הגבלת בולוס ממושך ל- %1$.1f יח\' בגלל %2$s</string>
+    <string name="virtualpump_pump_def">בולוס: צעד=%1$s\nבולוס ממושך: [צעד=%2$s, משך=%3$s מינ\'-%4$sש\']\nבזאלי: צעד=%5$s\nבזאלי זמני: %6$s (עם %7$s), משך=%8$s מינ\'-%9$sש\'\n%10$s</string>
+    <string name="enable_tbr_emulation_summary">השתמש בבולוס ממושך במקום בזאלים זמניים לעקיפת הגבלת ה-250%</string>
+    <string name="disable_vibration_summary">עבור בולוס רגיל וממושך (זמין רק עם קושחה 3.x של משאבת Insight)</string>
+    <string name="extended_bolus">בולוס ממושך</string>
+    <string name="short_status_extended">בולוס ממושך: %1$.2f / %2$.2f יח\' במשך %3$d דקות</string>
+    <string name="ebstopsloop">שימוש בבולוס ממושך יפסיק את מצב הלולאה הסגורה לזמן פעילות הבולוס. אתם בטוחים שאתם רוצים להמשיך?</string>
+    <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
+    <string name="extended_bolus_short">EB</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">הנתונים הבאים יועלו לחשבון Open Humans שלכם: ערכי גלוקוז, בולוסים, פחמימות, אירועים מפורטל הטיפולים (מלבד הערות), בולוסים ממושכים, החלפות פרופיל, מינונים יומיים כוללים, באזאלים זמניים, ערכי מטרה זמניים, העדפות, גרסת יישום, דגם המכשיר ומממדי המסך. מידע סודי או פרטי כגון כתובת ה-Nightscout האישית או סוד ה-API שלכם לא יועלו.</string>
 </resources>
