@@ -4,19 +4,19 @@
     <string name="objectives_button_start">התחל</string>
     <string name="objectives_button_verify">אמת</string>
     <string name="nth_objective">%1$d. משימה</string>
-    <string name="objectivenotstarted">משימה %1$d לא התחילה</string>
+    <string name="objectivenotstarted">מטרה %1$d לא החלה</string>
     <string name="objectivenotfinished">משימה %1$d לא בוצעה במלואה</string>
-    <string name="objectives_0_objective">הגדרת חיזוי ופיקוח, וניתוח קצב בסיסי ויחסים</string>
+    <string name="objectives_0_objective">מגדיר ויזואליזציה, ניטור, נתוח של מינון בזאלי ויחסים</string>
     <string name="objectives_0_gate">ודא כי רמת סוכר זמינה ב- Nightscout, ושנתוני האינסולין מהמשאבה נשלחים</string>
-    <string name="objectives_openloop_objective">התחל לולאה פתוחה</string>
+    <string name="objectives_openloop_objective">התחלה עם לולאה פתוחה</string>
     <string name="objectives_openloop_gate">השתמשו במצב לולאה פתוחה במשך מס\' ימים, וקבעו באופן ידני מס\' רב של פרופילי בזאלי זמניים. הגדירו והשתמשו במטרות זמניות ובמטרות ברירת מחדל (לדוגמא פעילות גופנית, או מתן פחמימות בהיפו)</string>
     <string name="objectives_maxbasal_objective">הבנה של הלולאה הפתוחה שלך, לרבות הבזאלים הזמניים וההמלצות</string>
     <string name="objectives_maxbasal_gate">בהתבסס על ניסיון זה, קבעו את הערך הבזאלי המקסימלי והגדירו אותו במשאבה</string>
-    <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה בהשהיה עקב רמת סוכר נמוכה</string>
+    <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
     <string name="objectives_maxiobzero_gate">הרץ בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם מעט ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעל במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
-    <string name="objectives_autosens_objective">במידת הצורך, בצע התאמת בזאלי ויחסים, ולאחר מכן הפעל Auto-sens</string>
+    <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
     <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך היום, עם הוספת ערכי פחמימות רגילים</string>
     <string name="objectives_ama_objective">הפעלת פונקציות נוספות לשימוש במשך היום, לדוגמה AMA (סיוע ארוחות מתקדם)</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
@@ -41,7 +41,7 @@
     <string name="codeaccepted">קוד אושר</string>
     <string name="codeinvalid">קוד בלתי חוקי</string>
     <string name="objectives_exam_objective">הוכח את הידע שלך</string>
-    <string name="objectives_exam_gate">למד וענה על שאלות</string>
+    <string name="objectives_exam_gate">למדו וענו נכונה על שאלות</string>
     <string name="answerdisabledto">השבת תשובה מושבתת עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
     <string name="unfinshed_button">הבא שלא נעשה</string>
