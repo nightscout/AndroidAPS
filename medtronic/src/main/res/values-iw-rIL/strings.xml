@@ -2,10 +2,26 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">מספר סידורי של המשאבה</string>
+    <string name="medtronic_pump_type">סוג המשאבה</string>
+    <string name="medtronic_pump_frequency">תדר המשאבה</string>
+    <string name="medtronic_pump_bolus_delay">המתנה לפני מתן בולוס (שניות)</string>
+    <string name="medtronic_pump_max_bolus">מקסימום בולוס במשאבה (יח\')</string>
+    <string name="medtronic_pump_max_basal">מקסימום בזאלי במשאבה (יח\' לשעה)</string>
+    <string name="medtronic_pump_encoding">קידוד מדטרוניק</string>
+    <string name="medtronic_pump_frequency_us_ca">ארצות הברית &amp; קנדה (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">ברחבי העולם (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">קידוד תוכנה 4B6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">קידוד חומרה 4B6b</string>
+    <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
+    <string name="medtronic_custom_action_reset_rileylink">איפוס תצורת RileyLink</string>
+    <string name="medtronic_pump_battery_select">סוג סוללה (תצוגת חשמל)</string>
+    <string name="medtronic_pump_battery_no">לא נבחר (תצוגה פשוטה)</string>
     <string name="medtronic_pump_battery_alkaline">אלקליין (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_lithium">ליתיום (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
+    <string name="medtronic_bolus_debugging">איתור באגים בבולוס או טיפולים</string>
     <!-- MDT Errors -->
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
