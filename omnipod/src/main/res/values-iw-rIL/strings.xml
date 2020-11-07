@@ -96,6 +96,7 @@
     <string name="omnipod_error_failed_to_initialize_pod">אתחול הפוד נכשל</string>
     <string name="omnipod_error_failed_to_insert_cannula">הכנסת הצינורית נכשלה</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">זמן ההפעלה של הפוד חורג. לא ניתן להפעיל את פוד זה יותר.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">אימות התקדמות ההפעלה נכשל. אנא נסו שנית.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">אימות</string>
     <string name="omnipod_confirmation_time_or_timezone_change">שעה ו/או אזור הזמן השתנו בפוד.</string>
