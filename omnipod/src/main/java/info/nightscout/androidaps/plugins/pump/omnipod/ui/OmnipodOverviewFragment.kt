@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.Activat
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.*
@@ -54,6 +55,7 @@ import kotlin.collections.ArrayList
 
 class OmnipodOverviewFragment : DaggerFragment() {
     companion object {
+
         private val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
         private val PLACEHOLDER = "-" // 15 seconds
     }
@@ -278,11 +280,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }
 
-            val now = DateTime.now()
-
             // base basal rate
             omnipod_overview_base_basal_rate.text = if (podStateManager.isPodActivationCompleted) {
-                resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(Duration(now.withTimeAtStartOfDay(), now))))
+                resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
             } else {
                 PLACEHOLDER
             }
@@ -598,6 +598,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     }
 
     inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {
+
         private var messageOnSuccess: String? = null
 
         override fun run() {
