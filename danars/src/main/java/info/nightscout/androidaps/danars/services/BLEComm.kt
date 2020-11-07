@@ -15,6 +15,7 @@ import info.nightscout.androidaps.danars.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.danars.comm.DanaRS_Packet
 import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
 import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.androidaps.danars.encryption.EncryptionType
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -56,9 +57,13 @@ class BLEComm @Inject internal constructor(
         private const val WRITE_DELAY_MILLIS: Long = 50
         private const val UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb"
         private const val UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb"
+        private const val UART_BLE5_UUID = "00002902-0000-1000-8000-00805f9b34fb"
 
         private const val PACKET_START_BYTE = 0xA5.toByte()
         private const val PACKET_END_BYTE = 0x5A.toByte()
+
+        private const val BLE5_PACKET_START_BYTE = 0x73.toByte()
+        private const val BLE5_PACKET_END_BYTE = 0xBF.toByte()
     }
 
     private var scheduledDisconnection: ScheduledFuture<*>? = null
@@ -69,7 +74,7 @@ class BLEComm @Inject internal constructor(
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
-    private var v3Encryption: Boolean = false
+    private var encryption: EncryptionType = EncryptionType.ENCRYPTION_DEFAULT
         set(newValue) {
             bleEncryption.setEnhancedEncryption(newValue)
             field = newValue
@@ -116,7 +121,7 @@ class BLEComm @Inject internal constructor(
             return false
         }
         isConnected = false
-        v3Encryption = false
+        encryption = EncryptionType.ENCRYPTION_DEFAULT
         encryptedDataRead = false
         encryptedCommandSent = false
         isConnecting = true
@@ -136,7 +141,7 @@ class BLEComm @Inject internal constructor(
     fun disconnect(from: String) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
-        if (!encryptedDataRead && encryptedCommandSent && v3Encryption) {
+        if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_RSv3) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
@@ -185,8 +190,6 @@ class BLEComm @Inject internal constructor(
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic()
             }
-            sendConnect()
-            // 1st message sent to pump after connect
         }
 
         override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
@@ -204,7 +207,7 @@ class BLEComm @Inject internal constructor(
         override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
             // for v3 after initial handshake it's encrypted - useless
             // aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicWrite: " + DanaRS_Packet.toHexString(characteristic.value))
-            Thread(Runnable {
+            Thread {
                 synchronized(mSendQueue) {
                     // after message sent, check if there is the rest of the message waiting and send it
                     if (mSendQueue.size > 0) {
@@ -213,7 +216,14 @@ class BLEComm @Inject internal constructor(
                         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
                     }
                 }
-            }).start()
+            }.start()
+        }
+
+        override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+            super.onDescriptorWrite(gatt, descriptor, status)
+            //aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite " + status)
+            sendConnect()
+            // 1st message sent to pump after connect
         }
     }
 
@@ -229,6 +239,11 @@ class BLEComm @Inject internal constructor(
             return
         }
         bluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
+        // Dana-i BLE5 specific
+        characteristic?.getDescriptor(UUID.fromString(UART_BLE5_UUID))?.let {
+            it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+            bluetoothGatt?.writeDescriptor(it)
+        }
     }
 
     @Synchronized
@@ -299,7 +314,7 @@ class BLEComm @Inject internal constructor(
             close()
             isConnected = false
             isConnecting = false
-            v3Encryption = false
+            encryption = EncryptionType.ENCRYPTION_DEFAULT
             encryptedDataRead = false
             encryptedCommandSent = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
@@ -331,7 +346,7 @@ class BLEComm @Inject internal constructor(
         var inputBuffer: ByteArray? = null
 
         // decrypt 2nd level after successful connection
-        val incomingBuffer = if (v3Encryption && isConnected)
+        val incomingBuffer = if (encryption == EncryptionType.ENCRYPTION_RSv3 && isConnected)
             bleEncryption.decryptSecondLevelPacket(receivedData).also {
                 encryptedDataRead = true
                 sp.putLong(R.string.key_rs_last_clear_key_request, 0L)
@@ -342,7 +357,6 @@ class BLEComm @Inject internal constructor(
         while (isProcessing) {
             var length = 0
             synchronized(readBuffer) {
-
                 // Find packet start [A5 A5]
                 if (bufferLength >= 6) {
                     for (idxStartByte in 0 until bufferLength - 2) {
@@ -370,6 +384,36 @@ class BLEComm @Inject internal constructor(
                         packetIsValid = true
                     }
                 }
+                // packet can be BLE5 encrypted too
+                if (!packetIsValid && encryption == EncryptionType.ENCRYPTION_BLE5) {
+                    var startIndex: Int = -1
+                    // Find encrypted packet start [73 73]
+                    if (bufferLength >= 6) {
+                        for (idxStartByte in 0 until bufferLength - 2) {
+                            if (readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE) {
+                                if (idxStartByte > 0) {
+                                    // if buffer doesn't start with signature remove the leading trash
+                                    aapsLogger.debug(LTag.PUMPBTCOMM, "Shifting the input buffer by $idxStartByte bytes")
+                                    System.arraycopy(readBuffer, idxStartByte, readBuffer, 0, bufferLength - idxStartByte)
+                                    bufferLength -= idxStartByte
+                                }
+                                startIndex = idxStartByte
+                                break
+                            }
+                        }
+                    }
+                    // 73 73 ENCRYPTED CONTENT BF BF
+                    if (startIndex != -1) {
+                        for (idxEndByte in 5..bufferLength - 2) {
+                            if (readBuffer[idxEndByte] == BLE5_PACKET_END_BYTE && readBuffer[idxEndByte + 1] == BLE5_PACKET_END_BYTE) {
+                                length = idxEndByte - startIndex + 2 - 7
+                                packetIsValid = true
+                                encryptedDataRead = true
+                                break
+                            }
+                        }
+                    }
+                }
                 if (packetIsValid) {
                     inputBuffer = ByteArray(length + 7)
                     // copy packet to input buffer
@@ -385,7 +429,11 @@ class BLEComm @Inject internal constructor(
                     // now we have encrypted packet in inputBuffer
                 }
             }
+            if (packetIsValid && encryptedDataRead && encryption == EncryptionType.ENCRYPTION_BLE5) {
+                inputBuffer = bleEncryption.decryptSecondLevelPacket(inputBuffer)
+            }
             if (packetIsValid) {
+                // aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< PROCESSING: " + DanaRS_Packet.toHexString(inputBuffer))
                 // decrypt the packet
                 bleEncryption.getDecryptedPacket(inputBuffer)?.let { decryptedBuffer ->
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
@@ -453,8 +501,8 @@ class BLEComm @Inject internal constructor(
         // response OK v1
         if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
-            v3Encryption = false
-            danaPump.v3RSPump = false
+            encryption = EncryptionType.ENCRYPTION_DEFAULT
+            danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
             val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
@@ -467,8 +515,8 @@ class BLEComm @Inject internal constructor(
             // response OK v3
         } else if (decryptedBuffer.size == 9 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
             // v3 2nd layer encryption
-            v3Encryption = true
-            danaPump.v3RSPump = true
+            encryption = EncryptionType.ENCRYPTION_RSv3
+            danaPump.ignoreUserPassword = true
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             // grab randomSyncKey
@@ -482,6 +530,21 @@ class BLEComm @Inject internal constructor(
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 EASY (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
                 // Dana RS Easy
                 sendEasyMenuCheck()
+            }
+            // response OK BLE5
+        } else if (decryptedBuffer.size == 14 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
+            // v3 2nd layer encryption
+            encryption = EncryptionType.ENCRYPTION_BLE5
+            danaPump.ignoreUserPassword = true
+            danaPump.hwModel = decryptedBuffer[5].toInt()
+            danaPump.protocol = decryptedBuffer[7].toInt()
+            val pairingKey = DanaRS_Packet.asciiStringFromBuff(decryptedBuffer, 8, 6) // used while bonding
+
+            if (danaPump.hwModel == 0x09) {
+                bleEncryption.setBle5Key(pairingKey.encodeToByteArray())
+                aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK BLE5 (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
+                // Dana-i BLE5 Pump
+                sendBLE5PairingInformation()
             }
             // response PUMP : error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'M'.toByte() && decryptedBuffer[5] == 'P'.toByte()) {
@@ -501,8 +564,8 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.connectionerror)))
-            sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName)
-            val n = Notification(Notification.WRONGSERIALNUMBER, resourceHelper.gs(R.string.wrongpassword), Notification.URGENT)
+            danaRSPlugin.clearPairing()
+            val n = Notification(Notification.WRONGSERIALNUMBER, resourceHelper.gs(R.string.password_cleared), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
         }
     }
@@ -544,6 +607,14 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    // 2nd packet BLE5
+    private fun sendBLE5PairingInformation() {
+        val params = ByteArray(4) { 0.toByte() }
+        val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, params, null)
+        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + "ENCRYPTION__TIME_INFORMATION BLE5" + " " + DanaRS_Packet.toHexString(bytes))
+        writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
+    }
+
     private fun sendV3PairingInformation(requestNewPairing: Int) {
         val params = byteArrayOf(requestNewPairing.toByte())
         val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, params, null)
@@ -553,8 +624,12 @@ class BLEComm @Inject internal constructor(
 
     // 2nd packet response
     private fun processEncryptionResponse(decryptedBuffer: ByteArray) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__TIME_INFORMATION " +  /*message.getMessageName() + " " + */DanaRS_Packet.toHexString(decryptedBuffer))
-        if (v3Encryption) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__TIME_INFORMATION " + DanaRS_Packet.toHexString(decryptedBuffer))
+        if (encryption == EncryptionType.ENCRYPTION_BLE5) {
+            isConnected = true
+            isConnecting = false
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Connect !!")
+        } else if (encryption == EncryptionType.ENCRYPTION_RSv3) {
             // decryptedBuffer[2] : 0x00 OK  0x01 Error, No pairing
             if (decryptedBuffer[2] == 0x00.toByte()) {
                 val randomPairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
@@ -656,7 +731,7 @@ class BLEComm @Inject internal constructor(
         isUnitUD = decryptedBuffer[3] == 0x01.toByte()
 
         // request time information
-        if (v3Encryption) sendV3PairingInformation()
+        if (encryption == EncryptionType.ENCRYPTION_RSv3) sendV3PairingInformation()
         else sendTimeInfo()
     }
 
@@ -668,7 +743,8 @@ class BLEComm @Inject internal constructor(
         val params = message.requestParams
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.friendlyName + " " + DanaRS_Packet.toHexString(command) + " " + DanaRS_Packet.toHexString(params))
         var bytes = bleEncryption.getEncryptedPacket(message.opCode, params, null)
-        if (v3Encryption)
+        // aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + DanaRS_Packet.toHexString(bytes))
+        if (encryption != EncryptionType.ENCRYPTION_DEFAULT)
             bytes = bleEncryption.encryptSecondLevelPacket(bytes)
         // If there is another message not completely sent, add to queue only
         if (mSendQueue.size > 0) {
