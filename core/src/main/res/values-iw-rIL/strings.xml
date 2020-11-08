@@ -184,7 +184,7 @@
     <string name="warning_Message">שימוש בבולוס למילוי / פריימינג עשוי לגרום לחוסר דיוק!</string>
     <string name="olddata_Message">הנתונים ישנים. לרענון לחצו \"טען מחדש\"</string>
     <string name="tbb">סה\"כ בזאלי בסיסי</string>
-    <string name="tbb2">בזאלי יומי כולל * 2</string>
+    <string name="tbb2">סה\"כ בזאלי בסיסי * 2</string>
     <!--    Ntp-->
     <string name="timedetection">זיהוי שעה</string>
     <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
