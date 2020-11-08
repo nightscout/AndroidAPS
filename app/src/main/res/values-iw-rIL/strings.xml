@@ -262,7 +262,6 @@
     <string name="valueoutofrange">ערך %1$s הינו מחוץ לתחום</string>
     <string name="smscommunicator_pumpconnectwithcode">לחיבור המשאבה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_pumpconnectfail">החיבור אל המשאבה נכשל</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">לניתוק המשאבה למשך %1d דקות הקש קוד %2$s</string>
     <string name="smscommunicator_pumpdisconnected">המשאבה מנותקת</string>
     <string name="smscommunicator_reconnect">המשאבה חוברה מחדש</string>
     <string name="smscommunicator_remotecommandnotallowed">פקודה מרוחקת אינה מותרת</string>
