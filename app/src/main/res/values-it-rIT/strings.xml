@@ -410,6 +410,7 @@
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto insulino-resistente</string>
+    <string name="pregnant">Gravidanza</string>
     <string name="patientage_summary">Seleziona l\'età del paziente per impostare i limiti di sicurezza</string>
     <string name="patient_name">Nome paziente</string>
     <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
@@ -454,6 +455,8 @@
     <string name="statuslights_iage_critical">Soglia età insulina critica [h]</string>
     <string name="statuslights_sage_warning">Soglia di avviso età sensore [h]</string>
     <string name="statuslights_sage_critical">Soglia età sensore critica [h]</string>
+    <string name="statuslights_sbat_warning">Soglia di avviso livello batteria sensore [%]</string>
+    <string name="statuslights_sbat_critical">Soglia livello batteria sensore critico [%]</string>
     <string name="statuslights_bage_warning">Soglia di avviso età batteria [h]</string>
     <string name="statuslights_bage_critical">Soglia età batteria critica [h]</string>
     <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
@@ -484,6 +487,10 @@
     <string name="careportal_insulinage_label">Età insulina</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_pbage_label">Età batteria micro</string>
+    <string name="careportal_sensor_label">Sensore</string>
+    <string name="careportal_canula_label">Cannula</string>
+    <string name="careportal_insulin_label">Insulina</string>
+    <string name="careportal_pb_label">Batteria micro</string>
     <string name="careportal_age_label">età:</string>
     <string name="careportal_level_label">livello:</string>
     <string name="ns_alarmoptions">Opzioni allarme</string>
@@ -1180,6 +1187,7 @@
     <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
     <string name="copyexistingvalues">Copiare impostazioni NS (se esiste)?</string>
     <string name="classic_description">Tema originale</string>
+    <string name="lowres_description">Tema a bassa risoluzione</string>
     <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
