@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Valoarea %1$s este mai mare decât limita stabilită</string>
     <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1d minute, raspundeti cu: %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
