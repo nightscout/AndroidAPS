@@ -134,8 +134,6 @@
     <string name="ic_increasingvalue">יחס אינסולין פחמימה גבוה גורם להזרקת פחות אינסולין עבור כל פחמימה.</string>
     <string name="ic_decreasingvalue">יחס אינסולין פחמימה נמוך גורם להזרקת פחות אינסולין עבור כל פחמימה.</string>
     <string name="ic_noeffect">כאשר יש 0 פחמ\', שינוי יחס הפחמימות (IC) יוביל למינון שונה של אינסולין כדי לתקן ערך סוכר נתון.</string>
-    <string name="ic_different">יחס אינסולין פחמימה ישתנה אם תחשבו יחידות לחם כ-10 גר\' או 12 גר\'.</string>
-    <string name="ic_meaning">יחס אינסולין פחמימה קובע כמה יח\' לחם מכוסות ע\"י יחידת אינסולין.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">נושא: החלפת פרופילים</string>
     <string name="profileswitch_pctwillchange"> כאשר בוחרים 90% בעת החלפת הפרופיל…</string>
