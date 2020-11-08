@@ -70,6 +70,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NonceRes
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodProgressStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkInterruptedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkTimeoutException;
@@ -795,6 +796,8 @@ public class AapsOmnipodManager {
         } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalActivationProgressException ||
                 ex instanceof IllegalDeliveryStatusException) {
             comment = getStringResource(R.string.omnipod_error_invalid_progress_state);
+        } else if (ex instanceof PodProgressStatusVerificationFailedException) {
+            comment = getStringResource(R.string.omnipod_error_failed_to_verify_activation_progress);
         } else if (ex instanceof IllegalVersionResponseTypeException) {
             comment = getStringResource(R.string.omnipod_error_invalid_response);
         } else if (ex instanceof IllegalResponseException) {
