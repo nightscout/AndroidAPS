@@ -77,12 +77,14 @@
         <item>@string/teenage</item>
         <item>@string/adult</item>
         <item>@string/resistantadult</item>
+        <item>@string/pregnant</item>
     </string-array>
     <string-array name="ageValues" translatable="false">
         <item>@string/key_child</item>
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
         <item>@string/key_resistantadult</item>
+        <item>@string/key_pregnant</item>
     </string-array>
 
     <string-array name="quickWizardYesNo">
