@@ -52,6 +52,7 @@
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Nastavenie dočasného bazálu zlyhalo. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Nastavenie času, pravdepodobne zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Nastavenie času zlyhalo. Podávanie je pozastavené! Manuálne obnovte podávanie zo záložky Omnipod.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Nepodarilo sa overiť priebeh aktivácie. Skúste to znova.</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deaktivovať Pod</string>
