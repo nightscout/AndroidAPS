@@ -306,7 +306,7 @@
     <string name="valueoutofrange">Value %1$s is out of hard limits</string>
     <string name="smscommunicator_pumpconnectwithcode">To connect pump reply with code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Connection to pump failed</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">To disconnect pump for %1d minutes reply with code %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">To disconnect pump for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pump disconnected</string>
     <string name="smscommunicator_reconnect">Pump reconnected</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
