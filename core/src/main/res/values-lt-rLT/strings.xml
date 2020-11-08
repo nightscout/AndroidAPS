@@ -170,7 +170,6 @@
     <string name="waitingforpumpresult">Laukiama rezultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Būtina suvartoti %d g papildomų AV per %d min</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistika</string>
     <string name="cumulative_tdd">BPD viso</string>
