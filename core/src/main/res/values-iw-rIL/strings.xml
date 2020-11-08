@@ -128,8 +128,6 @@
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יח'</b> בולוס: <b>%3$.2f יח'</b> בזאלי: <b>%4$.2f יח'(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יח'</b> בולוס: <b>%3$.2f יח'</b> בזאלי: <b>%4$.2f יח'(%5$.0f%%)</b> פחמ': <b>%6$.0f גר'</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
