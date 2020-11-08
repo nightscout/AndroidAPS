@@ -170,7 +170,6 @@
     <string name="waitingforpumpresult">ממתין לתוצאות</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">נדרשים %d גר\' פחמימות ב-%d הדקות הקרובות</string>
     <!--    TDDStatsActivity-->
     <string name="stats">סטטיסטיקה</string>
     <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
