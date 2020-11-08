@@ -14,6 +14,7 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hodiny pred vypnutím</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Upozornenie na nízký stav zásobníka povolené</string>
     <string name="omnipod_config_low_reservoir_alert_units">Počet jednotiek</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Zvuk upozornenia pre neistý dočasný bazál povolený</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Iné</string>
     <string name="omnipod_preference_category_alerts">Výstrahy</string>
@@ -21,14 +22,7 @@
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Žiadny aktívny Pod</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Inštalácia prebieha (čaká sa na vloženie kanyly)</string>
-    <string name="omnipod_pod_status_running">V prevádzke</string>
-    <string name="omnipod_pod_status_suspended">Pozastavené</string>
-    <string name="omnipod_pod_status_pod_fault">Chyba Podu</string>
-    <string name="omnipod_pod_status_activation_time_exceeded">Bol prekročený čas aktivácie</string>
-    <string name="omnipod_pod_status_inactive">Neaktívny</string>
-    <string name="omnipod_pod_status_pod_fault_description">Chyba Podu: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_alert_finish_pairing_reminder">Pripomienka ukončenia párovania</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Pripomienka ukončenia nastavenia</string>
     <string name="omnipod_alert_expiration">Pod čoskoro expiruje</string>
     <string name="omnipod_alert_expiration_advisory">Pod čoskoro expiruje</string>
@@ -48,10 +42,22 @@
     <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Nastavenie bazálneho profilu zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
     <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Nastavenie bazálneho profilu zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
     <string name="omnipod_error_set_basal_failed_delivery_suspended">Nastavenie bazálneho profilu zlyhalo. Podávanie je pozastavené! Manuálne obnovte podávanie zo záložky Omnipod.</string>
+    <string name="omnipod_error_set_basal_failed">Nastavenie bazálneho profilu zlyhalo.</string>
+    <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Zrušenie dočasného bazalu mohlo zlyhať. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Nastavenie dočasného bazálu zlyhalo. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Nastavenie dočasného bazálu zlyhalo. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Nastavenie času, pravdepodobne zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Nastavenie času zlyhalo. Podávanie je pozastavené! Manuálne obnovte podávanie zo záložky Omnipod.</string>
+    <string name="omnipod_error_failed_to_set_profile_empty_profile">Nepodarilo sa nastaviť bazálny profil: bol prijatý prázdny profil. Uistite sa, že ste aktivovali svoj bazálny profil.</string>
+    <string name="omnipod_error_set_initial_basal_schedule_no_profile">Žiadny bazálny profil nie je aktívny. Uistite sa, že ste aktivovali svoj bazálny profil.</string>
+    <string name="omnipod_error_unknown_custom_command">Neznámy vlastný príkaz: %1$s</string>
+    <string name="omnipod_error_failed_to_read_pulse_log">Zlyhalo načítanie Pulse Log</string>
+    <string name="omnipod_error_failed_to_refresh_status">Nepodarilo sa obnoviť stav</string>
+    <string name="omnipod_error_failed_to_acknowledge_alerts">Nepodarilo sa potvrdiť výstrahy</string>
+    <string name="omnipod_error_failed_to_suspend_delivery">Nepodarilo sa pozastaviť podávanie inzulínu</string>
+    <string name="omnipod_error_failed_to_set_time">Nepodarilo sa nastaviť čas</string>
+    <string name="omnipod_error_failed_to_resume_delivery">Podávanie inzulínu sa nepodarilo spustiť</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Nepodarilo sa overiť priebeh aktivácie. Skúste to znova.</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Commands -->
