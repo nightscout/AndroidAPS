@@ -21,6 +21,7 @@
     <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
     <string name="description_insulin_rapid">Insulininställning för vanliga direktverkande insuliner som Humalog, Lispro, Apidra och Novorapid/Novolog</string>
     <string name="description_insulin_ultra_rapid">Insulininställning för ultrasnabba insuliner, t ex Fiasp</string>
+    <string name="description_insulin_lyumjev">Insulininställning för Lyumjev</string>
     <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet. Bör bara användas av avancerade användare</string>
     <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
     <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
@@ -536,6 +537,7 @@ Eversense-appen.</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
     <string name="activate_profile">Aktivera profil</string>
     <string name="invalid">OGILTIG</string>
@@ -798,6 +800,8 @@ Eversense-appen.</string>
     <string name="bgsourcesetup">Konfigurera BG-källa</string>
     <string name="setupwizard_profile_description">Vänligen välj källa för profil. Om patienten är ett barn bör du använda NS profil. Om ingen följer dig på Nightscout kommer du förmodligen föredra lokal profil. Kom ihåg att du endast väljer profilkälla här. För att använda den måste du aktivera den genom att köra ”Byt Profil”</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Väntar på Riley Link-anslutning...\n</string>
+    <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har initierats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
     <string name="permission">Behörighet</string>
     <string name="askforpermission">Be om behörighet</string>
@@ -987,6 +991,7 @@ Eversense-appen.</string>
     <string name="storage">intern lagringsbegränsning</string>
     <string name="diskfull">Frigör minst %1$d MB från internminnet. Loop inaktiverad!</string>
     <string name="wrongformat">Felaktigt format</string>
+    <string name="wrongTbrDuration">Durationen måste vara större än 0 och en multipel av %1$d minuter.</string>
     <string name="sms_wrongcode">Fel kod. Kommandot avbrutet.</string>
     <string name="notconfigured">Inte konfigurerad</string>
     <string name="profileswitchcreated">Skapade ett profilbyte</string>
@@ -1152,6 +1157,9 @@ Eversense-appen.</string>
     <string name="smscommunicator_otp_reset_title">Återställ autentiseringsnyckel</string>
     <string name="smscommunicator_otp_reset_prompt">Är du säker på att återställa autentiseringsnyckeln? Det gör alla konfigurerade autentiseringsappar ogiltiga och du kommer behöva ställa in dem igen.</string>
     <string name="smscommunicator_otp_reset_successful">Ny autentiseringsnyckel genererades! Använd uppdaterad QR-kod till att aktivera autentiserare.</string>
+    <string name="smscommunicator_otp_export_title">Exporterar OTP-hemlighet</string>
+    <string name="smscommunicator_otp_export_prompt">Är du säker på att du vill kopiera OTP-hemligheten till Urklipp?\n\nDu behöver bara göra detta om din autentiseringsapp har problem QR-koder så du vill ange den manuellt eller om du vill konfigurera OTP-token med hjälp av en dedikerad app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP-hemligheten exporteras och kopieras till klippbordet i Base32-format. Klistra in den i autentiseringsfunktionen eller OTP-brännaren!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installera autentiseringsapp</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanna koden för att ställa in engångslösenord för AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
@@ -1215,4 +1223,5 @@ Eversense-appen.</string>
     <string name="worker_state">Jobbstatus: %s</string>
     <string name="uploaded_data">Uppladdad data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Följande data kommer att överföras till ditt Open Humans-konto: Glukosvärden, careportalhändelser (utom anteckningar), utökade bolusar, profilbyten, totala dagliga doser, temp basaler, temp mål, inställningar, appversion, enhetsmodell och skärmstorlek. Hemlig eller privat information, t. ex. din Nightscout-adress eller API-hemlighet, kommer inte att överföras.</string>
+    <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
 </resources>
