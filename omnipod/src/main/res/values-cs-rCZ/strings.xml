@@ -59,6 +59,7 @@
     <string name="omnipod_error_invalid_packet_type">Komunikace selhala: z podu byly přijaty neplatné pakety</string>
     <string name="omnipod_error_invalid_progress_state">Komunikace selhala: Pod se nachází v chybném stavu</string>
     <string name="omnipod_error_invalid_response">Komunikace selhala: byla přijata neplatná odezva z Podu</string>
+    <string name="omnipod_error_communication_failed_no_response_from_riley_link">Žádná odpověď od RileyLinku</string>
     <string name="omnipod_error_communication_failed_no_response_from_pod">Žádná odezva z Podu</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">Doba trvání TBR musí být větší než nula, a musí být násobkem %1$s minut.</string>
     <!-- Omnipod - Confirmation -->
