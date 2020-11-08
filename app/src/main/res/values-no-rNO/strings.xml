@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Verdien %1$s er utenfor angitt begrensning</string>
     <string name="smscommunicator_pumpconnectwithcode">For å koble til pumpen, svar med kode %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Tilkobling til pumpen mislyktes</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">For å koble fra pumpen i %1d minutter, svar med koden %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pumpe frakoblet</string>
     <string name="smscommunicator_reconnect">Pumpen tilkoblet igjen</string>
     <string name="smscommunicator_remotecommandnotallowed">Fjernstyringskommando er ikke tillatt</string>
