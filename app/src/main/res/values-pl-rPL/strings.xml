@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Wartość %1$s jest poza dopuszczalną granicą</string>
     <string name="smscommunicator_pumpconnectwithcode">Aby podłączyć pompę odpowiedz kodem %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Połączenie z pompą nie powiodło się</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Aby odłączyć pompę na %1d minut odpowiedz kodem %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompa odłączona</string>
     <string name="smscommunicator_reconnect">Pompa ponownie podłączona</string>
     <string name="smscommunicator_remotecommandnotallowed">Zdalne komendy nie są dozwolone</string>
