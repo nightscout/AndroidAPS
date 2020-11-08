@@ -261,6 +261,7 @@
     <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits.</string>
     <string name="smscommunicator_pumpconnectwithcode">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbindung zur Pumpe fehlgeschlagen</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1$d Minuten zu trennen, antworte mit dem Code %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Verbindung zur Pumpe getrennt</string>
     <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
     <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
