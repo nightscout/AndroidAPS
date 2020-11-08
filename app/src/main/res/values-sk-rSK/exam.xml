@@ -134,8 +134,6 @@
     <string name="ic_increasingvalue">Vyššie hodnoty IC vedú k menšej dávke inzulínu ku rovnakému množstvu sacharidov.</string>
     <string name="ic_decreasingvalue">Nižšie hodnoty IC vedú k menšej dávke inzulínu ku rovnakému množstvu sacharidov.</string>
     <string name="ic_noeffect">Pokiaľ máte 0 COB, zmena inzulíno-sacharidového pomeru povedie k inému množstvu inzulínu vydanému pre korekciu glykémie.</string>
-    <string name="ic_different">Inzulíno-sacharidový pomer sa bude líšiť podľa toho, či počítate sacharidovú jednotku ako 10 g, alebo ako 12 g sacharidov.</string>
-    <string name="ic_meaning">Inzulíno-sacharidový pomer vyjadruje: koľko sacharidových jednotiek pokryje 1 jednotka inzulínu.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#inzulino-sacharidovy-pomer-cr-g-u</string>
     <string name="profileswitch_label">Téma: Prepínanie profilu</string>
     <string name="profileswitch_pctwillchange">Keď v prepnutí profilu zadáte 90 %…</string>
