@@ -411,6 +411,7 @@
     <string name="teenage">מתבגר\ת</string>
     <string name="adult">מבוגר\ת</string>
     <string name="resistantadult">מבוגר\ת עם תנגודת אינסולין גבוהה</string>
+    <string name="pregnant">הריון</string>
     <string name="patientage_summary">נא לבחור את גיל המטופל כדי להגדיר מגבלות בטיחות</string>
     <string name="patient_name">שם מטופל</string>
     <string name="patient_name_summary">נא לציין שם המטופל או כינוי, להבחנה בין מספר הגדרות</string>
@@ -455,12 +456,14 @@
     <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
     <string name="statuslights_sage_warning">סף התראה של תוקף החיישן[h]</string>
     <string name="statuslights_sage_critical">סף התראה קריטית של תוקף החיישן [h]</string>
+    <string name="statuslights_sbat_warning">סף התראה של רמת סוללת החיישן [%]</string>
+    <string name="statuslights_sbat_critical">סף התראה קריטית של רמת סוללת החיישן [%]</string>
     <string name="statuslights_bage_warning">סף התראה של תוקף הסוללה [h]</string>
     <string name="statuslights_bage_critical">סף התראה קריטית של תוקף הסוללה [h]</string>
     <string name="statuslights_res_warning">אזהרת סף של מיכל ריק [U]</string>
     <string name="statuslights_res_critical">אזהרת סף קריטית של מיכל ריק [U]</string>
-    <string name="statuslights_bat_warning">אזהרת סף של מיכל ריק [%]</string>
-    <string name="statuslights_bat_critical">אזהרת סף קריטית של סוללה ריקה [%]</string>
+    <string name="statuslights_bat_warning">אזהרת סף של רמת הסוללה [%]</string>
+    <string name="statuslights_bat_critical">אזהרת סף קריטית של רמת הסוללה [%]</string>
     <string name="prediction_shortname">חיזוי</string>
     <string name="iob">אינ\' פעיל</string>
     <string name="cob">פחמ\' פעילות</string>
@@ -485,6 +488,12 @@
     <string name="careportal_insulinage_label">גיל אינסולין</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="careportal_pbage_label">גיל סוללת המשאבה</string>
+    <string name="careportal_sensor_label">סנסור</string>
+    <string name="careportal_canula_label">צינורית</string>
+    <string name="careportal_insulin_label">אינסולין</string>
+    <string name="careportal_pb_label">סוללת משאבה</string>
+    <string name="careportal_age_label">גיל:</string>
+    <string name="careportal_level_label">רמה:</string>
     <string name="ns_alarmoptions">אפשרויות התראה</string>
     <string name="ns_alarms">ייצר התראות מאזעקות של Nightscout</string>
     <string name="ns_announcements">ייצר התראות מהכרזות של Nightscout</string>
@@ -1179,6 +1188,7 @@
     <string name="statuslights_copy_ns">העתקת הגדרות מ-Nightscout</string>
     <string name="copyexistingvalues">להעתיק הגדרות מ-Nightscout (אם קיימות)?</string>
     <string name="classic_description">סקין מקורי</string>
+    <string name="lowres_description">סקין רזולוציה נמוכה</string>
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
