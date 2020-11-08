@@ -528,6 +528,10 @@
     <string name="statuslights_sage_warning">Threshold warning sensor age [h]</string>
     <string name="key_statuslights_sage_critical" translatable="false">statuslights_sage_critical</string>
     <string name="statuslights_sage_critical">Threshold critical sensor age [h]</string>
+    <string name="key_statuslights_sbat_warning" translatable="false">statuslights_sbat_warning</string>
+    <string name="statuslights_sbat_warning">Threshold warning sensor battery level [%]</string>
+    <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
+    <string name="statuslights_sbat_critical">Threshold critical sensor battery level [%]</string>
     <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
     <string name="statuslights_bage_warning">Threshold warning battery age [h]</string>
     <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
@@ -566,6 +570,12 @@
     <string name="careportal_insulinage_label">Insulin age</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
+    <string name="careportal_sensor_label">Sensor</string>
+    <string name="careportal_canula_label">Canula</string>
+    <string name="careportal_insulin_label">Insulin</string>
+    <string name="careportal_pb_label">Pump battery</string>
+    <string name="careportal_age_label">age:</string>
+    <string name="careportal_level_label">level:</string>
     <string name="ns_alarmoptions">Alarm options</string>
     <string name="key_ns_announcements" translatable="false">ns_announcements</string>
     <string name="key_ns_alarms" translatable="false">ns_alarms</string>
@@ -1405,6 +1415,7 @@
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
     <string name="classic_description">Original skin</string>
+    <string name="lowres_description">Low Resolution skin</string>
     <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
     <string name="largedisplay_description">Large display</string>
     <string name="key_skin" translatable="false">skin</string>
