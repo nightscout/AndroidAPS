@@ -261,6 +261,7 @@
     <string name="valueoutofrange">Hodnota %1$s je mimo přednastavený rozsah</string>
     <string name="smscommunicator_pumpconnectwithcode">Chcete-li připojit pumpu, odpovězte pomocí SMS s kódem %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Připojení k pumpě selhalo</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Chcete-li odpojit pumpu na %1$d minut, odpovězte pomocí SMS s kódem %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pumpa odpojena</string>
     <string name="smscommunicator_reconnect">Pumpa byla znovu připojena</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálený příkaz není povolen</string>
