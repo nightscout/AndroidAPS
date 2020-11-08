@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Vertė %1$s viršija griežtą limitą</string>
     <string name="smscommunicator_pumpconnectwithcode">Pompos prijungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Nepavyko prisijungti prie pompos</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Norėdami atjungti pompą %1d min., atsakykite kodu %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompa atjungta</string>
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
