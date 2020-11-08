@@ -30,7 +30,7 @@
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה, ולחצני פעולות שימושיות</string>
-    <string name="description_persistent_notification">מציג הודעה מתמשכת עם סקירה קצרה של מה שהלולאה שלך עושה</string>
+    <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלך עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
     <string name="description_profile_simple">הגדרת פרופיל עם חטיבת זמן אחת בלבד.</string>
