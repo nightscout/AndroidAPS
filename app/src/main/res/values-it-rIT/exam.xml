@@ -134,6 +134,8 @@
     <string name="ic_increasingvalue">Rapporti IC più alti portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_decreasingvalue">Rapporti IC più bassi portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_noeffect">Se hai 0 COB, cambiare il rapporto IC porterà a una differente quantità di insulina necessaria a correggere una determinata glicemia.</string>
+    <string name="ic_different">IC sarà diverso se consideri l\'unità di pane (BE) come 10g o 12g.</string>
+    <string name="ic_meaning">Il significato di IC è: quante unità di pane (BE) sono coperte da 1U di insulina.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Argomento: cambio profilo</string>
     <string name="profileswitch_pctwillchange"> Quando si specifica il 90% nel cambio profilo…</string>
