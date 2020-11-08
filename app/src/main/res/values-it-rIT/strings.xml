@@ -484,6 +484,8 @@
     <string name="careportal_insulinage_label">Età insulina</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_pbage_label">Età batteria micro</string>
+    <string name="careportal_age_label">età:</string>
+    <string name="careportal_level_label">livello:</string>
     <string name="ns_alarmoptions">Opzioni allarme</string>
     <string name="ns_alarms">Crea notifiche da allarmi NS</string>
     <string name="ns_announcements">Crea notifiche da avvisi NS</string>
