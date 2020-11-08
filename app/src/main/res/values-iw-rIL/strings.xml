@@ -267,7 +267,7 @@
     <string name="smscommunicator_remotecommandnotallowed">פקודה מרוחקת אינה מותרת</string>
     <string name="smscommunicator_remotebolusnotallowed">בולוס מרחוק אינו זמין. נסו שוב מאוחר יותר.</string>
     <string name="smscommunicator_basalreplywithcode">להפעלת בזאלי %1$.2f יח\' לשעה למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d% הקש קוד %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d % הקש קוד %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">למתן בולוס ממושך %1$.2f יח\' למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">למתן %1$d גר\' ב-%2$s יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">להפעלת בזאלי %1$d%% למשך %2$d דקות הקש קוד %3$s</string>
