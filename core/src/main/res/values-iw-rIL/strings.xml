@@ -128,6 +128,8 @@
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יח'</b> בול': <b>%3$.2f יח'</b> Bas: <b>%4$.2f יח'(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יח'</b> בול': <b>%3$.2f U</b> בזאלי: <b>%4$.2f יח'(%5$.0f%%)</b> פחמ': <b>%6$.0f גר'</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
@@ -168,6 +170,7 @@
     <string name="waitingforpumpresult">ממתין לתוצאות</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
     <!--    TDDStatsActivity-->
     <string name="stats">סטטיסטיקה</string>
     <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
