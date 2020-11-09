@@ -261,6 +261,7 @@
     <string name="valueoutofrange">Значение %1$s недопустимо</string>
     <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Помпа отключена</string>
     <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
