@@ -170,7 +170,7 @@
     <string name="waitingforpumpresult">Ожидание результата</string>
     <string name="smb_shortname">Супер микро болюс SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Необходимо дополнительно %d г углеводов в течение %d минут</string>
+    <string name="carbsreq">Необходимо дополнительно %1$d г углеводов в течение %2$d минут</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">накопительные TDD</string>

@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="connection_failed">החיבור נכשל</string>
+    <string name="connection_lost">החיבור נותק</string>
+    <string name="pairing_rejected">התחברות נדחתה</string>
+    <string name="socket_creation_failed">יצירת סוקט נכשלה</string>
+    <string name="timeout">פג הזמן</string>
+    <string name="maximum_number_of_bolus_type_already_running">מספר מרבי של סוגי בולוס מופעל</string>
+    <string name="no_active_tbr_to_cancel">לא קיים בזאלי זמני לביטול</string>
+    <string name="no_active_tbr_to_change">לא קיים בזאלי זמני לשינוי</string>
+    <string name="no_such_bolus_to_cancel">לא קיים בולוס לביטול</string>
+    <string name="pump_already_in_that_state_exception">משאבה כבר במצב זה</string>
+    <string name="run_mode_not_allowed">מצב הפעלה לא מורשה</string>
+</resources>

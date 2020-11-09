@@ -131,8 +131,6 @@
     <string name="ic_increasingvalue">높은 IC 비율은 탄수화물 섭취시 인슐린이 보다 덜 주입되게 합니다.</string>
     <string name="ic_decreasingvalue">낮은 IC 비율은 탄수화물 섭취시 인슐린이 보다 덜 주입되게 합니다.</string>
     <string name="ic_noeffect">COB가 0 인 경우 IC 비율을 변경하면 혈당을 교정하기 위해 다른 양의 인슐린이 주입됩니다.</string>
-    <string name="ic_different">빵유닛(Bread Unit)을 10g 혹은 12g으로 계산한다면 IC 값도 달라집니다.</string>
-    <string name="ic_meaning">IC의 의미는 다음과 같습니다: 1U의 인슐린으로 얼마나 많은 빵유닛(Bread Units)이 처리되는지.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">주제: 프로파일 변경</string>
     <string name="profileswitch_pctwillchange">프로파일을 90%로 설정하면 어떻게 됩니까?</string>

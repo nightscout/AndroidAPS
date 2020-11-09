@@ -136,7 +136,7 @@ Context | Edit Context</string>
     <string name="ic_increasingvalue">Более высокие коэффициенты инсулин-углеводы IC приводят к уменьшению инсулина на данное количество углеводов.</string>
     <string name="ic_decreasingvalue">Более низкие коэффициенты инсулин-углеводы IC приводят к уменьшению инсулина на данное количество углеводов.</string>
     <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение соотношения инсулин-углеводы IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>
-    <string name="ic_different">Соотношение инсулин-углеводы изменится если принимать ХЕ за 10 или 12г.</string>
+    <string name="ic_different">Соотношение инсулин-углеводы IC изменится если принимать ХЕ за 10 или 12г.</string>
     <string name="ic_meaning">Смысл соотношения инсулин-углеводы IC таков: сколько хлебных единиц покрываются одной ед. инсулина.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Тема: Переключение Профиля</string>

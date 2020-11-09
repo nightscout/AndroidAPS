@@ -134,8 +134,8 @@
     <string name="ic_increasingvalue">Ein höheres IC-Verhältnis bedeutet, dass weniger Insulin für die selbe Menge an KH abgegeben wird.</string>
     <string name="ic_decreasingvalue">Ein niedrigeres IC-Verhältnis bedeutet, dass weniger Insulin für die selbe Menge an KH abgegeben wird.</string>
     <string name="ic_noeffect">Das Ändern des IC-Verhältnisses bedeutet, dass bei 0 COB eine andere Menge an Insulin zur Korrektur eines vorgegebenen BZ-Wertes abgegeben wird.</string>
-    <string name="ic_different">Der IC-Wert muss sich unterscheiden, je nachdem, ob Du eine BE mit 10g oder mit 12g berechnest.</string>
-    <string name="ic_meaning">IC bedeutet: Wie viele BE werden durch eine Einheit Insulin abgedeckt?</string>
+    <string name="ic_different">Der IC-Wert wird sich unterscheiden, je nachdem, ob Du eine Broteinheit (BE) mit 10g oder mit 12g berechnest.</string>
+    <string name="ic_meaning">IC bedeutet: Anzahl BE, die durch eine Einheit Insulin abgedeckt werden</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/FAQ.html#kh-faktor-carbohydrate-to-insulin-ratio-cr-g-ie</string>
     <string name="profileswitch_label">Thema: Profilwechsel</string>
     <string name="profileswitch_pctwillchange"> Durch einen Profilwechsel auf 90%…</string>

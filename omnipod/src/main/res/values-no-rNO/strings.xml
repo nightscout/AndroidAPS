@@ -14,10 +14,14 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
     <string name="omnipod_config_low_reservoir_alert_units">Antall enheter</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Lydvarsel for usikre TBR er aktivert</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Lydvarsel for usikre SMB er aktivert</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Lydvarsel for usikre bolus er aktivert</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Annen</string>
     <string name="omnipod_preference_category_alerts">Varsler</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bekreftelse pip</string>
+    <string name="omnipod_preference_category_notifications">Varsler</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Ingen aktiv Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod aktivering)</string>
@@ -73,6 +77,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere temp basal. Vennligst oppdater Pod status manuelt fra Omnipod menyen.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Endring av midlertidig basal var mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Endring av midlertidig basal kan ha vært mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">TBR varighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være kansellert! Oppdater statusen manuelt fra fanen Omnipod og gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er sperret! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Feilet i å lagre basal profil: mottok en tom profil. Kontroller at du har aktivert profilen.</string>
@@ -91,6 +96,7 @@
     <string name="omnipod_error_failed_to_initialize_pod">Feilet i å initialisere Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Feilet ved innsetting av kanyle</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Pod\'ens aktiveringstid er overskredet. Denne Pod kan ikke lenger aktiveres.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Klarte ikke å verifisere fremdrift i aktiveringen. Prøv på nytt.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Bekreftelse</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Tid og/eller tidssone endret på Pod.</string>
