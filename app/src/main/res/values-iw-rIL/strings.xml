@@ -919,7 +919,7 @@
     <string name="tbr_formatter">%1$d%% למשך %2$d/%3$d דק\'</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="multiwave_bolus">בולוס רב שלבי</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f יח\' for %3$d דק\'</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f יח\' עבור %3$d דק\'</string>
     <string name="enable_tbr_over_notification">אפשר התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
     <string name="disable_tbr_over_notification">השבת התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
     <string name="refresh">רענן</string>
