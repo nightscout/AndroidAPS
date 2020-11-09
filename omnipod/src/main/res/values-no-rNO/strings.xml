@@ -96,6 +96,7 @@
     <string name="omnipod_error_failed_to_initialize_pod">Feilet i å initialisere Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Feilet ved innsetting av kanyle</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Pod\'ens aktiveringstid er overskredet. Denne Pod kan ikke lenger aktiveres.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Klarte ikke å verifisere fremdrift i aktiveringen. Prøv på nytt.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Bekreftelse</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Tid og/eller tidssone endret på Pod.</string>
