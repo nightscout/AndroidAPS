@@ -405,13 +405,11 @@
     <string name="wear_detailedIOB_summary">Rozepsat IOB do bolusového a bazálního na hodinkách</string>
     <string name="nosuccess">neúspěšně - zkontrolujte mobil</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Stáří pacienta</string>
     <string name="child">Dítě</string>
     <string name="teenage">Dospívající</string>
     <string name="adult">Dospělý</string>
     <string name="resistantadult">Dospělý s nízkou citlivostí</string>
     <string name="pregnant">Těhotenství</string>
-    <string name="patientage_summary">Vyberte věk pacienta pro nastavení bezpečnostních limitů</string>
     <string name="patient_name">Jméno pacienta</string>
     <string name="patient_name_summary">Zadejte jméno pacienta nebo přezdívku pro rozlišení mezi více nastaveními</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Uživatel</string>
