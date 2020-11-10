@@ -309,12 +309,10 @@
     <string name="wear_detailedIOB_title">Wys gedetailleerde IAB</string>
     <string name="wear_detailedIOB_summary">Breek af IAB in bolus en basale IAB op die watchface</string>
     <string name="nosuccess">nie suksesvol - Kontroleer asseblief foon</string>
-    <string name="patientage">Pasiënt ouderdom</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
     <string name="resistantadult">Insulien weerstandige volwasse</string>
-    <string name="patientage_summary">Kies asseblief pasiënt ouderdom om veiligheids limiete te stel</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s benodig battery optimisering bemagtiging vir beter werksverrigting</string>
     <string name="loopsuspended">Lus opgeskort</string>
