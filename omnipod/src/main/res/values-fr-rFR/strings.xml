@@ -96,6 +96,7 @@
     <string name="omnipod_error_failed_to_initialize_pod">Impossible d’initialiser le Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Impossible d\'insérer la canule</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">La durée d\'activation du Pod a été dépassée. Ce Pod ne peut plus être activé.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Échec de la vérification de l\'activation. Veuillez réessayer.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Heure et/ou fuseau horaire changé sur le Pod.</string>
