@@ -404,13 +404,11 @@
     <string name="wear_detailedIOB_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="nosuccess">non riuscito - controlla il telefono</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Età del paziente</string>
     <string name="child">Bambino</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto insulino-resistente</string>
     <string name="pregnant">Gravidanza</string>
-    <string name="patientage_summary">Seleziona l\'età del paziente per impostare i limiti di sicurezza</string>
     <string name="patient_name">Nome paziente</string>
     <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
