@@ -400,12 +400,10 @@
     <string name="wear_detailedIOB_summary">Separar IOB en bolo y base en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Edad paciente</string>
     <string name="child">Menor de edad</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente a la insulina</string>
-    <string name="patientage_summary">Por favor elige la edad del paciente para ajustar los límites de seguridad</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
