@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.actions
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -54,16 +57,30 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val pumpCustomActions = HashMap<String, CustomAction>()
     private val pumpCustomButtons = ArrayList<SingleClickButton>()
+    private var smallWidth = false
+    private var smallHeight = false
+    private lateinit var dm: DisplayMetrics
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.actions_fragment, container, false)
+        //check screen width
+        dm = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+
+        val screenWidth = dm.widthPixels
+        val screenHeight = dm.heightPixels
+        smallWidth = screenWidth <= Constants.SMALL_WIDTH
+        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
+        val landscape = screenHeight < screenWidth
+
+        return inflater.inflate(skinProvider.activeSkin().actionsLayout(landscape, smallWidth), container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -235,6 +252,7 @@ class ActionsFragment : DaggerFragment() {
 
         // statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
         checkPumpCustomActions()
+
     }
 
     private fun checkPumpCustomActions() {

@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Значение %1$s недопустимо</string>
     <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Помпа отключена</string>
     <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
@@ -1158,6 +1157,9 @@ Context | Edit Context</string>
     <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
     <string name="smscommunicator_otp_reset_prompt">Вы действительно хотите сбросить ключ аутентификации? Все сконфигурированные в настоящее время ключи станут недопустимы, и придется их настроить заново.</string>
     <string name="smscommunicator_otp_reset_successful">Создан новый ключ аутентификации! Для идентификации используйте обновленный QRCode.</string>
+    <string name="smscommunicator_otp_export_title">Экспорт секретного кода OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Вы действительно хотите скопировать пароль OTP в буфер обмена?\n\nЭто может потребоваться только в том случае, если у вашего приложения идентификации проблемы при сканировании QR кода, вы хотите ввести его вручную или настроить аппаратный маркер OTP с помощью специального приложения.</string>
+    <string name="smscommunicator_otp_export_successful">Секретный одноразовый код OTP (в формате Base32) экспортирован и скопирован в буфер обмена. Вставьте его в систему идентификации или аппаратный маркер OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Установить Аутентификатор</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Код сканирования для настройки кодов OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Одноразовый Пароль</string>

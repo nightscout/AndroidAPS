@@ -25,34 +25,15 @@
 
 
             <TextView
-                android:id="@+id/careportal_sensoragelabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_age_label"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/careportal_sensorage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
-
-            <TextView
-                android:id="@+id/careportal_senslevellabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_level_label"
-                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/careportal_sensorlevel"
@@ -73,12 +54,12 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="5"
+                android:layout_span="3"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="?android:attr/dividerHorizontal" />
+                android:background="@color/listdelimiter" />
 
         </TableRow>
 
@@ -98,34 +79,15 @@
 
 
             <TextView
-                android:id="@+id/careportal_insulinagelabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_age_label"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/careportal_insulinage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
-
-            <TextView
-                android:id="@+id/careportal_inslevellabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_level_label"
-                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/careportal_reservoirlevel"
@@ -146,12 +108,12 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="5"
+                android:layout_span="3"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="?android:attr/dividerHorizontal" />
+                android:background="@color/listdelimiter" />
 
         </TableRow>
 
@@ -170,30 +132,13 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/careportal_canulaagelabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_age_label"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/careportal_canulaage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
             <TextView
@@ -215,12 +160,12 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="5"
+                android:layout_span="3"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="?android:attr/dividerHorizontal" />
+                android:background="@color/listdelimiter" />
 
         </TableRow>
 
@@ -236,19 +181,9 @@
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingStart="15dp"
-                android:text="@string/careportal_pb_label"
+                android:text="@string/pump"
                 android:textSize="14sp" />
 
-
-            <TextView
-                android:id="@+id/careportal_pbagelabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_age_label"
-                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/careportal_pbage"
@@ -261,22 +196,13 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/careportal_pblevellabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingStart="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/careportal_level_label"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/careportal_batterylevel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:paddingLeft="2dp"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -288,12 +214,12 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_span="5"
+                android:layout_span="3"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="?android:attr/dividerHorizontal" />
+                android:background="@color/listdelimiter" />
 
         </TableRow>
 
