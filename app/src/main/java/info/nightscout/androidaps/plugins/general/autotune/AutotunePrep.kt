@@ -319,7 +319,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 }
             }
             // debug line to print out all the things
-            log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + Round.roundTo(iob.iob, 0.1) + " at " + dateUtil!!.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
+            log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + Round.roundTo(iob.iob, 0.01) + " Activity: " + Round.roundTo(iob.activity, 0.01) + " at " + dateUtil!!.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
             //log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.001)+" BGI: "+ Round.roundTo(BGI,0.001) +" IOB: "+Round.roundTo(iob.iob,0.001) + " IOBbas: "+Round.roundTo(iob.basaliob,0.01) + " IOBbol: " +Round.roundTo(iob.iob-iob.basaliob,0.01)+ " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
