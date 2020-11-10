@@ -404,12 +404,10 @@
     <string name="wear_detailedIOB_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="nosuccess">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Paciento amžius</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
     <string name="adult">Suaugęs</string>
     <string name="resistantadult">Insulinui rezistentiškas suaugęs</string>
-    <string name="patientage_summary">Pasirinkite paciento amžių saugumo riboms nustatyti</string>
     <string name="patient_name">Paciento vardas</string>
     <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
