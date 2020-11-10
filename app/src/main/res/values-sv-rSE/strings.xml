@@ -405,12 +405,10 @@ Eversense-appen.</string>
     <string name="wear_detailedIOB_summary">Visa IOB med bolus och basal på klocka</string>
     <string name="nosuccess">misslyckat - kontrollera telefonen</string>
     <string name="notavailable">-</string>
-    <string name="patientage">Personens ålder</string>
     <string name="child">Barn</string>
     <string name="teenage">Tonåring</string>
     <string name="adult">Vuxen</string>
     <string name="resistantadult">Insulinresistent vuxen</string>
-    <string name="patientage_summary">Vg ange personens ålder för inställningar av gränser</string>
     <string name="patient_name">Patientens namn</string>
     <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Ditt namn</string>
