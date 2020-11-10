@@ -405,13 +405,11 @@
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">---</string>
-    <string name="patientage">Възраст на потребителя</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
     <string name="adult">Възрастен</string>
     <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
     <string name="pregnant">Бременност</string>
-    <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
     <string name="patient_name">Име на пациента</string>
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
