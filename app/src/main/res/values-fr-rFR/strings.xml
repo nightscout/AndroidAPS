@@ -406,11 +406,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_detailedIOB_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="nosuccess">Sans succès - vérifiez votre téléphone</string>
     <string name="notavailable">s/o</string>
+    <string name="patientage">Type de patient</string>
     <string name="child"> Enfant</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adulte</string>
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
     <string name="pregnant">Grossesse</string>
+    <string name="patientage_summary">Veuillez sélectionner le type de patient pour définir les limites de sécurité</string>
     <string name="patient_name">Nom du patient</string>
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
