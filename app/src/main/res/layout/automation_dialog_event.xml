@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/automation"
-                android:src="@drawable/ic_action_orange_48dp" />
+                app:srcCompat="@drawable/ic_action_orange_48dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_trigger_green_48dp" />
+                    app:srcCompat="@drawable/ic_trigger_green_48dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,7 +132,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_action_orange_48dp" />
+                    app:srcCompat="@drawable/ic_action_orange_48dp" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -21,6 +21,7 @@
     <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
     <string name="description_insulin_rapid">Nustatymai Humalog ir NovoRapid / NovoLog insulinams</string>
     <string name="description_insulin_ultra_rapid">Nustatymai Fiasp insulinui</string>
+    <string name="description_insulin_lyumjev">Nustatymai Lyumjev insulinui</string>
     <string name="description_insulin_free_peak">Leidžia pasirinkti insulino veikimo piką ir turėtų būti naudojama tik patyrusių vartotojų</string>
     <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
     <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout</string>
@@ -260,7 +261,6 @@
     <string name="valueoutofrange">Vertė %1$s viršija griežtą limitą</string>
     <string name="smscommunicator_pumpconnectwithcode">Pompos prijungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Nepavyko prisijungti prie pompos</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Norėdami atjungti pompą %1d min., atsakykite kodu %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompa atjungta</string>
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
@@ -535,6 +535,7 @@
     <string name="free_peak_oref">Oref be piko</string>
     <string name="rapid_acting_oref">Greito veikimo Oref</string>
     <string name="ultrarapid_oref">Staigaus veikimo Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="invalid">KLAIDA</string>
@@ -797,6 +798,8 @@
     <string name="bgsourcesetup">Sukonfigūruoti KG šaltinį</string>
     <string name="setupwizard_profile_description">Prašome pasirinkti profilį. Jei pacientas yra vaikas, turite naudoti NS profilį. Jei niekas neseka jūsų Nightscout platformoje, tada geriau pasirinkti Vietinį profilį. Atminkite, kad čia Jūs tik pasirenkate profilio šaltinį. Norėdami jį aktyvuoti, turite atlikti Profilio keitimą</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Laukiama RileyLink ryšio...\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b> Pastaba:</b> sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
     <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
@@ -986,6 +989,7 @@
     <string name="storage">vidinės saugyklos apribojimas</string>
     <string name="diskfull">Atlaisvinkite ne mažiau kaip %1$d MB iš vidinės atminties! Ciklas išjungtas!</string>
     <string name="wrongformat">Neteisingas formatas</string>
+    <string name="wrongTbrDuration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
     <string name="sms_wrongcode">Neteisingas kodas. Komanda atšaukta.</string>
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="profileswitchcreated">Profilio perjungimas sukurtas</string>
@@ -1151,6 +1155,9 @@
     <string name="smscommunicator_otp_reset_title">Atstatyti autentifikatoriaus kodą</string>
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
+    <string name="smscommunicator_otp_export_title">Eksportuojamas OTP kodas</string>
+    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
+    <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Nuskanuoti kodą AndroidAPS OTP kodų nustatymyu</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
@@ -1214,4 +1221,5 @@
     <string name="worker_state">Darbinė Būklė: %s</string>
     <string name="uploaded_data">Įkelti duomenis</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Į jūsų Open Humans paskyrą bus įkelti šie duomenys: glikemijos reikšmės, bolusai, angliavandeniai, priežiūros portalo įvykiai (išskyrus pastabas), ištęstiniai bolusai, profilio pakeitimai, visos paros dozės, laikinos valandinės bazės, laikini tikslai, nustatymai, programos versija, įrenginio modelis ir ekrano matmenys. Konfidenciali ar privati ​​informacija, pvz., Jūsų Nightscout URL arba API slaptažodis, nebus įkelta.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
 </resources>

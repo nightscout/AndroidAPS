@@ -17,7 +17,7 @@ abstract class ActionViewModelBase : ViewModel() {
 
     fun executeAction() {
         _isActionExecutingLiveData.postValue(true)
-        val disposable = SingleSubject.fromCallable<PumpEnactResult>(this::doExecuteAction)
+        SingleSubject.fromCallable<PumpEnactResult>(this::doExecuteAction)
             .subscribeOn(Schedulers.io())
             .doOnSuccess { result ->
                 _isActionExecutingLiveData.postValue(false)

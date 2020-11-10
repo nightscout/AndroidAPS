@@ -170,7 +170,6 @@
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%dg Carbohidratos adicionales necesarios dentro De %d minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estadísticas</string>
     <string name="cumulative_tdd">TDD acumulativa</string>

@@ -42,7 +42,7 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/reorder_label"
         android:orientation="horizontal"
-        android:src="@drawable/ic_reorder_gray_24dp" />
+        app:srcCompat="@drawable/ic_reorder_gray_24dp" />
 
     <LinearLayout
         android:id="@+id/iconLayout"

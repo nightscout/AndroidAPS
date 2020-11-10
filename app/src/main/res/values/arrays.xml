@@ -35,6 +35,7 @@
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
         <item>@string/lt_lang</item>
+        <item>@string/no_lang</item>
         <item>@string/pt_lang</item>
         <item>@string/pt_BR_lang</item>
         <item>@string/ro_lang</item>
@@ -59,6 +60,7 @@
         <item>it</item>
         <item>ko</item>
         <item>lt</item>
+        <item>no</item>
         <item>pt</item>
         <item>pt_BR</item>
         <item>ro</item>
@@ -75,12 +77,14 @@
         <item>@string/teenage</item>
         <item>@string/adult</item>
         <item>@string/resistantadult</item>
+        <item>@string/pregnant</item>
     </string-array>
     <string-array name="ageValues" translatable="false">
         <item>@string/key_child</item>
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
         <item>@string/key_resistantadult</item>
+        <item>@string/key_pregnant</item>
     </string-array>
 
     <string-array name="quickWizardYesNo">

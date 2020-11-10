@@ -578,12 +578,13 @@ class SmsCommunicatorPlugin @Inject constructor(
             })
         } else if (splitted[1].endsWith("%")) {
             var tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(splitted[1], "%"))
+            var durationStep = activePlugin.activePump.model().tbrSettings.durationStep
             var duration = 30
             if (splitted.size > 2) duration = SafeParse.stringToInt(splitted[2])
             val profile = profileFunction.getProfile()
             if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.noprofile)))
             else if (tempBasalPct == 0 && splitted[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-            else if (duration == 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
+            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongTbrDuration, durationStep)))
             else {
                 tempBasalPct = constraintChecker.applyBasalPercentConstraints(Constraint(tempBasalPct), profile).value()
                 val passCode = generatePasscode()
@@ -610,12 +611,13 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
         } else {
             var tempBasal = SafeParse.stringToDouble(splitted[1])
+            var durationStep = activePlugin.activePump.model().tbrSettings.durationStep
             var duration = 30
             if (splitted.size > 2) duration = SafeParse.stringToInt(splitted[2])
             val profile = profileFunction.getProfile()
             if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.noprofile)))
             else if (tempBasal == 0.0 && splitted[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-            else if (duration == 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
+            else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongTbrDuration, durationStep)))
             else {
                 tempBasal = constraintChecker.applyBasalConstraints(Constraint(tempBasal), profile).value()
                 val passCode = generatePasscode()
@@ -1002,7 +1004,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun areMoreNumbers(allowednumbers: String?): Boolean {
         return allowednumbers?.let {
-            var countNumbers = 0
+            val knownNumbers = HashSet<String>()
             val substrings = it.split(";").toTypedArray()
             for (number in substrings) {
                 var cleaned = number.replace(Regex("\\s+"), "")
@@ -1010,9 +1012,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                 cleaned = cleaned.replace("+", "")
                 cleaned = cleaned.replace("-", "")
                 if (!cleaned.matches(Regex("[0-9]+"))) continue
-                countNumbers++
+                knownNumbers.add(cleaned)
             }
-            countNumbers > 1
+            knownNumbers.size > 1
         } ?: false
     }
 }

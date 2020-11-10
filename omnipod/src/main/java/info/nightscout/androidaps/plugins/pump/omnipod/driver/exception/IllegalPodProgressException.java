@@ -9,7 +9,7 @@ public class IllegalPodProgressException extends OmnipodException {
     private final PodProgressStatus actual;
 
     public IllegalPodProgressException(PodProgressStatus expected, PodProgressStatus actual) {
-        super(String.format(Locale.getDefault(), "Illegal setup state: %s, expected: %s", actual, expected), true);
+        super(String.format(Locale.getDefault(), "Illegal Pod progress: %s, expected: %s", actual, expected), true);
         this.expected = expected;
         this.actual = actual;
     }

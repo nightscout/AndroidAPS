@@ -72,9 +72,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCustomA
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.ExpirationReminderBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
@@ -96,6 +98,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
 
 /**
  * Created by andy on 23.04.18.
@@ -254,6 +258,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
         podStateManager.loadPodState();
 
+        // BS @ 2020-10-17 FIXME: for backwards compatibility; remove before release
+        if (podStateManager.isPodInitialized() &&
+                podStateManager.getActivationProgress() == ActivationProgress.NONE &&
+                podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS)) {
+            podStateManager.setActivationProgress(ActivationProgress.COMPLETED);
+        }
+
         lastConnectionTimeMillis = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
 
@@ -274,13 +285,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if ((event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled)) ||
-                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled))) {
+                    if (event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled)) {
                         aapsOmnipodManager.reloadSettings();
                     } else if (event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
@@ -484,9 +498,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return 0.0d;
         }
 
-        DateTime now = DateTime.now();
-        Duration offset = new Duration(now.withTimeAtStartOfDay(), now);
-        return podStateManager.getBasalSchedule().rateAt(offset);
+        return podStateManager.getBasalSchedule().rateAt(TimeUtil.toDuration(DateTime.now()));
     }
 
     @Override
@@ -536,6 +548,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
             durationInMinutes, Profile profile, boolean enforceNew) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
+
+        if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
+            return new PumpEnactResult(getInjector()).success(false).comment(resourceHelper.gs(R.string.omnipod_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
+        }
 
         // read current TBR
         TemporaryBasal tbrCurrent = readTBR();
@@ -895,8 +911,14 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @NonNull @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer
             durationInMinutes, Profile profile, boolean enforceNew) {
-        aapsLogger.debug(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+        if (percent == 0) {
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+        } else {
+            double absoluteValue = profile.getBasal() * (percent / 100.0d);
+            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue);
+            aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+        }
     }
 
     @NonNull @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer
@@ -916,7 +938,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void initializeAfterRileyLinkConnection() {
-        if (podStateManager.isPodInitialized() && podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.PAIRING_COMPLETED)) {
+        if (podStateManager.getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
             for (int i = 0; STARTUP_STATUS_REQUEST_TRIES > i; i++) {
                 PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
                 if (result.success) {
@@ -933,7 +955,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         Bundle params = new Bundle();
         params.putString("version", BuildConfig.VERSION);
 
-        fabricPrivacy.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
+        fabricPrivacy.logCustom("OmnipodPumpInit", params);
     }
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {

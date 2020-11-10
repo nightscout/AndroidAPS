@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragment.InfoFragmentBase
@@ -26,13 +26,15 @@ class AttachPodInfoFragment : InfoFragmentBase() {
         super.onViewCreated(view, savedInstanceState)
 
         omnipod_wizard_button_next.setOnClickListener {
-            AlertDialog.Builder(context)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(getString(getTitleId()))
-                .setMessage(getString(R.string.omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text))
-                .setPositiveButton(getString(R.string.omnipod_ok)) { _, _ -> findNavController().navigate(getNextPageActionId()) }
-                .setNegativeButton(getString(R.string.omnipod_cancel), null)
-                .show()
+            context?.let {
+                AlertDialog.Builder(it)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(getString(getTitleId()))
+                    .setMessage(getString(R.string.omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text))
+                    .setPositiveButton(getString(R.string.omnipod_ok)) { _, _ -> findNavController().navigate(getNextPageActionId()) }
+                    .setNegativeButton(getString(R.string.omnipod_cancel), null)
+                    .show()
+            }
         }
     }
 }

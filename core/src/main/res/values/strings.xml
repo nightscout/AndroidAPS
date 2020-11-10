@@ -26,6 +26,7 @@
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
+    <string name="key_ns_sync_use_absolute" translatable="false">ns_sync_use_absolute</string>
 
     <!--    General-->
     <string name="error">Error</string>
@@ -212,7 +213,7 @@
     <string name="smb_shortname">SMB</string>
 
     <!--    CarbsReq-->
-    <string name="carbsreq">%d g Additional Carbs Required Within %d Minutes</string>
+    <string name="carbsreq">%1$d g Additional Carbs Required Within %2$d Minutes</string>
 
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>

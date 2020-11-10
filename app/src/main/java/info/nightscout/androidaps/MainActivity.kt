@@ -45,6 +45,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
+import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -87,9 +89,16 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
+
+    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
+        it?.let {
+            importExportPrefs.importSharedPreferences(this, it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

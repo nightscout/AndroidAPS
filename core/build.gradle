@@ -42,12 +42,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "androidx.preference:preference-ktx:1.1.1"
+    implementation "androidx.appcompat:appcompat:$appcompat_verison"
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation 'androidx.biometric:biometric:1.0.1'
     implementation "androidx.activity:activity:${activityVersion}"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "com.google.android.material:material:$material_version"
 
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
@@ -59,12 +59,14 @@ dependencies {
     //Logger
     implementation 'org.slf4j:slf4j-api:1.7.30'
     //Fabric
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-crashlytics-ktx"
+    implementation "com.google.firebase:firebase-messaging-ktx"
 
     //RxBus
     implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //CryptoUtil
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
@@ -82,7 +84,7 @@ dependencies {
     // pumpCommon
     implementation "com.google.code.gson:gson:2.8.6"
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation "junit:junit:$junit_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

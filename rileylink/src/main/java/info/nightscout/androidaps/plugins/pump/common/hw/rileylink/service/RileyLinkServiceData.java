@@ -33,8 +33,7 @@ public class RileyLinkServiceData {
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     private long lastServiceStateChange = 0L;
     public RileyLinkFirmwareVersion firmwareVersion;
-    public RileyLinkTargetFrequency rileyLinkTargetFrequency; // TODO this might not be correct place
-
+    public RileyLinkTargetFrequency rileyLinkTargetFrequency;
     public String rileylinkAddress;
     long lastTuneUpTime = 0L;
     public Double lastGoodFrequency;
@@ -44,7 +43,7 @@ public class RileyLinkServiceData {
     // radio version
     public RileyLinkFirmwareVersion versionCC110;
 
-    public RileyLinkTargetDevice targetDevice; // TODO this might not be correct place
+    public RileyLinkTargetDevice targetDevice;
 
     // Medtronic Pump
     public String pumpID;
@@ -86,7 +85,7 @@ public class RileyLinkServiceData {
             aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: " + errorCode.name());
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
-            rxBus.send(new EventRileyLinkDeviceStatusChange(newState, errorCode));
+            rxBus.send(new EventRileyLinkDeviceStatusChange(targetDevice, newState, errorCode));
             return null;
 
         } else {

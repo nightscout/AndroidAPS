@@ -3,15 +3,15 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.definition;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfo;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoActiveAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDataLog;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultAndInitializationTime;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoOlderPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 
 public enum PodInfoType {
     NORMAL((byte) 0x00),
     ACTIVE_ALERTS((byte) 0x01),
-    FAULT_EVENT((byte) 0x02),
+    DETAILED_STATUS((byte) 0x02),
     DATA_LOG((byte) 0x03), // Similar to types $50 & $51. Returns up to the last 60 dwords of data.
     FAULT_AND_INITIALIZATION_TIME((byte) 0x05),
     RECENT_PULSE_LOG((byte) 0x50),  // Starting at $4200
@@ -44,8 +44,8 @@ public enum PodInfoType {
                 throw new UnsupportedOperationException("Cannot decode PodInfoType.NORMAL");
             case ACTIVE_ALERTS:
                 return new PodInfoActiveAlerts(encodedData);
-            case FAULT_EVENT:
-                return new PodInfoFaultEvent(encodedData);
+            case DETAILED_STATUS:
+                return new PodInfoDetailedStatus(encodedData);
             case DATA_LOG:
                 return new PodInfoDataLog(encodedData, bodyLength);
             case FAULT_AND_INITIALIZATION_TIME:
