@@ -406,11 +406,13 @@
     <string name="wear_detailedIOB_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
     <string name="notavailable">לא זמין</string>
+    <string name="patientage">סוג המטופל\ת</string>
     <string name="child">ילד/ה</string>
     <string name="teenage">מתבגר\ת</string>
     <string name="adult">מבוגר\ת</string>
     <string name="resistantadult">מבוגר\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
+    <string name="patientage_summary">נא לבחור את גיל המטופל\ת להתאמת מגבלות בטיחות</string>
     <string name="patient_name">שם מטופל</string>
     <string name="patient_name_summary">נא לציין שם המטופל או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
