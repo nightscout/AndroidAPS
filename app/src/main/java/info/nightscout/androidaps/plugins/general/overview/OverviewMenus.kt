@@ -199,11 +199,7 @@ class OverviewMenus @Inject constructor(
                     menu.add(resourceHelper.gs(R.string.enableloop))
                 }
                 if (!loopPlugin.isDisconnected) {
-                    if(pumpDescription.pumpType != PumpType.Insulet_Omnipod) {
-                        // Don't show the disconnect menu for Omnipod,
-                        // as an Omnipod is attached to your body and cannot be physically disconnected.
-                        showSuspendPump(menu, pumpDescription)
-                    }
+                    showSuspendPump(menu, pumpDescription)
                 } else {
                     menu.add(resourceHelper.gs(R.string.reconnect))
                 }
