@@ -405,11 +405,13 @@
     <string name="wear_detailedIOB_summary">Rozłóż IOB na bolus i IOB bazy na zegarku</string>
     <string name="nosuccess">nie udało się - proszę sprawdzić telefon</string>
     <string name="notavailable">n/a</string>
+    <string name="patientage">Typ pacjenta</string>
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
     <string name="adult">Osoba dorosła</string>
     <string name="resistantadult">Osoba dorosła insulinooporna</string>
     <string name="pregnant">Ciąża</string>
+    <string name="patientage_summary">Wybierz typ pacjenta, aby ustawić limity bezpieczeństwa</string>
     <string name="patient_name">Nazwa pacjenta</string>
     <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Użytkownik</string>
