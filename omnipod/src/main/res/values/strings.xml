@@ -132,6 +132,7 @@
     <string name="omnipod_error_failed_to_insert_cannula">Failed to insert cannula</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">The Pod\'s activation time has been exceeded. This Pod can no longer be activated.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
+    <string name="omnipod_error_pod_suspended">Pod suspended</string>
 
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
@@ -141,7 +142,6 @@
     <string name="omnipod_confirmation_suspended_delivery">All insulin delivery has been suspended.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Active alerts have been acknowledged.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulin delivery has been resumed.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod suspended</string>
 
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deactivate Pod</string>

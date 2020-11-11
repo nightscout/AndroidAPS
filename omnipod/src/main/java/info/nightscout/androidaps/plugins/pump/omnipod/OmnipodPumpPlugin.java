@@ -366,7 +366,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 rxBus.send(new EventNewNotification(notification));
             } else {
                 if (podStateManager.isSuspended()) {
-                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_confirmation_pod_suspended), Notification.NORMAL);
+                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_error_pod_suspended), Notification.NORMAL);
                     rxBus.send(new EventNewNotification(notification));
                 }
             }
