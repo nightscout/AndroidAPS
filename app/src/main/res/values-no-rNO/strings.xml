@@ -405,11 +405,13 @@
     <string name="wear_detailedIOB_summary">Vis IOB med bolus och basal IOB på klokke</string>
     <string name="nosuccess">mislykket - sjekk telefonen</string>
     <string name="notavailable">n/a</string>
+    <string name="patientage">Pasient type</string>
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
     <string name="adult">Voksen</string>
     <string name="resistantadult">Insulin resistent voksen</string>
     <string name="pregnant">Graviditet</string>
+    <string name="patientage_summary">Velg pasientens type for oppsett av sikkerhetsgrenser</string>
     <string name="patient_name">Pasientens navn</string>
     <string name="patient_name_summary">Angi pasientnavn eller kallenavn for å kunne skille mellom flere oppsett</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
