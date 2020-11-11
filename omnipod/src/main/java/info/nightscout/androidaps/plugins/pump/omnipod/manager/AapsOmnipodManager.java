@@ -461,6 +461,8 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
+            long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
+
             if (!OmnipodManager.isCertainFailure(ex)) {
                 showNotification(getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
 
@@ -470,11 +472,10 @@ public class AapsOmnipodManager {
                 // If we would assume that the TBR didn't succeed, we couldn't properly recover upon the next StatusResponse,
                 // as we could only see that the Pod is running a TBR, but we don't know the rate and duration as
                 // the Pod doesn't provide this information
-                long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
+
                 addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
             }
 
-            addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
 
