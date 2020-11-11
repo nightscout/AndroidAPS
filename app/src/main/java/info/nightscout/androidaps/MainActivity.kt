@@ -87,6 +87,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
 import kotlinx.android.synthetic.main.status_fragment.*
+import org.spongycastle.crypto.tls.HashAlgorithm.none
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -627,10 +628,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
     private fun upDateStatusLight() {
         // Status lights
         overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(careportal_canulaage,
+        statusLightHandler.updateStatusLights(
+                careportal_canulaage,
                 careportal_insulinage,
                 careportal_reservoirlevel,
                 careportal_sensorage,
+            null,
                 careportal_pbage,
                 careportal_batterylevel,
                 resourceHelper.getAttributeColor(this, R.attr.statuslight_normal),

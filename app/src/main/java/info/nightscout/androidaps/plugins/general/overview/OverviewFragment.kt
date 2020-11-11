@@ -572,7 +572,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
         // Status lights
         overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, null, careportal_pbage, careportal_batterylevel)
+        statusLightHandler.updateStatusLights(
+            careportal_canulaage,
+            careportal_insulinage,
+            careportal_reservoirlevel,
+            careportal_sensorage,
+            null,
+            careportal_pbage,
+            careportal_batterylevel,
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
 
         // cob
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)

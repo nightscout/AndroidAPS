@@ -27,7 +27,7 @@ class StatusLightHandler @Inject constructor(
     /**
      * applies the extended statusLight subview on the overview fragment
      */
-    fun updateStatusLights(careportal_canulaage: TextView?, careportal_insulinage: TextView?, careportal_reservoirlevel: TextView?, careportal_sensorage: TextView?, careportal_sensorbatterylevel: TextView?, careportal_pbage: TextView?, careportal_batterylevel: TextView?) {
+    fun updateStatusLights(careportal_canulaage: TextView?, careportal_insulinage: TextView?, careportal_reservoirlevel: TextView?, careportal_sensorage: TextView?, careportal_sensorbatterylevel: TextView?, careportal_pbage: TextView?, careportal_batterylevel: TextView?, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) {
         val pump = activePlugin.activePump
         val bgSource = activePlugin.activeBgSource
         handleAge(careportal_canulaage, CareportalEvent.SITECHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0, ColorNormal, ColorWarning, ColorAlarm)
@@ -37,7 +37,7 @@ class StatusLightHandler @Inject constructor(
         if (!config.NSCLIENT) {
             handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U", ColorNormal, ColorWarning, ColorAlarm)
             if (bgSource.sensorBatteryLevel != -1)
-                handleLevel(careportal_sensorbatterylevel, R.string.key_statuslights_sbat_critical, 5.0, R.string.key_statuslights_sbat_warning, 20.0, bgSource.sensorBatteryLevel.toDouble(), "%")
+                handleLevel(careportal_sensorbatterylevel, R.string.key_statuslights_sbat_critical, 5.0, R.string.key_statuslights_sbat_warning, 20.0, bgSource.sensorBatteryLevel.toDouble(), "%",  ColorNormal, ColorWarning, ColorAlarm)
             else
                 careportal_sensorbatterylevel?.text = ""
         }
