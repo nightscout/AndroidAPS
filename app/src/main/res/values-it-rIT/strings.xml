@@ -261,6 +261,7 @@
     <string name="valueoutofrange">Il valore %1$s è fuori limite massimo</string>
     <string name="smscommunicator_pumpconnectwithcode">Per connettere il micro rispondi col codice %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Connessione al micro fallita</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Per disconnettere il micro per %1$d minuti rispondi col codice %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Micro disconnesso</string>
     <string name="smscommunicator_reconnect">Micro riconnesso</string>
     <string name="smscommunicator_remotecommandnotallowed">Il comando da remoto non è permesso</string>
@@ -404,6 +405,7 @@
     <string name="wear_detailedIOB_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="nosuccess">non riuscito - controlla il telefono</string>
     <string name="notavailable">n/a</string>
+    <string name="patientage">Tipo paziente</string>
     <string name="child">Bambino</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
