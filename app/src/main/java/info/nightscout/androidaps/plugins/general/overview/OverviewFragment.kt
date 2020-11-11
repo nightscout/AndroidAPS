@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -616,7 +617,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
+                    overview_apsmode?.setImageResource(if (pump.pumpDescription.pumpType == PumpType.Insulet_Omnipod) {
+                        // For Omnipod, indicate the pump as disconnected when it's suspended.
+                        // The only way to 'reconnect' it, is through the Omnipod tab
+                        R.drawable.ic_loop_disconnected
+                    } else {
+                        R.drawable.ic_loop_paused
+                    })
                     overview_apsmode_text?.text = ""
                 }
 
