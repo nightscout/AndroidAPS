@@ -245,20 +245,22 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                 }
 
-                AlertSet activeAlerts = podStateManager.getActiveAlerts();
-                if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && activeAlerts.size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
-                    String alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager));
-                    getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
-                        @Override public void run() {
-                            if (result != null) {
-                                aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment);
-                                if (result.success) {
-                                    Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, resourceHelper.gq(R.plurals.omnipod_pod_alerts, activeAlerts.size(), alerts), Notification.URGENT);
-                                    rxBus.send(new EventNewNotification(notification));
+                if (podStateManager.hasPodState()) {
+                    AlertSet activeAlerts = podStateManager.getActiveAlerts();
+                    if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && activeAlerts.size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                        String alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager));
+                        getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
+                            @Override public void run() {
+                                if (result != null) {
+                                    aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment);
+                                    if (result.success) {
+                                        Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, resourceHelper.gq(R.plurals.omnipod_pod_alerts, activeAlerts.size(), alerts), Notification.URGENT);
+                                        rxBus.send(new EventNewNotification(notification));
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
 
                 doPodCheck();
