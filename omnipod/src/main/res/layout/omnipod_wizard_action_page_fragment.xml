@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -28,7 +29,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/omnipod_wizard_vertical_spacing"
         android:layout_marginBottom="@dimen/omnipod_wizard_vertical_spacing"
-        android:src="@drawable/ic_toast_check"
+        app:srcCompat="@drawable/ic_toast_check"
         android:visibility="gone" />
 
     <TextView

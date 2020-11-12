@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerDialogFragment;
@@ -59,7 +61,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         runnable = () -> {
             for (int i = 0; i < 20; i++) {
                 if (pairingEnded) {
-                    Activity activity = getActivity();
+                    FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
                             progressBar.setProgress(100);
@@ -80,7 +82,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
                 } catch (InterruptedException ignored) {
                 }
             }
-            Activity activity = getActivity();
+            FragmentActivity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
                     progressBar.setProgress(100);
@@ -106,7 +108,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         progressBar = view.findViewById(R.id.danars_pairingprogress_progressbar);
         button = view.findViewById(R.id.ok);
 
-       setViews();
+        setViews();
 
         return view;
     }

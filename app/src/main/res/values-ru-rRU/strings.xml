@@ -33,8 +33,8 @@
     <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
     <string name="description_profile_nightscout">Содержит профиль, заданный в Nightscout</string>
     <string name="description_profile_simple">Определите профиль только в одном блоке времени.</string>
-    <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия установленного алгоритма</string>
-    <string name="description_pump_mdi">Интеграция с помпой для тех, кто делает многочисленные подколки для компенсации диабета</string>
+    <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия утилиты Ruffy</string>
+    <string name="description_pump_mdi">Интеграция с помпой для тех, кто для компенсации диабета пользуется инъекциями шприц-ручек</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
     <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
@@ -261,7 +261,7 @@
     <string name="valueoutofrange">Значение %1$s недопустимо</string>
     <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1d мин ответьте кодом %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Помпа отключена</string>
     <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
@@ -405,12 +405,10 @@
     <string name="wear_detailedIOB_summary">разбивка IOB на болюсный и базальный IOB на циферблате смарт-часов</string>
     <string name="nosuccess">неудача - проверьте телефон</string>
     <string name="notavailable">н/д</string>
-    <string name="patientage">Возраст пациента</string>
     <string name="child">ребенок</string>
     <string name="teenage">подросток</string>
     <string name="adult">взрослый</string>
     <string name="resistantadult">Инсулинорезистентный взрослый</string>
-    <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Пользователь</string>
@@ -801,6 +799,8 @@ Context | Edit Context</string>
     <string name="bgsourcesetup">Настройте источник СК</string>
     <string name="setupwizard_profile_description">Пожалуйста выберите источник профиля. Если пациент ребенок пользуйтесь профилем Nightscout. Если никто не отслеживает ваш СК на NS, вы вероятно предпочтете Локальный профиль. Напоминание - вы всего лишь выбираете профиль. Активируйте его \"Переключателем профиля\"</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Ожидание соединения RileyLink\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы вы можете продолжить установку\n</string>
     <string name="startobjective">Начните первую Цель</string>
     <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>
@@ -990,6 +990,7 @@ Context | Edit Context</string>
     <string name="storage">ограничение по объему карты памяти</string>
     <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <string name="wrongformat">Неверный формат</string>
+    <string name="wrongTbrDuration">Длительность временного базала TBR должна быть кратной %1$d минутам и больше 0.</string>
     <string name="sms_wrongcode">Неверный код. Команда отменена.</string>
     <string name="notconfigured">Не сконфигурировано</string>
     <string name="profileswitchcreated">Переключатель профиля создан</string>
@@ -1155,6 +1156,9 @@ Context | Edit Context</string>
     <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
     <string name="smscommunicator_otp_reset_prompt">Вы действительно хотите сбросить ключ аутентификации? Все сконфигурированные в настоящее время ключи станут недопустимы, и придется их настроить заново.</string>
     <string name="smscommunicator_otp_reset_successful">Создан новый ключ аутентификации! Для идентификации используйте обновленный QRCode.</string>
+    <string name="smscommunicator_otp_export_title">Экспорт секретного кода OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Вы действительно хотите скопировать пароль OTP в буфер обмена?\n\nЭто может потребоваться только в том случае, если у вашего приложения идентификации проблемы при сканировании QR кода, вы хотите ввести его вручную или настроить аппаратный маркер OTP с помощью специального приложения.</string>
+    <string name="smscommunicator_otp_export_successful">Секретный одноразовый код OTP (в формате Base32) экспортирован и скопирован в буфер обмена. Вставьте его в систему идентификации или аппаратный маркер OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Установить Аутентификатор</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Код сканирования для настройки кодов OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Одноразовый Пароль</string>
@@ -1218,4 +1222,5 @@ Context | Edit Context</string>
     <string name="worker_state">Рабочее состояние: %s</string>
     <string name="uploaded_data">Загруженные данные</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">На ваш аккаунт Open Humans будут загружены следующие данные: значения ГК, события careportal (за исключением примечаний), пролонгированные болюсы, переключения профиля, суммарные суточные дозы, временные базалы, временные цели, настройки, версии приложения, модель устройства и размеры экрана. Секретная или конфиденциальная информация, такая как адрес вашего сайта Nightscout или API secret, не будет загружена.</string>
+    <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
 </resources>

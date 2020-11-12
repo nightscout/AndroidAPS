@@ -21,6 +21,7 @@
     <string name="description_food">Zobrazení jídel definovaných v NS</string>
     <string name="description_insulin_rapid">Předvolba pro Novorapid</string>
     <string name="description_insulin_ultra_rapid">Předvolba pro Fiasp</string>
+    <string name="description_insulin_lyumjev">Předvolba pro Lyumjev</string>
     <string name="description_insulin_free_peak">Možnost definice vrcholu účinnosti inzulínu pro pokročilé uživatele</string>
     <string name="description_loop">Povolení nebo zakázání smyčky.</string>
     <string name="description_ns_client">Synchronizace dat s NS</string>
@@ -260,7 +261,7 @@
     <string name="valueoutofrange">Hodnota %1$s je mimo přednastavený rozsah</string>
     <string name="smscommunicator_pumpconnectwithcode">Chcete-li připojit pumpu, odpovězte pomocí SMS s kódem %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Připojení k pumpě selhalo</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Chcete-li odpojit pumpu na %1d minut, odpovězte pomocí SMS s kódem %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Chcete-li odpojit pumpu na %1$d minut, odpovězte pomocí SMS s kódem %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pumpa odpojena</string>
     <string name="smscommunicator_reconnect">Pumpa byla znovu připojena</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálený příkaz není povolen</string>
@@ -404,12 +405,13 @@
     <string name="wear_detailedIOB_summary">Rozepsat IOB do bolusového a bazálního na hodinkách</string>
     <string name="nosuccess">neúspěšně - zkontrolujte mobil</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Stáří pacienta</string>
+    <string name="patientage">Typ pacienta</string>
     <string name="child">Dítě</string>
     <string name="teenage">Dospívající</string>
     <string name="adult">Dospělý</string>
     <string name="resistantadult">Dospělý s nízkou citlivostí</string>
-    <string name="patientage_summary">Vyberte věk pacienta pro nastavení bezpečnostních limitů</string>
+    <string name="pregnant">Těhotenství</string>
+    <string name="patientage_summary">Prosím vyberte typ pacienta pro nastavení bezpečnostních limitů</string>
     <string name="patient_name">Jméno pacienta</string>
     <string name="patient_name_summary">Zadejte jméno pacienta nebo přezdívku pro rozlišení mezi více nastaveními</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Uživatel</string>
@@ -453,6 +455,8 @@
     <string name="statuslights_iage_critical">Úroveň kritického stáří inzulínu [h]</string>
     <string name="statuslights_sage_warning">Úroveň varování stáří senzoru [h]</string>
     <string name="statuslights_sage_critical">Úroveň kritického stáří senzoru [h]</string>
+    <string name="statuslights_sbat_warning">Úroveň varování stavu baterie senzoru [%]</string>
+    <string name="statuslights_sbat_critical">Úroveň kritického varování stavu baterie senzoru [%]</string>
     <string name="statuslights_bage_warning">Úroveň varování stáří baterie [h]</string>
     <string name="statuslights_bage_critical">Úroveň kritického varování stáří baterie [h]</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
@@ -483,6 +487,12 @@
     <string name="careportal_insulinage_label">Stáří inzulínu</string>
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
     <string name="careportal_pbage_label">Stáří baterie v pumpě</string>
+    <string name="careportal_sensor_label">Senzor</string>
+    <string name="careportal_canula_label">Kanyla</string>
+    <string name="careportal_insulin_label">Inzulín</string>
+    <string name="careportal_pb_label">Baterie pumpy</string>
+    <string name="careportal_age_label">věk:</string>
+    <string name="careportal_level_label">úroveň:</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>
     <string name="ns_alarms">Vytvořit oznámení z alarmů NS</string>
     <string name="ns_announcements">Vytvořit oznámení z NS upozornění </string>
@@ -535,6 +545,7 @@
     <string name="free_peak_oref">Volitelný vrchol - Oref</string>
     <string name="rapid_acting_oref">Rychle působící - Oref</string>
     <string name="ultrarapid_oref">Ultra rychlý - Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA %1$f je příliš krátké - použito %2$f !</string>
     <string name="activate_profile">Aktivovat profil</string>
     <string name="invalid">NEPLATNÝ</string>
@@ -797,6 +808,8 @@
     <string name="bgsourcesetup">Konfigurace zdroje glykémií</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilů. Pokud jde o dítě, využijte nejspíše NS profil. Pokud Vás nikdo přes NS nesleduje, budete patrně preferovat Místní profil. Uvědomte si, že nastavujete pouze zdroj profilů. Na to aby se opravdu profil začal používat, je třeba provést aktivaci profilu použitím \"Přepnutí profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Čekám na připojení RileyLink.... \n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po inicializaci pumpy můžete pokračovat v nastavení.\n</string>
     <string name="startobjective">Spusťte první cíl</string>
     <string name="permission">Povolení</string>
     <string name="askforpermission">Získat povolení</string>
@@ -986,6 +999,7 @@
     <string name="storage">omezení vnitřního úložiště</string>
     <string name="diskfull">Uvolněte alespoň %1$d MB z vnitřního úložiště! Smyčka zakázána!</string>
     <string name="wrongformat">Chybný formát</string>
+    <string name="wrongTbrDuration">Trvání dočasného bazálu musí být násobkem %1$d minut a musí být větší než 0.</string>
     <string name="sms_wrongcode">Nesprávný kód. Příkaz zrušen.</string>
     <string name="notconfigured">Není nakonfigurováno</string>
     <string name="profileswitchcreated">Přepnutí profilu vytvořeno</string>
@@ -1151,6 +1165,9 @@
     <string name="smscommunicator_otp_reset_title">Resetovat klíč pro autentikátory</string>
     <string name="smscommunicator_otp_reset_prompt">Opravdu chcete obnovit ověřovací klíč? Vyresetujete všechny aktuálně nakonfigurované autentikátory a budete je muset znovu nastavit.</string>
     <string name="smscommunicator_otp_reset_successful">Byl vygenerován nový klíč autentikátoru! Prosím, použijte aktualizovaný QR kód pro nastavení autentikátorů.</string>
+    <string name="smscommunicator_otp_export_title">Export OTP tajného klíče</string>
+    <string name="smscommunicator_otp_export_prompt">Jste si jisti, že chcete zkopírovat tajný OTP klíč do schránky?\n\nPravděpodobně to budete potřebovat pouze v případě, když bude mít vaše ověřovací aplikace problém se skenováním QR kodu, chcete ho zadat ručně, nebo chcete nakonfigurovat hardwarový OTP token pomocí specializované aplikace.</string>
+    <string name="smscommunicator_otp_export_successful">Tajné OTP heslo (ve formátu Base32) bylo vyexportováno a zkopírováno do schránky. Vložte ho do autentikátoru nebo programátoru OTP hardwaru!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainstalujte Autentikátor</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pro nastavení kódů OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
@@ -1170,6 +1187,7 @@
     <string name="statuslights_copy_ns">Zkopírovat nastavení z NS</string>
     <string name="copyexistingvalues">Zkopírovat nastavení NS (existuje-li)?</string>
     <string name="classic_description">Původní vzhled</string>
+    <string name="lowres_description">Vzhled pro nízké rozlišení</string>
     <string name="buttonson_description">Tlačítka jsou vždy zobrazena v dolní části obrazovky</string>
     <string name="largedisplay_description">Velký displej</string>
     <string name="skin">Vzhled</string>
@@ -1214,4 +1232,5 @@
     <string name="worker_state">Stav procesu: %s</string>
     <string name="uploaded_data">Odeslaná data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Následující data budou nahrána do vašeho účtu Open Humans: hodnoty glykémie, bolusy, sacharidy, události péče (kromě poznámek), rozložené bolusy, přepnutí profilu, celkové denní dávky, dočasné bazály, nastavení, verze aplikace, model zařízení a rozměry obrazovky. Tajné nebo soukromé informace, jako je URL nebo API heslo vašeho Nightscoutu, nahrány nebudou.</string>
+    <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
 </resources>

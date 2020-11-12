@@ -31,6 +31,7 @@ class DanaRS_Packet_Option_Get_Pump_Time(
     }
 
     override fun handleMessageNotReceived() {
+        super.handleMessageNotReceived()
         danaPump.resetPumpTime()
     }
 

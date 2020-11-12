@@ -133,8 +133,8 @@ object PrefImportSummaryDialog {
 
         val dialog = builder.show()
         val textView = dialog.findViewById<View>(android.R.id.message) as TextView?
-        textView!!.textSize = 12f
-        textView!!.setPadding(10,0,0,0)
+        textView?.textSize = 12f
+        textView?.setPadding(10,0,0,0)
         dialog.setCanceledOnTouchOutside(false)
     }
 

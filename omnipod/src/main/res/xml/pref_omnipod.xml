@@ -74,6 +74,25 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/omnipod_preference_category_notifications">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_tbr_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_tbr_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_smb_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_smb_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_bolus_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_bolus_sound_enabled" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/omnipod_preference_category_other">
 
         <SwitchPreference

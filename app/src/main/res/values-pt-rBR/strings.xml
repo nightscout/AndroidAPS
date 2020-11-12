@@ -381,12 +381,10 @@
     <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
     <string name="nosuccess">não foi bem sucedido - por favor, verifique o telefone</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Idade do Paciente</string>
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente insulina</string>
-    <string name="patientage_summary">Por favor seleccione a idade do diabético para definir os limites de segurança</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou apelido para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuário</string>

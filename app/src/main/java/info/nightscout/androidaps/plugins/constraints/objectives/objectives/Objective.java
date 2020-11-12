@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ public abstract class Objective {
         return true;
     }
 
-    public void specialAction(Activity activity, String input) {
+    public void specialAction(FragmentActivity activity, String input) {
     }
 
     public abstract class Task {

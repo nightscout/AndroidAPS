@@ -21,6 +21,7 @@
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
     <string name="description_insulin_rapid">Réglages pour les insulines Humalog et NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Réglages pour l\'insuline Fiasp</string>
+    <string name="description_insulin_lyumjev">Réglages pour l\'insuline Lyumjev</string>
     <string name="description_insulin_free_peak">Permet de définir le pic de l’activité de l’insuline et ne doit être utilisé que par les utilisateurs avancés</string>
     <string name="description_loop">Activer ou désactiver la mise en œuvre déclenchant la Boucle.</string>
     <string name="description_ns_client">Synchronise vos données avec Nightscout</string>
@@ -261,7 +262,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="valueoutofrange">La valeur %1$s est en dehors des limites</string>
     <string name="smscommunicator_pumpconnectwithcode">Pour connecter la pompe, renvoyez le code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Echec de la connexion pompe</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1d min, renvoyez le code %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1$d min, renvoyez le code %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompe déconnectée</string>
     <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
@@ -405,12 +406,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_detailedIOB_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="nosuccess">Sans succès - vérifiez votre téléphone</string>
     <string name="notavailable">s/o</string>
-    <string name="patientage">Age du patient</string>
+    <string name="patientage">Type de patient</string>
     <string name="child"> Enfant</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adulte</string>
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
-    <string name="patientage_summary">Veuillez svp sélectionner l’âge du patient pour définir les limites de sécurité</string>
+    <string name="pregnant">Grossesse</string>
+    <string name="patientage_summary">Veuillez sélectionner le type de patient pour définir les limites de sécurité</string>
     <string name="patient_name">Nom du patient</string>
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
@@ -454,6 +456,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_iage_critical">Seuil critique âge insuline [h]</string>
     <string name="statuslights_sage_warning">Seuil d\'alerte âge capteur [h]</string>
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
+    <string name="statuslights_sbat_warning">Seuil d’alerte niveau pile capteur [%]</string>
+    <string name="statuslights_sbat_critical">Seuil critique niveau pile capteur [%]</string>
     <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
     <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
     <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
@@ -484,6 +488,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_insulinage_label">Age Insuline</string>
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_pbage_label">Age Pile Pompe</string>
+    <string name="careportal_sensor_label">Capteur</string>
+    <string name="careportal_canula_label">Canule</string>
+    <string name="careportal_insulin_label">Insuline</string>
+    <string name="careportal_pb_label">Pile pompe</string>
+    <string name="careportal_age_label">age:</string>
+    <string name="careportal_level_label">niveau:</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
     <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
     <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
@@ -536,6 +546,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
     <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
     <string name="ultrarapid_oref">Insuline Ultra Rapide Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
     <string name="activate_profile">Activer le profil</string>
     <string name="invalid">INVALIDE</string>
@@ -798,6 +809,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="bgsourcesetup">Configurez la source des glycémies</string>
     <string name="setupwizard_profile_description">Sélectionnez la source du profil. Si le patient est un enfant vous devriez utiliser un profil NS. Si personne ne vous suit sur Nightscout, vous préférerez probablement un profil local. N\'oubliez pas que vous êtes simplement en train de sélectionner la source du profil. Afin de pouvoir l\'utiliser vous devrez l\'activer via \"Changement de Profil\"</string>
     <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont organisés du plus ancien au plus récent. Les algorithmes les plus récents sont habituellement plus puissants et plus agressifs. De ce fait, si vous êtes un nouvel utilisateur, vous devriez probablement démarrer avec AMA au lieu de choisir un algorithme plus récent. N\'oubliez pas de lire la documentation OpenAPS et en faire la configuration avant utilisation.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">En attente de connexion RileyLink...\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois que la pompe a été initialisée.\n</string>
     <string name="startobjective">Démarrez votre premier objectif</string>
     <string name="permission">Autorisation</string>
     <string name="askforpermission">Demande d\'autorisation</string>
@@ -987,6 +1000,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="storage">stockage interne limité</string>
     <string name="diskfull">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <string name="wrongformat">Format incorrect</string>
+    <string name="wrongTbrDuration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
     <string name="sms_wrongcode">Code incorrect. Commande annulée.</string>
     <string name="notconfigured">Non configuré</string>
     <string name="profileswitchcreated">Changement de profil effectué</string>
@@ -1152,6 +1166,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
     <string name="smscommunicator_otp_reset_prompt">Voulez-vous réinitialiser la clé de l\'Authenticateur ? Cela rendra tous authentificateurs configurés invalides, et vous devrez les configurer à nouveau.</string>
     <string name="smscommunicator_otp_reset_successful">Nouvelle clé de l\'Authenticateur générée ! Veuillez utiliser le QRCode mis à jour pour les authentificateurs.</string>
+    <string name="smscommunicator_otp_export_title">Exportation de l\'OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Êtes-vous sûr de vouloir copier l\'OTP secret dans le presse-papiers ?\n\nVous pouvez en avoir besoin uniquement si votre application d\'authentification a des problèmes pour scanner le QRCode, si vous voulez le saisir manuellement ou si vous voulez configurer un jeton OTP matériel en utilisant une application dédiée.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (au format Base32) exporté et copié dans le presse-papiers. Collez-le dans l\'authentificateur ou le graveur OTP matériel !</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan du code pour configurer les codes OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
@@ -1171,14 +1188,15 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="classic_description">Thème d\'origine</string>
-    <string name="buttonson_description">Les boutons sont toujours affichés en bas de l\'écran</string>
+    <string name="lowres_description">Basse résolution</string>
+    <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
     <string name="comapareprofile">Comparer les profils</string>
     <string name="nav_profilehelper">Assistant Profil</string>
     <string name="motoldefaultprofile">Profil par défaut</string>
     <string name="currentprofile">Profil actuel</string>
-    <string name="availableprofile">Profil disponible</string>
+    <string name="availableprofile">Profils disponibles</string>
     <string name="profiletype">Type de profil</string>
     <string name="formatwithtdd">Âge: %1$.0f DTI: %2$.0f U</string>
     <string name="formatwittddandpct">Âge: %1$.0f DTI: %2$.0f U %3$d%%</string>
@@ -1215,4 +1233,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="worker_state">État du travail : %s</string>
     <string name="uploaded_data">Données transférées</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Les données suivantes seront téléchargées sur votre compte Open Humans : glycémie, bolus, glucides, événements Careportal (sauf les notes), bolus étendus, changements de profil, doses quotidiennes totales, basales temporaires, cibles temporaires, préférences, version de l\'application, modèle de l\'appareil et dimensions de l\'écran. Les informations secrètes ou privées telles que votre URL Nightscout ou votre API secret ne seront pas téléchargés.</string>
+    <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
 </resources>

@@ -17,6 +17,9 @@ public class OmnipodStorageKeys {
         public static final int EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN = R.string.key_omnipod_expiration_reminder_hours_before_shutdown;
         public static final int LOW_RESERVOIR_ALERT_ENABLED = R.string.key_omnipod_low_reservoir_alert_enabled;
         public static final int LOW_RESERVOIR_ALERT_UNITS = R.string.key_omnipod_low_reservoir_alert_units;
+        public static final int NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_tbr_sound_enabled;
+        public static final int NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_smb_sound_enabled;
+        public static final int NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_bolus_sound_enabled;
     }
 
     public static class Statistics {

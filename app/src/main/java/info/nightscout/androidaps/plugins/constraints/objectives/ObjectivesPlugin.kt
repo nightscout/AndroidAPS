@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.objectives
 
-import android.app.Activity
+import androidx.fragment.app.FragmentActivity
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import dagger.android.HasAndroidInjector
@@ -116,7 +116,7 @@ class ObjectivesPlugin @Inject constructor(
         sp.putBoolean(R.string.key_objectiveusescale, false)
     }
 
-    fun completeObjectives(activity: Activity, request: String) {
+    fun completeObjectives(activity: FragmentActivity, request: String) {
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
         var url = sp.getString(R.string.key_nsclientinternal_url, "").toLowerCase(Locale.getDefault())
         if (!url.endsWith("/")) url = "$url/"
@@ -145,7 +145,7 @@ class ObjectivesPlugin @Inject constructor(
         }
     }
 
-    fun allPriorAccomplished(position: Int) : Boolean {
+    fun allPriorAccomplished(position: Int): Boolean {
         var accomplished = true
         for (i in 0 until position) {
             accomplished = accomplished && objectives[i].isAccomplished
