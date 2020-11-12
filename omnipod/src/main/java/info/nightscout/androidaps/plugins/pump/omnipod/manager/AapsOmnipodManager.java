@@ -46,7 +46,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
@@ -55,7 +54,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedul
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActivationTimeExceededException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommandFailedAfterChangingDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CrcMismatchException;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.DeliveryStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalActivationProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
@@ -72,6 +70,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodProgressStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodReturnedErrorResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PrecedingCommandFailedUncertainlyException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkInterruptedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkTimeoutException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkUnexpectedException;
@@ -281,24 +280,22 @@ public class AapsOmnipodManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(historyEntryType, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
-        } catch (DeliveryStatusVerificationFailedException ex) {
+        } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
-                String note;
-                if (ex.getExpectedStatus() == DeliveryStatus.SUSPENDED) {
-                    // Happened when suspending delivery before setting the new profile
-                    note = getStringResource(R.string.omnipod_error_set_basal_failed_delivery_might_be_suspended);
-                } else {
-                    // Happened when setting the new profile (after suspending delivery)
-                    note = getStringResource(R.string.omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended);
-                }
-                showNotification(Notification.FAILED_UDPATE_PROFILE, note, Notification.URGENT, R.raw.boluserror);
+                showNotification(Notification.FAILED_UDPATE_PROFILE, getStringResource(R.string.omnipod_error_set_basal_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(historyEntryType, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             if (showNotifications) {
-                showNotification(Notification.FAILED_UDPATE_PROFILE, getStringResource(R.string.omnipod_error_set_basal_failed), Notification.URGENT, R.raw.boluserror);
+                String note;
+                if (OmnipodManager.isCertainFailure(ex)) {
+                    note = getStringResource(R.string.omnipod_error_set_basal_failed);
+                } else {
+                    note = getStringResource(R.string.omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended);
+                }
+                showNotification(Notification.FAILED_UDPATE_PROFILE, note, Notification.URGENT, R.raw.boluserror);
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(historyEntryType, errorMessage);
@@ -455,13 +452,19 @@ public class AapsOmnipodManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
-        } catch (DeliveryStatusVerificationFailedException ex) {
+        } catch (PrecedingCommandFailedUncertainlyException ex) {
             String errorMessage = translateException(ex.getCause());
+            addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
-            String note;
-            if (ex.getExpectedStatus() == DeliveryStatus.TEMP_BASAL_RUNNING) {
-                // Happened after cancelling the old TBR, when attempting to set new TBR
-                note = getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed);
+            showNotification(getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+        } catch (Exception ex) {
+            String errorMessage = translateException(ex);
+            long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
+
+            if (!OmnipodManager.isCertainFailure(ex)) {
+                showNotification(getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
 
                 // Assume that setting the temp basal succeeded here, because in case it didn't succeed,
                 // The next StatusResponse that we receive will allow us to recover from the wrong state
@@ -469,19 +472,10 @@ public class AapsOmnipodManager {
                 // If we would assume that the TBR didn't succeed, we couldn't properly recover upon the next StatusResponse,
                 // as we could only see that the Pod is running a TBR, but we don't know the rate and duration as
                 // the Pod doesn't provide this information
-                long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
-                addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
-            } else {
-                // Happened when attempting to cancel the old TBR
-                note = getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled);
-                addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
-            }
-            showNotification(note, Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
 
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
-        } catch (Exception ex) {
-            String errorMessage = translateException(ex);
-            addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
+                addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
+            }
+
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
 
@@ -560,7 +554,7 @@ public class AapsOmnipodManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
-        } catch (DeliveryStatusVerificationFailedException ex) {
+        } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
                 showNotification(getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
             }
@@ -568,6 +562,9 @@ public class AapsOmnipodManager {
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
+            if (showNotifications) {
+                showNotification(getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
+            }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);

@@ -464,7 +464,7 @@
     <string name="notavailable">n/a</string>
     <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
     <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
-    <string name="patientage">Patient age</string>
+    <string name="patientage">Patient type</string>
     <string name="child">Child</string>
     <string name="teenage">Teenage</string>
     <string name="adult">Adult</string>

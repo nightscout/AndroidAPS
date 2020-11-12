@@ -116,7 +116,7 @@ public abstract class PodStateManager {
     }
 
     public final void setInitializationParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone, PodProgressStatus podProgressStatus) {
-        if (isPodInitialized() && getPodProgressStatus().isAfter(PodProgressStatus.REMINDER_INITIALIZED)) {
+        if (isPodInitialized() && getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
             throw new IllegalStateException("Cannot set pairing parameters: pairing parameters have already been set");
         }
         if (piVersion == null) {
