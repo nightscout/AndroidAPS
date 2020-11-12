@@ -105,7 +105,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Insulinabgabe komplett ausgesetzt.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Aktive Warnungen wurden bestätigt.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulinabgabe wieder aufgenommen.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod unterbrochen</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_cmd_discard_pod">Pod ablegen</string>
