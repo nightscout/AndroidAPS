@@ -105,7 +105,6 @@
     <string name="omnipod_confirmation_suspended_delivery">כל הזרקת אינסולין הושהתה.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">התראות פעילות אושרו.</string>
     <string name="omnipod_confirmation_delivery_resumed">מתן האינסולין חודש.</string>
-    <string name="omnipod_confirmation_pod_suspended">הפוד מושהה</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">השבת פוד</string>
     <string name="omnipod_cmd_discard_pod">השלכת הפוד</string>
