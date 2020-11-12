@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="digitalstyle_styles_name">
+        <item>@string/digitalstyle_style_none</item>
+        <item>@string/digitalstyle_style_minimal</item>
+        <item>@string/digitalstyle_style_shape</item>
+        <item>@string/digitalstyle_style_full</item>
+    </string-array>
+    <string-array name="digitalstyle_styles_values">
+        <item>none</item>
+        <item>minimal</item>
+        <item>shape</item>
+        <item>full</item>
+    </string-array>
+
+    <string-array name="digitalstyle_color_name">
+        <item>@string/color_name_red</item>
+        <item>@string/color_name_pink</item>
+        <item>@string/color_name_purple</item>
+        <item>@string/color_name_deeppurple</item>
+        <item>@string/color_name_indigo</item>
+        <item>@string/color_name_blue</item>
+        <item>@string/color_name_lightblue</item>
+        <item>@string/color_name_cyan</item>
+        <item>@string/color_name_teal</item>
+        <item>@string/color_name_green</item>
+        <item>@string/color_name_lightgreen</item>
+        <item>@string/color_name_lime</item>
+        <item>@string/color_name_yellow</item>
+        <item>@string/color_name_amber</item>
+        <item>@string/color_name_orange</item>
+        <item>@string/color_name_deeporange</item>
+        <item>@string/color_name_brown</item>
+        <item>@string/color_name_gray</item>
+        <item>@string/color_name_bluegray</item>
+        <item>@string/color_name_white</item>
+        <item>@string/color_name_multicolor</item>
+    </string-array>
+    <string-array name="digitalstyle_color_values">
+        <item>red</item>
+        <item>pink</item>
+        <item>purple</item>
+        <item>deeppurple</item>
+        <item>indigo</item>
+        <item>blue</item>
+        <item>lightblue</item>
+        <item>cyan</item>
+        <item>teal</item>
+        <item>green</item>
+        <item>lightgreen</item>
+        <item>lime</item>
+        <item>yellow</item>
+        <item>amber</item>
+        <item>orange</item>
+        <item>deeporange</item>
+        <item>brown</item>
+        <item>gray</item>
+        <item>bluegray</item>
+        <item>white</item>
+        <item>multicolor</item>
+    </string-array>
+
+
+    <string-array name="digitalstyle_color_saturation">
+        <item>100</item>
+        <item>500</item>
+        <item>700</item>
+        <item>900</item>
+    </string-array>
+
+
+    <string-array name="digitalstyle_color_opacity_name">
+        <item>10%</item>
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+        <item>100%</item>
+    </string-array>
+    <string-array name="digitalstyle_color_opacity_value">
+        <item>0.1</item>
+        <item>0.2</item>
+        <item>0.3</item>
+        <item>0.4</item>
+        <item>0.5</item>
+        <item>0.6</item>
+        <item>0.7</item>
+        <item>0.8</item>
+        <item>0.9</item>
+        <item>1</item>
+    </string-array>
+
+
+</resources>
