@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -74,12 +75,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.acti
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandAcknowledgeAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandHandleTimeChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandUpdateAlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommand;
@@ -88,6 +91,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLi
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -241,6 +245,22 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                 }
 
+                AlertSet activeAlerts = podStateManager.getActiveAlerts();
+                if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && activeAlerts.size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                    String alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager));
+                    getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
+                        @Override public void run() {
+                            if (result != null) {
+                                aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment);
+                                if (result.success) {
+                                    Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, resourceHelper.gq(R.plurals.omnipod_pod_alerts, activeAlerts.size(), alerts), Notification.URGENT);
+                                    rxBus.send(new EventNewNotification(notification));
+                                }
+                            }
+                        }
+                    });
+                }
+
                 doPodCheck();
 
                 loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
@@ -294,7 +314,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled)) {
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_automatically_acknowledge_alerts_enabled)) {
                         aapsOmnipodManager.reloadSettings();
                     } else if (event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
