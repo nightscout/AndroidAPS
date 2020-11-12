@@ -265,9 +265,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
                 loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
             }
-        }
-
-        ;
+        };
     }
 
     @Override
