@@ -269,7 +269,7 @@
         <item quantity="other">%1$d days</item>
     </plurals>
     <plurals name="omnipod_pod_alerts">
-        <item quantity="one">Pod alert: %1$</item>
+        <item quantity="one">Pod alert: %1$s</item>
         <item quantity="other">Pod alerts: %1$s</item>
     </plurals>
 
