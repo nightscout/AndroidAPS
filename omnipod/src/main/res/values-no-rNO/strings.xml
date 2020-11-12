@@ -105,7 +105,6 @@
     <string name="omnipod_confirmation_suspended_delivery">All insulintilførsel har blitt pauset.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Aktive varsler har blitt bekreftet.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulintilførselen er gjenopptatt.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod er pauset</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deaktiviser Pod</string>
     <string name="omnipod_cmd_discard_pod">Forkast Pod</string>
