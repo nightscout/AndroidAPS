@@ -105,7 +105,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Цялата доставка на инсулин е спряна.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Активните аларми са потърдени.</string>
     <string name="omnipod_confirmation_delivery_resumed">Доставката на инсулин е подновена.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod изключен</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Деактивирай под</string>
     <string name="omnipod_cmd_discard_pod">Премахни под</string>
