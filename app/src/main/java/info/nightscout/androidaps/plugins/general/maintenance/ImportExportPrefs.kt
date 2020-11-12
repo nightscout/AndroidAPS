@@ -72,13 +72,15 @@ class ImportExportPrefs @Inject constructor(
         f.activity?.let { exportSharedPreferences(it) }
     }
 
-    fun verifyStoragePermissions(fragment: Fragment) {
+    fun verifyStoragePermissions(fragment: Fragment, onGranted: Runnable) {
         fragment.context?.let {
             val permission = ContextCompat.checkSelfPermission(it,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 // We don't have permission so prompt the user
                 fragment.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
+            } else {
+                onGranted.run()
             }
         }
     }
