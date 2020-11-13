@@ -85,7 +85,7 @@
         <service
             android:name=".watchfaces.Home2"
             android:allowEmbedded="true"
-            android:label="AAPSv2"
+            android:label="@string/label_xdrip_v2"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
@@ -106,7 +106,7 @@
         <service
             android:name=".watchfaces.Cockpit"
             android:allowEmbedded="true"
-            android:label="AAPS(Cockpit)"
+            android:label="@string/label_xdrip_cockpit"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
@@ -127,7 +127,7 @@
         <service
             android:name=".watchfaces.Steampunk"
             android:allowEmbedded="true"
-            android:label="AAPS(Steampunk)"
+            android:label="@string/label_xdrip_steampunk"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
