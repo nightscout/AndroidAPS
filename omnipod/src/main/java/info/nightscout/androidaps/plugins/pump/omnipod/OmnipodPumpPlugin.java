@@ -525,7 +525,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
             return true;
         }
-        return podStateManager.getBasalSchedule().equals(AapsOmnipodManager.mapProfileToBasalSchedule(profile));
+        return Objects.equals(podStateManager.getBasalSchedule(), AapsOmnipodManager.mapProfileToBasalSchedule(profile));
     }
 
     @Override
