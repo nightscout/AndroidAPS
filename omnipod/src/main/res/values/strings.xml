@@ -49,6 +49,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Automatically acknowledge Pod alerts</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Other</string>
     <string name="omnipod_preference_category_alerts">Alerts</string>
@@ -255,7 +256,6 @@
     <string name="omnipod_less_than_a_minute_ago">Less than a minute ago</string>
     <string name="omnipod_composite_time">%1$s and %2$s</string>
     <string name="omnipod_time_ago">%1$s ago</string>
-    <string name="omnipod_config_automatically_acknowledge_alerts">Automatically acknowledge Pod alerts</string>
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
