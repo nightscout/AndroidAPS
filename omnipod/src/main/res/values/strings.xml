@@ -90,7 +90,6 @@
     <string name="omnipod_warning">Warning</string>
     <string name="omnipod_error_rileylink_address_invalid">RileyLink address invalid.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\nYou need to configure Omnipod first, before you can use this operation.</string>
-    <string name="omnipod_error_pod_pod_alert">No active Pod</string>
     <string name="omnipod_error_pod_not_attached">No active Pod</string>
     <string name="omnipod_error_unexpected_exception">An unexpected error occurred. Please report! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Communication failed: message integrity verification failed</string>
