@@ -537,7 +537,10 @@ public abstract class PodStateManager {
                 podState.setActivatedAt(activatedAtCalculated);
             }
             podState.setSuspended(status.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
-            podState.setActiveAlerts(status.getUnacknowledgedAlerts());
+            if (!Objects.equals(status.getUnacknowledgedAlerts(), podState.getActiveAlerts())) {
+                podState.setActiveAlerts(status.getUnacknowledgedAlerts());
+                onActiveAlertsChanged();
+            }
             podState.setLastDeliveryStatus(status.getDeliveryStatus());
             podState.setReservoirLevel(status.getReservoirLevel());
             podState.setTotalTicksDelivered(status.getTicksDelivered());
@@ -563,6 +566,11 @@ public abstract class PodStateManager {
     }
 
     protected void onTbrChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onActiveAlertsChanged() {
         // Deliberately left empty
         // Can be overridden in subclasses
     }

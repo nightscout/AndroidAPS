@@ -53,6 +53,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -79,6 +80,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSe
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
@@ -139,6 +141,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final List<CustomAction> customActions = Collections.singletonList(new CustomAction(
             R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, true));
     private final CompositeDisposable disposables = new CompositeDisposable();
+    private final NSUpload nsUpload;
 
     // variables for handling statuses and history
     private boolean firstRun = true;
@@ -173,7 +176,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             AapsOmnipodUtil aapsOmnipodUtil,
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
-            ProfileFunction profileFunction
+            ProfileFunction profileFunction,
+            NSUpload nsUpload
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -199,6 +203,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
+        this.nsUpload = nsUpload;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -245,23 +250,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                 }
 
-                if (podStateManager.hasPodState()) {
+                if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead()) {
                     AlertSet activeAlerts = podStateManager.getActiveAlerts();
-                    if (activeAlerts != null) {
-                        if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && activeAlerts.size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
-                            String alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager));
-                            getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
-                                @Override public void run() {
-                                    if (result != null) {
-                                        aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment);
-                                        if (result.success) {
-                                            Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, resourceHelper.gq(R.plurals.omnipod_pod_alerts, activeAlerts.size(), alerts), Notification.URGENT);
-                                            rxBus.send(new EventNewNotification(notification));
-                                        }
-                                    }
-                                }
-                            });
-                        }
+
+                    if (activeAlerts != null && activeAlerts.size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                        queueAcknowledgeAlertsCommand();
                     }
                 }
 
@@ -304,6 +297,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .toObservable(EventOmnipodTbrChanged.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> updateAapsTbr(), fabricPrivacy::logException)
+        );
+        disposables.add(rxBus
+                .toObservable(EventOmnipodActiveAlertsChanged.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> handleActivePodAlerts(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventPreferenceChange.class)
@@ -372,6 +370,23 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         }
     }
 
+    private void handleActivePodAlerts() {
+        if (podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead()) {
+            AlertSet activeAlerts = podStateManager.getActiveAlerts();
+            if (activeAlerts != null && activeAlerts.size() > 0) {
+                String alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager));
+                String notificationText = resourceHelper.gq(R.plurals.omnipod_pod_alerts, activeAlerts.size(), alerts);
+                Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, notificationText, Notification.URGENT);
+                rxBus.send(new EventNewNotification(notification));
+                nsUpload.uploadError(notificationText);
+
+                if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                    queueAcknowledgeAlertsCommand();
+                }
+            }
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -382,6 +397,16 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         context.unbindService(serviceConnection);
 
         disposables.clear();
+    }
+
+    private void queueAcknowledgeAlertsCommand() {
+        getCommandQueue().customCommand(new CommandAcknowledgeAlerts(), new Callback() {
+            @Override public void run() {
+                if (result != null) {
+                    aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.success, result.comment);
+                }
+            }
+        });
     }
 
     private void doPodCheck() {
