@@ -18,12 +18,12 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="false"
         android:key="show_date"
         android:title="@string/pref_show_date"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
+        app:wear_iconOn="@drawable/settings_on" />-->
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -109,13 +109,13 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="true"
         android:key="dark"
         android:summary="Dark theme"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on"/>  -->
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -125,13 +125,13 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="false"
         android:key="match_divider"
         android:summary="Status bar divider background matches watchface background"
         android:title="@string/pref_matching_divider"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on"/> -->
 
     <ListPreference
         android:defaultValue="3"
@@ -149,45 +149,45 @@
         android:summary="Input Design"
         android:title="@string/pref_input_design" />
 
-    <ListPreference
+    <!--<ListPreference
         android:defaultValue="2"
         android:entries="@array/delta_granularity"
         android:entryValues="@array/delta_granularity_values"
         android:key="delta_granularity"
         android:summary="Delta Granularity (Steampunk)"
-        android:title="@string/pref_delta_granularity" />
+        android:title="@string/pref_delta_granularity" />-->
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="false"
         android:key="showBigNumbers"
         android:summary="Big numbers. (Circle WF)"
         android:title="@string/pref_big_numbers"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on"/>-->
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="false"
         android:key="showRingHistory"
         android:summary="Graphical history. (Circle WF)"
         android:title="@string/pref_ring_history"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
+        app:wear_iconOn="@drawable/settings_on" />-->
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="true"
         android:key="softRingHistory"
         android:summary="Less eyecandy. (Circle WF)"
         android:title="@string/pref_light_ring_history"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on"/>-->
 
-    <CheckBoxPreference
+    <!--<CheckBoxPreference
         android:defaultValue="true"
         android:key="animation"
         android:summary="Animations. (Circle WF)"
         android:title="@string/pref_animations"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on"/>-->
 
     <CheckBoxPreference
         android:defaultValue="true"

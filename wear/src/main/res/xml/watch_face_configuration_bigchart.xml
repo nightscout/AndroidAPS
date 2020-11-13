@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="dark"
+        android:summary="Dark theme"
+        android:title="@string/pref_dark"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
         android:key="vibrate_Hourly"
