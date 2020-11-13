@@ -187,6 +187,13 @@
         android:summary="Input Design"
         android:title="@string/pref_version" />
 
+    <info.nightscout.androidaps.interaction.utils.WatchfaceSettingsPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="more_settings"
+        android:summary="Input Design"
+        android:title="@string/pref_moreWatchfaceSettings" />
 
 
     <!--<CheckBoxPreference
