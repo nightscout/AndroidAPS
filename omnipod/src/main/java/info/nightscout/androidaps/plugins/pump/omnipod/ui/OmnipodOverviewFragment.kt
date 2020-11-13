@@ -474,7 +474,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     }
 
     private fun updateAcknowledgeAlertsButton() {
-        if (podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java))) {
+        if (!omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java))) {
             omnipod_overview_button_acknowledge_active_alerts.visibility = View.VISIBLE
             omnipod_overview_button_acknowledge_active_alerts.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
