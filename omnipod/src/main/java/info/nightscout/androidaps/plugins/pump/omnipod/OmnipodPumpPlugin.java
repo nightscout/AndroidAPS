@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -77,7 +76,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
@@ -274,13 +272,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         // We can't do this in PodStateManager itself, because JodaTimeAndroid.init() hasn't been called yet
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
         podStateManager.loadPodState();
-
-        // BS @ 2020-10-17 FIXME: for backwards compatibility; remove before release
-        if (podStateManager.isPodInitialized() &&
-                podStateManager.getActivationProgress() == ActivationProgress.NONE &&
-                podStateManager.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS)) {
-            podStateManager.setActivationProgress(ActivationProgress.COMPLETED);
-        }
 
         lastConnectionTimeMillis = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
@@ -907,7 +898,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @Override
     public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
         // We have a separate notification for when no Pod is active, see doPodCheck()
-        if (podStateManager.isPodActivationCompleted() && podStateManager.getLastSuccessfulCommunication() != null) { // Null check for backwards compatibility
+        if (podStateManager.isPodActivationCompleted() && podStateManager.getLastSuccessfulCommunication() != null) {
             long currentTimeMillis = System.currentTimeMillis();
 
             if (podStateManager.getLastSuccessfulCommunication().getMillis() + unreachableTimeoutMilliseconds < currentTimeMillis) {
@@ -1002,10 +993,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running");
         }
 
-        Bundle params = new Bundle();
-        params.putString("version", BuildConfig.VERSION);
-
-        fabricPrivacy.logCustom("OmnipodPumpInit", params);
+        fabricPrivacy.logCustom("OmnipodPumpInit");
     }
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
