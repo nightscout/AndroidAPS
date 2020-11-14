@@ -161,7 +161,7 @@ class AutotunePlugin @Inject constructor(
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
                     Thread(Runnable {
-                        result = resourceHelper.gs(R.string.format_autotune_partialresult, i+1, daysBack, showResults(tunedProfile!!, pumpprofile))
+                        result = resourceHelper.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
                 }
@@ -246,8 +246,10 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("tune_insulin_curve", false)
             //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
             if (insulinInterface.id == InsulinInterface.OREF_ULTRA_RAPID_ACTING) jsonSettings.put("curve", "ultra-rapid") else if (insulinInterface.id == InsulinInterface.OREF_RAPID_ACTING) jsonSettings.put("curve", "rapid-acting") else if (insulinInterface.id == InsulinInterface.OREF_FREE_PEAK) {
-                jsonSettings.put("curve", "bilinear")
-                jsonSettings.put("insulinpeaktime", sp.getInt(R.string.key_insulin_oref_peak, 75))
+                val peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak), 75)
+                jsonSettings.put("curve", if (peaktime > 50) "rapid-acting" else "ultra-rapid")
+                jsonSettings.put("useCustomPeakTime", true)
+                jsonSettings.put("insulinPeakTime", peaktime)
             }
             jsonString = jsonSettings.toString(4).replace("\\/", "/")
         } catch (e: JSONException) {
