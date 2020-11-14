@@ -275,7 +275,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 })
             }
 
-            if (podStateManager.isFaulted) {
+            if (podStateManager.isPodFaulted) {
                 val faultEventCode = podStateManager.faultEventCode
                 errors.add(resourceHelper.gs(R.string.omnipod_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
             }

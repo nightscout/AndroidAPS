@@ -238,15 +238,6 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastUpdatedFromResponse());
     }
 
-    /**
-     * @return true if the Pod State contains a fault event. Is the Pod state does not contain
-     * a fault event, this does NOT necessarily mean that the Pod is not faulted. For a reliable
-     * indication on whether or not the pod is faulted, see {@link #isPodFaulted() isPodFaulted()}
-     */
-    public final boolean isFaulted() {
-        return podState != null && podState.getFaultEventCode() != null;
-    }
-
     public final FaultEventCode getFaultEventCode() {
         return getSafe(() -> podState.getFaultEventCode());
     }
@@ -559,7 +550,10 @@ public abstract class PodStateManager {
             if (status instanceof PodInfoDetailedStatus) {
                 PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) status;
                 if (detailedStatus.isFaulted()) {
-                    podState.setFaultEventCode(detailedStatus.getFaultEventCode());
+                    if (!Objects.equals(podState.getFaultEventCode(), detailedStatus.getFaultEventCode())) {
+                        podState.setFaultEventCode(detailedStatus.getFaultEventCode());
+                        onFaultEventChanged();
+                    }
                 }
             }
         });
@@ -571,6 +565,11 @@ public abstract class PodStateManager {
     }
 
     protected void onActiveAlertsChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onFaultEventChanged() {
         // Deliberately left empty
         // Can be overridden in subclasses
     }
