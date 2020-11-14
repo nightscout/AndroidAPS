@@ -404,12 +404,10 @@
     <string name="wear_detailedIOB_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="nosuccess">Niet geslaagd - controleer de telefoon</string>
     <string name="notavailable">n.v.t.</string>
-    <string name="patientage">Leeftijd Patient</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
     <string name="resistantadult">insuline resistente volwassene</string>
-    <string name="patientage_summary">Kies leeftijd van de patient voor veiligheids limieten</string>
     <string name="patient_name">Naam patiënt</string>
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Gebruiker</string>

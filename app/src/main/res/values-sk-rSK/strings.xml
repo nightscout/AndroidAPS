@@ -403,12 +403,10 @@
     <string name="wear_detailedIOB_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="nosuccess">Neúspešné - skontrolujte telefón</string>
     <string name="notavailable">nie je k dispozícii</string>
-    <string name="patientage">Vek pacienta</string>
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
     <string name="adult">Dospelý</string>
     <string name="resistantadult">Dospelý s nízkou citlivosťou</string>
-    <string name="patientage_summary">Vyberte vek pacienta pre nastavenie bezpečnostných limitov</string>
     <string name="patient_name">Meno pacienta</string>
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>

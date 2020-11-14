@@ -105,7 +105,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Tutta l\'erogazione di insulina è stata sospesa.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Gli avvisi attivi sono stati confermati.</string>
     <string name="omnipod_confirmation_delivery_resumed">L\'erogazione di insulina è ripresa.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod sospeso</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Disattiva pod</string>
     <string name="omnipod_cmd_discard_pod">Scarta pod</string>

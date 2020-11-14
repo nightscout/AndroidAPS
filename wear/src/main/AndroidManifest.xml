@@ -6,7 +6,7 @@
 
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 
     <application
@@ -33,7 +33,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -52,7 +51,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -71,7 +69,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -90,7 +87,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -109,7 +105,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -128,7 +123,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -147,7 +141,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -165,7 +158,27 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
 
+        <service
+            android:name=".watchfaces.DigitalStyle"
+            android:allowEmbedded="true"
+            android:label="@string/label_digitalstyle"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_digitalstyle" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyleConfigAct" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
@@ -178,57 +191,57 @@
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
 
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data" />
+                    android:pathPrefix="/nightscout_watch_data"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data_resend" />
+                    android:pathPrefix="/nightscout_watch_data_resend"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancel_bolus" />
+                    android:pathPrefix="/nightscout_watch_cancel_bolus"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_confirmactionstring" />
+                    android:pathPrefix="/nightscout_watch_confirmactionstring"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_initiateactionstring" />
+                    android:pathPrefix="/nightscout_watch_initiateactionstring"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/openwearsettings" />
+                    android:pathPrefix="/openwearsettings"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/sendstatustowear" />
+                    android:pathPrefix="/sendstatustowear"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/sendpreferencestowear" />
+                    android:pathPrefix="/sendpreferencestowear"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_basal" />
+                    android:pathPrefix="/nightscout_watch_basal"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_bolusprogress" />
+                    android:pathPrefix="/nightscout_watch_bolusprogress"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest" />
+                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest" />
+                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest" />
+                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 
@@ -237,16 +250,16 @@
             android:icon="@drawable/ic_aaps_full"
             android:label="Full Status"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
-        <intent-filter>
-            <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-        </intent-filter>
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
 
-        <meta-data
-            android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-            android:value="LONG_TEXT" />
-        <meta-data
-            android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-            android:value="300" />
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
         </service>
 
         <service
@@ -413,10 +426,10 @@
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="LARGE_IMAGE"/>
+                android:value="LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0"/>
+                android:value="0" />
         </service>
 
         <service
@@ -430,10 +443,10 @@
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="LARGE_IMAGE"/>
+                android:value="LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0"/>
+                android:value="0" />
         </service>
 
         <service
@@ -447,13 +460,13 @@
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="LARGE_IMAGE"/>
+                android:value="LARGE_IMAGE" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0"/>
+                android:value="0" />
         </service>
 
-        <receiver android:name=".complications.ComplicationTapBroadcastReceiver"/>
+        <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
 
         <activity
             android:name=".interaction.menus.MainMenuActivity"
@@ -465,44 +478,42 @@
         </activity>
         <activity
             android:name=".interaction.AAPSPreferences"
-            android:label="@string/menu_settings">
-        </activity>
+            android:label="@string/menu_settings" />
         <activity
             android:name=".interaction.actions.WizardActivity"
-            android:label="@string/menu_wizard">
-        </activity>
+            android:label="@string/menu_wizard" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
-            android:label="@string/menu_prime_fill">
-        </activity>
+            android:label="@string/menu_prime_fill" />
         <activity
             android:name=".interaction.menus.StatusMenuActivity"
-            android:label="@string/menu_status">
-        </activity>
+            android:label="@string/menu_status" />
         <activity
             android:name=".interaction.actions.BolusActivity"
-            android:label="@string/action_bolus">
-        </activity>
+            android:label="@string/action_bolus" />
         <activity
             android:name=".interaction.actions.CPPActivity"
-            android:label="@string/status_cpp">
-        </activity>
+            android:label="@string/status_cpp" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
-            android:launchMode="singleInstance"
-            android:label="@string/action_confirm">
-        </activity>
+            android:label="@string/action_confirm"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".interaction.actions.FillActivity"
-            android:label="@string/menu_prime_fill">
-        </activity>
+            android:label="@string/menu_prime_fill" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
-            android:label="@string/action_carbs">
-        </activity>
+            android:label="@string/action_carbs" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
-            android:label="@string/menu_tempt">
+            android:label="@string/menu_tempt" />
+        <activity android:name=".interaction.configurationActivities.DigitalStyleConfigAct">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyleConfigAct" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 </manifest>

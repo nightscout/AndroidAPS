@@ -97,6 +97,7 @@
     <string name="omnipod_error_failed_to_insert_cannula">הכנסת הצינורית נכשלה</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">זמן ההפעלה של הפוד חורג. לא ניתן להפעיל את פוד זה יותר.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">אימות התקדמות ההפעלה נכשל. אנא נסו שנית.</string>
+    <string name="omnipod_error_pod_suspended">הפוד מושהה</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">אימות</string>
     <string name="omnipod_confirmation_time_or_timezone_change">שעה ו/או אזור הזמן השתנו בפוד.</string>
@@ -105,7 +106,6 @@
     <string name="omnipod_confirmation_suspended_delivery">כל הזרקת אינסולין הושהתה.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">התראות פעילות אושרו.</string>
     <string name="omnipod_confirmation_delivery_resumed">מתן האינסולין חודש.</string>
-    <string name="omnipod_confirmation_pod_suspended">הפוד מושהה</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">השבת פוד</string>
     <string name="omnipod_cmd_discard_pod">השלכת הפוד</string>

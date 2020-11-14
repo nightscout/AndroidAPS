@@ -464,7 +464,7 @@
     <string name="notavailable">n/a</string>
     <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
     <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
-    <string name="patientage">Patient age</string>
+    <string name="patientage">Patient type</string>
     <string name="child">Child</string>
     <string name="teenage">Teenage</string>
     <string name="adult">Adult</string>
@@ -476,7 +476,7 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
-    <string name="patientage_summary">Please select patient age to setup safety limits</string>
+    <string name="patientage_summary">Please select patient type to setup safety limits</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>

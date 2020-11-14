@@ -406,13 +406,13 @@
     <string name="wear_detailedIOB_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
     <string name="notavailable">לא זמין</string>
-    <string name="patientage">גיל המטופל</string>
+    <string name="patientage">סוג המטופל\ת</string>
     <string name="child">ילד/ה</string>
     <string name="teenage">מתבגר\ת</string>
     <string name="adult">מבוגר\ת</string>
     <string name="resistantadult">מבוגר\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
-    <string name="patientage_summary">נא לבחור את גיל המטופל כדי להגדיר מגבלות בטיחות</string>
+    <string name="patientage_summary">נא לבחור את גיל המטופל\ת להתאמת מגבלות בטיחות</string>
     <string name="patient_name">שם מטופל</string>
     <string name="patient_name_summary">נא לציין שם המטופל או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
@@ -919,7 +919,7 @@
     <string name="tbr_formatter">%1$d%% למשך %2$d/%3$d דק\'</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="multiwave_bolus">בולוס רב שלבי</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f יח\' עבור %3$d דק\'</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f יח\' במשך %3$d דק\'</string>
     <string name="enable_tbr_over_notification">אפשר התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
     <string name="disable_tbr_over_notification">השבת התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
     <string name="refresh">רענן</string>
