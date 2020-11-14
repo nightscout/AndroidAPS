@@ -330,12 +330,10 @@
     <string name="wear_detailedIOB_title">IOB 자세하게 보여주기</string>
     <string name="wear_detailedIOB_summary">워치페이스에 IOB를 Bolus IOB와 Basal IOB로 나누어서 보여줍니다.</string>
     <string name="nosuccess">성공하지 못했습니다. 폰을 확인하세요</string>
-    <string name="patientage">나이</string>
     <string name="child">어린이</string>
     <string name="teenage">청소년</string>
     <string name="adult">성인</string>
     <string name="resistantadult">인슐린 저항성 높은 성인</string>
-    <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">최적의 성능을 위해 %1$s에서 배터리 최적화를 해제해야합니다.</string>
     <string name="loopsuspended">Loop 일시중지</string>

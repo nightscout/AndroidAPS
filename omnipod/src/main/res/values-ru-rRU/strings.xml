@@ -104,7 +104,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Все подачи инсулина приостановлены.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Подтверждены активные оповещения.</string>
     <string name="omnipod_confirmation_delivery_resumed">Подача инсулина возобновлена.</string>
-    <string name="omnipod_confirmation_pod_suspended">Omnipod остановлен</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Деактивировать Pod</string>
     <string name="omnipod_cmd_discard_pod">Выбросить помпу</string>

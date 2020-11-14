@@ -237,6 +237,13 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
+    <CheckBoxPreference
+        android:key="vibrate_Hourly"
+        android:title="@string/pref_vibrate_hourly"
+        android:defaultValue="false"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <info.nightscout.androidaps.interaction.utils.VersionPreference
         android:defaultValue="1"
         android:entries="@array/input_design"

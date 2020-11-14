@@ -405,13 +405,13 @@
     <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Patientenalter</string>
+    <string name="patientage">Patiententyp</string>
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
     <string name="adult">Erwachsener</string>
     <string name="resistantadult">Insulinresistenter Erwachsener</string>
     <string name="pregnant">Schwangerschaft</string>
-    <string name="patientage_summary">Bitte wähle das Patientenalter, um die Sicherheits-Limits festzulegen</string>
+    <string name="patientage_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
     <string name="patient_name">Name des Patienten</string>
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>

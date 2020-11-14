@@ -311,12 +311,10 @@
     <string name="wear_detailedIOB_title">Δείξε αναλυτικά IOB</string>
     <string name="wear_detailedIOB_summary">Χώρισε την IOB σε bolus και βασικό στο ρολόι</string>
     <string name="nosuccess">αποτυχία - ελέγξτε τηλέφωνο</string>
-    <string name="patientage">Ηλικία χρήστη</string>
     <string name="child">Παιδί</string>
     <string name="teenage">Έφηβος</string>
     <string name="adult">Ενήλικας</string>
     <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
-    <string name="patientage_summary">Παρακαλώ επιλέξτε ηλικία χρήστη για να ορισθούν όρια ασφαλείας</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s χρειάζεται λίστα βελτιστοποίησης μπαταρίας για σωστή απόδοση</string>
     <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
