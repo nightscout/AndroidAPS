@@ -65,7 +65,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod fault</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Activation time exceeded</string>
     <string name="omnipod_pod_status_inactive">Inactive</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod fault: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod fault: %1$03d %2$s</string>
 
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Finish pairing reminder</string>

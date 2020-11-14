@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodFaultEventChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -39,5 +40,9 @@ public class AapsPodStateManager extends PodStateManager {
 
     @Override protected void onActiveAlertsChanged() {
         rxBus.send(new EventOmnipodActiveAlertsChanged());
+    }
+
+    @Override protected void onFaultEventChanged() {
+        rxBus.send(new EventOmnipodFaultEventChanged());
     }
 }
