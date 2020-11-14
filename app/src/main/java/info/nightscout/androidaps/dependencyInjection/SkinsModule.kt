@@ -26,11 +26,6 @@ open class SkinsModule {
     @IntKey(20)
     fun bindsSkinLargeDisplay(skinLargeDisplay: SkinLargeDisplay): SkinInterface = skinLargeDisplay
 
-    @Provides
-    @Skin
-    @IntoMap
-    @IntKey(30)
-    fun bindsSkinLowRes(skinLowRes: SkinLowRes): SkinInterface = skinLowRes
 
     @Provides
     @Skin
