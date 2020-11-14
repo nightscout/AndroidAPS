@@ -308,12 +308,10 @@
     <string name="wear_detailedIOB_title">显示详细 IOB</string>
     <string name="wear_detailedIOB_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="nosuccess">未成功-请检查手机</string>
-    <string name="patientage">病人年龄</string>
     <string name="child">儿童</string>
     <string name="teenage">青少年</string>
     <string name="adult">成人</string>
     <string name="resistantadult">胰岛素抵抗成人</string>
-    <string name="patientage_summary">请选择患者年龄以设置安全限制</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s 需要加入电池优化白名单才能正常运行</string>
     <string name="loopsuspended">闭环暂停了</string>

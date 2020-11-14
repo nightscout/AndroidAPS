@@ -134,8 +134,8 @@
     <string name="ic_increasingvalue">Les ratios G/I plus élevés conduisent à moins d\'insuline injectée pour une quantité donnée de glucides.</string>
     <string name="ic_decreasingvalue">Les ratios G/I plus faibles conduisent à moins d\'insuline injectée pour une quantité donnée de glucides.</string>
     <string name="ic_noeffect">Si vous avez 0 GA, changer le ratio G/I conduira à différentes quantités d\'insuline pour corriger une valeur de glycémie donnée.</string>
-    <string name="ic_different">Le G/I sera différent si vous comptez l\'unité de pain à 10g ou à 12g.</string>
-    <string name="ic_meaning">Le G/I (Ratio Glucides/Insuline) est : combien d\'unités de pain sont couverte par 1U d\'insuline.</string>
+    <string name="ic_different">Le G/I sera différent si vous comptez l\'unité (d\'échange) de pain à 10g ou à 12g.</string>
+    <string name="ic_meaning">Le G/I (Ratio Glucides/Insuline) est : combien d\'unités (d\'échange) de pain sont couverte par 1U d\'insuline.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Rubrique : Changement de profil</string>
     <string name="profileswitch_pctwillchange"> Quand on renseigne 90% dans le changement de profil…</string>

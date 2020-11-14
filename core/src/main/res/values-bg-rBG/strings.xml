@@ -170,7 +170,6 @@
     <string name="waitingforpumpresult">Изчаква резултат от помпата</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%dгр допълнителни въглехидрати ще са необходими до %d минути</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">Комулативна TDD</string>

@@ -260,7 +260,6 @@
     <string name="valueoutofrange">Hodnota %1$s je mimo prednastavený rozsah</string>
     <string name="smscommunicator_pumpconnectwithcode">Ak chcete pripojiť pumpu, odpovedzte pomocou SMS s kódom %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Pripojenie k pumpe zlyhalo</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Ak chcete odpojiť pumpu na %1d minút, odpovedzte pomocou SMS s kódom %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pumpa odpojená</string>
     <string name="smscommunicator_reconnect">Pumpa bola znovu pripojená</string>
     <string name="smscommunicator_remotecommandnotallowed">Príkazy na diaľku nie sú povolené</string>
@@ -404,12 +403,10 @@
     <string name="wear_detailedIOB_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="nosuccess">Neúspešné - skontrolujte telefón</string>
     <string name="notavailable">nie je k dispozícii</string>
-    <string name="patientage">Vek pacienta</string>
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
     <string name="adult">Dospelý</string>
     <string name="resistantadult">Dospelý s nízkou citlivosťou</string>
-    <string name="patientage_summary">Vyberte vek pacienta pre nastavenie bezpečnostných limitov</string>
     <string name="patient_name">Meno pacienta</string>
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>

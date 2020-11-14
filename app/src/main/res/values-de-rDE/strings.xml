@@ -261,7 +261,7 @@
     <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits.</string>
     <string name="smscommunicator_pumpconnectwithcode">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbindung zur Pumpe fehlgeschlagen</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1d Minuten zu trennen, antworte mit dem Code %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1$d Minuten zu trennen, antworte mit dem Code %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Verbindung zur Pumpe getrennt</string>
     <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
     <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
@@ -405,12 +405,13 @@
     <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Patientenalter</string>
+    <string name="patientage">Patiententyp</string>
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
     <string name="adult">Erwachsener</string>
     <string name="resistantadult">Insulinresistenter Erwachsener</string>
-    <string name="patientage_summary">Bitte wähle das Patientenalter, um die Sicherheits-Limits festzulegen</string>
+    <string name="pregnant">Schwangerschaft</string>
+    <string name="patientage_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
     <string name="patient_name">Name des Patienten</string>
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
@@ -454,6 +455,8 @@
     <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
     <string name="statuslights_sage_warning">Warnschwelle Sensoralter [h]</string>
     <string name="statuslights_sage_critical">Warnschwelle kritisches Sensoralter [h]</string>
+    <string name="statuslights_sbat_warning">Warnschwelle Sensor-Batteriestand [%]</string>
+    <string name="statuslights_sbat_critical">Warnschwelle kritischer Sensor-Batteriestand [%]</string>
     <string name="statuslights_bage_warning">Warnschwelle Batteriealter [h]</string>
     <string name="statuslights_bage_critical">Warnschwelle kritisches Batteriealter [h]</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
@@ -484,6 +487,12 @@
     <string name="careportal_insulinage_label">Insulinalter</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_pbage_label">Batteriealter</string>
+    <string name="careportal_sensor_label">Sensor</string>
+    <string name="careportal_canula_label">Kanüle</string>
+    <string name="careportal_insulin_label">Insulin</string>
+    <string name="careportal_pb_label">Pumpenbatterie</string>
+    <string name="careportal_age_label">Alter:</string>
+    <string name="careportal_level_label">Level:</string>
     <string name="ns_alarmoptions">Alarm-Optionen</string>
     <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
     <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
@@ -1179,6 +1188,7 @@ Unerwartetes Verhalten.</string>
     <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
     <string name="copyexistingvalues">NS-Einstellungen kopieren (falls vorhanden)?</string>
     <string name="classic_description">Ursprüngliches Erscheinungsbild</string>
+    <string name="lowres_description">Darstellung niedrige Auflösung</string>
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>

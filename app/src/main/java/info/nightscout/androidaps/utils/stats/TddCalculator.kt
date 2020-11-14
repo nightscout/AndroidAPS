@@ -62,7 +62,7 @@ class TddCalculator @Inject constructor(
             val midnight = MidnightTime.calc(t)
             val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
             val tbr = getTempBasalFromHistory(t)
-            val profile = profileFunction.getProfile(t) ?: continue
+            val profile = profileFunction.getProfile(t, this) ?: continue
             val absoluteRate = tbr?.tempBasalConvertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basal += absoluteRate / 60.0 * 5.0
 

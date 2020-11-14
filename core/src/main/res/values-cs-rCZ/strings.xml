@@ -170,7 +170,7 @@
     <string name="waitingforpumpresult">Čekání na výsledek</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Požadováno dalších %d g sacharidů během %d minut</string>
+    <string name="carbsreq">Požadováno dalších %1$d g sacharidů během %2$d minut</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiky</string>
     <string name="cumulative_tdd">Kumulativní CDD</string>

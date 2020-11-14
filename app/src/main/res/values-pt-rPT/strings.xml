@@ -261,7 +261,6 @@
     <string name="valueoutofrange">O valor %1$s está fora dos limites permitidos</string>
     <string name="smscommunicator_pumpconnectwithcode">Para ligar a bomba responda com o código %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ligação à bomba falhou</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Para desligar a bomba por %1d minutos responda com o código %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Bomba desligada</string>
     <string name="smscommunicator_reconnect">Bomba ligada novamente</string>
     <string name="smscommunicator_remotecommandnotallowed">O comando remoto não é permitido</string>
@@ -405,12 +404,10 @@
     <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
     <string name="notavailable">n/d</string>
-    <string name="patientage">Idade do Paciente</string>
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente insulina</string>
-    <string name="patientage_summary">Por favor seleccione a idade do diabético para definir os limites de segurança</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou alcunha para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>

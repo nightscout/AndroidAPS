@@ -210,7 +210,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun isSuspended(): Boolean {
-        return danaPump.pumpSuspended
+        return danaPump.pumpSuspended || danaPump.errorState != DanaPump.ErrorState.NONE
     }
 
     override fun isBusy(): Boolean {
