@@ -152,6 +152,8 @@ class AutotunePlugin @Inject constructor(
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
                     tunedProfile=null
+                    autotuneFS!!.exportResult(result)
+                    autotuneFS!!.exportLogAndZip(lastRun, logString)
                     return result
                 }
                 autotuneFS!!.exportPreppedGlucose(preppedGlucose!!)

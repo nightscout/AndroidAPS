@@ -53,9 +53,14 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         val boluses = 0
         val maxCarbs = 0
         if (treatments.size < 1) {
-            log("No treatments")
+            log("No Carbs entries")
+            //return null
+        }
+        if (autotuneIob.treatments.size < 1) {
+            log("No treatment received")
             return null
         }
+
         var csfGlucoseData: MutableList<BGDatum> = ArrayList()
         var isfGlucoseData: MutableList<BGDatum> = ArrayList()
         var basalGlucoseData: MutableList<BGDatum> = ArrayList()
