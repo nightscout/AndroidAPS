@@ -15,14 +15,25 @@
     <string name="omnipod_config_low_reservoir_alert_enabled">Upozornenie na nízký stav zásobníka povolené</string>
     <string name="omnipod_config_low_reservoir_alert_units">Počet jednotiek</string>
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Zvuk upozornenia pre neistý dočasný bazál povolený</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Zvuk upozornenia pre neistý SMB povolený</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Zvuk upozornenia pre neistý bolus povolený</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Iné</string>
     <string name="omnipod_preference_category_alerts">Výstrahy</string>
     <string name="omnipod_preference_category_confirmation_beeps">Potvrdzujúce pípnutie</string>
+    <string name="omnipod_preference_category_notifications">Upozornenia</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Žiadny aktívny Pod</string>
+    <string name="omnipod_pod_status_waiting_for_activation">Prebieha inštalácia (čaká sa na aktiváciu Podu)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Inštalácia prebieha (čaká sa na vloženie kanyly)</string>
+    <string name="omnipod_pod_status_running">V prevádzke</string>
+    <string name="omnipod_pod_status_suspended">Pozastavené</string>
+    <string name="omnipod_pod_status_pod_fault">Chyba Podu</string>
+    <string name="omnipod_pod_status_activation_time_exceeded">Bol prekročený čas aktivácie</string>
+    <string name="omnipod_pod_status_inactive">Neaktívny</string>
+    <string name="omnipod_pod_status_pod_fault_description">Chyba Podu: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_pairing_reminder">Pripomienka ukončenia párovania</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Pripomienka ukončenia nastavenia</string>
     <string name="omnipod_alert_expiration">Pod čoskoro expiruje</string>
     <string name="omnipod_alert_expiration_advisory">Pod čoskoro expiruje</string>
@@ -30,10 +41,14 @@
     <string name="omnipod_alert_low_reservoir">Nízka hladina zásobníka</string>
     <string name="omnipod_alert_unknown_alert">Neznáma výstraha</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_history_title">História Podu</string>
     <string name="omnipod_history_item_description">Popis</string>
     <string name="omnipod_history_item_source">Zdroj</string>
     <string name="omnipod_history_item_date">Dátum</string>
     <string name="omnipod_history_type">Typ:</string>
+    <string name="omnipod_history_bolus_value">%1$.2f JI</string>
+    <string name="omnipod_history_bolus_value_with_carbs">%1$.2f JI, SACH=%2$.1f g</string>
+    <string name="omnipod_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Upozornenie</string>
     <string name="omnipod_error_rileylink_address_invalid">Neplatná adresa RileyLinku.</string>
