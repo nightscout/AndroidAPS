@@ -25,6 +25,7 @@ import javax.inject.Provider
 abstract class OmnipodWizardModule {
 
     companion object {
+
         @Provides
         @OmnipodPluginQualifier
         fun providesViewModelFactory(@OmnipodPluginQualifier viewModels: MutableMap<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory {

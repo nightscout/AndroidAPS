@@ -143,7 +143,7 @@ public class AapsOmnipodManager {
         this.nsUpload = nsUpload;
         this.profileFunction = profileFunction;
 
-        delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
+        delegate = new OmnipodManager(aapsLogger, communicationService, podStateManager);
 
         reloadSettings();
     }
