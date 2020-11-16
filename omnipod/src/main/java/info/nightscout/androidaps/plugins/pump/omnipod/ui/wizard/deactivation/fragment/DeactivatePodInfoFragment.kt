@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragment.InfoFragmentBase
 
 class DeactivatePodInfoFragment : InfoFragmentBase() {
+
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_pod_deactivation_wizard_deactivate_pod_title
 

@@ -50,7 +50,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFault
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodProgressStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PrecedingCommandFailedUncertainlyException;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -62,17 +61,16 @@ public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 1;
 
     private final OmnipodRileyLinkCommunicationManager communicationService;
-    private PodStateManager podStateManager;
+    private final PodStateManager podStateManager;
 
     private ActiveBolusData activeBolusData;
     private SingleSubject<Boolean> bolusCommandExecutionSubject;
 
     private final Object bolusDataMutex = new Object();
 
-    private AAPSLogger aapsLogger;
+    private final AAPSLogger aapsLogger;
 
     public OmnipodManager(AAPSLogger aapsLogger,
-                          SP sp,
                           OmnipodRileyLinkCommunicationManager communicationService,
                           PodStateManager podStateManager) {
         if (communicationService == null) {

@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.omnipod_wizard_progress_indication.*
 import kotlin.math.roundToInt
 
 abstract class WizardFragmentBase : DaggerFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
