@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Guasto pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Tempo di attivazione superato</string>
     <string name="omnipod_pod_status_inactive">Inattivo</string>
-    <string name="omnipod_pod_status_pod_fault_description">Guasto pod: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Fine promemoria associazione</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Fine promemoria configurazione</string>
