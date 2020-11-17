@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Chyba Podu</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Byl překročen čas aktivace</string>
     <string name="omnipod_pod_status_inactive">Neaktivní</string>
-    <string name="omnipod_pod_status_pod_fault_description">Chyba Podu: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Upomínka dokončení párování</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Upomínka dokončení nastavení</string>
