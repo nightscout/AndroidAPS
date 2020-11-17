@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Грешка в под</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Времето за активация изтече</string>
     <string name="omnipod_pod_status_inactive">Неактивен</string>
-    <string name="omnipod_pod_status_pod_fault_description">Грешка на под: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Край на напомняне за сдвояване</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Край на напомнянето за настройка</string>
