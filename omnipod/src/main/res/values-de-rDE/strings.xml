@@ -17,6 +17,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Ton für unsichere SMB-Benachrichtigungen aktiviert</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Ton für unsichere Bolus-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Pod-Alarme automatisch bestätigen</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Andere</string>
     <string name="omnipod_preference_category_alerts">Alarme</string>
@@ -31,6 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod-Fehler</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Aktivierungszeit überschritten</string>
     <string name="omnipod_pod_status_inactive">Inaktiv</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod-Fehler: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Erinnerung Setup beendet</string>
@@ -219,5 +221,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod-Alarm: %1$s</item>
+        <item quantity="other">Pod-Alarme: %1$s</item>
     </plurals>
 </resources>
