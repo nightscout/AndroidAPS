@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Pod feil</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Aktiveringstiden er overskredet</string>
     <string name="omnipod_pod_status_inactive">Inaktiv</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod feil: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Fullfør paringspåminnelse</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Påminnelse om å sluttføre oppsett</string>
