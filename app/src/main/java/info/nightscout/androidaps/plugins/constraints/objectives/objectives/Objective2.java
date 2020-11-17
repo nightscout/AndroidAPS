@@ -52,7 +52,6 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.isf_preferences, false))
                 .option(new Option(R.string.isf_increasingvalue, false))
                 .option(new Option(R.string.isf_noeffect, false))
-                .option(new Option(R.string.isf_profile, false))
                 .hint(new Hint(R.string.isf_hint1))
                 .hint(new Hint(R.string.isf_hint2))
         );
@@ -78,11 +77,11 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.profileswitch_hint1))
         );
         tasks.add(new ExamTask(R.string.profileswitch2_label, R.string.profileswitch2_pctwillchange,"profileswitch2")
-                        .option(new Option(R.string.profileswitch2_bghigher, false))
-                        .option(new Option(R.string.profileswitch2_basalhigher, true))
-                        .option(new Option(R.string.profileswitch2_bgunchanged, true))
-                        .option(new Option(R.string.profileswitch2_isfhigher, false))
-                        .hint(new Hint(R.string.profileswitch_hint1))
+                .option(new Option(R.string.profileswitch2_bghigher, false))
+                .option(new Option(R.string.profileswitch2_basalhigher, true))
+                .option(new Option(R.string.profileswitch2_bgunchanged, true))
+                .option(new Option(R.string.profileswitch2_isfhigher, false))
+                .hint(new Hint(R.string.profileswitch_hint1))
         );
         tasks.add(new ExamTask(R.string.profileswitchtime_label, R.string.profileswitchtime_iwant,"profileswitchtime")
                 .option(new Option(R.string.profileswitchtime_2, false))
@@ -90,6 +89,13 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.profileswitchtime_tt, false))
                 .option(new Option(R.string.profileswitchtime_100, false))
                 .hint(new Hint(R.string.profileswitchtime_hint1))
+        );
+        tasks.add(new ExamTask(R.string.profileswitch4_label, R.string.blank,"profileswitch4")
+                .option(new Option(R.string.profileswitch4_rates, true))
+                .option(new Option(R.string.profileswitch4_internet, true))
+                .option(new Option(R.string.profileswitch4_sufficient, false))
+                .option(new Option(R.string.profileswitch4_multi, true))
+                .hint(new Hint(R.string.profileswitch_hint1))
         );
         tasks.add(new ExamTask(R.string.exerciseprofile_label, R.string.exerciseprofile_whattodo,"exercise")
                 .option(new Option(R.string.exerciseprofile_switchprofileabove100, false))

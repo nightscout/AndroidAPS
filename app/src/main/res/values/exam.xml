@@ -190,6 +190,11 @@
     <string name="profileswitchtime_tt">Set an eating soon temporary target.</string>
     <string name="profileswitchtime_100">Do a profile switch to more than 100%. </string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitch4_label">Topic 7: Changes to profiles</string>
+    <string name="profileswitch4_rates">Basal rates, ISF, I:C ratios, etc., should be set in profiles.</string>
+    <string name="profileswitch4_internet">Activating changes to your Nightscout Profile requires your AndroidAPS phone to have an internet connection.</string>
+    <string name="profileswitch4_sufficient">Editing profiles to change values is sufficient to enact any changes made.</string>
+    <string name="profileswitch4_multi">Multiple profiles can be set up and selected to accommodate changing circumstances (e.g. hormonal changes, shift working, weekdays/weekend lifestyle).</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Topic: Help with basal rates</string>
     <string name="basalhelp_where">Where to go for help with basalrate etc.</string>
