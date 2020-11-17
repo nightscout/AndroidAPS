@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Pod fout</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Activatietijd overschreden</string>
     <string name="omnipod_pod_status_inactive">Inactief</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod fout: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Herrinering om Pod initialisatie af te ronden</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
