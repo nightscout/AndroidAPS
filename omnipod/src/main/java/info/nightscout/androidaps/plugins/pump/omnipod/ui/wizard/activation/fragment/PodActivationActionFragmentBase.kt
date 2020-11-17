@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.omnipod_wizard_action_page_fragment.*
 import javax.inject.Inject
 
 abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
+
     @Inject
     protected lateinit var podStateManager: PodStateManager
 

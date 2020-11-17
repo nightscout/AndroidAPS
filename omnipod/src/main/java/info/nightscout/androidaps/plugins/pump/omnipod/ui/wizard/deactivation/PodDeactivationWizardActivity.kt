@@ -5,6 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.activity.OmnipodWizardActivityBase
 
 class PodDeactivationWizardActivity : OmnipodWizardActivityBase() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

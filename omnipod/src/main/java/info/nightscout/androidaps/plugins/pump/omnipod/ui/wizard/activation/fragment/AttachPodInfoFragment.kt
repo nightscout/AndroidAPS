@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragment
 import kotlinx.android.synthetic.main.omnipod_wizard_nav_buttons.*
 
 class AttachPodInfoFragment : InfoFragmentBase() {
+
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_pod_activation_wizard_attach_pod_title
 

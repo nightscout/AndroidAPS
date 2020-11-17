@@ -113,6 +113,7 @@ public class AapsOmnipodManager {
     private boolean notificationUncertainTbrSoundEnabled;
     private boolean notificationUncertainSmbSoundEnabled;
     private boolean notificationUncertainBolusSoundEnabled;
+    private boolean automaticallyAcknowledgeAlertsEnabled;
 
     @Inject
     public AapsOmnipodManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -142,7 +143,7 @@ public class AapsOmnipodManager {
         this.nsUpload = nsUpload;
         this.profileFunction = profileFunction;
 
-        delegate = new OmnipodManager(aapsLogger, sp, communicationService, podStateManager);
+        delegate = new OmnipodManager(aapsLogger, communicationService, podStateManager);
 
         reloadSettings();
     }
@@ -158,6 +159,7 @@ public class AapsOmnipodManager {
         notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, true);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
         notificationUncertainBolusSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED, true);
+        automaticallyAcknowledgeAlertsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED, false);
     }
 
     public PumpEnactResult initializePod() {
@@ -625,6 +627,10 @@ public class AapsOmnipodManager {
 
     public boolean isNotificationUncertainBolusSoundEnabled() {
         return notificationUncertainBolusSoundEnabled;
+    }
+
+    public boolean isAutomaticallyAcknowledgeAlertsEnabled() {
+        return automaticallyAcknowledgeAlertsEnabled;
     }
 
     public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
