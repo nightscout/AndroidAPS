@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Сбой Пода</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Превышено время активации</string>
     <string name="omnipod_pod_status_inactive">Неактивирован</string>
-    <string name="omnipod_pod_status_pod_fault_description">Ошибка Пода: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
