@@ -492,8 +492,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pile pompe</string>
-    <string name="careportal_age_label">age:</string>
-    <string name="careportal_level_label">niveau:</string>
+    <string name="careportal_age_label">Âge:</string>
+    <string name="careportal_level_label">Niveau:</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
     <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
     <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
