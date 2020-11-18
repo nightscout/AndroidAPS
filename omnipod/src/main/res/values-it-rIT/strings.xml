@@ -220,4 +220,8 @@
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
     </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Avviso pod: %1$s</item>
+        <item quantity="other">Avvisi pod: %1$s</item>
+    </plurals>
 </resources>
