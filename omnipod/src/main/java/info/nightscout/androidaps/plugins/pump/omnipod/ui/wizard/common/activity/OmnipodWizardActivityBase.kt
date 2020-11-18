@@ -7,6 +7,7 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 
 abstract class OmnipodWizardActivityBase : NoSplashAppCompatActivity() {
+
     override fun onBackPressed() {
         exitActivityAfterConfirmation()
     }

@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Erreur Pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Délai d\'activation dépassé</string>
     <string name="omnipod_pod_status_inactive">Inactif</string>
-    <string name="omnipod_pod_status_pod_fault_description">Défaut du Pod : %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>

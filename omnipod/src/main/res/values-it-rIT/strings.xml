@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Guasto pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Tempo di attivazione superato</string>
     <string name="omnipod_pod_status_inactive">Inattivo</string>
-    <string name="omnipod_pod_status_pod_fault_description">Guasto pod: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Fine promemoria associazione</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Fine promemoria configurazione</string>
@@ -97,6 +96,7 @@
     <string name="omnipod_error_failed_to_insert_cannula">Inserimento cannula fallito</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Il tempo di attivazione del pod è stato superato. Questo pod non può più essere attivato.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Impossibile verificare l\'avanzamento dell\'attivazione. Riprova.</string>
+    <string name="omnipod_error_pod_suspended">Pod sospeso</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Conferma</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Ora e/o fuso orario cambiati nel pod.</string>

@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Сбой Пода</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Превышено время активации</string>
     <string name="omnipod_pod_status_inactive">Неактивирован</string>
-    <string name="omnipod_pod_status_pod_fault_description">Ошибка Пода: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
@@ -96,6 +95,8 @@
     <string name="omnipod_error_failed_to_initialize_pod">Не удалось инициализировать Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Не удалось установить канюлю</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Превышено время активации Pod. Этот Pod больше не может быть активирован.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Не удалось проверить ход активации. Повторите попытку.</string>
+    <string name="omnipod_error_pod_suspended">Omnipod остановлен</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Подтверждение</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Время и/или часовой пояс изменены на Pod.</string>

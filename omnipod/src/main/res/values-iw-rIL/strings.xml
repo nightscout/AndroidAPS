@@ -31,7 +31,7 @@
     <string name="omnipod_pod_status_pod_fault">תקלה בפוד</string>
     <string name="omnipod_pod_status_activation_time_exceeded">חריגת זמן הפעלה</string>
     <string name="omnipod_pod_status_inactive">לא פעיל</string>
-    <string name="omnipod_pod_status_pod_fault_description">תקלה בפוד: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">תקלת פוד: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">תזכורת לסיום זיווג</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">תזכורת לסיום התקנה</string>

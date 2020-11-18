@@ -18,13 +18,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
-
-        // OMNIPOD: for usage in Firebase event during testing phase
-        buildConfigField "String", "VERSION", '"2.7-omnipod-0.4.1-SNAPSHOT"'
-        // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
-        buildConfigField "String", "DEV_VERSION", '"2.7.0-rc4"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"7d5dc54656c961660451c4fa4c6ea66bd83a1c46"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"21.8.2020"' // 21st of August
     }
 
     kotlinOptions {

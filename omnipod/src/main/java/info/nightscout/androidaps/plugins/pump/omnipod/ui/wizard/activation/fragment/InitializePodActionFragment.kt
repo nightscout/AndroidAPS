@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.view
 import javax.inject.Inject
 
 class InitializePodActionFragment : PodActivationActionFragmentBase() {
+
     @Inject
     @OmnipodPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory
