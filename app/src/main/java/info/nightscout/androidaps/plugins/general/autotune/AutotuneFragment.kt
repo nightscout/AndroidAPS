@@ -29,6 +29,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.autotune_fragment.*
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 
@@ -54,6 +55,7 @@ class AutotuneFragment : DaggerFragment() {
     private var lastRun: Date? = null
     private var lastRunTxt: String? = null
     private var tempResult = ""
+    private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.autotune_fragment, container, false)
@@ -66,6 +68,8 @@ class AutotuneFragment : DaggerFragment() {
             val daysBack = tune_days.text.toString().toInt()
             if (daysBack > 0) {
                 tempResult = ""
+                AutotunePlugin.srcprofile = profileFunction.getProfile(System.currentTimeMillis()).toString()
+                AutotunePlugin.srcprofilename = profileFunction.getProfileName()
                 AutotunePlugin.calculationRunning = true
                 Thread(Runnable {
                     autotunePlugin.aapsAutotune(daysBack, false)
@@ -88,18 +92,16 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         autotune_compare.setOnClickListener {
-            val currentprofile = AutotunePlugin.currentprofile
-            //log("profile : " + currentprofile?.profilename + "\n" + currentprofile?.data.toString())
             val tunedprofile = AutotunePlugin.tunedProfile
             //log("tunedprofile : " + AutotunePlugin.tunedProfile?.profilename + "\n" + tunedprofile?.data.toString())
             ProfileViewerDialog().also { pvd ->
                 pvd.arguments = Bundle().also {
                     it.putLong("time", DateUtil.now())
                     it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                    it.putString("customProfile", currentprofile?.data.toString())
+                    it.putString("customProfile", AutotunePlugin.srcprofile)
                     it.putString("customProfile2", tunedprofile?.data.toString())
                     it.putString("customProfileUnits", profileFunction.getUnits())
-                    it.putString("customProfileName", currentprofile?.profilename + "\n" + AutotunePlugin.tunedProfile?.profilename)
+                    it.putString("customProfileName", AutotunePlugin.srcprofilename + "\n" + AutotunePlugin.tunedProfile?.profilename)
                 }
             }.show(childFragmentManager, "ProfileViewDialog")
         }
