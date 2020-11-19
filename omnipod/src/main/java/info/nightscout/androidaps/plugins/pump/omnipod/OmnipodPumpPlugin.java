@@ -518,8 +518,30 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             firstRun = false;
         } else if (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain()) {
             aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request because basal and/or temp basal is uncertain");
-            executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+            getPodStatus();
         }
+    }
+
+    private PumpEnactResult getPodStatus() {
+        PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+
+        // bit hacky...
+        if (result.success && !activePlugin.getActiveTreatments().isTempBasalInProgress() && podStateManager.isTempBasalRunning()) {
+            aapsLogger.warn(LTag.PUMP, "Cancelling TBR because AAPS is not aware of any running TBR");
+
+            getCommandQueue().cancelTempBasal(true, new Callback() {
+                @Override public void run() {
+                    if (result.success) {
+                        aapsLogger.info(LTag.PUMP, "Successfully cancelled TBR because AAPS was not aware of any running TBR");
+                    } else {
+                        aapsLogger.error(LTag.PUMP, "Failed to cancel TBR because AAPS was not aware of any running TBR");
+                        rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
+                    }
+                }
+            });
+        }
+
+        return result;
     }
 
     @NonNull
@@ -785,7 +807,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             case ACKNOWLEDGE_ALERTS:
                 return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodManager::acknowledgeAlerts);
             case GET_POD_STATUS:
-                return executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+                return getPodStatus();
             case READ_PULSE_LOG:
                 return retrievePulseLog();
             case SUSPEND_DELIVERY:
@@ -861,7 +883,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         } else {
             // Even if automatically changing the time is disabled, we still want to at least do a GetStatus request,
             // in order to update the Pod's activation time, which we need for calculating the time on the Pod
-            result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+            result = getPodStatus();
         }
 
         if (result.success) {
@@ -992,14 +1014,18 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private void initializeAfterRileyLinkConnection() {
         if (podStateManager.getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
+            boolean success = true;
             for (int i = 0; STARTUP_STATUS_REQUEST_TRIES > i; i++) {
-                PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+                PumpEnactResult result = getPodStatus();
                 if (result.success) {
+                    success = true;
                     aapsLogger.debug(LTag.PUMP, "Successfully retrieved Pod status on startup");
                     break;
-                } else {
-                    aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
                 }
+            }
+            if (!success) {
+                aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
+                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status_on_startup), Notification.NORMAL)));
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running");

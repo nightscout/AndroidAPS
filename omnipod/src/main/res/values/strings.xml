@@ -122,6 +122,7 @@
     <string name="omnipod_error_unknown_custom_command">Unknown custom command: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Failed to read Pulse Log</string>
     <string name="omnipod_error_failed_to_refresh_status">Failed to refresh status</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Failed to refresh status on startup</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Failed to acknowledge alerts</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Failed to suspend delivery</string>
     <string name="omnipod_error_failed_to_set_time">Failed to set time</string>
@@ -135,6 +136,7 @@
     <string name="omnipod_error_pod_fault_activation_time_exceeded">The Pod\'s activation time has been exceeded. This Pod can no longer be activated.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
     <string name="omnipod_error_pod_suspended">Pod suspended</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">A temporary basal is running on the Pod, but AAPS is unaware of this temp basal. Please cancel your temporary basal.</string>
 
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
