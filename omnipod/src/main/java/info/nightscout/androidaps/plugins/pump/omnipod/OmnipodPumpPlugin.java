@@ -33,6 +33,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventAppInitialized;
@@ -527,18 +528,35 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         // bit hacky...
         if (result.success && !activePlugin.getActiveTreatments().isTempBasalInProgress() && podStateManager.isTempBasalRunning()) {
-            aapsLogger.warn(LTag.PUMP, "Cancelling TBR because AAPS is not aware of any running TBR");
+            if (podStateManager.hasTempBasal()) {
+                aapsLogger.warn(LTag.PUMP, "Registering TBR that AAPS was unaware of");
 
-            getCommandQueue().cancelTempBasal(true, new Callback() {
-                @Override public void run() {
-                    if (result.success) {
-                        aapsLogger.info(LTag.PUMP, "Successfully cancelled TBR because AAPS was not aware of any running TBR");
-                    } else {
-                        aapsLogger.error(LTag.PUMP, "Failed to cancel TBR because AAPS was not aware of any running TBR");
-                        rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
+                long pumpId = aapsOmnipodManager.addTbrSuccessToHistory(podStateManager.getTempBasalStartTime().getMillis(),
+                        new TempBasalPair(podStateManager.getTempBasalAmount(), false, (int) podStateManager.getTempBasalDuration().getStandardMinutes()));
+
+                TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector()) //
+                        .absolute(podStateManager.getTempBasalAmount()) //
+                        .duration((int) podStateManager.getTempBasalDuration().getStandardMinutes())
+                        .date(podStateManager.getTempBasalStartTime().getMillis()) //
+                        .source(Source.PUMP) //
+                        .pumpId(pumpId);
+
+                activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+            } else {
+                // Not sure what's going on. Cancel TBR on the Pod
+                aapsLogger.warn(LTag.PUMP, "Cancelling TBR because AAPS is not aware of any running TBR");
+
+                getCommandQueue().cancelTempBasal(true, new Callback() {
+                    @Override public void run() {
+                        if (result.success) {
+                            aapsLogger.info(LTag.PUMP, "Successfully cancelled TBR because AAPS was not aware of any running TBR");
+                        } else {
+                            aapsLogger.error(LTag.PUMP, "Failed to cancel TBR because AAPS was not aware of any running TBR");
+                            rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         return result;

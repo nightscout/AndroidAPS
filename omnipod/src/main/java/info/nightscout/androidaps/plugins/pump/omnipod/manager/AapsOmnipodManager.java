@@ -710,6 +710,10 @@ public class AapsOmnipodManager {
         activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
     }
 
+    public long addTbrSuccessToHistory(long requestTime, TempBasalPair tempBasalPair) {
+        return addSuccessToHistory(requestTime, PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
+    }
+
     private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
         TemporaryBasal tempStart = new TemporaryBasal(injector) //
                 .date(time) //
