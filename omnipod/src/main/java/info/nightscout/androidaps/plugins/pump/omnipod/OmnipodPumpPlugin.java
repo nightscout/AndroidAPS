@@ -524,10 +524,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private PumpEnactResult getPodStatus() {
-        PumpEnactResult result = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
+        PumpEnactResult getStatusResult = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
 
         // bit hacky...
-        if (result.success && !activePlugin.getActiveTreatments().isTempBasalInProgress() && podStateManager.isTempBasalRunning()) {
+        if (getStatusResult.success && !activePlugin.getActiveTreatments().isTempBasalInProgress() && podStateManager.isTempBasalRunning()) {
             if (podStateManager.hasTempBasal()) {
                 aapsLogger.warn(LTag.PUMP, "Registering TBR that AAPS was unaware of");
 
@@ -546,20 +546,17 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 // Not sure what's going on. Cancel TBR on the Pod
                 aapsLogger.warn(LTag.PUMP, "Cancelling TBR because AAPS is not aware of any running TBR");
 
-                getCommandQueue().cancelTempBasal(true, new Callback() {
-                    @Override public void run() {
-                        if (result.success) {
-                            aapsLogger.info(LTag.PUMP, "Successfully cancelled TBR because AAPS was not aware of any running TBR");
-                        } else {
-                            aapsLogger.error(LTag.PUMP, "Failed to cancel TBR because AAPS was not aware of any running TBR");
-                            rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
-                        }
-                    }
-                });
+                PumpEnactResult cancelTbrResult = executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
+                if (cancelTbrResult.success) {
+                    aapsLogger.info(LTag.PUMP, "Successfully cancelled TBR because AAPS was not aware of any running TBR");
+                } else {
+                    aapsLogger.error(LTag.PUMP, "Failed to cancel TBR because AAPS was not aware of any running TBR");
+                    rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
+                }
             }
         }
 
-        return result;
+        return getStatusResult;
     }
 
     @NonNull
