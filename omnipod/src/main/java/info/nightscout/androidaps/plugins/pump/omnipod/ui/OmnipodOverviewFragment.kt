@@ -438,8 +438,18 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 omnipod_overview_temp_basal.setTextColor(textColor)
             }
         } else {
-            omnipod_overview_temp_basal.text = PLACEHOLDER
-            omnipod_overview_temp_basal.setTextColor(Color.WHITE)
+            var text = PLACEHOLDER
+            val textColor: Int
+
+            if (podStateManager.isTempBasalCertain) {
+                textColor = Color.WHITE
+            } else {
+                textColor = Color.RED
+                text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
+            }
+
+            omnipod_overview_temp_basal.text = text
+            omnipod_overview_temp_basal.setTextColor(textColor)
         }
     }
 

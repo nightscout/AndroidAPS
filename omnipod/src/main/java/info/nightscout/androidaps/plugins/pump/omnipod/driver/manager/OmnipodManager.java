@@ -249,11 +249,10 @@ public class OmnipodManager {
         }
 
         try {
-            podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration);
+            podStateManager.setTempBasal(DateTime.now().plus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration);
             podStateManager.setTempBasalCertain(false);
             executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
                     podStateManager, rate, duration, acknowledgementBeep, completionBeep)));
-            podStateManager.setTempBasal(DateTime.now().minus(OmnipodConstants.AVERAGE_TEMP_BASAL_COMMAND_COMMUNICATION_DURATION), rate, duration);
         } catch (OmnipodException ex) {
             if (ex.isCertainFailure()) {
                 podStateManager.clearTempBasal();
