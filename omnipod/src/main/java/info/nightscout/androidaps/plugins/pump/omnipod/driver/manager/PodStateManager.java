@@ -424,7 +424,12 @@ public abstract class PodStateManager {
     }
 
     public final void setTempBasalCertain(boolean certain) {
-        setSafe(() -> podState.setTempBasalCertain(certain));
+        setAndStore(() -> {
+            if (!Objects.equals(podState.isTempBasalCertain(), certain)) {
+                podState.setTempBasalCertain(certain);
+                onTbrChanged();
+            }
+        });
     }
 
     public final void setTempBasal(DateTime startTime, Double amount, Duration duration) {
@@ -565,8 +570,13 @@ public abstract class PodStateManager {
                 clearTempBasal(false);
             }
             podState.setLastUpdatedFromResponse(DateTime.now());
-            podState.setTempBasalCertain(true);
-            podState.setBasalCertain(true);
+            if (!podState.isTempBasalCertain()) {
+                podState.setTempBasalCertain(true);
+                onTbrChanged();
+            }
+            if (!podState.isBasalCertain()) {
+                podState.setBasalCertain(true);
+            }
 
             if (status instanceof PodInfoDetailedStatus) {
                 PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) status;
