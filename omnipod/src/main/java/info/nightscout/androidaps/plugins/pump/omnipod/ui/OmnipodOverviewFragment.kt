@@ -9,12 +9,14 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -77,6 +79,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private val loopHandler = Handler(Looper.getMainLooper())
     private lateinit var refreshLoop: Runnable
 
@@ -93,6 +97,29 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        swipeRefresh_omnipod.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_omnipod.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        // Initialize the handler instance
+        mHandler = Handler()
+        swipeRefresh_omnipod.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                swipeRefresh_omnipod.isRefreshing = false
+                commandQueue.readStatus("swipe to connect to pump", null)
+                disablePodActionButtons()
+                commandQueue.customCommand(CommandGetPodStatus(),
+                    DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
+        }
 
         omnipod_overview_button_pod_management.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
@@ -517,13 +544,13 @@ class OmnipodOverviewFragment : DaggerFragment() {
         context?.let {
             UIRunnable(Runnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
-                    resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
+                    resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null,sp)
             }).run()
         }
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        context?.let {
+      context?.let {
             val i = Intent(it, ErrorHelperActivity::class.java)
             i.putExtra("soundid", if (withSound) R.raw.boluserror else 0)
             i.putExtra("status", message)
@@ -536,7 +563,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
             UIRunnable(Runnable {
-                OKDialog.show(it, title, message, null)
+                OKDialog.show(it, title, message, null,sp)
             }).run()
         }
     }

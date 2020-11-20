@@ -106,7 +106,7 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id = "@+id/swipeRefresh_dana_rs"
+        android:id = "@+id/swipeRefresh_omnipod"
         android:layout_width = "match_parent"
         android:layout_height = "match_parent"
         android:layout_marginBottom="20dp">
@@ -115,11 +115,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/omnipod_overview_buttons"
-            android:fillViewport="true">
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/overview_toppart_scrollbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:layout_above="@+id/omnipod_overview_buttons"
+                android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -821,13 +827,15 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/omnipod_overview_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="70dp"
+            android:paddingBottom="40dp"
             android:orientation="vertical">
 
             <LinearLayout
