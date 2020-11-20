@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.actions
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -255,6 +256,10 @@ class ActionsFragment : DaggerFragment() {
 
     }
 
+
+    val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
     private fun checkPumpCustomActions() {
         val activePump = activePlugin.activePump
         val customActions = activePump.customActions ?: return
@@ -263,22 +268,23 @@ class ActionsFragment : DaggerFragment() {
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(context, null, android.R.attr.buttonStyle)
+            val btn = SingleClickButton(context, null, R.attr.materialButtonStyle)
             btn.text = resourceHelper.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)
-            layoutParams.setMargins(20, 8, 20, 8) // 10,3,10,3
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
+            layoutParams.setMargins(24, 8, 24, 8) // 10,3,10,3
 
             btn.layoutParams = layoutParams
+            btn.cornerRadius = 16.dp
             btn.setOnClickListener { v ->
                 val b = v as SingleClickButton
                 this.pumpCustomActions[b.text.toString()]?.let {
                     activePlugin.activePump.executeCustomAction(it.customActionType)
                 }
             }
-            val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
-            btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
+            val left = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
+            btn.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
 
             action_buttons_layout?.addView(btn)
 
