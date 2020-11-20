@@ -56,7 +56,7 @@
     <string name="treatments_iobactivitytotal_label_string">פעילות IOB כוללת:</string>
     <string name="tempbasals_realduration_label_string">משך:</string>
     <string name="tempbasals_netratio_label_string">יחס:</string>
-    <string name="tempbasals_netinsulin_label_string">תוספות:</string>
+    <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
     <string name="treatments_wizard_bg_label">ערכי סוכר בדם</string>
@@ -83,13 +83,13 @@
     <string name="sms_delta">דלתא:</string>
     <string name="configbuilder">בונה התצורה</string>
     <string name="overview">סקירה כללית</string>
-    <string name="nsprofile">פרופיל נייטסקאוט</string>
+    <string name="nsprofile">פרופיל Nightscout</string>
     <string name="simpleprofile">פרופיל רגיל</string>
     <string name="treatments">טיפולים</string>
     <string name="virtualpump">משאבה וירטואלית</string>
     <string name="careportal">פורטל טיפולים</string>
     <string name="configbuilder_pump">משאבה</string>
-    <string name="configbuilder_pump_description">באיזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
+    <string name="configbuilder_pump_description">עם משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_treatments">טיפולים</string>
     <string name="configbuilder_treatments_description">איזה תוסף ישמש לתפעול הטיפולים?</string>
     <string name="configbuilder_profile">פרופיל</string>
@@ -453,7 +453,7 @@
     <string name="statuslights_cage_critical">סף התראה קריטית לתוקף העירוי [h]</string>
     <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
     <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
-    <string name="statuslights_sage_warning">סף התראה של תוקף החיישן[h]</string>
+    <string name="statuslights_sage_warning">סף התראה של תוקף החיישן [h]</string>
     <string name="statuslights_sage_critical">סף התראה קריטית של תוקף החיישן [h]</string>
     <string name="statuslights_sbat_warning">סף התראה של רמת סוללת החיישן [%]</string>
     <string name="statuslights_sbat_critical">סף התראה קריטית של רמת סוללת החיישן [%]</string>
