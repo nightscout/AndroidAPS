@@ -441,7 +441,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             var text = PLACEHOLDER
             val textColor: Int
 
-            if (podStateManager.isTempBasalCertain) {
+            if (!podStateManager.isPodActivationCompleted || podStateManager.isTempBasalCertain) {
                 textColor = Color.WHITE
             } else {
                 textColor = Color.RED
