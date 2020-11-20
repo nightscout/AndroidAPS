@@ -83,8 +83,6 @@ class AutotunePlugin @Inject constructor(
     fun aapsAutotune() {
         val daysBack = sp.getInt(R.string.key_autotune_default_tune_days, 5)
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
-        srcprofile = profileFunction.getProfile(System.currentTimeMillis()).toString()
-        srcprofilename = profileFunction.getProfileName()
         aapsAutotune(daysBack, autoSwitch)
     }
 
@@ -120,7 +118,6 @@ class AutotunePlugin @Inject constructor(
         tunedProfile!!.profilename = resourceHelper.gs(R.string.autotune_tunedprofile_name)
         val pumpprofile = ATProfile(profile)
         pumpprofile.profilename = profileFunction.getProfileName()
-
         autotuneFS!!.exportPumpProfile(pumpprofile)
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
@@ -273,9 +270,7 @@ class AutotunePlugin @Inject constructor(
     companion object {
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
         @JvmField var currentprofile: ATProfile? = null
-        @JvmField var srcprofile = ""
-        @JvmField var srcprofilename = ""
-        var profile: Profile? = null
+        private var profile: Profile? = null
         const val autotuneStartHour = 4
         @JvmField var tunedProfile: ATProfile? = null
         @JvmField var result = ""

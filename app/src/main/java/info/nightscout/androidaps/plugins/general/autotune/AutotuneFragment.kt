@@ -68,8 +68,6 @@ class AutotuneFragment : DaggerFragment() {
             val daysBack = tune_days.text.toString().toInt()
             if (daysBack > 0) {
                 tempResult = ""
-                AutotunePlugin.srcprofile = profileFunction.getProfile(System.currentTimeMillis()).toString()
-                AutotunePlugin.srcprofilename = profileFunction.getProfileName()
                 AutotunePlugin.calculationRunning = true
                 Thread(Runnable {
                     autotunePlugin.aapsAutotune(daysBack, false)
@@ -92,16 +90,18 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         autotune_compare.setOnClickListener {
+            val currentprofile = AutotunePlugin.currentprofile
+            //log("profile : " + currentprofile?.profilename + "\n" + currentprofile?.data.toString())
             val tunedprofile = AutotunePlugin.tunedProfile
             //log("tunedprofile : " + AutotunePlugin.tunedProfile?.profilename + "\n" + tunedprofile?.data.toString())
             ProfileViewerDialog().also { pvd ->
                 pvd.arguments = Bundle().also {
                     it.putLong("time", DateUtil.now())
                     it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                    it.putString("customProfile", AutotunePlugin.srcprofile)
+                    it.putString("customProfile", currentprofile?.data.toString())
                     it.putString("customProfile2", tunedprofile?.data.toString())
                     it.putString("customProfileUnits", profileFunction.getUnits())
-                    it.putString("customProfileName", AutotunePlugin.srcprofilename + "\n" + AutotunePlugin.tunedProfile?.profilename)
+                    it.putString("customProfileName", currentprofile?.profilename + "\n" + AutotunePlugin.tunedProfile?.profilename)
                 }
             }.show(childFragmentManager, "ProfileViewDialog")
         }
