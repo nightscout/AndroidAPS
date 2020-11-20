@@ -98,7 +98,7 @@ class AutotuneFragment : DaggerFragment() {
                 pvd.arguments = Bundle().also {
                     it.putLong("time", DateUtil.now())
                     it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                    it.putString("customProfile", currentprofile?.data.toString())
+                    it.putString("customProfile", currentprofile?.getData(true).toString())
                     it.putString("customProfile2", tunedprofile?.data.toString())
                     it.putString("customProfileUnits", profileFunction.getUnits())
                     it.putString("customProfileName", currentprofile?.profilename + "\n" + AutotunePlugin.tunedProfile?.profilename)

@@ -36,7 +36,9 @@ public class ATProfile {
     public double basal[] = new double[24];
     public int basalUntuned[] = new int[24];
     public double ic;
+    private Profile.ProfileValue[] srcic = null;
     public double isf;
+    private Profile.ProfileValue[] srcisf = null;
     public double dia;
     public boolean isValid = false;
     public long from;
@@ -58,6 +60,10 @@ public class ATProfile {
         if (isValid) {
             //initialize tuned value with current profile values
             basal = getBasal();
+            if (srcic == null)
+                srcic = profile.getIcs();
+            if (srcisf == null)
+                srcisf = profile.getIsfsMgdl();
             ic = getAvgIC();
             isf = getAvgISF();
             dia = profile.getDia();
@@ -173,12 +179,20 @@ public class ATProfile {
     }
 
     //json profile
-    public JSONObject getData() {
+    public JSONObject getData() { return getData(false); }
+
+    //json profile
+    public JSONObject getData(Boolean src) {
         JSONObject json = profile.getData();
         try{
             json.put("dia",dia);
-            json.put("sens",new JSONArray().put(new JSONObject().put("time","00:00").put("timeAsSeconds",0).put("value",Profile.fromMgdlToUnits(isf, profile.getUnits()))));
-            json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
+            if (src) {
+                json.put("sens", getArray(srcisf));
+                json.put("carbratio", getArray(srcic));
+            } else {
+                json.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", Profile.fromMgdlToUnits(isf, profile.getUnits()))));
+                json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
+            }
             JSONArray basals = new JSONArray();
             for (int h = 0; h < 24; h++) {
                 int secondfrommidnight = h * 60 * 60;
@@ -193,6 +207,22 @@ public class ATProfile {
 
         return json;
     }
+
+    private JSONArray getArray(Profile.ProfileValue[] pf) {
+        JSONArray json = new JSONArray();
+        if (pf == null)
+            return json;
+        try{
+            for(int i = 0; i< pf.length;i++) {
+                int h = pf[i].timeAsSeconds/60/60;
+                String time;
+                time = (h<10 ? "0"+ h : h)  + ":00";
+                json.put(new JSONObject().put("time", time).put("timeAsSeconds", pf[i].timeAsSeconds).put("value", Profile.fromMgdlToUnits(pf[i].value, profile.getUnits())));
+            }
+        } catch (JSONException e) {}
+        return json;
+    }
+
 
     public ProfileStore getProfileStore() {
         ProfileStore profileStore=null;
