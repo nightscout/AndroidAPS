@@ -567,8 +567,11 @@ public abstract class PodStateManager {
             podState.setTotalTicksDelivered(status.getTicksDelivered());
             podState.setPodProgressStatus(status.getPodProgressStatus());
             podState.setTimeActive(status.getTimeActive());
+
+            boolean isBasalCertain = podState.isBasalCertain() == null || podState.isBasalCertain();
+            boolean isTempBasalCertain = podState.isTempBasalCertain() == null || podState.isTempBasalCertain();
             if (!status.getDeliveryStatus().isTbrRunning()) {
-                if (podState.isTempBasalCertain()) {
+                if (isTempBasalCertain) {
                     clearTempBasal(); // Triggers onTbrChanged when appropriate
                 } else {
                     // Don't trigger onTbrChanged as we will trigger onUncertainTbrRecovered below
@@ -577,11 +580,11 @@ public abstract class PodStateManager {
                     podState.setTempBasalDuration(null);
                 }
             }
-            if (!podState.isTempBasalCertain()) {
+            if (!isTempBasalCertain) {
                 podState.setTempBasalCertain(true);
                 onUncertainTbrRecovered();
             }
-            if (!podState.isBasalCertain()) {
+            if (!isBasalCertain) {
                 podState.setBasalCertain(true);
             }
 
