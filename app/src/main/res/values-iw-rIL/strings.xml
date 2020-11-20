@@ -5,16 +5,15 @@
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
-    <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [יחידות]</string>
-    <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [גרם]</string>
+    <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [g]</string>
     <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
     <string name="ns_sync_use_absolute_title">השתמש תמיד בערכים בזאלים מוחלטים</string>
-    <string name="alert_dialog_storage_permission_text">בבקשה אתחל את הסמרטפון שלך או תרענן את אפלקצית AndroidAPS בהגדרות המערכת
-אחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב אחר ולוודא כי האלגוריתמים פועלים כראוי)!</string>
+    <string name="alert_dialog_storage_permission_text">בבקשה אתחל את הסמרטפון שלך או תרענן את אפלקצית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב אחר ולוודא כי האלגוריתמים פועלים כראוי)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
@@ -24,10 +23,10 @@
     <string name="description_insulin_ultra_rapid">הגדרת אינסולין ל-Fiasp</string>
     <string name="description_insulin_lyumjev">הגדרת אינסולין ל-Lyumjev</string>
     <string name="description_insulin_free_peak">מאפשר לכם להגדיר את שיא פעילות האינסולין, לשימוש על ידי משתמשים מתקדמים בלבד</string>
-    <string name="description_loop">להפעיל או לכבות את הלולאה.</string>
+    <string name="description_loop">הפעלת או השבתת הלולאה.</string>
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
-    <string name="description_ma">הישאר עם האלגוריתם של 2016</string>
-    <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
+    <string name="description_ma">מצב האלגוריתם ב-2016</string>
+    <string name="description_ama">מצב האלגוריתם ב-2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה, ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלך עושה</string>
