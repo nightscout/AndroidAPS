@@ -83,6 +83,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveA
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodFaultEventChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodUncertainTbrRecovered;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandAcknowledgeAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandHandleTimeChange;
@@ -155,6 +156,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
+    private boolean isSetTempBasalRunning;
     private boolean isCancelTempBasalRunning;
 
     @Inject
@@ -286,7 +288,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         disposables.add(rxBus
                 .toObservable(EventOmnipodTbrChanged.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> updateAapsTbr(), fabricPrivacy::logException)
+                .subscribe(event -> handleCancelledTbr(), fabricPrivacy::logException)
+        );
+        disposables.add(rxBus
+                .toObservable(EventOmnipodUncertainTbrRecovered.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> handleUncertainTbrRecovery(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventOmnipodActiveAlertsChanged.class)
@@ -351,17 +358,49 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return rileyLinkServiceData.rileyLinkServiceState.isReady();
     }
 
-    private void updateAapsTbr() {
-        // As per the characteristics of the Omnipod, we only know whether or not a TBR is currently active
-        // But it doesn't tell us the duration or amount, so we can only update TBR status in AAPS if
-        // The pod is not running a TBR, while AAPS thinks it is
-        if (!podStateManager.isTempBasalRunning()) {
-            // Only report TBR cancellations if they haven't been explicitly requested
-            if (!isCancelTempBasalRunning) {
-                if (activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
-                    aapsOmnipodManager.reportCancelledTbr();
-                }
+    private void handleCancelledTbr() {
+        // Only report TBR cancellations if they haven't been explicitly requested
+        if (isCancelTempBasalRunning) {
+            return;
+        }
+        if (!podStateManager.isTempBasalRunning() && activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
+            aapsOmnipodManager.reportCancelledTbr();
+        }
+    }
+
+    private void handleUncertainTbrRecovery() {
+        // Ignore changes in certainty during tbr commands; these are normal
+        if (isSetTempBasalRunning || isCancelTempBasalRunning) {
+            return;
+        }
+
+        TemporaryBasal tempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
+
+        if (podStateManager.isTempBasalRunning() && tempBasal == null) {
+            if (podStateManager.hasTempBasal()) {
+                aapsLogger.warn(LTag.PUMP, "Registering TBR that AAPS was unaware of");
+                long pumpId = aapsOmnipodManager.addTbrSuccessToHistory(podStateManager.getTempBasalStartTime().getMillis(),
+                        new TempBasalPair(podStateManager.getTempBasalAmount(), false, (int) podStateManager.getTempBasalDuration().getStandardMinutes()));
+
+                TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector()) //
+                        .absolute(podStateManager.getTempBasalAmount()) //
+                        .duration((int) podStateManager.getTempBasalDuration().getStandardMinutes())
+                        .date(podStateManager.getTempBasalStartTime().getMillis()) //
+                        .source(Source.PUMP) //
+                        .pumpId(pumpId);
+
+                activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+            } else {
+                // Not sure what's going on. Notify the user
+                aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS");
+                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
             }
+        } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
+            aapsLogger.warn(LTag.PUMP, "Invalidating AAPS TBR that actually hadn't succeeded");
+
+            tempBasal.isValid = false;
+            activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
+            handleCancelledTbr();
         }
     }
 
@@ -524,39 +563,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private PumpEnactResult getPodStatus() {
-        PumpEnactResult getStatusResult = executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
-
-        // bit hacky...
-        if (getStatusResult.success && !activePlugin.getActiveTreatments().isTempBasalInProgress() && podStateManager.isTempBasalRunning()) {
-            if (podStateManager.hasTempBasal()) {
-                aapsLogger.warn(LTag.PUMP, "Registering TBR that AAPS was unaware of");
-
-                long pumpId = aapsOmnipodManager.addTbrSuccessToHistory(podStateManager.getTempBasalStartTime().getMillis(),
-                        new TempBasalPair(podStateManager.getTempBasalAmount(), false, (int) podStateManager.getTempBasalDuration().getStandardMinutes()));
-
-                TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector()) //
-                        .absolute(podStateManager.getTempBasalAmount()) //
-                        .duration((int) podStateManager.getTempBasalDuration().getStandardMinutes())
-                        .date(podStateManager.getTempBasalStartTime().getMillis()) //
-                        .source(Source.PUMP) //
-                        .pumpId(pumpId);
-
-                activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
-            } else {
-                // Not sure what's going on. Cancel TBR on the Pod
-                aapsLogger.warn(LTag.PUMP, "Cancelling TBR because AAPS is not aware of any running TBR");
-
-                PumpEnactResult cancelTbrResult = executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
-                if (cancelTbrResult.success) {
-                    aapsLogger.info(LTag.PUMP, "Successfully cancelled TBR because AAPS was not aware of any running TBR");
-                } else {
-                    aapsLogger.error(LTag.PUMP, "Failed to cancel TBR because AAPS was not aware of any running TBR");
-                    rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
-                }
-            }
-        }
-
-        return getStatusResult;
+        return executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodManager::getPodStatus);
     }
 
     @NonNull
@@ -661,7 +668,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             }
         }
 
-        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
+        isSetTempBasalRunning = true;
+        PumpEnactResult result;
+        try {
+            result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
+        } finally {
+            isSetTempBasalRunning = false;
+        }
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 

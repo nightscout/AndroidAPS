@@ -567,12 +567,18 @@ public abstract class PodStateManager {
             podState.setPodProgressStatus(status.getPodProgressStatus());
             podState.setTimeActive(status.getTimeActive());
             if (!status.getDeliveryStatus().isTbrRunning()) {
-                clearTempBasal(false);
+                if (podState.isTempBasalCertain()) {
+                    clearTempBasal(); // Triggers onTbrChanged when appropriate
+                } else {
+                    // Don't trigger onTbrChanged as we will trigger onUncertainTbrRecovered below
+                    podState.setTempBasalStartTime(null);
+                    podState.setTempBasalAmount(null);
+                    podState.setTempBasalDuration(null);
+                }
             }
-            podState.setLastUpdatedFromResponse(DateTime.now());
             if (!podState.isTempBasalCertain()) {
                 podState.setTempBasalCertain(true);
-                onTbrChanged();
+                onUncertainTbrRecovered();
             }
             if (!podState.isBasalCertain()) {
                 podState.setBasalCertain(true);
@@ -587,10 +593,17 @@ public abstract class PodStateManager {
                     }
                 }
             }
+
+            podState.setLastUpdatedFromResponse(DateTime.now());
         });
     }
 
     protected void onTbrChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onUncertainTbrRecovered() {
         // Deliberately left empty
         // Can be overridden in subclasses
     }
