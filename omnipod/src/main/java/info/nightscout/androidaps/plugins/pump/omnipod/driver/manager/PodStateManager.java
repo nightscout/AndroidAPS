@@ -369,7 +369,8 @@ public abstract class PodStateManager {
     }
 
     public final boolean isBasalCertain() {
-        return getSafe(() -> podState.isBasalCertain());
+        Boolean certain = getSafe(() -> podState.isBasalCertain());
+        return certain == null || certain;
     }
 
     public final void setBasalCertain(boolean certain) {
@@ -711,7 +712,7 @@ public abstract class PodStateManager {
         private DeliveryStatus lastDeliveryStatus;
         private AlertSet activeAlerts;
         private BasalSchedule basalSchedule;
-        private boolean basalCertain;
+        private Boolean basalCertain;
         private DateTime lastBolusStartTime;
         private Double lastBolusAmount;
         private Duration lastBolusDuration;
