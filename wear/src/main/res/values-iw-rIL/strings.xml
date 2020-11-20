@@ -77,7 +77,7 @@
     <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
     <string name="action_carbs">פחמימות</string>
     <string name="action_percentage">אחוז</string>
-    <string name="action_start_min">התחל [min]</string>
+    <string name="action_start_min">התחלה [min]</string>
     <string name="action_duration_h">משך [h]</string>
     <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
