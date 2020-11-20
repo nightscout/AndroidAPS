@@ -1042,7 +1042,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private void initializeAfterRileyLinkConnection() {
         if (podStateManager.getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
-            boolean success = true;
+            boolean success = false;
             for (int i = 0; STARTUP_STATUS_REQUEST_TRIES > i; i++) {
                 PumpEnactResult result = getPodStatus();
                 if (result.success) {
