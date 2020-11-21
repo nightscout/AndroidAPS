@@ -115,6 +115,8 @@ public class AapsOmnipodManager {
     private boolean notificationUncertainSmbSoundEnabled;
     private boolean notificationUncertainBolusSoundEnabled;
     private boolean automaticallyAcknowledgeAlertsEnabled;
+    private boolean testBeepButtonEnabled;
+    private boolean rileylinkStatsButtonEnabled;
 
     @Inject
     public AapsOmnipodManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -156,6 +158,8 @@ public class AapsOmnipodManager {
         tbrBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED, true);
         suspendDeliveryButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED, false);
         pulseLogButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
+        testBeepButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TEST_BEEP_BUTTON_ENABLED, true);
+        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED, false);
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
         notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, true);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
@@ -627,6 +631,13 @@ public class AapsOmnipodManager {
 
     public boolean isPulseLogButtonEnabled() {
         return pulseLogButtonEnabled;
+    }
+
+    public boolean isTestBeepButtonEnabled() {
+        return testBeepButtonEnabled; }
+
+    public boolean isRileylinkStatsButtonEnabled() {
+        return rileylinkStatsButtonEnabled;
     }
 
     public boolean isTimeChangeEventEnabled() {

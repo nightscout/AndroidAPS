@@ -12,6 +12,7 @@ public class OmnipodStorageKeys {
         public static final int TBR_BEEPS_ENABLED = R.string.key_omnipod_tbr_beeps_enabled;
         public static final int SUSPEND_DELIVERY_BUTTON_ENABLED = R.string.key_omnipod_suspend_delivery_button_enabled;
         public static final int PULSE_LOG_BUTTON_ENABLED = R.string.key_omnipod_pulse_log_button_enabled;
+        public static final int TEST_BEEP_BUTTON_ENABLED = R.string.key_omnipod_test_beep_button_enabled;
         public static final int TIME_CHANGE_EVENT_ENABLED = R.string.key_omnipod_time_change_event_enabled;
         public static final int EXPIRATION_REMINDER_ENABLED = R.string.key_omnipod_expiration_reminder_enabled;
         public static final int EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN = R.string.key_omnipod_expiration_reminder_hours_before_shutdown;
@@ -21,6 +22,7 @@ public class OmnipodStorageKeys {
         public static final int NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_smb_sound_enabled;
         public static final int NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_bolus_sound_enabled;
         public static final int AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED = R.string.key_omnipod_automatically_acknowledge_alerts_enabled;
+        public static final int RILEYLINK_STATS_BUTTON_ENABLED = R.string.key_omnipod_rileylink_stats_button_enabled;
     }
 
     public static class Statistics {

@@ -309,6 +309,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_rileylink_stats_button_enabled) ||
+                            event.isChanged(getResourceHelper(), R.string.key_omnipod_test_beep_button_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||

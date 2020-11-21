@@ -257,6 +257,12 @@
     <string name="omnipod_time_ago">%1$s ago</string>
     <string name="omnipod_cmd_beep_config">Beep config</string>
     <string name="omnipod_cmd_play_test_beep">Play test beep</string>
+    <string name="key_omnipod_test_beep_button_enabled">AAPS.Omnipod.test_beep_button_enabled</string>
+    <string name="omnipod_config_test_beep_button_enabled">Test beep button enabled</string>
+    <string name="omnipod_overview_button_test_beep">Test beep</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">RileyLink Stats button enabled</string>
+    <string name="key_omnipod_rileylink_stats_button_enabled">AAPS.Omnipod.rileylink_stats_button_enabled</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Failed to play test beep</string>
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
