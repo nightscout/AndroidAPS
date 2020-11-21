@@ -20,7 +20,7 @@ public class ConfigureBeepAction implements OmnipodAction<StatusResponse> {
 
     public ConfigureBeepAction(PodStateManager podState, BeepConfigType beepType, boolean basalCompletionBeep, Duration basalIntervalBeep, boolean tempBasalCompletionBeep, Duration tempBasalIntervalBeep, boolean bolusCompletionBeep, Duration bolusIntervalBeep) {
         if (podState == null || beepType == null) {
-            throw new IllegalArgumentException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Required parameter(s) missing");
         }
 
         this.beepType = beepType;
@@ -41,8 +41,8 @@ public class ConfigureBeepAction implements OmnipodAction<StatusResponse> {
     @Override
     public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
         return communicationService.sendCommand(
-                StatusResponse.class, podStateManager
-                , new BeepConfigCommand(beepType, basalCompletionBeep, basalIntervalBeep,
+                StatusResponse.class, podStateManager,
+                new BeepConfigCommand(beepType, basalCompletionBeep, basalIntervalBeep,
                         tempBasalCompletionBeep, tempBasalIntervalBeep,
                         bolusCompletionBeep, bolusIntervalBeep));
     }

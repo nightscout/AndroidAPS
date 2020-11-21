@@ -533,7 +533,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
     private fun updateTestBeepButton() {
         if (omnipodManager.isTestBeepButtonEnabled) {
             omnipod_overview_button_test_beep.visibility = View.VISIBLE
-            omnipod_overview_button_test_beep.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
+            omnipod_overview_button_test_beep.isEnabled = podStateManager.isPodInitialized &&
+                podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) &&
+                rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
             omnipod_overview_button_test_beep.visibility = View.GONE
         }

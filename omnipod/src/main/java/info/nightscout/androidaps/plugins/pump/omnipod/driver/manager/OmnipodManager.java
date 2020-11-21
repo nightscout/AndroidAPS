@@ -435,7 +435,10 @@ public class OmnipodManager {
         if (!podStateManager.isPodInitialized()) {
             throw new IllegalPodProgressException(PodProgressStatus.REMINDER_INITIALIZED, null);
         }
-        communicationService.executeAction(new ConfigureBeepAction(podStateManager, beepType, false, Duration.ZERO, false, Duration.ZERO, false, Duration.ZERO));
+        communicationService.executeAction(new ConfigureBeepAction(
+                podStateManager, beepType, basalCompletionBeep,
+                basalIntervalBeep, tempBasalCompletionBeep, tempBasalIntervalBeep,
+                bolusCompletionBeep, bolusIntervalBeep));
     }
 
     public synchronized void playTestBeep(BeepConfigType beepType) {

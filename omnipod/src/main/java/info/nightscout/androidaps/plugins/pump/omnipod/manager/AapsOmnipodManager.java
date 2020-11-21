@@ -251,7 +251,6 @@ public class AapsOmnipodManager {
     }
 
 
-
     public PumpEnactResult getPodStatus() {
         StatusResponse statusResponse;
 
@@ -634,7 +633,8 @@ public class AapsOmnipodManager {
     }
 
     public boolean isTestBeepButtonEnabled() {
-        return testBeepButtonEnabled; }
+        return testBeepButtonEnabled;
+    }
 
     public boolean isRileylinkStatsButtonEnabled() {
         return rileylinkStatsButtonEnabled;

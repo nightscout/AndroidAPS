@@ -10,6 +10,8 @@
     <string name="key_omnipod_tbr_beeps_enabled" translatable="false">AAPS.Omnipod.tbr_beeps_enabled</string>
     <string name="key_omnipod_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
     <string name="key_omnipod_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
+    <string name="key_omnipod_test_beep_button_enabled">AAPS.Omnipod.test_beep_button_enabled</string>
+    <string name="key_omnipod_rileylink_stats_button_enabled">AAPS.Omnipod.rileylink_stats_button_enabled</string>
     <string name="key_omnipod_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
     <string name="key_omnipod_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
     <string name="key_omnipod_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
@@ -41,6 +43,8 @@
     <string name="omnipod_config_tbr_beeps_enabled">TBR beeps enabled</string>
     <string name="omnipod_config_suspend_delivery_button_enabled">Suspend Delivery button enabled</string>
     <string name="omnipod_config_pulse_log_button_enabled">Pulse Log button enabled</string>
+    <string name="omnipod_config_test_beep_button_enabled">Test beep button enabled</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">RileyLink Stats button enabled</string>
     <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
     <string name="omnipod_config_expiration_reminder_enabled">Expiration reminder enabled</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
@@ -135,6 +139,7 @@
     <string name="omnipod_error_pod_fault_activation_time_exceeded">The Pod\'s activation time has been exceeded. This Pod can no longer be activated.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
     <string name="omnipod_error_pod_suspended">Pod suspended</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Failed to play test beep</string>
 
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
@@ -167,6 +172,8 @@
     <string name="omnipod_cmd_read_pulse_log">Read pulse log</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
+    <string name="omnipod_cmd_beep_config">Beep config</string>
+    <string name="omnipod_cmd_play_test_beep">Play test beep</string>
 
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod management</string>
@@ -221,6 +228,7 @@
     <string name="omnipod_overview_button_resume_delivery">Resume delivery</string>
     <string name="omnipod_overview_button_pod_management">Pod mgmt</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Ack alerts</string>
+    <string name="omnipod_overview_button_test_beep">Test beep</string>
     <string name="omnipod_overview_pod_status">Pod status</string>
     <string name="omnipod_overview_total_delivered">Total delivered</string>
     <string name="omnipod_overview_total_delivered_value">%1$.2f U</string>
@@ -255,14 +263,6 @@
     <string name="omnipod_less_than_a_minute_ago">Less than a minute ago</string>
     <string name="omnipod_composite_time">%1$s and %2$s</string>
     <string name="omnipod_time_ago">%1$s ago</string>
-    <string name="omnipod_cmd_beep_config">Beep config</string>
-    <string name="omnipod_cmd_play_test_beep">Play test beep</string>
-    <string name="key_omnipod_test_beep_button_enabled">AAPS.Omnipod.test_beep_button_enabled</string>
-    <string name="omnipod_config_test_beep_button_enabled">Test beep button enabled</string>
-    <string name="omnipod_overview_button_test_beep">Test beep</string>
-    <string name="omnipod_config_rileylink_stats_button_enabled">RileyLink Stats button enabled</string>
-    <string name="key_omnipod_rileylink_stats_button_enabled">AAPS.Omnipod.rileylink_stats_button_enabled</string>
-    <string name="omnipod_error_failed_to_play_test_beep">Failed to play test beep</string>
     <plurals name="omnipod_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
