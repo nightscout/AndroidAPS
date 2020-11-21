@@ -37,7 +37,6 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
-
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
@@ -82,9 +81,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
-
                 </LinearLayout>
-
 
                 <View
                     android:layout_width="fill_parent"
@@ -449,7 +446,6 @@
 
                 </LinearLayout>
 
-
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
@@ -729,7 +725,6 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/listdelimiter" />
 
-
             </LinearLayout>
 
         </ScrollView>
@@ -778,7 +773,6 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_acknowledge_active_alerts" />
-
 
                 <Button
                     android:id="@+id/omnipod_overview_button_set_time"

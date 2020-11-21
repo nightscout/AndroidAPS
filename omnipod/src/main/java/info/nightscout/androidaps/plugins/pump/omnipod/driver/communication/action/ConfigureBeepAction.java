@@ -33,7 +33,6 @@ public class ConfigureBeepAction implements OmnipodAction<StatusResponse> {
         this.podStateManager = podState;
     }
 
-
     public ConfigureBeepAction(PodStateManager podState, BeepConfigType beepType) {
         this(podState, beepType, false, Duration.ZERO, false, Duration.ZERO, false, Duration.ZERO);
     }

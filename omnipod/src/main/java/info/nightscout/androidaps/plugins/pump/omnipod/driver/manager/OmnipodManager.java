@@ -448,7 +448,6 @@ public class OmnipodManager {
         communicationService.executeAction(new ConfigureBeepAction(podStateManager, beepType));
     }
 
-
     public OmnipodRileyLinkCommunicationManager getCommunicationService() {
         return communicationService;
     }

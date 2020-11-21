@@ -125,8 +125,6 @@
             android:key="@string/key_omnipod_time_change_event_enabled"
             android:title="@string/omnipod_config_time_change_enabled" />
 
-
-
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
