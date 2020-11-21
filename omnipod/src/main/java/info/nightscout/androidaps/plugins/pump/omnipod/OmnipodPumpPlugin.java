@@ -76,6 +76,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
@@ -85,6 +86,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChan
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandAcknowledgeAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandHandleTimeChange;
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandPlayTestBeep;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandUpdateAlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommandType;
@@ -794,6 +796,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 return handleTimeChange(((CommandHandleTimeChange) command).isRequestedByUser());
             case UPDATE_ALERT_CONFIGURATION:
                 return updateAlertConfiguration();
+            case PLAY_TEST_BEEP:
+                return executeCommand(OmnipodCommandType.PLAY_TEST_BEEP, () -> aapsOmnipodManager.playTestBeep(((CommandPlayTestBeep)command).getBeepType()));
             default:
                 aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + commandType);
                 return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, commandType));

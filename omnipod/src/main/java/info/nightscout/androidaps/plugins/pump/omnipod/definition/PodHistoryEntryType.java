@@ -35,11 +35,13 @@ public enum PodHistoryEntryType {
 
     CONFIGURE_ALERTS(50, R.string.omnipod_cmd_configure_alerts, PumpHistoryEntryGroup.Alarm),
     ACKNOWLEDGE_ALERTS(51, R.string.omnipod_cmd_acknowledge_alerts, PumpHistoryEntryGroup.Alarm),
+    PLAY_TEST_BEEP(52, R.string.omnipod_cmd_play_test_beep, PumpHistoryEntryGroup.Alarm),
 
     SUSPEND_DELIVERY(60, R.string.omnipod_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),
     RESUME_DELIVERY(61, R.string.omnipod_cmd_resume_delivery, PumpHistoryEntryGroup.Basal),
 
     UNKNOWN_ENTRY_TYPE(99, R.string.omnipod_cmd_unknown_entry);
+
 
     private int code;
     private static final Map<Integer, PodHistoryEntryType> instanceMap;

@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
@@ -231,6 +232,21 @@ public class AapsOmnipodManager {
         addSuccessToHistory(PodHistoryEntryType.CONFIGURE_ALERTS, alertConfigurations);
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
+
+    public PumpEnactResult playTestBeep(BeepConfigType beepType) {
+        try {
+            executeCommand(() -> delegate.playTestBeep(beepType));
+        } catch (Exception ex) {
+            String errorMessage = translateException(ex);
+            addFailureToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, errorMessage);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+        }
+
+        addSuccessToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, beepType);
+        return new PumpEnactResult(injector).success(true).enacted(false);
+    }
+
+
 
     public PumpEnactResult getPodStatus() {
         StatusResponse statusResponse;
