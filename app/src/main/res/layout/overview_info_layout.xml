@@ -241,7 +241,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toStartOf="@+id/overview_basal_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_iob_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
@@ -272,7 +271,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toStartOf="@+id/overview_extended_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_cob_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
@@ -303,7 +301,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toStartOf="@+id/overview_as_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_basal_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
@@ -333,7 +330,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/overview_extended_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
