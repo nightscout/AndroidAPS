@@ -151,11 +151,16 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
             omnipod_pod_management_button_activate_pod.isEnabled = !podStateManager.isPodActivationCompleted
             omnipod_pod_management_button_deactivate_pod.isEnabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 
-            if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {
-                omnipod_pod_management_button_play_test_beep.isEnabled = false
-                omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_playing_test_beep)
+            if (podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
+                if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {
+                    omnipod_pod_management_button_play_test_beep.isEnabled = false
+                    omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_playing_test_beep)
+                } else {
+                    omnipod_pod_management_button_play_test_beep.isEnabled = true
+                    omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
+                }
             } else {
-                omnipod_pod_management_button_play_test_beep.isEnabled = true
+                omnipod_pod_management_button_play_test_beep.isEnabled = false
                 omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
             }
 
@@ -163,18 +168,23 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
                 omnipod_pod_management_button_discard_pod.isEnabled = true
             }
             if (pulseLogButtonEnabled) {
-                if (commandQueue.isCustomCommandInQueue(CommandReadPulseLog::class.java)) {
-                    omnipod_pod_management_button_pulse_log.isEnabled = false
-                    omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_reading_pulse_log)
+                if (podStateManager.isPodActivationCompleted) {
+                    if (commandQueue.isCustomCommandInQueue(CommandReadPulseLog::class.java)) {
+                        omnipod_pod_management_button_pulse_log.isEnabled = false
+                        omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_reading_pulse_log)
+                    } else {
+                        omnipod_pod_management_button_pulse_log.isEnabled = true
+                        omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_read_pulse_log)
+                    }
                 } else {
-                    omnipod_pod_management_button_pulse_log.isEnabled = true
+                    omnipod_pod_management_button_pulse_log.isEnabled = false
                     omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_read_pulse_log)
                 }
             }
         } else {
+            omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
             omnipod_pod_management_button_activate_pod.isEnabled = false
             omnipod_pod_management_button_deactivate_pod.isEnabled = false
-            omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
             omnipod_pod_management_button_play_test_beep.isEnabled = false
 
             if (discardButtonEnabled) {
