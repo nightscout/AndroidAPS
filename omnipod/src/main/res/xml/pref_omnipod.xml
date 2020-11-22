@@ -32,7 +32,7 @@
             android:title="@string/omnipod_config_smb_beeps_enabled" />
 
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="@string/key_omnipod_tbr_beeps_enabled"
             android:title="@string/omnipod_config_tbr_beeps_enabled" />
 
