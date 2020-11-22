@@ -106,11 +106,6 @@
             android:title="@string/omnipod_config_suspend_delivery_button_enabled" />
 
         <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_omnipod_test_beep_button_enabled"
-            android:title="@string/omnipod_config_test_beep_button_enabled" />
-
-        <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_omnipod_pulse_log_button_enabled"
             android:title="@string/omnipod_config_pulse_log_button_enabled" />

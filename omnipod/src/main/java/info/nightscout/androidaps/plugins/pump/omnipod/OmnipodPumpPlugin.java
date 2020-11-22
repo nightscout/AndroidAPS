@@ -77,7 +77,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
@@ -318,7 +317,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_rileylink_stats_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_test_beep_button_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
@@ -850,7 +848,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             case UPDATE_ALERT_CONFIGURATION:
                 return updateAlertConfiguration();
             case PLAY_TEST_BEEP:
-                return executeCommand(OmnipodCommandType.PLAY_TEST_BEEP, () -> aapsOmnipodManager.playTestBeep(((CommandPlayTestBeep)command).getBeepType()));
+                return executeCommand(OmnipodCommandType.PLAY_TEST_BEEP, () -> aapsOmnipodManager.playTestBeep(((CommandPlayTestBeep) command).getBeepType()));
             default:
                 aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + commandType);
                 return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, commandType));

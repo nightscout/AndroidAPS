@@ -93,6 +93,19 @@
                 android:textAllCaps="false" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/omnipod_pod_management_button_play_test_beep"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="40dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_play_test_beep"
+                android:text="@string/omnipod_pod_management_button_play_test_beep"
+                android:textAllCaps="false" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/omnipod_pod_management_button_pulse_log"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"

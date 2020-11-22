@@ -23,14 +23,17 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.*
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandAcknowledgeAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandGetPodStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandHandleTimeChange
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandSuspendDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil
 import info.nightscout.androidaps.queue.Callback
@@ -117,12 +120,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(CommandGetPodStatus(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
-        }
-
-        omnipod_overview_button_test_beep.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandPlayTestBeep(BeepConfigType.BIP_BIP),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_play_test_beep), false))
         }
 
         omnipod_overview_button_acknowledge_active_alerts.setOnClickListener {
@@ -460,7 +457,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
         updateAcknowledgeAlertsButton()
         updateSuspendDeliveryButton()
         updateSetTimeButton()
-        updateTestBeepButton()
     }
 
     private fun disablePodActionButtons() {
@@ -469,7 +465,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
         omnipod_overview_button_suspend_delivery.isEnabled = false
         omnipod_overview_button_set_time.isEnabled = false
         omnipod_overview_button_refresh_status.isEnabled = false
-        omnipod_overview_button_test_beep.isEnabled = false
     }
 
     private fun updateRefreshStatusButton() {
@@ -511,17 +506,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_button_set_time.isEnabled = !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
             omnipod_overview_button_set_time.visibility = View.GONE
-        }
-    }
-
-    private fun updateTestBeepButton() {
-        if (omnipodManager.isTestBeepButtonEnabled) {
-            omnipod_overview_button_test_beep.visibility = View.VISIBLE
-            omnipod_overview_button_test_beep.isEnabled = podStateManager.isPodInitialized &&
-                podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) &&
-                rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
-        } else {
-            omnipod_overview_button_test_beep.visibility = View.GONE
         }
     }
 

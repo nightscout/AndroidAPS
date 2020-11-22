@@ -810,17 +810,6 @@
                     android:text="@string/omnipod_overview_button_suspend_delivery"
                     android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/omnipod_overview_button_test_beep"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_play_test_beep"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_test_beep" />
-
             </LinearLayout>
 
         </LinearLayout>
