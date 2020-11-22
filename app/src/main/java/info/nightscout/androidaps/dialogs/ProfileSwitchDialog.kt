@@ -52,7 +52,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         overview_profileswitch_duration.setParams(savedInstanceState?.getDouble("overview_profileswitch_duration")
             ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
         overview_profileswitch_percentage.setParams(savedInstanceState?.getDouble("overview_profileswitch_percentage")
-            ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 1.0, DecimalFormat("0"), false, ok)
+            ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 5.0, DecimalFormat("0"), false, ok)
         overview_profileswitch_timeshift.setParams(savedInstanceState?.getDouble("overview_profileswitch_timeshift")
             ?: 0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, ok)
 
