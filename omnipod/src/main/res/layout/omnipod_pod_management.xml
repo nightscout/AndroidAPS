@@ -92,6 +92,20 @@
                 android:text="@string/omnipod_pod_management_button_discard_pod"
                 android:textAllCaps="false" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/omnipod_pod_management_button_pulse_log"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="40dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_pulse_log"
+                android:text="@string/omnipod_pod_management_button_read_pulse_log"
+                android:textAllCaps="false"
+                android:visibility="gone" />
+
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/omnipod_pod_management_button_pod_history"
                 style="?android:attr/buttonStyle"
@@ -103,6 +117,19 @@
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_pod_history"
                 android:text="@string/omnipod_pod_management_button_pod_history"
+                android:textAllCaps="false" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/omnipod_pod_management_button_rileylink_stats"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="40dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_rl_stats"
+                android:text="@string/omnipod_pod_management_button_riley_link_stats"
                 android:textAllCaps="false" />
 
         </LinearLayout>

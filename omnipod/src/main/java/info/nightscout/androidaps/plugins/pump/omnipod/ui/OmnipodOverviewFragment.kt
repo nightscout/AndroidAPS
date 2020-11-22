@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
@@ -126,14 +125,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_play_test_beep), false))
         }
 
-        omnipod_overview_button_rileylink_stats.setOnClickListener {
-            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, RileyLinkStatusActivity::class.java))
-            } else {
-                displayNotConfiguredDialog()
-            }
-        }
-
         omnipod_overview_button_acknowledge_active_alerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandAcknowledgeAlerts(),
@@ -153,12 +144,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
             commandQueue.customCommand(CommandHandleTimeChange(true),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_set_time), true)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_time_on_pod_updated)))
-        }
-
-        omnipod_overview_button_pulse_log.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandReadPulseLog(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_read_pulse_log), false))
         }
     }
 
@@ -454,11 +439,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
         updateAcknowledgeAlertsButton()
         updateSuspendDeliveryButton()
         updateSetTimeButton()
-        updatePulseLogButton()
         updateTestBeepButton()
-        updateRileylinkStatsButton()
     }
-
 
     private fun disablePodActionButtons() {
         omnipod_overview_button_acknowledge_active_alerts.isEnabled = false
@@ -466,7 +448,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
         omnipod_overview_button_suspend_delivery.isEnabled = false
         omnipod_overview_button_set_time.isEnabled = false
         omnipod_overview_button_refresh_status.isEnabled = false
-        omnipod_overview_button_pulse_log.isEnabled = false
         omnipod_overview_button_test_beep.isEnabled = false
     }
 
@@ -509,24 +490,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_button_set_time.isEnabled = !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
             omnipod_overview_button_set_time.visibility = View.GONE
-        }
-    }
-
-    private fun updatePulseLogButton() {
-        if (omnipodManager.isPulseLogButtonEnabled) {
-            omnipod_overview_button_pulse_log.visibility = View.VISIBLE
-            omnipod_overview_button_pulse_log.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
-        } else {
-            omnipod_overview_button_pulse_log.visibility = View.GONE
-        }
-    }
-
-    private fun updateRileylinkStatsButton() {
-        if (omnipodManager.isRileylinkStatsButtonEnabled) {
-            omnipod_overview_button_rileylink_stats.visibility = View.VISIBLE
-            omnipod_overview_button_rileylink_stats.isEnabled = true
-        } else {
-            omnipod_overview_button_rileylink_stats.visibility = View.GONE
         }
     }
 

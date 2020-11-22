@@ -821,30 +821,6 @@
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_test_beep" />
 
-                <Button
-                    android:id="@+id/omnipod_overview_button_pulse_log"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_pulse_log"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_read_pulse_log"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_rileylink_stats"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_riley_link_stats"
-                    android:visibility="gone" />
-
             </LinearLayout>
 
         </LinearLayout>
