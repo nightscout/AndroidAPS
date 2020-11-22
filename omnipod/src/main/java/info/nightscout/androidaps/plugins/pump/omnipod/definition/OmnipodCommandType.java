@@ -21,7 +21,8 @@ public enum OmnipodCommandType {
     ACKNOWLEDGE_ALERTS(R.string.omnipod_cmd_acknowledge_alerts), //
     READ_POD_PULSE_LOG(R.string.omnipod_cmd_read_pulse_log), //
     SUSPEND_DELIVERY(R.string.omnipod_cmd_suspend_delivery),
-    RESUME_DELIVERY(R.string.omnipod_cmd_resume_delivery);
+    RESUME_DELIVERY(R.string.omnipod_cmd_resume_delivery),
+    PLAY_TEST_BEEP(R.string.omnipod_cmd_play_test_beep);
 
     private int resourceId;
 

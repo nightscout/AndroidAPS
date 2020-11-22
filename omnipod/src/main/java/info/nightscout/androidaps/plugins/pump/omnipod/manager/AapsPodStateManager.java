@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateMa
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodFaultEventChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodTbrChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodUncertainTbrRecovered;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 @Singleton
@@ -32,6 +33,10 @@ public class AapsPodStateManager extends PodStateManager {
     @Override
     protected void storePodState(String podState) {
         sp.putString(OmnipodStorageKeys.Preferences.POD_STATE, podState);
+    }
+
+    @Override protected void onUncertainTbrRecovered() {
+        rxBus.send(new EventOmnipodUncertainTbrRecovered());
     }
 
     @Override protected void onTbrChanged() {

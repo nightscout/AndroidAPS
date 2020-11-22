@@ -30,10 +30,6 @@ public class BeepConfigCommand extends MessageBlock {
         encode();
     }
 
-    public BeepConfigCommand(BeepConfigType beepType) {
-        this(beepType, false, Duration.ZERO, false, Duration.ZERO, false, Duration.ZERO);
-    }
-
     private void encode() {
         encodedData = new byte[]{beepType.getValue()};
         encodedData = ByteUtil.concat(encodedData, (byte) ((basalCompletionBeep ? (1 << 6) : 0) + (basalIntervalBeep.getStandardMinutes() & 0x3f)));
