@@ -112,6 +112,7 @@
     <string name="color_name_deeporange">arancione scuro</string>
     <string name="color_name_brown">marrone</string>
     <string name="color_name_gray">grigio</string>
+    <string name="color_name_bluegray">grigio-azzurro</string>
     <string name="color_name_white">bianco</string>
     <string name="color_name_black">nero</string>
     <string name="color_name_multicolor">multicolore</string>
@@ -120,6 +121,7 @@
     <string name="digitalstyle_pref_your_style">Il tuo stile:</string>
     <string name="digitalstyle_style_none">nessuno stile</string>
     <string name="digitalstyle_style_minimal">stile minimale</string>
+    <string name="digitalstyle_style_shape">stile shape</string>
     <string name="digitalstyle_style_full">stile completo</string>
     <string name="digitalstyle_pref_your_color">Il tuo colore:</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturazione del tuo colore:</string>

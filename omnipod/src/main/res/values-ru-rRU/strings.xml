@@ -17,6 +17,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Звук для неопределенных TBR уведомлений включен</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Звук для неопределенных SMB уведомлений включен</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Звук для неопределенных уведомлений болюса включен</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Автоматически подтверждать оповещения Pod</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Другое</string>
     <string name="omnipod_preference_category_alerts">Оповещения</string>
@@ -31,6 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Сбой Пода</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Превышено время активации</string>
     <string name="omnipod_pod_status_inactive">Неактивирован</string>
+    <string name="omnipod_pod_status_pod_fault_description">Ошибка Pod: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
