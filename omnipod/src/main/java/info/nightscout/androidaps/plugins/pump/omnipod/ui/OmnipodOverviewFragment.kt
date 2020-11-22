@@ -353,11 +353,17 @@ class OmnipodOverviewFragment : DaggerFragment() {
             }
         } else {
             if (podStateManager.podProgressStatus.isRunning) {
-                if (podStateManager.isSuspended) {
+                var status = if (podStateManager.isSuspended) {
                     resourceHelper.gs(R.string.omnipod_pod_status_suspended)
                 } else {
                     resourceHelper.gs(R.string.omnipod_pod_status_running)
                 }
+
+                if (!podStateManager.isBasalCertain) {
+                    status += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
+                }
+
+                status
             } else if (podStateManager.podProgressStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
                 resourceHelper.gs(R.string.omnipod_pod_status_pod_fault)
             } else if (podStateManager.podProgressStatus == PodProgressStatus.INACTIVE) {
@@ -367,7 +373,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             }
         }
 
-        val podStatusColor = if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended) {
+        val podStatusColor = if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended || (podStateManager.isPodRunning && !podStateManager.isBasalCertain)) {
             Color.RED
         } else {
             Color.WHITE
@@ -398,18 +404,36 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun updateTempBasal() {
         if (podStateManager.isPodActivationCompleted && podStateManager.isTempBasalRunning) {
-            val now = DateTime.now()
+            if (!podStateManager.hasTempBasal()) {
+                omnipod_overview_temp_basal.text = "???"
+                omnipod_overview_temp_basal.setTextColor(Color.RED)
+            } else {
+                val now = DateTime.now()
 
-            val startTime = podStateManager.tempBasalStartTime
-            val amount = podStateManager.tempBasalAmount
-            val duration = podStateManager.tempBasalDuration
+                val startTime = podStateManager.tempBasalStartTime
+                val amount = podStateManager.tempBasalAmount
+                val duration = podStateManager.tempBasalDuration
 
-            val minutesRunning = Duration(startTime, now).standardMinutes
+                val minutesRunning = Duration(startTime, now).standardMinutes
 
-            var text: String
+                var text: String
+                val textColor: Int
+                text = resourceHelper.gs(R.string.omnipod_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
+                if (podStateManager.isTempBasalCertain) {
+                    textColor = Color.WHITE
+                } else {
+                    textColor = Color.RED
+                    text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
+                }
+
+                omnipod_overview_temp_basal.text = text
+                omnipod_overview_temp_basal.setTextColor(textColor)
+            }
+        } else {
+            var text = PLACEHOLDER
             val textColor: Int
-            text = resourceHelper.gs(R.string.omnipod_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
-            if (podStateManager.isTempBasalCertain) {
+
+            if (!podStateManager.isPodActivationCompleted || podStateManager.isTempBasalCertain) {
                 textColor = Color.WHITE
             } else {
                 textColor = Color.RED
@@ -418,9 +442,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
             omnipod_overview_temp_basal.text = text
             omnipod_overview_temp_basal.setTextColor(textColor)
-        } else {
-            omnipod_overview_temp_basal.text = PLACEHOLDER
-            omnipod_overview_temp_basal.setTextColor(Color.WHITE)
         }
     }
 

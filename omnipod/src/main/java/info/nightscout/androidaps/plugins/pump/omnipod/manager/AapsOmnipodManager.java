@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.manager;
 
+import android.content.Context;
+import android.content.Intent;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.json.JSONException;
@@ -14,6 +17,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -103,6 +107,7 @@ public class AapsOmnipodManager {
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final NSUpload nsUpload;
     private final ProfileFunction profileFunction;
+    private final Context context;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -131,8 +136,9 @@ public class AapsOmnipodManager {
                               DatabaseHelperInterface databaseHelper,
                               OmnipodAlertUtil omnipodAlertUtil,
                               NSUpload nsUpload,
-                              ProfileFunction profileFunction
-    ) {
+                              ProfileFunction profileFunction,
+                              Context context) {
+
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.aapsLogger = aapsLogger;
@@ -145,6 +151,7 @@ public class AapsOmnipodManager {
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.nsUpload = nsUpload;
         this.profileFunction = profileFunction;
+        this.context = context;
 
         delegate = new OmnipodManager(aapsLogger, communicationService, podStateManager);
 
@@ -376,7 +383,7 @@ public class AapsOmnipodManager {
             if (detailedBolusInfo.isSMB) {
                 showNotification(getStringResource(R.string.omnipod_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? R.raw.boluserror : null);
             } else {
-                showNotification(getStringResource(R.string.omnipod_error_bolus_failed_uncertain), Notification.URGENT, isNotificationUncertainBolusSoundEnabled() ? R.raw.boluserror : null);
+                showErrorDialog(getStringResource(R.string.omnipod_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? R.raw.boluserror : null);
             }
         }
 
@@ -737,6 +744,10 @@ public class AapsOmnipodManager {
         activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
     }
 
+    public long addTbrSuccessToHistory(long requestTime, TempBasalPair tempBasalPair) {
+        return addSuccessToHistory(requestTime, PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
+    }
+
     private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
         TemporaryBasal tempStart = new TemporaryBasal(injector) //
                 .date(time) //
@@ -875,6 +886,15 @@ public class AapsOmnipodManager {
 
     private void sendEvent(Event event) {
         rxBus.send(event);
+    }
+
+    private void showErrorDialog(String message, Integer sound) {
+        Intent intent = new Intent(context, ErrorHelperActivity.class);
+        intent.putExtra("soundid", sound);
+        intent.putExtra("status", message);
+        intent.putExtra("title", resourceHelper.gs(R.string.error));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
