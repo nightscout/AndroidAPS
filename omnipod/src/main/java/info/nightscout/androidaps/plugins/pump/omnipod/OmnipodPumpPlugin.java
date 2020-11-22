@@ -396,11 +396,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
             }
         } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
-            aapsLogger.warn(LTag.PUMP, "Invalidating AAPS TBR that actually hadn't succeeded");
-
-            tempBasal.isValid = false;
-            activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
-            handleCancelledTbr();
+            aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded");
+            activePlugin.getActiveTreatments().removeTempBasal(tempBasal);
         }
     }
 
