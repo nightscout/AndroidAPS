@@ -17,6 +17,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">צליל של התראת בזאלי זמני לא ברור מאופשר</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">צליל של התראת SMB לא ברור מאופשר</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">צליל של התראת בולוס לא ברור מאופשר</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">קבל התראות מהפוד אוטומטית</string>
     <string name="omnipod_preference_category_rileylink">ריילילינק</string>
     <string name="omnipod_preference_category_other">אחר</string>
     <string name="omnipod_preference_category_alerts">התראות</string>
@@ -226,5 +227,11 @@
         <item quantity="two">%1$d ימים</item>
         <item quantity="many">%1$d ימים</item>
         <item quantity="other">%1$d ימים</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">התראת פוד: %1$s</item>
+        <item quantity="two">התראות פוד: %1$s</item>
+        <item quantity="many">התראות פוד: %1$s</item>
+        <item quantity="other">התראות פוד: %1$s</item>
     </plurals>
 </resources>
