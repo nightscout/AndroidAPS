@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
@@ -30,7 +29,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateMa
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.*
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandAcknowledgeAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandGetPodStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandHandleTimeChange
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandSuspendDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil
 import info.nightscout.androidaps.queue.Callback
@@ -119,14 +122,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
         }
 
-        omnipod_overview_button_rileylink_stats.setOnClickListener {
-            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, RileyLinkStatusActivity::class.java))
-            } else {
-                displayNotConfiguredDialog()
-            }
-        }
-
         omnipod_overview_button_acknowledge_active_alerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(CommandAcknowledgeAlerts(),
@@ -146,12 +141,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
             commandQueue.customCommand(CommandHandleTimeChange(true),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_set_time), true)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_time_on_pod_updated)))
-        }
-
-        omnipod_overview_button_pulse_log.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandReadPulseLog(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_read_pulse_log), false))
         }
     }
 
@@ -468,7 +457,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
         updateAcknowledgeAlertsButton()
         updateSuspendDeliveryButton()
         updateSetTimeButton()
-        updatePulseLogButton()
     }
 
     private fun disablePodActionButtons() {
@@ -477,7 +465,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
         omnipod_overview_button_suspend_delivery.isEnabled = false
         omnipod_overview_button_set_time.isEnabled = false
         omnipod_overview_button_refresh_status.isEnabled = false
-        omnipod_overview_button_pulse_log.isEnabled = false
     }
 
     private fun updateRefreshStatusButton() {
@@ -519,15 +506,6 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_button_set_time.isEnabled = !podStateManager.isSuspended && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {
             omnipod_overview_button_set_time.visibility = View.GONE
-        }
-    }
-
-    private fun updatePulseLogButton() {
-        if (omnipodManager.isPulseLogButtonEnabled) {
-            omnipod_overview_button_pulse_log.visibility = View.VISIBLE
-            omnipod_overview_button_pulse_log.isEnabled = podStateManager.isPodActivationCompleted && rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
-        } else {
-            omnipod_overview_button_pulse_log.visibility = View.GONE
         }
     }
 

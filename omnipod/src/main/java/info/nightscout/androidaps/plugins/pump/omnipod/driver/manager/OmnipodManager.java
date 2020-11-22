@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.acti
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.CancelDeliveryAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.ConfigureAlertsAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.ConfigureBeepAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.DeactivatePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.GetStatusAction;
@@ -33,6 +34,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryType;
@@ -488,6 +490,25 @@ public class OmnipodManager {
         }
 
         podStateManager.discardState();
+    }
+
+    public synchronized void configureBeeps(BeepConfigType beepType, boolean basalCompletionBeep, Duration basalIntervalBeep,
+                                            boolean tempBasalCompletionBeep, Duration tempBasalIntervalBeep,
+                                            boolean bolusCompletionBeep, Duration bolusIntervalBeep) {
+        if (!podStateManager.isPodInitialized()) {
+            throw new IllegalPodProgressException(PodProgressStatus.REMINDER_INITIALIZED, null);
+        }
+        communicationService.executeAction(new ConfigureBeepAction(
+                podStateManager, beepType, basalCompletionBeep,
+                basalIntervalBeep, tempBasalCompletionBeep, tempBasalIntervalBeep,
+                bolusCompletionBeep, bolusIntervalBeep));
+    }
+
+    public synchronized void playTestBeep(BeepConfigType beepType) {
+        if (!podStateManager.isPodInitialized()) {
+            throw new IllegalPodProgressException(PodProgressStatus.REMINDER_INITIALIZED, null);
+        }
+        communicationService.executeAction(new ConfigureBeepAction(podStateManager, beepType));
     }
 
     public OmnipodRileyLinkCommunicationManager getCommunicationService() {
