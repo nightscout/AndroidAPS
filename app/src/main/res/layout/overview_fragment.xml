@@ -34,6 +34,6 @@
 
     </ScrollView>
 
-    <include layout="@layout/overview_buttons_layout" />
+    <include layout="@layout/overview_buttons_layout_no_label" />
 
 </LinearLayout>
