@@ -26,7 +26,6 @@
     <string name="omnipod_pod_status_pod_fault">Pod klaida</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Viršytas aktyvinimo laikas</string>
     <string name="omnipod_pod_status_inactive">Neaktyvus</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod klaida: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Priminimas apie suporavimo pabaigą</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Priminimas apie sąrankos pabaigą</string>
