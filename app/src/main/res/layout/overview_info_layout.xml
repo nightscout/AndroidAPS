@@ -111,7 +111,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/overview_time_llayout"
         app:layout_constraintStart_toEndOf="@id/overview_deltas_llayout"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -133,6 +133,42 @@
             android:text="Open Loop"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/overview_time_llayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/overview_apsmode_llayout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/overview_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-10dp"
+            android:layout_marginBottom="-10dp"
+            android:text="8:00 PM"
+            android:textSize="40dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/overview_timeagoshort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-5dp"
+            android:gravity="center_vertical"
+            android:text="(-5)"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -172,7 +208,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/overview_basal_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_iob_llayout"
-        app:layout_constraintTop_toBottomOf="@+id/overview_bg">
+        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -201,7 +237,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/overview_extended_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_cob_llayout"
-        app:layout_constraintTop_toBottomOf="@+id/overview_bg">
+        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
 
         <ImageView
             android:id="@+id/overview_basebasal_icon"
@@ -230,7 +266,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/overview_as_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_basal_llayout"
-        app:layout_constraintTop_toBottomOf="@+id/overview_bg">
+        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -258,7 +294,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/overview_extended_llayout"
-        app:layout_constraintTop_toBottomOf="@+id/overview_bg">
+        app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
 
         <ImageView
             android:id="@+id/overview_sensitivity_icon"
