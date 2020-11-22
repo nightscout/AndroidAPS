@@ -30,11 +30,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.dialogs.CalibrationDialog
-import info.nightscout.androidaps.dialogs.CarbsDialog
-import info.nightscout.androidaps.dialogs.InsulinDialog
-import info.nightscout.androidaps.dialogs.TreatmentDialog
-import info.nightscout.androidaps.dialogs.WizardDialog
+import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -76,6 +72,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_buttons_layout.*
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_carbsbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_profileswitchbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_temptargetbutton
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_insulinbutton
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_quickwizardbutton
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatmentbutton
@@ -218,6 +216,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_carbsbutton?.setOnClickListener(this)
         overview_quickwizardbutton?.setOnClickListener(this)
         overview_quickwizardbutton?.setOnLongClickListener(this)
+        overview_profileswitchbutton?.setOnClickListener(this)
+        overview_temptargetbutton?.setOnClickListener(this)
     }
 
     override fun onPause() {
@@ -319,6 +319,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
+                R.id.overview_profileswitchbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") }))
+                R.id.overview_temptargetbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TempTargetDialog().show(childFragmentManager, "Overview") }))
                 R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
                 R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
                 R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
@@ -465,6 +467,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         // **** Various treatment buttons ****
+        overview_profileswitchbutton?.visibility = ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_profileswitch_button, false)).toVisibility()
+        overview_temptargetbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_temptarget_button, true)).toVisibility()
         overview_carbsbutton?.visibility = ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
         overview_treatmentbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
         overview_wizardbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()

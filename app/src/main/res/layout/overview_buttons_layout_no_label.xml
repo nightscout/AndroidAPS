@@ -26,6 +26,28 @@
         android:paddingEnd="5dp" >
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/overview_profileswitchbutton"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:drawablePadding="-20dp"
+            android:drawableTop="@drawable/ic_actions_profileswitch"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/overview_temptargetbutton"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:drawablePadding="-20dp"
+            android:drawableTop="@drawable/ic_actions_temptarget"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/overview_treatmentbutton"
             style="?android:attr/buttonStyle"
             android:layout_width="0px"

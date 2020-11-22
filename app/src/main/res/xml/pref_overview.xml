@@ -19,6 +19,16 @@
 
             <SwitchPreference
                 android:defaultValue="false"
+                android:key="@string/key_show_profileswitch_button"
+                android:title="@string/careportal_profileswitch" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_show_temptarget_button"
+                android:title="@string/careportal_temporarytarget" />
+
+            <SwitchPreference
+                android:defaultValue="false"
                 android:key="@string/key_show_treatment_button"
                 android:title="@string/treatments" />
 
