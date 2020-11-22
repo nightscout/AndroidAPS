@@ -10,8 +10,8 @@
     <string name="key_omnipod_tbr_beeps_enabled" translatable="false">AAPS.Omnipod.tbr_beeps_enabled</string>
     <string name="key_omnipod_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
     <string name="key_omnipod_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
-    <string name="key_omnipod_test_beep_button_enabled">AAPS.Omnipod.test_beep_button_enabled</string>
-    <string name="key_omnipod_rileylink_stats_button_enabled">AAPS.Omnipod.rileylink_stats_button_enabled</string>
+    <string name="key_omnipod_test_beep_button_enabled" translatable="false">AAPS.Omnipod.test_beep_button_enabled</string>
+    <string name="key_omnipod_rileylink_stats_button_enabled" translatable="false">AAPS.Omnipod.rileylink_stats_button_enabled</string>
     <string name="key_omnipod_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
     <string name="key_omnipod_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
     <string name="key_omnipod_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
