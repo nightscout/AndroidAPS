@@ -11,7 +11,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabDanaMenu"
+        android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
@@ -22,7 +22,7 @@
         android:src="@drawable/ic_more" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabDanaMenuUserOptions"
+        android:id="@+id/omnipod_overview_button_refresh_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -30,12 +30,12 @@
         android:layout_marginTop="80dp"
         android:clickable="true"
         android:focusable="true"
-        android:text="@string/danar_useroptions"
+        android:text="@string/omnipod_overview_button_refresh"
         android:visibility="gone"
-        app:icon="@drawable/ic_danarhistory"/>
+        app:icon="@drawable/ic_refresh_pod_status"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/danar_stats"
+        android:id="@+id/omnipod_overview_button_pod_management"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -43,13 +43,13 @@
         android:layout_marginTop="150dp"
         android:clickable="true"
         android:focusable="true"
-        android:text="@string/stats"
-        app:icon="@drawable/ic_cp_aaps_offline"
+        android:text="@string/omnipod_overview_button_pod_management"
+        app:icon="@drawable/ic_pod_management"
         android:visibility="gone"
         app:fabSize="auto" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/danar_history"
+        android:id="@+id/omnipod_overview_button_acknowledge_active_alerts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -57,13 +57,13 @@
         android:focusable="true"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="220dp"
-        android:text="@string/pumphistory"
-        app:icon="@drawable/ic_danarstats"
+        android:text="@string/omnipod_overview_button_acknowledge_active_alerts"
+        app:icon="@drawable/ic_acknowledge_alerts"
         android:visibility="gone"
         app:fabSize="auto" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/danar_history1"
+        android:id="@+id/omnipod_overview_button_set_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -71,13 +71,13 @@
         android:focusable="true"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="290dp"
-        android:text="@string/pumphistory"
-        app:icon="@drawable/ic_cp_bolus_correction"
+        android:text="@string/omnipod_overview_button_set_time"
+        app:icon="@drawable/ic_set_time"
         android:visibility="gone"
         app:fabSize="auto" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/danar_history2"
+        android:id="@+id/omnipod_overview_button_resume_delivery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -85,22 +85,23 @@
         android:focusable="true"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="360dp"
-        android:text="@string/pumphistory"
-        app:icon="@drawable/ic_loop_disabled"
+        android:text="@string/omnipod_overview_button_resume_delivery"
+        app:icon="@drawable/ic_resume_delivery"
         android:visibility="gone"
         app:fabSize="auto" />
 
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/danar_history3"
+        android:id="@+id/omnipod_overview_button_suspend_delivery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:clickable="true"
         android:focusable="true"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="360dp"
-        android:text="@string/pumphistory"
-        app:icon="@drawable/ic_local_activate"
+        android:layout_marginTop="430dp"
+        android:text="@string/omnipod_overview_button_suspend_delivery"
+        app:icon="@drawable/ic_suspend_delivery"
         android:visibility="gone"
         app:fabSize="auto" />
 
@@ -124,7 +125,6 @@
                 android:layout_marginEnd="2dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:layout_above="@+id/omnipod_overview_buttons"
                 android:fillViewport="true">
 
             <LinearLayout
@@ -825,93 +825,6 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <LinearLayout
-            android:id="@+id/omnipod_overview_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="70dp"
-            android:paddingBottom="40dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_refresh_status"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_refresh_pod_status"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_refresh" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_pod_management"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_pod_management"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_pod_management" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_acknowledge_active_alerts"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_acknowledge_alerts"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_acknowledge_active_alerts" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_set_time"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_set_time"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_set_time"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_resume_delivery"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_resume_delivery"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_resume_delivery"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_suspend_delivery"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_suspend_delivery"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_suspend_delivery"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-        </LinearLayout>
 
     </RelativeLayout>
 
