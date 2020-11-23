@@ -7,8 +7,6 @@
     <string name="omnipod_config_basal_beeps_enabled">Звук при базал активен</string>
     <string name="omnipod_config_smb_beeps_enabled">Звук при SMB активен</string>
     <string name="omnipod_config_tbr_beeps_enabled">Звук при временен базал активен</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Бутон за спиране на инсулина активен</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Разрешено е бутонът за Pulse Log </string>
     <string name="omnipod_config_time_change_enabled">Разрешено е Лятно часово време</string>
     <string name="omnipod_config_expiration_reminder_enabled">Напомняне за срок</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часове преди изключване</string>
@@ -133,7 +131,6 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Деактивирай Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Премахни Pod</string>
     <string name="omnipod_pod_management_button_pod_history">История в Pod</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Ако натиснете OK, състоянието на Pod ще бъде нулирано и няма да можете да общувате с него повече. Правете това, само ако вече не можете да се свързвате с него. Ако все още можете да общувате с Pod, моля, използвайте опцията <b>Деактивирай Pod</b>!</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Откажи</string>
     <string name="omnipod_wizard_button_finish">Край</string>
@@ -169,8 +166,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Задаване на часа</string>
     <string name="omnipod_overview_button_suspend_delivery">Спиране</string>
-    <string name="omnipod_overview_button_riley_link_stats">Статистика на RL</string>
-    <string name="omnipod_overview_button_read_pulse_log">Pulse лог</string>
     <string name="omnipod_overview_button_refresh">Опресни</string>
     <string name="omnipod_overview_button_resume_delivery">Подновяване на доставката</string>
     <string name="omnipod_overview_button_pod_management">Управление на Pod</string>
