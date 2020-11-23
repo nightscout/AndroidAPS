@@ -208,7 +208,6 @@
 
                 </LinearLayout>
 
-
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
@@ -558,7 +557,6 @@
 
                 </LinearLayout>
 
-
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
@@ -824,7 +822,6 @@
                     android:layout_marginBottom="5dp"
                     android:background="?android:attr/dividerHorizontal"  />
 
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -849,7 +846,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_actions_refill"
+                    android:drawableTop="@drawable/ic_refresh_pod_status"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_refresh" />
@@ -860,7 +857,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_danarhistory"
+                    android:drawableTop="@drawable/ic_pod_management"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_pod_management" />
@@ -871,33 +868,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_cp_aaps_offline"
+                    android:drawableTop="@drawable/ic_acknowledge_alerts"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_acknowledge_active_alerts" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_rileylink_stats"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_riley_link_stats" />
-
-                <Button
-                    android:id="@+id/omnipod_overview_button_pulse_log"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_cp_bolus_correction"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/omnipod_overview_button_read_pulse_log"
-                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/omnipod_overview_button_set_time"
@@ -905,7 +879,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_access_alarm"
+                    android:drawableTop="@drawable/ic_set_time"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_set_time"
@@ -917,7 +891,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_local_activate"
+                    android:drawableTop="@drawable/ic_resume_delivery"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_resume_delivery"
@@ -929,7 +903,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_loop_disabled"
+                    android:drawableTop="@drawable/ic_suspend_delivery"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/omnipod_overview_button_suspend_delivery"

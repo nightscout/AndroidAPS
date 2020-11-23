@@ -489,7 +489,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
         // Basal, TBR
         val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
-        overview_basebasal?.text = activeTemp?.let { if (resourceHelper.shortTextMode()) "T:" + activeTemp.toStringVeryShort() else activeTemp.toStringFull() }
+        overview_basebasal?.text = activeTemp?.let { "T:" + activeTemp.toStringVeryShort() }
             ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)
         overview_basal_llayout?.setOnClickListener {
             var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
@@ -509,10 +509,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
-        overview_extendedbolus?.text = if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses) {
-            if (resourceHelper.shortTextMode()) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
-            else extendedBolus.toStringMedium()
-        } else ""
+        overview_extendedbolus?.text =
+            if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses)
+                resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
+            else ""
         overview_extendedbolus?.setOnClickListener {
             if (extendedBolus != null) activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString(), null, sp)
@@ -555,15 +555,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         treatmentsPlugin.updateTotalIOBTempBasals()
         val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
-        overview_iob?.text = when {
-            resourceHelper.shortTextMode() ->
-                resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
+        overview_iob?.text = resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
 
-            else                           ->
-                resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + " (" +
-                    resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob) + "/" +
-                    resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob) + ")"
-        }
         overview_iob_llayout?.setOnClickListener {
             activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.iob),

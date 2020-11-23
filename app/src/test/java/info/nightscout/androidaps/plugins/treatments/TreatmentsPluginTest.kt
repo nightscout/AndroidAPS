@@ -8,6 +8,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -33,6 +34,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var databaseHelper: DatabaseHelper
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var uploadQueue: UploadQueue
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -58,7 +60,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         `when`(profileFunction.getProfile(ArgumentMatchers.anyLong())).thenReturn(validProfile)
         `when`(activePluginProvider.activeInsulin).thenReturn(insulinOrefRapidActingPlugin)
 
-        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil)
+        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, uploadQueue)
         sot.service = treatmentService
     }
 
