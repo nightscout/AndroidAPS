@@ -63,6 +63,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_activate_pod"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_activate_pod"
                 android:textAllCaps="false" />
 
@@ -76,6 +77,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_deactivate_pod"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_deactivate_pod"
                 android:textAllCaps="false" />
 
@@ -89,6 +91,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_discard_pod"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_discard_pod"
                 android:textAllCaps="false" />
 
@@ -102,6 +105,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_play_test_beep"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_play_test_beep"
                 android:textAllCaps="false" />
 
@@ -115,6 +119,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_pulse_log"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_read_pulse_log"
                 android:textAllCaps="false"
                 android:visibility="gone" />
@@ -129,6 +134,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_pod_history"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_pod_history"
                 android:textAllCaps="false" />
 
@@ -142,6 +148,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/icon_pod_management_rl_stats"
+                android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                 android:text="@string/omnipod_pod_management_button_riley_link_stats"
                 android:textAllCaps="false" />
 
