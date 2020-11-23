@@ -58,7 +58,7 @@ public class InsertCannulaAction implements OmnipodAction<Void> {
 
         if (podStateManager.getActivationProgress().needsCannulaInsertion()) {
             communicationService.executeAction(new BolusAction(podStateManager, OmnipodConstants.POD_CANNULA_INSERTION_BOLUS_UNITS,
-                    Duration.standardSeconds(1), false, false));
+                    Duration.standardSeconds(1), false, true));
             podStateManager.setActivationProgress(ActivationProgress.INSERTING_CANNULA);
         }
 

@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
         app:layout_constraintEnd_toStartOf="@+id/overview_deltas_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_bg"
         app:layout_constraintTop_toTopOf="parent">
@@ -142,6 +143,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
         app:layout_constraintEnd_toStartOf="@id/overview_time_llayout"
         app:layout_constraintStart_toEndOf="@id/overview_deltas_llayout"
         app:layout_constraintTop_toTopOf="parent">
@@ -175,6 +177,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/overview_apsmode_llayout"
         app:layout_constraintTop_toTopOf="parent">
@@ -212,6 +215,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:layout_marginTop="68dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/overview_cob_llayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/overview_bg">
@@ -241,15 +245,16 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/overview_basal_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_iob_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
 
         <ImageView
+            android:id="@+id/overview_carbs_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/overview_carbs_icon"
             android:background="@drawable/anim_carbs" />
 
         <TextView
@@ -271,6 +276,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/overview_extended_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_cob_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
@@ -301,6 +307,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/overview_as_llayout"
         app:layout_constraintStart_toEndOf="@+id/overview_basal_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">
@@ -330,6 +337,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/overview_extended_llayout"
         app:layout_constraintTop_toTopOf="@+id/overview_iob_llayout">

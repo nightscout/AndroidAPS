@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.skins
 
 import android.util.DisplayMetrics
-import android.widget.LinearLayout
+import android.view.View
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import javax.inject.Inject
@@ -27,5 +27,5 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
             else                         -> R.layout.actions_fragment_lowres
         }
 
-    override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, iobLayout: LinearLayout, timeLayout: LinearLayout) {}
+    override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isTablet: Boolean) {}
 }
