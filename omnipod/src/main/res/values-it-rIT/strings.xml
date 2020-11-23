@@ -7,8 +7,6 @@
     <string name="omnipod_config_basal_beeps_enabled">BIP basale abilitato</string>
     <string name="omnipod_config_smb_beeps_enabled">BIP SMB abilitato</string>
     <string name="omnipod_config_tbr_beeps_enabled">BIP TBR abilitato</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Tasto \'sospendi erogazione\' abilitato</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Tasto \'log impulsi\' abilitato</string>
     <string name="omnipod_config_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_config_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
@@ -136,7 +134,6 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Disattiva pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Scarta pod</string>
     <string name="omnipod_pod_management_button_pod_history">Storico pod</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Se scarti il pod, non sarai più in grado di comunicare con esso. Dovresti farlo solo quando tutte le comunicazioni col pod falliscono persistentemente. Se puoi ancora comunicare col pod, usa l\'opzione <b>Disattiva pod</b>.\n\nSe desideri procedere, assicurati di rimuovere il pod dal tuo corpo!</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Annulla</string>
     <string name="omnipod_wizard_button_finish">Fine</string>
@@ -172,8 +169,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Imposta ora</string>
     <string name="omnipod_overview_button_suspend_delivery">Sospendi</string>
-    <string name="omnipod_overview_button_riley_link_stats">Statistiche RL</string>
-    <string name="omnipod_overview_button_read_pulse_log">Log impulsi</string>
     <string name="omnipod_overview_button_refresh">Aggiorna</string>
     <string name="omnipod_overview_button_resume_delivery">Riprendi erogazione</string>
     <string name="omnipod_overview_button_pod_management">GSTN pod</string>
