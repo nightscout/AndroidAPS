@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodHistoryEntryType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
@@ -272,6 +273,12 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     }
                     break;
 
+                    case PLAY_TEST_BEEP: {
+                        if (historyEntry.getData() != null) {
+                            valueView.setText(historyEntry.getData());
+                        }
+                    }
+                    break;
                     case GET_POD_STATUS:
                     case GET_POD_INFO:
                     case SET_TIME:

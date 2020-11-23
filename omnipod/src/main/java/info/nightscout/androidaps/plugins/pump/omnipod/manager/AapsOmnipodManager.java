@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.manager;
 
+import android.content.Context;
+import android.content.Intent;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.json.JSONException;
@@ -14,6 +17,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -46,6 +50,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
@@ -102,6 +107,7 @@ public class AapsOmnipodManager {
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final NSUpload nsUpload;
     private final ProfileFunction profileFunction;
+    private final Context context;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -114,6 +120,8 @@ public class AapsOmnipodManager {
     private boolean notificationUncertainSmbSoundEnabled;
     private boolean notificationUncertainBolusSoundEnabled;
     private boolean automaticallyAcknowledgeAlertsEnabled;
+    private boolean testBeepButtonEnabled;
+    private boolean rileylinkStatsButtonEnabled;
 
     @Inject
     public AapsOmnipodManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -128,8 +136,9 @@ public class AapsOmnipodManager {
                               DatabaseHelperInterface databaseHelper,
                               OmnipodAlertUtil omnipodAlertUtil,
                               NSUpload nsUpload,
-                              ProfileFunction profileFunction
-    ) {
+                              ProfileFunction profileFunction,
+                              Context context) {
+
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.aapsLogger = aapsLogger;
@@ -142,6 +151,7 @@ public class AapsOmnipodManager {
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.nsUpload = nsUpload;
         this.profileFunction = profileFunction;
+        this.context = context;
 
         delegate = new OmnipodManager(aapsLogger, communicationService, podStateManager);
 
@@ -152,9 +162,10 @@ public class AapsOmnipodManager {
         basalBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.BASAL_BEEPS_ENABLED, true);
         bolusBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.BOLUS_BEEPS_ENABLED, true);
         smbBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.SMB_BEEPS_ENABLED, true);
-        tbrBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED, true);
+        tbrBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED, false);
         suspendDeliveryButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED, false);
         pulseLogButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
+        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED, false);
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
         notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, true);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
@@ -231,6 +242,20 @@ public class AapsOmnipodManager {
         addSuccessToHistory(PodHistoryEntryType.CONFIGURE_ALERTS, alertConfigurations);
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
+
+    public PumpEnactResult playTestBeep(BeepConfigType beepType) {
+        try {
+            executeCommand(() -> delegate.playTestBeep(beepType));
+        } catch (Exception ex) {
+            String errorMessage = translateException(ex);
+            addFailureToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, errorMessage);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+        }
+
+        addSuccessToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, beepType);
+        return new PumpEnactResult(injector).success(true).enacted(false);
+    }
+
 
     public PumpEnactResult getPodStatus() {
         StatusResponse statusResponse;
@@ -357,7 +382,7 @@ public class AapsOmnipodManager {
             if (detailedBolusInfo.isSMB) {
                 showNotification(getStringResource(R.string.omnipod_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? R.raw.boluserror : null);
             } else {
-                showNotification(getStringResource(R.string.omnipod_error_bolus_failed_uncertain), Notification.URGENT, isNotificationUncertainBolusSoundEnabled() ? R.raw.boluserror : null);
+                showErrorDialog(getStringResource(R.string.omnipod_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? R.raw.boluserror : null);
             }
         }
 
@@ -613,6 +638,14 @@ public class AapsOmnipodManager {
         return pulseLogButtonEnabled;
     }
 
+    public boolean isTestBeepButtonEnabled() {
+        return testBeepButtonEnabled;
+    }
+
+    public boolean isRileylinkStatsButtonEnabled() {
+        return rileylinkStatsButtonEnabled;
+    }
+
     public boolean isTimeChangeEventEnabled() {
         return timeChangeEventEnabled;
     }
@@ -708,6 +741,10 @@ public class AapsOmnipodManager {
                 .pumpId(pumpId);
 
         activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+    }
+
+    public long addTbrSuccessToHistory(long requestTime, TempBasalPair tempBasalPair) {
+        return addSuccessToHistory(requestTime, PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
     }
 
     private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
@@ -848,6 +885,15 @@ public class AapsOmnipodManager {
 
     private void sendEvent(Event event) {
         rxBus.send(event);
+    }
+
+    private void showErrorDialog(String message, Integer sound) {
+        Intent intent = new Intent(context, ErrorHelperActivity.class);
+        intent.putExtra("soundid", sound);
+        intent.putExtra("status", message);
+        intent.putExtra("title", resourceHelper.gs(R.string.error));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
