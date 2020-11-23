@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="omnipodWizardProgressBar">#0099CC</color>
-    <color name="review_green">#ff669900</color>
+    <!-- Omnipod Wizard -->
+    <color name="omnipod_wizard_progress_bar">#0099CC</color>
+    <color name="omnipod_wizard_finish_button">#ff669900</color>
+    <color name="ic_success">#77DD77</color>
+
+    <!-- Omnipod tab - Button icons -->
+    <color name="ic_refresh_pod_status">#FFFFFFFF</color>
+    <color name="ic_pod_management">#FFFFFFFF</color>
+    <color name="ic_acknowledge_alerts">#FFFFFFFF</color>
+    <color name="ic_set_time">#FFFFFFFF</color>
+    <color name="ic_resume_delivery">#FFFFFFFF</color>
+    <color name="ic_suspend_delivery">#FFFFFFFF</color>
+
+    <!-- Pod Management - Button icons -->
+    <color name="ic_activate_pod">#FFFFFFFF</color>
+    <color name="ic_deactivate_pod">#FFFFFFFF</color>
+    <color name="ic_discard_pod">#FFFFFFFF</color>
+    <color name="ic_play_test_beep">#FFFFFFFF</color>
+    <color name="ic_pulse_log">#FFFFFFFF</color>
+    <color name="ic_pod_history">#FFFFFFFF</color>
+    <color name="ic_rl_stats">#FFFFFFFF</color>
+
 </resources>

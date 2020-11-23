@@ -1,7 +1,7 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp"
     android:height="48dp"
-    android:tint="#FFFFFFFF"
+    android:tint="@color/ic_pod_management"
     android:viewportWidth="490"
     android:viewportHeight="490">
     <path
