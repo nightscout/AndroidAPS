@@ -7,8 +7,6 @@
     <string name="omnipod_config_basal_beeps_enabled">Bolus pip aktivert</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB pip aktivert</string>
     <string name="omnipod_config_tbr_beeps_enabled">TBR pip aktivert</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Deaktiver insulin leveringknapp aktivert</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Pulslogg knappen er aktivert</string>
     <string name="omnipod_config_time_change_enabled">DST/Tidssone deteksjon aktivert</string>
     <string name="omnipod_config_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
@@ -136,7 +134,6 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Deaktiver Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Forkast Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Pod historikk</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Dersom du forkaster Pod, vil du ikke kunne kommunisere med den lenger. Du skal bare gjøre dette når all kommunikasjon med Pod kontinuerlig mislykkes. Hvis du fortsatt kan kommunisere med Pod, bruk alternativet <b>Deaktiver Pod</b>.\n\nHvis du ønsker å fortsette, må du huske på å fjerne Pod fra kroppen din!</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Avbryt</string>
     <string name="omnipod_wizard_button_finish">Fullfør</string>
@@ -172,8 +169,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Angi tid</string>
     <string name="omnipod_overview_button_suspend_delivery">Pause</string>
-    <string name="omnipod_overview_button_riley_link_stats">RL statistikk</string>
-    <string name="omnipod_overview_button_read_pulse_log">Puls logg</string>
     <string name="omnipod_overview_button_refresh">Oppdater</string>
     <string name="omnipod_overview_button_resume_delivery">Fortsett levering</string>
     <string name="omnipod_overview_button_pod_management">Pod håndtering</string>
