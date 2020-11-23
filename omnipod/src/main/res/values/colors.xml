@@ -3,23 +3,38 @@
     <!-- Omnipod Wizard -->
     <color name="omnipod_wizard_progress_bar">#0099CC</color>
     <color name="omnipod_wizard_finish_button">#ff669900</color>
-    <color name="ic_success">#77DD77</color>
+    <color name="icon_omnipod_wizard_success">#77DD77</color>
+
+    <!-- Button icons - general -->
+    <color name="pod_icon_outline">#FFFFFFFF</color>
 
     <!-- Omnipod tab - Button icons -->
-    <color name="ic_refresh_pod_status">#FFFFFFFF</color>
-    <color name="ic_pod_management">#FFFFFFFF</color>
-    <color name="ic_acknowledge_alerts">#FFFFFFFF</color>
-    <color name="ic_set_time">#FFFFFFFF</color>
-    <color name="ic_resume_delivery">#FFFFFFFF</color>
-    <color name="ic_suspend_delivery">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_refresh_pod_status">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_refresh_pod_status_outline">@color/pod_icon_outline</color>
+    <color name="icon_omnipod_overview_pod_management">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_pod_management_outline">@color/pod_icon_outline</color>
+    <color name="icon_omnipod_overview_acknowledge_alerts">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_acknowledge_alerts_outline">@color/pod_icon_outline</color>
+    <color name="icon_omnipod_overview_set_time">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_set_time_outline">@color/pod_icon_outline</color>
+    <color name="icon_omnipod_overview_resume_delivery">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_resume_delivery_outline">@color/pod_icon_outline</color>
+    <color name="icon_omnipod_overview_suspend_delivery">#FFFFFFFF</color>
+    <color name="icon_omnipod_overview_suspend_delivery_outline">@color/pod_icon_outline</color>
 
     <!-- Pod Management - Button icons -->
-    <color name="ic_activate_pod">#FFFFFFFF</color>
-    <color name="ic_deactivate_pod">#FFFFFFFF</color>
-    <color name="ic_discard_pod">#FFFFFFFF</color>
-    <color name="ic_play_test_beep">#FFFFFFFF</color>
-    <color name="ic_pulse_log">#FFFFFFFF</color>
-    <color name="ic_pod_history">#FFFFFFFF</color>
-    <color name="ic_rl_stats">#FFFFFFFF</color>
+    <color name="icon_pod_management_activate_pod">#FFFFFFFF</color>
+    <color name="icon_pod_management_activate_pod_outline">@color/pod_icon_outline</color>
+    <color name="icon_pod_management_deactivate_pod">#FFFFFFFF</color>
+    <color name="icon_pod_management_deactivate_pod_outline">@color/pod_icon_outline</color>
+    <color name="icon_pod_management_discard_pod">#FFFFFFFF</color>
+    <color name="icon_pod_management_discard_pod_outline">@color/pod_icon_outline</color>
+    <color name="icon_pod_management_play_test_beep">#FFFFFFFF</color>
+    <color name="icon_pod_management_play_test_beep_outline">@color/pod_icon_outline</color>
+    <color name="icon_pod_management_pulse_log">#FFFFFFFF</color>
+    <color name="icon_pod_management_pulse_log_outline">@color/pod_icon_outline</color>
+    <color name="icon_pod_management_pod_history">#FFFFFFFF</color>
+    <color name="icon_pod_management_pod_history_outline">@color/pod_icon_outline</color>
+    <color name="icon_pod_management_rl_stats">#FFFFFFFF</color>
 
 </resources>

@@ -1,7 +1,7 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp"
     android:height="48dp"
-    android:tint="@color/ic_suspend_delivery"
+    android:tint="@color/icon_omnipod_overview_suspend_delivery"
     android:viewportWidth="30.05"
     android:viewportHeight="30.05">
     <path
