@@ -368,7 +368,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     open fun changeHeaderElements() {
         val pump = activePlugin.activePump
         if ( pump.model() == PumpType.Insulet_Omnipod ) {
-            reservoir?.visibility = View.GONE
+            reservoir?.visibility = View.VISIBLE
             canula?.visibility = View.GONE
             battery?.visibility = View.GONE
         } else {
