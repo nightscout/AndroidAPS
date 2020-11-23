@@ -172,7 +172,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         // pre-process landscape mode
-        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, overview_iob_llayout, overview_time_llayout)
+        //skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, overview_iob_llayout, overview_time_llayout)
 
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
