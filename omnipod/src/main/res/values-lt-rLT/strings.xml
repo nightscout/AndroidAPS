@@ -7,8 +7,6 @@
     <string name="omnipod_config_basal_beeps_enabled">Bazės signalai įjungti</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB signalai įjungti</string>
     <string name="omnipod_config_tbr_beeps_enabled">Laikinos bazės signalai įjungti</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Įgalintas leidimo sustabdymo mygtukas</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Įgalintas Pulse Log mygtukas</string>
     <string name="omnipod_config_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įgalintas</string>
     <string name="omnipod_config_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Valandos prieš išsijungimą</string>
