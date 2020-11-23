@@ -327,7 +327,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_units)) {
-                        if (!verifyPodAlertConfiguration() && !getCommandQueue().statusInQueue()) {
+                        if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
                     }
