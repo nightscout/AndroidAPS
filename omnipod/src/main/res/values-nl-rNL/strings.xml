@@ -15,6 +15,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Geluid voor onzekere TBR notificaties ingeschakeld</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Geluid voor onzekere SMB notificaties ingeschakeld</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Geluid voor onzekere bolus notificaties ingeschakeld</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Podwaarschuwingen automatisch bevestigen</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Overige</string>
     <string name="omnipod_preference_category_alerts">Waarschuwingen</string>
