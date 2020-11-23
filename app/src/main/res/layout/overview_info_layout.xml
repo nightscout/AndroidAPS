@@ -56,7 +56,6 @@
             android:layout_gravity="center_horizontal"
             android:tint="?attr/iconColorToolbar"
             android:backgroundTint="?attr/iconColorToolbar"
-            android:id="@+id/overview_carbs_icon"
             android:background="@drawable/anim_carbs" />
 
         <TextView

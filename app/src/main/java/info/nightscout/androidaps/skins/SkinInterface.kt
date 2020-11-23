@@ -12,6 +12,13 @@ import info.nightscout.androidaps.R
 import kotlinx.android.synthetic.main.overview_fragment_nsclient.view.*
 import kotlinx.android.synthetic.main.overview_info_layout.view.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.view.*
+import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_batterylevel
+import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_canulaage
+import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_insulinage
+import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_pbage
+import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_reservoirlevel
+import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_sensorage
+import kotlinx.android.synthetic.main.status_fragment.view.*
 
 interface SkinInterface {
 
@@ -35,18 +42,18 @@ interface SkinInterface {
         if (landscape) {
             val iobLayoutParams = view.overview_iob_llayout.layoutParams as ConstraintLayout.LayoutParams
             iobLayoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
-            iobLayoutParams.startToEnd = view.overview_time_llayout.id
+           // iobLayoutParams.startToEnd = view.overview_time_llayout.id
             iobLayoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
             iobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val timeLayoutParams = view.overview_time_llayout.layoutParams as ConstraintLayout.LayoutParams
-            timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
-            timeLayoutParams.endToStart = view.overview_iob_llayout.id
+           // val timeLayoutParams = view.overview_time_llayout.layoutParams as ConstraintLayout.LayoutParams
+           // timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
+           // timeLayoutParams.endToStart = view.overview_iob_llayout.id
 
             if (isTablet) {
                 for (v in listOf<TextView>(
                     view.overview_bg,
-                    view.overview_time,
-                    view.overview_timeagoshort,
+                   // view.overview_time,
+                   // view.overview_timeagoshort,
                     view.overview_iob,
                     view.overview_cob,
                     view.overview_basebasal,
@@ -65,8 +72,8 @@ interface SkinInterface {
                     view.careportal_pbage,
                     view.careportal_batterylevel
                 )) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
-                view.overview_time_llayout.orientation = LinearLayout.HORIZONTAL
-                view.overview_timeagoshort.setTextSize(COMPLEX_UNIT_PX, view.overview_time.textSize)
+               // view.overview_time_llayout.orientation = LinearLayout.HORIZONTAL
+               // view.overview_timeagoshort.setTextSize(COMPLEX_UNIT_PX, view.overview_time.textSize)
             }
         }
     }
