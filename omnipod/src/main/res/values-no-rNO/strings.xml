@@ -17,6 +17,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Lydvarsel for usikre TBR er aktivert</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Lydvarsel for usikre SMB er aktivert</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Lydvarsel for usikre bolus er aktivert</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Godkjenn automatisk Pod varsler</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Annen</string>
     <string name="omnipod_preference_category_alerts">Varsler</string>
@@ -31,6 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod feil</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Aktiveringstiden er overskredet</string>
     <string name="omnipod_pod_status_inactive">Inaktiv</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod feil: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Fullfør paringspåminnelse</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Påminnelse om å sluttføre oppsett</string>
@@ -219,5 +221,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod varsel: %1$s</item>
+        <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
 </resources>

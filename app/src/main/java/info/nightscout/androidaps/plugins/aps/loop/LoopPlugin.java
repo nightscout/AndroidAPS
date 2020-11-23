@@ -551,6 +551,9 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                                         rxBus.send(new EventLoopUpdateGui());
                                     }
                                 });
+                            } else {
+                                lastRun.setTbrSetByPump(result);
+                                lastRun.setLastTBRRequest(lastRun.getLastAPSRun());
                             }
                             rxBus.send(new EventLoopUpdateGui());
                         }

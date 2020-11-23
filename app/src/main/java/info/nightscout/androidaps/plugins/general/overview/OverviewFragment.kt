@@ -72,7 +72,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_buttons_layout.*
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
+import kotlinx.android.synthetic.main.overview_fragment_nsclient.*
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_chartMenuButton
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobcalculationprogess
@@ -170,6 +170,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // pre-process landscape mode
+        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, overview_iob_llayout, overview_time_llayout)
 
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
@@ -309,7 +312,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                         loopPlugin.invoke("Accept temp button", false)
                         if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                ?: "".toSpanned(), Runnable {
+                                ?: "".toSpanned(), {
                                 aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
                                 overview_accepttempbutton?.visibility = View.GONE
                                 (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
