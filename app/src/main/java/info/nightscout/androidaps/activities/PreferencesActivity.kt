@@ -25,8 +25,8 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_single_fragment)
-        //setContentView(R.layout.activity_preferences)
+        //setContentView(R.layout.activity_single_fragment)
+        setContentView(R.layout.activity_preferences)
 
         pref_filter.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
