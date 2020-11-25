@@ -261,7 +261,7 @@
     <string name="valueoutofrange">Стойността %1$s е извън ограниченията</string>
     <string name="smscommunicator_pumpconnectwithcode">За свързване с помпа отговорете с код %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Връзката с помпата е неуспешна</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1d минути отговорете с код %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1$d минути отговорете с код %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Помпата е разкачена</string>
     <string name="smscommunicator_reconnect">Връзката с помпа е възстановена</string>
     <string name="smscommunicator_remotecommandnotallowed">Отдалеченото управление е забранено</string>
@@ -405,12 +405,11 @@
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">---</string>
-    <string name="patientage">Възраст на потребителя</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
     <string name="adult">Възрастен</string>
     <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
-    <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
+    <string name="pregnant">Бременност</string>
     <string name="patient_name">Име на пациента</string>
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
@@ -454,6 +453,8 @@
     <string name="statuslights_iage_critical">Праг за критична инсулинова възраст [часа]</string>
     <string name="statuslights_sage_warning">Праг за възраст на сензор [часа]</string>
     <string name="statuslights_sage_critical">Праг за критична възраст на сензор [часа]</string>
+    <string name="statuslights_sbat_warning">Аларма при заряд на батерия под [%]</string>
+    <string name="statuslights_sbat_critical">Критично ниво на сензорната батерия под [%]</string>
     <string name="statuslights_bage_warning">Аларма при възраст на батерия над [часа]</string>
     <string name="statuslights_bage_critical">Праг за критична възраст на батерията над [часа]</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
@@ -484,6 +485,12 @@
     <string name="careportal_insulinage_label">Възраст на инсулина</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
+    <string name="careportal_sensor_label">Сензор</string>
+    <string name="careportal_canula_label">Канюла</string>
+    <string name="careportal_insulin_label">Инсулин</string>
+    <string name="careportal_pb_label">Батерия на помпата</string>
+    <string name="careportal_age_label">възраст:</string>
+    <string name="careportal_level_label">ниво:</string>
     <string name="ns_alarmoptions">Опции за аларми</string>
     <string name="ns_alarms">Известяване при NS аларми</string>
     <string name="ns_announcements">Създаване на известия от NS съобщения</string>
@@ -990,6 +997,7 @@
     <string name="storage">Ограничение поради липса на памет</string>
     <string name="diskfull">Освободете поне %1$d Мб в паметта на телефона! Loop изключен!</string>
     <string name="wrongformat">Грешен формат</string>
+    <string name="wrongTbrDuration">Продължителността на временния база; трябва да бъде кратна на %1$d минути и по-голяма от 0.</string>
     <string name="sms_wrongcode">Грешен код. Командата не е изпълнена.</string>
     <string name="notconfigured">Не е конфигуриран</string>
     <string name="profileswitchcreated">Създаден запис - Промяна на профил</string>
@@ -1155,6 +1163,9 @@
     <string name="smscommunicator_otp_reset_title">Нулиране на ключва</string>
     <string name="smscommunicator_otp_reset_prompt">Сигурни ли сте, че ще анулирате ключа на Authenticator? Той ще направи всички конфигурирани в момента аудиентикатори невалидни, и вие ще трябва да ги настроите отново.</string>
     <string name="smscommunicator_otp_reset_successful">Генериран е нов ключ! Моля, използвайте актуализирания QRCode.</string>
+    <string name="smscommunicator_otp_export_title">Експортиране на OTP парола</string>
+    <string name="smscommunicator_otp_export_prompt">Сигурни ли сте, че искате да копирате OTP паролата в клипборда?\n\nВие може да се нуждаете само от това, ако вашето приложение за автентичност има проблеми със сканирането на QRCode, искате да го въведете ръчно или искате да конфигурирате хардуерен OTP токен чрез специално приложение.</string>
+    <string name="smscommunicator_otp_export_successful">OTP парола (във Base32 формат) е експортирана и копирана в клипборда. Поставете го в автентикатор или хардуерен OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Инсталиране на удостоверител</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Сканиране на кода за настройка на AndroidAPS OTP </string>
     <string name="smscommunicator_otp_step3_test_header">3. Тест на еднократна парола</string>
@@ -1174,6 +1185,7 @@
     <string name="statuslights_copy_ns">Копиране на настройки от NS</string>
     <string name="copyexistingvalues">Копиране на профил от NS (ако има)?</string>
     <string name="classic_description">Оригинален изглед</string>
+    <string name="lowres_description">Скин за ниска резолюция</string>
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
@@ -1218,4 +1230,5 @@
     <string name="worker_state">Статус: %s</string>
     <string name="uploaded_data">Качени данни</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, болуси, въглехидрати, удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на AAPS, модел на телефона и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
 </resources>

@@ -131,8 +131,6 @@
     <string name="ic_increasingvalue">Υψηλή αναλογία IC οδηγεί σε λιγότερη χορήγηση ινσουλίνης για μια δεδομένη ποσότητα υδατανθράκων.</string>
     <string name="ic_decreasingvalue">Μικρή αναλογία IC οδηγεί σε λιγότερη χορήγηση ινσουλίνης για μια δεδομένη ποσότητα υδατανθράκων.</string>
     <string name="ic_noeffect">Αν έχετε 0 COB Ενεργούς Υδατ., αλλάζοντας την αναλογία IC θα οδηγήσει σε μια διαφορετική ποσότητα ινσουλίνης για να διορθωθεί μια συγκεκριμένη τιμή BG.</string>
-    <string name="ic_different">Το IC θα είναι διαφορετικό αν υπολογίζετε το ψωμί ως 10g ή 12g.</string>
-    <string name="ic_meaning">Η έννοια του IC είναι: Πόσες φέτες ψωμί καλύπτονται από 1 μονάδα ινσουλίνης.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Θέμα: Αλλαγή Προφίλ</string>
     <string name="profileswitch_pctwillchange"> Όταν καθορίζεται 90% στην αλλαγή προφίλ…</string>

@@ -17,6 +17,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Ton für unsichere SMB-Benachrichtigungen aktiviert</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Ton für unsichere Bolus-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Pod-Alarme automatisch bestätigen</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Andere</string>
     <string name="omnipod_preference_category_alerts">Alarme</string>
@@ -31,7 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod-Fehler</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Aktivierungszeit überschritten</string>
     <string name="omnipod_pod_status_inactive">Inaktiv</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod-Fehler: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod-Fehler: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Erinnerung Setup beendet</string>
@@ -96,6 +97,8 @@
     <string name="omnipod_error_failed_to_initialize_pod">Pod konnte nicht initalisiert werden.</string>
     <string name="omnipod_error_failed_to_insert_cannula">Kanüle konnte nicht eingeführt werden.</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Die Aktivierungszeit des Pods wurde überschritten. Dieser Pod kann nicht mehr aktiviert werden.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Überprüfen des Aktivierungsfortschritts gescheitert. Bitte erneut versuchen.</string>
+    <string name="omnipod_error_pod_suspended">Pod unterbrochen</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Bestätigung</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Zeit und/oder Zeitzone auf dem Pod geändert.</string>
@@ -104,7 +107,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Insulinabgabe komplett ausgesetzt.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Aktive Warnungen wurden bestätigt.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulinabgabe wieder aufgenommen.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod unterbrochen</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_cmd_discard_pod">Pod ablegen</string>
@@ -219,5 +221,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod-Alarm: %1$s</item>
+        <item quantity="other">Pod-Alarme: %1$s</item>
     </plurals>
 </resources>

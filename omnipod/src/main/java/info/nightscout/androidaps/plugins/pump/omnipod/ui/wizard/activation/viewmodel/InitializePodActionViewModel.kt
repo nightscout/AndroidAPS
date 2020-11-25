@@ -6,5 +6,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.viewmode
 import javax.inject.Inject
 
 class InitializePodActionViewModel @Inject constructor(private val aapsOmnipodManager: AapsOmnipodManager) : ActionViewModelBase() {
+
     override fun doExecuteAction(): PumpEnactResult = aapsOmnipodManager.initializePod()
 }

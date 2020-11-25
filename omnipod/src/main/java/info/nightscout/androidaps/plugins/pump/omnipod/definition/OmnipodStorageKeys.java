@@ -20,6 +20,8 @@ public class OmnipodStorageKeys {
         public static final int NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_tbr_sound_enabled;
         public static final int NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_smb_sound_enabled;
         public static final int NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_bolus_sound_enabled;
+        public static final int AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED = R.string.key_omnipod_automatically_acknowledge_alerts_enabled;
+        public static final int RILEYLINK_STATS_BUTTON_ENABLED = R.string.key_omnipod_rileylink_stats_button_enabled;
     }
 
     public static class Statistics {

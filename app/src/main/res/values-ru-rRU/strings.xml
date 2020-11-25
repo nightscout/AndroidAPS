@@ -261,7 +261,7 @@
     <string name="valueoutofrange">Значение %1$s недопустимо</string>
     <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1d мин ответьте кодом %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Помпа отключена</string>
     <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
@@ -405,12 +405,13 @@
     <string name="wear_detailedIOB_summary">разбивка IOB на болюсный и базальный IOB на циферблате смарт-часов</string>
     <string name="nosuccess">неудача - проверьте телефон</string>
     <string name="notavailable">н/д</string>
-    <string name="patientage">Возраст пациента</string>
+    <string name="patientage">Тип пациента</string>
     <string name="child">ребенок</string>
     <string name="teenage">подросток</string>
     <string name="adult">взрослый</string>
     <string name="resistantadult">Инсулинорезистентный взрослый</string>
-    <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
+    <string name="pregnant">Беременность</string>
+    <string name="patientage_summary">Пожалуйста, выберите тип пациента для установки лимитов безопасности</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Пользователь</string>
@@ -454,6 +455,8 @@
     <string name="statuslights_iage_critical">Критический порог предупреждения о времени, отработанном инсулином [h]</string>
     <string name="statuslights_sage_warning">Порог предупреждения о времени, отработанном сенсором [h]</string>
     <string name="statuslights_sage_critical">Критический порог предупреждения о времени, отработанном сенсором [h]</string>
+    <string name="statuslights_sbat_warning">Порог предупреждения о разрядке батареи [%]</string>
+    <string name="statuslights_sbat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="statuslights_bage_warning">Порог предупреждения о разрядке батареи [h]</string>
     <string name="statuslights_bage_critical">Порог предупреждения о критическом уровне разрядки батареи [h]</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
@@ -484,6 +487,12 @@
     <string name="careportal_insulinage_label">Инсулин проработал</string>
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_pbage_label">Батарея помпы работает</string>
+    <string name="careportal_sensor_label">Сенсор</string>
+    <string name="careportal_canula_label">Канюля</string>
+    <string name="careportal_insulin_label">Инсулин</string>
+    <string name="careportal_pb_label">Батарея помпы</string>
+    <string name="careportal_age_label">Возраст:</string>
+    <string name="careportal_level_label">Уровень:</string>
     <string name="ns_alarmoptions">опции оповещения</string>
     <string name="ns_alarms">Создать уведомления из оповещений NS</string>
     <string name="ns_announcements">Создать уведомления из оповещений NS</string>
@@ -1158,6 +1167,9 @@ Context | Edit Context</string>
     <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
     <string name="smscommunicator_otp_reset_prompt">Вы действительно хотите сбросить ключ аутентификации? Все сконфигурированные в настоящее время ключи станут недопустимы, и придется их настроить заново.</string>
     <string name="smscommunicator_otp_reset_successful">Создан новый ключ аутентификации! Для идентификации используйте обновленный QRCode.</string>
+    <string name="smscommunicator_otp_export_title">Экспорт секретного кода OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Вы действительно хотите скопировать пароль OTP в буфер обмена?\n\nЭто может потребоваться только в том случае, если у вашего приложения идентификации проблемы при сканировании QR кода, вы хотите ввести его вручную или настроить аппаратный маркер OTP с помощью специального приложения.</string>
+    <string name="smscommunicator_otp_export_successful">Секретный одноразовый код OTP (в формате Base32) экспортирован и скопирован в буфер обмена. Вставьте его в систему идентификации или аппаратный маркер OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Установить Аутентификатор</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Код сканирования для настройки кодов OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Одноразовый Пароль</string>
@@ -1177,6 +1189,7 @@ Context | Edit Context</string>
     <string name="statuslights_copy_ns">Копировать параметры из NS</string>
     <string name="copyexistingvalues">Копировать настройки NS (если есть)?</string>
     <string name="classic_description">Исходная тема оформления</string>
+    <string name="lowres_description">Скин для низкого разрешения</string>
     <string name="buttonson_description">Кнопки всегда отображаются в нижней части экрана</string>
     <string name="largedisplay_description">Большой дисплей</string>
     <string name="skin">Тема оформления</string>

@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Vertė %1$s viršija griežtą limitą</string>
     <string name="smscommunicator_pumpconnectwithcode">Pompos prijungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Nepavyko prisijungti prie pompos</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Norėdami atjungti pompą %1d min., atsakykite kodu %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompa atjungta</string>
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
@@ -405,12 +404,10 @@
     <string name="wear_detailedIOB_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="nosuccess">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Paciento amžius</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
     <string name="adult">Suaugęs</string>
     <string name="resistantadult">Insulinui rezistentiškas suaugęs</string>
-    <string name="patientage_summary">Pasirinkite paciento amžių saugumo riboms nustatyti</string>
     <string name="patient_name">Paciento vardas</string>
     <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
@@ -990,6 +987,7 @@
     <string name="storage">vidinės saugyklos apribojimas</string>
     <string name="diskfull">Atlaisvinkite ne mažiau kaip %1$d MB iš vidinės atminties! Ciklas išjungtas!</string>
     <string name="wrongformat">Neteisingas formatas</string>
+    <string name="wrongTbrDuration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
     <string name="sms_wrongcode">Neteisingas kodas. Komanda atšaukta.</string>
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="profileswitchcreated">Profilio perjungimas sukurtas</string>
@@ -1155,6 +1153,9 @@
     <string name="smscommunicator_otp_reset_title">Atstatyti autentifikatoriaus kodą</string>
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
+    <string name="smscommunicator_otp_export_title">Eksportuojamas OTP kodas</string>
+    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
+    <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Nuskanuoti kodą AndroidAPS OTP kodų nustatymyu</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
@@ -1218,4 +1219,5 @@
     <string name="worker_state">Darbinė Būklė: %s</string>
     <string name="uploaded_data">Įkelti duomenis</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Į jūsų Open Humans paskyrą bus įkelti šie duomenys: glikemijos reikšmės, bolusai, angliavandeniai, priežiūros portalo įvykiai (išskyrus pastabas), ištęstiniai bolusai, profilio pakeitimai, visos paros dozės, laikinos valandinės bazės, laikini tikslai, nustatymai, programos versija, įrenginio modelis ir ekrano matmenys. Konfidenciali ar privati ​​informacija, pvz., Jūsų Nightscout URL arba API slaptažodis, nebus įkelta.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
 </resources>

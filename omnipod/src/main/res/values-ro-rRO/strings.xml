@@ -26,7 +26,6 @@
     <string name="omnipod_pod_status_pod_fault">Defecțiune Pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Timp de activare depăşit</string>
     <string name="omnipod_pod_status_inactive">Inactiv</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod defect: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Notificare Finalizare împerechere</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>

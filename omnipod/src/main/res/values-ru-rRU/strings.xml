@@ -14,10 +14,15 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часов до выключения</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Предупреждение о низком уровне в резервуаре включено</string>
     <string name="omnipod_config_low_reservoir_alert_units">К-во единиц</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Звук для неопределенных TBR уведомлений включен</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Звук для неопределенных SMB уведомлений включен</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Звук для неопределенных уведомлений болюса включен</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Автоматически подтверждать оповещения Pod</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Другое</string>
     <string name="omnipod_preference_category_alerts">Оповещения</string>
     <string name="omnipod_preference_category_confirmation_beeps">Звуковые сигналы подтверждения</string>
+    <string name="omnipod_preference_category_notifications">Уведомления</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Активная помпа не выбрана</string>
     <string name="omnipod_pod_status_waiting_for_activation">Выполняется настройка (ожидание активации Pod)</string>
@@ -27,7 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Сбой Пода</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Превышено время активации</string>
     <string name="omnipod_pod_status_inactive">Неактивирован</string>
-    <string name="omnipod_pod_status_pod_fault_description">Ошибка Пода: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Ошибка Pod: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
@@ -73,6 +78,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Возможно, отмена временного базала завершилась неудачно. Обновите вручную состояние Pod на вкладке Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Не удалось задать временный базал. Если ранее был запущен временный базал, он мог быть отменен. Обновите вручную состояние Pod на вкладке Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Не удалось задать временный базал. Если ранее был запущен временный базал, он мог быть отменен. Обновите вручную состояние Pod на вкладке Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">Продолжительность TBR должна быть больше нуля и кратной %1$s минутам.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Возможно, не удалось задать время. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите подачу.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Не удалось задать время. Подача инсулина приостановлена! Вручную возобновите подачу с вкладки Omnipod.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Не удалось задать базальный профиль: получен пустой профиль. Активируйте профиль базала.</string>
@@ -91,6 +97,8 @@
     <string name="omnipod_error_failed_to_initialize_pod">Не удалось инициализировать Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Не удалось установить канюлю</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Превышено время активации Pod. Этот Pod больше не может быть активирован.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Не удалось проверить ход активации. Повторите попытку.</string>
+    <string name="omnipod_error_pod_suspended">Omnipod остановлен</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Подтверждение</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Время и/или часовой пояс изменены на Pod.</string>
@@ -99,7 +107,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Все подачи инсулина приостановлены.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Подтверждены активные оповещения.</string>
     <string name="omnipod_confirmation_delivery_resumed">Подача инсулина возобновлена.</string>
-    <string name="omnipod_confirmation_pod_suspended">Omnipod остановлен</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Деактивировать Pod</string>
     <string name="omnipod_cmd_discard_pod">Выбросить помпу</string>

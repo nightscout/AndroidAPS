@@ -10,11 +10,13 @@
     <string name="key_omnipod_tbr_beeps_enabled" translatable="false">AAPS.Omnipod.tbr_beeps_enabled</string>
     <string name="key_omnipod_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
     <string name="key_omnipod_pulse_log_button_enabled" translatable="false">AAPS.Omnipod.pulse_log_button_enabled</string>
+    <string name="key_omnipod_rileylink_stats_button_enabled" translatable="false">AAPS.Omnipod.rileylink_stats_button_enabled</string>
     <string name="key_omnipod_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
     <string name="key_omnipod_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
     <string name="key_omnipod_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
     <string name="key_omnipod_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
     <string name="key_omnipod_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
+    <string name="key_omnipod_automatically_acknowledge_alerts_enabled" translatable="false">AAPS.Omnipod.automatically_acknowledge_alerts_enabled</string>
     <string name="key_omnipod_notification_uncertain_tbr_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_tbr_sound_enabled</string>
     <string name="key_omnipod_notification_uncertain_smb_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_smb_sound_enabled</string>
     <string name="key_omnipod_notification_uncertain_bolus_sound_enabled" translatable="false">AAPS.Omnipod.notification_uncertain_bolus_sound_enabled</string>
@@ -38,8 +40,9 @@
     <string name="omnipod_config_basal_beeps_enabled">Basal beeps enabled</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB beeps enabled</string>
     <string name="omnipod_config_tbr_beeps_enabled">TBR beeps enabled</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Suspend Delivery button enabled</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Pulse Log button enabled</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Show Suspend Delivery button in Omnipod tab</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Show Pulse Log button in Pod Management menu</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Show RileyLink Stats button in Pod Management menu</string>
     <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
     <string name="omnipod_config_expiration_reminder_enabled">Expiration reminder enabled</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
@@ -48,6 +51,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Automatically acknowledge Pod alerts</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Other</string>
     <string name="omnipod_preference_category_alerts">Alerts</string>
@@ -63,7 +67,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod fault</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Activation time exceeded</string>
     <string name="omnipod_pod_status_inactive">Inactive</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod fault: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod fault: %1$03d %2$s</string>
 
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Finish pairing reminder</string>
@@ -120,6 +124,7 @@
     <string name="omnipod_error_unknown_custom_command">Unknown custom command: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Failed to read Pulse Log</string>
     <string name="omnipod_error_failed_to_refresh_status">Failed to refresh status</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Failed to refresh status on startup</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Failed to acknowledge alerts</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Failed to suspend delivery</string>
     <string name="omnipod_error_failed_to_set_time">Failed to set time</string>
@@ -131,6 +136,10 @@
     <string name="omnipod_error_failed_to_initialize_pod">Failed to initialize the Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Failed to insert cannula</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">The Pod\'s activation time has been exceeded. This Pod can no longer be activated.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Failed to verify activation progress. Please retry.</string>
+    <string name="omnipod_error_pod_suspended">Pod suspended</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Failed to play test beep</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">A temporary basal is running on the Pod, but AAPS is unaware of this temporary basal. Please cancel your temporary basal manually.</string>
 
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
@@ -140,7 +149,6 @@
     <string name="omnipod_confirmation_suspended_delivery">All insulin delivery has been suspended.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Active alerts have been acknowledged.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulin delivery has been resumed.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod suspended</string>
 
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deactivate Pod</string>
@@ -164,6 +172,8 @@
     <string name="omnipod_cmd_read_pulse_log">Read pulse log</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
+    <string name="omnipod_cmd_beep_config">Beep config</string>
+    <string name="omnipod_cmd_play_test_beep">Play test beep</string>
 
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod management</string>
@@ -172,7 +182,12 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Deactivate Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Discard Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Pod history</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">If you discard the Pod, you will not be able to communicate with it anymore. You should only do this when all communication with the Pod persistently fails. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.\n\nIf you wish to proceed, please make sure to remove the Pod from your body!</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">RileyLink stats</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Read pulse log</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Reading pulse log…</string>
+    <string name="omnipod_pod_management_discard_pod_confirmation">If you discard the Pod, you will not be able to communicate with it anymore. You should only do this when all communication with the Pod persistently fails. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.\n\nIf you wish to proceed, please make sure to remove the Pod from your body!</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Play test beep</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">Playing test beep…</string>
 
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Cancel</string>
@@ -212,8 +227,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Set time</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspend</string>
-    <string name="omnipod_overview_button_riley_link_stats">RL stats</string>
-    <string name="omnipod_overview_button_read_pulse_log">Pulse log</string>
     <string name="omnipod_overview_button_refresh">Refresh</string>
     <string name="omnipod_overview_button_resume_delivery">Resume delivery</string>
     <string name="omnipod_overview_button_pod_management">Pod mgmt</string>
@@ -263,6 +276,10 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod alert: %1$s</item>
+        <item quantity="other">Pod alerts: %1$s</item>
     </plurals>
 
 </resources>

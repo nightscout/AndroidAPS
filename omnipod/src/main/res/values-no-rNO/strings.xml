@@ -14,10 +14,15 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
     <string name="omnipod_config_low_reservoir_alert_units">Antall enheter</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Lydvarsel for usikre TBR er aktivert</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Lydvarsel for usikre SMB er aktivert</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Lydvarsel for usikre bolus er aktivert</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Godkjenn automatisk Pod varsler</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Annen</string>
     <string name="omnipod_preference_category_alerts">Varsler</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bekreftelse pip</string>
+    <string name="omnipod_preference_category_notifications">Varsler</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Ingen aktiv Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod aktivering)</string>
@@ -27,7 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod feil</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Aktiveringstiden er overskredet</string>
     <string name="omnipod_pod_status_inactive">Inaktiv</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod feil: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod feil: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Fullfør paringspåminnelse</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Påminnelse om å sluttføre oppsett</string>
@@ -73,6 +78,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere temp basal. Vennligst oppdater Pod status manuelt fra Omnipod menyen.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Endring av midlertidig basal var mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Endring av midlertidig basal kan ha vært mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">TBR varighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være kansellert! Oppdater statusen manuelt fra fanen Omnipod og gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er sperret! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Feilet i å lagre basal profil: mottok en tom profil. Kontroller at du har aktivert profilen.</string>
@@ -91,6 +97,8 @@
     <string name="omnipod_error_failed_to_initialize_pod">Feilet i å initialisere Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Feilet ved innsetting av kanyle</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Pod\'ens aktiveringstid er overskredet. Denne Pod kan ikke lenger aktiveres.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Klarte ikke å verifisere fremdrift i aktiveringen. Prøv på nytt.</string>
+    <string name="omnipod_error_pod_suspended">Pod er pauset</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Bekreftelse</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Tid og/eller tidssone endret på Pod.</string>
@@ -99,7 +107,6 @@
     <string name="omnipod_confirmation_suspended_delivery">All insulintilførsel har blitt pauset.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Aktive varsler har blitt bekreftet.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulintilførselen er gjenopptatt.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod er pauset</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deaktiviser Pod</string>
     <string name="omnipod_cmd_discard_pod">Forkast Pod</string>
@@ -214,5 +221,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod varsel: %1$s</item>
+        <item quantity="other">Pod varsler: %1$s</item>
     </plurals>
 </resources>

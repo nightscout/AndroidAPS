@@ -24,7 +24,8 @@ class HardLimits @Inject constructor(
     val TEENAGE = 1
     val ADULT = 2
     val RESISTANTADULT = 3
-    val MAXBOLUS = doubleArrayOf(5.0, 10.0, 17.0, 25.0)
+    val PREGNANT = 4
+    val MAXBOLUS = doubleArrayOf(5.0, 10.0, 17.0, 25.0, 60.0)
 
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define
@@ -36,15 +37,15 @@ class HardLimits @Inject constructor(
     val VERY_HARD_LIMIT_TEMP_MIN_BG = intArrayOf(72, 180)
     val VERY_HARD_LIMIT_TEMP_MAX_BG = intArrayOf(72, 270)
     val VERY_HARD_LIMIT_TEMP_TARGET_BG = intArrayOf(72, 200)
-    val MINDIA = 5.0
-    val MAXDIA = 7.0
-    val MINIC = 2.0
-    val MAXIC = 100.0
+    val MINDIA = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0)
+    val MAXDIA = doubleArrayOf(7.0, 7.0, 7.0, 7.0, 10.0)
+    val MINIC = doubleArrayOf(2.0, 2.0, 2.0, 2.0, 0.3)
+    val MAXIC = doubleArrayOf(100.0, 100.0, 100.0, 100.0, 100.0)
     val MINISF = 2.0 // mgdl
     val MAXISF = 720.0 // mgdl
-    val MAXIOB_AMA = doubleArrayOf(3.0, 5.0, 7.0, 12.0)
-    val MAXIOB_SMB = doubleArrayOf(3.0, 7.0, 12.0, 25.0)
-    val MAXBASAL = doubleArrayOf(2.0, 5.0, 10.0, 12.0)
+    val MAXIOB_AMA = doubleArrayOf(3.0, 5.0, 7.0, 12.0, 25.0)
+    val MAXIOB_SMB = doubleArrayOf(3.0, 7.0, 12.0, 25.0, 40.0)
+    val MAXBASAL = doubleArrayOf(2.0, 5.0, 10.0, 12.0, 25.0)
 
     //LGS Hard limits
     //No IOB at all
@@ -57,6 +58,7 @@ class HardLimits @Inject constructor(
         else if (sp_age == resourceHelper.gs(R.string.key_teenage)) TEENAGE
         else if (sp_age == resourceHelper.gs(R.string.key_adult)) ADULT
         else if (sp_age == resourceHelper.gs(R.string.key_resistantadult)) RESISTANTADULT
+        else if (sp_age == resourceHelper.gs(R.string.key_pregnant)) PREGNANT
         else ADULT
         return age
     }
@@ -75,6 +77,22 @@ class HardLimits @Inject constructor(
 
     fun maxBasal(): Double {
         return MAXBASAL[loadAge()]
+    }
+
+    fun minDia(): Double {
+        return MINDIA[loadAge()]
+    }
+
+    fun maxDia(): Double {
+        return MAXDIA[loadAge()]
+    }
+
+    fun minIC(): Double {
+        return MINIC[loadAge()]
+    }
+
+    fun maxIC(): Double {
+        return MAXIC[loadAge()]
     }
 
     // safety checks

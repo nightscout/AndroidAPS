@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.actions
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -54,16 +57,30 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val pumpCustomActions = HashMap<String, CustomAction>()
     private val pumpCustomButtons = ArrayList<SingleClickButton>()
+    private var smallWidth = false
+    private var smallHeight = false
+    private lateinit var dm: DisplayMetrics
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.actions_fragment, container, false)
+        //check screen width
+        dm = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+
+        val screenWidth = dm.widthPixels
+        val screenHeight = dm.heightPixels
+        smallWidth = screenWidth <= Constants.SMALL_WIDTH
+        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
+        val landscape = screenHeight < screenWidth
+
+        return inflater.inflate(skinProvider.activeSkin().actionsLayout(landscape, smallWidth), container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -233,15 +250,24 @@ class ActionsFragment : DaggerFragment() {
                 actions_canceltempbasal?.visibility = View.GONE
             }
         }
-
+        val activeBgSource = activePlugin.activeBgSource
         actions_historybrowser.visibility = (profile != null).toVisibility()
         actions_fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized && !pump.isSuspended).toVisibility()
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
+        if (!config.NSCLIENT) {
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
+            careportal_senslevellabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
+        } else {
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
+            careportal_senslevellabel?.text = ""
+            careportal_inslevellabel?.text = ""
+            careportal_pblevellabel?.text = ""
+        }
         checkPumpCustomActions()
+
     }
 
     private fun checkPumpCustomActions() {

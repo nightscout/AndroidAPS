@@ -261,7 +261,6 @@
     <string name="valueoutofrange">Valoarea %1$s este mai mare decât limita stabilită</string>
     <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1d minute, raspundeti cu: %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
@@ -405,12 +404,10 @@
     <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
     <string name="notavailable">indisponibil</string>
-    <string name="patientage">Vârsta pacientului</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
     <string name="resistantadult">Adult rezistent la insulină</string>
-    <string name="patientage_summary">Vă rog să selectați vârsta pacientului în vederea stabilirii valorilor maxime admise de siguranță</string>
     <string name="patient_name">Numele pacientului</string>
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>

@@ -32,7 +32,7 @@
             android:title="@string/omnipod_config_smb_beeps_enabled" />
 
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="@string/key_omnipod_tbr_beeps_enabled"
             android:title="@string/omnipod_config_tbr_beeps_enabled" />
 
@@ -72,6 +72,11 @@
             validate:minNumber="5"
             validate:testType="numericRange" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_automatically_acknowledge_alerts_enabled"
+            android:title="@string/omnipod_config_automatically_acknowledge_alerts" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/omnipod_preference_category_notifications">
@@ -104,6 +109,11 @@
             android:defaultValue="false"
             android:key="@string/key_omnipod_pulse_log_button_enabled"
             android:title="@string/omnipod_config_pulse_log_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_rileylink_stats_button_enabled"
+            android:title="@string/omnipod_config_rileylink_stats_button_enabled" />
 
         <SwitchPreference
             android:defaultValue="true"

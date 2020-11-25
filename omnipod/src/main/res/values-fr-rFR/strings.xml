@@ -14,10 +14,15 @@
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Heures avant arrêt</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Alerte Réservoir bas activée</string>
     <string name="omnipod_config_low_reservoir_alert_units">Nombre d\'unités</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Son pour les notifications DBT incertains activé</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Son pour les notifications SMB incertains activé</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Son pour les notifications bolus incertains activé</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Accepter automatiquement les alertes Pod</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Autres</string>
     <string name="omnipod_preference_category_alerts">Alertes</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bips de confirmation</string>
+    <string name="omnipod_preference_category_notifications">Notifications</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Pas de Pod actif</string>
     <string name="omnipod_pod_status_waiting_for_activation">Configuration en cours (en attente d\'activation du Pod)</string>
@@ -27,7 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Erreur Pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Délai d\'activation dépassé</string>
     <string name="omnipod_pod_status_inactive">Inactif</string>
-    <string name="omnipod_pod_status_pod_fault_description">Défaut du Pod : %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Défaut Pod : %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
@@ -73,6 +78,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">L\'annulation de la basale temporaire peut avoir échouée. Veuillez actualiser manuellement l\'état du Pod depuis l\'onglet Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Le paramétrage de la basal temp a échoué. Si une basal temp était en cours d\'exécution, elle a peut-être été annulée. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Le paramétrage de la basal temp a peut-être échoué. Si une basal temp était en cours d\'exécution, elle a été annulée. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Le paramétrage de l\'heure a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Le paramétrage de l\'heure a échoué. L\'injection est suspendue ! Veuillez poursuivre manuellement l\'injection à partir de l\'onglet Omnipod.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Impossible de définir le profil Basal : profil vide reçu. Vérifiez que votre profil de basal est activé.</string>
@@ -91,6 +97,8 @@
     <string name="omnipod_error_failed_to_initialize_pod">Impossible d’initialiser le Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Impossible d\'insérer la canule</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">La durée d\'activation du Pod a été dépassée. Ce Pod ne peut plus être activé.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Échec de la vérification de l\'activation. Veuillez réessayer.</string>
+    <string name="omnipod_error_pod_suspended">Pod suspendu</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Heure et/ou fuseau horaire changé sur le Pod.</string>
@@ -99,7 +107,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Toutes les injections d\'insuline ont été suspendues.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Les alertes actives ont été acceptées.</string>
     <string name="omnipod_confirmation_delivery_resumed">L\'injection de l\'insuline a été reprise.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod suspendu</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Désactiver Pod</string>
     <string name="omnipod_cmd_discard_pod">Supprimer le Pod</string>
@@ -214,5 +221,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Alerte Pod : %1$s</item>
+        <item quantity="other">Alertes Pod : %1$s</item>
     </plurals>
 </resources>

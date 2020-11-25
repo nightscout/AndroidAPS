@@ -134,8 +134,8 @@
     <string name="ic_increasingvalue">Högre IC-kvot leder till mindre insulin som levereras för en given mängd kolhydrater.</string>
     <string name="ic_decreasingvalue">Lägre IC-kvot leder till mindre insulin som levereras för en given mängd kolhydrater.</string>
     <string name="ic_noeffect">Om du har 0 COB, kommer en förändring av IC-kvoten leda till en annan mängd insulin för att korrigera din BG-nivå.</string>
-    <string name="ic_different">IC kommer att vara annorlunda om du räknar en skiva bröd som 10g eller 12g.</string>
-    <string name="ic_meaning">IC-betydelsen är: Hur många skivor bröd omfattas av 1U insulin.</string>
+    <string name="ic_different">IC kommer att vara annorlunda om du räknar brödenheter (utbytesenhet) som 10g eller 12g.</string>
+    <string name="ic_meaning">IC betyder: Hur många brödenheter (utbytesenheter) som omfattas av 1U insulin.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Ämne: Profilbyte</string>
     <string name="profileswitch_pctwillchange"> När du anger 90% i profilbytet…</string>

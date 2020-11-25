@@ -31,7 +31,6 @@
     <string name="omnipod_pod_status_pod_fault">Pod fout</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Activatietijd overschreden</string>
     <string name="omnipod_pod_status_inactive">Inactief</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod fout: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Herrinering om Pod initialisatie af te ronden</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
@@ -104,7 +103,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Alle insulinetoediening is onderbroken.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Actieve meldingen zijn bevestigd.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulinetoediening is hervat.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod onderbroken</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deactiveer Pod</string>
     <string name="omnipod_cmd_discard_pod">Pod verwerpen</string>

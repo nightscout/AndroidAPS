@@ -262,7 +262,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="valueoutofrange">La valeur %1$s est en dehors des limites</string>
     <string name="smscommunicator_pumpconnectwithcode">Pour connecter la pompe, renvoyez le code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Echec de la connexion pompe</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1d min, renvoyez le code %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Pour déconnecter la pompe pendant %1$d min, renvoyez le code %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompe déconnectée</string>
     <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
@@ -406,12 +406,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_detailedIOB_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="nosuccess">Sans succès - vérifiez votre téléphone</string>
     <string name="notavailable">s/o</string>
-    <string name="patientage">Age du patient</string>
+    <string name="patientage">Type de patient</string>
     <string name="child"> Enfant</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adulte</string>
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
-    <string name="patientage_summary">Veuillez svp sélectionner l’âge du patient pour définir les limites de sécurité</string>
+    <string name="pregnant">Grossesse</string>
+    <string name="patientage_summary">Veuillez sélectionner le type de patient pour définir les limites de sécurité</string>
     <string name="patient_name">Nom du patient</string>
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
@@ -455,6 +456,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_iage_critical">Seuil critique âge insuline [h]</string>
     <string name="statuslights_sage_warning">Seuil d\'alerte âge capteur [h]</string>
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
+    <string name="statuslights_sbat_warning">Seuil d’alerte niveau pile capteur [%]</string>
+    <string name="statuslights_sbat_critical">Seuil critique niveau pile capteur [%]</string>
     <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
     <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
     <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
@@ -485,6 +488,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_insulinage_label">Age Insuline</string>
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_pbage_label">Age Pile Pompe</string>
+    <string name="careportal_sensor_label">Capteur</string>
+    <string name="careportal_canula_label">Canule</string>
+    <string name="careportal_insulin_label">Insuline</string>
+    <string name="careportal_pb_label">Pile pompe</string>
+    <string name="careportal_age_label">Âge:</string>
+    <string name="careportal_level_label">Niveau:</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
     <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
     <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
@@ -1157,6 +1166,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
     <string name="smscommunicator_otp_reset_prompt">Voulez-vous réinitialiser la clé de l\'Authenticateur ? Cela rendra tous authentificateurs configurés invalides, et vous devrez les configurer à nouveau.</string>
     <string name="smscommunicator_otp_reset_successful">Nouvelle clé de l\'Authenticateur générée ! Veuillez utiliser le QRCode mis à jour pour les authentificateurs.</string>
+    <string name="smscommunicator_otp_export_title">Exportation de l\'OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Êtes-vous sûr de vouloir copier l\'OTP secret dans le presse-papiers ?\n\nVous pouvez en avoir besoin uniquement si votre application d\'authentification a des problèmes pour scanner le QRCode, si vous voulez le saisir manuellement ou si vous voulez configurer un jeton OTP matériel en utilisant une application dédiée.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (au format Base32) exporté et copié dans le presse-papiers. Collez-le dans l\'authentificateur ou le graveur OTP matériel !</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scan du code pour configurer les codes OTP AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
@@ -1176,6 +1188,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="classic_description">Thème d\'origine</string>
+    <string name="lowres_description">Basse résolution</string>
     <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
