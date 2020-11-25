@@ -34,6 +34,9 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
         })
 
         pref_filter_clear.setOnClickListener() {
+            if (pref_filter.text.toString() == "") {
+                this.finish()
+            }
             pref_filter.setText("");
         }
 
