@@ -33,13 +33,6 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
             override fun afterTextChanged(s: Editable) {}
         })
 
-        pref_filter_clear.setOnClickListener() {
-            if (pref_filter.text.toString() == "") {
-                this.finish()
-            }
-            pref_filter.setText("");
-        }
-
         title = resourceHelper.gs(R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
