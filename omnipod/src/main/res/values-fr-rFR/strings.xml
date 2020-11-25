@@ -85,6 +85,7 @@
     <string name="omnipod_error_unknown_custom_command">Commande personnalisée inconnue : %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Échec lecture Journal d\'impulsions</string>
     <string name="omnipod_error_failed_to_refresh_status">Échec pour rafraichir l\'état</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Échec pour rafraichir l\'état au démarrage</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Échec pour confirmer les alertes</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Échec pour suspendre l\'injection</string>
     <string name="omnipod_error_failed_to_set_time">Échec pour définir l\'heure</string>
@@ -172,7 +173,7 @@
     <string name="omnipod_overview_button_suspend_delivery">Arrêter</string>
     <string name="omnipod_overview_button_refresh">Actualiser</string>
     <string name="omnipod_overview_button_resume_delivery">Reprendre l\'injection</string>
-    <string name="omnipod_overview_button_pod_management">Pod mngt</string>
+    <string name="omnipod_overview_button_pod_management">Gest. Pod</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Accepter les alertes</string>
     <string name="omnipod_overview_pod_status">État du Pod</string>
     <string name="omnipod_overview_total_delivered">Total injecté</string>
