@@ -129,7 +129,7 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val insulin = SafeParse.stringToDouble(overview_insulin_amount.text)
+        val insulin = SafeParse.stringToDouble(overview_insulin_amount?.text ?: return false)
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
