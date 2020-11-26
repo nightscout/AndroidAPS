@@ -41,6 +41,14 @@ interface SkinInterface {
             val timeLayoutParams = view.overview_time_llayout.layoutParams as ConstraintLayout.LayoutParams
             timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
             timeLayoutParams.endToStart = view.overview_iob_llayout.id
+            val cobLayoutParams = view.overview_cob_llayout.layoutParams as ConstraintLayout.LayoutParams
+            cobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            val basalLayoutParams = view.overview_basal_llayout.layoutParams as ConstraintLayout.LayoutParams
+            basalLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            val extendedLayoutParams = view.overview_extended_llayout.layoutParams as ConstraintLayout.LayoutParams
+            extendedLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            val asLayoutParams = view.overview_as_llayout.layoutParams as ConstraintLayout.LayoutParams
+            asLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
 
             if (isTablet) {
                 for (v in listOf<TextView>(
