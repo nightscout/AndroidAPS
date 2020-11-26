@@ -33,6 +33,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod fout</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Activatietijd overschreden</string>
     <string name="omnipod_pod_status_inactive">Inactief</string>
+    <string name="omnipod_pod_status_pod_fault_description">Podfout: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Herrinering om Pod initialisatie af te ronden</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
@@ -98,6 +99,8 @@
     <string name="omnipod_error_failed_to_initialize_pod">Het initialiseren van de Pod is mislukt</string>
     <string name="omnipod_error_failed_to_insert_cannula">Het inbrengen van de canule is mislukt</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">De activeringstijd van de pod is overschreden. Deze Pod kan niet meer geactiveerd worden.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Controleren van activatiestatus is mislukt. Probeer het opnieuw.</string>
+    <string name="omnipod_error_pod_suspended">Pod onderbroken</string>
     <string name="omnipod_error_failed_to_play_test_beep">Testpiep afspelen mislukt</string>
     <string name="omnipod_error_tbr_running_but_aaps_not_aware">Er loopt een tijdelijk basaal op de Pod, maar AndroidAPS is zich niet bewust van deze tijdelijke basaal. Annuleer de tijdelijke basal handmatig.</string>
     <!-- Omnipod - Confirmation -->
@@ -227,5 +230,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod waarschuwing: %1$s</item>
+        <item quantity="other">Podwaarschuwing: %1$s</item>
     </plurals>
 </resources>
