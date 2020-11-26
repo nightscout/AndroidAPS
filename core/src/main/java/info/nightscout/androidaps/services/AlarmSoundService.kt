@@ -18,6 +18,7 @@ import kotlin.math.ln
 import kotlin.math.pow
 
 class AlarmSoundService : DaggerService() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var notificationHolder: NotificationHolderInterface
@@ -27,6 +28,7 @@ class AlarmSoundService : DaggerService() {
     private var resourceId = R.raw.error
 
     companion object {
+
         private const val VOLUME_INCREASE_STEPS = 40 // Total number of steps to increase volume with
         private const val VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS = 3_000L // Number of milliseconds that the notification should initially be silent
         private const val VOLUME_INCREASE_BASE_DELAY_MILLIS = 15_000 // Base delay between volume increments
@@ -47,17 +49,20 @@ class AlarmSoundService : DaggerService() {
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onCreate() {
-        super.onCreate()
         aapsLogger.debug(LTag.CORE, "onCreate")
+        super.onCreate()
+        aapsLogger.debug(LTag.CORE, "onCreate parent called")
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        aapsLogger.debug(LTag.CORE, "onCreate End")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        aapsLogger.debug(LTag.CORE, "onStartCommand")
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        aapsLogger.debug(LTag.CORE, "onStartCommand Foreground called")
 
         player?.let { if (it.isPlaying) it.stop() }
 
-        aapsLogger.debug(LTag.CORE, "onStartCommand")
         if (intent?.hasExtra("soundid") == true) resourceId = intent.getIntExtra("soundid", R.raw.error)
         player = MediaPlayer()
         try {
@@ -80,19 +85,19 @@ class AlarmSoundService : DaggerService() {
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
         }
+        aapsLogger.debug(LTag.CORE, "onStartCommand End")
         return START_STICKY
     }
 
     override fun onDestroy() {
+        aapsLogger.debug(LTag.CORE, "onDestroy")
         increaseVolumeHandler.removeCallbacks(volumeUpdater)
         player?.stop()
         player?.release()
-        aapsLogger.debug(LTag.CORE, "onDestroy")
+        aapsLogger.debug(LTag.CORE, "onDestroy End")
     }
 
-    private fun getAudioManager(): AudioManager {
-        return getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    }
+    private fun getAudioManager() = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     // TODO replace with VolumeShaper when min API level >= 26
     private val volumeUpdater = object : Runnable {
