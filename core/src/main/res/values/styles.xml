@@ -77,4 +77,10 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="WhiteOutlineBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@drawable/outline_box_selector</item>
+        <item name="hintTextColor">@color/colorLightGray</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
 </resources>
