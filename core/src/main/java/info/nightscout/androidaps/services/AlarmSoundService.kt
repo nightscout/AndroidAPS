@@ -49,7 +49,6 @@ class AlarmSoundService : DaggerService() {
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onCreate() {
-        aapsLogger.debug(LTag.CORE, "onCreate")
         super.onCreate()
         aapsLogger.debug(LTag.CORE, "onCreate parent called")
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
