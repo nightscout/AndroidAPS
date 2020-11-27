@@ -206,6 +206,8 @@
     <string name="omnipod_overview_errors">Chyby</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Integrácia pumpy pre Omnipod, vyžaduje zariadenie RileyLink (s firmwarom aspoň 2.0).</string>
+    <string name="omnipod_custom_action_reset_rileylink">Resetovať konfiguráciu RileyLinku</string>
+    <string name="omnipod_uncertain">neznáme</string>
     <string name="omnipod_pulse_log">Protokol pulzov</string>
     <string name="omnipod_pulse_log_value">Protokol pulzov (skopírované do schránky)</string>
     <string name="omnipod_yes">Áno</string>
@@ -213,6 +215,7 @@
     <string name="omnipod_ok">OK</string>
     <string name="omnipod_cancel">Zrušiť</string>
     <!-- Omnipod - Times -->
+    <string name="omnipod_moments_ago">Pred chvíľou</string>
     <string name="omnipod_less_than_a_minute_ago">Pred menej ako minútou</string>
     <string name="omnipod_composite_time">%1$s a %2$s</string>
     <string name="omnipod_time_ago">pred %1$s min</string>
