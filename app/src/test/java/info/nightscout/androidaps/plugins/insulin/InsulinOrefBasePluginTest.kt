@@ -9,8 +9,10 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.db.Treatment
+import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -46,8 +48,10 @@ class InsulinOrefBasePluginTest {
             get() = testPeak
 
         override fun commentStandardText(): String = ""
-        override fun getId(): Int = 0
-        override fun getFriendlyName(): String = ""
+        override val id get(): InsulinInterface.InsulinType = InsulinInterface.InsulinType.UNKNOWN
+        override val friendlyName get(): String = ""
+        override fun configuration(): JSONObject = JSONObject()
+        override fun applyConfiguration(configuration: JSONObject) {}
     }
 
     @get:Rule

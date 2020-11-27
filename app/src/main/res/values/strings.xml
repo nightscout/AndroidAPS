@@ -932,7 +932,6 @@
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_virtualpump_uploadstatus" translatable="false">virtualpump_uploadstatus</string>
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>

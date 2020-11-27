@@ -22,9 +22,9 @@ class InsulinFragment : DaggerFragment() {
 
     override fun onResume() {
         super.onResume()
-        insulin_name?.setText(activePlugin.getActiveInsulin().getFriendlyName())
-        insulin_comment?.setText(activePlugin.getActiveInsulin().getComment())
-        insulin_dia?.text = resourceHelper.gs(R.string.dia) + ":  " + activePlugin.getActiveInsulin().getDia() + "h"
+        insulin_name?.setText(activePlugin.getActiveInsulin().friendlyName)
+        insulin_comment?.setText(activePlugin.getActiveInsulin().comment)
+        insulin_dia?.text = resourceHelper.gs(R.string.dia) + ":  " + activePlugin.getActiveInsulin().dia + "h"
         insulin_graph?.show(activePlugin.getActiveInsulin())
     }
 }
