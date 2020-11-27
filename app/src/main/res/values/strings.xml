@@ -1468,4 +1468,6 @@
     <string name="uploaded_data">Uploaded Data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">The following data will be uploaded to your Open Humans account: Glucose values, boluses, carbs, careportal events (except notes), extended boluses, profile switches, total daily doses, temporary basals, temp targets, preferences, application version, device model and screen dimensions. Secret or private information such as your Nightscout URL or API secret will not be uploaded.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
+    <string name="filter">Filter</string>
+
 </resources>
