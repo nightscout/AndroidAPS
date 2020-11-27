@@ -315,7 +315,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
+        when (item.title) {
+            resourceHelper.gs(R.string.careportal_profileswitch),
+            resourceHelper.gs(R.string.viewprofile),
+            resourceHelper.gs(R.string.custom) ->  return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
+
+            else    -> {
+                OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.confirm), item.title.toString(),
+                    Runnable {
+                        overviewMenus.onContextItemSelected(item, childFragmentManager)
+                    })
+                return true
+            }
+        }
     }
 
     override fun onClick(v: View) {
