@@ -71,13 +71,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_buttons_layout.*
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_carbsbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_profileswitchbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_temptargetbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_insulinbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_quickwizardbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatmentbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout_no_label.*
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
 import kotlinx.android.synthetic.main.overview_fragment_nsclient.*
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
@@ -223,6 +217,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_quickwizardbutton?.setOnLongClickListener(this)
         overview_profileswitchbutton?.setOnClickListener(this)
         overview_temptargetbutton?.setOnClickListener(this)
+
+        overview_accepttempbutton_nol?.setOnClickListener(this)
+        overview_treatmentbutton_nol?.setOnClickListener(this)
+        overview_wizardbutton_nol?.setOnClickListener(this)
+        overview_calibrationbutton_nol?.setOnClickListener(this)
+        overview_cgmbutton_nol?.setOnClickListener(this)
+        overview_insulinbutton_nol?.setOnClickListener(this)
+        overview_carbsbutton_nol?.setOnClickListener(this)
+        overview_quickwizardbutton_nol?.setOnClickListener(this)
+        overview_quickwizardbutton_nol?.setOnLongClickListener(this)
+        overview_profileswitchbutton_nol?.setOnClickListener(this)
+        overview_temptargetbutton_nol?.setOnClickListener(this)
+
     }
 
     override fun onPause() {
@@ -336,15 +343,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_profileswitchbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_temptargetbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
-                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_profileswitchbutton, R.id.overview_profileswitchbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_temptargetbutton, R.id.overview_temptargetbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_treatmentbutton, R.id.overview_treatmentbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_wizardbutton, R.id.overview_wizardbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_insulinbutton, R.id.overview_insulinbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_quickwizardbutton, R.id.overview_quickwizardbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
+                R.id.overview_carbsbutton, R.id.overview_carbsbutton_nol -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
 
-                R.id.overview_cgmbutton -> {
+                R.id.overview_cgmbutton, R.id.overview_cgmbutton_nol -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
@@ -355,7 +362,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
                 }
 
-                R.id.overview_calibrationbutton -> {
+                R.id.overview_calibrationbutton, R.id.overview_calibrationbutton_nol -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE)) {
                         CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
                     } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
@@ -370,7 +377,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
                 }
 
-                R.id.overview_accepttempbutton -> {
+                R.id.overview_accepttempbutton, R.id.overview_accepttempbutton_nol -> {
                     profileFunction.getProfile() ?: return
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         val lastRun = loopPlugin.lastRun
@@ -380,6 +387,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                 ?: "".toSpanned(), {
                                 aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
                                 overview_accepttempbutton?.visibility = View.GONE
+                                overview_accepttempbutton_nol?.visibility = View.GONE
                                 (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                 actionStringHandler.handleInitiate("cancelChangeRequest")
                                 loopPlugin.acceptChangeRequest()
@@ -479,8 +487,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (showAcceptButton && pump.isInitialized && !pump.isSuspended && loopPlugin.isEnabled(PluginType.LOOP)) {
             overview_accepttempbutton?.visibility = View.VISIBLE
             overview_accepttempbutton?.text = "${resourceHelper.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
+            overview_accepttempbutton_nol?.visibility = View.VISIBLE
+            overview_accepttempbutton_nol?.text = "${resourceHelper.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
+
         } else {
             overview_accepttempbutton?.visibility = View.GONE
+            overview_accepttempbutton_nol?.visibility = View.GONE
         }
 
         // **** Various treatment buttons ****
@@ -491,12 +503,23 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_wizardbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
         overview_insulinbutton?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
 
+        overview_profileswitchbutton_nol?.visibility = ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_profileswitch_button, false)).toVisibility()
+        overview_temptargetbutton_nol?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_temptarget_button, false)).toVisibility()
+        overview_carbsbutton_nol?.visibility = ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized && !pump.isSuspended) && profile != null && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
+        overview_treatmentbutton_nol?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
+        overview_wizardbutton_nol?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
+        overview_insulinbutton_nol?.visibility = (pump.isInitialized && !pump.isSuspended && profile != null && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
+
+
+
         // **** Calibration & CGM buttons ****
         val xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE)
         val dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE)
         overview_calibrationbutton?.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
         overview_cgmbutton?.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
+        overview_calibrationbutton_nol?.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
+        overview_cgmbutton_nol?.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
     }
 
     private fun prepareGraphs() {

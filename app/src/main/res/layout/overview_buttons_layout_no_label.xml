@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
-        android:id="@+id/overview_accepttempbutton"
+        android:id="@+id/overview_accepttempbutton_nol"
         style="?android:attr/buttonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,100 +25,99 @@
         android:paddingStart="0dp"
         android:paddingEnd="5dp" >
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_profileswitchbutton"
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_profileswitchbutton_nol"
             style="?android:attr/buttonStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_actions_profileswitch"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_actions_profileswitch"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_temptargetbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_actions_temptarget"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_treatmentbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/icon_insulin_carbs"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_insulinbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_bolus" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_carbsbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_cp_bolus_carbs" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_wizardbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_calculator" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_calibrationbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_calibration"
+            android:visibility="gone" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButtonImage
+            android:id="@+id/overview_cgmbutton_nol"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-4dp"
+            android:layout_weight="0.5"
+            android:foregroundGravity="center"
+            android:foreground="@drawable/ic_xdrip"
             android:visibility="gone" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_temptargetbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_actions_temptarget"
-            android:visibility="gone" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_treatmentbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/icon_insulin_carbs"
-            android:visibility="gone" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_insulinbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_bolus" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_carbsbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_cp_bolus_carbs" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_wizardbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_calculator" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_calibrationbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_calibration"
-            android:visibility="gone" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_cgmbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
-            android:layout_weight="0.5"
-            android:drawablePadding="-20dp"
-            android:drawableTop="@drawable/ic_xdrip"
-            android:visibility="gone" />
-
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/overview_quickwizardbutton"
+            android:id="@+id/overview_quickwizardbutton_nol"
             style="?android:attr/buttonStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
             android:layout_marginEnd="-4dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_quickwizard_small"
-            android:drawablePadding="-15dp"
             android:text="@string/quickwizard"
             android:textColor="@color/colorQuickWizardButton"
             android:textSize="10dp" />
