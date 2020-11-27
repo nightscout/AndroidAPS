@@ -419,6 +419,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
             }
+            R.id.overview_quickwizardbutton_nol -> {
+                startActivity(Intent(v.context, QuickWizardListActivity::class.java))
+                return true
+            }
         }
         return false
     }
@@ -431,6 +435,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && actualBg != null && profile != null) {
             overview_quickwizardbutton?.visibility = View.VISIBLE
+            overview_quickwizardbutton_nol?.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
@@ -469,11 +474,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized && !pump.isSuspended) {
             overview_quickwizardbutton?.visibility = View.VISIBLE
+            overview_quickwizardbutton_nol?.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
             overview_quickwizardbutton?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
                 " " + resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
-            if (wizard.calculatedTotalInsulin <= 0) overview_quickwizardbutton?.visibility = View.GONE
-        } else overview_quickwizardbutton?.visibility = View.GONE
+            overview_quickwizardbutton_nol?.text = quickWizardEntry.buttonText() + "\n" + resourceHelper.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
+                " " + resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
+            if (wizard.calculatedTotalInsulin <= 0) {
+                overview_quickwizardbutton?.visibility = View.GONE
+                overview_quickwizardbutton_nol?.visibility = View.GONE
+            }
+        } else {
+            overview_quickwizardbutton?.visibility = View.GONE
+            overview_quickwizardbutton_nol?.visibility = View.GONE
+        }
 
         // **** Temp button ****
         val lastRun = loopPlugin.lastRun
