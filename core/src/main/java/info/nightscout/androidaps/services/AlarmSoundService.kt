@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import dagger.android.DaggerService
@@ -43,10 +44,16 @@ class AlarmSoundService : DaggerService() {
 
     }
 
+    inner class LocalBinder : Binder() {
+
+        fun getService(): AlarmSoundService = this@AlarmSoundService
+    }
+
+    private val binder = LocalBinder()
+    override fun onBind(intent: Intent): IBinder = binder
+
     private val increaseVolumeHandler = Handler()
     private var currentVolumeLevel = 0
-
-    override fun onBind(intent: Intent): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
