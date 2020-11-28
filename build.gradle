@@ -54,6 +54,7 @@ allprojects {
                 artifact '/[organisation]/[module]/archive/[revision].[ext]'
             }
         }
+        maven { url 'https://jitpack.io' }
     }
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
