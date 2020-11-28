@@ -38,6 +38,7 @@ interface SkinInterface {
             iobLayoutParams.startToEnd = view.overview_time_llayout.id
             iobLayoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
             iobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            iobLayoutParams.topMargin = 0
             val timeLayoutParams = view.overview_time_llayout.layoutParams as ConstraintLayout.LayoutParams
             timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
             timeLayoutParams.endToStart = view.overview_iob_llayout.id
