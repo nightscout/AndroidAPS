@@ -596,7 +596,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">펌프의 Basal 양이 변경되었지만 읽기를 실패했습니다.</string>
     <string name="combo_activity_checking_for_history_changes">이력 변경 확인중</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">동일한 시간(분)에 동일한 양의 2개이상의 Bolus가 주입되었습니다. 오직 하나의 기록만이 관리에 입력될 수 있습니다. 펌프를 확인한 후 케어포털 탭에서 Bolus 기록을 수동으로 추가하세요. 동일한 시간에 동일한 양의 Bolus를 주입하지 않도록 하세요.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">최근 Bolus가 24시간 전 혹은 미래에 있습니다. 펌프의 날짜가 제대로 설정되어 있는지 확인해보세요.</string>
     <string name="combo_suspious_bolus_time">펌프에서 주입된 Bolus의 시간/날짜가 잘못되었습니다. IOB가 부정확할 수 있습니다. 펌프 시간/날짜를 확인하세요.</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
