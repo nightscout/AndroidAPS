@@ -719,7 +719,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basal raten i pumpen er endret, men feilet i å lese ny verdi</string>
     <string name="combo_activity_checking_for_history_changes">Sjekker for endringer i historikken</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flere boluser levert i samme minutt og med samme insulinmengde ble importert. Bare en av doseringene ble lagt til i behandlinger. Vennligst sjekk pumpen og legg til manuelt ekstra bolus doseringer i Careportal. Ikke legg til flere boluser i samme minutt.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">Den siste bolus er eldre enn 24t eller er i fremtiden. Vennligst sjekk at datoen i pumpen er korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for levert bolus i pumpen er trolig feil, og IOB beregningen blir da feil. Vennligst sjekk pumpens tid/dato.</string>
     <string name="profileswitch_ismissing">Profil bytte mangler. Utfør et profil bytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
