@@ -564,7 +564,7 @@ class OpenHumansUploader @Inject constructor(
                 creationDate = uploadDate.time
             ),
             content = bytes,
-            highestQueueId = items.map { it.id }.max()
+            highestQueueId = items.map { it.id }.maxOrNull()
         ))
     }
 
