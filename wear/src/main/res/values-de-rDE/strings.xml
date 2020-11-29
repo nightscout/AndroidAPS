@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Tipp Komplikation</string>
     <string name="pref_unicode_in_complications">Unicode in Komplikationen</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">weitere Watchface Einstellungen</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Schaue Dir bitte die Watchface-Konfiguration an.</string>
     <string name="menu_tempt">Temp. Ziel</string>
     <string name="menu_wizard">Rechner</string>
     <string name="menu_bolus">Bolus</string>
