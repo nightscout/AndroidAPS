@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -37,7 +38,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_historybrowse.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -256,7 +256,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun runCalculation(from: String) {
-        GlobalScope.launch(Dispatchers.Default) {
+        lifecycleScope.launch(Dispatchers.Default) {
             treatmentsPluginHistory.initializeData(start - T.hours(8).msecs())
             val end = start + T.hours(rangeToDisplay.toLong()).msecs()
             iobCobCalculatorPluginHistory.stopCalculation(from)
@@ -273,7 +273,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
 
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             historybrowse_noprofile?.visibility = (profile == null).toVisibility()
             profile ?: return@launch
 
