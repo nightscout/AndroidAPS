@@ -84,7 +84,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         var percent = 0
         var absolute = 0.0
-        val durationInMinutes = actions_tempbasal_duration.value.toInt()
+        val durationInMinutes = actions_tempbasal_duration?.value?.toInt() ?: return false
         val profile = profileFunction.getProfile() ?: return false
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {

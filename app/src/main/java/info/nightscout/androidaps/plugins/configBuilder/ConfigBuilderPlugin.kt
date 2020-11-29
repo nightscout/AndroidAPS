@@ -147,7 +147,7 @@ class ConfigBuilderPlugin @Inject constructor(
         }
     }
 
-    fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
+    override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)

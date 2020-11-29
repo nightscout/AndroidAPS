@@ -40,6 +40,15 @@ import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
+import dev.doubledot.doki.ui.DokiActivity
+import info.nightscout.androidaps.activities.ProfileHelperActivity
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.activities.SingleFragmentActivity
+import info.nightscout.androidaps.activities.StatsActivity
+import info.nightscout.androidaps.events.EventAppExit
+import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -962,18 +971,16 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 message += resourceHelper.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                val adb: AlertDialog.Builder = AlertDialog.Builder(this)
-                adb
-                        .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + "\nNew GUI")
-                        .setIcon(iconsProvider.getIcon())
-                        .setMessage(messageSpanned)
-                        .setPositiveButton(resourceHelper.gs(R.string.ok), null)
-                        .create().also {
-                            it.setCanceledOnTouchOutside(false)
-                            it.setOnShowListener { OKDialog.setdrawableBackground(this, it as AlertDialog, sp) }
-                            it.show()
-                            (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
-                        }
+                AlertDialog.Builder(this)
+                    .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + "\nNew GUI")
+                    .setIcon(iconsProvider.getIcon())
+                    .setMessage(messageSpanned)
+                    .setPositiveButton(resourceHelper.gs(R.string.ok), null)
+                    .setNeutralButton(resourceHelper.gs(R.string.cta_dont_kill_my_app_info)) { _, _ -> DokiActivity.start(context = this@MainActivity) }
+                    .create().apply {
+                        show()
+                        findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
+                    }
                 return true
             }
 

@@ -94,7 +94,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val insulin = SafeParse.stringToDouble(overview_treatment_insulin.text)
+        val insulin = SafeParse.stringToDouble(overview_treatment_insulin?.text ?: return false)
         val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
         val recordOnlyChecked = overview_treatment_record_only.isChecked
         val actions: LinkedList<String?> = LinkedList()

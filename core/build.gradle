@@ -45,9 +45,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation 'androidx.biometric:biometric:1.0.1'
-    implementation "androidx.activity:activity:${activityVersion}"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
-    implementation "com.google.android.material:material:$materialVersion"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    implementation "com.google.android.material:material:$material_version"
 
     implementation "com.google.dagger:dagger-android:$dagger_android_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_android_support_version"
@@ -83,6 +83,11 @@ dependencies {
 
     // pumpCommon
     implementation "com.google.code.gson:gson:2.8.6"
+
+    // don't kill my app
+    api('dev.doubledot.doki:library:0.0.1@aar') {
+        transitive = true
+    }
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

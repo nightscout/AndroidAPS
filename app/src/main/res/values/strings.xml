@@ -851,7 +851,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basal rate changed on pump, but reading it failed</string>
     <string name="combo_activity_checking_for_history_changes">Checking for history changes</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Multiple boluses with the same amount within the same minute were just imported. Only one record could be added to treatments. Please check the pump and manually add a bolus record using the Careportal tab. Make sure to create a bolus with a time no other bolus uses.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
+    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">The last bolus is older than 24 hours or is in the future. Please check the date on the pump is set correctly.</string>
     <string name="combo_suspious_bolus_time">Time/date of the delivered bolus on pump seems wrong, IOB is likely incorrect. Please check pump time/date.</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
@@ -932,7 +932,6 @@
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_virtualpump_uploadstatus" translatable="false">virtualpump_uploadstatus</string>
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
@@ -1474,5 +1473,7 @@
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">The following data will be uploaded to your Open Humans account: Glucose values, boluses, carbs, careportal events (except notes), extended boluses, profile switches, total daily doses, temporary basals, temp targets, preferences, application version, device model and screen dimensions. Secret or private information such as your Nightscout URL or API secret will not be uploaded.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
 
 </resources>

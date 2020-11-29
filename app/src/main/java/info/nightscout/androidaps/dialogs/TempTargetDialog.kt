@@ -116,7 +116,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val actions: LinkedList<String> = LinkedList()
-        val reason = overview_temptarget_reason.selectedItem.toString()
+        val reason = overview_temptarget_reason?.selectedItem?.toString() ?: return false
         val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
         val target = overview_temptarget_temptarget.value
         val duration = overview_temptarget_duration.value.toInt()

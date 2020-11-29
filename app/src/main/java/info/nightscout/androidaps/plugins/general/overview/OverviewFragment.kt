@@ -22,6 +22,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
@@ -85,7 +86,6 @@ import kotlinx.android.synthetic.main.overview_info_layout.overview_iob
 import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import kotlinx.android.synthetic.main.status_fragment.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -630,7 +630,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             } ?: ""
 
         // ****** GRAPH *******
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
