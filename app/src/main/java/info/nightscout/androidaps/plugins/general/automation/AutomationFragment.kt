@@ -192,6 +192,17 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
                 }
                 v.onTouchEvent(motionEvent)
             }
+            // remove event
+            holder.iconTrash.setOnClickListener {
+                showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.automationEvents[position].title,
+                    Runnable {
+                        automationPlugin.automationEvents.removeAt(position)
+                        notifyItemRemoved(position)
+                        rxBus.send(EventAutomationDataChanged())
+                        rxBus.send(EventAutomationUpdateGui())
+                    }, Runnable { rxBus.send(EventAutomationUpdateGui())
+                })
+            }
         }
 
         override fun getItemCount(): Int = automationPlugin.automationEvents.size
@@ -219,6 +230,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             val rootLayout: RelativeLayout = view.findViewById(R.id.rootLayout)
             val iconLayout: LinearLayout = view.findViewById(R.id.iconLayout)
             val eventTitle: TextView = view.findViewById(R.id.viewEventTitle)
+            val iconTrash: ImageView = view.findViewById(R.id.iconTrash)
             val iconSort: ImageView = view.findViewById(R.id.iconSort)
             val enabled: CheckBox = view.findViewById(R.id.automation_enabled)
 
