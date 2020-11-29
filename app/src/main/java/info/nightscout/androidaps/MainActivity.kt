@@ -136,12 +136,12 @@ class MainActivity : NoSplashAppCompatActivity() {
                 if (it.recreate) recreate()
                 else setupViews()
                 setWakeLock()
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException )
         )
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
+            .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException )
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             val intent = Intent(this, SetupWizardActivity::class.java)

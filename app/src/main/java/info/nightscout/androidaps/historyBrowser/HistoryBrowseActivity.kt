@@ -168,7 +168,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = false)
                 }
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException )
         )
         disposable.add(rxBus
             .toObservable(EventAutosensBgLoaded::class.java)
@@ -178,12 +178,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = true)
                 }
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException )
         )
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_iobcalculationprogess?.text = it.progress }) { fabricPrivacy::logException }
+            .subscribe({ overview_iobcalculationprogess?.text = it.progress }, fabricPrivacy::logException )
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
@@ -193,7 +193,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                     prepareGraphs()
                     updateGUI("EventRefreshOverview", bgOnly = false)
                 }
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException )
         )
         if (start == 0L) {
             // set start of current day
