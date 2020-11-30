@@ -39,57 +39,5 @@ android {
     }
 }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.preference:preference-ktx:$preferencektx_version"
-    implementation 'androidx.biometric:biometric:1.0.1'
-    implementation "androidx.activity:activity-ktx:${activityVersion}"
-    api "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
-    implementation "com.google.android.material:material:$material_version"
 
-    implementation "com.google.dagger:dagger-android:$dagger_android_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_android_support_version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_compiler_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-
-    //Logger
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    //Fabric
-    implementation platform('com.google.firebase:firebase-bom:25.12.0')
-    implementation "com.google.firebase:firebase-analytics-ktx"
-    implementation "com.google.firebase:firebase-crashlytics-ktx"
-    implementation "com.google.firebase:firebase-messaging-ktx"
-
-    //RxBus
-    implementation "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
-    implementation "org.apache.commons:commons-lang3:$commonslang3_version"
-
-    //CryptoUtil
-    implementation 'com.madgag.spongycastle:core:1.58.0.0'
-
-    // Graphview cannot be upgraded
-    implementation "com.jjoe64:graphview:4.0.1"
-
-    //DateUtil
-    implementation 'net.danlew:android.joda:2.10.6'
-
-    //db
-    implementation "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
-    implementation "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
-
-    // pumpCommon
-    implementation "com.google.code.gson:gson:2.8.6"
-
-    // don't kill my app
-    api('dev.doubledot.doki:library:0.0.1@aar') {
-        transitive = true
-    }
-
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-}
+apply from: 'core_dependencies.gradle'

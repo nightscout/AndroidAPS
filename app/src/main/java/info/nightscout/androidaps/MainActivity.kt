@@ -312,18 +312,18 @@ open class MainActivity : NoSplashAppCompatActivity() {
         setUserStats()
         setupViews()
         disposable.add(rxBus
-                .toObservable(EventRebuildTabs::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (it.recreate) recreate()
-                    else setupViews()
-                    setWakeLock()
-                }) { fabricPrivacy::logException }
+            .toObservable(EventRebuildTabs::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.recreate) recreate()
+                else setupViews()
+                setWakeLock()
+            }, fabricPrivacy::logException )
         )
         disposable.add(rxBus
-                .toObservable(EventPreferenceChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException )
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             val intent = Intent(this, SetupWizardActivity::class.java)
