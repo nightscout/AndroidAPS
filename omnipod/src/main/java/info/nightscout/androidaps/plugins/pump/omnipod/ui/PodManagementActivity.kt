@@ -209,7 +209,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     private fun displayNotConfiguredDialog() {
-        context?.let {
+        context.let {
             UIRunnable(Runnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
                     resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
