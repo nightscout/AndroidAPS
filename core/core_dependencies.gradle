@@ -1,7 +1,7 @@
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
