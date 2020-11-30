@@ -386,7 +386,7 @@
     <string name="nsclientinternal_url">Adresa URL:</string>
     <string name="nsclientinternal_autoscroll">Posouvat</string>
     <string name="restart">Restart</string>
-    <string name="nsclientinternal_title">Interní NSClient</string>
+    <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Adresa Nightscoutu</string>
     <string name="nsclientinternal_url_dialogmessage">Vložte adresu Nightscoutu</string>
     <string name="nsclientinternal_secret_title">NS heslo (API secret)</string>
