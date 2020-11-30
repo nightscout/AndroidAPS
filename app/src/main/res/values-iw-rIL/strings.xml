@@ -1234,5 +1234,6 @@
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">הנתונים הבאים יועלו לחשבון Open Humans שלכם: ערכי גלוקוז, בולוסים, פחמימות, אירועים מפורטל הטיפולים (מלבד הערות), בולוסים ממושכים, החלפות פרופיל, מינונים יומיים כוללים, באזאלים זמניים, ערכי מטרה זמניים, העדפות, גרסת יישום, דגם המכשיר ומממדי המסך. מידע סודי או פרטי כגון כתובת ה-Nightscout האישית או סוד ה-API שלכם לא יועלו.</string>
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="filter">סינון</string>
+    <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
 </resources>
