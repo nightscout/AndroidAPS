@@ -63,10 +63,6 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: MIN_DIA
         }
 
-    fun iobCalcForTreatment(treatment: Treatment, time: Long): Iob {
-        return this.iobCalcForTreatment(treatment, time, 0.0)
-    }
-
     override fun iobCalcForTreatment(treatment: Treatment, time: Long, dia: Double): Iob {
         val result = Iob()
         val peak = peak

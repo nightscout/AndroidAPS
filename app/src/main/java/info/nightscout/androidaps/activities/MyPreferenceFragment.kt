@@ -151,7 +151,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         (savedInstanceState ?: arguments)?.let { bundle ->
             if (bundle.containsKey("id")) {
-                pluginId = bundle.getInt("id") ?: -1
+                pluginId = bundle.getInt("id")
             }
             if (bundle.containsKey("filter")) {
                 filter = bundle.getString("filter") ?: ""

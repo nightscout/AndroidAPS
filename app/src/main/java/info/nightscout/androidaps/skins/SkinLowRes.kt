@@ -23,7 +23,7 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
 
     override fun actionsLayout(isLandscape: Boolean, isSmallWidth: Boolean): Int =
         when {
-            isLandscape || !isSmallWidth -> R.layout.actions_fragment
+            isLandscape                  -> R.layout.actions_fragment
             else                         -> R.layout.actions_fragment_lowres
         }
 

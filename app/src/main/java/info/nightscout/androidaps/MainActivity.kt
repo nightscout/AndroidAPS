@@ -27,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
+import dev.doubledot.doki.ui.DokiActivity
 import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
@@ -135,12 +136,12 @@ class MainActivity : NoSplashAppCompatActivity() {
                 if (it.recreate) recreate()
                 else setupViews()
                 setWakeLock()
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException )
         )
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
+            .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException )
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             val intent = Intent(this, SetupWizardActivity::class.java)
@@ -304,9 +305,10 @@ class MainActivity : NoSplashAppCompatActivity() {
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(resourceHelper.gs(R.string.ok), null)
-                    .create().also {
-                        it.show()
-                        (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
+                    .setNeutralButton(resourceHelper.gs(R.string.cta_dont_kill_my_app_info)) { _, _ -> DokiActivity.start(context = this@MainActivity) }
+                    .create().apply {
+                        show()
+                        findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
                     }
                 return true
             }
