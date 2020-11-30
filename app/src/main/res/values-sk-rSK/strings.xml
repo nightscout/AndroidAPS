@@ -719,6 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Bazál na pumpe bol zmenený, ale jeho načítanie zlyhalo</string>
     <string name="combo_activity_checking_for_history_changes">Kontrolujem zmeny v histórii</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Boli načítané bolusy rovnakej veľkosti v priebehu jednej minúty. Do ošetrení je možné pridať iba jeden. Skontrolujte pumpu a pridajte bolus do ošetrení ručne tak, aby čas nekolidoval.</string>
+    <string name="about_link_urls">\n\ndokumentácia:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Posledný bolus je starší ako 24h, alebo je v budúcnosti. Skontrolujte čas v pumpe.</string>
     <string name="combo_suspious_bolus_time">Dátum/čas podaného bolusu se zdá byť nesprávny. IOB bude pravdepodobne chybné. Skontrolujte čas v pumpe.</string>
     <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
@@ -1233,4 +1234,6 @@
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Následujúce dáta budú nahraté do vašeho účtu Open Humans: hodnoty glykémie, bolusy, sacharidy, udalosti starostlivosti (okrem poznámok), rozložené bolusy, prepnutia profilov, celkové denné dávky, dočasné bazály, nastavenia, verzia aplikácie, model zariadenia a rozmery obrazovky. Tajné, alebo súkromné informácie, ako je URL, alebo API heslo vašeho Nightscoutu, nahraté nebudú.</string>
     <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
     <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Nie je možné vytvoriť lokálny profil. Profil je neplatný.</string>
+    <string name="cta_dont_kill_my_app_info">Nepotláčať moju aplikáciu?</string>
 </resources>
