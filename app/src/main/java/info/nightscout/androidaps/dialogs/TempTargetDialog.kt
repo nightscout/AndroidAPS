@@ -101,8 +101,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         }
 
                         else                                   -> {
-                            defaultDuration = overview_temptarget_duration.value
-                            defaultTarget = overview_temptarget_temptarget.value
+                            defaultDuration = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
+                            defaultTarget = savedInstanceState?.getDouble("overview_temptarget_temptarget") ?: if (profileFunction.getUnits() == Constants.MMOL) Constants.MIN_TT_MMOL else Constants.MIN_TT_MGDL
                         }
                     }
                     overview_temptarget_temptarget.value = defaultTarget
