@@ -141,7 +141,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
     private final List<CustomAction> customActions = Collections.singletonList(new CustomAction(
-            R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, true));
+            R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, R.drawable.icon_pod_activity_reset_rileylink_config, true));
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
 
@@ -810,12 +810,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
-        OmnipodCustomActionType mcat = (OmnipodCustomActionType) customActionType;
+        OmnipodCustomActionType omnipodCustomActionType = (OmnipodCustomActionType) customActionType;
 
-        if (mcat == OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION) {
+        if (omnipodCustomActionType == OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION) {
             serviceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
         } else {
-            aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + mcat);
+            aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + omnipodCustomActionType);
         }
     }
 
