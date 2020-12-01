@@ -1230,4 +1230,5 @@
     <string name="uploaded_data">Качени данни</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, болуси, въглехидрати, удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на AAPS, модел на телефона и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
+    <string name="filter">Филтър</string>
 </resources>
