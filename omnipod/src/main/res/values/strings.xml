@@ -177,6 +177,8 @@
 
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod management</string>
+    <string name="omnipod_pod_management_heading_actions">Actions</string>
+    <string name="omnipod_pod_management_heading_tools">Tools</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Waiting for RileyLink connection…</string>
     <string name="omnipod_pod_management_button_activate_pod">Activate Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Deactivate Pod</string>

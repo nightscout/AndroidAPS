@@ -41,7 +41,7 @@
     <color name="icon_pod_management_play_test_beep_outline">@color/pod_icon_outline</color>
     <color name="icon_pod_management_pulse_log">#4DD0E1</color>
     <color name="icon_pod_management_pulse_log_outline">@color/pod_icon_outline</color>
-    <color name="icon_pod_management_pod_history">#9FA8DA</color>
+    <color name="icon_pod_management_pod_history">#FB8C00</color>
     <color name="icon_pod_management_pod_history_outline">@color/pod_icon_outline</color>
     <color name="icon_pod_management_rl_stats">@color/rl_board_shape</color>
     <color name="icon_pod_management_rl_stats_outline">@color/rl_icon_outline</color>
