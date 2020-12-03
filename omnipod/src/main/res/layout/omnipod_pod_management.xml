@@ -145,7 +145,7 @@
             android:textAllCaps="false" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod"
+            android:id="@+id/omnipod_pod_management_button_rileylink_stats"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
