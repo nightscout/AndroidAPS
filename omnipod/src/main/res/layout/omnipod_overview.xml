@@ -778,7 +778,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_omnipod_overview_refresh_pod_status"
+                    android:drawableTop="@drawable/ic_omnipod_overview_refresh_pod_status"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                     android:text="@string/omnipod_overview_button_refresh" />
 
@@ -788,7 +788,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_omnipod_overview_pod_management"
+                    android:drawableTop="@drawable/ic_omnipod_overview_pod_management"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                     android:text="@string/omnipod_overview_button_pod_management" />
 
@@ -798,7 +798,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_omnipod_overview_acknowledge_alerts"
+                    android:drawableTop="@drawable/ic_omnipod_overview_acknowledge_alerts"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                     android:text="@string/omnipod_overview_button_acknowledge_active_alerts" />
 
@@ -808,7 +808,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_omnipod_overview_set_time"
+                    android:drawableTop="@drawable/ic_omnipod_overview_set_time"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                     android:text="@string/omnipod_overview_button_set_time"
                     android:visibility="gone" />
@@ -819,7 +819,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_omnipod_overview_resume_delivery"
+                    android:drawableTop="@drawable/ic_omnipod_overview_resume_delivery"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                     android:text="@string/omnipod_overview_button_resume_delivery"
                     android:visibility="gone" />
@@ -830,10 +830,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_omnipod_overview_suspend_delivery"
+                    android:drawableTop="@drawable/ic_omnipod_overview_suspend_delivery"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
                     android:text="@string/omnipod_overview_button_suspend_delivery"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
