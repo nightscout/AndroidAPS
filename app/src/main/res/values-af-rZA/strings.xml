@@ -570,7 +570,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basale koers is verander op pomp, maar kon nie dit teruglees nie</string>
     <string name="combo_activity_checking_for_history_changes">Kontroleer tans vir geskiedenis veranderinge</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Veelvuldige boluses met dieselfde hoeveelheid binne die dieselfde minuut was nounet ingevoer. Slegs een rekord kon bygevoeg word in behandelings. Kontroleer asseblief die pomp en voeg per hand \'n bolus rekord met behulp van die Careportal oortjie maak seker om \'n bolus te skep met \'n tyd deur geen ander bolus gebruik.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">Die laaste bolus is ouer as 24 uur of is in die toekoms. Kontroleer asseblief of die datum op die pomp reg ingestel is.</string>
     <string name="combo_suspious_bolus_time">Tyd/datum van die gelewerde bolus op pomp lyk verkeerd, IAB is waarskynlik verkeerd. Kontroleer asseblief pomp tyd/datum.</string>
     <string name="profileswitch_ismissing">ProfileSwitch ontbreek. Doen \'n profiel skakelaar of druk \"Aktiveer profiel\" in die LokaleProfiel.</string>

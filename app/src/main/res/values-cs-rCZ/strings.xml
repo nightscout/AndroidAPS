@@ -386,7 +386,7 @@
     <string name="nsclientinternal_url">Adresa URL:</string>
     <string name="nsclientinternal_autoscroll">Posouvat</string>
     <string name="restart">Restart</string>
-    <string name="nsclientinternal_title">Interní NSClient</string>
+    <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Adresa Nightscoutu</string>
     <string name="nsclientinternal_url_dialogmessage">Vložte adresu Nightscoutu</string>
     <string name="nsclientinternal_secret_title">NS heslo (API secret)</string>
@@ -719,7 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Bazál na pumpě byl změněn, ale čtení selhalo</string>
     <string name="combo_activity_checking_for_history_changes">Kontroluji změny v historii</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Byly načteny bolusy stejné velikosti během jedné minuty. Do ošetření je možné přidat jen jeden. Zkontrolujte pumpu a přidejte bolus do ošetření ručně tak, aby čas nekolidoval.</string>
-    <string name="about_link_urls">\nhttp://www.androidaps.org\n\nfacebook: \nhttp://facebook.androidaps.org</string>
+    <string name="about_link_urls">\n\ndokumentace:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Poslední bolus je starší než 24h nebo v budoucnu. Zkontrolujte čas v pumpě.</string>
     <string name="combo_suspious_bolus_time">Datum/čas podaného bolusu se zdá špatně. IOB bude chybné. Zkontrolujte čas v pumpě.</string>
     <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
@@ -1233,4 +1233,7 @@
     <string name="uploaded_data">Odeslaná data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Následující data budou nahrána do vašeho účtu Open Humans: hodnoty glykémie, bolusy, sacharidy, události péče (kromě poznámek), rozložené bolusy, přepnutí profilu, celkové denní dávky, dočasné bazály, nastavení, verze aplikace, model zařízení a rozměry obrazovky. Tajné nebo soukromé informace, jako je URL nebo API heslo vašeho Nightscoutu, nahrány nebudou.</string>
     <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
+    <string name="filter">Filtr</string>
+    <string name="copytolocalprofile_invalid">Nelze vytvořit lokální profil. Profil je neplatný.</string>
+    <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
 </resources>
