@@ -142,7 +142,7 @@
     <string name="iob_negiob">Negative IOB for a substantial period in the absence of exercise suggests your profile is too strong and less insulin is needed in your settings.</string>
     <string name="iob_posiob">Positive IOB for a substantial period suggests insulin resistance or unannounced meals.</string>
     <string name="breadgrams_label">Carb entry and boluses</string>
-    <string name="breadgrams_grams">Only grams should be uesd for estimating and recording carbohydrates consumed.</string>
+    <string name="breadgrams_grams">Only grams should be used for estimating and recording carbohydrates consumed.</string>
     <string name="breadgrams_exchange">Carbohydrates consumed can be recorded using an appropriate exchange system (e.g. DAFNE “CHO” exchanges or European “Bread Units”) provided the appropriate I:C ratios are specified in profiles. </string>
     <string name="breadgrams_decay">AndroidAPS uses a dynamic model to estimate carb “decay” and calculate COB.</string>
     <string name="breadgrams_calc">If blood glucose levels are outside acceptable values (too low or too high) the bolus calculator should be used to provide suggestions for carb or insulin corrections.</string>
