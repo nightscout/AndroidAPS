@@ -111,6 +111,13 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.exercise_15g, false))
                 .hint(new Hint(R.string.exercise_hint1))
         );
+        tasks.add(new ExamTask(R.string.noisycgm_label, R.string.noisycgm_whattodo,"noisycgm")
+                .option(new Option(R.string.noisycgm_nothing, false))
+                .option(new Option(R.string.noisycgm_pause, true))
+                .option(new Option(R.string.noisycgm_replacesensor, true))
+                .option(new Option(R.string.noisycgm_checksmoothing, true))
+                .hint(new Hint(R.string.noisycgm_hint1))
+        );
         tasks.add(new ExamTask(R.string.pumpdisconnect_label, R.string.blank,"pumpdisconnect")
                 .option(new Option(R.string.pumpdisconnect_unnecessary, false))
                 .option(new Option(R.string.pumpdisconnect_missinginsulin, true))
@@ -181,6 +188,13 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.iob_hightemp, false))
                 .option(new Option(R.string.iob_negiob, true))
                 .option(new Option(R.string.iob_posiob, true))
+        );
+        tasks.add(new ExamTask(R.string.breadgrams_label, R.string.blank,"breadgrams")
+                .option(new Option(R.string.breadgrams_grams, true))
+                .option(new Option(R.string.breadgrams_exchange, false))
+                .option(new Option(R.string.breadgrams_decay, true))
+                .option(new Option(R.string.breadgrams_calc, false))
+                .hint(new Hint(R.string.breadgrams_hint1))
         );
         tasks.add(new ExamTask(R.string.extendedcarbs_label, R.string.extendedcarbs_handling,"extendedcarbs")
                 .option(new Option(R.string.extendedcarbs_future, true))
