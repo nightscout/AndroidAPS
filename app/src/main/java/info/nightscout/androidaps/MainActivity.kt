@@ -173,8 +173,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) }),
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) })
+            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } },
+            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } }
         )
     }
 
@@ -193,14 +193,14 @@ class MainActivity : NoSplashAppCompatActivity() {
         val pageAdapter = TabPageAdapter(this)
         main_navigation_view.setNavigationItemSelectedListener { true }
         val menu = main_navigation_view.menu.also { it.clear() }
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p)
             if (p.isEnabled() && p.hasFragment() && !p.isFragmentVisible() && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(p.name)
                 menuItem.isCheckable = true
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
-                    intent.putExtra("plugin", activePlugin.pluginsList.indexOf(p))
+                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
                     startActivity(intent)
                     main_drawer_layout.closeDrawers()
                     true
@@ -274,7 +274,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_preferences        -> {
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", -1)
                     startActivity(i)
@@ -323,7 +323,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
             R.id.nav_plugin_preferences -> {
                 val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", plugin.preferencesId)
                     startActivity(i)
