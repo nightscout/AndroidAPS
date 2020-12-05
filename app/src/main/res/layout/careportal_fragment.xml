@@ -79,7 +79,7 @@
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:drawableTop="@drawable/ic_cp_cgm_target"
+                        android:drawableTop="@drawable/ic_actions_temptarget"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
                         android:text="@string/careportal_temporarytarget"
