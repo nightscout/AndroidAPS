@@ -21,6 +21,7 @@
     <string name="description_food">Zobrazenie prednastavených jedál, definovaných v Nightscoute</string>
     <string name="description_insulin_rapid">Predvoľba pre inzulín Humalog a Novorapid</string>
     <string name="description_insulin_ultra_rapid">Predvoľba pre inzulín Fiasp</string>
+    <string name="description_insulin_lyumjev">Predvoľba pre inzulín Lyumjev</string>
     <string name="description_insulin_free_peak">Umožňuje definovať vrchol účinnosti inzulínu a malo by byť používané iba pokročilými užívateľmi</string>
     <string name="description_loop">Aktivuje alebo deaktivuje spustenie uzavretého okruhu.</string>
     <string name="description_ns_client">Synchronizuje vaše dáta s NS</string>
@@ -260,6 +261,7 @@
     <string name="valueoutofrange">Hodnota %1$s je mimo prednastavený rozsah</string>
     <string name="smscommunicator_pumpconnectwithcode">Ak chcete pripojiť pumpu, odpovedzte pomocou SMS s kódom %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Pripojenie k pumpe zlyhalo</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Ak chcete odpojiť pumpu na %1$d minút, odpovedzte pomocou SMS s kódom %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pumpa odpojená</string>
     <string name="smscommunicator_reconnect">Pumpa bola znovu pripojená</string>
     <string name="smscommunicator_remotecommandnotallowed">Príkazy na diaľku nie sú povolené</string>
@@ -403,10 +405,13 @@
     <string name="wear_detailedIOB_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="nosuccess">Neúspešné - skontrolujte telefón</string>
     <string name="notavailable">nie je k dispozícii</string>
+    <string name="patientage">Typ pacienta</string>
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
     <string name="adult">Dospelý</string>
     <string name="resistantadult">Dospelý s nízkou citlivosťou</string>
+    <string name="pregnant">Tehotenstvo</string>
+    <string name="patientage_summary">Prosím vyberte typ pacienta pre nastavenie bezpečnostných limitov</string>
     <string name="patient_name">Meno pacienta</string>
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
@@ -450,6 +455,8 @@
     <string name="statuslights_iage_critical">Prah kritického veku inzulínu [h]</string>
     <string name="statuslights_sage_warning">Prah upozornenia na vek senzora [h]</string>
     <string name="statuslights_sage_critical">Prah kritického veku senzora [h]</string>
+    <string name="statuslights_sbat_warning">Prah upozornenia na úroveň batérie senzora [%]</string>
+    <string name="statuslights_sbat_critical">Prah kritickej úrovne batérie senzora [%]</string>
     <string name="statuslights_bage_warning">Prah upozornenia na úroveň batérie [h]</string>
     <string name="statuslights_bage_critical">Prah kritickej úrovne batérie [h]</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [JI]</string>
@@ -480,6 +487,12 @@
     <string name="careportal_insulinage_label">Vek inzulínu</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="careportal_pbage_label">Vek batérie v pumpe</string>
+    <string name="careportal_sensor_label">Senzor</string>
+    <string name="careportal_canula_label">Kanyla</string>
+    <string name="careportal_insulin_label">Inzulín</string>
+    <string name="careportal_pb_label">Batéria do pumpy</string>
+    <string name="careportal_age_label">vek:</string>
+    <string name="careportal_level_label">úroveň:</string>
     <string name="ns_alarmoptions">Nastavenie alarmov</string>
     <string name="ns_alarms">Vytvoriť oznámenia z alarmov NS</string>
     <string name="ns_announcements">Vytvoriť oznámenia z upozornení NS</string>
@@ -532,6 +545,7 @@
     <string name="free_peak_oref">Voliteľný vrchol - Oref</string>
     <string name="rapid_acting_oref">Rýchlo pôsobiaci - Oref</string>
     <string name="ultrarapid_oref">Ultra rýchly - Oref</string>
+    <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA %1$f je príliš krátke - AAPS namiesto toho použilo %2$f !</string>
     <string name="activate_profile">Aktivovať profil</string>
     <string name="invalid">NEPLATNÝ</string>
@@ -705,7 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Bazál na pumpe bol zmenený, ale jeho načítanie zlyhalo</string>
     <string name="combo_activity_checking_for_history_changes">Kontrolujem zmeny v histórii</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Boli načítané bolusy rovnakej veľkosti v priebehu jednej minúty. Do ošetrení je možné pridať iba jeden. Skontrolujte pumpu a pridajte bolus do ošetrení ručne tak, aby čas nekolidoval.</string>
-    <string name="about_link_urls">\nhttp://www.androidaps.org\n\nfacebook: \nhttp://facebook.androidaps.org</string>
+    <string name="about_link_urls">\n\ndokumentácia:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Posledný bolus je starší ako 24h, alebo je v budúcnosti. Skontrolujte čas v pumpe.</string>
     <string name="combo_suspious_bolus_time">Dátum/čas podaného bolusu se zdá byť nesprávny. IOB bude pravdepodobne chybné. Skontrolujte čas v pumpe.</string>
     <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
@@ -794,6 +808,8 @@
     <string name="bgsourcesetup">Konfigurácia zdroja glykémií</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilov. Pokiaľ ide o dieťa, využijete pravdepodobne NS profil. Pokiaľ Vás nikto cez NS nesleduje, budete pravdepodobne preferovať lokálny profil. Uvedomte si, že nastavujete iba zdroj profilov. Na to aby se naozaj profil začal používať, je potrebné vykonať aktiváciu profilu použitím funkcie \"Prepnutie profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Čakám na pripojenie RileyLink…\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po inicializácii pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
     <string name="permission">Povolenie</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
@@ -983,6 +999,7 @@
     <string name="storage">obmedzenie interného úložiska</string>
     <string name="diskfull">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
     <string name="wrongformat">Chybný formát</string>
+    <string name="wrongTbrDuration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
     <string name="sms_wrongcode">Nesprávný kód. Príkaz zrušený.</string>
     <string name="notconfigured">Nie je nakonfigurované</string>
     <string name="profileswitchcreated">Prepnutie profilu vytvorené</string>
@@ -1148,6 +1165,9 @@
     <string name="smscommunicator_otp_reset_title">Resetovať autentifikačný kľúč</string>
     <string name="smscommunicator_otp_reset_prompt">Ste si istý, že chcete obnoviť autentifikačný kľúč? Vyresetujete tým všetky aktuálne nakonfigurované autentikátory a budete ich musieť znovu nastaviť.</string>
     <string name="smscommunicator_otp_reset_successful">Bol vygenerovaný nový autentifikačný kľúč! Prosím, použite aktualizovaný QR kód pre nastavenie autentifikátorov.</string>
+    <string name="smscommunicator_otp_export_title">Export OTP tajného kľúča</string>
+    <string name="smscommunicator_otp_export_prompt">Ste si istý, že chcete skopírovať tajný OTP kľúč do schránky?\n\nPravdepodobne to budete potrebovať iba v prípade, keď bude mať vaša overovacia aplikácia problém so skenováním QR kódu, chcete ho zadať ručne, alebo chcete nakonfigurovať hardwarový OTP token pomocou špeciálnej aplikácie.</string>
+    <string name="smscommunicator_otp_export_successful">Tajné OTP heslo (vo formáte Base32) bolo vyexportované a skopírované do schránky. Vložte ho do autentikátora, alebo programátora OTP hardwaru!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainštalujte Autentifikátor</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pre nastavenie AndroidAPS OTP kódov</string>
     <string name="smscommunicator_otp_step3_test_header">3. Odtestujte jednorázové heslo</string>
@@ -1167,6 +1187,7 @@
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
     <string name="copyexistingvalues">Skopírovať nastavenia NS (ak existujú)?</string>
     <string name="classic_description">Pôvodný vzhľad</string>
+    <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>
     <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
     <string name="largedisplay_description">Veľký displej</string>
     <string name="skin">Vzhľad</string>
@@ -1211,4 +1232,8 @@
     <string name="worker_state">Stav procesu: %s</string>
     <string name="uploaded_data">Odoslané údaje</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Následujúce dáta budú nahraté do vašeho účtu Open Humans: hodnoty glykémie, bolusy, sacharidy, udalosti starostlivosti (okrem poznámok), rozložené bolusy, prepnutia profilov, celkové denné dávky, dočasné bazály, nastavenia, verzia aplikácie, model zariadenia a rozmery obrazovky. Tajné, alebo súkromné informácie, ako je URL, alebo API heslo vašeho Nightscoutu, nahraté nebudú.</string>
+    <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
+    <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Nie je možné vytvoriť lokálny profil. Profil je neplatný.</string>
+    <string name="cta_dont_kill_my_app_info">Nepotláčať moju aplikáciu?</string>
 </resources>

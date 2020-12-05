@@ -113,7 +113,7 @@ class EditEventDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         // check for title
-        val title = automation_inputEventTitle.text.toString()
+        val title = automation_inputEventTitle?.text?.toString() ?: return false
         if (title.isEmpty()) {
             ToastUtils.showToastInUiThread(context, R.string.automation_missing_task_name)
             return false

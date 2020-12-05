@@ -719,7 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Скорость базала на помпе изменилась, но учесть ее не удалось</string>
     <string name="combo_activity_checking_for_history_changes">Проверка изменений в истории событий помпы</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Только что импортировано несколько болюсов с одинаковым количеством инсулина в течение одной минуты. В лог лечения может быть добавлена только одна запись. Пожалуйста проверьте помпу и вручную введите запись о болюсе через вкладку портала назначений. Убедитесь, что данному времени соответствует только одна запись о болюсе.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de) \n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
+    <string name="about_link_urls">\n\nДокументация:\nhttps://androidaps.readthedocs.io\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Новый болюс старше 24 часов или запись относится к будущему. Пожалуйста убедитесь что дата на помпе установлена правильно.</string>
     <string name="combo_suspious_bolus_time">Время/дата поданного болюса неверны. Вероятно, кол-во активного инсулина IOB также неверно. Проверьте время/дату помпы.</string>
     <string name="profileswitch_ismissing">Профиль не переключен. Пожалуйста переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
@@ -1235,4 +1235,6 @@ Context | Edit Context</string>
     <string name="uploaded_data">Загруженные данные</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">На ваш аккаунт Open Humans будут загружены следующие данные: значения ГК, события careportal (за исключением примечаний), пролонгированные болюсы, переключения профиля, суммарные суточные дозы, временные базалы, временные цели, настройки, версии приложения, модель устройства и размеры экрана. Секретная или конфиденциальная информация, такая как адрес вашего сайта Nightscout или API secret, не будет загружена.</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
+    <string name="filter">Фильтр</string>
+    <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
 </resources>
