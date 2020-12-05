@@ -719,7 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basal raten i pumpen er endret, men feilet i å lese ny verdi</string>
     <string name="combo_activity_checking_for_history_changes">Sjekker for endringer i historikken</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flere boluser levert i samme minutt og med samme insulinmengde ble importert. Bare en av doseringene ble lagt til i behandlinger. Vennligst sjekk pumpen og legg til manuelt ekstra bolus doseringer i Careportal. Ikke legg til flere boluser i samme minutt.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
+    <string name="about_link_urls">\n\ndokumentasjon:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Den siste bolus er eldre enn 24t eller er i fremtiden. Vennligst sjekk at datoen i pumpen er korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for levert bolus i pumpen er trolig feil, og IOB beregningen blir da feil. Vennligst sjekk pumpens tid/dato.</string>
     <string name="profileswitch_ismissing">Profil bytte mangler. Utfør et profil bytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
@@ -1233,4 +1233,7 @@
     <string name="uploaded_data">Opplastede data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Følgende data vil bli lastet opp til din Open Humans konto: glukoseverdier, boluser, karbohydrater, careportalhendelser (bortsett fra merknader), forlengede boluser, profilbytter, totale daglige doser, temp basaler, endringer i BS mål, innstillinger, app versjon, mobilmerke og skjermstørrelser. Hemmelig eller privat informasjon som din Nightscout URL eller API secret vil ikke bli lastet opp.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
+    <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Klarte ikke å opprette lokal profil. Profilen er ikke gyldig.</string>
+    <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
 </resources>

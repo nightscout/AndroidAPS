@@ -720,7 +720,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_error_failure_reading_changed_basal_rate">Le pourcentage de basal a changé dans la pompe mais sa lecture a échoué</string>
     <string name="combo_activity_checking_for_history_changes">Vérification des modifications de l\'historique</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Merci de vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
-    <string name="about_link_urls">\n\nhttps://androidaps.readthedocs.io/en/latest/CROWDIN/fr\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">Le dernier bolus enregistré date d\'il y a plus de 24h ou est dans le futur. Vérifiez que la date dans la pompe est correctement définie.</string>
     <string name="combo_suspious_bolus_time">L\'heure/date sur la pompe du dernier bolus administré semble erroné. L\'IA est probablement incorrecte. Vérifiez l\'heure/date de la pompe.</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
@@ -1234,4 +1233,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="uploaded_data">Données transférées</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Les données suivantes seront téléchargées sur votre compte Open Humans : glycémie, bolus, glucides, événements Careportal (sauf les notes), bolus étendus, changements de profil, doses quotidiennes totales, basales temporaires, cibles temporaires, préférences, version de l\'application, modèle de l\'appareil et dimensions de l\'écran. Les informations secrètes ou privées telles que votre URL Nightscout ou votre API secret ne seront pas téléchargés.</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
+    <string name="filter">Filtrer</string>
 </resources>
