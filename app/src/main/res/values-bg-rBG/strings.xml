@@ -405,11 +405,13 @@
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">---</string>
+    <string name="patientage">Тип пациент</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
     <string name="adult">Възрастен</string>
     <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
     <string name="pregnant">Бременност</string>
+    <string name="patientage_summary">Моля, изберете тип на пациента за настройка на границите за безопастност</string>
     <string name="patient_name">Име на пациента</string>
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
@@ -717,7 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Базалният процент е променен в помпата, но прочитането е неуспешно</string>
     <string name="combo_activity_checking_for_history_changes">Проверка за промени в историята на помпата</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Бяха внесени няколко болуса със същото количество в рамките на една и съща минута. Само един запис може да бъде добавен към лечението. Моля, проверете помпата и ръчно добавете болус запис, като използвате раздела Careportal . Уверете се, че сте създали болус и нямате друг болус за същото време.</string>
-    <string name="about_link_urls"> http://www.androidaps.org  facebook: http://facebook.androidaps.org</string>
+    <string name="about_link_urls">\n\nдокументация:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Последният болус е с време от преди 24 часа или е в бъдеще. Моля, проверете дали датата на помпата е зададена правилно.</string>
     <string name="combo_suspious_bolus_time">Времето/датата на доставения болус на помпата изглежда погрешно, IOB вероятно е неправилно. Моля, проверете часа/датата на помпата.</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
@@ -1231,4 +1233,7 @@
     <string name="uploaded_data">Качени данни</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, болуси, въглехидрати, удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на AAPS, модел на телефона и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
+    <string name="filter">Филтър</string>
+    <string name="copytolocalprofile_invalid">Не може да се създаде локален профил. Профилът е невалиден.</string>
+    <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
 </resources>

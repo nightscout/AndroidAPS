@@ -61,7 +61,7 @@ class LoopPluginTest : TestBase() {
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
         loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
-        `when`(activePlugin.getActivePump()).thenReturn(virtualPumpPlugin)
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
     }
 
     @Test
