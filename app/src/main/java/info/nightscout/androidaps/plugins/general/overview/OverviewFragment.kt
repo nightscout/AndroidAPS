@@ -230,6 +230,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_profileswitchbutton_nol?.setOnClickListener(this)
         overview_temptargetbutton_nol?.setOnClickListener(this)
 
+        overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
+        overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
+        overviewMenus.setupPopupMenu(overview_temptarget, requireContext(), childFragmentManager)
+
     }
 
     override fun onPause() {
@@ -322,19 +326,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.title) {
-            resourceHelper.gs(R.string.careportal_profileswitch),
-            resourceHelper.gs(R.string.viewprofile),
-            resourceHelper.gs(R.string.custom) ->  return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
-
-            else    -> {
-                OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.confirm), item.title.toString(),
-                    Runnable {
-                        overviewMenus.onContextItemSelected(item, childFragmentManager)
-                    })
-                return true
-            }
-        }
+        return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
     }
 
     override fun onClick(v: View) {
@@ -500,9 +492,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         if (showAcceptButton && pump.isInitialized && !pump.isSuspended && loopPlugin.isEnabled(PluginType.LOOP)) {
             overview_accepttempbutton?.visibility = View.VISIBLE
-            overview_accepttempbutton?.text = "${resourceHelper.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
+            overview_accepttempbutton?.text = "${resourceHelper.gs(R.string.setbasalquestion)}\n${lastRun?.constraintsProcessed}"
             overview_accepttempbutton_nol?.visibility = View.VISIBLE
-            overview_accepttempbutton_nol?.text = "${resourceHelper.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
+            overview_accepttempbutton_nol?.text = "${resourceHelper.gs(R.string.setbasalquestion)}\n${lastRun?.constraintsProcessed}"
 
         } else {
             overview_accepttempbutton?.visibility = View.GONE
