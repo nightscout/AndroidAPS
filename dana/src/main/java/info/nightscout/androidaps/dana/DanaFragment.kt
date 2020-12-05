@@ -168,6 +168,11 @@ class DanaFragment : DaggerFragment() {
         loopHandler.removeCallbacks(refreshLoop)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // GUI functions
     @Synchronized
     fun updateGUI() {
