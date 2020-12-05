@@ -172,6 +172,7 @@
     <string name="omnipod_cmd_read_pulse_log">Read pulse log</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
+    <string name="omnipod_cmd_split_tbr">Split temporary basal because of uncertain failure in cancellation</string>
     <string name="omnipod_cmd_beep_config">Beep config</string>
     <string name="omnipod_cmd_play_test_beep">Play test beep</string>
 

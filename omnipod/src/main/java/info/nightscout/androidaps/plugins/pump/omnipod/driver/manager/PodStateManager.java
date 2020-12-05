@@ -428,7 +428,6 @@ public abstract class PodStateManager {
         setAndStore(() -> {
             if (!Objects.equals(podState.isTempBasalCertain(), certain)) {
                 podState.setTempBasalCertain(certain);
-                onTbrChanged();
             }
         });
     }
@@ -570,7 +569,7 @@ public abstract class PodStateManager {
 
             boolean isBasalCertain = podState.isBasalCertain() == null || podState.isBasalCertain();
             boolean isTempBasalCertain = podState.isTempBasalCertain() == null || podState.isTempBasalCertain();
-            if (!status.getDeliveryStatus().isTbrRunning()) {
+            if (!status.getDeliveryStatus().isTbrRunning() && hasTempBasal()) {
                 if (isTempBasalCertain) {
                     clearTempBasal(); // Triggers onTbrChanged when appropriate
                 } else {
