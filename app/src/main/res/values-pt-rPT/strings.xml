@@ -707,7 +707,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Rácio da basal foi alterado na bomba, mas a leitura falhou</string>
     <string name="combo_activity_checking_for_history_changes">A verificar se há alterações de histórico</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Bólus múltiplos, com a mesma quantidade e no mesmo minuto acabaram de ser importados. Apenas um registo pôde ser adicionado aos tratamentos. Por favor confirma na bomba e adicione o registo de bólus manualmente, utilizando o separador do Careportal. Tenha em atenção que deve criar um bólus com um tempo em que nã oexistem outros registos de bólus.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">O último bólus tem mais de 24 horas ou está no futuro. Por favor verifique se a data está definida correctamente na bomba.</string>
     <string name="combo_suspious_bolus_time">Hora/data da administração do bólus na bomba parece errado, IOB aparentemente está incorrecto. Verifique hora/data na bomba.</string>
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em PerfilLocal.</string>

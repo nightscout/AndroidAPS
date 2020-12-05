@@ -13,7 +13,7 @@
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
     <string name="ns_sync_use_absolute_title">השתמש תמיד בערכים בזאלים מוחלטים</string>
-    <string name="alert_dialog_storage_permission_text">בבקשה אתחל את הסמרטפון שלך או תרענן את אפלקצית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב אחר ולוודא כי האלגוריתמים פועלים כראוי)!</string>
+    <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
@@ -89,7 +89,7 @@
     <string name="virtualpump">משאבה וירטואלית</string>
     <string name="careportal">פורטל טיפולים</string>
     <string name="configbuilder_pump">משאבה</string>
-    <string name="configbuilder_pump_description">עם משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
+    <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_treatments">טיפולים</string>
     <string name="configbuilder_treatments_description">איזה תוסף ישמש לתפעול הטיפולים?</string>
     <string name="configbuilder_profile">פרופיל</string>
@@ -719,7 +719,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">המינון הבזאלי במשאבה השתנה אך קריאתו נכשלה</string>
     <string name="combo_activity_checking_for_history_changes">בודק שינויים בהיסטוריה</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">בולוסים מרובים באותו הגודל בתוך הובאו באותה דקה. ניתן להוסיף רק רשומה אחת לטיפולים. בדקו את המשאבה והוסיפו באופן ידני רשומת בולוס בלשונית פורטל הטיפולים. יש ליצור רשומות בולוס עם זמנים שונים מבולוסים אחרים.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
+    <string name="about_link_urls">\n\nתיעוד:\nhttps://androidaps.readthedocs.io\n\nפייסבוק:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">הבולוס האחרון נרשם לפני 24 שעות או בשעה עתידית, נא לבדוק את כיוון השעון ותאריך במשאבה.</string>
     <string name="combo_suspious_bolus_time">זמן\תאריך הבולוס שהוזרק מהמשאבה נראה לא נכון, IOB כנראה שגוי, בדקו את השעון ואת התאריך במשאבה.</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
@@ -1233,4 +1233,7 @@
     <string name="uploaded_data">נתונים שהועלו</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">הנתונים הבאים יועלו לחשבון Open Humans שלכם: ערכי גלוקוז, בולוסים, פחמימות, אירועים מפורטל הטיפולים (מלבד הערות), בולוסים ממושכים, החלפות פרופיל, מינונים יומיים כוללים, באזאלים זמניים, ערכי מטרה זמניים, העדפות, גרסת יישום, דגם המכשיר ומממדי המסך. מידע סודי או פרטי כגון כתובת ה-Nightscout האישית או סוד ה-API שלכם לא יועלו.</string>
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
+    <string name="filter">סינון</string>
+    <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
+    <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
 </resources>

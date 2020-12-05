@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import org.json.JSONObject
 
-interface SensitivityInterface {
+interface SensitivityInterface : ConfigExportImportInterface {
 
     enum class SensitivityType(val value: Int) {
         UNKNOWN(-1),
@@ -19,9 +19,6 @@ interface SensitivityInterface {
 
     val id: SensitivityType
     fun detectSensitivity(plugin: IobCobCalculatorInterface, fromTime: Long, toTime: Long): AutosensResult
-
-    fun configuration(): JSONObject
-    fun applyConfiguration(configuration: JSONObject)
 
     companion object {
         const val MIN_HOURS = 1.0

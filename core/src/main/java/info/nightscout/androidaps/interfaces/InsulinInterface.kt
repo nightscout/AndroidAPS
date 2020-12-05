@@ -4,7 +4,7 @@ import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.db.Treatment
 import org.json.JSONObject
 
-interface InsulinInterface {
+interface InsulinInterface : ConfigExportImportInterface{
 
     enum class InsulinType(val value: Int) {
         UNKNOWN(-1),
@@ -27,7 +27,4 @@ interface InsulinInterface {
     val dia: Double
 
     fun iobCalcForTreatment(treatment: Treatment, time: Long, dia: Double): Iob
-
-    fun configuration(): JSONObject
-    fun applyConfiguration(configuration: JSONObject)
 }
