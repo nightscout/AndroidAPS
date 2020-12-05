@@ -174,6 +174,9 @@
     <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>
     <string name="preferences_import_impossible">¡No se pueden importar preferencias!</string>
     <string name="goto_main_try_again">Por favor, vuelve a la pantalla principal e inténtalo de nuevo.</string>
+    <string name="old_master_password">Contraseña Maestra antigua</string>
+    <string name="different_password_used">Este archivo se ha exportado y cifrado con una contraseña maestra diferente. Insertar contraseña maestra antigua para descifrar el archivo.</string>
+    <string name="master_password_will_be_replaced">Como resultado de la importación correcta, la contraseña maestra actual SE SUSTITUIRÁ por la contraseña maestra antigua!</string>
     <string name="preferences_import_list_title">Seleccionar fichero para importar</string>
     <string name="check_preferences_before_import">Por favor, compruebe las preferencias antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
@@ -257,6 +260,7 @@
     <string name="valueoutofrange">El valor %1$s está fuera de límites</string>
     <string name="smscommunicator_pumpconnectwithcode">Para conectar la infusora responder con el código %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Error al conectar a la bomba</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Para desconectar la bomba durante %1$dminutos responde con el código %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Bomba desconectada</string>
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
     <string name="smscommunicator_remotecommandnotallowed">Comando remoto no permitido</string>
@@ -400,10 +404,13 @@
     <string name="wear_detailedIOB_summary">Separar IOB en bolo y base en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
     <string name="notavailable">n/a</string>
+    <string name="patientage">Tipo paciente</string>
     <string name="child">Menor de edad</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente a la insulina</string>
+    <string name="pregnant">Embarazo</string>
+    <string name="patientage_summary">Por favor seleccione el tipo de paciente para establecer límites de seguridad</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
@@ -447,6 +454,7 @@
     <string name="statuslights_iage_critical">Umbral crítico de la edad de la insulina [h]</string>
     <string name="statuslights_sage_warning">Umbral de advertencia de la edad del sensor [h]</string>
     <string name="statuslights_sage_critical">Umbral crítico de la edad del sensor [h]</string>
+    <string name="statuslights_sbat_warning">Umbral de advertencia de nivel de pila del sensor [%]</string>
     <string name="statuslights_bage_warning">Umbral de advertencia de nivel de pila [h]</string>
     <string name="statuslights_bage_critical">Umbral crítico de nivel de batería [h]</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
