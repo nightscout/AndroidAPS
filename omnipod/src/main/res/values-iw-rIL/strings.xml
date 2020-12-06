@@ -207,7 +207,6 @@
     <string name="omnipod_overview_errors">שגיאות</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">חיבור משאבת Omnipod, דרוש התקן ריילילינק (עם גרסת קושחה 2.0 לפחות).</string>
-    <string name="omnipod_custom_action_reset_rileylink">אתחול קונפיגורציית ריילילינק</string>
     <string name="omnipod_uncertain">לא בטוח</string>
     <string name="omnipod_pulse_log">יומן פעימות</string>
     <string name="omnipod_pulse_log_value">יומן פעימות (מועתק ללוח ההעתקה)</string>
