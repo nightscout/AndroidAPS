@@ -206,7 +206,6 @@
     <string name="omnipod_overview_errors">Грешки</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Използването на помпа Omnipod, изисква RileyLink устройство (с фърмуер минимум 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Нулирай RileyLink конфигурацията</string>
     <string name="omnipod_uncertain">неизвестно</string>
     <string name="omnipod_pulse_log">Pulse лог</string>
     <string name="omnipod_pulse_log_value">Pulse лога (копиран в клипборда)</string>
