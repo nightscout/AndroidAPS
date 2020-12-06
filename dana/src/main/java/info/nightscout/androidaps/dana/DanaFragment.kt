@@ -79,15 +79,15 @@ class DanaFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefresh_dana_rs.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
-        swipeRefresh_dana_rs.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        binding.danaSwipeRefresh.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        binding.danaSwipeRefresh.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
         // Initialize the handler instance
         mHandler = Handler()
-        swipeRefresh_dana_rs.setOnRefreshListener {
+        binding.danaSwipeRefresh.setOnRefreshListener {
 
             mRunnable = Runnable {
                 // Hide swipe to refresh icon animation
-                swipeRefresh_dana_rs.isRefreshing = false
+                binding.danaSwipeRefresh.isRefreshing = false
                 aapsLogger.debug(LTag.PUMP, "swipe to connect to pump")
                 danaPump.lastConnection = 0
                 commandQueue.readStatus("swipe to connect to pump", null)
@@ -102,17 +102,17 @@ class DanaFragment : DaggerFragment() {
 
         binding.danaPumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
-        ViewAnimation.showOut(fabDanaMenuUserOptions)
-        ViewAnimation.showOut(danar_history)
-        ViewAnimation.showOut(danar_stats)
-        ViewAnimation.showOut(danar_viewprofile)
+        ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
+        ViewAnimation.showOut(binding.danarHistory)
+        ViewAnimation.showOut(binding.danarStats)
+        ViewAnimation.showOut(binding.danarViewprofile)
 
         binding.fabDanaMenuUserOptions.setOnClickListener(clickListener)
         binding.fabDanaMenu.setOnClickListener(clickListener)
-        binding.danar_history.setOnClickListener(clickListener)
-        binding.danar_stats.setOnClickListener(clickListener)
-        binding.danar_viewprofile.setOnClickListener(clickListener)
-        binding.danar_btconnection.setOnClickListener {
+        binding.danarHistory.setOnClickListener(clickListener)
+        binding.danarStats.setOnClickListener(clickListener)
+        binding.danarViewprofile.setOnClickListener(clickListener)
+        binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.lastConnection = 0
             commandQueue.readStatus("Clicked connect to pump", null)
@@ -132,38 +132,38 @@ class DanaFragment : DaggerFragment() {
     private val clickListener: View.OnClickListener = View.OnClickListener { view ->
         when ( view.id ){
             R.id.fabDanaMenu -> {
-                if ( danar_viewprofile.visibility == View.GONE) {
-                    ViewAnimation.showIn(fabDanaMenuUserOptions)
-                    ViewAnimation.showIn(danar_history)
-                    ViewAnimation.showIn(danar_stats)
-                    ViewAnimation.showIn(danar_viewprofile)
+                if ( binding.danarViewprofile.visibility == View.GONE) {
+                    ViewAnimation.showIn(binding.fabDanaMenuUserOptions)
+                    ViewAnimation.showIn(binding.danarHistory)
+                    ViewAnimation.showIn(binding.danarStats)
+                    ViewAnimation.showIn(binding.danarViewprofile)
                 } else  {
-                    ViewAnimation.showOut(fabDanaMenuUserOptions)
-                    ViewAnimation.showOut(danar_history)
-                    ViewAnimation.showOut(danar_stats)
-                    ViewAnimation.showOut(danar_viewprofile)
+                    ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
+                    ViewAnimation.showOut(binding.danarHistory)
+                    ViewAnimation.showOut(binding.danarStats)
+                    ViewAnimation.showOut(binding.danarViewprofile)
                 }
             }
             R.id.fabDanaMenuUserOptions -> {
                 startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java))
-                ViewAnimation.showOut(fabDanaMenuUserOptions)
-                ViewAnimation.showOut(danar_history)
-                ViewAnimation.showOut(danar_stats)
-                ViewAnimation.showOut(danar_viewprofile)
+                ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
+                ViewAnimation.showOut(binding.danarHistory)
+                ViewAnimation.showOut(binding.danarStats)
+                ViewAnimation.showOut(binding.danarViewprofile)
             }
             R.id.danar_history -> {
                 startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java))
-                ViewAnimation.showOut(fabDanaMenuUserOptions)
-                ViewAnimation.showOut(danar_history)
-                ViewAnimation.showOut(danar_stats)
-                ViewAnimation.showOut(danar_viewprofile)
+                ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
+                ViewAnimation.showOut(binding.danarHistory)
+                ViewAnimation.showOut(binding.danarStats)
+                ViewAnimation.showOut(binding.danarViewprofile)
             }
             R.id.danar_stats -> {
                 startActivity(Intent(context, TDDStatsActivity::class.java))
-                ViewAnimation.showOut(fabDanaMenuUserOptions)
-                ViewAnimation.showOut(danar_history)
-                ViewAnimation.showOut(danar_stats)
-                ViewAnimation.showOut(danar_viewprofile)
+                ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
+                ViewAnimation.showOut(binding.danarHistory)
+                ViewAnimation.showOut(binding.danarStats)
+                ViewAnimation.showOut(binding.danarViewprofile)
             }
             R.id.danar_viewprofile -> {
                 val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
@@ -179,10 +179,10 @@ class DanaFragment : DaggerFragment() {
                 val pvd = ProfileViewerDialog()
                 pvd.arguments = args
                 pvd.show(childFragmentManager, "ProfileViewDialog")
-                ViewAnimation.showOut(fabDanaMenuUserOptions)
-                ViewAnimation.showOut(danar_history)
-                ViewAnimation.showOut(danar_stats)
-                ViewAnimation.showOut(danar_viewprofile)
+                ViewAnimation.showOut(binding.fabDanaMenuUserOptions)
+                ViewAnimation.showOut(binding.danarHistory)
+                ViewAnimation.showOut(binding.danarStats)
+                ViewAnimation.showOut(binding.danarViewprofile)
             }
         }
 
@@ -258,7 +258,7 @@ class DanaFragment : DaggerFragment() {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
             binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
-            warnColors.setColor(danar_lastconnection, agoMin.toDouble(), 16.0, 31.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+            warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
                     resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
                     resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
         }
@@ -273,7 +273,7 @@ class DanaFragment : DaggerFragment() {
         }
 
         binding.dailyunits.text = resourceHelper.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
-        warnColors.setColor(danar_dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal), resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning), resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
+        warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal), resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning), resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
         binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses == true) {
@@ -287,11 +287,11 @@ class DanaFragment : DaggerFragment() {
         binding.extendedbolus.text = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
             ?: ""
         binding.reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
-        warnColors.setColorInverse(danar_reservoir, pump.reservoirRemainingUnits, 50.0, 20.0,  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0,  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
                 resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
                 resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
-        warnColors.setColorInverse(danar_battery, pump.batteryRemaining.toDouble(), 51.0, 26.0,  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0,  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
                 resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
                 resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
         binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
@@ -307,6 +307,6 @@ class DanaFragment : DaggerFragment() {
             binding.queue.text = status
         }
         //hide user options button if not an RS pump or old firmware
-        fabDanaMenuUserOptions?.visibility = (pump.hwModel != 1 && pump.protocol != 0x00).toVisibility()
+        binding.fabDanaMenuUserOptions?.visibility = (pump.hwModel != 1 && pump.protocol != 0x00).toVisibility()
     }
 }

@@ -105,7 +105,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.system.exitProcess
 
-class MainActivity : NoSplashAppCompatActivity() {
+open class MainActivity : NoSplashAppCompatActivity() {
 
     private val disposable = CompositeDisposable()
     private var scheduledUpdate: ScheduledFuture<*>? = null
@@ -730,8 +730,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish(),sp } },
-            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish(),sp } }
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) }),
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) })
         )
         disposable.add(rxBus
                 .toObservable(EventRefreshOverview::class.java)
@@ -846,7 +846,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         main_navigation_view.setNavigationItemSelectedListener { true }
         val menu = main_navigation_view.menu.also { it.clear() }
         var itemId = 0
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p)
             if (p.hasFragment() && p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
@@ -920,12 +920,12 @@ class MainActivity : NoSplashAppCompatActivity() {
         //show all selected plugins not selected for hamburger menu in option menu
         this.menu = menu
         var itemId = 0
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
-                    intent.putExtra("plugin", activePlugin.pluginsList.indexOf(p))
+                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
                     startActivity(intent)
                     true
                 }

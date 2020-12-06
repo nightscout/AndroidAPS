@@ -7,7 +7,7 @@
         android:layout_marginBottom="20dp"
         android:paddingTop="5dp"
         android:background="?attr/fragmentbackground"
-        tools:context="info.nightscout.androidaps.dana.DanaRFragment">
+        tools:context="info.nightscout.androidaps.dana.DanaFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabDanaMenu"
@@ -31,7 +31,7 @@
         android:focusable="true"
         android:text="@string/danar_useroptions"
         android:visibility="gone"
-        app:icon="@drawable/icon_danar_useropt"/>
+        app:icon="@drawable/ic_danar_useropt"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/danar_stats"
@@ -43,7 +43,7 @@
         android:clickable="true"
         android:focusable="true"
         android:text="@string/stats"
-        app:icon="@drawable/icon_danarstats"
+        app:icon="@drawable/ic_danarstats"
         android:visibility="gone"
         app:fabSize="auto" />
 
@@ -57,7 +57,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="220dp"
         android:text="@string/pumphistory"
-        app:icon="@drawable/icon_danarhistory"
+        app:icon="@drawable/ic_danarhistory"
         android:visibility="gone"
         app:fabSize="auto" />
 
@@ -71,12 +71,12 @@
         android:clickable="true"
         android:focusable="true"
         android:text="@string/viewprofile"
-        app:icon="@drawable/icon_danarprofile"
+        app:icon="@drawable/ic_danarprofile"
         android:visibility="gone"
         app:fabSize="auto" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id = "@+id/swipeRefresh_dana_rs"
+        android:id = "@+id/dana_swipeRefresh"
         android:layout_width = "match_parent"
         android:layout_height = "match_parent"
         android:layout_marginBottom="20dp">
