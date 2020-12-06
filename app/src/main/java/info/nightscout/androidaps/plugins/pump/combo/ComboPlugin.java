@@ -451,7 +451,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         }
     }
 
-    private BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
+    private final BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.INSTANCE;
         switch (state) {
             case PROGRAMMING:
@@ -966,9 +966,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             checkPumpTime(preCheckResult.state);
             checkBasalRate(preCheckResult.state);
             CommandResult historyCheckError = checkHistory();
-            if (historyCheckError != null) {
-                return historyCheckError;
-            }
+            return historyCheckError;
         } else {
             long now = System.currentTimeMillis();
             TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistory(now);

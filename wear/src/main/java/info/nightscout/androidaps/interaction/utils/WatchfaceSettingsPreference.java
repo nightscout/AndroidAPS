@@ -10,7 +10,8 @@ import preference.WearListPreference;
 
 
 public class WatchfaceSettingsPreference extends WearListPreference {
-    private String pref_moreWatchfaceSettings,pref_lookInYourWatchfaceConfiguration;
+    private final String pref_moreWatchfaceSettings;
+    private final String pref_lookInYourWatchfaceConfiguration;
 
     public WatchfaceSettingsPreference(Context context, AttributeSet attrs) {
         super(context, attrs);

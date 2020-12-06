@@ -16,7 +16,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
  */
 
 public class SingleClickButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(SingleClickButton.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(SingleClickButton.class);
 
     Context context;
     OnClickListener listener = null;

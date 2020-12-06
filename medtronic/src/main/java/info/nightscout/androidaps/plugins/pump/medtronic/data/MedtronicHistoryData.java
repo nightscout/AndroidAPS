@@ -82,7 +82,7 @@ public class MedtronicHistoryData {
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     private final DatabaseHelperInterface databaseHelper;
 
-    private List<PumpHistoryEntry> allHistory;
+    private final List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
 
     private boolean isInit = false;
@@ -600,7 +600,7 @@ public class MedtronicHistoryData {
         TBR("TBR"),
         Suspend("Suspend");
 
-        private String description;
+        private final String description;
 
         ProcessHistoryRecord(String desc) {
             this.description = desc;

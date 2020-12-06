@@ -57,9 +57,7 @@ public class RadioResponse {
             return false;
         }
         if (decodedPayload != null) {
-            if (receivedCRC == CRC.crc8(decodedPayload)) {
-                return true;
-            }
+            return receivedCRC == CRC.crc8(decodedPayload);
         }
         return false;
     }

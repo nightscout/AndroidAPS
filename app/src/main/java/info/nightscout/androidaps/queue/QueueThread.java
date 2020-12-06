@@ -24,12 +24,12 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 
 public class QueueThread extends Thread {
-    private CommandQueue queue;
-    private AAPSLogger aapsLogger;
-    private RxBusWrapper rxBus;
-    private ActivePluginProvider activePlugin;
-    private ResourceHelper resourceHelper;
-    private SP sp;
+    private final CommandQueue queue;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ActivePluginProvider activePlugin;
+    private final ResourceHelper resourceHelper;
+    private final SP sp;
 
     private boolean connectLogged = false;
     boolean waitingForDisconnect = false;

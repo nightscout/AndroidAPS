@@ -67,7 +67,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private final long RILEYLINK_TIMEOUT = 15 * 60 * 1000; // 15 min
 
     private String errorMessage;
-    private boolean debugSetCommands = false;
+    private final boolean debugSetCommands = false;
 
     private boolean doWakeUpBeforeCommand = true;
 
@@ -277,7 +277,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (List<Byte> frame : frames) {
 
-            byte[] frameData = medtronicUtil.createByteArray(frame);
+            byte[] frameData = MedtronicUtil.createByteArray(frame);
 
             // aapsLogger.debug(LTag.PUMPCOMM,"Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
 
@@ -826,7 +826,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         data[i + 1] = (byte) gc.get(Calendar.MINUTE);
         data[i + 2] = (byte) gc.get(Calendar.SECOND);
 
-        byte[] yearByte = medtronicUtil.getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
+        byte[] yearByte = MedtronicUtil.getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
 
         data[i + 3] = yearByte[0];
         data[i + 4] = yearByte[1];

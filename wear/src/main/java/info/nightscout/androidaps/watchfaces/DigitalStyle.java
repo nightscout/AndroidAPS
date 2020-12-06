@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 public class DigitalStyle extends BaseWatchFace {
     private static final long TIME_TAP_THRESHOLD = 800;
-    private long chartTapTime = 0;
+    private final long chartTapTime = 0;
     private long sgvTapTime = 0;
 
     @Override
@@ -34,7 +34,7 @@ public class DigitalStyle extends BaseWatchFace {
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
         //tapType = TAP_TYPE_TAP;
-        Log.d("onTapCommand: DeviceWidth x DeviceHeight   ///  x , y, TapType  >> ", Integer.toString(getWidth()) + " x " + Integer.toString(getHeight()) + " ///  " + Integer.toString(x) + " , " + Integer.toString(y) + " , " + Integer.toString(tapType));
+        Log.d("onTapCommand: DeviceWidth x DeviceHeight   ///  x , y, TapType  >> ", getWidth() + " x " + getHeight() + " ///  " + x + " , " + y + " , " + tapType);
 
         if (tapType == TAP_TYPE_TAP) {
             if (eventTime - sgvTapTime < TIME_TAP_THRESHOLD) {

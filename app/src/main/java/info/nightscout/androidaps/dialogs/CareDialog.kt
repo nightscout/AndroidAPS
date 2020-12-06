@@ -122,7 +122,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).getGlucoseStatusData()?.glucose
+        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).glucoseStatusData?.glucose
             ?: 0.0, profileFunction.getUnits())
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}

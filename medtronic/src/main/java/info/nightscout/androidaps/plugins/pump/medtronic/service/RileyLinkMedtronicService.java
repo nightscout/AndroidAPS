@@ -42,7 +42,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject MedtronicCommunicationManager medtronicCommunicationManager;
 
     private MedtronicUIComm medtronicUIComm;
-    private IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new LocalBinder();
 
     private boolean serialChanged = false;
     private String[] frequencies;

@@ -59,7 +59,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     public abstract ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent);
     public abstract String getProviderCanonicalName();
 
-    public ComplicationAction getComplicationAction() { return ComplicationAction.MENU; };
+    public ComplicationAction getComplicationAction() { return ComplicationAction.MENU; }
 
     //----------------------------------------------------------------------------------------------
     // DEFAULT BEHAVIOURS

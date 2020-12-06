@@ -42,7 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class DanaRv2Plugin extends AbstractDanaRPlugin {
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
     private final Context context;
@@ -104,7 +104,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         super.onStop();
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             aapsLogger.debug(LTag.PUMP, "Service is disconnected");

@@ -116,7 +116,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     public void performViewSetup() {
-        final WatchViewStub stub = (WatchViewStub) layoutView.findViewById(R.id.watch_view_stub);
+        final WatchViewStub stub = layoutView.findViewById(R.id.watch_view_stub);
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
 
         messageReceiver = new MessageReceiver();
@@ -126,41 +126,41 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTime = (TextView) stub.findViewById(R.id.watch_time);
-                mHour = (TextView) stub.findViewById(R.id.hour);
-                mMinute = (TextView) stub.findViewById(R.id.minute);
-                mDay = (TextView) stub.findViewById(R.id.day);
-                mDayName= (TextView) stub.findViewById(R.id.dayname);
-                mMonth = (TextView) stub.findViewById(R.id.month);
-                mDate = (LinearLayout) stub.findViewById(R.id.date_time);
-                mLoop = (TextView) stub.findViewById(R.id.loop);
-                mSgv = (TextView) stub.findViewById(R.id.sgv);
-                mDirection = (TextView) stub.findViewById(R.id.direction);
-                mTimestamp = (TextView) stub.findViewById(R.id.timestamp);
-                mIOB1 = (TextView) stub.findViewById(R.id.iob_text);
-                mIOB2 = (TextView) stub.findViewById(R.id.iobView);
-                mCOB1 = (TextView) stub.findViewById(R.id.cob_text);
-                mCOB2 = (TextView) stub.findViewById(R.id.cobView);
-                mBgi =  (TextView) stub.findViewById(R.id.bgiView);
-                mStatus = (TextView) stub.findViewById(R.id.externaltstatus);
-                mBasalRate = (TextView) stub.findViewById(R.id.tmpBasal);
-                mUploaderBattery = (TextView) stub.findViewById(R.id.uploader_battery);
-                mRigBattery = (TextView) stub.findViewById(R.id.rig_battery);
-                mDelta = (TextView) stub.findViewById(R.id.delta);
-                mAvgDelta = (TextView) stub.findViewById(R.id.avgdelta);
-                isAAPSv2 = (TextView) stub.findViewById(R.id.AAPSv2);
-                mHighLight = (TextView) stub.findViewById(R.id.highLight);
-                mLowLight = (TextView) stub.findViewById(R.id.lowLight);
-                mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
-                mLinearLayout = (LinearLayout) stub.findViewById(R.id.secondary_layout);
-                mLinearLayout2 = (LinearLayout) stub.findViewById(R.id.tertiary_layout);
-                mGlucoseDial = (ImageView) stub.findViewById(R.id.glucose_dial);
-                mDeltaGauge = (ImageView) stub.findViewById(R.id.delta_pointer);
-                mHourHand = (ImageView) stub.findViewById(R.id.hour_hand);
-                mMinuteHand = (ImageView) stub.findViewById(R.id.minute_hand);
-                mChartTap = (LinearLayout) stub.findViewById(R.id.chart_zoom_tap);
-                mMainMenuTap = (LinearLayout) stub.findViewById(R.id.main_menu_tap);
-                chart = (LineChartView) stub.findViewById(R.id.chart);
+                mTime = stub.findViewById(R.id.watch_time);
+                mHour = stub.findViewById(R.id.hour);
+                mMinute = stub.findViewById(R.id.minute);
+                mDay = stub.findViewById(R.id.day);
+                mDayName= stub.findViewById(R.id.dayname);
+                mMonth = stub.findViewById(R.id.month);
+                mDate = stub.findViewById(R.id.date_time);
+                mLoop = stub.findViewById(R.id.loop);
+                mSgv = stub.findViewById(R.id.sgv);
+                mDirection = stub.findViewById(R.id.direction);
+                mTimestamp = stub.findViewById(R.id.timestamp);
+                mIOB1 = stub.findViewById(R.id.iob_text);
+                mIOB2 = stub.findViewById(R.id.iobView);
+                mCOB1 = stub.findViewById(R.id.cob_text);
+                mCOB2 = stub.findViewById(R.id.cobView);
+                mBgi = stub.findViewById(R.id.bgiView);
+                mStatus = stub.findViewById(R.id.externaltstatus);
+                mBasalRate = stub.findViewById(R.id.tmpBasal);
+                mUploaderBattery = stub.findViewById(R.id.uploader_battery);
+                mRigBattery = stub.findViewById(R.id.rig_battery);
+                mDelta = stub.findViewById(R.id.delta);
+                mAvgDelta = stub.findViewById(R.id.avgdelta);
+                isAAPSv2 = stub.findViewById(R.id.AAPSv2);
+                mHighLight = stub.findViewById(R.id.highLight);
+                mLowLight = stub.findViewById(R.id.lowLight);
+                mRelativeLayout = stub.findViewById(R.id.main_layout);
+                mLinearLayout = stub.findViewById(R.id.secondary_layout);
+                mLinearLayout2 = stub.findViewById(R.id.tertiary_layout);
+                mGlucoseDial = stub.findViewById(R.id.glucose_dial);
+                mDeltaGauge = stub.findViewById(R.id.delta_pointer);
+                mHourHand = stub.findViewById(R.id.hour_hand);
+                mMinuteHand = stub.findViewById(R.id.minute_hand);
+                mChartTap = stub.findViewById(R.id.chart_zoom_tap);
+                mMainMenuTap = stub.findViewById(R.id.main_menu_tap);
+                chart = stub.findViewById(R.id.chart);
                 layoutSet = true;
 
                 setDataFields();

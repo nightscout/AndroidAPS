@@ -48,5 +48,5 @@ public class IobDetailedComplication extends BaseComplicationProviderService {
     @Override
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.BOLUS;
-    };
+    }
 }

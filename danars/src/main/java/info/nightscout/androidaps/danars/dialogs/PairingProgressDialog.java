@@ -32,7 +32,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
     @Inject RxBusWrapper rxBus;
     @Inject FabricPrivacy fabricPrivacy;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private PairingHelperActivity helperActivity;
 

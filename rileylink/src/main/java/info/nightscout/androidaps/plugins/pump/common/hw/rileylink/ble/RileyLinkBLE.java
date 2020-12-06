@@ -48,14 +48,14 @@ public class RileyLinkBLE {
     @Inject RileyLinkUtil rileyLinkUtil;
 
     private final Context context;
-    private boolean gattDebugEnabled = true;
+    private final boolean gattDebugEnabled = true;
     private boolean manualDisconnect = false;
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothGattCallback bluetoothGattCallback;
+    private final BluetoothAdapter bluetoothAdapter;
+    private final BluetoothGattCallback bluetoothGattCallback;
     private BluetoothDevice rileyLinkDevice;
     private BluetoothGatt bluetoothConnectionGatt = null;
     private BLECommOperation mCurrentOperation;
-    private Semaphore gattOperationSema = new Semaphore(1, true);
+    private final Semaphore gattOperationSema = new Semaphore(1, true);
     private Runnable radioResponseCountNotified;
     private boolean mIsConnected = false;
 

@@ -70,10 +70,10 @@ public class IobCobThread extends Thread {
     private final HasAndroidInjector injector;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin; // cannot be injected : HistoryBrowser uses different instance
     private final TreatmentsPlugin treatmentsPlugin;             // cannot be injected : HistoryBrowser uses different instance
-    private boolean bgDataReload;
-    private boolean limitDataToOldestAvailable;
-    private String from;
-    private long end;
+    private final boolean bgDataReload;
+    private final boolean limitDataToOldestAvailable;
+    private final String from;
+    private final long end;
 
     private PowerManager.WakeLock mWakeLock;
 
