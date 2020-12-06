@@ -133,16 +133,20 @@
     <string name="omnipod_cmd_read_pulse_log">Leer registro pulso</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Establece una base temporal falsa porque el Pod está suspendido</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancelar la base temporal falsa que se ha creado porque el Pod se ha suspendido</string>
+    <string name="omnipod_cmd_split_tbr">Dividir basal temporal debido a un fallo incierto en la cancelación</string>
     <string name="omnipod_cmd_beep_config">Configuración Pitido</string>
     <string name="omnipod_cmd_play_test_beep">Reproducir pitido de prueba</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Administración de Pod</string>
+    <string name="omnipod_pod_management_heading_actions">Acciones</string>
+    <string name="omnipod_pod_management_heading_tools">Herramientas</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Esperando la conexión de RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Activar Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Descartar Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Historial de Pod</string>
     <string name="omnipod_pod_management_button_riley_link_stats">Estadísticas de RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Restablecer configuración de RileyLink</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Leer registro pulso</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Leyendo pulso de registro…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla continuamente. Si todavía puede comunicarse con el Pod, utilice la opción <b>Desactivar Pod</b>.\n\nSi desea continuar, por favor asegúrese de quitar el Pod de su cuerpo!</string>
