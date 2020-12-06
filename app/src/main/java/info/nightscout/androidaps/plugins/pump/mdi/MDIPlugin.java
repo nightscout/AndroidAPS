@@ -43,8 +43,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 @Singleton
 public class MDIPlugin extends PumpPluginBase implements PumpInterface {
 
-    private TreatmentsPlugin treatmentsPlugin;
-    private PumpDescription pumpDescription = new PumpDescription();
+    private final TreatmentsPlugin treatmentsPlugin;
+    private final PumpDescription pumpDescription = new PumpDescription();
 
     @Inject
     public MDIPlugin(

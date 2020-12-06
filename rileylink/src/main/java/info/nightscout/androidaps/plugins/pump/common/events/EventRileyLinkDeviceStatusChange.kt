@@ -16,8 +16,7 @@ open class EventRileyLinkDeviceStatusChange : EventStatus {
     var pumpDeviceState: PumpDeviceState? = null
     var errorDescription: String? = null
 
-    constructor() {
-    }
+    constructor()
 
     constructor(rileyLinkTargetDevice: RileyLinkTargetDevice, rileyLinkServiceState: RileyLinkServiceState?, rileyLinkError: RileyLinkError?) {
         this.rileyLinkTargetDevice = rileyLinkTargetDevice

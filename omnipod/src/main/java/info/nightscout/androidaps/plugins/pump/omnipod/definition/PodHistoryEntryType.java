@@ -23,6 +23,7 @@ public enum PodHistoryEntryType {
     CANCEL_TEMPORARY_BASAL(12, R.string.omnipod_cmd_cancel_tbr, PumpHistoryEntryGroup.Basal),
     SET_FAKE_SUSPENDED_TEMPORARY_BASAL(13, R.string.omnipod_cmd_set_fake_suspended_tbr, PumpHistoryEntryGroup.Basal),
     CANCEL_FAKE_SUSPENDED_TEMPORARY_BASAL(14, R.string.omnipod_cmd_cancel_fake_suspended_tbr, PumpHistoryEntryGroup.Basal),
+    SPLIT_TEMPORARY_BASAL(15, R.string.omnipod_cmd_split_tbr, PumpHistoryEntryGroup.Basal),
 
     SET_BASAL_SCHEDULE(20, R.string.omnipod_cmd_set_basal_schedule, PumpHistoryEntryGroup.Basal),
 
@@ -42,11 +43,11 @@ public enum PodHistoryEntryType {
 
     UNKNOWN_ENTRY_TYPE(99, R.string.omnipod_cmd_unknown_entry);
 
-    private int code;
+    private final int code;
     private static final Map<Integer, PodHistoryEntryType> instanceMap;
 
     @StringRes
-    private int resourceId;
+    private final int resourceId;
 
     private PumpHistoryEntryGroup group;
 

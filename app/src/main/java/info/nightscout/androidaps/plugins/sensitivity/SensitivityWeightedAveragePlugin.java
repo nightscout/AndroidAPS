@@ -36,9 +36,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
 
-    private SP sp;
-    private DateUtil dateUtil;
-    private ProfileFunction profileFunction;
+    private final SP sp;
+    private final DateUtil dateUtil;
+    private final ProfileFunction profileFunction;
 
     @Inject
     public SensitivityWeightedAveragePlugin(

@@ -92,10 +92,10 @@ public class NSClientService extends DaggerService {
     @Inject DateUtil dateUtil;
     @Inject UploadQueue uploadQueue;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;
-    private IBinder mBinder = new NSClientService.LocalBinder();
+    private final IBinder mBinder = new NSClientService.LocalBinder();
 
     static ProfileStore profileStore;
 
@@ -124,9 +124,9 @@ public class NSClientService extends DaggerService {
     private String nsAPIhashCode = "";
 
     private final ArrayList<Long> reconnections = new ArrayList<>();
-    private int WATCHDOG_INTERVAL_MINUTES = 2;
-    private int WATCHDOG_RECONNECT_IN = 15;
-    private int WATCHDOG_MAXCONNECTIONS = 5;
+    private final int WATCHDOG_INTERVAL_MINUTES = 2;
+    private final int WATCHDOG_RECONNECT_IN = 15;
+    private final int WATCHDOG_MAXCONNECTIONS = 5;
 
     public NSClientService() {
         super();
@@ -323,7 +323,7 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    private Emitter.Listener onConnect = new Emitter.Listener() {
+    private final Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             connectCounter++;
@@ -361,7 +361,7 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+    private final Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             aapsLogger.debug(LTag.NSCLIENT, "disconnect reason: {}", args);
@@ -413,7 +413,7 @@ public class NSClientService extends DaggerService {
         nsDevice = sp.getString("careportal_enteredby", "");
     }
 
-    private Emitter.Listener onError = new Emitter.Listener() {
+    private final Emitter.Listener onError = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             String msg = "Unknown Error";
@@ -424,7 +424,7 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    private Emitter.Listener onPing = new Emitter.Listener() {
+    private final Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             rxBus.send(new EventNSClientNewLog("PING", "received"));
@@ -433,7 +433,7 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    private Emitter.Listener onAnnouncement = new Emitter.Listener() {
+    private final Emitter.Listener onAnnouncement = new Emitter.Listener() {
         /*
         {
         "level":0,
@@ -457,7 +457,7 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    private Emitter.Listener onAlarm = new Emitter.Listener() {
+    private final Emitter.Listener onAlarm = new Emitter.Listener() {
         /*
         {
         "level":1,
@@ -483,7 +483,7 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    private Emitter.Listener onUrgentAlarm = args -> {
+    private final Emitter.Listener onUrgentAlarm = args -> {
         JSONObject data;
         try {
             data = (JSONObject) args[0];
@@ -493,7 +493,7 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    private Emitter.Listener onClearAlarm = new Emitter.Listener() {
+    private final Emitter.Listener onClearAlarm = new Emitter.Listener() {
         /*
         {
         "clear":true,
@@ -517,7 +517,7 @@ public class NSClientService extends DaggerService {
         }
     };
 
-    private Emitter.Listener onDataUpdate = new Emitter.Listener() {
+    private final Emitter.Listener onDataUpdate = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             NSClientService.handler.post(() -> {

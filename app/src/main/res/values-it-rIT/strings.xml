@@ -719,7 +719,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Velocità basale cambiata sul micro, ma la sua lettura è fallita</string>
     <string name="combo_activity_checking_for_history_changes">Controllo modifiche allo storico</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Sono appena stati importati più boli con la stessa quantità nello stesso minuto. Solo un record può essere aggiunto ai trattamenti. Controlla il micro e aggiungi manualmente un record di bolo utilizzando la sezione Portale. Assicurati di creare un bolo con un\'ora non utilizzata da nessun altro bolo.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\n\nfacebook:\nhttp://facebook.androidaps.org</string>
     <string name="combo_check_date">L\'ultimo bolo è più vecchio di 24 ore o ha una data nel futuro. Controlla che la data sul micro sia impostata correttamente.</string>
     <string name="combo_suspious_bolus_time">L\'ora/la data del bolo erogato sul micro sembra errata, IOB probabilmente non è corretto. Controlla l\'ora e/o la data del micro.</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
@@ -1233,4 +1232,5 @@
     <string name="uploaded_data">Dati caricati</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">I seguenti dati verranno caricati sul tuo account Open Humans: valori glicemia, boli, carboidrati, eventi portale (eccetto note), boli estesi, cambi profilo, dosi giornaliere totali (TDD), basali temporanee, target temporanei, preferenze, versione dell\'applicazione, modello del dispositivo e dimensioni dello schermo. Informazioni segrete o private come l\'URL di Nightscout o l\'API secret non verranno caricate.</string>
     <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
+    <string name="filter">Filtro</string>
 </resources>

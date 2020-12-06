@@ -151,7 +151,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_serialnumber"
+                        android:id="@+id/serial_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -196,7 +196,7 @@
                         android:textSize="14sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/danar_btconnection"
+                        android:id="@+id/btconnection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -209,7 +209,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/danar_queue"
+                    android:id="@+id/queue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="content"
@@ -249,7 +249,7 @@
                         android:textSize="14sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/danar_battery"
+                        android:id="@+id/battery"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -294,7 +294,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_lastconnection"
+                        android:id="@+id/lastconnection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -338,7 +338,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_lastbolus"
+                        android:id="@+id/lastbolus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -382,7 +382,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_dailyunits"
+                        android:id="@+id/dailyunits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -426,7 +426,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_basabasalrate"
+                        android:id="@+id/basabasalrate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -470,7 +470,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_tempbasal"
+                        android:id="@+id/tempbasal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -514,7 +514,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_extendedbolus"
+                        android:id="@+id/extendedbolus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -558,7 +558,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_reservoir"
+                        android:id="@+id/reservoir"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -602,7 +602,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_iob"
+                        android:id="@+id/iob"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -646,7 +646,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_basalstep"
+                        android:id="@+id/basalstep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -690,7 +690,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_bolusstep"
+                        android:id="@+id/bolusstep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -734,7 +734,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/danar_firmware"
+                        android:id="@+id/firmware"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

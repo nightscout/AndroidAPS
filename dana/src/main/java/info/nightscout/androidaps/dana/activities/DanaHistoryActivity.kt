@@ -13,8 +13,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.comm.RecordTypes
+import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.DanaRHistoryRecord
+import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -24,7 +26,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -34,11 +35,11 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.danar_historyactivity.*
 import java.util.*
 import javax.inject.Inject
 
-class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCompatActivity() {
+class DanaHistoryActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -55,21 +56,24 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
     private var historyList: List<DanaRHistoryRecord> = ArrayList()
 
     class TypeList internal constructor(var type: Byte, var name: String) {
+
         override fun toString(): String = name
     }
+
+    private lateinit var binding: DanarHistoryActivityBinding
 
     override fun onResume() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ danar_history_status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
+            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
-                danar_history_status.text = it.message
+                binding.status.text = it.message
             }) { fabricPrivacy.logException(it) }
     }
 
@@ -80,12 +84,13 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.danar_historyactivity)
+        binding = DanarHistoryActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        danar_history_recyclerview.setHasFixedSize(true)
-        danar_history_recyclerview.layoutManager = LinearLayoutManager(this)
-        danar_history_recyclerview.adapter = RecyclerViewAdapter(historyList)
-        danar_history_status.visibility = View.GONE
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(this)
+        binding.recyclerview.adapter = RecyclerViewAdapter(historyList)
+        binding.status.visibility = View.GONE
 
         val pump = activePlugin.activePump
         val isKorean = pump.pumpDescription.pumpType == PumpType.DanaRKorean
@@ -107,26 +112,27 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, resourceHelper.gs(R.string.danar_history_refill)))
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, resourceHelper.gs(R.string.danar_history_syspend)))
         }
-        danar_history_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
+        binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
-        danar_history_reload.setOnClickListener {
-            val selected = danar_history_spinner.selectedItem as TypeList? ?: return@setOnClickListener
+        binding.reload.setOnClickListener {
+            val selected = binding.spinner.selectedItem as TypeList?
+                ?: return@setOnClickListener
             runOnUiThread {
-                danar_history_reload?.visibility = View.GONE
-                danar_history_status?.visibility = View.VISIBLE
+                binding.reload.visibility = View.GONE
+                binding.status.visibility = View.VISIBLE
             }
             clearCardView()
             commandQueue.loadHistory(selected.type, object : Callback() {
                 override fun run() {
                     loadDataFromDB(selected.type)
                     runOnUiThread {
-                        danar_history_reload?.visibility = View.VISIBLE
-                        danar_history_status?.visibility = View.GONE
+                        binding.reload.visibility = View.VISIBLE
+                        binding.status.visibility = View.GONE
                     }
                 }
             })
         }
-        danar_history_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selected = typeList[position]
                 loadDataFromDB(selected.type)
@@ -140,6 +146,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
     }
 
     inner class RecyclerViewAdapter internal constructor(private var historyList: List<DanaRHistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
+
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder =
             HistoryViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.danar_history_item, viewGroup, false))
 
@@ -152,7 +159,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
             holder.duration.text = DecimalFormatter.to0Decimal(record.recordDuration.toDouble())
             holder.alarm.text = record.recordAlarm
             when (showingType) {
-                RecordTypes.RECORD_TYPE_ALARM                                                                                                                                                              -> {
+                RecordTypes.RECORD_TYPE_ALARM -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE
@@ -164,7 +171,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
                     holder.alarm.visibility = View.VISIBLE
                 }
 
-                RecordTypes.RECORD_TYPE_BOLUS                                                                                                                                                              -> {
+                RecordTypes.RECORD_TYPE_BOLUS -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE
@@ -176,7 +183,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
+                RecordTypes.RECORD_TYPE_DAILY -> {
                     holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
                     holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
                     holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
@@ -192,7 +199,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_GLUCOSE -> {
                     holder.value.text = Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
@@ -217,7 +224,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_SUSPEND                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_SUSPEND -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
                     holder.stringValue.visibility = View.VISIBLE
@@ -236,6 +243,7 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
         }
 
         inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             var time: TextView = itemView.findViewById(R.id.danar_history_time)
             var value: TextView = itemView.findViewById(R.id.danar_history_value)
             var bolusType: TextView = itemView.findViewById(R.id.danar_history_bolustype)
@@ -250,11 +258,11 @@ class DanaHistoryActivity : info.nightscout.androidaps.activities.NoSplashAppCom
 
     private fun loadDataFromDB(type: Byte) {
         historyList = databaseHelper.getDanaRHistoryRecordsByType(type)
-        runOnUiThread { danar_history_recyclerview?.swapAdapter(RecyclerViewAdapter(historyList), false) }
+        runOnUiThread { binding.recyclerview.swapAdapter(RecyclerViewAdapter(historyList), false) }
     }
 
     private fun clearCardView() {
         historyList = ArrayList()
-        runOnUiThread { danar_history_recyclerview?.swapAdapter(RecyclerViewAdapter(historyList), false) }
+        runOnUiThread { binding.recyclerview.swapAdapter(RecyclerViewAdapter(historyList), false) }
     }
 }

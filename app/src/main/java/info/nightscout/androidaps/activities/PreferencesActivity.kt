@@ -12,7 +12,6 @@ import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.activity_preferences.*
-import kotlinx.android.synthetic.main.local_insight_status_item.view.*
 import javax.inject.Inject
 
 class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
@@ -37,6 +36,9 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
             override fun afterTextChanged(s: Editable) {}
         })
 
+        pref_filter_clear.setOnClickListener {
+            pref_filter.setText("")
+        }
 
         title = resourceHelper.gs(R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

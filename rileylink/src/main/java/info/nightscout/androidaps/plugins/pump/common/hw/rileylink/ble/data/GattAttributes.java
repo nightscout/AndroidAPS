@@ -30,8 +30,8 @@ public class GattAttributes {
     public static String CHARA_RADIO_VERSION = "30d99dc9-7c91-4295-a051-0a104d238cf2";
     public static String CHARA_RADIO_LED_MODE = "c6d84241-f1a7-4f9c-a25f-fce16732f14e";
 
-    private static Map<String, String> attributes;
-    private static Map<String, String> attributesRileyLinkSpecific;
+    private static final Map<String, String> attributes;
+    private static final Map<String, String> attributesRileyLinkSpecific;
 
     // table of names for uuids
     static {

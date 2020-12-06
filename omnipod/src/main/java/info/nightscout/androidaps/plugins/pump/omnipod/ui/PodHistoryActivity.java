@@ -35,7 +35,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.PodHistoryEntryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
@@ -249,7 +248,8 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                 PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
                 switch (entryType) {
 
-                    case SET_TEMPORARY_BASAL: {
+                    case SET_TEMPORARY_BASAL:
+                    case SPLIT_TEMPORARY_BASAL: {
                         TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
                         valueView.setText(resourceHelper.gs(R.string.omnipod_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }

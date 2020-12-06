@@ -167,10 +167,10 @@ class PrefFileListProvider @Inject constructor(
 
         meta[PrefsMetadataKey.CREATED_AT]?.let { createdAt ->
             try {
-                val date1 = DateTime.parse(createdAt.value);
+                val date1 = DateTime.parse(createdAt.value)
                 val date2 = DateTime.now()
 
-                val daysOld = Days.daysBetween(date1.toLocalDate(), date2.toLocalDate()).getDays()
+                val daysOld = Days.daysBetween(date1.toLocalDate(), date2.toLocalDate()).days
 
                 if (daysOld > IMPORT_AGE_NOT_YET_OLD_DAYS) {
                     createdAt.status = PrefsStatus.WARN

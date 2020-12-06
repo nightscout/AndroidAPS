@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Komplikasjon trykk handling</string>
     <string name="pref_unicode_in_complications">Unicode ikomplikasjoner</string>
     <string name="pref_version">Versjon:</string>
+    <string name="pref_moreWatchfaceSettings">flere urskive innstillinger</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskive innstillinger.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Veiviser</string>
     <string name="menu_bolus">Bolus</string>

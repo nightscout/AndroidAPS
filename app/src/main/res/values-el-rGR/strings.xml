@@ -575,7 +575,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Ο βασικός ρυθμός της αντλίας έχει αλλάξει αλλά η ανάγνωση έχει αποτύχει</string>
     <string name="combo_activity_checking_for_history_changes">Έλεγχος για αλλαγές στο ιστορικό</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Πολλαπλά bolus της ίδιας ποσότητας φορτώθηκαν μέσα σε ένα λεπτό. Μόνο μία εγγραφή μπορεί να προστεθεί στη θεραπεία. Ελέγξτε την αντλία και προσθέστε χειροκίνητα το bolus χρησιμοποιώντας το Careportal. Σιγουρευτείτε ότι δημιουργήσατε ένα bolus σε χρόνο που να μη γίνεται άλλο bolus.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">Το τελευταίο bolus είναι παλαιότερο από 24 ώρες ή είναι προγραμματισμένο στο μέλλον. Ελέγξτε αν είναι σωστή η ώρα στην αντλία.</string>
     <string name="combo_suspious_bolus_time">Η ημερομηνία/ώρα έγχυσης του bolus φαίνεται λάθος. Το IOB είναι λάθος. Ελέγξτε την ώρα/ημερομηνία της αντλίας.</string>
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>

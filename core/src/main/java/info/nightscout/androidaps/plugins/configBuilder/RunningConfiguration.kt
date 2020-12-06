@@ -24,22 +24,28 @@ class RunningConfiguration @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) {
 
+    private var counter = 0
+    private val every = 20 // Send only every 20 devicestatus to save traffic
+
     // called in AAPS mode only
     fun configuration(): JSONObject {
         val json = JSONObject()
-        try {
-            val insulinInterface = activePlugin.activeInsulin
-            val sensitivityInterface = activePlugin.activeSensitivity
-            val pumpInterface = activePlugin.activePump
+        if (counter++ % every == 0)
+            try {
+                val insulinInterface = activePlugin.activeInsulin
+                val sensitivityInterface = activePlugin.activeSensitivity
+                val pumpInterface = activePlugin.activePump
+                val overviewInterface = activePlugin.activeOverview
 
-            json.put("insulin", insulinInterface.id.value)
-            json.put("insulinConfiguration", insulinInterface.configuration())
-            json.put("sensitivity", sensitivityInterface.id.value)
-            json.put("sensitivityConfiguration", sensitivityInterface.configuration())
-            json.put("pump", pumpInterface.model().description)
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
+                json.put("insulin", insulinInterface.id.value)
+                json.put("insulinConfiguration", insulinInterface.configuration())
+                json.put("sensitivity", sensitivityInterface.id.value)
+                json.put("sensitivityConfiguration", sensitivityInterface.configuration())
+                json.put("overviewConfiguration", overviewInterface.configuration())
+                json.put("pump", pumpInterface.model().description)
+            } catch (e: JSONException) {
+                aapsLogger.error("Unhandled exception", e)
+            }
         return json
     }
 
@@ -68,8 +74,12 @@ class RunningConfiguration @Inject constructor(
                 sensitivityPlugin.applyConfiguration(configuration.getJSONObject("sensitivityConfiguration"))
             }
         }
+
         val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
         sp.putString(R.string.key_virtualpump_type, pumpType)
         activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
+
+        if (configuration.has("overviewConfiguration"))
+            activePlugin.activeOverview.applyConfiguration(configuration.getJSONObject("overviewConfiguration"))
     }
 }

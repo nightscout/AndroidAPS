@@ -261,7 +261,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_lot"
                         android:textSize="14sp" />
 
@@ -296,7 +297,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_tid"
                         android:textSize="14sp" />
 
@@ -331,7 +333,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_overview_firmware_version"
                         android:textSize="14sp" />
 
@@ -366,7 +369,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_overview_time_on_pod"
                         android:textSize="14sp" />
 
@@ -386,7 +390,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -403,7 +408,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_overview_pod_expiry_date"
                         android:textSize="14sp" />
 
@@ -702,7 +708,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_overview_total_delivered"
                         android:textSize="14sp" />
 
@@ -744,7 +751,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/omnipod_overview_errors"
                         android:textSize="14sp" />
 

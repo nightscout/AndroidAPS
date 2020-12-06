@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
     <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
+    <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
     <string name="menu_tempt">מטרה זמנית</string>
     <string name="menu_wizard">אשף</string>
     <string name="menu_bolus">בולוס</string>

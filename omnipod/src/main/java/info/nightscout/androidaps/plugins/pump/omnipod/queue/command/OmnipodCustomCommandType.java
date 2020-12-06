@@ -9,8 +9,7 @@ public enum OmnipodCustomCommandType {
     DEACTIVATE_POD("DEACTIVATE POD"),
     HANDLE_TIME_CHANGE("HANDLE TIME CHANGE"),
     UPDATE_ALERT_CONFIGURATION("UPDATE ALERT CONFIGURATION"),
-    PLAY_TEST_BEEP("PLAY TEST BEEP")
-    ;
+    PLAY_TEST_BEEP("PLAY TEST BEEP");
 
     private final String description;
 

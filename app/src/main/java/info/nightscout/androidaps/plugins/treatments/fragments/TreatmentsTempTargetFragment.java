@@ -53,7 +53,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     SwipeRefreshLayout swipeRefresh;
     private RecyclerView recyclerView;

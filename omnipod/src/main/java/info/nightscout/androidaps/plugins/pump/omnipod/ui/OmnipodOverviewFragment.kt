@@ -267,7 +267,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     private fun updateRileyLinkStatus() {
         val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
 
-        val resourceId = rileyLinkServiceState.getResourceId()
+        val resourceId = rileyLinkServiceState.resourceId
         val rileyLinkError = rileyLinkServiceData.rileyLinkError
 
         omnipod_overview_riley_link_status.text =

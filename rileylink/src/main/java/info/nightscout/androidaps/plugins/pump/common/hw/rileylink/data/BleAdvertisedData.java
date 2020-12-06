@@ -9,8 +9,8 @@ import java.util.UUID;
 
 public class BleAdvertisedData {
 
-    private List<UUID> mUuids;
-    private String mName;
+    private final List<UUID> mUuids;
+    private final String mName;
 
 
     public BleAdvertisedData(List<UUID> uuids, String name) {

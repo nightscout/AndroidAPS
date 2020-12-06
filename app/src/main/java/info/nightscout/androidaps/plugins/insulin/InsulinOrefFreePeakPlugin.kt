@@ -6,6 +6,8 @@ import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.extensions.storeInt
+import info.nightscout.androidaps.utils.extensions.putInt
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
@@ -28,10 +30,9 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     override val friendlyName get(): String = resourceHelper.gs(R.string.free_peak_oref)
 
-    override fun configuration(): JSONObject = JSONObject().put(resourceHelper.gs(R.string.key_insulin_oref_peak), peak)
+    override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, resourceHelper)
     override fun applyConfiguration(configuration: JSONObject) {
-        if (configuration.has(resourceHelper.gs(R.string.key_insulin_oref_peak)))
-            sp.putInt(R.string.key_insulin_oref_peak, configuration.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak)))
+            configuration.storeInt(R.string.key_insulin_oref_peak, sp, resourceHelper)
     }
 
     override fun commentStandardText(): String {

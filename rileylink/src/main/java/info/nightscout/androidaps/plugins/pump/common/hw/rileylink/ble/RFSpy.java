@@ -52,11 +52,11 @@ public class RFSpy {
     private static final long RILEYLINK_FREQ_XTAL = 24000000;
     private static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
     public int notConnectedCount = 0;
-    private RileyLinkBLE rileyLinkBle;
+    private final RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
-    private UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
-    private UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
-    private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
+    private final UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
+    private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
+    private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
     //private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic

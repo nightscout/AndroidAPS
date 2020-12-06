@@ -18,18 +18,18 @@ import info.nightscout.androidaps.utils.CRC;
  * Created by mike on 17.07.2016.
  */
 public class SerialIOThread extends Thread {
-    private AAPSLogger aapsLogger;
+    private final AAPSLogger aapsLogger;
 
     private InputStream mInputStream = null;
     private OutputStream mOutputStream = null;
-    private BluetoothSocket mRfCommSocket;
+    private final BluetoothSocket mRfCommSocket;
 
     private boolean mKeepRunning = true;
     private byte[] mReadBuff = new byte[0];
 
     private MessageBase processedMessage;
-    private MessageHashTableBase hashTable;
-    private DanaPump danaPump;
+    private final MessageHashTableBase hashTable;
+    private final DanaPump danaPump;
 
     public SerialIOThread(AAPSLogger aapsLogger, BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaPump danaPump) {
         super();

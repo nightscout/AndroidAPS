@@ -80,7 +80,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected TreatmentService service;
 
