@@ -206,7 +206,6 @@
     <string name="omnipod_overview_errors">Errores</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Restablecer configuración de RileyLink</string>
     <string name="omnipod_uncertain">incierto</string>
     <string name="omnipod_pulse_log">Registro de pulso</string>
     <string name="omnipod_pulse_log_value">Registro de Pulso (copiado al portapapeles)</string>
