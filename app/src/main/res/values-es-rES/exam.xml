@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">El perfil NS puede ser usado pero no configurado.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Tema: Desconectando de la bomba</string>
-    <string name="pumpdisconnect_whattodo">¿Qué se debe hacer al desconectar la bomba?</string>
     <string name="pumpdisconnect_letknow">Haga clic en \"Desconectar bomba\" para que AAPS sepa que no se está inyectando insulina.</string>
     <string name="pumpdisconnect_suspend">Haga clic en \'Suspender lazo \' para que la AAPS deje de estar en lazo cerrado mientras la bomba está desconectada.</string>
     <string name="pumpdisconnect_dontchnage">No cambies nada en AAPS, sólo desconecta la bomba.</string>
