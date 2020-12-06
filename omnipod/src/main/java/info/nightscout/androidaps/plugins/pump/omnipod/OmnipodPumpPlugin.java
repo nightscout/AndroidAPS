@@ -64,13 +64,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.ExpirationReminderBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
@@ -122,7 +119,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
-    private final ServiceTaskExecutor serviceTaskExecutor;
     private final AapsOmnipodManager aapsOmnipodManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final RileyLinkUtil rileyLinkUtil;
@@ -140,8 +136,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
-    private final List<CustomAction> customActions = Collections.singletonList(new CustomAction(
-            R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, true));
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
 
@@ -174,7 +168,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
-            ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
             AapsOmnipodUtil aapsOmnipodUtil,
             RileyLinkUtil rileyLinkUtil,
@@ -200,7 +193,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.dateUtil = dateUtil;
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
-        this.serviceTaskExecutor = serviceTaskExecutor;
         this.aapsOmnipodManager = aapsOmnipodManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.rileyLinkUtil = rileyLinkUtil;
@@ -327,7 +319,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_enabled) ||
                             event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_units)) {
-                        if (!verifyPodAlertConfiguration() && !getCommandQueue().statusInQueue()) {
+                        if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
                     }
@@ -482,8 +474,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isHandshakeInProgress() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages) {
             aapsLogger.debug(LTag.PUMP, "isHandshakeInProgress [OmnipodPumpPlugin] - default (empty) implementation.");
+        }
         return false;
     }
 
@@ -805,18 +798,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public List<CustomAction> getCustomActions() {
-        return customActions;
+        return Collections.emptyList();
     }
 
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
-        OmnipodCustomActionType mcat = (OmnipodCustomActionType) customActionType;
-
-        if (mcat == OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION) {
-            serviceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
-        } else {
-            aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + mcat);
-        }
+        aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + customActionType);
     }
 
     @Override
