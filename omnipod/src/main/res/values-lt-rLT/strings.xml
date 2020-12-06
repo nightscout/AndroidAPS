@@ -99,7 +99,6 @@
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_custom_action_reset_rileylink">Išvalyti RileyLink nustatymus</string>
     <string name="omnipod_uncertain">neaiški</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_moments_ago">Neseniai</string>

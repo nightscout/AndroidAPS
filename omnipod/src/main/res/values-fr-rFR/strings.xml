@@ -204,7 +204,6 @@
     <string name="omnipod_overview_errors">Erreurs</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">L\'intégration de la pompe Omnipod nécessite un boitier RileyLink (avec au minimum un firmware 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Réinitialiser la config. RileyLink</string>
     <string name="omnipod_uncertain">incertain</string>
     <string name="omnipod_pulse_log">Journal d\'impulsions</string>
     <string name="omnipod_pulse_log_value">Journal d\'impulsions (copié dans presse-papiers)</string>

@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">NS profil může být použit, ale ne nastaven.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Téma: Odpojení od pumpy</string>
-    <string name="pumpdisconnect_whattodo">Co se má provést při odpojení pumpy?</string>
     <string name="pumpdisconnect_letknow">Klepněte na \"Odpojit pumpu\" tak, aby AAPS vědělo, že není dodáván žádný inzulín.</string>
     <string name="pumpdisconnect_suspend">Klepněte na tlačítko \"Pozastavit smyčku\", aby AAPS zastavil smyčku na dobu, co je pumpa odpojená.</string>
     <string name="pumpdisconnect_dontchnage">Neměňte nic v AAPS, jen odpojte pumpu.</string>

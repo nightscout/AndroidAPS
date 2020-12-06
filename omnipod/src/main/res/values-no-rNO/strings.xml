@@ -206,7 +206,6 @@
     <string name="omnipod_overview_errors">Feil</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Pumpetilkobling for Omnipod krever RileyLink enhet med firmwareversjon 2.0 eller høyere.</string>
-    <string name="omnipod_custom_action_reset_rileylink">Tilbakestill RileyLink oppsett</string>
     <string name="omnipod_uncertain">usikker</string>
     <string name="omnipod_pulse_log">Puls logg</string>
     <string name="omnipod_pulse_log_value">Puls logg (kopiert til utklippstavlen)</string>

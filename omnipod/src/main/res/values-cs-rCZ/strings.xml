@@ -133,16 +133,20 @@
     <string name="omnipod_cmd_read_pulse_log">Číst protokol pulsů</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Nastavit falešný dočasný bazál, protože Pod je pozastaven</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Zrušit falešný dočasný bazál který byl vytvořen, protože Pod byl pozastaven</string>
+    <string name="omnipod_cmd_split_tbr">Rozdělit dočasný bazál kvůli nejisté chybě při rušení</string>
     <string name="omnipod_cmd_beep_config">Nastavení pípnutí</string>
     <string name="omnipod_cmd_play_test_beep">Přehrát testovací pípnutí</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Správa Podu</string>
+    <string name="omnipod_pod_management_heading_actions">Akce</string>
+    <string name="omnipod_pod_management_heading_tools">Nástroje</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Čekám na připojení RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Aktivovat Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Deaktivovat Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Vyřadit Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Historie Podu</string>
     <string name="omnipod_pod_management_button_riley_link_stats">Statistika RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Resetovat konfiguraci RileyLinku</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Číst protokol pulsů</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Čtení protokolu pulsů…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Pokud zahodíte Pod, již s ním nebudete moci komunikovat. Měli byste to udělat pouze tehdy, pokud veškerá komunikace s Podem trvale selhává. Pokud stále můžete komunikovat s Podem, použijte možnost <b>Deaktivovat Pod</b>.\n\nPokud si přejete pokračovat, ujistěte se prosím, že odstraníte Pod z těla!</string>
@@ -206,7 +210,6 @@
     <string name="omnipod_overview_errors">Chyby</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Integrace pumpy pro Omnipod, vyžaduje zařízení RileyLink (s firmwarem alespoň 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Resetovat konfiguraci RileyLinku</string>
     <string name="omnipod_uncertain">neznámé</string>
     <string name="omnipod_pulse_log">Protokol pulzů</string>
     <string name="omnipod_pulse_log_value">Protokol pulzů (zkopírováno do schránky)</string>

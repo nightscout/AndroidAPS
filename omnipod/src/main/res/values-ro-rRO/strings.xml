@@ -77,7 +77,6 @@
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
     <string name="omnipod_uncertain">incert</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_moments_ago">Acum câteva momente</string>

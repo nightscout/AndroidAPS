@@ -16,7 +16,6 @@
     <string name="offlineprofile_nsprofile">Το προφίλ NS μπορεί να χρησιμοποιηθεί, αλλά όχι να ρυθμιστεί.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Θέμα: Αποσύνδεση από την Αντλία</string>
-    <string name="pumpdisconnect_whattodo">Τι πρέπει να γίνει όταν αποσυνδέεται η αντλία;</string>
     <string name="pumpdisconnect_letknow">Πατήστε το κουμπί \"Αποσύνδεση αντλίας\", έτσι ώστε το AAPS να ξέρει ότι δεν χορηγείται ινσουλίνη.</string>
     <string name="pumpdisconnect_suspend">Πατήστε το κουμπί \"Αναστολή κυκλώματος\", έτσι ώστε το AAPS να σταματά το κύκλωμα, ενώ η αντλία είναι αποσυνδεδεμένη.</string>
     <string name="pumpdisconnect_dontchnage">Μην αλλάζετετίποτα στο AAPS, απλά αποσυνδέστε την αντλία.</string>

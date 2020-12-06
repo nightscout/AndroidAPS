@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Versione:</string>
+    <string name="pref_moreWatchfaceSettings">più impostazioni watchface</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Controlla configurazione watchface.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Wizard</string>
     <string name="menu_bolus">Bolo</string>
