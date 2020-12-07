@@ -146,6 +146,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(MedtronicFragment.class.getName()) //
+                        .pluginIcon(R.drawable.ic_medtronic_veo)
                         .pluginName(R.string.medtronic_name) //
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic)
