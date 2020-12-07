@@ -753,6 +753,13 @@
                     android:layout_marginTop="5dp"
                     android:background="?android:attr/dividerHorizontal" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTop="@drawable/ic_danars"
+                    android:paddingTop="10dp" />
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

@@ -126,7 +126,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         val baseView: LinearLayout = fragment.layoutInflater.inflate(R.layout.configbuilder_single_plugin, null) as LinearLayout
         private val enabledExclusive: RadioButton
         private val enabledInclusive: CheckBox
-        private var pluginIcon: ImageView
+        private val pluginIcon: ImageView
         private val pluginName: TextView
         private val pluginDescription: TextView
         private val pluginPreferences: ImageButton

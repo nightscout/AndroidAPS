@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatButton
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper.Companion.getLogger
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import org.slf4j.Logger
 
 class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : com.google.android.material.button.MaterialButton(context, attrs, defStyleAttr) {
@@ -18,8 +18,10 @@ class SingleClickButton @JvmOverloads constructor(context: Context, attrs: Attri
         return block()
     }
 
+    @Suppress("DEPRECATION")
+    private val log: Logger = StacktraceLoggerWrapper.getLogger(SingleClickButton::class.java)
+
     companion object {
         const val BUTTON_REFRACTION_PERIOD = 1500L
-        private val log: Logger = getLogger(SingleClickButton::class.java)
     }
 }

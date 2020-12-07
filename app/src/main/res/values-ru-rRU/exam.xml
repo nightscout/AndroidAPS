@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Профилем NS можно пользоваться, но не настраивать.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Тема: Отключение от помпы</string>
-    <string name="pumpdisconnect_whattodo">Что следует делать при отсоединении помпы?</string>
     <string name="pumpdisconnect_letknow">Нажать «Отключить помпу», чтобы AAPS знал, что инсулин не подается.</string>
     <string name="pumpdisconnect_suspend">Нажать \'Приостановить цикл\', чтобы AAPS перестал выполнять цикл, когда помпа отсоединена.</string>
     <string name="pumpdisconnect_dontchnage">Ничего не менять в AAPS, просто отключить помпу.</string>

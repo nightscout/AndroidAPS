@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">NS-Profil kann verwendet, aber nicht konfiguriert werden.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Configuration/Config-Builder.html#profil</string>
     <string name="pumpdisconnect_label">Thema: Pumpe abkoppeln</string>
-    <string name="pumpdisconnect_whattodo">Was soll getan werden, wenn die Verbindung zur Pumpe getrennt wird?</string>
     <string name="pumpdisconnect_letknow">Klicke auf \'Pumpe trennen\', so dass AAPS weiß, dass kein Insulin abgegeben wird.</string>
     <string name="pumpdisconnect_suspend">Klicke auf auf \'Loop pausieren\', damit AAPS den Loop unterbricht während die Pumpe nicht verbunden ist.</string>
     <string name="pumpdisconnect_dontchnage">Ändere nichts in AAPS, trenne einfach die Verbindung zur Pumpe.</string>

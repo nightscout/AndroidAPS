@@ -133,16 +133,20 @@
     <string name="omnipod_cmd_read_pulse_log">קרא יומן פעימות</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">הגדר בזאלי זמני מזויף כי הפוד מושהה</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">בטל בזאלי זמני מזויף שנוצר מפני שהפוד הושהה</string>
+    <string name="omnipod_cmd_split_tbr">פיצול הבזאלי הזמני עקב כשל לא ברור בביטול</string>
     <string name="omnipod_cmd_beep_config">הגדרות צפצוף</string>
     <string name="omnipod_cmd_play_test_beep">השמע צפצוף ניסיון</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">ניהול פוד</string>
+    <string name="omnipod_pod_management_heading_actions">פעולות</string>
+    <string name="omnipod_pod_management_heading_tools">כלים</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">ממתין לחיבור לריילילינק…</string>
     <string name="omnipod_pod_management_button_activate_pod">הפעלת פוד</string>
     <string name="omnipod_pod_management_button_deactivate_pod">השבת פוד</string>
     <string name="omnipod_pod_management_button_discard_pod">השלכת פוד</string>
     <string name="omnipod_pod_management_button_pod_history">היסטוריית הפוד</string>
     <string name="omnipod_pod_management_button_riley_link_stats">סטטיסטיקת ריילילינק</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">איפוס תצורת ריילילינק</string>
     <string name="omnipod_pod_management_button_read_pulse_log">קרא יומן פעימות</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">קורא יומן פעימות…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">אם הפוד יושבת, לא יהיה ניתן לתקשר איתו יותר. יש לבצע זאת רק כאשר כל ניסיונות ההתקשרות עם הפוד נכשלים. אם עדיין ניתן לתקשר עם הפוד, יש לבחור באפשרות <b>השבת פוד</b>.\n\n
@@ -207,7 +211,6 @@
     <string name="omnipod_overview_errors">שגיאות</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">חיבור משאבת Omnipod, דרוש התקן ריילילינק (עם גרסת קושחה 2.0 לפחות).</string>
-    <string name="omnipod_custom_action_reset_rileylink">אתחול קונפיגורציית ריילילינק</string>
     <string name="omnipod_uncertain">לא בטוח</string>
     <string name="omnipod_pulse_log">יומן פעימות</string>
     <string name="omnipod_pulse_log_value">יומן פעימות (מועתק ללוח ההעתקה)</string>

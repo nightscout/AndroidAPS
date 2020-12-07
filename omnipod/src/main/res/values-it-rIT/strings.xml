@@ -206,7 +206,6 @@
     <string name="omnipod_overview_errors">Errori</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Integrazione del microinfusore Omnipod, richiede un dispositivo RileyLink (con almeno il firmware 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
     <string name="omnipod_uncertain">indeterminato</string>
     <string name="omnipod_pulse_log">Log impulsi</string>
     <string name="omnipod_pulse_log_value">Log impulsi (copiato negli appunti)</string>
