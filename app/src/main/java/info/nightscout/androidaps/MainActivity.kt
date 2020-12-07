@@ -460,7 +460,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         this.let {
             when (id) {
-                R.id.sensorage, R.id.careportal_cgmsensorstart -> {
+                R.id.sensorage, R.id.careportal_sensorage -> {
                     newCareDialog.setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(manager!!, "Actions")
                     return
                 }
