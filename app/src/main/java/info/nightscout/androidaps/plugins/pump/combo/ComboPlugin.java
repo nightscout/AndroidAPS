@@ -147,6 +147,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
                         .fragmentClass(ComboFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_combo)
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
                         .description(R.string.description_pump_combo),
