@@ -57,6 +57,7 @@ class AutomationPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutomationFragment::class.qualifiedName)
+    .pluginIcon(R.drawable.ic_automation)
     .pluginName(R.string.automation)
     .shortName(R.string.automation_short)
     .preferencesId(R.xml.pref_automation)

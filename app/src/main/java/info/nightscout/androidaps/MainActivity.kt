@@ -850,7 +850,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
             pageAdapter.registerNewFragment(p)
             if (p.hasFragment() && p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
-                menuItem.setIcon(R.drawable.ic_settings)
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.isCheckable = true
                 menuItem.setOnMenuItemClickListener {
                     main_drawer_layout.closeDrawers()
