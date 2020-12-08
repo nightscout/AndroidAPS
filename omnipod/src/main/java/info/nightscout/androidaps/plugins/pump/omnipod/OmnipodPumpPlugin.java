@@ -151,7 +151,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
-    private boolean isSetTempBasalRunning;
     private boolean isCancelTempBasalRunning;
 
     @Inject
@@ -303,23 +302,23 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_rileylink_stats_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_automatically_acknowledge_alerts_enabled)) {
+                    if (event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BASAL_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BOLUS_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED)) {
                         aapsOmnipodManager.reloadSettings();
-                    } else if (event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_units)) {
+                    } else if (event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS)) {
                         if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
@@ -364,11 +363,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void handleUncertainTbrRecovery() {
-        // Ignore changes in certainty during tbr commands; these are normal
-        if (isSetTempBasalRunning || isCancelTempBasalRunning) {
-            return;
-        }
-
         TemporaryBasal tempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
 
         if (podStateManager.isTempBasalRunning() && tempBasal == null) {
@@ -661,13 +655,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             }
         }
 
-        isSetTempBasalRunning = true;
-        PumpEnactResult result;
-        try {
-            result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
-        } finally {
-            isSetTempBasalRunning = false;
-        }
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
