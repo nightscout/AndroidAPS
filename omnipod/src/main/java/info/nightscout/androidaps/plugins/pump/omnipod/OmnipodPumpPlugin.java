@@ -151,7 +151,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
-    private boolean isSetTempBasalRunning;
     private boolean isCancelTempBasalRunning;
 
     @Inject
@@ -363,11 +362,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void handleUncertainTbrRecovery() {
-        // Ignore changes in certainty during tbr commands; these are normal
-        if (isSetTempBasalRunning || isCancelTempBasalRunning) {
-            return;
-        }
-
         TemporaryBasal tempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
 
         if (podStateManager.isTempBasalRunning() && tempBasal == null) {
@@ -660,13 +654,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             }
         }
 
-        isSetTempBasalRunning = true;
-        PumpEnactResult result;
-        try {
-            result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
-        } finally {
-            isSetTempBasalRunning = false;
-        }
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
