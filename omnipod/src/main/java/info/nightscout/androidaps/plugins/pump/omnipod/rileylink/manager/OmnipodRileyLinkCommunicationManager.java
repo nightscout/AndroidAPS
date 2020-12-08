@@ -129,11 +129,11 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
                 if (responseMessageBlock instanceof StatusUpdatableResponse) {
-                    podStateManager.updateFromResponse((StatusUpdatableResponse) responseMessageBlock);
+                    podStateManager.updateFromResponse((StatusUpdatableResponse) responseMessageBlock, message);
                 } else if (responseMessageBlock instanceof PodInfoResponse) {
                     PodInfo podInfo = ((PodInfoResponse) responseMessageBlock).getPodInfo();
                     if (podInfo instanceof StatusUpdatableResponse) {
-                        podStateManager.updateFromResponse((StatusUpdatableResponse) podInfo);
+                        podStateManager.updateFromResponse((StatusUpdatableResponse) podInfo, message);
                     }
                 }
 

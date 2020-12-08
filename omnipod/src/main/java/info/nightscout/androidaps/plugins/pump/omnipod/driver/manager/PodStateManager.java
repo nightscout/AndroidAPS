@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
@@ -550,7 +551,7 @@ public abstract class PodStateManager {
     /**
      * Does not automatically store pod state in order to decrease I/O load
      */
-    public final void updateFromResponse(StatusUpdatableResponse status) {
+    public final void updateFromResponse(StatusUpdatableResponse status, OmnipodMessage requestMessage) {
         setSafe(() -> {
             if (podState.getActivatedAt() == null) {
                 DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(status.getTimeActive());
@@ -581,7 +582,10 @@ public abstract class PodStateManager {
             }
             if (!isTempBasalCertain) {
                 podState.setTempBasalCertain(true);
-                onUncertainTbrRecovered();
+                if (!requestMessage.isSetTempBasalMessage() // We always set TBR to uncertain before sending the set temp basal command, so this is not an actual recovery
+                        && !requestMessage.isCancelTempBasalMessage()) { // Delivery status changed, so we can't recover here
+                    onUncertainTbrRecovered();
+                }
             }
             if (!isBasalCertain) {
                 podState.setBasalCertain(true);
