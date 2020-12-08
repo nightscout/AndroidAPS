@@ -66,6 +66,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_sms)
     .pluginName(R.string.smscommunicator)
     .shortName(R.string.smscommunicator_shortname)
     .preferencesId(R.xml.pref_smscommunicator)
