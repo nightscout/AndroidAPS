@@ -133,16 +133,20 @@
     <string name="omnipod_cmd_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Imposta basale temporanea fittizia perché il pod è sospeso</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
+    <string name="omnipod_cmd_split_tbr">Divisione basale temporanea a causa di un errore indeterminato nella cancellazione</string>
     <string name="omnipod_cmd_beep_config">Configurazione BIP</string>
     <string name="omnipod_cmd_play_test_beep">Esegui BIP di test</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Gestione pod</string>
+    <string name="omnipod_pod_management_heading_actions">Azioni</string>
+    <string name="omnipod_pod_management_heading_tools">Strumenti</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Attesa connessione RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Attiva pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Disattiva pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Scarta pod</string>
     <string name="omnipod_pod_management_button_pod_history">Storico pod</string>
     <string name="omnipod_pod_management_button_riley_link_stats">Statistiche RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Reset config.ne RileyLink</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Lettura log impulsi…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Se scarti il pod, non sarai più in grado di comunicare con esso. Dovresti farlo solo quando tutte le comunicazioni col pod falliscono persistentemente. Se puoi ancora comunicare col pod, usa l\'opzione <b>Disattiva pod</b>.\n\nSe desideri procedere, assicurati di rimuovere il pod dal tuo corpo!</string>
