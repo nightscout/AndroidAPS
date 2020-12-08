@@ -58,7 +58,7 @@ interface SkinInterface {
             asLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
 
             if (isTablet) {
-                for (v in listOf<TextView>(
+                for (v in listOf<TextView?>(
                     view.overview_bg,
                    // view.overview_time,
                    // view.overview_timeagoshort,
@@ -67,8 +67,8 @@ interface SkinInterface {
                     view.overview_basebasal,
                     view.overview_extendedbolus,
                     view.overview_sensitivity
-                )) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
-                for (v in listOf<TextView>(
+                )) v?.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
+                for (v in listOf<TextView?>(
                     view.overview_pump,
                     view.overview_openaps,
                     view.overview_uploader,
