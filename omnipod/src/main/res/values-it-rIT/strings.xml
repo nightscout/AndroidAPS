@@ -133,6 +133,7 @@
     <string name="omnipod_cmd_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Imposta basale temporanea fittizia perché il pod è sospeso</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
+    <string name="omnipod_cmd_split_tbr">Divisione basale temporanea a causa di un errore indeterminato nella cancellazione</string>
     <string name="omnipod_cmd_beep_config">Configurazione BIP</string>
     <string name="omnipod_cmd_play_test_beep">Esegui BIP di test</string>
     <!-- Omnipod - Pod Management -->
