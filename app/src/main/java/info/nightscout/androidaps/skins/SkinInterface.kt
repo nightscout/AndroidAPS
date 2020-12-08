@@ -79,7 +79,9 @@ interface SkinInterface {
                     view.careportal_sensorage,
                     view.careportal_pbage,
                     view.careportal_batterylevel
-                )) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
+                )) if (v != null) {
+                    v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
+                }
                // view.overview_time_llayout.orientation = LinearLayout.HORIZONTAL
                // view.overview_timeagoshort.setTextSize(COMPLEX_UNIT_PX, view.overview_time.textSize)
             }
