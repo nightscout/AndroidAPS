@@ -46,6 +46,27 @@ public class DetermineBasalResultSMB extends APSResult {
                 tempBasalRequested = true;
                 rate = result.getDouble("rate");
                 if (rate < 0d) rate = 0d;
+                
+                // Ketocidosis Protection
+                // Calculate IOB
+                treatmentsPlugin.updateTotalIOBTreatments();
+                treatmentsPlugin.updateTotalIOBTempBasals();
+                final IobTotal bolusIob = treatmentsPlugin.getLastCalculationTreatments();
+                final IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals();
+                // Get active BaseBasalRate
+                double baseBasalRate = activePlugin.getActivePump().getBaseBasalRate();
+                // Activate a small TBR
+                if ( sp.getBoolean(R.string.keto_protect, false) && sp.getBoolean("keto_protect_strategy", true) && (bolusIob.iob + basalIob.basaliob) < (0 - baseBasalRate)) {
+                    // Variable strategy
+                    double cutoff = baseBasalRate * (sp.getDouble(R.string.keto_protect_basal, 20d) * 0.01);
+                    if (rate < cutoff) rate = cutoff;
+                } else if ( sp.getBoolean(R.string.keto_protect, false) && !sp.getBoolean("keto_protect_strategy", true) ) {
+                    // Continuous strategy
+                    double cutoff = baseBasalRate * ( sp.getDouble(R.string.keto_protect_basal, 20d) * 0.01 );
+                    if (rate < cutoff) rate = cutoff;
+                }
+                // End Ketoacidosis Protetion
+                
                 duration = result.getInt("duration");
             } else {
                 rate = -1;
