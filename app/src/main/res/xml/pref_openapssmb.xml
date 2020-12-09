@@ -157,6 +157,40 @@
             validate:maxNumber="10"
             validate:minNumber="1"
             validate:testType="numericRange"/>
+        
+        <androidx.preference.PreferenceScreen
+            android:key="keto_protect_settings"
+            android:title="@string/keto_protect_title">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/keto_protect"
+                android:summary="@string/keto_protect_summary"
+                android:title="@string/keto_protect_title" />
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:dependency="@string/keto_protect"
+                android:key="@string/keto_protect_strategy"
+                android:summary="@string/keto_protect_strategy_summary"
+                android:title="@string/keto_protect_strategy_title" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="20"
+                android:dependency="@string/keto_protect"
+                android:dialogMessage="@string/keto_protect_basal_summary"
+                android:digits="0123456789"
+                android:inputType="number"
+                android:key="@string/keto_protect_basal"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/keto_protect_basal_title"
+                validate:maxNumber="50"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
+
+        </androidx.preference.PreferenceScreen>
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_smb_advanced"
