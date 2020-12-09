@@ -1411,5 +1411,15 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    
+    <string name="keto_protect" translatable="false">keto_protect</string>
+    <string name="keto_protect_strategy" translatable="false">keto_protect_strategy</string>
+    <string name="keto_protect_basal" translatable="false">keto_protect_basal</string>
+    <string name="keto_protect_title">Ketoacidosis Protection</string>
+	<string name="keto_protect_summary">Enables a small safety TBR to reduce the ketoacidosis risk.</string>
+	<string name="keto_protect_strategy_title">Variable protection?</string>
+	<string name="keto_protect_strategy_summary">If activated the small safety TBR kicks in when IOB is in negative range as if no basal insulin has been delivered for one hour.\nIf deactivated every Zero Temp is replaced with the small TBR.</string>	
+    <string name="keto_protect_basal_title">Quantity of the safety TBR [%]</string>
+	<string name="keto_protect_basal_summary">Quantity of the small safety TBR in % which is given to avoid ketoacidosis.</string>
 
 </resources>
