@@ -59,6 +59,7 @@ class OpenHumansUploader @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
+        .pluginIcon(R.drawable.open_humans_white)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)
         .description(R.string.donate_your_data_to_science)

@@ -32,6 +32,7 @@ class ObjectivesPlugin @Inject constructor(
     .fragmentClass(ObjectivesFragment::class.qualifiedName)
     .alwaysEnabled(config.APS)
     .showInList(config.APS)
+    .pluginIcon(R.drawable.ic_graduation)
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),

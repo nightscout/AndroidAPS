@@ -122,7 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:drawableTop="@drawable/ic_dana_rs" />
+                        app:drawableTopCompat="@drawable/ic_dana_rs" />
 
                 </LinearLayout>
 
@@ -388,7 +388,8 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingStart="5dp"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry" />
 
                 </LinearLayout>
 
@@ -755,9 +756,8 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:drawableTop="@drawable/ic_danars"
                     android:paddingTop="10dp" />
 
             </LinearLayout>

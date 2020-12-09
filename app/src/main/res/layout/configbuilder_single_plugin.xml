@@ -32,7 +32,9 @@
         <ImageView
             android:id="@+id/plugin_icon"
             android:layout_width="36dp"
-            android:layout_height="36dp" />
+            android:layout_height="36dp"
+            android:tintMode="multiply"
+            app:tint="?attr/iconColor" />
 
         <TextView
             android:id="@+id/plugin_name"

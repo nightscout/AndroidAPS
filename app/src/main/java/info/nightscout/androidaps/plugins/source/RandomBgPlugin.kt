@@ -40,6 +40,7 @@ class RandomBgPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_dice)
     .pluginName(R.string.randombg)
     .shortName(R.string.randombg_short)
     .preferencesId(R.xml.pref_bgsource)

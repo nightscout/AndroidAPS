@@ -177,7 +177,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodOverviewFragment.class.getName()) //
-                        .pluginIcon(R.drawable.ic_pod)
+                        .pluginIcon(R.drawable.ic_pod_horizontal)
                         .pluginName(R.string.omnipod_name) //
                         .shortName(R.string.omnipod_name_short) //
                         .preferencesId(R.xml.pref_omnipod) //

@@ -71,7 +71,7 @@ dependencies {
     api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
     api "androidx.work:work-rxjava2:$work_version"
-    api 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1'
+    api 'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0'
     api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
     // new for tidepool
@@ -87,7 +87,7 @@ dependencies {
     api "androidx.fragment:fragment:${fragmentVersion}"
     api "androidx.fragment:fragment-ktx:${fragmentktx_version}"
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-    api 'androidx.navigation:navigation-runtime-ktx:2.3.1'
+    api 'androidx.navigation:navigation-runtime-ktx:2.3.2'
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"
     api "androidx.navigation:navigation-ui-ktx:$nav_version"
 
