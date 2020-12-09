@@ -36,19 +36,12 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.ms_square.etsyblur.BlurSupport
 import dagger.android.HasAndroidInjector
+import dev.doubledot.doki.ui.DokiActivity
 import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
-import dev.doubledot.doki.ui.DokiActivity
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
-import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -96,7 +89,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.overview_statuslights
 import kotlinx.android.synthetic.main.main_bottom_fab_menu.*
 import kotlinx.android.synthetic.main.status_fragment.*
-import org.spongycastle.crypto.tls.HashAlgorithm.none
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -237,10 +229,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         val gestureDetector = GestureDetector(this, SingleTapDetector())
         // set on touch listener for move detetction
-        fab.setOnTouchListener { view, event ->
+        fab.setOnTouchListener(fun(view: View, event: MotionEvent): Boolean {
             if (gestureDetector.onTouchEvent(event)) {
                 // code for single tap or onclick
-                onClick(view!!)
+                onClick(view)
             } else {
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
@@ -254,7 +246,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                         fab.translationX = dx
                     }
 
-                    MotionEvent.ACTION_UP -> {
+                    MotionEvent.ACTION_UP   -> {
                         if (bottom_app_bar.fabAlignmentMode == FAB_ALIGNMENT_MODE_CENTER) {
                             bottom_app_bar.fabAlignmentMode = FAB_ALIGNMENT_MODE_END
                             bottom_navigation.menu.findItem(R.id.placeholder)?.isVisible = false
@@ -267,8 +259,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     }
                 }
             }
-            true
-        }
+            return true
+        })
 
         overview_bg?.setOnClickListener {
             val fullText = avgdelta
@@ -343,8 +335,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
         //check screen width and choose main dialog
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
-        val screen_height: Int = dm.heightPixels
-        val smallHeight = screen_height <= Constants.SMALL_HEIGHT
+        val screenheight: Int = dm.heightPixels
+        val smallHeight = screenheight <= Constants.SMALL_HEIGHT
 
         // Special settings for small displays like atom
         if (smallHeight) {
@@ -493,8 +485,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     return
                 }
 
-                R.id.treatmentButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(manager!!, "MainActivity") }))
-                R.id.quickwizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
+                R.id.treatmentButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(manager!!, "MainActivity") })
+                R.id.quickwizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
 
                 R.id.cgmButton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
@@ -532,9 +524,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if (manager.isStateSaved) return
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.wizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(manager, "Main") }))
-                R.id.insulinButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(manager, "Main") }))
-                R.id.carbsButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(manager, "Main") }))
+                R.id.wizardButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(manager, "Main") })
+                R.id.insulinButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(manager, "Main") })
+                R.id.carbsButton -> protectionCheck.queryProtection(this, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(manager, "Main") })
 
                 R.id.cgmButton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
@@ -708,7 +700,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         if( pluginPreferencesMenuItem?.isEnabled == false){
             val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
             spanString.setSpan(ForegroundColorSpan( getColor(R.color.concinnity_grey)) , 0,spanString.length, 0)
-            this.menu?.findItem(R.id.nav_plugin_preferences)?.setTitle(spanString)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
         }
     }
 
@@ -730,8 +722,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) }),
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }, sp) })
+            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), { finish() }, sp) },
+            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), { finish() }, sp) }
         )
         disposable.add(rxBus
                 .toObservable(EventRefreshOverview::class.java)
@@ -918,7 +910,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
     private fun setPluginPreferenceMenuName() {
         val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-       this.menu?.findItem(R.id.nav_plugin_preferences)?.setTitle(plugin.name + ' ' + resourceHelper.gs(R.string.nav_preferences))
+        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = plugin.name + ' ' + resourceHelper.gs(R.string.nav_preferences)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
