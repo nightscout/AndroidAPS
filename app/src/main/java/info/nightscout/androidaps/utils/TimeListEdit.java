@@ -38,26 +38,26 @@ public class TimeListEdit {
 
     private final int ONEHOURINSECONDS = 60 * 60;
 
-    private View[] intervals = new View[24];
-    private SpinnerHelper[] spinners = new SpinnerHelper[24];
-    private NumberPicker[] numberPickers1 = new NumberPicker[24];
-    private NumberPicker[] numberPickers2 = new NumberPicker[24];
-    private ImageView[] addButtons = new ImageView[24];
-    private ImageView[] removeButtons = new ImageView[24];
+    private final View[] intervals = new View[24];
+    private final SpinnerHelper[] spinners = new SpinnerHelper[24];
+    private final NumberPicker[] numberPickers1 = new NumberPicker[24];
+    private final NumberPicker[] numberPickers2 = new NumberPicker[24];
+    private final ImageView[] addButtons = new ImageView[24];
+    private final ImageView[] removeButtons = new ImageView[24];
     private ImageView finalAdd;
 
-    private Context context;
-    private View view;
-    private int resLayoutId;
-    private String tagPrefix;
+    private final Context context;
+    private final View view;
+    private final int resLayoutId;
+    private final String tagPrefix;
     private String label;
-    private JSONArray data1;
-    private JSONArray data2;
-    private double step;
-    private double min;
-    private double max;
-    private NumberFormat formatter;
-    private Runnable save;
+    private final JSONArray data1;
+    private final JSONArray data2;
+    private final double step;
+    private final double min;
+    private final double max;
+    private final NumberFormat formatter;
+    private final Runnable save;
     private LinearLayout layout;
     private TextView textlabel;
     private int inflatedUntil = -1;

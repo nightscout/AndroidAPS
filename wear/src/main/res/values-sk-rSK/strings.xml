@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Zadaj komplikáciu</string>
     <string name="pref_unicode_in_complications">Unicode v komplikáciach</string>
     <string name="pref_version">Verzia:</string>
+    <string name="pref_moreWatchfaceSettings">ďalšie nastavenia Watchface</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Pozrite sa prosím do konfigurácie Watchface.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Sprievodca</string>
     <string name="menu_bolus">Bolus</string>
@@ -121,4 +123,9 @@
     <string name="digitalstyle_pref_your_style">Váš štýl:</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>
     <string name="digitalstyle_style_minimal">minimálny štýl</string>
+    <string name="digitalstyle_style_shape">tvar štýlu</string>
+    <string name="digitalstyle_style_full">úplný štýl</string>
+    <string name="digitalstyle_pref_your_color">Vaša farba:</string>
+    <string name="digitalstyle_pref_your_color_saturation">Vaše nasýtenie farby:</string>
+    <string name="digitalstyle_pref_your_color_opacity">Priehľadnosť farby:</string>
 </resources>

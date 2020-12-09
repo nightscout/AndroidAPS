@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class BleEncryption {
-    private Context context;
+    private final Context context;
 
     @Inject BleEncryption(Context context) {
         this.context = context;

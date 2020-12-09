@@ -10,6 +10,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -50,7 +51,7 @@ public class Objective3 extends Objective {
 
     @Override
     public boolean specialActionEnabled() {
-        return nsClientPlugin.nsClientService.isConnected && nsClientPlugin.nsClientService.hasWriteAuth;
+        return NSClientService.isConnected && NSClientService.hasWriteAuth;
     }
 
     @Override

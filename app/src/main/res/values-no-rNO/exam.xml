@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">NS profil kan brukes, men ikke konfigureres.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Tema: koble fra pumpen</string>
-    <string name="pumpdisconnect_whattodo">Hva bør gjøres innen du kobler fra pumpen?</string>
     <string name="pumpdisconnect_letknow">Trykk på \"Koble fra pumpen\" slik at AAPS vet at ingen insulin vil bli levert.</string>
     <string name="pumpdisconnect_suspend">Trykk \"Pause loop\" så AAPS stopper å loope mens pumpen er frakoblet.</string>
     <string name="pumpdisconnect_dontchnage">Endre ikke på noe i AAPS, koble bare fra pumpen.</string>

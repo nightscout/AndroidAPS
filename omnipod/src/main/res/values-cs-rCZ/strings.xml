@@ -7,8 +7,9 @@
     <string name="omnipod_config_basal_beeps_enabled">Pípnutí při bazálu povoleno</string>
     <string name="omnipod_config_smb_beeps_enabled">Pípnutí při SMB povoleno</string>
     <string name="omnipod_config_tbr_beeps_enabled">Pípnutí při TBR povoleno</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Tlačítko Pozastavit doručení povoleno</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Tlačítko Pulse Log je zapnuto</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Zobrazit tlačítko \"Pozastavit dodávku\" na záložce Omnipod</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Zobrazit tlačítko Pulzní Log v menu Správa Podu</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Zobrazit tlačítko Statistika RileyLink v nabídce Správa Podu</string>
     <string name="omnipod_config_time_change_enabled">Letní čas / Detekce časového pásma povoleno</string>
     <string name="omnipod_config_expiration_reminder_enabled">Připomenutí vypršení platnosti povoleno</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hodiny před vypnutím</string>
@@ -86,6 +87,7 @@
     <string name="omnipod_error_unknown_custom_command">Neznámý vlastní příkaz: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Nezdařilo se čtení protokolu pulzů</string>
     <string name="omnipod_error_failed_to_refresh_status">Nebylo možné aktualizovat stav</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Nepodařilo se aktualizovat stav při spuštění</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Nezdařilo se potvrdit výstrahy</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Nepodařilo se pozastavit výdej</string>
     <string name="omnipod_error_failed_to_set_time">Nepodařilo se nastavit čas</string>
@@ -99,6 +101,8 @@
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Byl překročen čas aktivace Podu. Tento Pod již nelze aktivovat.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Ověření procesu aktivace se nezdařilo. Zkuste to znovu.</string>
     <string name="omnipod_error_pod_suspended">Pod pozastavený</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Nepodařilo se přehrát testovací pípnutí</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">Dočasný bazál běží na Podu, ale AAPS o tomto dočasném bazálu neví. Prosím zrušte svůj dočasný bazál ručně.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Potvrzení</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Čas a/nebo časová zóna změněna na Podu.</string>
@@ -129,14 +133,25 @@
     <string name="omnipod_cmd_read_pulse_log">Číst protokol pulsů</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Nastavit falešný dočasný bazál, protože Pod je pozastaven</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Zrušit falešný dočasný bazál který byl vytvořen, protože Pod byl pozastaven</string>
+    <string name="omnipod_cmd_split_tbr">Rozdělit dočasný bazál kvůli nejisté chybě při rušení</string>
+    <string name="omnipod_cmd_beep_config">Nastavení pípnutí</string>
+    <string name="omnipod_cmd_play_test_beep">Přehrát testovací pípnutí</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Správa Podu</string>
+    <string name="omnipod_pod_management_heading_actions">Akce</string>
+    <string name="omnipod_pod_management_heading_tools">Nástroje</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Čekám na připojení RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Aktivovat Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Deaktivovat Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Vyřadit Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Historie Podu</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Pokud zahodíte Pod, již s ním nebudete moci komunikovat. Měli byste to udělat pouze tehdy, pokud veškerá komunikace s Podem trvale selhává. Pokud stále můžete komunikovat s Podem, použijte možnost <b>Deaktivovat Pod</b>.\n\nPokud si přejete pokračovat, ujistěte se prosím, že odstraníte Pod z těla!</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">Statistika RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Resetovat konfiguraci RileyLinku</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Číst protokol pulsů</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Čtení protokolu pulsů…</string>
+    <string name="omnipod_pod_management_discard_pod_confirmation">Pokud zahodíte Pod, již s ním nebudete moci komunikovat. Měli byste to udělat pouze tehdy, pokud veškerá komunikace s Podem trvale selhává. Pokud stále můžete komunikovat s Podem, použijte možnost <b>Deaktivovat Pod</b>.\n\nPokud si přejete pokračovat, ujistěte se prosím, že odstraníte Pod z těla!</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Přehrát testovací pípnutí</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">Přehrávání testovacího pípnutí…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Zrušit</string>
     <string name="omnipod_wizard_button_finish">Konec</string>
@@ -172,8 +187,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Nastavení času</string>
     <string name="omnipod_overview_button_suspend_delivery">Pozastavit</string>
-    <string name="omnipod_overview_button_riley_link_stats">Statistika RL</string>
-    <string name="omnipod_overview_button_read_pulse_log">Protokol pulzů</string>
     <string name="omnipod_overview_button_refresh">Obnovit</string>
     <string name="omnipod_overview_button_resume_delivery">Obnovit podávání inzulínu</string>
     <string name="omnipod_overview_button_pod_management">Správa Podu</string>
@@ -197,7 +210,6 @@
     <string name="omnipod_overview_errors">Chyby</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Integrace pumpy pro Omnipod, vyžaduje zařízení RileyLink (s firmwarem alespoň 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Resetovat konfiguraci RileyLinku</string>
     <string name="omnipod_uncertain">neznámé</string>
     <string name="omnipod_pulse_log">Protokol pulzů</string>
     <string name="omnipod_pulse_log_value">Protokol pulzů (zkopírováno do schránky)</string>

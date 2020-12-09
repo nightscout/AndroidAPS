@@ -156,7 +156,7 @@ class DanaPump @Inject constructor(
 
     // DanaRS specific
     var rsPassword = ""
-    var v3RSPump = false;
+    var v3RSPump = false
 
     // User settings
     var timeDisplayType24 = false

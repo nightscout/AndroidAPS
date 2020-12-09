@@ -17,13 +17,13 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
     override fun overviewLayout(isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean): Int =
         when {
             config.NSCLIENT              -> R.layout.overview_fragment_nsclient
-            isSmallHeight || isLandscape -> R.layout.overview_fragment_landscape
+            isLandscape                  -> R.layout.overview_fragment_landscape
             else                         -> R.layout.overview_fragment
         }
 
     override fun actionsLayout(isLandscape: Boolean, isSmallWidth: Boolean): Int =
         when {
-            isLandscape || !isSmallWidth -> R.layout.actions_fragment
+            isLandscape                  -> R.layout.actions_fragment
             else                         -> R.layout.actions_fragment_lowres
         }
 

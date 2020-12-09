@@ -389,7 +389,7 @@ public class NSDeviceStatus {
 
     // ********* Uploader data ***********
 
-    private static HashMap<String, Uploader> uploaders = new HashMap<>();
+    private static final HashMap<String, Uploader> uploaders = new HashMap<>();
 
     static class Uploader {
         long clock = 0L;

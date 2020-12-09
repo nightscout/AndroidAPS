@@ -13,9 +13,23 @@
         android:text="00.0"
         android:textSize="60sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/overview_arrow"
+        app:layout_constraintEnd_toStartOf="@+id/overview_delta_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/overview_delta_large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(+1.0)"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
+        app:layout_constraintEnd_toStartOf="@+id/overview_arrow"
+        app:layout_constraintStart_toEndOf="@+id/overview_bg"
+        app:layout_constraintTop_toTopOf="@+id/overview_bg" />
 
 
     <ImageView
@@ -25,8 +39,8 @@
         android:layout_gravity="center_vertical"
         app:layout_constraintEnd_toStartOf="@+id/overview_deltas_llayout"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/overview_bg"
-        app:layout_constraintTop_toTopOf="@+id/overview_bg"
+        app:layout_constraintStart_toEndOf="@+id/overview_delta_large"
+        app:layout_constraintTop_toTopOf="@+id/overview_delta_large"
         android:paddingTop="18dp"
         app:srcCompat="@drawable/ic_flat" />
 

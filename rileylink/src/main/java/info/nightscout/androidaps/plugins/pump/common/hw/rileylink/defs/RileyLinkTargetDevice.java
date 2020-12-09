@@ -12,8 +12,8 @@ public enum RileyLinkTargetDevice {
     Omnipod(R.string.rileylink_target_device_omnipod, false), //
     ;
 
-    private int resourceId;
-    private boolean tuneUpEnabled;
+    private final int resourceId;
+    private final boolean tuneUpEnabled;
 
     RileyLinkTargetDevice(int resourceId, boolean tuneUpEnabled) {
         this.resourceId = resourceId;

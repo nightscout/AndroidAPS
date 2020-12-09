@@ -64,13 +64,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.service.ExpirationReminderBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
@@ -122,7 +119,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
-    private final ServiceTaskExecutor serviceTaskExecutor;
     private final AapsOmnipodManager aapsOmnipodManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final RileyLinkUtil rileyLinkUtil;
@@ -140,8 +136,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
 
-    private final List<CustomAction> customActions = Collections.singletonList(new CustomAction(
-            R.string.omnipod_custom_action_reset_rileylink, OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION, true));
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
 
@@ -157,7 +151,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
-    private boolean isSetTempBasalRunning;
     private boolean isCancelTempBasalRunning;
 
     @Inject
@@ -174,7 +167,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
-            ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
             AapsOmnipodUtil aapsOmnipodUtil,
             RileyLinkUtil rileyLinkUtil,
@@ -185,6 +177,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodOverviewFragment.class.getName()) //
+                        .pluginIcon(R.drawable.ic_pod)
                         .pluginName(R.string.omnipod_name) //
                         .shortName(R.string.omnipod_name_short) //
                         .preferencesId(R.xml.pref_omnipod) //
@@ -200,7 +193,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.dateUtil = dateUtil;
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
-        this.serviceTaskExecutor = serviceTaskExecutor;
         this.aapsOmnipodManager = aapsOmnipodManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.rileyLinkUtil = rileyLinkUtil;
@@ -310,24 +302,24 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (event.isChanged(getResourceHelper(), R.string.key_omnipod_basal_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_bolus_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_tbr_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_smb_beeps_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_suspend_delivery_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_pulse_log_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_rileylink_stats_button_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_time_change_event_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_tbr_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_smb_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_notification_uncertain_bolus_sound_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_automatically_acknowledge_alerts_enabled)) {
+                    if (event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BASAL_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BOLUS_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED)) {
                         aapsOmnipodManager.reloadSettings();
-                    } else if (event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_expiration_reminder_hours_before_shutdown) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_enabled) ||
-                            event.isChanged(getResourceHelper(), R.string.key_omnipod_low_reservoir_alert_units)) {
-                        if (!verifyPodAlertConfiguration() && !getCommandQueue().statusInQueue()) {
+                    } else if (event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS)) {
+                        if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
                     }
@@ -371,11 +363,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void handleUncertainTbrRecovery() {
-        // Ignore changes in certainty during tbr commands; these are normal
-        if (isSetTempBasalRunning || isCancelTempBasalRunning) {
-            return;
-        }
-
         TemporaryBasal tempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
 
         if (podStateManager.isTempBasalRunning() && tempBasal == null) {
@@ -482,8 +469,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public boolean isHandshakeInProgress() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages) {
             aapsLogger.debug(LTag.PUMP, "isHandshakeInProgress [OmnipodPumpPlugin] - default (empty) implementation.");
+        }
         return false;
     }
 
@@ -667,13 +655,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             }
         }
 
-        isSetTempBasalRunning = true;
-        PumpEnactResult result;
-        try {
-            result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
-        } finally {
-            isSetTempBasalRunning = false;
-        }
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
@@ -805,18 +787,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public List<CustomAction> getCustomActions() {
-        return customActions;
+        return Collections.emptyList();
     }
 
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
-        OmnipodCustomActionType mcat = (OmnipodCustomActionType) customActionType;
-
-        if (mcat == OmnipodCustomActionType.RESET_RILEY_LINK_CONFIGURATION) {
-            serviceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
-        } else {
-            aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + mcat);
-        }
+        aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + customActionType);
     }
 
     @Override

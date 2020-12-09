@@ -78,9 +78,7 @@ public class Objective0 extends Objective {
             @Override
             public boolean isCompleted() {
                 APSInterface usedAPS = activePlugin.getActiveAPS();
-                if (((PluginBase) usedAPS).isEnabled(PluginType.APS))
-                    return true;
-                return false;
+                return ((PluginBase) usedAPS).isEnabled(PluginType.APS);
             }
         });
         tasks.add(new Task(R.string.activate_profile) {
