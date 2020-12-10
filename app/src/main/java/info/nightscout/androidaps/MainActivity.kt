@@ -67,6 +67,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
+import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.*
@@ -127,6 +128,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var config: Config
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var xdripPlugin: XdripPlugin
+    @Inject lateinit var tomatoPlugin: TomatoPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var quickWizard: QuickWizard
@@ -351,7 +353,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
             careportal_pbage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
             careportal_batterylevel?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
         }
+
     }
+
 
     open fun onClick(view: View) {
         action(view, view.id, supportFragmentManager)
@@ -378,6 +382,15 @@ open class MainActivity : NoSplashAppCompatActivity() {
             reservoir?.visibility = View.VISIBLE
             canula?.visibility = View.VISIBLE
             battery?.visibility = View.VISIBLE
+        }
+
+        //set sensor icon if possible
+        if(dexcomPlugin.isEnabled()) {
+            sensorage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+        } else if(tomatoPlugin.isEnabled()) {
+            sensorage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+        } else {
+            sensorage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
         }
     }
 
