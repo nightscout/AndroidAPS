@@ -28,11 +28,22 @@
         android:layout_alignBottom="@+id/automation_enabled"
         android:layout_centerVertical="true"
         android:layout_marginTop="6dp"
-        android:layout_toStartOf="@+id/iconSort"
+        android:layout_toStartOf="@+id/iconTrash"
         android:layout_toEndOf="@id/automation_enabled"
         android:text="Title"
         android:textAlignment="viewStart"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iconTrash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/iconSort"
+        android:contentDescription="@string/remove_label"
+        android:orientation="horizontal"
+        android:src="@drawable/ic_trash_outline" />
 
     <ImageView
         android:id="@+id/iconSort"
