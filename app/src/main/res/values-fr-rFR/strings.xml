@@ -466,8 +466,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pile pompe</string>
-    <string name="careportal_age_label">Âge:</string>
-    <string name="careportal_level_label">Niveau:</string>
+    <string name="careportal_age_label">âge:</string>
+    <string name="careportal_level_label">niveau:</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
     <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
     <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
@@ -1178,4 +1178,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Les données suivantes seront téléchargées sur votre compte Open Humans : glycémie, bolus, glucides, événements Careportal (sauf les notes), bolus étendus, changements de profil, doses quotidiennes totales, basales temporaires, cibles temporaires, préférences, version de l\'application, modèle de l\'appareil et dimensions de l\'écran. Les informations secrètes ou privées telles que votre URL Nightscout ou votre API secret ne seront pas téléchargés.</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
     <string name="filter">Filtrer</string>
+    <string name="copytolocalprofile_invalid">Impossible de créer le profil local. Le profil est invalide.</string>
+    <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
 </resources>
