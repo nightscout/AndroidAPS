@@ -582,10 +582,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 overview_delta_large?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                 overview_delta_large?.setTextColor(color)
                 overview_delta?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\n${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_long_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 overview_avgdelta?.text = ""
+                overview_long_avgdelta?.text = ""
             }
 
             // strike through if BG is old
@@ -610,16 +612,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 pump.isSuspended                                                        -> {
@@ -630,27 +635,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     } else {
                         R.drawable.ic_loop_paused
                     })
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 else                                                                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
             }
         } else {
