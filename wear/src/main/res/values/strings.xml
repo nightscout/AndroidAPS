@@ -12,6 +12,8 @@
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
+
 
     <string name="label_warning_sync">No data!</string>
     <string name="label_warning_old">Old data!</string>
@@ -21,8 +23,6 @@
     <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
 
-    <string name="pref_on">On</string>
-    <string name="pref_off">Off</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
     <string name="pref_units_for_actions">Units for Actions</string>
     <string name="pref_show_date">Show Date</string>
@@ -67,6 +67,9 @@
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">more Watchface settings</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
+
 
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Wizard</string>
@@ -93,10 +96,7 @@
     <string name="action_preset_3">Preset 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Free amount</string>
     <string name="action_confirm">CONFIRM</string>
-    <string name="action_status_pump">STATUS PUMP</string>
-    <string name="action_status_loop">STATUS LOOP</string>
     <string name="action_timeshift">timeshift</string>
-    <string name="action_tdd_weighted">TDD weighted</string>
     <string name="action_bolus">bolus</string>
 
 
@@ -109,14 +109,44 @@
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">no status</string>
 
-    <string name="unit_mg_dl">mg/dl</string>
-    <string name="unit_mmol_l">mmol/l</string>
-    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
-    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
-    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
-    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
-    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
-    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">w</string>
+
+    <string name="color_name_red">red</string>
+    <string name="color_name_pink">pink</string>
+    <string name="color_name_purple">purple</string>
+    <string name="color_name_deeppurple">deep purple</string>
+    <string name="color_name_indigo">indigo</string>
+    <string name="color_name_blue">blue</string>
+    <string name="color_name_lightblue">light blue</string>
+    <string name="color_name_cyan">cyan</string>
+    <string name="color_name_teal">teal</string>
+    <string name="color_name_green">green</string>
+    <string name="color_name_lightgreen">light green</string>
+    <string name="color_name_lime">lime</string>
+    <string name="color_name_yellow">yellow</string>
+    <string name="color_name_amber">amber</string>
+    <string name="color_name_orange">orange</string>
+    <string name="color_name_deeporange">deep orange</string>
+    <string name="color_name_brown">brown</string>
+    <string name="color_name_gray">gray</string>
+    <string name="color_name_bluegray">blue gray</string>
+    <string name="color_name_white">white</string>
+    <string name="color_name_black">black</string>
+    <string name="color_name_multicolor">multicolor</string>
+
+
+    <string name="pref_vibrate_hourly">Vibrate hourly</string>
+    <string name="pref_show_weeknumber">Show Week number</string>
+
+    <string name="digitalstyle_pref_your_style">Your style:</string>
+    <string name="digitalstyle_style_none">no style</string>
+    <string name="digitalstyle_style_minimal">minimal style</string>
+    <string name="digitalstyle_style_shape">shape style</string>
+    <string name="digitalstyle_style_full">full style</string>
+
+    <string name="digitalstyle_pref_your_color">Your color:</string>
+    <string name="digitalstyle_pref_your_color_saturation">Your color saturation:</string>
+    <string name="digitalstyle_pref_your_color_opacity">Your color opacity:</string>
+
 
 
 </resources>

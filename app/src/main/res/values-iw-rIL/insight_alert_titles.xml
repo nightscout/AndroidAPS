@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_title">הזרק בולוס</string>
+    <string name="alert_r2_title">בולוס הוחמץ</string>
+    <string name="alert_r3_title">תזכורת</string>
+    <string name="alert_r4_title">החלף פרפרית</string>
+    <string name="alert_r7_title">בזאלי זמני הסתיים</string>
+    <string name="alert_w31_title">מכל מתרוקן</string>
+    <string name="alert_w32_title">סוללה חלשה</string>
+    <string name="alert_w33_title">תאריך/זמן לא תקין</string>
+    <string name="alert_w34_title">תמה תקופת האחריות</string>
+    <string name="alert_w36_title">בזאלי זמני בוטל</string>
+    <string name="alert_w38_title">בולוס בוטל</string>
+    <string name="alert_w39_title">אזהרת זמן השאלה</string>
+    <string name="alert_m20_title">מכל לא הוכנס</string>
+    <string name="alert_m21_title">מיכל ריק</string>
+    <string name="alert_m22_title">סוללה ריקה</string>
+    <string name="alert_m23_title">כיבוי אוטומטי - משאבה נעצרה</string>
+    <string name="alert_m24_title">חסימה</string>
+    <string name="alert_m25_title">נגמרה תקופת ההשאלה - סיום פעולה</string>
+    <string name="alert_m26_title">החלפת מיכל לא הושלמה</string>
+    <string name="alert_m27_title">הורדת הנתונים נכשלה</string>
+    <string name="alert_m28_title">מצב השהייה הסתיים</string>
+    <string name="alert_m29_title">סוג הסוללה לא נקבע</string>
+    <string name="alert_m30_title">סוג המיכל לא נקבע</string>
+    <string name="alert_e6_title">תקלה מכנית</string>
+    <string name="alert_e10_title">תקלה בהחזרת הבוכנה לאחור</string>
+    <string name="alert_e13_title">תקלת שפה</string>
+</resources>

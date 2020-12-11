@@ -85,7 +85,7 @@ class FillDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val insulin = SafeParse.stringToDouble(fill_insulinamount.text)
+        val insulin = SafeParse.stringToDouble(fill_insulinamount?.text ?: return false)
         val actions: LinkedList<String?> = LinkedList()
 
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()

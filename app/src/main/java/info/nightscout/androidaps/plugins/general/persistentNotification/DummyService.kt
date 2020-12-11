@@ -44,7 +44,7 @@ class DummyService : DaggerService() {
             .subscribe({
                 aapsLogger.debug(LTag.CORE, "EventAppExit received")
                 stopSelf()
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException )
         )
     }
 

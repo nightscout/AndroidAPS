@@ -3,10 +3,15 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mes
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.GetStatusCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.MessageDecodingException;
@@ -91,8 +96,11 @@ public class OmnipodMessage {
         return encodedData;
     }
 
-    public void padWithGetStatusCommands(int packetSize) {
-        while (getEncoded().length < packetSize) {
+    public void padWithGetStatusCommands(int packetSize, AAPSLogger aapsLogger) {
+        while (getEncoded().length <= packetSize) {
+            if (getEncoded().length == PacketType.PDM.getMaxBodyLength()) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Message length equals max body length: {}", this);
+            }
             messageBlocks.add(new GetStatusCommand(PodInfoType.NORMAL));
         }
     }
@@ -137,6 +145,14 @@ public class OmnipodMessage {
             }
         }
         return false;
+    }
+
+    public boolean isSetTempBasalMessage() {
+        return messageBlocks.size() >= 2 && messageBlocks.get(0).getType() == MessageBlockType.SET_INSULIN_SCHEDULE && messageBlocks.get(1).getType() == MessageBlockType.TEMP_BASAL_EXTRA;
+    }
+
+    public boolean isCancelTempBasalMessage() {
+        return messageBlocks.size() >= 1 && messageBlocks.get(0).getType() == MessageBlockType.CANCEL_DELIVERY && ((CancelDeliveryCommand) messageBlocks.get(0)).getDeliveryTypes().contains(DeliveryType.TEMP_BASAL);
     }
 
     @Override

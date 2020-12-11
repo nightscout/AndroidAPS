@@ -3,10 +3,11 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,18 +22,13 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
     rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
 
+    override val id get(): InsulinInterface.InsulinType = InsulinInterface.InsulinType.OREF_RAPID_ACTING
+    override val friendlyName get(): String = resourceHelper.gs(R.string.rapid_acting_oref)
 
-    override fun getId(): Int {
-        return InsulinInterface.OREF_RAPID_ACTING
-    }
+    override fun configuration(): JSONObject = JSONObject()
+    override fun applyConfiguration(configuration: JSONObject) {}
 
-    override fun getFriendlyName(): String {
-        return resourceHelper.gs(R.string.rapid_acting_oref)
-    }
-
-    override fun commentStandardText(): String {
-        return resourceHelper.gs(R.string.fastactinginsulincomment)
-    }
+    override fun commentStandardText(): String = resourceHelper.gs(R.string.fastactinginsulincomment)
 
     override val peak = 75
 
@@ -41,5 +37,6 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
             .pluginName(R.string.rapid_acting_oref)
             .description(R.string.description_insulin_rapid)
             .setDefault()
+            .enableByDefault(true)
     }
 }

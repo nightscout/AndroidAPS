@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.utils.alertDialogs
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.os.SystemClock
 import android.text.Spanned
+import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
 
@@ -33,7 +33,7 @@ object OKDialog {
     }
 
     @SuppressLint("InflateParams")
-    fun show(activity: Activity, title: String, message: Spanned, runnable: Runnable? = null) {
+    fun show(activity: FragmentActivity, title: String, message: Spanned, runnable: Runnable? = null) {
         var okClicked = false
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
@@ -55,17 +55,17 @@ object OKDialog {
     }
 
     @JvmStatic
-    fun showConfirmation(activity: Activity, message: String, ok: Runnable?) {
+    fun showConfirmation(activity: FragmentActivity, message: String, ok: Runnable?) {
         showConfirmation(activity, activity.getString(R.string.confirmation), message, ok, null)
     }
 
     @JvmStatic
-    fun showConfirmation(activity: Activity, message: Spanned, ok: Runnable?) {
+    fun showConfirmation(activity: FragmentActivity, message: Spanned, ok: Runnable?) {
         showConfirmation(activity, activity.getString(R.string.confirmation), message, ok, null)
     }
 
     @SuppressLint("InflateParams")
-    fun showConfirmation(activity: Activity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
+    fun showConfirmation(activity: FragmentActivity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
         AlertDialogHelper.Builder(activity)
             .setMessage(message)
@@ -93,7 +93,7 @@ object OKDialog {
     }
 
     @SuppressLint("InflateParams")
-    fun showConfirmation(activity: Activity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
+    fun showConfirmation(activity: FragmentActivity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
         AlertDialogHelper.Builder(activity)
             .setMessage(message)

@@ -15,7 +15,7 @@ public class SetPreamble extends RileyLinkCommand {
 
     @Inject RileyLinkServiceData rileyLinkServiceData;
 
-    private int preamble;
+    private final int preamble;
 
     public SetPreamble(HasAndroidInjector injector, int preamble) throws Exception {
         super();

@@ -38,23 +38,6 @@
             android:key="@string/key_danar_visualizeextendedaspercentage"
             android:title="@string/danar_visualizeextendedaspercentage_title" />
 
-        <androidx.preference.PreferenceScreen
-            android:key="absorption_danar_advanced"
-            android:title="@string/advancedsettings_title">
-
-            <PreferenceCategory
-                android:title="@string/bluetooth">
-
-                <SwitchPreference
-                    android:defaultValue="false"
-                    android:key="@string/key_btwatchdog"
-                    android:summary="@string/btwatchdog_summary"
-                    android:title="@string/btwatchdog_title" />
-
-            </PreferenceCategory>
-
-        </androidx.preference.PreferenceScreen>
-
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".watchfaces.DigitalStyle"
+    tools:deviceIds="wear_round">
+
+
+    <!-- background-image with shapes elements-->
+    <LinearLayout
+        android:id="@+id/shapes_elements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/digitalstyle_bg_full_round"
+        android:contentDescription="round-shape-elements"
+        android:orientation="horizontal" />
+
+    <!-- root-element-->
+    <LinearLayout
+        android:id="@+id/watchface_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <!-- left side 3/8 width  -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:weightSum="100">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="13.95" />
+
+            <!-- COB -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20.44"
+                android:orientation="horizontal"
+                android:weightSum="13">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4.9" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7.0"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:id="@+id/cob_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto_slab_light"
+                        android:gravity="bottom|center_horizontal"
+                        android:text="@string/activity_carb"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/cobView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:fontFamily="@font/roboto_slab_light"
+                        android:gravity="top|center_horizontal"
+                        android:letterSpacing="-0.075"
+                        android:lines="1"
+                        android:text="000g"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.87" />
+
+            <!-- SGV / BZ-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="25.48"
+                android:orientation="horizontal"
+                android:weightSum="13">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3.2" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8.7"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical"
+                    android:weightSum="20">
+
+                    <!-- 1st line with direction and timestamp-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="9"
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2" />
+
+                        <TextView
+                            android:id="@+id/direction"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="3"
+                            android:fontFamily="sans-serif-condensed-medium"
+                            android:gravity="center_horizontal|bottom"
+                            android:text="--"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/timestamp"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginBottom="2dp"
+                            android:layout_weight="3"
+                            android:fontFamily="sans-serif-condensed-light"
+                            android:text="--'"
+                            android:textColor="@color/light_grey"
+                            android:textSize="10sp" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2" />
+                    </LinearLayout>
+
+                    <!-- 2nd line with sgv-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="-10dp"
+                        android:layout_weight="11"
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/sgv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/roboto_slab_light"
+                            android:gravity="top|center_horizontal"
+                            android:letterSpacing="-0.05"
+                            android:lines="1"
+                            android:text="00,0"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.87" />
+
+            <!-- IOB -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20.44"
+                android:orientation="horizontal"
+                android:weightSum="13">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4.9" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7.0"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:id="@+id/iob_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto_slab_light"
+                        android:gravity="bottom|center_horizontal"
+                        android:text="@string/activity_IOB"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/iobView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:fontFamily="@font/roboto_slab_light"
+                        android:gravity="top|center_horizontal"
+                        android:letterSpacing="-0.075"
+                        android:lines="1"
+                        android:text="0,00U"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="13.95" />
+        </LinearLayout>
+
+
+        <!-- right side 5/8 width  -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <!-- right side 1/2 height - top halft -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="9dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!--  right side top - spacer    2/10 -->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2" />
+
+                <!--  right side top - date    4/10 -->
+                <LinearLayout
+                    android:id="@+id/date_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:orientation="vertical"
+                    android:weightSum="2">
+
+                    <!-- day name (short)-->
+                    <LinearLayout
+                        android:id="@+id/date_time1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/dayname"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:fontFamily="@font/roboto_condensed_regular"
+                            android:text="DDD"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textFontWeight="400"
+                            android:textSize="18sp" />
+                        <TextView
+                            android:id="@+id/weeknumber"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:fontFamily="@font/roboto_condensed_light"
+                            android:text="ww"
+                            android:textAllCaps="true"
+                            android:textColor="@color/light_grey"
+                            android:textFontWeight="400"
+                            android:textSize="18sp"
+                            android:letterSpacing="-0.1"
+                            android:visibility="gone"/>
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3" />
+                    </LinearLayout>
+
+                    <!-- day number + month (short)-->
+                    <LinearLayout
+                        android:id="@+id/date_time2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <!-- day number-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/day"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_condensed_regular"
+                                android:paddingEnd="4dp"
+                                android:text="DD"
+                                android:textColor="@color/light_grey"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+                        <!-- month short-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/month"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/roboto_condensed_regular"
+                                android:text="MMM"
+                                android:textAllCaps="true"
+                                android:textColor="@color/light_grey"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--  right side top - hour minute    4/10 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:gravity="left|center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="-5dp"
+                        android:layout_weight="1">
+                        <!-- hour -->
+                        <TextView
+                            android:id="@+id/hour"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:text="HH"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="40sp"
+                            android:textStyle="bold" />
+
+                        <!-- minute -->
+                        <TextView
+                            android:id="@+id/minute"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="6sp"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:paddingTop="5sp"
+                            android:text="MI"
+                            android:textColor="@color/light_grey"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- right side 1/2 height - bottom halft -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false"
+                android:gravity="left|top"
+                android:orientation="vertical"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:weightSum="10">
+
+                <!--  right side bottom - statusbar  2/10 -->
+                <LinearLayout
+                    android:id="@+id/secondary_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:baselineAligned="false"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/delta"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="+/-"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/avgdelta"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="avg"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/uploader_battery"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="--%"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/rig_battery"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="--%"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tmpBasal"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.7"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="-.--U/h"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/bgiView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="bgi"
+                        android:textColor="@color/light_grey"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!--  right side bottom - diagram 6/10 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="6"
+                    android:baselineAligned="false"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <lecho.lib.hellocharts.view.LineChartView
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|top" />
+                </LinearLayout>
+
+                <!--  right side bottom - spacer    2/10 -->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!--   FLAGs   -->
+
+    <TextView
+        android:id="@+id/AAPSv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text=""
+        android:visibility="gone" />
+
+</RelativeLayout>

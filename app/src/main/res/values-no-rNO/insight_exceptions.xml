@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="connection_failed">Tilkobling mislyktes</string>
+    <string name="connection_lost">Mistet forbindelsen</string>
+    <string name="pairing_rejected">Sammenkobling avvist</string>
+    <string name="socket_creation_failed">Mislykket opprettelse av socket tilkobling</string>
+    <string name="timeout">Tidsavbrudd</string>
+    <string name="maximum_number_of_bolus_type_already_running">Maksimalt antall bolusdoser som allerede går</string>
+    <string name="no_active_tbr_to_cancel">Ingen aktiv midlertidig basaldose å kansellere</string>
+    <string name="no_active_tbr_to_change">Ingen aktiv midlertidig basaldose å endre</string>
+    <string name="no_such_bolus_to_cancel">Ingen slik bolus til å avbryte</string>
+    <string name="pump_already_in_that_state_exception">Pumpe allerede i den tilstanden</string>
+    <string name="run_mode_not_allowed">Kjør modus ikke tillatt</string>
+</resources>

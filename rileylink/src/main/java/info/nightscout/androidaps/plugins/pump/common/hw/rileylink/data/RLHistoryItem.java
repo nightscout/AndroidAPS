@@ -83,7 +83,7 @@ public class RLHistoryItem {
         MedtronicCommand("Medtronic"), //
         OmnipodCommand("Omnipod");
 
-        private String desc;
+        private final String desc;
 
 
         RLHistoryItemSource(String desc) {

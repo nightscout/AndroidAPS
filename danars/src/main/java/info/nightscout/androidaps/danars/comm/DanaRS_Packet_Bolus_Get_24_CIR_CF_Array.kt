@@ -20,8 +20,8 @@ class DanaRS_Packet_Bolus_Get_24_CIR_CF_Array(
     override fun handleMessage(data: ByteArray) {
         danaPump.units = byteArrayToInt(getBytes(data, DATA_START, 1))
         for (i in 0 .. 23) {
-            val cf =  byteArrayToInt(getBytes(data, DATA_START + 1 + 2 * i, 2)).toDouble()
-            val cir =  if (danaPump.units == DanaPump.UNITS_MGDL)
+            val cir =  byteArrayToInt(getBytes(data, DATA_START + 1 + 2 * i, 2)).toDouble()
+            val cf =  if (danaPump.units == DanaPump.UNITS_MGDL)
                 byteArrayToInt(getBytes(data, DATA_START + 1 + 48 + 2 * i, 2)).toDouble()
             else
                 byteArrayToInt(getBytes(data, DATA_START + 1 + 48 + 2 * i, 2)) / 100.0

@@ -11,6 +11,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
@@ -114,7 +115,6 @@ class DanaRSService : DaggerService() {
 
     fun readPumpStatus() {
         try {
-            val now = System.currentTimeMillis()
             val pump = activePlugin.activePump
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
             sendMessage(DanaRS_Packet_Etc_Keep_Connection(injector)) // test encryption for v3
@@ -235,12 +235,13 @@ class DanaRSService : DaggerService() {
         lastHistoryFetched = if (danaPump.lastEventTimeLoaded != 0L) danaPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
         aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
         danaPump.lastConnection = System.currentTimeMillis()
-        return PumpEnactResult(injector).success(true)
+        return PumpEnactResult(injector).success(msg.success())
     }
 
     fun setUserSettings(): PumpEnactResult {
-        sendMessage(DanaRS_Packet_Option_Set_User_Option(injector))
-        return PumpEnactResult(injector).success(true)
+        val message = DanaRS_Packet_Option_Set_User_Option(injector)
+        sendMessage(message)
+        return PumpEnactResult(injector).success(message.success())
     }
 
     fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: Treatment): Boolean {
@@ -333,12 +334,13 @@ class DanaRSService : DaggerService() {
             SystemClock.sleep(500)
         }
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)))
-        sendMessage(DanaRS_Packet_Basal_Set_Temporary_Basal(injector, percent, durationInHours))
+        val msgTBR = DanaRS_Packet_Basal_Set_Temporary_Basal(injector, percent, durationInHours)
+        sendMessage(msgTBR)
         SystemClock.sleep(200)
         sendMessage(DanaRS_Packet_Basal_Get_Temporary_Basal_State(injector))
         loadEvents()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return msgTBR.success()
     }
 
     fun highTempBasal(percent: Int): Boolean {
@@ -348,11 +350,12 @@ class DanaRSService : DaggerService() {
             SystemClock.sleep(500)
         }
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)))
-        sendMessage(DanaRS_Packet_APS_Basal_Set_Temporary_Basal(injector, percent))
+        val msgTBR = DanaRS_Packet_APS_Basal_Set_Temporary_Basal(injector, percent)
+        sendMessage(msgTBR)
         sendMessage(DanaRS_Packet_Basal_Get_Temporary_Basal_State(injector))
         loadEvents()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return msgTBR.success()
     }
 
     fun tempBasalShortDuration(percent: Int, durationInMinutes: Int): Boolean {
@@ -366,42 +369,46 @@ class DanaRSService : DaggerService() {
             SystemClock.sleep(500)
         }
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)))
-        sendMessage(DanaRS_Packet_APS_Basal_Set_Temporary_Basal(injector, percent))
+        val msgTBR = DanaRS_Packet_APS_Basal_Set_Temporary_Basal(injector, percent)
+        sendMessage(msgTBR)
         sendMessage(DanaRS_Packet_Basal_Get_Temporary_Basal_State(injector))
         loadEvents()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return msgTBR.success()
     }
 
     fun tempBasalStop(): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)))
-        sendMessage(DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(injector))
+        val msgCancel = DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(injector)
+        sendMessage(msgCancel)
         sendMessage(DanaRS_Packet_Basal_Get_Temporary_Basal_State(injector))
         loadEvents()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return msgCancel.success()
     }
 
     fun extendedBolus(insulin: Double, durationInHalfHours: Int): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.settingextendedbolus)))
-        sendMessage(DanaRS_Packet_Bolus_Set_Extended_Bolus(injector, insulin, durationInHalfHours))
+        val msgExtended = DanaRS_Packet_Bolus_Set_Extended_Bolus(injector, insulin, durationInHalfHours)
+        sendMessage(msgExtended)
         SystemClock.sleep(200)
         sendMessage(DanaRS_Packet_Bolus_Get_Extended_Bolus_State(injector))
         loadEvents()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return msgExtended.success()
     }
 
     fun extendedBolusStop(): Boolean {
         if (!isConnected) return false
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingextendedbolus)))
-        sendMessage(DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(injector))
+        val msgStop = DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(injector)
+        sendMessage(msgStop)
         sendMessage(DanaRS_Packet_Bolus_Get_Extended_Bolus_State(injector))
         loadEvents()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return  msgStop.success()
     }
 
     fun updateBasalsInPump(profile: Profile): Boolean {
@@ -412,9 +419,13 @@ class DanaRSService : DaggerService() {
         sendMessage(msgSet)
         val msgActivate = DanaRS_Packet_Basal_Set_Profile_Number(injector, 0)
         sendMessage(msgActivate)
+        if (danaPump.profile24) {
+            val msgProfile = DanaRS_Packet_Bolus_Set_24_CIR_CF_Array(injector, profile)
+            sendMessage(msgProfile)
+        }
         readPumpStatus()
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return true
+        return msgSet.success()
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
@@ -422,15 +433,15 @@ class DanaRSService : DaggerService() {
         if (!isConnected) return result
         var msg: DanaRS_Packet_History_? = null
         when (type) {
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ALARM     -> msg = DanaRS_Packet_History_Alarm(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_PRIME     -> msg = DanaRS_Packet_History_Prime(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BASALHOUR -> msg = DanaRS_Packet_History_Basal(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BOLUS     -> msg = DanaRS_Packet_History_Bolus(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO     -> msg = DanaRS_Packet_History_Carbohydrate(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_DAILY     -> msg = DanaRS_Packet_History_Daily(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_GLUCOSE   -> msg = DanaRS_Packet_History_Blood_Glucose(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_REFILL    -> msg = DanaRS_Packet_History_Refill(injector)
-            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_SUSPEND   -> msg = DanaRS_Packet_History_Suspend(injector)
+            RecordTypes.RECORD_TYPE_ALARM -> msg = DanaRS_Packet_History_Alarm(injector)
+            RecordTypes.RECORD_TYPE_PRIME -> msg = DanaRS_Packet_History_Prime(injector)
+            RecordTypes.RECORD_TYPE_BASALHOUR -> msg = DanaRS_Packet_History_Basal(injector)
+            RecordTypes.RECORD_TYPE_BOLUS     -> msg = DanaRS_Packet_History_Bolus(injector)
+            RecordTypes.RECORD_TYPE_CARBO     -> msg = DanaRS_Packet_History_Carbohydrate(injector)
+            RecordTypes.RECORD_TYPE_DAILY     -> msg = DanaRS_Packet_History_Daily(injector)
+            RecordTypes.RECORD_TYPE_GLUCOSE   -> msg = DanaRS_Packet_History_Blood_Glucose(injector)
+            RecordTypes.RECORD_TYPE_REFILL    -> msg = DanaRS_Packet_History_Refill(injector)
+            RecordTypes.RECORD_TYPE_SUSPEND   -> msg = DanaRS_Packet_History_Suspend(injector)
         }
         if (msg != null) {
             sendMessage(DanaRS_Packet_General_Set_History_Upload_Mode(injector, 1))
@@ -442,8 +453,7 @@ class DanaRSService : DaggerService() {
             SystemClock.sleep(200)
             sendMessage(DanaRS_Packet_General_Set_History_Upload_Mode(injector, 0))
         }
-        result.success = true
-        result.comment = "OK"
+        result.success = msg?.success() ?: false
         return result
     }
 
