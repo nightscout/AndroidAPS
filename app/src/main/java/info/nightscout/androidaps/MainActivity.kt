@@ -386,11 +386,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
         //set sensor icon if possible
         if(dexcomPlugin.isEnabled()) {
-            sensorage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
         } else if(tomatoPlugin.isEnabled()) {
-            sensorage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
         } else {
-            sensorage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
         }
     }
 
