@@ -12,14 +12,29 @@
         android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginEnd="8dp" />
 
     <CheckBox
         android:id="@+id/plugin_enabled_inclusive"
         android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginEnd="8dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/plugin_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical"
+            android:tintMode="multiply"
+            app:tint="?attr/iconColor" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -29,17 +44,10 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/plugin_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:tintMode="multiply"
-            app:tint="?attr/iconColor" />
-
         <TextView
             android:id="@+id/plugin_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textSize="16sp"
             tools:text="Plugin name" />
 
@@ -49,6 +57,8 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             tools:text="A super exquisite plugin description" />
+    </LinearLayout>
+
     </LinearLayout>
 
     <ImageButton
