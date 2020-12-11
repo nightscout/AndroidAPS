@@ -612,16 +612,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 pump.isSuspended                                                        -> {
@@ -632,27 +635,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     } else {
                         R.drawable.ic_loop_paused
                     })
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 else                                                                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
             }
         } else {
