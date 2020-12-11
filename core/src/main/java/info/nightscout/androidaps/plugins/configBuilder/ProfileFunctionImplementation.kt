@@ -11,6 +11,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -70,8 +71,9 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun getProfile(): Profile? =
         getProfile(System.currentTimeMillis())
 
-    override fun getProfile(time: Long): Profile? {
-        val activeTreatments = activePlugin.activeTreatments
+    override fun getProfile(time: Long): Profile? = getProfile(time, activePlugin.activeTreatments)
+
+    override fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile? {
         val activeProfile = activePlugin.activeProfileInterface
 
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));

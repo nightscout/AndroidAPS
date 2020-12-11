@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,9 @@ public abstract class Objective {
     @Inject public SP sp;
     @Inject public ResourceHelper resourceHelper;
 
-    private String spName;
-    @StringRes private int objective;
-    @StringRes private int gate;
+    private final String spName;
+    @StringRes private final int objective;
+    @StringRes private final int gate;
     private long startedOn;
     private long accomplishedOn;
     List<Task> tasks = new ArrayList<>();
@@ -110,12 +111,12 @@ public abstract class Objective {
         return true;
     }
 
-    public void specialAction(Activity activity, String input) {
+    public void specialAction(FragmentActivity activity, String input) {
     }
 
     public abstract class Task {
         @StringRes
-        private int task;
+        private final int task;
         private Objective objective;
         ArrayList<Hint> hints = new ArrayList<>();
 
@@ -137,8 +138,6 @@ public abstract class Objective {
             return isCompleted();
         }
 
-        ;
-
         public String getProgress() {
             return resourceHelper.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
         }
@@ -159,7 +158,7 @@ public abstract class Objective {
 
     public class MinimumDurationTask extends Task {
 
-        private long minimumDuration;
+        private final long minimumDuration;
 
         MinimumDurationTask(long minimumDuration) {
             super(R.string.time_elapsed);
@@ -196,7 +195,7 @@ public abstract class Objective {
         @StringRes
         int question;
         ArrayList<Option> options = new ArrayList<>();
-        private String spIdentifier;
+        private final String spIdentifier;
         private boolean answered;
         private long disabledTo;
 
@@ -273,8 +272,7 @@ public abstract class Objective {
         public boolean evaluate() {
             boolean selection = cb.isChecked();
             if (selection && isCorrect) return true;
-            if (!selection && !isCorrect) return true;
-            return false;
+            return !selection && !isCorrect;
         }
     }
 

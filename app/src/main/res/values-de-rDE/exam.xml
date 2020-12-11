@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">NS-Profil kann verwendet, aber nicht konfiguriert werden.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Configuration/Config-Builder.html#profil</string>
     <string name="pumpdisconnect_label">Thema: Pumpe abkoppeln</string>
-    <string name="pumpdisconnect_whattodo">Was soll getan werden, wenn die Verbindung zur Pumpe getrennt wird?</string>
     <string name="pumpdisconnect_letknow">Klicke auf \'Pumpe trennen\', so dass AAPS weiß, dass kein Insulin abgegeben wird.</string>
     <string name="pumpdisconnect_suspend">Klicke auf auf \'Loop pausieren\', damit AAPS den Loop unterbricht während die Pumpe nicht verbunden ist.</string>
     <string name="pumpdisconnect_dontchnage">Ändere nichts in AAPS, trenne einfach die Verbindung zur Pumpe.</string>
@@ -134,8 +133,8 @@
     <string name="ic_increasingvalue">Ein höheres IC-Verhältnis bedeutet, dass weniger Insulin für die selbe Menge an KH abgegeben wird.</string>
     <string name="ic_decreasingvalue">Ein niedrigeres IC-Verhältnis bedeutet, dass weniger Insulin für die selbe Menge an KH abgegeben wird.</string>
     <string name="ic_noeffect">Das Ändern des IC-Verhältnisses bedeutet, dass bei 0 COB eine andere Menge an Insulin zur Korrektur eines vorgegebenen BZ-Wertes abgegeben wird.</string>
-    <string name="ic_different">Der IC-Wert muss sich unterscheiden, je nachdem, ob Du eine BE mit 10g oder mit 12g berechnest.</string>
-    <string name="ic_meaning">IC bedeutet: Wie viele BE werden durch eine Einheit Insulin abgedeckt?</string>
+    <string name="ic_different">Der IC-Wert wird sich unterscheiden, je nachdem, ob Du eine Broteinheit (BE) mit 10g oder mit 12g berechnest.</string>
+    <string name="ic_meaning">IC bedeutet: Anzahl BE, die durch eine Einheit Insulin abgedeckt werden</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/FAQ.html#kh-faktor-carbohydrate-to-insulin-ratio-cr-g-ie</string>
     <string name="profileswitch_label">Thema: Profilwechsel</string>
     <string name="profileswitch_pctwillchange"> Durch einen Profilwechsel auf 90%…</string>

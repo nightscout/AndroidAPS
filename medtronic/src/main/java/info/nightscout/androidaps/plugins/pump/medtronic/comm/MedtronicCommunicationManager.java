@@ -13,13 +13,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RFSpyResponse;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioPacket;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
@@ -56,7 +54,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * functionality added.
  */
 @Singleton
-public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
+public class MedtronicCommunicationManager extends RileyLinkCommunicationManager<PumpMessage> {
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
@@ -69,13 +67,14 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private final long RILEYLINK_TIMEOUT = 15 * 60 * 1000; // 15 min
 
     private String errorMessage;
-    private boolean debugSetCommands = false;
+    private final boolean debugSetCommands = false;
 
     private boolean doWakeUpBeforeCommand = true;
 
     // This empty constructor must be kept, otherwise dagger injection might break!
     @Inject
-    public MedtronicCommunicationManager() {}
+    public MedtronicCommunicationManager() {
+    }
 
     @Inject
     public void onInit() {
@@ -85,9 +84,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
     @Override
-    public RLMessage createResponseMessage(byte[] payload) {
-        PumpMessage pumpMessage = new PumpMessage(aapsLogger, payload);
-        return pumpMessage;
+    public PumpMessage createResponseMessage(byte[] payload) {
+        return new PumpMessage(aapsLogger, payload);
     }
 
     @Override
@@ -170,7 +168,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 if (radioResponse.isValid()) {
 
-                    PumpMessage pumpResponse = (PumpMessage) createResponseMessage(radioResponse.getPayload());
+                    PumpMessage pumpResponse = createResponseMessage(radioResponse.getPayload());
 
                     if (!pumpResponse.isValid()) {
                         aapsLogger.warn(LTag.PUMPCOMM, "Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
@@ -279,7 +277,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (List<Byte> frame : frames) {
 
-            byte[] frameData = medtronicUtil.createByteArray(frame);
+            byte[] frameData = MedtronicUtil.createByteArray(frame);
 
             // aapsLogger.debug(LTag.PUMPCOMM,"Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
 
@@ -545,14 +543,15 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    private PumpMessage sendAndListen(RLMessage msg) throws RileyLinkCommunicationException {
+    private PumpMessage sendAndListen(PumpMessage msg) throws RileyLinkCommunicationException {
         return sendAndListen(msg, 4000); // 2000
     }
 
 
     // All pump communications go through this function.
-    protected PumpMessage sendAndListen(RLMessage msg, int timeout_ms) throws RileyLinkCommunicationException {
-        return (PumpMessage) super.sendAndListen(msg, timeout_ms);
+    @Override
+    protected PumpMessage sendAndListen(PumpMessage msg, int timeout_ms) throws RileyLinkCommunicationException {
+        return super.sendAndListen(msg, timeout_ms);
     }
 
 
@@ -827,7 +826,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         data[i + 1] = (byte) gc.get(Calendar.MINUTE);
         data[i + 2] = (byte) gc.get(Calendar.SECOND);
 
-        byte[] yearByte = medtronicUtil.getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
+        byte[] yearByte = MedtronicUtil.getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
 
         data[i + 3] = yearByte[0];
         data[i + 4] = yearByte[1];

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RLHistoryItemMedtronic extends RLHistoryItem {
 
-    private MedtronicCommandType medtronicCommandType;
+    private final MedtronicCommandType medtronicCommandType;
 
     public RLHistoryItemMedtronic(MedtronicCommandType medtronicCommandType) {
         super(new LocalDateTime(), RLHistoryItemSource.MedtronicCommand, RileyLinkTargetDevice.MedtronicPump);

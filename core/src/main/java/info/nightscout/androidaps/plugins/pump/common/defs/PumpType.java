@@ -143,7 +143,7 @@ public enum PumpType {
     MDI("MDI", ManufacturerType.AndroidAPS, "MDI");
 
 
-    private String description;
+    private final String description;
     private ManufacturerType manufacturer;
     private String model;
     private double bolusSize;
@@ -160,7 +160,7 @@ public enum PumpType {
     private boolean hasCustomUnreachableAlertCheck;
 
     private PumpType parent;
-    private static Map<String, PumpType> mapByDescription;
+    private static final Map<String, PumpType> mapByDescription;
 
     static {
         mapByDescription = new HashMap<>();
@@ -454,7 +454,7 @@ public enum PumpType {
         } else {
             DoseStepSize specialBolusSize = getBaseBasalSpecialSteps();
 
-            basalStepSize = specialBolusSize.getStepSizeForAmount((double) basalAmount);
+            basalStepSize = specialBolusSize.getStepSizeForAmount(basalAmount);
         }
 
         if (basalAmount > getTbrSettings().getMaxDose())

@@ -14,6 +14,7 @@ public class PluginDescription {
     public boolean enableByDefault = false;
     public boolean visibleByDefault = false;
     boolean defaultPlugin = false;
+    int pluginIcon = -1;
 
     public PluginDescription mainType(PluginType mainType) {
         this.mainType = mainType;
@@ -42,6 +43,11 @@ public class PluginDescription {
 
     public PluginDescription showInList(boolean showInList) {
         this.showInList = showInList;
+        return this;
+    }
+
+    public PluginDescription pluginIcon(int pluginIcon) {
+        this.pluginIcon = pluginIcon;
         return this;
     }
 

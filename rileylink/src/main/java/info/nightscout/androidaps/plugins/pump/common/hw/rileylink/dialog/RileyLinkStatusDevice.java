@@ -51,7 +51,7 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
     public void onStart() {
         super.onStart();
 
-        this.listView = (ListView)getActivity().findViewById(R.id.rileyLinkDeviceList);
+        this.listView = getActivity().findViewById(R.id.rileyLinkDeviceList);
 
         listView.setAdapter(adapter);
 
@@ -77,9 +77,9 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
 
     private class RileyLinkCommandListAdapter extends BaseAdapter {
 
-        private List<CommandValueDefinition> commandValueList;
+        private final List<CommandValueDefinition> commandValueList;
         private Map<CommandValueDefinitionType, CommandValueDefinition> commandValueMap;
-        private LayoutInflater mInflator;
+        private final LayoutInflater mInflator;
 
 
         public RileyLinkCommandListAdapter() {
@@ -136,8 +136,8 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
             if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_status_device_item, null);
                 viewHolder = new RileyLinkStatusDevice.ViewHolder();
-                viewHolder.itemDescription = (TextView)view.findViewById(R.id.rileylink_device_label);
-                viewHolder.itemValue = (Button)view.findViewById(R.id.rileylink_device_action);
+                viewHolder.itemDescription = view.findViewById(R.id.rileylink_device_label);
+                viewHolder.itemValue = view.findViewById(R.id.rileylink_device_action);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (RileyLinkStatusDevice.ViewHolder)view.getTag();

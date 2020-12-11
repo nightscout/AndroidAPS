@@ -3,7 +3,9 @@ package info.nightscout.androidaps.utils
 import android.content.Context
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -18,17 +20,30 @@ import javax.inject.Singleton
  */
 @Singleton
 class FabricPrivacy @Inject constructor(
-    context: Context,
     private val aapsLogger: AAPSLogger,
     private val sp: SP
 ) {
 
-    var firebaseAnalytics: FirebaseAnalytics
+    val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     init {
-        firebaseAnalytics = FirebaseAnalytics.getInstance(context)
         firebaseAnalytics.setAnalyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
+    }
+
+    // Analytics logCustom
+    fun logCustom(name: String, event: Bundle) {
+        try {
+            if (fabricEnabled()) {
+                firebaseAnalytics.logEvent(name, event)
+            } else {
+                aapsLogger.debug(LTag.CORE, "Ignoring recently opted-out event: $event")
+            }
+        } catch (e: NullPointerException) {
+            aapsLogger.debug(LTag.CORE, "Ignoring opted-out non-initialized event: $event")
+        } catch (e: IllegalStateException) {
+            aapsLogger.debug(LTag.CORE, "Ignoring opted-out non-initialized event: $event")
+        }
     }
 
     // Analytics logCustom

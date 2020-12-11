@@ -10,14 +10,13 @@
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
+    <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
     <string name="label_warning_sync">Žádná data!</string>
     <string name="label_warning_old">Stará data!</string>
     <string name="label_warning_since">Od %1$s</string>
     <string name="label_warning_sync_aaps">Synchronizovat s AAPS!</string>
     <string name="msg_warning_sync">Od %1$s nebyla obdržena žádná data! Zkontrolujte, zda AAPS na telefonu odesílá data ke sledování</string>
     <string name="msg_warning_old">AAPS data jsou %1$s stará! Zkontrolujte svůj senzor, xDrip +, NS, AAPS konfigurace nebo ostatní!</string>
-    <string name="pref_on">Zap.</string>
-    <string name="pref_off">Vyp.</string>
     <string name="pref_vibrate_on_bolus">Vibrovat při bolusu</string>
     <string name="pref_units_for_actions">Jednotky pro akce</string>
     <string name="pref_show_date">Zobrazit datum</string>
@@ -62,6 +61,8 @@
     <string name="pref_complication_tap_action">Akce po klepnutí na komplikaci</string>
     <string name="pref_unicode_in_complications">Znaky Unicode v komplikacích</string>
     <string name="pref_version">Verze:</string>
+    <string name="pref_moreWatchfaceSettings">další nastavení Watchface</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Podívejte se na konfiguraci hodinek prosím.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Kalkulačka</string>
     <string name="menu_bolus">Bolus</string>
@@ -86,10 +87,7 @@
     <string name="action_preset_3">Předvolba 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Libovolné množství</string>
     <string name="action_confirm">POTVRDIT</string>
-    <string name="action_status_pump">STAV PUMPY</string>
-    <string name="action_status_loop">STAV SMYČKY</string>
     <string name="action_timeshift">posun času</string>
-    <string name="action_tdd_weighted">TDD vážený</string>
     <string name="action_bolus">bolus</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Smyčka</string>
@@ -98,12 +96,36 @@
     <string name="activity_carb">Sacharidy</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">žádný stav</string>
-    <string name="unit_mg_dl">mg/dl</string>
-    <string name="unit_mmol_l">mmol/l</string>
-    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
-    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
-    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
-    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
-    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
-    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">t</string>
+    <string name="color_name_red">červená</string>
+    <string name="color_name_pink">růžová</string>
+    <string name="color_name_purple">fialová</string>
+    <string name="color_name_deeppurple">tmavě fialová</string>
+    <string name="color_name_indigo">indigo</string>
+    <string name="color_name_blue">modrá</string>
+    <string name="color_name_lightblue">světle modrá</string>
+    <string name="color_name_cyan">tyrkysová</string>
+    <string name="color_name_teal">šedozelená</string>
+    <string name="color_name_green">zelená</string>
+    <string name="color_name_lightgreen">světle zelená</string>
+    <string name="color_name_lime">limetková</string>
+    <string name="color_name_yellow">žlutá</string>
+    <string name="color_name_amber">jantarová</string>
+    <string name="color_name_orange">oranžová</string>
+    <string name="color_name_deeporange">tmavě oranžová</string>
+    <string name="color_name_brown">hnědá</string>
+    <string name="color_name_gray">šedá</string>
+    <string name="color_name_bluegray">modrošedá</string>
+    <string name="color_name_white">bílá</string>
+    <string name="color_name_black">černá</string>
+    <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_vibrate_hourly">Vibrovat každou hodinu</string>
+    <string name="pref_show_weeknumber">Zobrazit číslo týdne</string>
+    <string name="digitalstyle_pref_your_style">Váš styl:</string>
+    <string name="digitalstyle_style_none">bez stylu</string>
+    <string name="digitalstyle_style_minimal">minimalistický styl</string>
+    <string name="digitalstyle_style_shape">tvar stylu</string>
+    <string name="digitalstyle_style_full">úplný styl</string>
+    <string name="digitalstyle_pref_your_color">Vaše barva:</string>
+    <string name="digitalstyle_pref_your_color_saturation">Vaše nasycení barvy:</string>
+    <string name="digitalstyle_pref_your_color_opacity">Průhlednost barvy:</string>
 </resources>

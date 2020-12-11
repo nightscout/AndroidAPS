@@ -85,7 +85,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
             for (int id : ids) {
 
-                TextView tv = (TextView) getActivity().findViewById(id);
+                TextView tv = getActivity().findViewById(id);
                 tv.setText(tv.getText() + ":");
             }
 

@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.LogEventErrorCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -39,18 +38,18 @@ public class PodInfoResponseTest {
     public void testMessageDecoding() {
         PodInfoResponse podInfoResponse = new PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"));
 
-        assertEquals(PodInfoType.FAULT_EVENT, podInfoResponse.getSubType());
+        assertEquals(PodInfoType.DETAILED_STATUS, podInfoResponse.getSubType());
 
-        PodInfoFaultEvent podInfo = (PodInfoFaultEvent) podInfoResponse.getPodInfo();
+        PodInfoDetailedStatus podInfo = (PodInfoDetailedStatus) podInfoResponse.getPodInfo();
         assertFalse(podInfo.isFaultAccessingTables());
-        assertEquals(LogEventErrorCode.INTERNAL_2_BIT_VARIABLE_SET_AND_MANIPULATED_IN_MAIN_LOOP_ROUTINES_2, podInfo.getLogEventErrorType());
+        assertEquals(0x01, podInfo.getErrorEventInfo().getInternalVariable());
     }
 
     @Test
     public void testInvalidPodInfoTypeMessageDecoding() {
         PodInfoResponse podInfoResponse = new PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"));
 
-        assertEquals(PodInfoType.FAULT_EVENT, podInfoResponse.getSubType());
+        assertEquals(PodInfoType.DETAILED_STATUS, podInfoResponse.getSubType());
 
         thrown.expect(ClassCastException.class);
         PodInfoActiveAlerts podInfo = (PodInfoActiveAlerts) podInfoResponse.getPodInfo();

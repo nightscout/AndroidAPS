@@ -8,16 +8,14 @@ public enum RileyLinkBLEError {
     CodingErrors("Coding Errors encountered during decode of RileyLink packet."), //
     Timeout("Timeout"), //
     Interrupted("Interrupted"),
+    NoResponse("No response from RileyLink"),
     TooShortOrNullResponse("Too short or null decoded response.");
 
-    private String description;
-
+    private final String description;
 
     RileyLinkBLEError(String description) {
-
         this.description = description;
     }
-
 
     public String getDescription() {
         return description;

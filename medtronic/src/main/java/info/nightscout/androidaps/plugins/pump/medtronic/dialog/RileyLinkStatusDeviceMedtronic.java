@@ -55,7 +55,7 @@ public class RileyLinkStatusDeviceMedtronic extends DaggerFragment implements Re
     public void onStart() {
         super.onStart();
 
-        this.listView = (ListView) getActivity().findViewById(R.id.rileylink_history_list);
+        this.listView = getActivity().findViewById(R.id.rileylink_history_list);
 
         listView.setAdapter(adapter);
 
@@ -77,8 +77,8 @@ public class RileyLinkStatusDeviceMedtronic extends DaggerFragment implements Re
 
     private class RileyLinkCommandListAdapter extends BaseAdapter {
 
-        private List<RLHistoryItem> historyItemList;
-        private LayoutInflater mInflator;
+        private final List<RLHistoryItem> historyItemList;
+        private final LayoutInflater mInflator;
 
 
         public RileyLinkCommandListAdapter() {
@@ -146,9 +146,9 @@ public class RileyLinkStatusDeviceMedtronic extends DaggerFragment implements Re
             if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_status_device_item, null);
                 viewHolder = new RileyLinkStatusDeviceMedtronic.ViewHolder();
-                viewHolder.itemTime = (TextView) view.findViewById(R.id.rileylink_history_time);
-                viewHolder.itemSource = (TextView) view.findViewById(R.id.rileylink_history_source);
-                viewHolder.itemDescription = (TextView) view.findViewById(R.id.rileylink_history_description);
+                viewHolder.itemTime = view.findViewById(R.id.rileylink_history_time);
+                viewHolder.itemSource = view.findViewById(R.id.rileylink_history_source);
+                viewHolder.itemDescription = view.findViewById(R.id.rileylink_history_description);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (RileyLinkStatusDeviceMedtronic.ViewHolder) view.getTag();

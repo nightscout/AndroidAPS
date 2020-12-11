@@ -35,10 +35,10 @@ public class FillActivity extends ViewSelectorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
         final Resources res = getResources();
-        final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
+        final GridViewPager pager = findViewById(R.id.pager);
 
         pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
+        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
     }
 
@@ -77,7 +77,7 @@ public class FillActivity extends ViewSelectorActivity {
             } else {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = (ImageView) view.findViewById(R.id.confirmbutton);
+                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

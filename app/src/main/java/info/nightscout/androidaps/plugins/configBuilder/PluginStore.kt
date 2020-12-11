@@ -15,13 +15,13 @@ class PluginStore @Inject constructor(
 
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
-    private var activeBgSource: BgSourceInterface? = null
-    private var activePump: PumpInterface? = null
+    private var activeBgSourceStore: BgSourceInterface? = null
+    private var activePumpStore: PumpInterface? = null
     private var activeProfile: ProfileInterface? = null
-    private var activeAPS: APSInterface? = null
-    private var activeInsulin: InsulinInterface? = null
-    private var activeSensitivity: SensitivityInterface? = null
-    private var activeTreatments: TreatmentsInterface? = null
+    private var activeAPSStore: APSInterface? = null
+    private var activeInsulinStore: InsulinInterface? = null
+    private var activeSensitivityStore: SensitivityInterface? = null
+    private var activeTreatmentsStore: TreatmentsInterface? = null
 
     fun loadDefaults() {
         verifySelectionInCategories()
@@ -71,34 +71,34 @@ class PluginStore @Inject constructor(
         // PluginType.APS
         if (!config.NSCLIENT && !config.PUMPCONTROL) {
             pluginsInCategory = getSpecificPluginsList(PluginType.APS)
-            activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
-            if (activeAPS == null) {
-                activeAPS = getDefaultPlugin(PluginType.APS) as APSInterface
-                (activeAPS as PluginBase).setPluginEnabled(PluginType.APS, true)
+            activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
+            if (activeAPSStore == null) {
+                activeAPSStore = getDefaultPlugin(PluginType.APS) as APSInterface
+                (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
                 aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
             }
-            setFragmentVisiblities((activeAPS as PluginBase).name, pluginsInCategory, PluginType.APS)
+            setFragmentVisiblities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
         }
 
         // PluginType.INSULIN
         pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)
-        activeInsulin = getTheOneEnabledInArray(pluginsInCategory, PluginType.INSULIN) as InsulinInterface?
-        if (activeInsulin == null) {
-            activeInsulin = getDefaultPlugin(PluginType.INSULIN) as InsulinInterface
-            (activeInsulin as PluginBase).setPluginEnabled(PluginType.INSULIN, true)
+        activeInsulinStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.INSULIN) as InsulinInterface?
+        if (activeInsulinStore == null) {
+            activeInsulinStore = getDefaultPlugin(PluginType.INSULIN) as InsulinInterface
+            (activeInsulinStore as PluginBase).setPluginEnabled(PluginType.INSULIN, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting InsulinInterface")
         }
-        setFragmentVisiblities((activeInsulin as PluginBase).name, pluginsInCategory, PluginType.INSULIN)
+        setFragmentVisiblities((activeInsulinStore as PluginBase).name, pluginsInCategory, PluginType.INSULIN)
 
         // PluginType.SENSITIVITY
         pluginsInCategory = getSpecificPluginsList(PluginType.SENSITIVITY)
-        activeSensitivity = getTheOneEnabledInArray(pluginsInCategory, PluginType.SENSITIVITY) as SensitivityInterface?
-        if (activeSensitivity == null) {
-            activeSensitivity = getDefaultPlugin(PluginType.SENSITIVITY) as SensitivityInterface
-            (activeSensitivity as PluginBase).setPluginEnabled(PluginType.SENSITIVITY, true)
+        activeSensitivityStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SENSITIVITY) as SensitivityInterface?
+        if (activeSensitivityStore == null) {
+            activeSensitivityStore = getDefaultPlugin(PluginType.SENSITIVITY) as SensitivityInterface
+            (activeSensitivityStore as PluginBase).setPluginEnabled(PluginType.SENSITIVITY, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityInterface")
         }
-        setFragmentVisiblities((activeSensitivity as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
+        setFragmentVisiblities((activeSensitivityStore as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
 
         // PluginType.PROFILE
         pluginsInCategory = getSpecificPluginsList(PluginType.PROFILE)
@@ -112,33 +112,33 @@ class PluginStore @Inject constructor(
 
         // PluginType.BGSOURCE
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
-        activeBgSource = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE) as BgSourceInterface?
-        if (activeBgSource == null) {
-            activeBgSource = getDefaultPlugin(PluginType.BGSOURCE) as BgSourceInterface
-            (activeBgSource as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
+        activeBgSourceStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE) as BgSourceInterface?
+        if (activeBgSourceStore == null) {
+            activeBgSourceStore = getDefaultPlugin(PluginType.BGSOURCE) as BgSourceInterface
+            (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
         }
-        setFragmentVisiblities((activeBgSource as PluginBase).name, pluginsInCategory, PluginType.PUMP)
+        setFragmentVisiblities((activeBgSourceStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)
-        activePump = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP) as PumpInterface?
-        if (activePump == null) {
-            activePump = getDefaultPlugin(PluginType.PUMP) as PumpInterface
-            (activePump as PluginBase).setPluginEnabled(PluginType.PUMP, true)
+        activePumpStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP) as PumpInterface?
+        if (activePumpStore == null) {
+            activePumpStore = getDefaultPlugin(PluginType.PUMP) as PumpInterface
+            (activePumpStore as PluginBase).setPluginEnabled(PluginType.PUMP, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
-        setFragmentVisiblities((activePump as PluginBase).name, pluginsInCategory, PluginType.PUMP)
+        setFragmentVisiblities((activePumpStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
 
         // PluginType.TREATMENT
         pluginsInCategory = getSpecificPluginsList(PluginType.TREATMENT)
-        activeTreatments = getTheOneEnabledInArray(pluginsInCategory, PluginType.TREATMENT) as TreatmentsInterface?
-        if (activeTreatments == null) {
-            activeTreatments = getDefaultPlugin(PluginType.TREATMENT) as TreatmentsInterface
-            (activeTreatments as PluginBase).setPluginEnabled(PluginType.TREATMENT, true)
+        activeTreatmentsStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.TREATMENT) as TreatmentsInterface?
+        if (activeTreatmentsStore == null) {
+            activeTreatmentsStore = getDefaultPlugin(PluginType.TREATMENT) as TreatmentsInterface
+            (activeTreatmentsStore as PluginBase).setPluginEnabled(PluginType.TREATMENT, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
-        setFragmentVisiblities((activeTreatments as PluginBase).name, pluginsInCategory, PluginType.TREATMENT)
+        setFragmentVisiblities((activeTreatmentsStore as PluginBase).name, pluginsInCategory, PluginType.TREATMENT)
     }
 
     /**
@@ -203,27 +203,31 @@ class PluginStore @Inject constructor(
 
     // ***** Interface *****
 
-    override fun getActiveBgSource(): BgSourceInterface {
-        return activeBgSource ?: checkNotNull(activeBgSource) { "No bg source selected" }
-    }
+    override val activeBgSource: BgSourceInterface
+        get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
-    override fun getActiveProfileInterface(): ProfileInterface =
-        activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
+    override val activeProfileInterface: ProfileInterface
+        get() = activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
 
-    override fun getActiveInsulin(): InsulinInterface =
-        activeInsulin ?: checkNotNull(activeInsulin) { "No insulin selected" }
+    override val activeInsulin: InsulinInterface
+        get() = activeInsulinStore ?: checkNotNull(activeInsulinStore) { "No insulin selected" }
 
-    override fun getActiveAPS(): APSInterface =
-        activeAPS ?: checkNotNull(activeAPS) { "No APS selected" }
+    override val activeAPS: APSInterface
+        get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
-    override fun getActivePump(): PumpInterface =
-        activePump ?: checkNotNull(activePump) { "No pump selected" }
+    override val activePump: PumpInterface
+        get() = activePumpStore ?: checkNotNull(activePumpStore) { "No pump selected" }
 
-    override fun getActiveSensitivity(): SensitivityInterface =
-        activeSensitivity ?: checkNotNull(activeSensitivity) { "No sensitivity selected" }
+    override val activeSensitivity: SensitivityInterface
+        get() = activeSensitivityStore
+            ?: checkNotNull(activeSensitivityStore) { "No sensitivity selected" }
 
-    override fun getActiveTreatments(): TreatmentsInterface =
-        activeTreatments ?: checkNotNull(activeTreatments) { "No treatments selected" }
+    override val activeTreatments: TreatmentsInterface
+        get() = activeTreatmentsStore
+            ?: checkNotNull(activeTreatmentsStore) { "No treatments selected" }
+
+    override val activeOverview: OverviewInterface
+        get() = getSpecificPluginsListByInterface(OverviewInterface::class.java).first() as OverviewInterface
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 
