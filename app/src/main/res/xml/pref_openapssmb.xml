@@ -164,14 +164,14 @@
 
             <SwitchPreference
                 android:defaultValue="false"
-                android:key="@string/keto_protect"
+                android:key="@string/key_keto_protect"
                 android:summary="@string/keto_protect_summary"
                 android:title="@string/keto_protect_title" />
 
             <SwitchPreference
                 android:defaultValue="true"
                 android:dependency="@string/keto_protect"
-                android:key="@string/keto_protect_strategy"
+                android:key="@string/key_variable_keto_protect_strategy"
                 android:summary="@string/keto_protect_strategy_summary"
                 android:title="@string/keto_protect_strategy_title" />
 
