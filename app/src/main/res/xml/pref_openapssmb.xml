@@ -170,14 +170,14 @@
 
             <SwitchPreference
                 android:defaultValue="true"
-                android:dependency="@string/keto_protect"
+                android:dependency="@string/key_keto_protect"
                 android:key="@string/key_variable_keto_protect_strategy"
                 android:summary="@string/keto_protect_strategy_summary"
                 android:title="@string/keto_protect_strategy_title" />
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="20"
-                android:dependency="@string/keto_protect"
+                android:dependency="@string/key_keto_protect"
                 android:dialogMessage="@string/keto_protect_basal_summary"
                 android:digits="0123456789"
                 android:inputType="number"
