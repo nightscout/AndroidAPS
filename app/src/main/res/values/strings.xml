@@ -1412,8 +1412,8 @@
     <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     
-    <string name="keto_protect" translatable="false">keto_protect</string>
-    <string name="keto_protect_strategy" translatable="false">keto_protect_strategy</string>
+    <string name="key_keto_protect" translatable="false">keto_protect</string>
+    <string name="key_variable_keto_protect_strategy" translatable="false">variable_keto_protect_strategy</string>
     <string name="keto_protect_basal" translatable="false">keto_protect_basal</string>
     <string name="keto_protect_title">Ketoacidosis Protection</string>
     <string name="keto_protect_summary">Enables a small safety TBR to reduce the ketoacidosis risk.</string>
