@@ -42,8 +42,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
-    private ProfileFunction profileFunction;
-    private DateUtil dateUtil;
+    private final ProfileFunction profileFunction;
+    private final DateUtil dateUtil;
 
     @Inject
     public SensitivityAAPSPlugin(

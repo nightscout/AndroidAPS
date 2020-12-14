@@ -520,9 +520,7 @@ public class NSUpload {
     public static boolean isIdValid(String _id) {
         if (_id == null)
             return false;
-        if (_id.length() == 24)
-            return true;
-        return false;
+        return _id.length() == 24;
     }
 
     public void generateCareportalEvent(String eventType, long time, String notes) {

@@ -25,7 +25,7 @@ object AlertDialogHelper {
         val titleLayout = LayoutInflater.from(ContextThemeWrapper(context, themeResId)).inflate(layoutResource, null)
         (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title
         (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(iconResource)
-        titleLayout.findViewById<View>(R.id.alertdialog_title).setSelected(true)
+        titleLayout.findViewById<View>(R.id.alertdialog_title).isSelected = true
         return titleLayout
     }
 

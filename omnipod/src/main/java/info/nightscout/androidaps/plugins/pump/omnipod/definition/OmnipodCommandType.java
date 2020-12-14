@@ -24,7 +24,7 @@ public enum OmnipodCommandType {
     RESUME_DELIVERY(R.string.omnipod_cmd_resume_delivery),
     PLAY_TEST_BEEP(R.string.omnipod_cmd_play_test_beep);
 
-    private int resourceId;
+    private final int resourceId;
 
     OmnipodCommandType(int resourceId) {
         this.resourceId = resourceId;

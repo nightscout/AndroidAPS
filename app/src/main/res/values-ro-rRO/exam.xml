@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Profilul NS poate fi folosit, dar nu modificat.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Subiect: Deconectarae de la pompă</string>
-    <string name="pumpdisconnect_whattodo">Ce trebuie să faceți atunci când deconectați pompa?</string>
     <string name="pumpdisconnect_letknow">Apăsați ‘Deconectează pompa’ astfel încât AAPS să știe că nu se va putea livra insulină.</string>
     <string name="pumpdisconnect_suspend">Apăsați ‘Suspendă bucla’ astfel încât AAPS să dezactiveze bucla atâta timp cât pompa este deconectată.</string>
     <string name="pumpdisconnect_dontchnage">Nu modificați nimic în AAPS, doar deconectați pompa.</string>

@@ -40,7 +40,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
     @Inject SP sp;
     @Inject FabricPrivacy fabricPrivacy;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private TextView stateView;
     private TextView activityView;

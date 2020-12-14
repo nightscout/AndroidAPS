@@ -29,7 +29,7 @@ public enum PumpHistoryEntryGroup {
     Unknown(R.string.history_group_unknown),
     ;
 
-    private int resourceId;
+    private final int resourceId;
     private String translated;
 
     private static List<PumpHistoryEntryGroup> translatedList;

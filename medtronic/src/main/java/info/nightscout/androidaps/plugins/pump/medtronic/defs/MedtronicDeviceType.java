@@ -66,7 +66,7 @@ public enum MedtronicDeviceType {
 
     private String pumpModel;
 
-    private boolean isFamily;
+    private final boolean isFamily;
     private MedtronicDeviceType[] familyMembers = null;
 
 

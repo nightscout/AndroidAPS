@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Il profilo NS può essere utilizzato, ma non configurato.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Argomento: disconnessione dal micro</string>
-    <string name="pumpdisconnect_whattodo">Cosa dovrebbe essere fatto quando si disconnette il micro?</string>
     <string name="pumpdisconnect_letknow">Click su \'Disconnetti micro\' cosicché AAPS sappia che non viene erogata alcuna insulina.</string>
     <string name="pumpdisconnect_suspend">Click su \'Sospendi loop\' cosicché AAPS stoppi l\'attività di loop mentre il micro è disconnesso.</string>
     <string name="pumpdisconnect_dontchnage">Non cambiare alcunché in AAPS, solo disconnettere il micro.</string>

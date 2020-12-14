@@ -289,7 +289,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
             reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
-        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
+        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
         activePlugin.activeTreatments.updateTotalIOBTreatments()
         val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
@@ -350,7 +350,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
             "STATUS"          -> {
                 val reply = if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                    if (loopPlugin.isSuspended()) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
+                    if (loopPlugin.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
                     else resourceHelper.gs(R.string.smscommunicator_loopisenabled)
                 } else
                     resourceHelper.gs(R.string.smscommunicator_loopisdisabled)

@@ -12,7 +12,7 @@ public enum ManufacturerType {
 
 
 
-    private String description;
+    private final String description;
 
     ManufacturerType(String description) {
 

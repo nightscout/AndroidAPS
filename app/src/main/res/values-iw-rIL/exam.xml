@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">ניתן להשתמש ב-Nightscout אך לא ניתן להגדירו.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">נושא: התנתקות מהמשאבה</string>
-    <string name="pumpdisconnect_whattodo">מה לעשות כשמתנתקים מהמשאבה?</string>
     <string name="pumpdisconnect_letknow">לחצו \"ניתוק משאבה\" כדי ש-AAPS יידע שלא יינתן איסולין.</string>
     <string name="pumpdisconnect_suspend">לחצו \"השהיית לולאה\" כדי ש-AAPS יעצור את הלולאה בזמן שהמשאבה מנותקת.</string>
     <string name="pumpdisconnect_dontchnage">לא לשנות דבר ב-AAPS, רק לנתק את המשאבה.</string>

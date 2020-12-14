@@ -20,7 +20,7 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject AAPSLogger aapsLogger;
 
-    private static LinkedBlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
+    private static final LinkedBlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
 
     @Inject
     public ServiceTaskExecutor() {

@@ -67,7 +67,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject DateUtil dateUtil;
     @Inject DatabaseHelperInterface databaseHelper;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected String mDevName;
 

@@ -8,7 +8,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/danar_header"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -40,12 +40,12 @@
         android:id="@+id/spacer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/danar_header"
+        android:layout_below="@+id/header"
         android:orientation="horizontal"
         android:padding="5dp" />
 
     <LinearLayout
-        android:id="@+id/danar_history_spinner_layout"
+        android:id="@+id/spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spacer"
@@ -60,7 +60,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Spinner
-            android:id="@+id/danar_history_spinner"
+            android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp" />
@@ -68,22 +68,22 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/danar_history_status"
+        android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/danar_history_spinner_layout"
+        android:layout_below="@id/spinner_layout"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/danar_history_recyclerview"
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/danar_history_reload"
-        android:layout_below="@+id/danar_history_status" />
+        android:layout_above="@id/reload"
+        android:layout_below="@+id/status" />
 
     <Button
-        android:id="@+id/danar_history_reload"
+        android:id="@+id/reload"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

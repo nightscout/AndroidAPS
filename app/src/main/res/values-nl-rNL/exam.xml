@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">NS-Profiel kan worden gebruikt, maar niet worden aangepast.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Configuration/Config-Builder.html#profiel</string>
     <string name="pumpdisconnect_label">Onderwerp: Ontkoppelen van de Pomp</string>
-    <string name="pumpdisconnect_whattodo">Wat moet er gebeuren bij het loskoppelen van de pomp?</string>
     <string name="pumpdisconnect_letknow">Klik op \'pomp ontkoppelen\' zodat AAPS weet dat er geen insuline wordt afgeleverd.</string>
     <string name="pumpdisconnect_suspend">Klik op \'lus onderbreken\' zodat AAPS stopt met loopen terwijl de pomp is losgekoppeld.</string>
     <string name="pumpdisconnect_dontchnage">Verander niets in AAPS, koppel gewoon de pomp af.</string>

@@ -7,9 +7,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import androidx.annotation.XmlRes
 import androidx.preference.*
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -58,7 +55,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
-class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener, HasAndroidInjector {
+class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
     private var pluginId = -1
     private var filter = ""
@@ -102,11 +99,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
     @Inject lateinit var openHumansUploader: OpenHumansUploader
-
-    // TODO why?
-    @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -259,7 +251,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
     }
 
-    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
+    private fun addPreferencesFromResource(@Suppress("SameParameterValue") @XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
         if (enabled) addPreferencesFromResource(preferencesResId, key)
     }
 
@@ -426,7 +418,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         return super.onPreferenceTreeClick(preference)
     }
 
-    public fun setFilter(filter: String) {
+    fun setFilter(filter: String) {
         this.filter = filter
         updateFilterVisibility(filter, preferenceScreen)
     }

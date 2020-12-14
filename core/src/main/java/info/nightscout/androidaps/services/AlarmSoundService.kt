@@ -108,7 +108,7 @@ class AlarmSoundService : DaggerService() {
     // TODO replace with VolumeShaper when min API level >= 26
     private val volumeUpdater = object : Runnable {
         override fun run() {
-            currentVolumeLevel++;
+            currentVolumeLevel++
 
             val volumePercentage = 100.0.coerceAtMost(currentVolumeLevel / VOLUME_INCREASE_STEPS.toDouble() * 100)
             val volume = (1 - (ln(1.0.coerceAtLeast(100.0 - volumePercentage)) / ln(100.0))).toFloat()

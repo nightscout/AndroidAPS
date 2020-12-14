@@ -250,7 +250,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         Rect bounds = new Rect((int) endX, (int) endY + 3, (int) (xpluslength), (int) endY + 8);
                         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         canvas.drawRect(bounds, mPaint);
-                        mPaint.setTextSize((float) (scaledTextSize));
+                        mPaint.setTextSize(scaledTextSize);
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                         mPaint.setFakeBoldText(true);
                         canvas.drawText(value.getLabel(), endX, endY, mPaint);

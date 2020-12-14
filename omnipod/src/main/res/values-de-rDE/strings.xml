@@ -137,12 +137,15 @@
     <string name="omnipod_cmd_play_test_beep">Testton abspielen</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod Management</string>
+    <string name="omnipod_pod_management_heading_actions">Aktionen</string>
+    <string name="omnipod_pod_management_heading_tools">Tools</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Warte auf Verbindung mit RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Pod aktivieren</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_pod_management_button_discard_pod">Pod verwerfen</string>
     <string name="omnipod_pod_management_button_pod_history">Pod Historie</string>
     <string name="omnipod_pod_management_button_riley_link_stats">RileyLink Statistik</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">RileyLink-Konfiguration zurücksetzen</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Pulse-Log lesen</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Lese Puls-Log...</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Wenn Du den Pod verwirfst, kannst Du nicht mehr mit ihm kommunizieren. Mache das nur, wenn jede Kommunikation mit dem Pod dauerhaft fehlschlägt. Falls Du noch mit dem Pod kommunizieren kannst, verwende bitte die Option <b>Pod deaktivieren</b>.\n\nWenn Du fortfahren willst, entferne jetzt den Pod von Deinem Körper!</string>
@@ -206,7 +209,6 @@
     <string name="omnipod_overview_errors">Fehler</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Um den Omnipod nutzen zu können, brauchst Du einen RileyLink (mind. Firmware 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">RileyLink-Konfiguration zurücksetzen</string>
     <string name="omnipod_uncertain">unsicher</string>
     <string name="omnipod_pulse_log">Pulse Log</string>
     <string name="omnipod_pulse_log_value">Pulse Log (in Zwischenablage kopiert)</string>

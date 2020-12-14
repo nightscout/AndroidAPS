@@ -37,7 +37,7 @@ public class InsightAlertActivity extends DaggerAppCompatActivity {
     private Button mute;
     private Button confirm;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             alertService = ((InsightAlertService.LocalBinder) binder).getService();

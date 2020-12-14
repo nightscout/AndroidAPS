@@ -135,9 +135,9 @@ class PasswordCheck @Inject constructor(
         passwordExplanation?.let { alertDialogBuilder.setMessage(it) }
 
         passwordWarning?.let {
-            val extraWarning: TextView = promptsView.findViewById<View>(R.id.password_prompt_extra_message) as TextView;
-            extraWarning.text = context.getString(it);
-            extraWarning.visibility = View.VISIBLE;
+            val extraWarning: TextView = promptsView.findViewById<View>(R.id.password_prompt_extra_message) as TextView
+            extraWarning.text = context.getString(it)
+            extraWarning.visibility = View.VISIBLE
         }
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText

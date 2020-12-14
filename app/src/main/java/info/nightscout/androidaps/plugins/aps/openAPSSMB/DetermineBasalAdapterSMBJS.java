@@ -55,7 +55,7 @@ public class DetermineBasalAdapterSMBJS {
     @Inject OpenHumansUploader openHumansUploader;
 
 
-    private ScriptReader mScriptReader;
+    private final ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
     private JSONArray mIobData;

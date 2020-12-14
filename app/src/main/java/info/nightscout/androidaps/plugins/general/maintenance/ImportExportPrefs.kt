@@ -208,10 +208,10 @@ class ImportExportPrefs @Inject constructor(
                 // import is OK when we do not have errors (warnings are allowed)
                 val importOkCheckedAgain = checkIfImportIsOk(prefsReloaded)
 
-                then(prefsReloaded, importOkCheckedAgain);
+                then(prefsReloaded, importOkCheckedAgain)
             }
         } else {
-            then(prefs, importOk);
+            then(prefs, importOk)
         }
     }
 
@@ -278,7 +278,7 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    public fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
+    fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
 
         askToConfirmImport(activity, importFile) { password ->
 
@@ -335,7 +335,7 @@ class ImportExportPrefs @Inject constructor(
 
         for ((_, value) in prefs.metadata) {
             if (value.status == PrefsStatus.ERROR)
-                importOk = false;
+                importOk = false
         }
         return importOk
     }

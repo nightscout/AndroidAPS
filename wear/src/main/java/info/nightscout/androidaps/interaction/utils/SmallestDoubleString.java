@@ -28,7 +28,7 @@ public class SmallestDoubleString {
         USE
     }
 
-    private  static Pattern pattern = Pattern.compile("^([+-]?)([0-9]*)([,.]?)([0-9]*)(\\([^)]*\\))?(.*?)$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE );
+    private  static final Pattern pattern = Pattern.compile("^([+-]?)([0-9]*)([,.]?)([0-9]*)(\\([^)]*\\))?(.*?)$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE );
 
     public SmallestDoubleString(String inputString) {
         this(inputString, Units.SKIP);
