@@ -133,16 +133,20 @@
     <string name="omnipod_cmd_read_pulse_log">Čítať protokol pulzov</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Nastaviť falošný dočasný bazál, pretože Pod je pozastavený</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Zrušiť falošný dočasný bazál ktorý bol vytvorený, pretože Pod bol pozastavený</string>
+    <string name="omnipod_cmd_split_tbr">Rozdeliť dočasný bazál kvôli neistej chybe pri zrušení</string>
     <string name="omnipod_cmd_beep_config">Nastavenie pípnutia</string>
     <string name="omnipod_cmd_play_test_beep">Prehrať testovacie pípnutie</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Správa Podu</string>
+    <string name="omnipod_pod_management_heading_actions">Akcie</string>
+    <string name="omnipod_pod_management_heading_tools">Nástroje</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Čakám na pripojenie RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Aktivovať Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Deaktivovať Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Vyradiť Pod</string>
     <string name="omnipod_pod_management_button_pod_history">História Podu</string>
     <string name="omnipod_pod_management_button_riley_link_stats">Štatistika RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Resetovať konfiguráciu RileyLinku</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Čítať protokol pulzov</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Čítanie protokolu pulzov…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Pokiaľ zahodíte Pod, už s ním nebudete môcť komunikovať. Mali by ste to urobiť iba vtedy, pokiaľ celá komunikácia s Podom trvalo zlyháva. Pokiaľ stále môžete komunikovať s Podom, použite možnosť <b>Deaktivovať Pod</b>.\n\nPokiaľ si prajete pokračovať, uistite sa prosím, že odstránite Pod z tela!</string>
