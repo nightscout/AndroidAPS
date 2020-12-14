@@ -29,7 +29,6 @@
                 app:srcCompat="@drawable/ic_trigger_green_48dp" />
 
             <TextView
-                android:id="@+id/automation_actionTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -43,7 +42,7 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/automation_layoutTrigger"
+            android:id="@+id/layoutTrigger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"

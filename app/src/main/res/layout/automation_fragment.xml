@@ -8,18 +8,18 @@
     tools:context="info.nightscout.androidaps.plugins.general.automation.AutomationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/automation_eventListView"
+        android:id="@+id/eventListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="6dp"
         android:nestedScrollingEnabled="true"
-        app:layout_constraintBottom_toTopOf="@+id/automation_logView"
+        app:layout_constraintBottom_toTopOf="@+id/logView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/automation_logView"
+        android:id="@+id/logView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
