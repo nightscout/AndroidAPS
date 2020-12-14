@@ -31,7 +31,7 @@
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
-    <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo מחייב התקנת ruffy</string>
+    <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo, מחייב התקנת ruffy</string>
     <string name="description_pump_mdi">טיפול בזריקות יום-יומיות</string>
     <string name="description_pump_virtual">שילוב משאבה עבור משאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
@@ -543,7 +543,7 @@
     <string name="enable_pump_unreachable_alert">התראה אם המשאבה בלתי נגישה</string>
     <string name="pump_unreachable_threshold">סף משאבה בלתי נגישה [min]</string>
     <string name="enable_carbs_req_alert">התראה אם יש צורך בפחמימות</string>
-    <string name="urgent_alarm">התרעה דחופה</string>
+    <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
     <string name="dexcomg5_nsupload_title">טעינת נתוני סוכר ל-Nightscout</string>
@@ -978,7 +978,9 @@
     <string name="description_source_dexcom">קבלת ערכי רמת סוכר מאפליקציית Dexcom עם פאץ\'.</string>
     <string name="notification">התראה</string>
     <string name="notification_message">התראה: %1$s</string>
+    <string name="alarm_message">התראה: %1$s</string>
     <string name="message_short">הודעה:</string>
+    <string name="alarm_short">התראה:</string>
     <string name="profilepercentage">אחוז הפרופיל</string>
     <string name="percent_u">אחוז [%]:</string>
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
@@ -1180,4 +1182,5 @@
     <string name="filter">סינון</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
+    <string name="alarm">התראה</string>
 </resources>
