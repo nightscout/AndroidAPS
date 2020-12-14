@@ -42,10 +42,10 @@ import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
+import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -65,6 +65,7 @@ public class NSUpload {
     private final Context context;
     private final UploadQueueInterface uploadQueue;
     private final DatabaseHelperInterface databaseHelper;
+    private final RunningConfiguration runningConfiguration;
 
     @Inject
     public NSUpload(
@@ -74,6 +75,7 @@ public class NSUpload {
             SP sp,
             Context context,
             UploadQueueInterface uploadQueue,
+            RunningConfiguration runningConfiguration,
             DatabaseHelperInterface databaseHelper
     ) {
         this.injector = injector;
@@ -82,6 +84,7 @@ public class NSUpload {
         this.sp = sp;
         this.context = context;
         this.uploadQueue = uploadQueue;
+        this.runningConfiguration = runningConfiguration;
         this.databaseHelper = databaseHelper;
     }
 
@@ -106,7 +109,7 @@ public class NSUpload {
 
     public void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal, Profile profile) {
         try {
-            boolean useAbsolute = sp.getBoolean("ns_sync_use_absolute", false);
+            boolean useAbsolute = sp.getBoolean(R.string.key_ns_sync_use_absolute, false);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
@@ -249,6 +252,9 @@ public class NSUpload {
             deviceStatus.uploaderBattery = batteryLevel;
 
             deviceStatus.created_at = DateUtil.toISOString(new Date());
+
+            deviceStatus.configuration = runningConfiguration.configuration();
+
             uploadQueue.add(new DbRequest("dbAdd", "devicestatus", deviceStatus.mongoRecord()));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
@@ -514,9 +520,7 @@ public class NSUpload {
     public static boolean isIdValid(String _id) {
         if (_id == null)
             return false;
-        if (_id.length() == 24)
-            return true;
-        return false;
+        return _id.length() == 24;
     }
 
     public void generateCareportalEvent(String eventType, long time, String notes) {

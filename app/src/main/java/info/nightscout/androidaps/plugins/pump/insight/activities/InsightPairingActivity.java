@@ -43,11 +43,11 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
     private TextView code;
     private Button exit;
     private RecyclerView deviceList;
-    private DeviceAdapter deviceAdapter = new DeviceAdapter();
+    private final DeviceAdapter deviceAdapter = new DeviceAdapter();
 
     private InsightConnectionService service;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((InsightConnectionService.LocalBinder) binder).getService();
@@ -199,7 +199,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
         service.pair(device.getAddress());
     }
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -214,7 +214,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
 
     private class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
 
-        private List<BluetoothDevice> bluetoothDevices = new ArrayList<>();
+        private final List<BluetoothDevice> bluetoothDevices = new ArrayList<>();
 
         public void addDevice(BluetoothDevice bluetoothDevice) {
             if (!bluetoothDevices.contains(bluetoothDevice)) {
@@ -248,7 +248,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView deviceName;
+            private final TextView deviceName;
 
             public ViewHolder(View itemView) {
                 super(itemView);

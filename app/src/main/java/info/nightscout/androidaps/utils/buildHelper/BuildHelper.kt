@@ -25,7 +25,7 @@ class BuildHelper @Inject constructor(private val config: Config) {
         if (!config.APS) true else engineeringMode || !devBranch
 
     fun isEngineeringMode(): Boolean =
-        if (!config.APS) true else engineeringMode || !devBranch
+        engineeringMode
 
     fun isDev(): Boolean = devBranch
 }

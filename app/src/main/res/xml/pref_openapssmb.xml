@@ -83,7 +83,7 @@
             android:singleLine="true"
             android:title="@string/smbinterval_summary"
             validate:maxNumber="10"
-            validate:minNumber="3"
+            validate:minNumber="1"
             validate:testType="numericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference

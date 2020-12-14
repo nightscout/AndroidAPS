@@ -22,6 +22,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
@@ -56,6 +57,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -80,7 +82,7 @@ import kotlinx.android.synthetic.main.overview_buttons_layout.overview_quickwiza
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatmentbutton
 import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
-import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
+import kotlinx.android.synthetic.main.overview_fragment_nsclient.*
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_chartMenuButton
 import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobcalculationprogess
@@ -93,10 +95,11 @@ import kotlinx.android.synthetic.main.overview_info_layout.overview_cob
 import kotlinx.android.synthetic.main.overview_info_layout.overview_extendedbolus
 import kotlinx.android.synthetic.main.overview_info_layout.overview_iob
 import kotlinx.android.synthetic.main.overview_info_layout.overview_sensitivity
+import kotlinx.android.synthetic.main.overview_info_layout.overview_time
+import kotlinx.android.synthetic.main.overview_info_layout.overview_timeagoshort
 import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -180,6 +183,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // pre-process landscape mode
+        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, resourceHelper.gb(R.bool.isTablet))
 
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
@@ -318,11 +324,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { TreatmentDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { WizardDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { InsulinDialog().show(childFragmentManager, "Overview") }))
-                R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { onClickQuickWizard() }))
-                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { CarbsDialog().show(childFragmentManager, "Overview") }))
+                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
+                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
 
                 R.id.overview_cgmbutton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
@@ -357,7 +363,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         loopPlugin.invoke("Accept temp button", false)
                         if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                ?: "".toSpanned(), Runnable {
+                                ?: "".toSpanned(), {
                                 aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
                                 overview_accepttempbutton?.visibility = View.GONE
                                 (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
@@ -573,13 +579,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
+                overview_delta_large?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                overview_delta_large?.setTextColor(color)
                 overview_delta?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\n${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_long_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
-                overview_deltashort?.text = "---"
                 overview_avgdelta?.text = ""
+                overview_long_avgdelta?.text = ""
             }
 
             // strike through if BG is old
@@ -596,53 +604,65 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
 
-        // open loop mode
+        // aps mode
         if (config.APS && pump.pumpDescription.isTempBasalCapable) {
             overview_apsmode?.visibility = View.VISIBLE
+            overview_time_llayout?.visibility = View.GONE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode?.setImageResource(if (pump.pumpDescription.pumpType == PumpType.Insulet_Omnipod) {
+                        // For Omnipod, indicate the pump as disconnected when it's suspended.
+                        // The only way to 'reconnect' it, is through the Omnipod tab
+                        R.drawable.ic_loop_disconnected
+                    } else {
+                        R.drawable.ic_loop_paused
+                    })
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 else                                                                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
             }
         } else {
+            //nsclient
             overview_apsmode?.visibility = View.GONE
             overview_apsmode_text?.visibility = View.GONE
+            overview_time_llayout?.visibility = View.VISIBLE
         }
         val lastRun = loopPlugin.lastRun
         val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
@@ -671,7 +691,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Basal, TBR
         val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
-        overview_basebasal?.text = activeTemp?.let { if (resourceHelper.shortTextMode()) "T:" + activeTemp.toStringVeryShort() else activeTemp.toStringFull() }
+        overview_basebasal?.text = activeTemp?.let { "T:" + activeTemp.toStringVeryShort() }
             ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)
         overview_basal_llayout?.setOnClickListener {
             var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
@@ -692,10 +712,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
-        overview_extendedbolus?.text = if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses) {
-            if (resourceHelper.shortTextMode()) resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
-            else extendedBolus.toStringMedium()
-        } else ""
+        overview_extendedbolus?.text =
+            if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses)
+                resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
+            else ""
         overview_extendedbolus?.setOnClickListener {
             if (extendedBolus != null) activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString())
@@ -720,15 +740,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         treatmentsPlugin.updateTotalIOBTempBasals()
         val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
-        overview_iob?.text = when {
-            resourceHelper.shortTextMode() ->
-                resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
+        overview_iob?.text = resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
 
-            else                           ->
-                resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + " (" +
-                    resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob) + "/" +
-                    resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob) + ")"
-        }
         overview_iob_llayout?.setOnClickListener {
             activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.iob),
@@ -741,7 +754,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Status lights
         overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
+        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, null, careportal_pbage, careportal_batterylevel)
 
         // cob
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
@@ -792,7 +805,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } ?: ""
 
         // ****** GRAPH *******
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()

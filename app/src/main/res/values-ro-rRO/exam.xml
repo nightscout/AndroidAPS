@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Profilul NS poate fi folosit, dar nu modificat.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Subiect: Deconectarae de la pompă</string>
-    <string name="pumpdisconnect_whattodo">Ce trebuie să faceți atunci când deconectați pompa?</string>
     <string name="pumpdisconnect_letknow">Apăsați ‘Deconectează pompa’ astfel încât AAPS să știe că nu se va putea livra insulină.</string>
     <string name="pumpdisconnect_suspend">Apăsați ‘Suspendă bucla’ astfel încât AAPS să dezactiveze bucla atâta timp cât pompa este deconectată.</string>
     <string name="pumpdisconnect_dontchnage">Nu modificați nimic în AAPS, doar deconectați pompa.</string>
@@ -134,8 +133,6 @@
     <string name="ic_increasingvalue">Valorile IC mai mari determină o cantitate mai mică de insulină livrată pentru o cantitate dată de carbohidrați.</string>
     <string name="ic_decreasingvalue">Valorile IC mai mici determină o cantitate mai mică de insulină livrată pentru o cantitate dată de carbohidrați.</string>
     <string name="ic_noeffect">Dacă aveți 0 CoB (carbohidrați activi), schimbarea IC va determina modificarea cantității de insulină livrată pentru a corecta glicemia.</string>
-    <string name="ic_different">Valoarea IC va fi diferita dacă considerați 1BE (unitate de pâine) ca 10g sau 12g glucide.</string>
-    <string name="ic_meaning">IC înseamnă: Câte unități de pâine sunt acoperite de 1 unitate de insulină.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Subiect: Schimbarea de profil</string>
     <string name="profileswitch_pctwillchange"> Atunci când se specifică 90% la schimbarea de profil…</string>

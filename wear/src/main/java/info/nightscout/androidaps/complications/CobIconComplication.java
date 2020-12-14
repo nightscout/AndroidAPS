@@ -47,5 +47,5 @@ public class CobIconComplication extends BaseComplicationProviderService {
 
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.WIZARD;
-    };
+    }
 }

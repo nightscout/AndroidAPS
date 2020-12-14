@@ -13,8 +13,8 @@ public enum MedtronicStatusRefreshType {
     PumpTime(60, MedtronicCommandType.GetRealTimeClock) //
     ;
 
-    private int refreshTime;
-    private MedtronicCommandType commandType;
+    private final int refreshTime;
+    private final MedtronicCommandType commandType;
 
 
     MedtronicStatusRefreshType(int refreshTime, MedtronicCommandType commandType) {

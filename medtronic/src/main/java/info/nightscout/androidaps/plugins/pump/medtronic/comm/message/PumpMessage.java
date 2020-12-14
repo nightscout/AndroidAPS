@@ -144,9 +144,7 @@ public class PumpMessage implements RLMessage {
             return false;
         if (commandType == null)
             return false;
-        if (messageBody == null)
-            return false;
-        return true;
+        return messageBody != null;
     }
 
 

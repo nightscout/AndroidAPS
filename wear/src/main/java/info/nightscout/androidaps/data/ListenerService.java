@@ -97,9 +97,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     // Wear
     private static final String CAPABILITY_WEAR_APP = "wear_app_sync_bgs";
     private static final String MESSAGE_PATH_WEAR = "/wear_message_path";
-    private String mPhoneNodeId = null;
+    private final String mPhoneNodeId = null;
     private String localnode = null;
-    private String logPrefix = ""; // "WR: "
+    private final String logPrefix = ""; // "WR: "
 
     public class DataRequester extends AsyncTask<Void, Void, Void> {
         Context mContext;
@@ -403,7 +403,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
 
     private void forceGoogleApiConnect() {
-        if ((googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) || googleApiClient == null) {
+        if (googleApiClient == null || (!googleApiClient.isConnected() && !googleApiClient.isConnecting())) {
             try {
                 Log.d(TAG, "forceGoogleApiConnect: forcing google api reconnection");
                 googleApiConnect();

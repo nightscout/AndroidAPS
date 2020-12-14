@@ -23,7 +23,7 @@ public class GlucoseStatus {
     @Inject public AAPSLogger aapsLogger;
     @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
-    private HasAndroidInjector injector;
+    private final HasAndroidInjector injector;
 
     public double glucose = 0d;
     public double noise = 0d;

@@ -56,7 +56,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     private OnValueChangedListener mOnValueChangedListener;
 
     private class UpdateCounterTask implements Runnable {
-        private boolean mInc;
+        private final boolean mInc;
         private int repeated = 0;
         private int multiplier = 1;
 

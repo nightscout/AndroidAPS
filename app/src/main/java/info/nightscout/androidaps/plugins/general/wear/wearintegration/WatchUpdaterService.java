@@ -56,6 +56,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import kotlin.Suppress;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     @Inject public HasAndroidInjector injector;
@@ -768,8 +769,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         // Log.d(TAG, "WR: " + source + " " + data);
     }
 
+    @SuppressWarnings("UNCHECKED")
     private void executeTask(AsyncTask task, DataMap... parameters) {
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object[]) parameters);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, parameters);
         // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
         // task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         // } else {
