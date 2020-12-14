@@ -1030,9 +1030,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     break;
                 }
             }
-            if (success) {
-                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED));
-            } else {
+            if (!success) {
                 aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
                 rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status_on_startup), Notification.NORMAL)));
             }
