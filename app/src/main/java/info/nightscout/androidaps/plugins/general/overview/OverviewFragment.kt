@@ -235,11 +235,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacksAndMessages(null)
-/*        overview_apsmode_llayout?.let { unregisterForContextMenu(it) }
-        overview_activeprofile?.let { unregisterForContextMenu(it) }
-        overview_temptarget?.let { unregisterForContextMenu(it) }
-
- */
     }
 
     override fun onResume() {
@@ -311,22 +306,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-/*        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
-        overview_activeprofile?.let { registerForContextMenu(it) }
-        overview_temptarget?.let { registerForContextMenu(it) }
-
- */
         updateGUI("onResume")
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        overviewMenus.createContextMenu(menu, v)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
-    }
 
     override fun onClick(v: View) {
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days

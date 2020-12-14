@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -248,17 +247,17 @@ class OverviewMenus @Inject constructor(
                         when (it.title) {
                             resourceHelper.gs(R.string.careportal_profileswitch),
                             resourceHelper.gs(R.string.viewprofile),
-                            resourceHelper.gs(R.string.custom) -> onContextItemSelected(it, manager)
+                            resourceHelper.gs(R.string.custom) -> onItemSelected(it, manager)
 
                             else                               -> {
                                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.confirm), it.title.toString(),
                                     Runnable {
-                                        onContextItemSelected(it, manager)
+                                        onItemSelected(it, manager)
                                     })
                             }
                         }
                     } else {
-                        onContextItemSelected(it, manager)
+                        onItemSelected(it, manager)
                     }
                 }
                 return@setOnMenuItemClickListener true
@@ -268,65 +267,7 @@ class OverviewMenus @Inject constructor(
         }
     }
 
-    fun createContextMenu(menu: ContextMenu, v: View) {
-        when (v.id) {
-            R.id.overview_apsmode       -> {
-                val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-                if (!profileFunction.isProfileValid("ContextMenuCreation")) return
-                menu.setHeaderTitle(resourceHelper.gs(R.string.loop))
-                if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                    menu.add(resourceHelper.gs(R.string.disableloop))
-                    if (!loopPlugin.isSuspended) {
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor1h))
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor2h))
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor3h))
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor10h))
-                    } else {
-                        if (!loopPlugin.isDisconnected) {
-                            menu.add(resourceHelper.gs(R.string.resume))
-                        }
-                    }
-                }
-                if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-                    menu.add(resourceHelper.gs(R.string.enableloop))
-                }
-                if (!loopPlugin.isDisconnected) {
-                    showSuspendPump(menu, pumpDescription)
-                } else {
-                    menu.add(resourceHelper.gs(R.string.reconnect))
-                }
-            }
-
-            R.id.overview_activeprofile -> {
-                menu.setHeaderTitle(resourceHelper.gs(R.string.profile))
-                menu.add(resourceHelper.gs(R.string.viewprofile))
-                if (activePlugin.activeProfileInterface.profile != null) {
-                    menu.add(resourceHelper.gs(R.string.careportal_profileswitch))
-                }
-            }
-
-            R.id.overview_temptarget    -> {
-                menu.setHeaderTitle(resourceHelper.gs(R.string.careportal_temporarytarget))
-                menu.add(resourceHelper.gs(R.string.custom))
-                menu.add(resourceHelper.gs(R.string.eatingsoon))
-                menu.add(resourceHelper.gs(R.string.activity))
-                menu.add(resourceHelper.gs(R.string.hypo))
-                if (activePlugin.activeTreatments.tempTargetFromHistory != null) {
-                    menu.add(resourceHelper.gs(R.string.cancel))
-                }
-            }
-        }
-    }
-
-    private fun showSuspendPump(menu: ContextMenu, pumpDescription: PumpDescription) {
-        if (pumpDescription.tempDurationStep15mAllowed) menu.add(resourceHelper.gs(R.string.disconnectpumpfor15m))
-        if (pumpDescription.tempDurationStep30mAllowed) menu.add(resourceHelper.gs(R.string.disconnectpumpfor30m))
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor1h))
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor2h))
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor3h))
-    }
-
-    fun onContextItemSelected(item: MenuItem, manager: FragmentManager): Boolean {
+    fun onItemSelected(item: MenuItem, manager: FragmentManager): Boolean {
         val profile = profileFunction.getProfile() ?: return true
         when (item.title) {
             resourceHelper.gs(R.string.disableloop)                                   -> {
