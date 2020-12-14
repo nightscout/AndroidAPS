@@ -38,6 +38,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -75,6 +76,7 @@ class OverviewMenus @Inject constructor(
 
     companion object {
         const val MAX_GRAPHS = 5 // including main
+        var showOKCancel = true
     }
 
     fun enabledTypes(graph: Int): String {
@@ -171,6 +173,97 @@ class OverviewMenus @Inject constructor(
             }
             chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
             popup.setOnDismissListener { chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
+            popup.show()
+        }
+    }
+
+    fun setupPopupMenu(v: View, context: Context, manager: FragmentManager) {
+        v.setOnClickListener {
+            val popup = PopupMenu(v.context, v)
+            when (v.id) {
+                R.id.overview_apsmode       -> {
+                    val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
+                    if (profileFunction.isProfileValid("ContextMenuCreation")) {
+                        val item = popup.menu.add(Menu.NONE,1,Menu.NONE,resourceHelper.gs(R.string.loop))                 // title
+                        val title = item.title
+                        val s = SpannableString(title)
+                        s.setSpan( ForegroundColorSpan(resourceHelper.gc(R.color.colorAccent)), 0, s.length, 0)
+                        item.setTitle(s)
+                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                            popup.menu.add(resourceHelper.gs(R.string.disableloop))
+                            if (!loopPlugin.isSuspended) {
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor1h))
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor2h))
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor3h))
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor10h))
+                            } else {
+                                if (!loopPlugin.isDisconnected) {
+                                    popup.menu.add(resourceHelper.gs(R.string.resume))
+                                }
+                            }
+                        }
+                        if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+                            popup.menu.add(resourceHelper.gs(R.string.enableloop))
+                        }
+                        if (!loopPlugin.isDisconnected) {
+                            if (pumpDescription.tempDurationStep15mAllowed) popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor15m))
+                            if (pumpDescription.tempDurationStep30mAllowed) popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor30m))
+                            popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor1h))
+                            popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor2h))
+                            popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor3h))
+                        } else {
+                            popup.menu.add(resourceHelper.gs(R.string.reconnect))
+                        }
+                    }
+                }
+                R.id.overview_activeprofile -> {
+                    val item = popup.menu.add(Menu.NONE,1,Menu.NONE,resourceHelper.gs(R.string.profile))                // title
+                    val title = item.title
+                    val s = SpannableString(title)
+                    s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.colorAccent)), 0, s.length, 0)
+                    item.setTitle(s)
+                    popup.menu.add(resourceHelper.gs(R.string.viewprofile))
+                    if (activePlugin.activeProfileInterface.profile != null) {
+                        popup.menu.add(resourceHelper.gs(R.string.careportal_profileswitch))
+                    }
+                }
+                R.id.overview_temptarget    -> {
+                    val item = popup.menu.add(Menu.NONE,1,Menu.NONE,resourceHelper.gs(R.string.careportal_temporarytarget))                   // title
+                    val title = item.title
+                    val s = SpannableString(title)
+                    s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.colorAccent)), 0, s.length, 0)
+                    item.setTitle(s)
+                    popup.menu.add(resourceHelper.gs(R.string.custom))
+                    popup.menu.add(resourceHelper.gs(R.string.eatingsoon))
+                    popup.menu.add(resourceHelper.gs(R.string.activity))
+                    popup.menu.add(resourceHelper.gs(R.string.hypo))
+                    if (activePlugin.activeTreatments.tempTargetFromHistory != null) {
+                        popup.menu.add(resourceHelper.gs(R.string.cancel))
+                    }
+                }
+            }
+            popup.setOnMenuItemClickListener {
+                if (it.itemId != 1) {
+                    if (showOKCancel) {
+                        when (it.title) {
+                            resourceHelper.gs(R.string.careportal_profileswitch),
+                            resourceHelper.gs(R.string.viewprofile),
+                            resourceHelper.gs(R.string.custom) -> onContextItemSelected(it, manager)
+
+                            else                               -> {
+                                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.confirm), it.title.toString(),
+                                    Runnable {
+                                        onContextItemSelected(it, manager)
+                                    })
+                            }
+                        }
+                    } else {
+                        onContextItemSelected(it, manager)
+                    }
+                }
+                return@setOnMenuItemClickListener true
+            }
+            popup.setOnDismissListener { showOKCancel = true }
             popup.show()
         }
     }

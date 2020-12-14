@@ -214,6 +214,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overviewMenus.setupChartMenu(overview_chartMenuButton)
         prepareGraphs()
 
+        overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
+        overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
+        overviewMenus.setupPopupMenu(overview_temptarget, requireContext(), childFragmentManager)
         overview_accepttempbutton?.setOnClickListener(this)
         overview_treatmentbutton?.setOnClickListener(this)
         overview_wizardbutton?.setOnClickListener(this)
@@ -223,15 +226,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_carbsbutton?.setOnClickListener(this)
         overview_quickwizardbutton?.setOnClickListener(this)
         overview_quickwizardbutton?.setOnLongClickListener(this)
+        overview_apsmode?.setOnLongClickListener(this)
+        overview_activeprofile?.setOnLongClickListener(this)
+        overview_temptarget?.setOnLongClickListener(this)
     }
 
     override fun onPause() {
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacksAndMessages(null)
-        overview_apsmode_llayout?.let { unregisterForContextMenu(it) }
+/*        overview_apsmode_llayout?.let { unregisterForContextMenu(it) }
         overview_activeprofile?.let { unregisterForContextMenu(it) }
         overview_temptarget?.let { unregisterForContextMenu(it) }
+
+ */
     }
 
     override fun onResume() {
@@ -303,9 +311,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
+/*        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
         overview_activeprofile?.let { registerForContextMenu(it) }
         overview_temptarget?.let { registerForContextMenu(it) }
+
+ */
         updateGUI("onResume")
     }
 
@@ -396,6 +406,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             R.id.overview_quickwizardbutton -> {
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
+            }
+            R.id.overview_apsmode, R.id.overview_activeprofile, R.id.overview_temptarget -> {
+                OverviewMenus.showOKCancel = false
+                v.performClick()
             }
         }
         return false
