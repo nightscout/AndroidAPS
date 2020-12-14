@@ -336,11 +336,9 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
 
-        sendEvent(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
 
         if (historyEntryType == PodHistoryEntryType.RESUME_DELIVERY) {
             cancelSuspendedFakeTbrIfExists();
-            sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
         }
 
         addSuccessToHistory(historyEntryType, profile.getBasalValues());
@@ -348,6 +346,9 @@ public class AapsOmnipodManager {
         if (showNotifications) {
             showNotification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, null);
         }
+
+        sendEvent(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+        sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -612,9 +613,11 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
 
-        sendEvent(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-
         addSuccessToHistory(PodHistoryEntryType.SET_TIME, null);
+
+        sendEvent(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+        sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
