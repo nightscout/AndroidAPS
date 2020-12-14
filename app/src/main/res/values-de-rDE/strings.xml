@@ -979,7 +979,9 @@ Unerwartetes Verhalten.</string>
     <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
     <string name="notification">Benachrichtigung</string>
     <string name="notification_message">Benachrichtigung: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Nachricht:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Prozentsatz des Profils</string>
     <string name="percent_u">Prozent [%]:</string>
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
@@ -1181,4 +1183,5 @@ Unerwartetes Verhalten.</string>
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Lokales Profil kann nicht erstellt werden. Profil ist ungültig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="alarm">Alarm</string>
 </resources>
