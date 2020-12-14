@@ -978,7 +978,9 @@
     <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom modificata.</string>
     <string name="notification">Notifica</string>
     <string name="notification_message">Notifica: %1$s</string>
+    <string name="alarm_message">Allarme: %1$s</string>
     <string name="message_short">Msg:</string>
+    <string name="alarm_short">Allarme:</string>
     <string name="profilepercentage">Percentuale profilo</string>
     <string name="percent_u">Percentuale [%]:</string>
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
@@ -1180,4 +1182,5 @@
     <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">Impossibile creare il profilo locale. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
+    <string name="alarm">Allarme</string>
 </resources>
