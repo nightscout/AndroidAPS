@@ -212,6 +212,7 @@
     <string name="history_group_prime">Füllen</string>
     <string name="history_group_alarm">Alarme</string>
     <string name="history_group_glucose">Glukose</string>
+    <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
