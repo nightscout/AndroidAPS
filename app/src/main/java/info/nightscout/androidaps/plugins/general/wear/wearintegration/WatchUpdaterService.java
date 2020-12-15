@@ -291,7 +291,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                     return;
                 }
 
-                executeTask(new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient), dataMap);
+                (new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dataMap);
             }
         }
     }
@@ -402,7 +402,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 }
             }
             entries.putDataMapArrayList("entries", dataMaps);
-            executeTask(new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient), entries);
+            (new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, entries);
         }
         sendPreferences();
         sendBasals();
@@ -553,8 +553,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         dm.putDataMapArrayList("temps", temps);
         dm.putDataMapArrayList("boluses", boluses);
         dm.putDataMapArrayList("predictions", predictions);
-
-        executeTask(new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient), dm);
+        (new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dm);
     }
 
     private DataMap tempDatamap(long startTime, double startBasal, long to, double toBasal, double amount) {
@@ -601,7 +600,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("openSettings", "openSettings");
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendNotification", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("OpenSettings", "No connection to wearable available!");
@@ -617,7 +615,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putString("progressstatus", status);
             dataMapRequest.getDataMap().putInt("progresspercent", progresspercent);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendBolusProgress", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("BolusProgress", "No connection to wearable available!");
@@ -637,7 +634,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             aapsLogger.debug(LTag.WEAR, "Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendActionConfirmationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("confirmationRequest", "No connection to wearable available!");
@@ -657,7 +653,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             aapsLogger.debug(LTag.WEAR, "Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendChangeConfirmationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("changeConfirmRequest", "No connection to wearable available!");
@@ -675,7 +670,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             aapsLogger.debug(LTag.WEAR, "Canceling notification on wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendCancelNotificationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("cancelNotificationReq", "No connection to wearable available!");
@@ -701,8 +695,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 currentBasal = generateBasalString();
 
                 //bgi
-
-
                 double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
 
@@ -740,7 +732,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putBoolean("showBgi", sp.getBoolean(R.string.key_wear_showbgi, false));
             dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendStatus", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("SendStatus", "No connection to wearable available!");
@@ -757,28 +748,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
-            debugData("sendPreferences", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("SendStatus", "No connection to wearable available!");
         }
     }
-
-
-    private void debugData(String source, Object data) {
-        // Log.d(TAG, "WR: " + source + " " + data);
-    }
-
-    @SuppressWarnings("UNCHECKED")
-    private void executeTask(AsyncTask task, DataMap... parameters) {
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, parameters);
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        // task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        // } else {
-        // task.execute();
-        // }
-    }
-
 
     @NonNull
     private String generateStatusString(Profile profile, String currentBasal, String iobSum, String iobDetail, String bgiString) {
