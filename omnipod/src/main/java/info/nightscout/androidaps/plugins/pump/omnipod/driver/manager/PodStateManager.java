@@ -105,14 +105,14 @@ public abstract class PodStateManager {
     /**
      * @return true if the Pod's activation time has been exceeded
      */
-    public boolean isPodActivationTimeExceeded() {
+    public final boolean isPodActivationTimeExceeded() {
         return isPodInitialized() && getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
     }
 
     /**
      * @return true if we have a Pod state and the Pod is dead, meaning it is either in a fault state or activation time has been exceeded or it is deactivated
      */
-    public boolean isPodDead() {
+    public final boolean isPodDead() {
         return isPodInitialized() && getPodProgressStatus().isDead();
     }
 
@@ -603,6 +603,8 @@ public abstract class PodStateManager {
 
             podState.setLastUpdatedFromResponse(DateTime.now());
         });
+
+        onUpdatedFromResponse();
     }
 
     protected void onTbrChanged() {
@@ -621,6 +623,11 @@ public abstract class PodStateManager {
     }
 
     protected void onFaultEventChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onUpdatedFromResponse() {
         // Deliberately left empty
         // Can be overridden in subclasses
     }
