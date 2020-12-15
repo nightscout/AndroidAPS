@@ -1181,4 +1181,7 @@
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Następujące dane zostaną przesłane na konto Open Humans: wartości Glikemii, bolusy, węglowodany, zdarzenia z portalu opieki (z wyjątkiem notatek), rozszerzone bolusy, przełączenia profilu, całkowite dawki dobowe, bazy tymczasowe, cele tymczasowe, preferencje, wersja aplikacji, model urządzenia i wymiary ekranu. Dane niejawne lub prywatne, takie jak adres URL strony Nightscout lub klucz autoryzacji API, nie zostaną przesłane.</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
     <string name="filter">Filtr</string>
+    <string name="copytolocalprofile_invalid">Nie można utworzyć profilu lokalnego. Profil jest niepoprawny.</string>
+    <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
+    <string name="alarm">Alarm</string>
 </resources>
