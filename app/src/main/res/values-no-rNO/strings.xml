@@ -978,7 +978,9 @@
     <string name="description_source_dexcom">Motta BS verdier fra den patchede Dexcom appen.</string>
     <string name="notification">Varsling</string>
     <string name="notification_message">Varsel: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Meld:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Profil prosent</string>
     <string name="percent_u">Prosent [%]:</string>
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
@@ -1180,4 +1182,5 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Klarte ikke å opprette lokal profil. Profilen er ikke gyldig.</string>
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
+    <string name="alarm">Alarm</string>
 </resources>
