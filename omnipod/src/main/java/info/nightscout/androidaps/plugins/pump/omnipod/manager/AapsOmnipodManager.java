@@ -222,7 +222,7 @@ public class AapsOmnipodManager {
             uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
             uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 
-            sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+            dismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED);
 
             cancelSuspendedFakeTbrIfExists();
         }
@@ -285,7 +285,7 @@ public class AapsOmnipodManager {
         addSuccessToHistory(PodHistoryEntryType.DEACTIVATE_POD, null);
         createSuspendedFakeTbrIfNotExists();
 
-        sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_FAULT));
+        dismissNotification(Notification.OMNIPOD_POD_FAULT);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -345,8 +345,8 @@ public class AapsOmnipodManager {
             showNotification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, null);
         }
 
-        sendEvent(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-        sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+        dismissNotification(Notification.FAILED_UDPATE_PROFILE);
+        dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -358,7 +358,7 @@ public class AapsOmnipodManager {
 
         createSuspendedFakeTbrIfNotExists();
 
-        sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_FAULT));
+        dismissNotification(Notification.OMNIPOD_POD_FAULT);
         sendEvent(new EventOmnipodPumpValuesChanged());
         sendEvent(new EventRefreshOverview("Omnipod command: " + OmnipodCommandType.DISCARD_POD, false));
 
@@ -613,8 +613,8 @@ public class AapsOmnipodManager {
 
         addSuccessToHistory(PodHistoryEntryType.SET_TIME, null);
 
-        sendEvent(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-        sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+        dismissNotification(Notification.FAILED_UDPATE_PROFILE);
+        dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -963,6 +963,10 @@ public class AapsOmnipodManager {
             notification.soundId = sound;
         }
         sendEvent(new EventNewNotification(notification));
+    }
+
+    private void dismissNotification(int id) {
+        sendEvent(new EventDismissNotification(id));
     }
 
     private String getStringResource(int id, Object... args) {
