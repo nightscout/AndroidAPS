@@ -212,6 +212,7 @@
     <string name="history_group_prime">Prime</string>
     <string name="history_group_alarm">Alarmer</string>
     <string name="history_group_glucose">Glukose</string>
+    <string name="mute5min">Demp i 5 minutter</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
