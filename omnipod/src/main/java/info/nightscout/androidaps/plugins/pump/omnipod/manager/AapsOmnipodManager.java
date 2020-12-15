@@ -270,8 +270,6 @@ public class AapsOmnipodManager {
 
         addSuccessToHistory(PodHistoryEntryType.GET_POD_STATUS, statusResponse);
 
-        sendEvent(new EventDismissNotification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED));
-
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
 
