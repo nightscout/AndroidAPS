@@ -20,6 +20,8 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -675,6 +677,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {
 
         private var messageOnSuccess: String? = null
+        private var actionOnSuccess: Runnable? = null
 
         override fun run() {
             if (result.success) {
@@ -682,6 +685,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 if (messageOnSuccess != null) {
                     displayOkDialog(resourceHelper.gs(R.string.omnipod_confirmation), messageOnSuccess)
                 }
+                actionOnSuccess?.run()
             } else {
                 displayErrorDialog(resourceHelper.gs(R.string.omnipod_warning), resourceHelper.gs(R.string.omnipod_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
             }
@@ -689,6 +693,11 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
         fun messageOnSuccess(message: String): DisplayResultDialogCallback {
             messageOnSuccess = message
+            return this
+        }
+
+        fun actionOnSuccess(action: Runnable): DisplayResultDialogCallback {
+            actionOnSuccess = action
             return this
         }
     }

@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -382,12 +383,14 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS");
-                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
+                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_UNKNOWN_TBR, resourceHelper.gs(R.string.omnipod_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
             }
         } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded");
             activePlugin.getActiveTreatments().removeTempBasal(tempBasal);
         }
+
+        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_UNCERTAIN_TBR));
     }
 
     private void handleActivePodAlerts() {
@@ -1030,7 +1033,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             }
             if (!success) {
                 aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
-                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_PUMP_ALARM, resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status_on_startup), Notification.NORMAL)));
+                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status_on_startup), Notification.NORMAL)));
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running");
