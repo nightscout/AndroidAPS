@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -66,9 +67,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.source.DexcomPlugin
-import info.nightscout.androidaps.plugins.source.TomatoPlugin
-import info.nightscout.androidaps.plugins.source.XdripPlugin
+import info.nightscout.androidaps.plugins.source.*
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -128,7 +127,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var config: Config
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var xdripPlugin: XdripPlugin
+    @Inject lateinit var glimpPlugin: GlimpPlugin
     @Inject lateinit var tomatoPlugin: TomatoPlugin
+    @Inject lateinit var randomPlugin: RandomBgPlugin
+    @Inject lateinit var nSClientSourcePlugin: NSClientSourcePlugin
+    @Inject lateinit var pochTechPlugin: PoctechPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var quickWizard: QuickWizard
@@ -389,8 +392,23 @@ open class MainActivity : NoSplashAppCompatActivity() {
             sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
         } else if(tomatoPlugin.isEnabled()) {
             sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+        } else if(pochTechPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_poctech))
+        } else if(glimpPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_glimp))
+        } else if(nSClientSourcePlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_nsclient_bg))
+        } else if(randomPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dice))
+        }
+
+        else if(xdripPlugin.isEnabled()) {
+            if( xdripPlugin.advancedFilteringSupported())
+                sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+            else
+                sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_xdrip))
         } else {
-            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_generic_cgm))
         }
     }
 
@@ -933,6 +951,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
         for (p in activePlugin.getPluginsList()) {
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
                     intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))

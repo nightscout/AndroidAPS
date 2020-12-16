@@ -430,9 +430,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             return // view no longer exists
         }
 
-        val lastRun = loopPlugin.lastRun
-        val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
-
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
         if (tempTarget != null) {
