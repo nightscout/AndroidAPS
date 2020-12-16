@@ -57,7 +57,7 @@
         <item name="iconCanula">@drawable/ic_katheter</item>
         <item name="iconBattery">@drawable/ic_battery</item>
         <!-- Icons of bottom naviagtion bar -->
-        <item name="iconInsulin">@drawable/ic_iob_48</item>
+        <item name="iconInsulin">@drawable/ic_insulin</item>
         <item name="iconCarbs">@drawable/ic_carb_48</item>
         <item name="iconWizzard">@drawable/ic_calculator_48</item>
         <item name="iconCgm">@drawable/ic_blooddrop_48</item>

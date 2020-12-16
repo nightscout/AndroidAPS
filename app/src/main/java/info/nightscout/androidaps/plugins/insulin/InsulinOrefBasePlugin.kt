@@ -29,7 +29,7 @@ abstract class InsulinOrefBasePlugin(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_statuslight_insulin)
+    .pluginIcon(R.drawable.ic_insulin)
     .shortName(R.string.insulin_shortname)
     .visibleByDefault(false),
     aapsLogger, resourceHelper, injector
