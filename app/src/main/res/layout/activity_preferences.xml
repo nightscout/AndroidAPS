@@ -5,40 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:hint="@string/filter"
+        app:endIconMode="clear_text">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pref_filter"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_gravity="center_vertical"
-            android:text="@string/filter"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/pref_filter"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
+            android:autofillHints="@string/filter"
+            android:gravity="start"
+            android:textStyle="bold"
             android:inputType="text" />
 
-        <ImageView
-            android:id="@+id/pref_filter_clear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ScrollView
         android:layout_width="match_parent"

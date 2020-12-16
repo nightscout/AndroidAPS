@@ -37,11 +37,7 @@ import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.TreatmentDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
@@ -76,36 +72,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_buttons_layout.*
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_carbsbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_insulinbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_quickwizardbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatmentbutton
-import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
 import kotlinx.android.synthetic.main.overview_fragment_nsclient.*
-import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
-import kotlinx.android.synthetic.main.overview_graphs_layout.overview_chartMenuButton
-import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobcalculationprogess
-import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobgraph
+import kotlinx.android.synthetic.main.overview_graphs_layout.*
 import kotlinx.android.synthetic.main.overview_info_layout.*
-import kotlinx.android.synthetic.main.overview_info_layout.overview_arrow
-import kotlinx.android.synthetic.main.overview_info_layout.overview_basebasal
-import kotlinx.android.synthetic.main.overview_info_layout.overview_bg
-import kotlinx.android.synthetic.main.overview_info_layout.overview_cob
-import kotlinx.android.synthetic.main.overview_info_layout.overview_extendedbolus
-import kotlinx.android.synthetic.main.overview_info_layout.overview_iob
-import kotlinx.android.synthetic.main.overview_info_layout.overview_sensitivity
-import kotlinx.android.synthetic.main.overview_info_layout.overview_time
-import kotlinx.android.synthetic.main.overview_info_layout.overview_timeagoshort
 import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -154,9 +130,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private var rangeToDisplay = 6 // for graph
     private var loopHandler = Handler()
     private var refreshLoop: Runnable? = null
-
-    private val worker = Executors.newSingleThreadScheduledExecutor()
-    private var scheduledUpdate: ScheduledFuture<*>? = null
 
     private val secondaryGraphs = ArrayList<GraphView>()
     private val secondaryGraphsLabel = ArrayList<TextView>()
@@ -522,21 +495,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
     }
 
+    var task: Runnable? = null
+
     private fun scheduleUpdateGUI(from: String) {
         class UpdateRunnable : Runnable {
 
             override fun run() {
-                activity?.runOnUiThread {
-                    updateGUI(from)
-                    scheduledUpdate = null
-                }
+                updateGUI(from)
+                task = null
             }
         }
-        // prepare task for execution in 500 milliseconds
-        // cancel waiting task to prevent multiple updates
-        scheduledUpdate?.cancel(false)
-        val task: Runnable = UpdateRunnable()
-        scheduledUpdate = worker.schedule(task, 500, TimeUnit.MILLISECONDS)
+        view?.removeCallbacks(task)
+        task = UpdateRunnable()
+        view?.postDelayed(task, 500)
     }
 
     @SuppressLint("SetTextI18n")
@@ -562,6 +533,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
+        val lastRun = loopPlugin.lastRun
+        val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
+
+        try {
+            updateGraph(lastRun, predictionsAvailable, lowLine, highLine, pump, profile)
+        } catch (e: IllegalStateException) {
+            return // view no longer exists
+        }
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -582,10 +561,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 overview_delta_large?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                 overview_delta_large?.setTextColor(color)
                 overview_delta?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\n${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_long_avgdelta?.text = "${Profile.toSignedUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 overview_avgdelta?.text = ""
+                overview_long_avgdelta?.text = ""
             }
 
             // strike through if BG is old
@@ -610,16 +591,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    overview_apsmode_text?.visibility = View.VISIBLE
                 }
 
                 pump.isSuspended                                                        -> {
@@ -630,27 +614,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     } else {
                         R.drawable.ic_loop_paused
                     })
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_lgs)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_closed)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_open)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
 
                 else                                                                    -> {
                     overview_apsmode?.setImageResource(R.drawable.ic_loop_disabled)
-                    overview_apsmode_text?.text = ""
+                    overview_apsmode_text?.visibility = View.GONE
                 }
             }
         } else {
@@ -659,8 +643,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_apsmode_text?.visibility = View.GONE
             overview_time_llayout?.visibility = View.VISIBLE
         }
-        val lastRun = loopPlugin.lastRun
-        val predictionsAvailable = if (config.APS) lastRun?.request?.hasPredictions == true else config.NSCLIENT
 
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
@@ -798,8 +780,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             iobCobCalculatorPlugin.getLastAutosensData("Overview")?.let { autosensData ->
                 String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
             } ?: ""
+    }
 
-        // ****** GRAPH *******
+    private fun updateGraph(lastRun: LoopInterface.LastRun?, predictionsAvailable: Boolean, lowLine: Double, highLine: Double, pump: PumpInterface, profile: Profile) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
