@@ -20,7 +20,6 @@ jacoco {
 ext {
     wearableVersion = "2.4.0"
     playServicesWearable = "17.0.0"
-    powermockVersion = "1.7.3"
 }
 
 def generateGitBuild = { ->
@@ -49,7 +48,7 @@ android {
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 24
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.2"

@@ -404,7 +404,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     fun refreshConfiguration() {
-        val pumptype = sp.getString(R.string.key_virtualpump_type, "Generic AAPS")
+        val pumptype = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
         val pumpTypeNew = PumpType.getByDescription(pumptype)
         aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumptype, PumpType object: $pumpTypeNew")
         if (pumpType == pumpTypeNew) return

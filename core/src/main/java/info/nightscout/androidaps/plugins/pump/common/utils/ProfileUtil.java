@@ -24,7 +24,7 @@ public class ProfileUtil {
             stringBuilder.append(", ");
         }
         if (stringBuilder.length() > 3)
-            return stringBuilder.toString().substring(0, stringBuilder.length() - 2);
+            return stringBuilder.substring(0, stringBuilder.length() - 2);
         else
             return stringBuilder.toString();
     }
@@ -45,7 +45,7 @@ public class ProfileUtil {
             stringBuilder.append(", ");
         }
         if (stringBuilder.length() > 3)
-            return stringBuilder.toString().substring(0, stringBuilder.length() - 2);
+            return stringBuilder.substring(0, stringBuilder.length() - 2);
         else
             return stringBuilder.toString();
     }

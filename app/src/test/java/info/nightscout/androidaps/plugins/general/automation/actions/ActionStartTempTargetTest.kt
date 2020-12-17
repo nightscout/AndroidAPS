@@ -41,7 +41,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(R.drawable.ic_cp_cgm_target, sut.icon())
+        Assert.assertEquals(R.drawable.ic_temptarget_high, sut.icon())
     }
 
     @Test fun doActionTest() {

@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Akce po klepnutí na komplikaci</string>
     <string name="pref_unicode_in_complications">Znaky Unicode v komplikacích</string>
     <string name="pref_version">Verze:</string>
+    <string name="pref_moreWatchfaceSettings">další nastavení Watchface</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Podívejte se na konfiguraci hodinek prosím.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Kalkulačka</string>
     <string name="menu_bolus">Bolus</string>

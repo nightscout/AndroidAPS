@@ -7,8 +7,9 @@
     <string name="omnipod_config_basal_beeps_enabled">BIP basale abilitato</string>
     <string name="omnipod_config_smb_beeps_enabled">BIP SMB abilitato</string>
     <string name="omnipod_config_tbr_beeps_enabled">BIP TBR abilitato</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Tasto \'sospendi erogazione\' abilitato</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Tasto \'log impulsi\' abilitato</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Mostra tasto \"sospendi erogazione\" nella scheda Omnipod</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Mostra tasto \"log impulsi\" nel menu gestione pod</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Mostra tasto \"statistiche RileyLink\" nel menu gestione pod</string>
     <string name="omnipod_config_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_config_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
@@ -86,6 +87,7 @@
     <string name="omnipod_error_unknown_custom_command">Comando personalizzato sconosciuto: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Impossibile leggere il log impulsi</string>
     <string name="omnipod_error_failed_to_refresh_status">Impossibile aggiornare lo stato</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Impossibile aggiornare lo stato all\'avvio</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Impossibile confermare gli avvisi</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Impossibile sospendere l\'erogazione</string>
     <string name="omnipod_error_failed_to_set_time">Impossibile impostare l\'ora</string>
@@ -99,6 +101,8 @@
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Il tempo di attivazione del pod è stato superato. Questo pod non può più essere attivato.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Impossibile verificare l\'avanzamento dell\'attivazione. Riprova.</string>
     <string name="omnipod_error_pod_suspended">Pod sospeso</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Impossibile eseguire BIP di test</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">Una basale temporanea è in esecuzione sul pod, ma AAPS non ne è a conoscenza. Cancella manualmente la tua basale temporanea.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Conferma</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Ora e/o fuso orario cambiati nel pod.</string>
@@ -129,14 +133,25 @@
     <string name="omnipod_cmd_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Imposta basale temporanea fittizia perché il pod è sospeso</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
+    <string name="omnipod_cmd_split_tbr">Divisione basale temporanea a causa di un errore indeterminato nella cancellazione</string>
+    <string name="omnipod_cmd_beep_config">Configurazione BIP</string>
+    <string name="omnipod_cmd_play_test_beep">Esegui BIP di test</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Gestione pod</string>
+    <string name="omnipod_pod_management_heading_actions">Azioni</string>
+    <string name="omnipod_pod_management_heading_tools">Strumenti</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Attesa connessione RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Attiva pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Disattiva pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Scarta pod</string>
     <string name="omnipod_pod_management_button_pod_history">Storico pod</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Se scarti il pod, non sarai più in grado di comunicare con esso. Dovresti farlo solo quando tutte le comunicazioni col pod falliscono persistentemente. Se puoi ancora comunicare col pod, usa l\'opzione <b>Disattiva pod</b>.\n\nSe desideri procedere, assicurati di rimuovere il pod dal tuo corpo!</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">Statistiche RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Reset config.ne RileyLink</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Leggi log impulsi</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Lettura log impulsi…</string>
+    <string name="omnipod_pod_management_discard_pod_confirmation">Se scarti il pod, non sarai più in grado di comunicare con esso. Dovresti farlo solo quando tutte le comunicazioni col pod falliscono persistentemente. Se puoi ancora comunicare col pod, usa l\'opzione <b>Disattiva pod</b>.\n\nSe desideri procedere, assicurati di rimuovere il pod dal tuo corpo!</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Esegui BIP di test</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">BIP di test in esecuzione…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Annulla</string>
     <string name="omnipod_wizard_button_finish">Fine</string>
@@ -172,8 +187,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Imposta ora</string>
     <string name="omnipod_overview_button_suspend_delivery">Sospendi</string>
-    <string name="omnipod_overview_button_riley_link_stats">Statistiche RL</string>
-    <string name="omnipod_overview_button_read_pulse_log">Log impulsi</string>
     <string name="omnipod_overview_button_refresh">Aggiorna</string>
     <string name="omnipod_overview_button_resume_delivery">Riprendi erogazione</string>
     <string name="omnipod_overview_button_pod_management">GSTN pod</string>
@@ -197,7 +210,6 @@
     <string name="omnipod_overview_errors">Errori</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Integrazione del microinfusore Omnipod, richiede un dispositivo RileyLink (con almeno il firmware 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
     <string name="omnipod_uncertain">indeterminato</string>
     <string name="omnipod_pulse_log">Log impulsi</string>
     <string name="omnipod_pulse_log_value">Log impulsi (copiato negli appunti)</string>

@@ -273,12 +273,13 @@ class ActionsFragment : DaggerFragment() {
     private fun checkPumpCustomActions() {
         val activePump = activePlugin.activePump
         val customActions = activePump.customActions ?: return
+        val currentContext = context ?: return
         removePumpCustomActions()
 
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(context, null, android.R.attr.buttonStyle)
+            val btn = SingleClickButton(currentContext, null, android.R.attr.buttonStyle)
             btn.text = resourceHelper.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(

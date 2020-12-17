@@ -157,11 +157,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
-    private PumpDescription pumpDescription;
+    private final PumpDescription pumpDescription;
     private InsightAlertService alertService;
     private InsightConnectionService connectionService;
     private long timeOffset;
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             if (binder instanceof InsightConnectionService.LocalBinder) {
@@ -219,6 +219,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             DateUtil dateUtil
     ) {
         super(new PluginDescription()
+                        .pluginIcon(R.drawable.ic_insight)
                         .pluginName(R.string.insight_local)
                         .shortName(R.string.insightpump_shortname)
                         .mainType(PluginType.PUMP)

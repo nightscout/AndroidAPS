@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Le profil NS peut être utilisé, mais il n\'est pas configuré.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Rubrique : Déconnexion de la pompe</string>
-    <string name="pumpdisconnect_whattodo">Que faire en déconnectant la pompe ?</string>
     <string name="pumpdisconnect_letknow">Cliquez sur \"Déconnecter la pompe\" pour que APS sache qu\'aucune insuline ne soit délivrée.</string>
     <string name="pumpdisconnect_suspend">Cliquez sur \"Suspendre la boucle\" pour que AAPS s\'arrête tant que la pompe est déconnectée.</string>
     <string name="pumpdisconnect_dontchnage">Ne changez rien dans AAPS, débranchez juste la pompe.</string>

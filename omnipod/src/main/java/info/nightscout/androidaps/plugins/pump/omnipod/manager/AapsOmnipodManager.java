@@ -167,7 +167,7 @@ public class AapsOmnipodManager {
         pulseLogButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
         rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED, false);
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
-        notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, true);
+        notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, false);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
         notificationUncertainBolusSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED, true);
         automaticallyAcknowledgeAlertsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED, false);
@@ -222,7 +222,7 @@ public class AapsOmnipodManager {
             uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
             uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 
-            sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+            dismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED);
 
             cancelSuspendedFakeTbrIfExists();
         }
@@ -269,6 +269,7 @@ public class AapsOmnipodManager {
         }
 
         addSuccessToHistory(PodHistoryEntryType.GET_POD_STATUS, statusResponse);
+
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
 
@@ -284,13 +285,17 @@ public class AapsOmnipodManager {
         addSuccessToHistory(PodHistoryEntryType.DEACTIVATE_POD, null);
         createSuspendedFakeTbrIfNotExists();
 
+        dismissNotification(Notification.OMNIPOD_POD_FAULT);
+
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     public PumpEnactResult setBasalProfile(Profile profile, boolean showNotifications) {
         if (profile == null) {
             String note = getStringResource(R.string.omnipod_error_failed_to_set_profile_empty_profile);
-            showNotification(Notification.FAILED_UDPATE_PROFILE, note, Notification.URGENT, R.raw.boluserror);
+            if (showNotifications) {
+                showNotification(Notification.FAILED_UDPATE_PROFILE, note, Notification.URGENT, R.raw.boluserror);
+            }
             return new PumpEnactResult(injector).success(false).enacted(false).comment(note);
         }
 
@@ -329,15 +334,19 @@ public class AapsOmnipodManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         }
 
+
         if (historyEntryType == PodHistoryEntryType.RESUME_DELIVERY) {
             cancelSuspendedFakeTbrIfExists();
-            sendEvent(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
         }
+
         addSuccessToHistory(historyEntryType, profile.getBasalValues());
 
         if (showNotifications) {
             showNotification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, null);
         }
+
+        dismissNotification(Notification.FAILED_UDPATE_PROFILE);
+        dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -349,8 +358,9 @@ public class AapsOmnipodManager {
 
         createSuspendedFakeTbrIfNotExists();
 
+        dismissNotification(Notification.OMNIPOD_POD_FAULT);
         sendEvent(new EventOmnipodPumpValuesChanged());
-        rxBus.send(new EventRefreshOverview("Omnipod command: " + OmnipodCommandType.DISCARD_POD, false));
+        sendEvent(new EventRefreshOverview("Omnipod command: " + OmnipodCommandType.DISCARD_POD, false));
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -380,7 +390,7 @@ public class AapsOmnipodManager {
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
             if (detailedBolusInfo.isSMB) {
-                showNotification(getStringResource(R.string.omnipod_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? R.raw.boluserror : null);
             } else {
                 showErrorDialog(getStringResource(R.string.omnipod_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? R.raw.boluserror : null);
             }
@@ -483,7 +493,9 @@ public class AapsOmnipodManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
-            showNotification(getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+            showNotification(Notification.OMNIPOD_UNCERTAIN_TBR, getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+
+            splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
 
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
@@ -491,7 +503,7 @@ public class AapsOmnipodManager {
             long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
             if (!OmnipodManager.isCertainFailure(ex)) {
-                showNotification(getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_UNCERTAIN_TBR, getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
 
                 // Assume that setting the temp basal succeeded here, because in case it didn't succeed,
                 // The next StatusResponse that we receive will allow us to recover from the wrong state
@@ -520,8 +532,10 @@ public class AapsOmnipodManager {
         try {
             executeCommand(() -> delegate.cancelTemporaryBasal(isTbrBeepsEnabled()));
         } catch (Exception ex) {
-            if (ex instanceof OmnipodException && !((OmnipodException) ex).isCertainFailure()) {
-                showNotification(getStringResource(R.string.omnipod_error_cancel_temp_basal_failed_uncertain), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+            if (OmnipodManager.isCertainFailure(ex)) {
+                showNotification(Notification.OMNIPOD_UNCERTAIN_TBR, getStringResource(R.string.omnipod_error_cancel_temp_basal_failed_uncertain), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+            } else {
+                splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, errorMessage);
@@ -576,21 +590,21 @@ public class AapsOmnipodManager {
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             createSuspendedFakeTbrIfNotExists();
             if (showNotifications) {
-                showNotification(getStringResource(R.string.omnipod_error_set_time_failed_delivery_suspended), Notification.URGENT, R.raw.boluserror);
+                showNotification(Notification.FAILED_UDPATE_PROFILE, getStringResource(R.string.omnipod_error_set_time_failed_delivery_suspended), Notification.URGENT, R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
-                showNotification(getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
+                showNotification(Notification.FAILED_UDPATE_PROFILE, getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             if (showNotifications) {
-                showNotification(getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
+                showNotification(Notification.FAILED_UDPATE_PROFILE, getStringResource(R.string.omnipod_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, R.raw.boluserror);
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
@@ -598,6 +612,10 @@ public class AapsOmnipodManager {
         }
 
         addSuccessToHistory(PodHistoryEntryType.SET_TIME, null);
+
+        dismissNotification(Notification.FAILED_UDPATE_PROFILE);
+        dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
+
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
@@ -730,21 +748,53 @@ public class AapsOmnipodManager {
     }
 
     public void reportCancelledTbr() {
+        reportCancelledTbr(System.currentTimeMillis());
+    }
+
+    public void reportCancelledTbr(long time) {
         aapsLogger.debug(LTag.PUMP, "Reporting cancelled TBR to AAPS");
 
         long pumpId = addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
 
         TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
-                .date(System.currentTimeMillis()) //
+                .date(time) //
                 .duration(0) //
                 .source(Source.PUMP) //
                 .pumpId(pumpId);
 
         activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+
+        sendEvent(new EventRefreshOverview("AapsOmnipodManager.reportCancelledTbr()", false));
     }
 
     public long addTbrSuccessToHistory(long requestTime, TempBasalPair tempBasalPair) {
         return addSuccessToHistory(requestTime, PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
+    }
+
+    // Cancels current TBR and adds a new TBR for the remaining duration
+    private void splitActiveTbr() {
+        TemporaryBasal previouslyRunningTempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
+        if (previouslyRunningTempBasal != null) {
+            // Cancel the previously running TBR and start a NEW TBR here for the remaining duration,
+            // so that we only cancel the remaining part when recovering from an uncertain failure in the cancellation
+            int minutesRemaining = previouslyRunningTempBasal.getPlannedRemainingMinutesRoundedUp();
+
+            if (minutesRemaining > 0) {
+                reportCancelledTbr(System.currentTimeMillis() - 1000);
+
+                TempBasalPair newTempBasalPair = new TempBasalPair(previouslyRunningTempBasal.absoluteRate, false, minutesRemaining);
+                long pumpId = addSuccessToHistory(PodHistoryEntryType.SPLIT_TEMPORARY_BASAL, newTempBasalPair);
+
+                TemporaryBasal tempBasal = new TemporaryBasal(injector) //
+                        .date(System.currentTimeMillis()) //
+                        .absolute(previouslyRunningTempBasal.absoluteRate)
+                        .duration(minutesRemaining) //
+                        .pumpId(pumpId) //
+                        .source(Source.PUMP);
+
+                activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
+            }
+        }
     }
 
     private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
@@ -901,11 +951,7 @@ public class AapsOmnipodManager {
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode, Integer sound) {
-        showNotification(createPodFaultErrorMessage(faultEventCode), Notification.URGENT, sound);
-    }
-
-    private void showNotification(String message, int urgency, Integer sound) {
-        showNotification(Notification.OMNIPOD_PUMP_ALARM, message, urgency, sound);
+        showNotification(Notification.OMNIPOD_POD_FAULT, createPodFaultErrorMessage(faultEventCode), Notification.URGENT, sound);
     }
 
     private void showNotification(int id, String message, int urgency, Integer sound) {
@@ -917,6 +963,10 @@ public class AapsOmnipodManager {
             notification.soundId = sound;
         }
         sendEvent(new EventNewNotification(notification));
+    }
+
+    private void dismissNotification(int id) {
+        sendEvent(new EventDismissNotification(id));
     }
 
     private String getStringResource(int id, Object... args) {

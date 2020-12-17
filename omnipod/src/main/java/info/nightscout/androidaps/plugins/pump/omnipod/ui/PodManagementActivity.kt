@@ -11,6 +11,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
@@ -50,6 +52,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsOmnipodManager: AapsOmnipodManager
     @Inject lateinit var context: Context
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
+    @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -78,6 +81,11 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
             } else {
                 displayNotConfiguredDialog()
             }
+        }
+
+        omnipod_pod_management_button_reset_rileylink_config.setOnClickListener {
+            // TODO improvement: properly disable button until task is finished
+            serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
         }
 
         omnipod_pod_management_button_play_test_beep.setOnClickListener {
@@ -209,7 +217,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     private fun displayNotConfiguredDialog() {
-        context?.let {
+        context.let {
             UIRunnable(Runnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
                     resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)

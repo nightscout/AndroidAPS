@@ -67,7 +67,7 @@ class DanaRS_Packet_Option_Get_User_Option(
         dataSize = 1
         val selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         // Pump's screen on time can't be less than 5
-        failed = if (danaPump.lcdOnTimeSec < 5) true else false
+        failed = danaPump.lcdOnTimeSec < 5
         aapsLogger.debug(LTag.PUMPCOMM, "timeDisplayType24: " + danaPump.timeDisplayType24)
         aapsLogger.debug(LTag.PUMPCOMM, "buttonScrollOnOff: " + danaPump.buttonScrollOnOff)
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm: " + danaPump.beepAndAlarm)

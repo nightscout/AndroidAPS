@@ -11,7 +11,7 @@ public enum RileyLinkBLEError {
     NoResponse("No response from RileyLink"),
     TooShortOrNullResponse("Too short or null decoded response.");
 
-    private String description;
+    private final String description;
 
     RileyLinkBLEError(String description) {
         this.description = description;

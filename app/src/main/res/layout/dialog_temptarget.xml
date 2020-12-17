@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_temporarytarget"
-                app:srcCompat="@drawable/ic_actions_temptarget" />
+                app:srcCompat="@drawable/ic_temptarget_high" />
 
             <TextView
                 android:layout_width="match_parent"

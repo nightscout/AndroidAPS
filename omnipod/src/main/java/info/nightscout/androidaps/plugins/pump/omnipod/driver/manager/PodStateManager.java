@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
@@ -104,14 +105,14 @@ public abstract class PodStateManager {
     /**
      * @return true if the Pod's activation time has been exceeded
      */
-    public boolean isPodActivationTimeExceeded() {
+    public final boolean isPodActivationTimeExceeded() {
         return isPodInitialized() && getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
     }
 
     /**
      * @return true if we have a Pod state and the Pod is dead, meaning it is either in a fault state or activation time has been exceeded or it is deactivated
      */
-    public boolean isPodDead() {
+    public final boolean isPodDead() {
         return isPodInitialized() && getPodProgressStatus().isDead();
     }
 
@@ -428,7 +429,6 @@ public abstract class PodStateManager {
         setAndStore(() -> {
             if (!Objects.equals(podState.isTempBasalCertain(), certain)) {
                 podState.setTempBasalCertain(certain);
-                onTbrChanged();
             }
         });
     }
@@ -551,7 +551,7 @@ public abstract class PodStateManager {
     /**
      * Does not automatically store pod state in order to decrease I/O load
      */
-    public final void updateFromResponse(StatusUpdatableResponse status) {
+    public final void updateFromResponse(StatusUpdatableResponse status, OmnipodMessage requestMessage) {
         setSafe(() -> {
             if (podState.getActivatedAt() == null) {
                 DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(status.getTimeActive());
@@ -570,7 +570,7 @@ public abstract class PodStateManager {
 
             boolean isBasalCertain = podState.isBasalCertain() == null || podState.isBasalCertain();
             boolean isTempBasalCertain = podState.isTempBasalCertain() == null || podState.isTempBasalCertain();
-            if (!status.getDeliveryStatus().isTbrRunning()) {
+            if (!status.getDeliveryStatus().isTbrRunning() && hasTempBasal()) {
                 if (isTempBasalCertain) {
                     clearTempBasal(); // Triggers onTbrChanged when appropriate
                 } else {
@@ -582,7 +582,10 @@ public abstract class PodStateManager {
             }
             if (!isTempBasalCertain) {
                 podState.setTempBasalCertain(true);
-                onUncertainTbrRecovered();
+                if (!requestMessage.isSetTempBasalMessage() // We always set TBR to uncertain before sending the set temp basal command, so this is not an actual recovery
+                        && !requestMessage.isCancelTempBasalMessage()) { // Delivery status changed, so we can't recover here
+                    onUncertainTbrRecovered();
+                }
             }
             if (!isBasalCertain) {
                 podState.setBasalCertain(true);
@@ -600,6 +603,8 @@ public abstract class PodStateManager {
 
             podState.setLastUpdatedFromResponse(DateTime.now());
         });
+
+        onUpdatedFromResponse();
     }
 
     protected void onTbrChanged() {
@@ -618,6 +623,11 @@ public abstract class PodStateManager {
     }
 
     protected void onFaultEventChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onUpdatedFromResponse() {
         // Deliberately left empty
         // Can be overridden in subclasses
     }

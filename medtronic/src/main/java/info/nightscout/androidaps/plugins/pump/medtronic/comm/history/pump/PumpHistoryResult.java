@@ -18,7 +18,7 @@ public class PumpHistoryResult {
     private final AAPSLogger aapsLogger;
 
     private boolean searchFinished = false;
-    private PumpHistoryEntry searchEntry = null;
+    private final PumpHistoryEntry searchEntry = null;
     private Long searchDate = null;
     private SearchType searchType = SearchType.None;
     public List<PumpHistoryEntry> unprocessedEntries;

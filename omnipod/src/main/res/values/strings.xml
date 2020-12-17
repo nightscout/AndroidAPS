@@ -172,17 +172,21 @@
     <string name="omnipod_cmd_read_pulse_log">Read pulse log</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
+    <string name="omnipod_cmd_split_tbr">Split temporary basal because of uncertain failure in cancellation</string>
     <string name="omnipod_cmd_beep_config">Beep config</string>
     <string name="omnipod_cmd_play_test_beep">Play test beep</string>
 
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod management</string>
+    <string name="omnipod_pod_management_heading_actions">Actions</string>
+    <string name="omnipod_pod_management_heading_tools">Tools</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Waiting for RileyLink connection…</string>
     <string name="omnipod_pod_management_button_activate_pod">Activate Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Deactivate Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Discard Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Pod history</string>
     <string name="omnipod_pod_management_button_riley_link_stats">RileyLink stats</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Reset RileyLink Config</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Read pulse log</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Reading pulse log…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">If you discard the Pod, you will not be able to communicate with it anymore. You should only do this when all communication with the Pod persistently fails. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.\n\nIf you wish to proceed, please make sure to remove the Pod from your body!</string>
@@ -251,7 +255,6 @@
 
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Pump integration for Omnipod, requires RileyLink (with at least 2.0 firmware) device.</string>
-    <string name="omnipod_custom_action_reset_rileylink">Reset RileyLink config</string>
     <string name="omnipod_uncertain">uncertain</string>
     <string name="omnipod_pulse_log">Pulse log</string>
     <string name="omnipod_pulse_log_value">Pulse Log (copied to clipboard)</string>
