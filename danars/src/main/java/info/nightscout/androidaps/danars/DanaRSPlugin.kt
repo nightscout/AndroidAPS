@@ -63,7 +63,7 @@ class DanaRSPlugin @Inject constructor(
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(info.nightscout.androidaps.dana.DanaFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_dana_rs)
+    .pluginIcon(R.drawable.ic_danars_128)
     .pluginName(R.string.danarspump)
     .shortName(R.string.danarspump_shortname)
     .preferencesId(R.xml.pref_danars)

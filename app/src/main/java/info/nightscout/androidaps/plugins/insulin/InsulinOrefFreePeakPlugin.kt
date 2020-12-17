@@ -49,6 +49,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     init {
         pluginDescription
+            .pluginIcon(R.drawable.ic_insulin)
             .pluginName(R.string.free_peak_oref)
             .preferencesId(R.xml.pref_insulinoreffreepeak)
             .description(R.string.description_insulin_free_peak)

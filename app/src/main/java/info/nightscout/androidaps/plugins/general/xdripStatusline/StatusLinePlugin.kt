@@ -43,6 +43,7 @@ class StatusLinePlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
+        .pluginIcon((R.drawable.ic_blooddrop_48))
         .pluginName(R.string.xdripstatus)
         .shortName(R.string.xdripstatus_shortname)
         .neverVisible(true)

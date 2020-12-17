@@ -145,6 +145,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         super(new PluginDescription()
                         .mainType(PluginType.LOOP)
                         .fragmentClass(LoopFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_loop_closed_white)
                         .pluginName(R.string.loop)
                         .shortName(R.string.loop_shortname)
                         .preferencesId(R.xml.pref_loop)
