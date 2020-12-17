@@ -239,6 +239,7 @@ class AutomationPlugin @Inject constructor(
             ActionStartTempTarget(injector),
             ActionStopTempTarget(injector),
             ActionNotification(injector),
+            ActionAlarm(injector),
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
             ActionSendSMS(injector)

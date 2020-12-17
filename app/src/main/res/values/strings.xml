@@ -1174,7 +1174,9 @@
 
     <string name="notification">Notification</string>
     <string name="notification_message">Notification: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Msg:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Profile percentage</string>
     <string name="percent_u">Percent [%]:</string>
     <string name="startprofile">Start profile %1$d%% for %2$d min</string>
@@ -1411,5 +1413,6 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="alarm">Alarm</string>
 
 </resources>
