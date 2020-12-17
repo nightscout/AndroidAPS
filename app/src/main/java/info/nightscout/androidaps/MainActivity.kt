@@ -20,6 +20,7 @@ import android.text.util.Linkify
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.*
+import android.view.MenuItem.SHOW_AS_ACTION_ALWAYS
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -871,7 +872,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
         var itemId = 0
         for (p in activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p)
-            if (p.hasFragment() && p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
+            if (
+                p.hasFragment() && p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
                 if(p.menuIcon != -1) {
                     menuItem.setIcon(p.menuIcon)
@@ -950,7 +952,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         var itemId = 0
         for (p in activePlugin.getPluginsList()) {
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
-                val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
+                val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name )
                 if(p.menuIcon != -1) {
                     menuItem.setIcon(p.menuIcon)
                 } else
