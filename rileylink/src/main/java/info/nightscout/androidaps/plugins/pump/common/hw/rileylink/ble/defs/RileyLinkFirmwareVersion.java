@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,15 +13,18 @@ public enum RileyLinkFirmwareVersion {
     Version_0_0(0, 0, "0.0"), // just for defaulting
     Version_0_9(0, 9, "0.9"), //
     Version_1_0(1, 0, "1.0"), //
+    Version_1_x(1, null, "1.x"), //
     Version_2_0(2, 0, "2.0"), //
     Version_2_2(2, 2, "2.2"), //
     Version_2_x(2, null, "2.x"), //
     Version_3_x(3, null, "3.x"), //
     Version_4_x(4, null, "4.x"), //
     UnknownVersion(null, null, "???"), //
-    Version1(Version_0_0, Version_0_9, Version_1_0), //
+    Version1(Version_0_0, Version_0_9, Version_1_0, Version_1_x), //
     Version2(Version_2_0, Version_2_2, Version_2_x), //
-    Version2AndHigher(Version2, Version_3_x, Version_4_x);
+    Version3(Version_3_x), //
+    Version4(Version_4_x), //
+    Version2AndHigher(Version2, Version3, Version4);
 
     private static final String FIRMWARE_IDENTIFICATION_PREFIX = "subg_rfspy ";
     private static final Pattern _version_pattern = Pattern.compile(FIRMWARE_IDENTIFICATION_PREFIX
@@ -34,11 +40,10 @@ public enum RileyLinkFirmwareVersion {
         }
     }
 
-    protected RileyLinkFirmwareVersion[] familyMembers;
+    private List<RileyLinkFirmwareVersion> familyMembers;
     private Integer major;
     private Integer minor;
     private String versionKey = "";
-
 
     RileyLinkFirmwareVersion(Integer major, Integer minor, String versionKey) {
         this.major = major;
@@ -48,22 +53,39 @@ public enum RileyLinkFirmwareVersion {
 
 
     RileyLinkFirmwareVersion(RileyLinkFirmwareVersion... familyMembers) {
-        this.familyMembers = familyMembers;
+        this.familyMembers = Arrays.asList(familyMembers);
+    }
+
+    public boolean hasFamilyMembers() {
+        return familyMembers != null;
+    }
+
+    private List<RileyLinkFirmwareVersion> getFamilyMembersRecursive() {
+        List<RileyLinkFirmwareVersion> members = new ArrayList<>();
+        if (hasFamilyMembers()) {
+            for (RileyLinkFirmwareVersion version : familyMembers) {
+                members.add(version);
+                if (version.hasFamilyMembers()) {
+                    members.addAll(version.getFamilyMembersRecursive());
+                }
+            }
+        }
+
+        return members;
     }
 
 
     public static boolean isSameVersion(RileyLinkFirmwareVersion versionWeCheck, RileyLinkFirmwareVersion versionSources) {
-        if (versionSources.familyMembers != null) {
-            for (RileyLinkFirmwareVersion vrs : versionSources.familyMembers) {
-                if (vrs == versionWeCheck)
-                    return true;
-            }
-        } else {
-            return (versionWeCheck == versionSources);
+        if (versionWeCheck == versionSources) {
+            return true;
         }
+
+        if (versionSources.familyMembers != null) {
+            return versionSources.getFamilyMembersRecursive().contains(versionWeCheck);
+        }
+
         return false;
     }
-
 
     public static RileyLinkFirmwareVersion getByVersionString(String versionString) {
         if (versionString != null) {
@@ -100,6 +122,9 @@ public enum RileyLinkFirmwareVersion {
 
     @Override
     public String toString() {
+        if (hasFamilyMembers()) {
+            return FIRMWARE_IDENTIFICATION_PREFIX + name();
+        }
         return FIRMWARE_IDENTIFICATION_PREFIX + versionKey;
     }
 }

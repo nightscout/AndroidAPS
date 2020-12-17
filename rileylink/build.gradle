@@ -50,6 +50,9 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
     androidTestImplementation "androidx.test:rules:$androidx_rules"
 }
