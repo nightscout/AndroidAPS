@@ -99,6 +99,8 @@ public class RFSpy {
     public void initializeRileyLink() {
         bleVersion = getVersion();
         rileyLinkServiceData.firmwareVersion = getFirmwareVersion();
+        rileyLinkServiceData.versionCC110 = getCC1110Version();
+
     }
 
 
@@ -129,9 +131,7 @@ public class RFSpy {
         return (firmwareVersion != RileyLinkFirmwareVersion.UnknownVersion);
     }
 
-
-    private RileyLinkFirmwareVersion getFirmwareVersion() {
-
+    private String getCC1110Version() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version. Get Version - Start");
 
         for (int i = 0; i < 5; i++) {
@@ -146,16 +146,27 @@ public class RFSpy {
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
                 String versionString = StringUtil.fromBytes(response);
-
-                RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
-                        .fromBytes(response));
-
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", versionString, version);
-
-                if (version != RileyLinkFirmwareVersion.UnknownVersion)
-                    return version;
-
+                if (versionString.length() > 3) {
+                    if (versionString.indexOf('s') >= 0) {
+                        versionString = versionString.substring(versionString.indexOf('s'));
+                    }
+                    return versionString;
+                }
                 SystemClock.sleep(1000);
+            }
+        }
+
+        return null;
+    }
+
+    private RileyLinkFirmwareVersion getFirmwareVersion() {
+        String versionString = getCC1110Version();
+        if (versionString != null) {
+            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(versionString);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", versionString, version);
+
+            if (version != RileyLinkFirmwareVersion.UnknownVersion) {
+                return version;
             }
         }
 
@@ -167,7 +178,6 @@ public class RFSpy {
 
         return RileyLinkFirmwareVersion.UnknownVersion;
     }
-
 
     private byte[] writeToDataRaw(byte[] bytes, int responseTimeout_ms) {
         SystemClock.sleep(100);

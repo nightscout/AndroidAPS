@@ -32,7 +32,7 @@ public class RileyLinkServiceData {
     public RileyLinkError rileyLinkError;
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     private long lastServiceStateChange = 0L;
-    public RileyLinkFirmwareVersion firmwareVersion;
+    public RileyLinkFirmwareVersion firmwareVersion; // here we have "compatibility level" version
     public RileyLinkTargetFrequency rileyLinkTargetFrequency;
     public String rileylinkAddress;
     long lastTuneUpTime = 0L;
@@ -41,7 +41,8 @@ public class RileyLinkServiceData {
     // bt version
     public String versionBLE113;
     // radio version
-    public RileyLinkFirmwareVersion versionCC110;
+    public String versionCC110;
+
 
     public RileyLinkTargetDevice targetDevice;
 

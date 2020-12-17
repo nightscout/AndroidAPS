@@ -108,13 +108,11 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                     "-"
                     : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));
 
-            RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
-
             if (firmwareVersion == null) {
                 this.firmwareVersion.setText("BLE113: -\nCC110: -");
             } else {
-                this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + //
-                        "\nCC110: " + firmwareVersion.toString());
+                this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 +
+                        "\nCC110: " + rileyLinkServiceData.versionCC110);
             }
 
         }
