@@ -200,6 +200,12 @@ class MainActivity : NoSplashAppCompatActivity() {
             if (p.isEnabled() && p.hasFragment() && !p.isFragmentVisible() && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(p.name)
                 menuItem.isCheckable = true
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
                     intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
