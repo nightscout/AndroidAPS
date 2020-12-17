@@ -18,12 +18,11 @@ public enum RileyLinkFirmwareVersion {
     UnknownVersion(null, null, "???"), //
     Version1(Version_0_0, Version_0_9, Version_1_0), //
     Version2(Version_2_0, Version_2_2, Version_2_x), //
-    Version2AndHigher(Version2, Version_3_x, Version_4_x), //
-    ;
+    Version2AndHigher(Version2, Version_3_x, Version_4_x);
 
     private static final String FIRMWARE_IDENTIFICATION_PREFIX = "subg_rfspy ";
     private static final Pattern _version_pattern = Pattern.compile(FIRMWARE_IDENTIFICATION_PREFIX
-        + "([0-9]+)\\.([0-9]+)");
+            + "([0-9]+)\\.([0-9]+)");
     static Map<String, RileyLinkFirmwareVersion> mapByVersion;
 
     static {
@@ -77,7 +76,7 @@ public enum RileyLinkFirmwareVersion {
                     return mapByVersion.get(versionKey);
                 } else {
                     return defaultToLowestMajorVersion(major); // just in case there is new release that we don't cover
-                                                               // example: 2.3 etc
+                    // example: 2.3 etc
                 }
             }
         }

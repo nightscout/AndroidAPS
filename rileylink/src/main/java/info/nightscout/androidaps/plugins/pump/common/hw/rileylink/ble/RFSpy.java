@@ -98,9 +98,9 @@ public class RFSpy {
     // firmware version
     public void initializeRileyLink() {
         bleVersion = getVersion();
-        rileyLinkServiceData.firmwareVersion = getFirmwareVersion();
-        rileyLinkServiceData.versionCC110 = getCC1110Version();
-
+        String cc1110Version = getCC1110Version();
+        rileyLinkServiceData.versionCC110 = cc1110Version;
+        rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, bleVersion, cc1110Version);
     }
 
 
@@ -123,12 +123,6 @@ public class RFSpy {
             aapsLogger.error(LTag.PUMPBTCOMM, "getVersion failed with code: " + result.resultCode);
             return "(null)";
         }
-    }
-
-    public boolean isRileyLinkStillAvailable() {
-        RileyLinkFirmwareVersion firmwareVersion = getFirmwareVersion();
-
-        return (firmwareVersion != RileyLinkFirmwareVersion.UnknownVersion);
     }
 
     private String getCC1110Version() {
@@ -159,11 +153,10 @@ public class RFSpy {
         return null;
     }
 
-    private RileyLinkFirmwareVersion getFirmwareVersion() {
-        String versionString = getCC1110Version();
-        if (versionString != null) {
-            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(versionString);
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", versionString, version);
+    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
+        if (cc1110Version != null) {
+            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", cc1110Version, version);
 
             if (version != RileyLinkFirmwareVersion.UnknownVersion) {
                 return version;

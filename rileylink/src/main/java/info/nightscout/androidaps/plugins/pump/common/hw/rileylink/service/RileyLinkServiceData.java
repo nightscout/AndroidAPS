@@ -78,7 +78,6 @@ public class RileyLinkServiceData {
     private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState, RileyLinkError errorCode, boolean set) {
 
         if (set) {
-
             rileyLinkServiceState = newState;
             lastServiceStateChange = System.currentTimeMillis();
             this.rileyLinkError = errorCode;
@@ -88,7 +87,6 @@ public class RileyLinkServiceData {
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
             rxBus.send(new EventRileyLinkDeviceStatusChange(targetDevice, newState, errorCode));
             return null;
-
         } else {
             return rileyLinkServiceState;
         }
