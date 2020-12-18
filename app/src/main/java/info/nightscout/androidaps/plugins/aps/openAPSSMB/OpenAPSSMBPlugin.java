@@ -88,6 +88,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         super(new PluginDescription()
                         .mainType(PluginType.APS)
                         .fragmentClass(OpenAPSSMBFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.openapssmb)
                         .shortName(R.string.smb_shortname)
                         .preferencesId(R.xml.pref_openapssmb)

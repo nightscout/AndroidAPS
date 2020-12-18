@@ -57,6 +57,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
+                        .pluginIcon(R.drawable.ic_ict)
                         .pluginName(R.string.mdi)
                         .description(R.string.description_pump_mdi),
                 injector, aapsLogger, resourceHelper, commandQueue

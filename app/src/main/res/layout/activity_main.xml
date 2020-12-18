@@ -50,9 +50,11 @@
             android:id="@+id/main_navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:itemBackground="?selectableItemBackground"
-            app:itemTextColor="#FFFFFF"
-            android:layout_gravity="start" />
+            app:itemBackground="?attr/selectableItemBackground"
+            android:fitsSystemWindows="true"
+            android:layout_gravity="start"
+            app:itemIconTint="@android:color/white"
+            app:itemTextColor="@android:color/white"/>
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </LinearLayout>

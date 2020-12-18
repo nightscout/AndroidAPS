@@ -90,6 +90,7 @@ public class NSClientPlugin extends PluginBase {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
                         .fragmentClass(NSClientFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_nightscout_syncs)
                         .pluginName(R.string.nsclientinternal)
                         .shortName(R.string.nsclientinternal_shortname)
                         .preferencesId(R.xml.pref_nsclientinternal)
