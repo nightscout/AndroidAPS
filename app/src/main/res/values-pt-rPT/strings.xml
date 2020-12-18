@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Segurança de tratamentos</string>
     <string name="treatmentssafety_maxbolus_title">Max bolus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max hidratos permitidos [g]</string>
+    <string name="nav_preferences_plugin">%s Preferências</string>
     <string name="nav_preferences">Preferências</string>
     <string name="nav_refreshtreatments">Actualizar tratamentos do NS</string>
     <string name="nav_resetdb">Reinicializar base de dados</string>
@@ -384,10 +385,12 @@
     <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
     <string name="notavailable">n/d</string>
+    <string name="patientage">Tipo de Paciente</string>
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente insulina</string>
+    <string name="pregnant">Gravidez</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou alcunha para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
@@ -455,6 +458,12 @@
     <string name="ns_noupload_summary">Todos os dados enviados para NS são descartados. AAPS está conectado ao NS, mas não é feita nenhuma alteração no NS</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
+    <string name="careportal_sensor_label">Sensor</string>
+    <string name="careportal_canula_label">Cânula</string>
+    <string name="careportal_insulin_label">Insulina</string>
+    <string name="careportal_pb_label">Bateria da Bomba</string>
+    <string name="careportal_age_label">idade:</string>
+    <string name="careportal_level_label">nível:</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
     <string name="ns_alarms">Criar notificações dos alarmes NS</string>
     <string name="ns_announcements">Criar notificações a partir dos anúncios NS</string>
@@ -963,6 +972,7 @@
     <string name="notification">Notificação</string>
     <string name="notification_message">Notificação: %1$s</string>
     <string name="message_short">Mnsg:</string>
+    <string name="alarm_short">Alarme:</string>
     <string name="profilepercentage">Percentagem do Perfil</string>
     <string name="percent_u">Percentagem [%]:</string>
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
@@ -1086,6 +1096,7 @@
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_code_verify_label">Código para verificar:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
     <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados actualmente como inválidos, e precisará de os configurar novamente.</string>
@@ -1139,4 +1150,6 @@
     <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
     <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
     <string name="uploaded_data">Dados Enviados</string>
+    <string name="filter">Filtro</string>
+    <string name="alarm">Alarme</string>
 </resources>
