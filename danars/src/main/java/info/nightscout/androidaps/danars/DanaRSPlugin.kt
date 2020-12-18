@@ -165,7 +165,7 @@ class DanaRSPlugin @Inject constructor(
         danaRSService?.stopConnecting()
     }
 
-    override fun getPumpStatus() {
+    override fun getPumpStatus(reason: String?) {
         danaRSService?.readPumpStatus()
         pumpDesc.basalStep = danaPump.basalStep
         pumpDesc.bolusStep = danaPump.bolusStep

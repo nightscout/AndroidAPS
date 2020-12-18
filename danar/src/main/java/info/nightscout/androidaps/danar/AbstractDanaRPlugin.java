@@ -361,7 +361,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         if (sExecutionService != null) {
             sExecutionService.getPumpStatus();
             pumpDescription.basalStep = danaPump.getBasalStep();

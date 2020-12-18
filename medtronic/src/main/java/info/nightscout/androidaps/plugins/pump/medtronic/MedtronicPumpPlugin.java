@@ -421,7 +421,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
 
         if (firstRun) {
             initializePump(!isRefresh);

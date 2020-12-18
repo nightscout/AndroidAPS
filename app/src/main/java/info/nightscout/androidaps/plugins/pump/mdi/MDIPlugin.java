@@ -133,7 +133,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
     }
 
     @NonNull @Override

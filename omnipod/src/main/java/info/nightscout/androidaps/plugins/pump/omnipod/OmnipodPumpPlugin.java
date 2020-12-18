@@ -537,18 +537,24 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     /**
      * We don't do periodical status requests because that could drain the Pod's battery
-     * The only actual status requests we send to the Pod here are on startup (in {@link #initializeAfterRileyLinkConnection() initializeAfterRileyLinkConnection()})
+     * The only actual status requests we send to the Pod here are on startup (in {@link #initializeAfterRileyLinkConnection() initializeAfterRileyLinkConnection()}),
+     * When explicitly requested through SMS commands
      * And when the basal and/or temp basal status is uncertain
      * When the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through {@link #executeCustomCommand(CustomCommand)})
      */
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
             firstRun = false;
-        } else if (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain()) {
-            aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request because basal and/or temp basal is uncertain");
-            getPodStatus();
+        } else {
+            if ("SMS".equals(reason)) {
+                aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request it was requested through an SMS");
+                getPodStatus();
+            } else if (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain()) {
+                aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request because basal and/or temp basal is uncertain");
+                getPodStatus();
+            }
         }
     }
 
