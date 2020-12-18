@@ -338,7 +338,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Runs pump initialization if needed and reads the pump state from the main screen.
      */
     @Override
-    public synchronized void getPumpStatus() {
+    public synchronized void getPumpStatus(String reason) {
         getAapsLogger().debug(LTag.PUMP, "getPumpStatus called");
         if (!pump.initialized) {
             initializePump();

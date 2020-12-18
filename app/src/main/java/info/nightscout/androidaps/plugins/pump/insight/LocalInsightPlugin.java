@@ -370,7 +370,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
             readHistory();
