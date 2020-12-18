@@ -49,6 +49,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     TextView lastUsedFrequency;
     TextView lastDeviceContact;
     TextView firmwareVersion;
+    TextView batteryLevel;
 
     boolean first = false;
 
@@ -76,12 +77,14 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.lastUsedFrequency = getActivity().findViewById(R.id.rls_t1_last_used_frequency);
         this.lastDeviceContact = getActivity().findViewById(R.id.rls_t1_last_device_contact);
         this.firmwareVersion = getActivity().findViewById(R.id.rls_t1_firmware_version);
+        this.batteryLevel = getActivity().findViewById(R.id.rls_t1_battery_level);
 
         if (!first) {
 
-            // 7-12
+            // 7-14
             int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
-                    R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13};
+                    R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13,
+                    R.id.rls_t1_tv14};
 
             for (int id : ids) {
 
@@ -113,6 +116,12 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
             } else {
                 this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 +
                         "\nCC110: " + rileyLinkServiceData.versionCC110);
+            }
+            Integer batteryLevel = rileyLinkServiceData.batteryLevel;
+            if (batteryLevel == null || batteryLevel <= 0) {
+                this.batteryLevel.setText("???");
+            } else {
+                this.batteryLevel.setText(batteryLevel + "%");
             }
 
         }
