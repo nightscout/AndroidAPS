@@ -98,7 +98,9 @@ public class RFSpy {
     // firmware version
     public void initializeRileyLink() {
         bleVersion = getVersion();
-        rileyLinkServiceData.firmwareVersion = getFirmwareVersion();
+        String cc1110Version = getCC1110Version();
+        rileyLinkServiceData.versionCC110 = cc1110Version;
+        rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, bleVersion, cc1110Version);
     }
 
 
@@ -123,15 +125,7 @@ public class RFSpy {
         }
     }
 
-    public boolean isRileyLinkStillAvailable() {
-        RileyLinkFirmwareVersion firmwareVersion = getFirmwareVersion();
-
-        return (firmwareVersion != RileyLinkFirmwareVersion.UnknownVersion);
-    }
-
-
-    private RileyLinkFirmwareVersion getFirmwareVersion() {
-
+    private String getCC1110Version() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version. Get Version - Start");
 
         for (int i = 0; i < 5; i++) {
@@ -146,16 +140,26 @@ public class RFSpy {
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
                 String versionString = StringUtil.fromBytes(response);
-
-                RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
-                        .fromBytes(response));
-
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", versionString, version);
-
-                if (version != RileyLinkFirmwareVersion.UnknownVersion)
-                    return version;
-
+                if (versionString.length() > 3) {
+                    if (versionString.indexOf('s') >= 0) {
+                        versionString = versionString.substring(versionString.indexOf('s'));
+                    }
+                    return versionString;
+                }
                 SystemClock.sleep(1000);
+            }
+        }
+
+        return null;
+    }
+
+    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
+        if (cc1110Version != null) {
+            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", cc1110Version, version);
+
+            if (version != RileyLinkFirmwareVersion.UnknownVersion) {
+                return version;
             }
         }
 
@@ -167,7 +171,6 @@ public class RFSpy {
 
         return RileyLinkFirmwareVersion.UnknownVersion;
     }
-
 
     private byte[] writeToDataRaw(byte[] bytes, int responseTimeout_ms) {
         SystemClock.sleep(100);
@@ -373,7 +376,7 @@ public class RFSpy {
     private void setMedtronicEncoding() {
         RileyLinkEncodingType encoding = RileyLinkEncodingType.FourByteSixByteLocal;
 
-        if (RileyLinkFirmwareVersion.isSameVersion(rileyLinkServiceData.firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
+        if (rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             if (sp.getString(RileyLinkConst.Prefs.Encoding, "None")
                     .equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;
