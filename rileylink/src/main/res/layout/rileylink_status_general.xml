@@ -186,7 +186,6 @@
                     android:text="         " />
             </LinearLayout>
 
-
             <!-- Group - Device -->
             <LinearLayout
                 android:layout_width="match_parent"
