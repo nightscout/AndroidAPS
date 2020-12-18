@@ -74,8 +74,7 @@ public enum RileyLinkFirmwareVersion {
         return members;
     }
 
-
-    public static boolean isSameVersion(RileyLinkFirmwareVersion versionWeCheck, RileyLinkFirmwareVersion versionSources) {
+    static boolean isSameVersion(RileyLinkFirmwareVersion versionWeCheck, RileyLinkFirmwareVersion versionSources) {
         if (versionWeCheck == versionSources) {
             return true;
         }
