@@ -39,5 +39,9 @@ public class RFSpyTest {
         assertEquals(RileyLinkFirmwareVersion.Version_4_x, RFSpy.getFirmwareVersion(aapsLogger, "", "subg_rfspy 4.0.4"));
         assertEquals(RileyLinkFirmwareVersion.Version_4_x, RFSpy.getFirmwareVersion(aapsLogger, "", "subg_rfspy 4.3"));
         assertEquals(RileyLinkFirmwareVersion.Version_4_x, RFSpy.getFirmwareVersion(aapsLogger, "", "subg_rfspy 4.5.7"));
+
+        assertEquals(RileyLinkFirmwareVersion.UnknownVersion, RFSpy.getFirmwareVersion(aapsLogger, "", "subg_rfspy 5.0"));
+        assertEquals(RileyLinkFirmwareVersion.UnknownVersion, RFSpy.getFirmwareVersion(aapsLogger, "", "subg_rfspy 5.0.0"));
+        assertEquals(RileyLinkFirmwareVersion.UnknownVersion, RFSpy.getFirmwareVersion(aapsLogger, "", "subg_rfspy 5.5.5"));
     }
 }
