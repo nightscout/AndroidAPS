@@ -9,6 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.WarnColors
@@ -49,8 +50,14 @@ class StatusLightHandler @Inject constructor(
             else
                 careportal_sensorbatterylevel?.text = ""
         }
-        if (!config.NSCLIENT && pump.model() != PumpType.AccuChekCombo)
-            handleLevel(careportal_batterylevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
+
+        if (!config.NSCLIENT) {
+            if (pump.model() == PumpType.Insulet_Omnipod) {
+                handleOmnipodBatteryLevel(careportal_batterylevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", (pump as OmnipodPumpPlugin).isUseRileyLinkBatteryLevel)
+            } else if (pump.model() != PumpType.AccuChekCombo) {
+                handleLevel(careportal_batterylevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
+            }
+        }
     }
 
     private fun handleAge(view: TextView?, eventName: String, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
@@ -75,16 +82,21 @@ class StatusLightHandler @Inject constructor(
 
     // Omnipod only reports reservoir level when it's 50 units or less, so we display "50+U" for any value > 50
     private fun handleOmnipodReservoirLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
-        val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
-        val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
         if (level > OmnipodConstants.MAX_RESERVOIR_READING) {
             @Suppress("SetTextI18n")
             view?.text = " 50+$units"
             view?.setTextColor(Color.WHITE)
         } else {
-            @Suppress("SetTextI18n")
-            view?.text = " " + DecimalFormatter.to0Decimal(level) + units
-            warnColors.setColorInverse(view, level, resWarn, resUrgent)
+            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
+        }
+    }
+
+    private fun handleOmnipodBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean) {
+        if (useRileyLinkBatteryLevel) {
+            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
+        } else {
+            view?.text = resourceHelper.gs(R.string.notavailable)
+            view?.setTextColor(Color.WHITE)
         }
     }
 }

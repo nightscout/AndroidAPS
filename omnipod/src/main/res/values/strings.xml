@@ -44,8 +44,8 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Show Suspend Delivery button in Omnipod tab</string>
     <string name="omnipod_config_pulse_log_button_enabled">Show Pulse Log button in Pod Management menu</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Show RileyLink Stats button in Pod Management menu</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Use battery level reported by RileyLink (experimental)</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">Only tested with EmaLink. The reported battery level may be inaccurate with other devices.\nWhen disabled, the battery level show a fixed value of 75.</string>
+    <string name="omnipod_config_use_riley_link_battery_level">Use battery level reported by RileyLink</string>
+    <string name="omnipod_config_use_riley_link_battery_level_summary">Works with EmaLink and OrangeLink.\nDOES NOT work with the original RileyLink: it will not report the actual battery level. Might also not work with other RileyLink alternatives.</string>
     <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
     <string name="omnipod_config_expiration_reminder_enabled">Expiration reminder enabled</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
@@ -90,6 +90,15 @@
     <string name="omnipod_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <string name="omnipod_history_tbr_value">Rate: %1$.2f U, duration: %2$d minutes</string>
+
+    <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_no_active_pod">No active Pod</string>
+    <string name="omnipod_short_status_last_connection">LastConn: %1$d min ago</string>
+    <string name="omnipod_short_status_last_bolus">LastBolus: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Temp: %1$s</string>
+    <string name="omnipod_short_status_extended_bolus">Extended: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Reserv: %1$sU</string>
+    <string name="omnipod_short_status_rl_battery">RLBatt: %1$d</string>
 
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Warning</string>
