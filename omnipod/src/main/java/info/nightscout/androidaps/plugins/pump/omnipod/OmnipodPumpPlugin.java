@@ -738,10 +738,20 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
-            pump.put("battery", battery);
+            // BS: Leave battery level out for now as we only have a fixed bogus value
+            // TODO use RL battery level
+            //pump.put("battery", battery);
+
             pump.put("status", status);
             pump.put("extended", extended);
-            pump.put("reservoir", getReservoirLevel());
+
+            // If the reservoir level is over 50 units, we don't know the actual value,
+            // so only include the reservoir level if it's under 50 units
+            double reservoirLevel = getReservoirLevel();
+            if (reservoirLevel <= OmnipodConstants.MAX_RESERVOIR_READING) {
+                pump.put("reservoir", reservoirLevel);
+            }
+
             pump.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMP, "Unhandled exception", e);
@@ -794,8 +804,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         ret += "Reserv: " + (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+U" : DecimalFormatter.to0Decimal(getReservoirLevel()) + "U") + "\n";
-        ret += "Batt: " + getBatteryLevel();
-        return ret;
+
+        // BS leave out for now as we only have a bogus default value
+        // TODO use RL battery
+        // ret += "Batt: " + getBatteryLevel();
+
+        return ret.trim();
     }
 
     @Override
