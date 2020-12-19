@@ -30,7 +30,6 @@
     <string name="rileylink_last_used_frequency">Last used frequency</string>
     <string name="rileylink_last_device_contact">Last device contact</string>
     <string name="rileylink_firmware_version">Firmware</string>
-    <string name="rileylink_battery_level">Battery level</string>
 
 
     <!-- RL State -->
