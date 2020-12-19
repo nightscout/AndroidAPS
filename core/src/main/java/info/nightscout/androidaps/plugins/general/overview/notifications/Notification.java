@@ -73,7 +73,7 @@ public class Notification {
     public static final int OMNIPOD_POD_SUSPENDED = 61;
     public static final int OMNIPOD_POD_ALERTS_UPDATED = 62;
     public static final int OMNIPOD_POD_ALERTS = 63;
-    public static final int OMNIPOD_UNCERTAIN_TBR = 64;
+    public static final int OMNIPOD_TBR_ALERTS = 64;
     public static final int OMNIPOD_POD_FAULT = 66;
     public static final int OMNIPOD_UNCERTAIN_SMB = 67;
     public static final int OMNIPOD_UNKNOWN_TBR = 68;
