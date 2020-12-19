@@ -819,9 +819,9 @@
     <string name="loop_openmode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="searching_for_devices">מחפש התקנים…</string>
-    <string name="pairing_completed">הזיווג הושלם</string>
+    <string name="pairing_completed">הצימוד הושלם</string>
     <string name="code_compare">האם הקודים המוצגים בהתקן זה ובמשאבה זהים?</string>
-    <string name="insight_pairing">זיווג Insight</string>
+    <string name="insight_pairing">צימוד Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_delivered">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
@@ -853,8 +853,8 @@
     <string name="bluetooth_address">כתובת בלוטות\'</string>
     <string name="system_id_appendix">נספח זהות מערכת</string>
     <string name="manufacturing_date">תאריך ייצור</string>
-    <string name="delete_pairing">מחיקת זיווג</string>
-    <string name="pairing_information">פרטי זיווג</string>
+    <string name="delete_pairing">מחיקת צימוד</string>
+    <string name="pairing_information">פרטי צימוד</string>
     <string name="start_pump">הפעל משאבה</string>
     <string name="stop_pump">עצור משאבה</string>
     <string name="operating_mode">מצב פעולה</string>
@@ -863,7 +863,7 @@
     <string name="tdd_basal">מינון בזאלי יומי מצטבר</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
     <string name="recovering">משחזר</string>
-    <string name="not_paired">לא מזווג</string>
+    <string name="not_paired">לא מצומד</string>
     <string name="last_connected">התחברות אחרונה</string>
     <string name="started">החל</string>
     <string name="stopped">נעצר</string>
