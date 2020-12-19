@@ -300,6 +300,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 // do the trick to show bottombar >> performHide and than performShow
                 bottom_app_bar.performHide()
                 bottom_app_bar.performShow()
+                setPluginPreferenceMenuName()
                 checkPluginPreferences(main_pager)
                 setPluginPreferenceMenuName()
                 setDisabledMenuItemColorPluginPreferences()
@@ -882,6 +883,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     menuItem.setIcon(R.drawable.ic_settings)
                 }
                 menuItem.isCheckable = true
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     main_drawer_layout.closeDrawers()
                     main_pager.setCurrentItem(it.itemId, true)
@@ -943,7 +950,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
     private fun setPluginPreferenceMenuName() {
         val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = plugin.name + ' ' + resourceHelper.gs(R.string.nav_preferences)
+        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
