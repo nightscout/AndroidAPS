@@ -15,9 +15,9 @@ buildscript {
         dagger_android_support_version = '2.29.1'
         dagger_compiler_version = '2.29.1'
         coroutinesVersion = '1.3.9'
-        activityVersion = '1.2.0-beta02'
-        fragmentVersion = '1.3.0-beta02'
-        material_version = '1.3.0-alpha04'
+        activityVersion = '1.2.0-rc01'
+        fragmentVersion = '1.3.0-rc01'
+        material_version = '1.3.0-beta01'
         ormLiteVersion = "5.1"
         appcompatVersion = "1.3.0-alpha02"
         swiperefreshVersion ="1.1.0"
