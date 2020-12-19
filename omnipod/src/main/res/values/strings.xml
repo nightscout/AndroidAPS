@@ -115,7 +115,7 @@
     <string name="omnipod_error_set_basal_failed">Setting basal profile failed.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Cancelling temp basal might have failed. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Setting temp basal failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting temp basal might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">TBR duration must be greater than zero and a multiple of %1$s minutes.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Setting time might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Setting time failed. Delivery is suspended! Please manually resume delivery from the Omnipod tab.</string>
