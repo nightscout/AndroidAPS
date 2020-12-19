@@ -218,7 +218,6 @@ public class AapsOmnipodManager {
         addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.comment, result.success);
 
         if (result.success) {
-            uploadCareportalEvent(System.currentTimeMillis() - 2000, CareportalEvent.PUMPBATTERYCHANGE);
             uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
             uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 
