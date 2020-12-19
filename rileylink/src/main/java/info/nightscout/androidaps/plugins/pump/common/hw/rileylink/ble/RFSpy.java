@@ -116,12 +116,12 @@ public class RFSpy {
     public Integer getBatteryLevel() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            Integer value = (int) result.value[0];
-            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: " + value.toString());
+            int value = result.value[0];
+            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: {}", value);
             return value;
         } else {
             aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel failed with code: " + result.resultCode);
-            return -1;
+            return null;
         }
     }
 
@@ -439,8 +439,6 @@ public class RFSpy {
      * Reset RileyLink Configuration (set all updateRegisters)
      */
     public void resetRileyLinkConfiguration() {
-        //TODO: Please move me to an appropriate place!
-        rileyLinkServiceData.batteryLevel = this.getBatteryLevel();
         if (this.currentFrequencyMHz != null)
             this.setBaseFrequency(this.currentFrequencyMHz);
     }

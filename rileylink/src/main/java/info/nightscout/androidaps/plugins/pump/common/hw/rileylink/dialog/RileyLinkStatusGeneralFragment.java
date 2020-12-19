@@ -17,7 +17,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
@@ -118,7 +117,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                         "\nCC110: " + rileyLinkServiceData.versionCC110);
             }
             Integer batteryLevel = rileyLinkServiceData.batteryLevel;
-            if (batteryLevel == null || batteryLevel <= 0) {
+            if (batteryLevel == null) {
                 this.batteryLevel.setText("???");
             } else {
                 this.batteryLevel.setText(batteryLevel + "%");
