@@ -75,6 +75,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
@@ -117,6 +118,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
+    public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
@@ -602,7 +604,9 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return 0.0d;
         }
         Double reservoirLevel = podStateManager.getReservoirLevel();
-        return reservoirLevel == null ? 75.0 : reservoirLevel;
+        // Omnipod only reports reservoir level when it's 50 units or less.
+        // When it's over 50 units, we don't know, so return some default over 50 units
+        return reservoirLevel == null ? RESERVOIR_OVER_50_UNITS_DEFAULT : reservoirLevel;
     }
 
     @Override
@@ -789,7 +793,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
-        ret += "Reserv: " + DecimalFormatter.to0Decimal(getReservoirLevel()) + "U\n";
+        ret += "Reserv: " + (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+U" : DecimalFormatter.to0Decimal(getReservoirLevel()) + "U") + "\n";
         ret += "Batt: " + getBatteryLevel();
         return ret;
     }
