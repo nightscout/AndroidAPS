@@ -393,7 +393,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             activePlugin.getActiveTreatments().removeTempBasal(tempBasal);
         }
 
-        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_UNCERTAIN_TBR));
+        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
     }
 
     private void handleActivePodAlerts() {
