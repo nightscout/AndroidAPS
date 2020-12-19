@@ -43,6 +43,7 @@ public class RileyLinkServiceData {
     // radio version
     public String versionCC110;
 
+    public Integer batteryLevel;
 
     public RileyLinkTargetDevice targetDevice;
 

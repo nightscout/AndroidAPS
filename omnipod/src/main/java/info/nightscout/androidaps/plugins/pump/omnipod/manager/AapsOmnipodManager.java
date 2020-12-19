@@ -120,8 +120,8 @@ public class AapsOmnipodManager {
     private boolean notificationUncertainSmbSoundEnabled;
     private boolean notificationUncertainBolusSoundEnabled;
     private boolean automaticallyAcknowledgeAlertsEnabled;
-    private boolean testBeepButtonEnabled;
     private boolean rileylinkStatsButtonEnabled;
+    private boolean useRileyLinkBatteryLevel;
 
     @Inject
     public AapsOmnipodManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -165,7 +165,8 @@ public class AapsOmnipodManager {
         tbrBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED, false);
         suspendDeliveryButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED, false);
         pulseLogButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
-        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED, false);
+        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED, false);
+        useRileyLinkBatteryLevel = sp.getBoolean(OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL, false);
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
         notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, false);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
@@ -655,12 +656,12 @@ public class AapsOmnipodManager {
         return pulseLogButtonEnabled;
     }
 
-    public boolean isTestBeepButtonEnabled() {
-        return testBeepButtonEnabled;
-    }
-
     public boolean isRileylinkStatsButtonEnabled() {
         return rileylinkStatsButtonEnabled;
+    }
+
+    public boolean isUseRileyLinkBatteryLevel() {
+        return useRileyLinkBatteryLevel;
     }
 
     public boolean isTimeChangeEventEnabled() {
