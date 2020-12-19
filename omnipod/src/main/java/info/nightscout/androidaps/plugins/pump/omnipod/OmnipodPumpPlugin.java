@@ -747,14 +747,15 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             pump.put("status", status);
             pump.put("extended", extended);
 
-            // If the reservoir level is over 50 units, we don't know the actual value,
-            // so only include the reservoir level if it's under 50 units
             double reservoirLevel = getReservoirLevel();
-            if (reservoirLevel <= OmnipodConstants.MAX_RESERVOIR_READING) {
+            if (reservoirLevel > OmnipodConstants.MAX_RESERVOIR_READING) {
+                pump.put("reservoir_display_override", "50+");
+                pump.put("reservoir", OmnipodConstants.MAX_RESERVOIR_READING);
+            } else {
                 pump.put("reservoir", reservoirLevel);
             }
 
-            pump.put("clock", DateUtil.toISOString(new Date()));
+            pump.put("clock", DateUtil.toISOString(podStateManager.getTime().toDate()));
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMP, "Unhandled exception", e);
         }
