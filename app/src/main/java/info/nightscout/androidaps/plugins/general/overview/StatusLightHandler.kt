@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import android.graphics.Color
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.Config
@@ -8,6 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -35,7 +37,11 @@ class StatusLightHandler @Inject constructor(
         handleAge(careportal_sensorage, CareportalEvent.SENSORCHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
         handleAge(careportal_pbage, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
         if (!config.NSCLIENT) {
-            handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
+            if (pump.model() == PumpType.Insulet_Omnipod) {
+                handleOmnipodReservoirLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
+            } else {
+                handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
+            }
             if (bgSource.sensorBatteryLevel != -1)
                 handleLevel(careportal_sensorbatterylevel, R.string.key_statuslights_sbat_critical, 5.0, R.string.key_statuslights_sbat_warning, 20.0, bgSource.sensorBatteryLevel.toDouble(), "%")
             else
@@ -63,5 +69,19 @@ class StatusLightHandler @Inject constructor(
         @Suppress("SetTextI18n")
         view?.text = " " + DecimalFormatter.to0Decimal(level) + units
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
+    }
+
+    private fun handleOmnipodReservoirLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
+        val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
+        val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
+        if (level > OmnipodConstants.MAX_RESERVOIR_READING) {
+            @Suppress("SetTextI18n")
+            view?.text = " 50+$units"
+            view?.setTextColor(Color.WHITE)
+        } else {
+            @Suppress("SetTextI18n")
+            view?.text = " " + DecimalFormatter.to0Decimal(level) + units
+            warnColors.setColorInverse(view, level, resWarn, resUrgent)
+        }
     }
 }
