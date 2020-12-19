@@ -59,6 +59,7 @@
         <item name="iconCarbs">@drawable/ic_carb_48</item>
         <item name="iconWizzard">@drawable/ic_calculator_48</item>
         <item name="iconCgm">@drawable/ic_blooddrop_48</item>
+        <item name="iconTreatment">@drawable/ic_treatments</item>
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
         <!-- Graph specific colors  -->
