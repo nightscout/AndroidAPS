@@ -35,7 +35,7 @@
     <string name="omnipod_pod_status_inactive">לא פעיל</string>
     <string name="omnipod_pod_status_pod_fault_description">תקלת פוד: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_alert_finish_pairing_reminder">תזכורת לסיום זיווג</string>
+    <string name="omnipod_alert_finish_pairing_reminder">תזכורת לסיום הצימוד</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">תזכורת לסיום התקנה</string>
     <string name="omnipod_alert_expiration">תוקף הפוד יפוג בקרוב</string>
     <string name="omnipod_alert_expiration_advisory">תוקף הפוד יפוג בקרוב</string>
@@ -166,7 +166,7 @@
     <string name="omnipod_pod_activation_wizard_fill_pod_title">מילוי פוד</string>
     <string name="omnipod_pod_activation_wizard_fill_pod_text">מלאו פוד חדש עם מספיק אינסולין לשלושה ימים.\n\nהקשיבו לשני צפצופים מהפוד במהלך המילוי. הם מציינים שהכמות המינימלית של 85 יח\' הוכנסה. הקפידו לרוקן לחלוטין את מזרק המילוי, גם לאחר שמיעת שני הצפצופים.\n\nלאחר מילוי הפוד, יש ללחוץ <b>הבא</b>.\n\n<b>הערה:</b> עוד לא להסיר את מכסה המחט.\n<b> הערה:</b> נא למקם את הריילילינק במצב עומד ובמרחק סנטימטרים בודדים מהפוד.</string>
     <string name="omnipod_pod_activation_wizard_initialize_pod_title">אתחול פוד</string>
-    <string name="omnipod_pod_activation_wizard_initialize_pod_text">מנסה לזווג הפוד החדש ולאתחלו.\n\nכאשר תהליך האתחול יושלם, ניתן ללחוץ על <b>הבא</b>.\n\n<b>שימו לב:</b> נא למקם את הריילילנק במצב אנכי ולמקם את הפוד כמה סנטימטרים ממנו.</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_text">מנסה לצמד את הפוד החדש ולאתחלו.\n\nכאשר תהליך האתחול יושלם, ניתן ללחוץ על <b>הבא</b>.\n\n<b>שימו לב:</b> נא למקם את הריילילנק במצב אנכי ולמקם את הפוד כמה סנטימטרים ממנו.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_title">הצמד פוד</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_text">הכינו את אתר העירוי. הסירו את מכסה המחט של הפוד ואת כיסוי הדבק והדביקו את הפוד לאתר העירוי.\n\nאם הצינורית בולטת, לחצו על <b>ביטול</b> והיפטרו מהפוד.\n\nלחצו <b>הבא</b> כדי להכניס את הצינורית ולהתחיל מתן בזאלי.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">בלחיצה על <b>OK</b> הצינורית תוכנס. יש לוודא שהפוד הוצמד לאתר העירוי.</string>
