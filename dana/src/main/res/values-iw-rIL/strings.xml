@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">מזווג</string>
+    <string name="danars_pairing">מצומד</string>
     <string name="danars_nodeviceavailable">לא נמצאו מכשירים עד כה</string>
-    <string name="danars_pairingok">הזיווג הצליח</string>
-    <string name="danars_pairingtimedout">הזיווג חרג ממגבלת הזמן</string>
-    <string name="danars_waitingforpairing">מחכה לזיווג עם משאבה</string>
+    <string name="danars_pairingok">הצימוד הצליח</string>
+    <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
+    <string name="danars_waitingforpairing">מחכה לצימוד עם משאבה</string>
     <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">חיבור משאבת DANA Diabecare RS</string>
@@ -15,7 +15,7 @@
     <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
     <string name="danar_valuenotsetproperly">ערך לא מוגדר כראוי</string>
     <string name="danar_setbasalstep001">הגדר מינון באזלי ל-0.01 יח\'\שעה</string>
-    <string name="resetpairing">לאפס את נתוני הזיווג?</string>
+    <string name="resetpairing">לאפס את נתוני הצימוד?</string>
     <string name="dana_model">%1$s\nדגם: %2$02X\nפרוטוקול: %3$02X\nקוד: %4$02X</string>
     <string name="processinghistory">מעבד אירוע</string>
     <string name="danar_enableextendedbolus">אפשר בזאלי ממושך במשאבה</string>
@@ -35,7 +35,7 @@
     <string name="bloodsugarmeasurementalert">התראת מדידת סוכר בדם</string>
     <string name="remaininsulinalert">רמת אינסולין נותרת</string>
     <string name="missedbolus">החמיץ בולוס</string>
-    <string name="invalidpairing">נתוני הזיווג אינם חוקיים. מבצע זיווג מחדש</string>
+    <string name="invalidpairing">נתוני הצימוד אינם חוקיים. מבצע צימוד מחדש</string>
     <string name="gettingpumpstatus">מקבל סטטוס המשאבה</string>
     <string name="gettingextendedbolusstatus">מקבל סטטוס בולוס ממושך</string>
     <string name="gettingbolusstatus">מקבל סטטוס בולוס</string>
@@ -44,7 +44,7 @@
     <string name="gettingpumptime">מקבל תאריך ושעת המשאבה</string>
     <string name="largetimedifftitle">הפרש זמן גדול</string>
     <string name="largetimediff">הפרש זמן גדול:\nשעון המשאבה לא מכוון במעל ל-1.5 שעות.\n נא להתאים את השעון במשאבה באופן ידני ולוודא כי קריאת ההיסטוריה מהמשאבה אינה גורמת להתנהגות בלתי צפויה.\nבמידת האפשר, מחקו את ההיסטוריה מהמשאבה לפני שתשנו את השעה או השביתו את הלולאה הסגורה למשך פעילות אינסולין (DIA) לאחר רשומת ההיסטוריה השגויה האחרונה אך לפחות DIA אחד מעכשיו.</string>
-    <string name="pairfirst">נא לזווג את המשאבה עם הטלפון שלכם!</string>
+    <string name="pairfirst">נא לצמד את המשאבה עם הטלפון שלכם!</string>
     <string name="approachingdailylimit">מתקרב למגבלת האינסולין היומית</string>
     <string name="startingbolus">מתחיל מתן בולוס</string>
     <string name="waitingforestimatedbolusend">המתינו לסיום מתן הבולוס. נותרו %1$d שניות.</string>
