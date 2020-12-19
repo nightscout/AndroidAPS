@@ -804,8 +804,12 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         ret += "Reserv: " + (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+U" : DecimalFormatter.to0Decimal(getReservoirLevel()) + "U") + "\n";
-        ret += "Batt: " + getBatteryLevel();
-        return ret;
+
+        // BS leave out for now as we only have a bogus default value
+        // TODO use RL battery
+        // ret += "Batt: " + getBatteryLevel();
+
+        return ret.trim();
     }
 
     @Override
