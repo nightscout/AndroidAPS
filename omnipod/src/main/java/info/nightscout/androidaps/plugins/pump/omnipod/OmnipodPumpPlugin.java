@@ -119,6 +119,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
+    private static final int DEFAULT_BATTERY_LEVEL = 75;
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
@@ -311,7 +312,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
-                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
@@ -611,7 +613,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public int getBatteryLevel() {
-        return rileyLinkServiceData.batteryLevel == null ? 0 : rileyLinkServiceData.batteryLevel;
+        if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
+            return rileyLinkServiceData.batteryLevel == null ? 0 : rileyLinkServiceData.batteryLevel;
+        }
+
+        return DEFAULT_BATTERY_LEVEL;
     }
 
     @NonNull @Override
