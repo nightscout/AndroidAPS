@@ -71,6 +71,7 @@ class StatusLightHandler @Inject constructor(
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
     }
 
+    // Omnipod only reports reservoir level when it's 50 units or less, so we display "50+U" for any value > 50
     private fun handleOmnipodReservoirLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
