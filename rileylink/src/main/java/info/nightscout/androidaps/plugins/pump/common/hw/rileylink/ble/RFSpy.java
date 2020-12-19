@@ -57,6 +57,8 @@ public class RFSpy {
     private final UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
     private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
     private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
+    private final UUID batteryServiceUUID = UUID.fromString(GattAttributes.SERVICE_BATTERY);
+    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_UNK);
     //private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
@@ -108,6 +110,19 @@ public class RFSpy {
     private void newDataIsAvailable() {
         // pass the message to the reader (which should be internal to RFSpy)
         reader.newDataIsAvailable();
+    }
+
+
+    public Integer getBatteryLevel() {
+        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
+        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
+            int value = result.value[0];
+            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: {}", value);
+            return value;
+        } else {
+            aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel failed with code: " + result.resultCode);
+            return null;
+        }
     }
 
 
