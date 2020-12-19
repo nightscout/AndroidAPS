@@ -611,10 +611,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public int getBatteryLevel() {
-        if (!podStateManager.isPodRunning()) {
-            return 0;
-        }
-        return 75;
+        return rileyLinkServiceData.batteryLevel == null ? 0 : rileyLinkServiceData.batteryLevel;
     }
 
     @NonNull @Override
@@ -738,9 +735,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
-            // BS: Leave battery level out for now as we only have a fixed bogus value
-            // TODO use RL battery level
-            //pump.put("battery", battery);
+            pump.put("battery", battery);
 
             pump.put("status", status);
             pump.put("extended", extended);
@@ -804,10 +799,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         ret += "Reserv: " + (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+U" : DecimalFormatter.to0Decimal(getReservoirLevel()) + "U") + "\n";
-
-        // BS leave out for now as we only have a bogus default value
-        // TODO use RL battery
-        // ret += "Batt: " + getBatteryLevel();
+        ret += "Batt: " + getBatteryLevel();
 
         return ret.trim();
     }
