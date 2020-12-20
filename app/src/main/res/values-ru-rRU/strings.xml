@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
     <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы (г)</string>
+    <string name="nav_preferences_plugin">Настройки %s</string>
     <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
     <string name="nav_resetdb">обнулить базы</string>
@@ -980,7 +981,9 @@ Context | Edit Context</string>
     <string name="description_source_dexcom">Получать данные ГК от модифицированного приложения Dexcom.</string>
     <string name="notification">Уведомление</string>
     <string name="notification_message">Уведомление: %1$s</string>
+    <string name="alarm_message">Сигнал оповещения: %1$s</string>
     <string name="message_short">Сообщение:</string>
+    <string name="alarm_short">Сигнал:</string>
     <string name="profilepercentage">Процент профиля</string>
     <string name="percent_u">Процент [%]:</string>
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
@@ -1180,5 +1183,7 @@ Context | Edit Context</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">На ваш аккаунт Open Humans будут загружены следующие данные: значения ГК, события careportal (за исключением примечаний), пролонгированные болюсы, переключения профиля, суммарные суточные дозы, временные базалы, временные цели, настройки, версии приложения, модель устройства и размеры экрана. Секретная или конфиденциальная информация, такая как адрес вашего сайта Nightscout или API secret, не будет загружена.</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="filter">Фильтр</string>
+    <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
+    <string name="alarm">Сигнал</string>
 </resources>
