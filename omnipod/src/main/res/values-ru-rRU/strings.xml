@@ -133,16 +133,20 @@
     <string name="omnipod_cmd_read_pulse_log">Читать журнал импульсов</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Установить фейковый временный базал, так как Pod остановлен</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Отменить фейковый временный базал, который был создан из-за приостановки действия Pod</string>
+    <string name="omnipod_cmd_split_tbr">Разбить временный базаль из-за неясной ошибки при отмене</string>
     <string name="omnipod_cmd_beep_config">Конфигурация звукового сигнала</string>
     <string name="omnipod_cmd_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Управление помпой Omnipod</string>
+    <string name="omnipod_pod_management_heading_actions">Действия</string>
+    <string name="omnipod_pod_management_heading_tools">Инструменты</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Ожидание соединения RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Активировать Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Деактивировать Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Утилизировать Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Журнал Pod</string>
     <string name="omnipod_pod_management_button_riley_link_stats">Статистика RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Сбросить конфигурацию RileyLink</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Читать журнал импульсов</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Чтение журнала импульсов…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Если нажать Утилизировать Pod, вы больше не сможете обмениваться командами с Pod. Сделайте это только в том случае, если связь с помпой постоянно отсутствует. Если связь с Pod еще возможна, воспользуйтесь опцией <b>Деактивировать Pod</b>.\n\n Если все же хотите продолжить, снимите помпу с тела!</string>
