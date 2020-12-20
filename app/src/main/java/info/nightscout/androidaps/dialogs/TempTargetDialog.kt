@@ -65,14 +65,14 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val units = profileFunction.getUnits()
         overview_temptarget_units.text = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
         // temp target
+        val reasonList: List<String> = Lists.newArrayList(
+            resourceHelper.gs(R.string.manual),
+            resourceHelper.gs(R.string.cancel),
+            resourceHelper.gs(R.string.eatingsoon),
+            resourceHelper.gs(R.string.activity),
+            resourceHelper.gs(R.string.hypo)
+        )
         context?.let { context ->
-            val reasonList: List<String> = Lists.newArrayList(
-                resourceHelper.gs(R.string.manual),
-                resourceHelper.gs(R.string.cancel),
-                resourceHelper.gs(R.string.eatingsoon),
-                resourceHelper.gs(R.string.activity),
-                resourceHelper.gs(R.string.hypo)
-            )
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             overview_temptarget_reason.adapter = adapterReason
             overview_temptarget_reason.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -101,8 +101,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         }
 
                         else                                   -> {
-                            defaultDuration = overview_temptarget_duration.value
-                            defaultTarget = overview_temptarget_temptarget.value
+                            defaultDuration = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
+                            defaultTarget = savedInstanceState?.getDouble("overview_temptarget_temptarget") ?: if (profileFunction.getUnits() == Constants.MMOL) Constants.MIN_TT_MMOL else Constants.MIN_TT_MGDL
                         }
                     }
                     overview_temptarget_temptarget.value = defaultTarget
@@ -111,6 +111,32 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+        }
+
+        overview_temptarget_custom?.setOnClickListener {
+            overview_temptarget_temptarget.value = savedInstanceState?.getDouble("overview_temptarget_temptarget") ?: if (profileFunction.getUnits() == Constants.MMOL) Constants.MIN_TT_MMOL else Constants.MIN_TT_MGDL
+            overview_temptarget_duration.value = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
+            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.manual)));
+        }
+        overview_temptarget_cancel?.setOnClickListener {
+            overview_temptarget_temptarget.value = 0.0
+            overview_temptarget_duration.value = 0.0
+            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.cancel)));
+        }
+        overview_temptarget_eating_soon?.setOnClickListener {
+            overview_temptarget_temptarget.value = defaultValueHelper.determineEatingSoonTT()
+            overview_temptarget_duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
+            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.eatingsoon)));
+        }
+        overview_temptarget_activity?.setOnClickListener {
+            overview_temptarget_temptarget.value = defaultValueHelper.determineActivityTT()
+            overview_temptarget_duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
+            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.activity)));
+        }
+        overview_temptarget_hypo?.setOnClickListener {
+            overview_temptarget_temptarget.value = defaultValueHelper.determineHypoTT()
+            overview_temptarget_duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
+            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.hypo)));
         }
     }
 
