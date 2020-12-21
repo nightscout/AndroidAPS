@@ -33,6 +33,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
+    var reason = ""
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("overview_temptarget_duration", overview_temptarget_duration.value)
@@ -64,85 +66,42 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         val units = profileFunction.getUnits()
         overview_temptarget_units.text = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
-        // temp target
-        val reasonList: List<String> = Lists.newArrayList(
-            resourceHelper.gs(R.string.manual),
-            resourceHelper.gs(R.string.cancel),
-            resourceHelper.gs(R.string.eatingsoon),
-            resourceHelper.gs(R.string.activity),
-            resourceHelper.gs(R.string.hypo)
-        )
-        context?.let { context ->
-            val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
-            overview_temptarget_reason.adapter = adapterReason
-            overview_temptarget_reason.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    val defaultDuration: Double
-                    val defaultTarget: Double
-                    when (reasonList[position]) {
-                        resourceHelper.gs(R.string.eatingsoon) -> {
-                            defaultDuration = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-                            defaultTarget = defaultValueHelper.determineEatingSoonTT()
-                        }
 
-                        resourceHelper.gs(R.string.activity)   -> {
-                            defaultDuration = defaultValueHelper.determineActivityTTDuration().toDouble()
-                            defaultTarget = defaultValueHelper.determineActivityTT()
-                        }
-
-                        resourceHelper.gs(R.string.hypo)       -> {
-                            defaultDuration = defaultValueHelper.determineHypoTTDuration().toDouble()
-                            defaultTarget = defaultValueHelper.determineHypoTT()
-                        }
-
-                        resourceHelper.gs(R.string.cancel)     -> {
-                            defaultDuration = 0.0
-                            defaultTarget = 0.0
-                        }
-
-                        else                                   -> {
-                            defaultDuration = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
-                            defaultTarget = savedInstanceState?.getDouble("overview_temptarget_temptarget") ?: if (profileFunction.getUnits() == Constants.MMOL) Constants.MIN_TT_MMOL else Constants.MIN_TT_MGDL
-                        }
-                    }
-                    overview_temptarget_temptarget.value = defaultTarget
-                    overview_temptarget_duration.value = defaultDuration
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-        }
+        reason = resourceHelper.gs(R.string.manual)
 
         overview_temptarget_custom?.setOnClickListener {
             overview_temptarget_temptarget.value = savedInstanceState?.getDouble("overview_temptarget_temptarget") ?: if (profileFunction.getUnits() == Constants.MMOL) Constants.MIN_TT_MMOL else Constants.MIN_TT_MGDL
             overview_temptarget_duration.value = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
-            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.manual)));
+            reason = resourceHelper.gs(R.string.manual)
         }
         overview_temptarget_cancel?.setOnClickListener {
             overview_temptarget_temptarget.value = 0.0
             overview_temptarget_duration.value = 0.0
-            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.cancel)));
+            reason = resourceHelper.gs(R.string.cancel)
+            if (submit()) dismiss()
         }
         overview_temptarget_eating_soon?.setOnClickListener {
             overview_temptarget_temptarget.value = defaultValueHelper.determineEatingSoonTT()
             overview_temptarget_duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.eatingsoon)));
+            reason = resourceHelper.gs(R.string.eatingsoon)
+            if (submit()) dismiss()
         }
         overview_temptarget_activity?.setOnClickListener {
             overview_temptarget_temptarget.value = defaultValueHelper.determineActivityTT()
             overview_temptarget_duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
-            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.activity)));
+            reason = resourceHelper.gs(R.string.activity)
+            if (submit()) dismiss()
         }
         overview_temptarget_hypo?.setOnClickListener {
             overview_temptarget_temptarget.value = defaultValueHelper.determineHypoTT()
             overview_temptarget_duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
-            overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.hypo)));
+            reason = resourceHelper.gs(R.string.hypo)
+            if (submit()) dismiss()
         }
     }
 
     override fun submit(): Boolean {
         val actions: LinkedList<String> = LinkedList()
-        val reason = overview_temptarget_reason?.selectedItem?.toString() ?: return false
         val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
         val target = overview_temptarget_temptarget.value
         val duration = overview_temptarget_duration.value.toInt()
