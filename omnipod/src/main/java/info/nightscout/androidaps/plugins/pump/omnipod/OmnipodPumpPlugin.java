@@ -554,7 +554,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             if ("SMS".equals(reason)) {
                 aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request it was requested through an SMS");
                 getPodStatus();
-            } else if (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain()) {
+            } else if (podStateManager.isPodRunning() && (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain())) {
                 aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request because basal and/or temp basal is uncertain");
                 getPodStatus();
             }
