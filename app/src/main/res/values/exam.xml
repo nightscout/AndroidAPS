@@ -18,10 +18,12 @@
     <string name="offlineprofile_label">Topic: Offline Profile</string>
     <string name="offlineprofile_nsprofile">NS Profile can be used, but not configured.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
-    <string name="pumpdisconnect_label">Topic: Disconnecting from the Pump</string>
-    <string name="pumpdisconnect_letknow">Click ‘Disconnect pump’ so that AAPS knows that no insulin is being delivered.</string>
-    <string name="pumpdisconnect_suspend">Click ‘Suspend loop’ so that AAPS stops looping while the pump is disconnected.</string>
-    <string name="pumpdisconnect_dontchnage">Don’t change anything in AAPS, just disconnect the pump.</string>
+    <string name="pumpdisconnect_label">Reasons for applying "Disconnect pump" in AndroidAPS</string>
+    <string name="pumpdisconnect_whattodo">What should be done when disconnecting the pump?</string>
+    <string name="pumpdisconnect_unnecessary">This is unnecessary as insulin will not be delivered if the pump is physically disconnected.</string>
+    <string name="pumpdisconnect_missinginsulin">It prevents AndroidAPS from accounting for insulin that was not delivered whilst the pump is physically disconnected. </string>
+    <string name="pumpdisconnect_notstop">It will not stop insulin delivery if the pump remains connected.</string>
+    <string name="pumpdisconnect_openloop">It will send AndroidAPS into open loop mode.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">AndroidAPS Settings</string>
     <string name="objectives2_label">AndroidAPS Settings</string>
@@ -167,6 +169,8 @@
     <string name="isf_profile">Changing the ISF value in your profile is enough to apply the change.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
+    <string name="ic_multiple">You can use more than one value for I:C ratio in your profile.</string>
+    <string name="ic_isf">If you change your ISF in your profile you should always change your I:C ratio too.</string>
     <string name="ic_label_exam">Topic: The IC Ratio</string>
     <string name="ic_increasingvalue">Higher IC ratios lead to less insulin delivered for a given amount of carbs.</string>
     <string name="ic_decreasingvalue">Lower IC ratios lead to less insulin delivered for a given amount of carbs.</string>
