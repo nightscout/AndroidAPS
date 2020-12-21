@@ -25,7 +25,6 @@
     <string name="rileylink_device_model">Toestel Model</string>
     <string name="rileylink_last_used_frequency">Laaste gebruik frekwensie</string>
     <string name="rileylink_last_device_contact">Laaste toestel verbinding</string>
-    <string name="rileylink_firmware_version">RL Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth Inisiasie…</string>
     <string name="rileylink_state_bt_error">Bluetooth Fout</string>
