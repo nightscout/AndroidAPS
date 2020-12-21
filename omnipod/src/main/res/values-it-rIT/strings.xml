@@ -55,7 +55,10 @@
     <string name="omnipod_short_status_no_active_pod">Nessun pod attivo</string>
     <string name="omnipod_short_status_last_connection">Ultima conn.: %1$d min fa</string>
     <string name="omnipod_short_status_last_bolus">Ultimo bolo: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_short_status_extended_bolus">Esteso: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Serb: %1$sU</string>
+    <string name="omnipod_short_status_rl_battery">RLBatt: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Avviso</string>
     <string name="omnipod_error_rileylink_address_invalid">Indirizzo RileyLink non valido.</string>
@@ -117,6 +120,20 @@
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Disattiva pod</string>
     <string name="omnipod_cmd_discard_pod">Scarta pod</string>
+    <string name="omnipod_cmd_set_bolus">Imposta bolo</string>
+    <string name="omnipod_cmd_cancel_bolus">Cancella bolo</string>
+    <string name="omnipod_cmd_set_tbr">Imposta basale temporanea</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Cancella basale temporanea (internamente dal driver)</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancella basale temporanea</string>
+    <string name="omnipod_cmd_set_basal_schedule">Imposta piano basale</string>
+    <string name="omnipod_cmd_get_pod_status">Ottieni stato pod</string>
+    <string name="omnipod_cmd_get_pod_info">Ottieni info pod</string>
+    <string name="omnipod_cmd_set_time">Imposta ora</string>
+    <string name="omnipod_cmd_configure_alerts">Configura avvisi</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Conferma avvisi</string>
+    <string name="omnipod_cmd_suspend_delivery">Sospendi erogazione</string>
+    <string name="omnipod_cmd_resume_delivery">Riprendi erogazione</string>
+    <string name="omnipod_cmd_unknown_entry">Inserimento sconosciuto</string>
     <string name="omnipod_cmd_initialize_pod">Inizializza pod</string>
     <string name="omnipod_cmd_insert_cannula">Inserisci cannula</string>
     <string name="omnipod_cmd_read_pulse_log">Leggi log impulsi</string>
