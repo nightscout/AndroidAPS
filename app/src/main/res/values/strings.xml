@@ -31,7 +31,7 @@
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
 
-    <string name="nav_preferences_plugin">%s Preferences</string>
+    <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
     <string name="nav_resetdb">Reset Databases</string>
