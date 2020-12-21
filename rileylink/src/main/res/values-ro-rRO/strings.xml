@@ -27,7 +27,6 @@
     <string name="rileylink_device_model">Model dispozitiv</string>
     <string name="rileylink_last_used_frequency">Ultima frecvență utilizată</string>
     <string name="rileylink_last_device_contact">Ultima conexiune cu dispozitivul</string>
-    <string name="rileylink_firmware_version">Firmware RL</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Se inițializează conexiunea Bluetooth…</string>
     <string name="rileylink_state_bt_error">Eroare Bluetooth</string>
