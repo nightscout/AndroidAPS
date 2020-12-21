@@ -27,7 +27,6 @@
     <string name="rileylink_device_model">Model zariadenia</string>
     <string name="rileylink_last_used_frequency">Posledná použitá frekvencia</string>
     <string name="rileylink_last_device_contact">Posledné spojenie zo zariadením</string>
-    <string name="rileylink_firmware_version">RL Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inicializácia Bluetooth...</string>
     <string name="rileylink_state_bt_error">Chyba Bluetooth</string>
