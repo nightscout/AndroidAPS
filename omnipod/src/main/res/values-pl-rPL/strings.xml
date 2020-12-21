@@ -18,6 +18,7 @@
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Opis</string>
     <string name="omnipod_history_item_date">Data</string>
+    <!-- Omnipod - Short status -->
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Ostrzeżenie</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować Omnipod przed uruchomieniem tego działania.</string>
