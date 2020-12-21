@@ -7,7 +7,6 @@
     <string name="treatmentssafety_title">Segurança de tratamentos</string>
     <string name="treatmentssafety_maxbolus_title">Max bolus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max hidratos permitidos [g]</string>
-    <string name="nav_preferences_plugin">%s Preferências</string>
     <string name="nav_preferences">Preferências</string>
     <string name="nav_refreshtreatments">Actualizar tratamentos do NS</string>
     <string name="nav_resetdb">Reinicializar base de dados</string>
