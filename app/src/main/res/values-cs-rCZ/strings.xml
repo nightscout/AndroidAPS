@@ -978,7 +978,9 @@
     <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom.</string>
     <string name="notification">Oznámení</string>
     <string name="notification_message">Oznámení: %1$s</string>
+    <string name="alarm_message">Poplach: %1$s</string>
     <string name="message_short">Zpráva:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Procento profilu</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
@@ -1180,4 +1182,5 @@
     <string name="filter">Filtr</string>
     <string name="copytolocalprofile_invalid">Nelze vytvořit lokální profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
+    <string name="alarm">Alarm</string>
 </resources>
