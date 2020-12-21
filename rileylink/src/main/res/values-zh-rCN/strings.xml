@@ -25,7 +25,6 @@
     <string name="rileylink_device_model">设备型号</string>
     <string name="rileylink_last_used_frequency">上次使用频率</string>
     <string name="rileylink_last_device_contact">最后一个设备联系人</string>
-    <string name="rileylink_firmware_version">固件</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">蓝牙初始化…</string>
     <string name="rileylink_state_bt_error">蓝牙错误</string>
