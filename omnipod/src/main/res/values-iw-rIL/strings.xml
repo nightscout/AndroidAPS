@@ -48,6 +48,7 @@
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
     <string name="omnipod_history_tbr_value">קצב: %1$.2f יח\', משך: %2$d דק\'</string>
     <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_extended_bolus">ממושך: %1$s</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">אזהרה</string>
     <string name="omnipod_error_rileylink_address_invalid">כתובת ריילילינק לא חוקית.</string>
