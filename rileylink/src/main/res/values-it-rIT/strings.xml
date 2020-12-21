@@ -27,6 +27,7 @@
     <string name="rileylink_device_model">Modello dispositivo</string>
     <string name="rileylink_last_used_frequency">Ultima frequenza utilizzata</string>
     <string name="rileylink_last_device_contact">Ultimo contatto dispositivo</string>
+    <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inizializzazione bluetooth…</string>
     <string name="rileylink_state_bt_error">Errore bluetooth</string>
