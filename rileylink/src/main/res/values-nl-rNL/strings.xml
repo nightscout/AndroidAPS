@@ -27,7 +27,6 @@
     <string name="rileylink_device_model">Apparaat model</string>
     <string name="rileylink_last_used_frequency">Laatst gebruikte frequentie</string>
     <string name="rileylink_last_device_contact">Laatste contact met apparaat</string>
-    <string name="rileylink_firmware_version">RL Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth initialiseren…</string>
     <string name="rileylink_state_bt_error">Bluetooth fout</string>
