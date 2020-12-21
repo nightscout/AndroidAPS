@@ -7,7 +7,6 @@
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
-    <string name="nav_preferences_plugin">%s-Einstellungen</string>
     <string name="nav_preferences">Einstellungen</string>
     <string name="nav_refreshtreatments">Behandlungen von NS aktualisieren</string>
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
