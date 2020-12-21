@@ -25,7 +25,6 @@
     <string name="rileylink_device_model">장치모델</string>
     <string name="rileylink_last_used_frequency">최근사용 주파수</string>
     <string name="rileylink_last_device_contact">최근장치연결</string>
-    <string name="rileylink_firmware_version">RL 펌웨어</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">블루투스 초기화중...</string>
     <string name="rileylink_state_bt_error">블루투스 에러</string>
