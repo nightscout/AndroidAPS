@@ -27,7 +27,6 @@
     <string name="rileylink_device_model">Модель устройства</string>
     <string name="rileylink_last_used_frequency">Последняя использованная частота</string>
     <string name="rileylink_last_device_contact">Контакт последнего устройства</string>
-    <string name="rileylink_firmware_version">Прошивка RileyLink</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Инициализация Bluetooth…</string>
     <string name="rileylink_state_bt_error">Ошибка Bluetooth</string>
