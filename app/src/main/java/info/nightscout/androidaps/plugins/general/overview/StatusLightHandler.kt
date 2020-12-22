@@ -39,7 +39,7 @@ class StatusLightHandler @Inject constructor(
         handleAge(careportal_pbage, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0, ColorNormal, ColorWarning, ColorAlarm)
         if (!config.NSCLIENT) {
             if (pump.model() == PumpType.Insulet_Omnipod) {
-                handleOmnipodReservoirLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U", ,ColorNormal, ColorWarning, ColorAlarm)
+                handleOmnipodReservoirLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U" ,ColorNormal, ColorWarning, ColorAlarm)
             } else {
             handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U", ColorNormal, ColorWarning, ColorAlarm)
             }
@@ -85,13 +85,13 @@ class StatusLightHandler @Inject constructor(
             view?.text = " 50+$units"
             view?.setTextColor(Color.WHITE)
         } else {
-            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units,, ColorNormal, ColorWarning, ColorAlarm)
+            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units, ColorNormal, ColorWarning, ColorAlarm)
         }
     }
 
     private fun handleOmnipodBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean, ColorNormal: Int, ColorWarning: Int, ColorAlarm: Int) {
         if (useRileyLinkBatteryLevel) {
-            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units,, ColorNormal, ColorWarning, ColorAlarm)
+            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units, ColorNormal, ColorWarning, ColorAlarm)
         } else {
             view?.text = resourceHelper.gs(R.string.notavailable)
             view?.setTextColor(Color.WHITE)
