@@ -24,7 +24,6 @@
     <string name="omnipod_preference_category_alerts">Výstrahy</string>
     <string name="omnipod_preference_category_notifications">Upozornenia</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_pod_status_no_active_pod">Žiadny aktívny Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Prebieha inštalácia (čaká sa na aktiváciu Podu)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Inštalácia prebieha (čaká sa na vloženie kanyly)</string>
     <string name="omnipod_pod_status_running">V prevádzke</string>
@@ -37,8 +36,6 @@
     <string name="omnipod_alert_expiration">Pod čoskoro expiruje</string>
     <string name="omnipod_alert_expiration_advisory">Pod čoskoro expiruje</string>
     <string name="omnipod_alert_shutdown_imminent">Vypnutie je bezprostredné</string>
-    <string name="omnipod_alert_low_reservoir">Nízka hladina zásobníka</string>
-    <string name="omnipod_alert_unknown_alert">Neznáma výstraha</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Popis</string>
     <string name="omnipod_history_item_source">Zdroj</string>
@@ -114,21 +111,14 @@
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Zrušiť falošný dočasný bazál ktorý bol vytvorený, pretože Pod bol pozastavený</string>
     <string name="omnipod_cmd_split_tbr">Rozdeliť dočasný bazál kvôli neistej chybe pri zrušení</string>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_pod_management_title">Správa Podu</string>
     <string name="omnipod_pod_management_heading_actions">Akcie</string>
     <string name="omnipod_pod_management_heading_tools">Nástroje</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Čakám na pripojenie RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Aktivovať Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Deaktivovať Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Vyradiť Pod</string>
-    <string name="omnipod_pod_management_button_pod_history">História Podu</string>
-    <string name="omnipod_pod_management_button_riley_link_stats">Štatistika RileyLink</string>
     <string name="omnipod_pod_management_button_reset_riley_link_config">Resetovať konfiguráciu RileyLinku</string>
-    <string name="omnipod_pod_management_button_read_pulse_log">Čítať protokol pulzov</string>
-    <string name="omnipod_pod_management_button_reading_pulse_log">Čítanie protokolu pulzov…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Pokiaľ zahodíte Pod, už s ním nebudete môcť komunikovať. Mali by ste to urobiť iba vtedy, pokiaľ celá komunikácia s Podom trvalo zlyháva. Pokiaľ stále môžete komunikovať s Podom, použite možnosť <b>Deaktivovať Pod</b>.\n\nPokiaľ si prajete pokračovať, uistite sa prosím, že odstránite Pod z tela!</string>
-    <string name="omnipod_pod_management_button_play_test_beep">Prehrať testovacie pípnutie</string>
-    <string name="omnipod_pod_management_button_playing_test_beep">Prehrávanie testovacieho pípnutia…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Zrušiť</string>
     <string name="omnipod_wizard_button_finish">Dokončiť</string>
@@ -146,18 +136,14 @@
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Nasaďte Pod</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_text">Pripravte infúzne miesto. Odstráňte krytku ihly a náplasti a nalepte Pod.\n\nPokiaľ sa kanyla odlepí, stlačíte <b>Zrušiť</b> a zahoďte Pod.\n\nStlačte <b>Ďalšia</b> pre vloženie kanyly a spustenie bazálu.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Keď stlačíte <b>OK</b>, kanyla se vloží. Uistite sa, že ste pripojili Pod k infuznemu miestu.</string>
-    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Vložiť kanylu</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_text">Snažím sa nastaviť počiatočný základný bazál a vložiť kanylu.\n\nPo úspešnom vložení kanyly môžete stlačiť tlačítko <b>Ďalšia</b>.</string>
-    <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod aktivovaný</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_text">Pod je teraz aktívny.\n\nVáš bazál bol naprogramovaný a kanyla bola vložená.\n\nOverte prosím, že kanyla bola vložená správne a prípadne vymeňte Pod.</string>
     <!-- Omnipod - Pod deactivation Wizard -->
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Deaktivovať Pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">Stlačte<b>Ďalšia</b> pre deaktiváciu Podu.\n\n<b>Poznámka:</b> Úplne zastavíte podávanie inzulínu a deaktivujete Pod.</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Deaktivácia Podu</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">Deaktivácia Podu.\n\nPo úspešnom dokončení deaktivácie môžete stlačiť <b>Ďalšia</b>.</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivovaný</string>
     <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod deaktivovaný.\n\nOdstráňte Pod z tela a znehodnoťte ho.</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_discarded_title">Pod vyradený</string>
     <string name="omnipod_pod_deactivation_wizard_pod_discarded_text">Stav Podu bol vyradený. Podávanie inzulínu nebolo pozastavené, pretože Pod nebol riadne deaktivovaný!\n\nOdstráňte Pod z vašeho tela a recyklujte ho.</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod_confirmation">Pokiaľ tento Pod vyradíte, nebudete s ním už mocť komunikovať. Túto operáciu by ste mali urobiť iba v prípade, že celá komunikácia s týmto Podom trvale zlyháva. Naozaj chcete vyradiť Pod?</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Vyradiť Pod</string>
@@ -203,11 +189,5 @@
         <item quantity="few">%1$d dní</item>
         <item quantity="many">%1$d dní</item>
         <item quantity="other">%1$d dní</item>
-    </plurals>
-    <plurals name="omnipod_pod_alerts">
-        <item quantity="one">Výstraha Podu: %1$s</item>
-        <item quantity="few">Výstrahy Podu: %1$s</item>
-        <item quantity="many">Výstrahy Podu: %1$s</item>
-        <item quantity="other">Výstrahy Podu: %1$s</item>
     </plurals>
 </resources>
