@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Traitements de sécurité</string>
     <string name="treatmentssafety_maxbolus_title">Maximum Bolus autorisé [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximum de Glucides autorisé [g]</string>
+    <string name="nav_preferences_plugin">Préférences de %1$s</string>
     <string name="nav_preferences">Préférences</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
     <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
@@ -979,7 +980,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée.</string>
     <string name="notification">Notification</string>
     <string name="notification_message">Notification : %1$s</string>
+    <string name="alarm_message">Alarme: %1$s</string>
     <string name="message_short">Mess :</string>
+    <string name="alarm_short">Alarme:</string>
     <string name="profilepercentage">Pourcentage du profil</string>
     <string name="percent_u">Pourcentage [%]:</string>
     <string name="startprofile">Début du profil %1$d%% pour %2$d min</string>
@@ -1181,4 +1184,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="filter">Filtrer</string>
     <string name="copytolocalprofile_invalid">Impossible de créer le profil local. Le profil est invalide.</string>
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
+    <string name="alarm">Alarme</string>
 </resources>
