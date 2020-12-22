@@ -17,7 +17,6 @@
     <string name="omnipod_preference_category_alerts">Perspėjimai</string>
     <string name="omnipod_preference_category_notifications">Pranešimai</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_pod_status_no_active_pod">Nėra aktyvaus Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Vykdomas nustatymas (laukiama Pod aktyvavimo)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Vykdomas nustatymas (laukiama kaniulės įvedimo)</string>
     <string name="omnipod_pod_status_running">Vykdoma</string>
@@ -30,8 +29,6 @@
     <string name="omnipod_alert_expiration">Pod galiojimas greitai baigsis</string>
     <string name="omnipod_alert_expiration_advisory">Pod galiojimas greitai baigsis</string>
     <string name="omnipod_alert_shutdown_imminent">Išjungimas yra neišvengiamas</string>
-    <string name="omnipod_alert_low_reservoir">Žemas rezervuaro lygis</string>
-    <string name="omnipod_alert_unknown_alert">Nežinomas perspėjimas</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Aprašymas</string>
     <string name="omnipod_history_item_source">Šaltinis</string>
