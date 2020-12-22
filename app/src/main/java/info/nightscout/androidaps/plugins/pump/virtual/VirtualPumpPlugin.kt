@@ -58,6 +58,7 @@ class VirtualPumpPlugin @Inject constructor(
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(VirtualPumpFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_virtual_pump)
     .pluginName(R.string.virtualpump)
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
@@ -178,7 +179,7 @@ class VirtualPumpPlugin @Inject constructor(
 
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
-    override fun getPumpStatus() {
+    override fun getPumpStatus(reason: String?) {
         lastDataTime = System.currentTimeMillis()
     }
 
@@ -404,7 +405,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     fun refreshConfiguration() {
-        val pumptype = sp.getString(R.string.key_virtualpump_type, "Generic AAPS")
+        val pumptype = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
         val pumpTypeNew = PumpType.getByDescription(pumptype)
         aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumptype, PumpType object: $pumpTypeNew")
         if (pumpType == pumpTypeNew) return

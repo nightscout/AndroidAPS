@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -129,6 +126,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         val baseView: LinearLayout = fragment.layoutInflater.inflate(R.layout.configbuilder_single_plugin, null) as LinearLayout
         private val enabledExclusive: RadioButton
         private val enabledInclusive: CheckBox
+        private val pluginIcon: ImageView
         private val pluginName: TextView
         private val pluginDescription: TextView
         private val pluginPreferences: ImageButton
@@ -137,6 +135,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         init {
             enabledExclusive = baseView.findViewById(R.id.plugin_enabled_exclusive)
             enabledInclusive = baseView.findViewById(R.id.plugin_enabled_inclusive)
+            pluginIcon = baseView.findViewById(R.id.plugin_icon)
             pluginName = baseView.findViewById(R.id.plugin_name)
             pluginDescription = baseView.findViewById(R.id.plugin_description)
             pluginPreferences = baseView.findViewById(R.id.plugin_preferences)
@@ -175,6 +174,12 @@ class ConfigBuilderFragment : DaggerFragment() {
             enabledInclusive.isChecked = plugin.isEnabled(pluginType)
             enabledInclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
             enabledExclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
+            if(plugin.menuIcon != -1) {
+                pluginIcon.visibility = View.VISIBLE
+                pluginIcon.setImageDrawable(context?.let { ContextCompat.getDrawable(it, plugin.menuIcon) })
+            } else {
+                pluginIcon.visibility = View.GONE
+            }
             pluginName.text = plugin.name
             if (plugin.description == null)
                 pluginDescription.visibility = View.GONE

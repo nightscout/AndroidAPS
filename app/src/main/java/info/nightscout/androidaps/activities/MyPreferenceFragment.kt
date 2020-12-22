@@ -7,9 +7,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import androidx.annotation.XmlRes
 import androidx.preference.*
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -59,9 +56,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
-class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener, HasAndroidInjector {
+class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
     private var pluginId = -1
+    private var filter = ""
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -104,11 +102,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
     @Inject lateinit var openHumansUploader: OpenHumansUploader
 
-    // TODO why?
-    @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    override fun androidInjector(): AndroidInjector<Any> = androidInjector
-
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
@@ -117,11 +110,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
         pluginId = args?.getInt("id") ?: -1
+        filter = args?.getString("filter") ?: ""
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("id", pluginId)
+        outState.putString("filter", filter)
     }
 
     override fun onDestroy() {
@@ -151,6 +146,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         (savedInstanceState ?: arguments)?.let { bundle ->
             if (bundle.containsKey("id")) {
                 pluginId = bundle.getInt("id")
+            }
+            if (bundle.containsKey("filter")) {
+                filter = bundle.getString("filter") ?: ""
             }
         }
         if (pluginId != -1) {
@@ -194,6 +192,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         initSummary(preferenceScreen, pluginId != -1)
         preprocessPreferences()
+        if (filter != "") updateFilterVisibility(filter, preferenceScreen)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -255,7 +254,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
     }
 
-    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
+    private fun addPreferencesFromResource(@Suppress("SameParameterValue") @XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
         if (enabled) addPreferencesFromResource(preferencesResId, key)
     }
 
@@ -289,6 +288,33 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             val converted = Profile.toCurrentUnits(profileFunction, SafeParse.stringToDouble(pref.text))
             pref.summary = converted.toString()
         }
+    }
+
+    private fun updateFilterVisibility(filter: String, p: Preference): Boolean {
+
+        var visible = false
+
+        if (p is PreferenceGroup) {
+            for (i in 0 until p.preferenceCount) {
+                visible = updateFilterVisibility(filter, p.getPreference(i)) || visible
+            }
+            if (visible && p is PreferenceCategory) {
+                p.initialExpandedChildrenCount = Int.MAX_VALUE
+            }
+        } else {
+            if (p.key != null) {
+                visible = visible || p.key.contains(filter, true)
+            }
+            if (p.title != null) {
+                visible = visible || p.title.contains(filter, true)
+            }
+            if (p.summary != null) {
+                visible = visible || p.summary.contains(filter, true)
+            }
+        }
+
+        p.isVisible = visible
+        return visible
     }
 
     private fun updatePrefSummary(pref: Preference?) {
@@ -393,5 +419,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
         return super.onPreferenceTreeClick(preference)
+    }
+
+    fun setFilter(filter: String) {
+        this.filter = filter
+        updateFilterVisibility(filter, preferenceScreen)
     }
 }

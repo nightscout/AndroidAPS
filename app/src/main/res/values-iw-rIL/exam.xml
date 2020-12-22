@@ -7,9 +7,9 @@
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">המשמעות שווה לערך ה-DIA שמשמש את המשאבה.</string>
     <string name="dia_valuemustbedetermined">עליכם לקבוע את הערך האישי לכם (עליו להיות לכל הפחות 5 שעות).</string>
-    <string name="hypott_label">נושא: ערך מטרה זמני בהיפו</string>
+    <string name="hypott_label">נושא: ערך מטרה זמני בהיפוגליקמיה</string>
     <string name="hypott_whenhypott">מהי הסיבה העיקרית להגדרת ערך \"ערך מטרה זמני בהיפו\" ?</string>
-    <string name="hypott_goinglow">כדי למנוע מרמת הסוכר מלרדת נמוך אם יש כבר ערך בזאלי זמני אפס.</string>
+    <string name="hypott_goinglow">כדי למנוע מרמת הסוכר מלרדת נמוך אם יש כבר מינון בזאלי זמני אפס.</string>
     <string name="hypott_preventoversmb">כדי למנוע מ-AAPS להזריק יותר מדי אינסולין לאחר עלייה ברמת הגלוקוז כתוצאה מפחמימות פשוטות שנאכלו כטיפול בהיפו.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">באיזה פרופיל אפשר להשתמש ולהגדיר במצב לא מקוון?</string>
@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">ניתן להשתמש ב-Nightscout אך לא ניתן להגדירו.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">נושא: התנתקות מהמשאבה</string>
-    <string name="pumpdisconnect_whattodo">מה לעשות כשמתנתקים מהמשאבה?</string>
     <string name="pumpdisconnect_letknow">לחצו \"ניתוק משאבה\" כדי ש-AAPS יידע שלא יינתן איסולין.</string>
     <string name="pumpdisconnect_suspend">לחצו \"השהיית לולאה\" כדי ש-AAPS יעצור את הלולאה בזמן שהמשאבה מנותקת.</string>
     <string name="pumpdisconnect_dontchnage">לא לשנות דבר ב-AAPS, רק לנתק את המשאבה.</string>
@@ -80,14 +79,14 @@
     <string name="update_asap">עדכנו כשיש גרסה חדשה ועשו זאת כשיש לכם זמן.</string>
     <string name="update_keys">השתמשו באותם מפתחות חתימה.</string>
     <string name="update_neverupdate">לעולם לא לעדכן את האפליקציה אם היא פועלת כראוי.</string>
-    <string name="update_askfriend">בקש עזרה מחבר להשגת קובץ ה-APK החדש.</string>
+    <string name="update_askfriend">בקשו עזרה מחבר להשגת קובץ ה-APK החדש.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">נושא: פתרון בעיות</string>
     <string name="troubleshooting_wheretoask">איפה לחפש עזרה?</string>
     <string name="troubleshooting_fb">הצטרפו לקבוצת AndroidAPS בפייסבוק.</string>
     <string name="troubleshooting_wiki">קראו את הוראות AndroidAPS.</string>
     <string name="troubleshooting_gitter">בקרו בחדר ה-Gitter של AndroidAPS.</string>
-    <string name="troubleshooting_googlesupport">בקש תמיכה ל-AndroidAPS ב-Google</string>
+    <string name="troubleshooting_googlesupport">בקשו תמיכה ל-AndroidAPS ב-Google</string>
     <string name="troubleshooting_yourendo">דברו עם האנדוקרינולוג שלכם.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>

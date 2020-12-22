@@ -7,6 +7,10 @@
     <string name="label_xdrip_big_chart">AAPS (תרשים גדול)</string>
     <string name="label_xdrip_no_chart">AAPS (ללא תרשים)</string>
     <string name="label_xdrip_circle">AAPS (עיגול)</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS (קוקפיט)</string>
+    <string name="label_xdrip_steampunk">AAPS (סטימפאנק)</string>
+    <string name="label_digitalstyle">AAPS (דיגיטלי)</string>
     <string name="label_warning_sync">אין נתונים!</string>
     <string name="label_warning_old">נתונים ישנים!</string>
     <string name="label_warning_since">מאז %1$s</string>
@@ -57,6 +61,8 @@
     <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
     <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
+    <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
     <string name="menu_tempt">מטרה זמנית</string>
     <string name="menu_wizard">אשף</string>
     <string name="menu_bolus">בולוס</string>
@@ -73,7 +79,7 @@
     <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
     <string name="action_carbs">פחמימות</string>
     <string name="action_percentage">אחוז</string>
-    <string name="action_start_min">התחל [min]</string>
+    <string name="action_start_min">התחלה [min]</string>
     <string name="action_duration_h">משך [h]</string>
     <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
@@ -90,4 +96,36 @@
     <string name="activity_carb">פחמימות</string>
     <string name="activity_IOB">כמות אינסולין פעילה</string>
     <string name="activity_no_status">אין סטטוס</string>
+    <string name="color_name_red">אדום</string>
+    <string name="color_name_pink">ורוד</string>
+    <string name="color_name_purple">סגול</string>
+    <string name="color_name_deeppurple">סגול עמוק</string>
+    <string name="color_name_indigo">כחול אינדיגו</string>
+    <string name="color_name_blue">כחול</string>
+    <string name="color_name_lightblue">כחול בהיר</string>
+    <string name="color_name_cyan">ציאן</string>
+    <string name="color_name_teal">כחול-ירקרק</string>
+    <string name="color_name_green">ירוק</string>
+    <string name="color_name_lightgreen">ירוק בהיר</string>
+    <string name="color_name_lime">ירוק ליים</string>
+    <string name="color_name_yellow">צהוב</string>
+    <string name="color_name_amber">ענבר</string>
+    <string name="color_name_orange">כתום</string>
+    <string name="color_name_deeporange">כתום עמוק</string>
+    <string name="color_name_brown">חום</string>
+    <string name="color_name_gray">אפור</string>
+    <string name="color_name_bluegray">כחול-אפור</string>
+    <string name="color_name_white">לבן</string>
+    <string name="color_name_black">שחור</string>
+    <string name="color_name_multicolor">צבעוני</string>
+    <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
+    <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
+    <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>
+    <string name="digitalstyle_style_none">ללא סגנון</string>
+    <string name="digitalstyle_style_minimal">סגנון מינימלי</string>
+    <string name="digitalstyle_style_shape">סגנון הצורה</string>
+    <string name="digitalstyle_style_full">סגנון מלא</string>
+    <string name="digitalstyle_pref_your_color">הצבע שלך:</string>
+    <string name="digitalstyle_pref_your_color_saturation">רווית הצבע שלך:</string>
+    <string name="digitalstyle_pref_your_color_opacity">אטימות הצבע שלכם:</string>
 </resources>

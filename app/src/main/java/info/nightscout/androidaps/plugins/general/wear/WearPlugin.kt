@@ -39,6 +39,7 @@ class WearPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(WearFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_watch)
     .pluginName(R.string.wear)
     .shortName(R.string.wear_shortname)
     .preferencesId(R.xml.pref_wear)

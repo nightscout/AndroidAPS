@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:indeterminate="false"
         android:progress="0"
-        android:progressTint="@color/omnipodWizardProgressBar"
+        android:progressTint="@color/omnipod_wizard_progress_bar"
         android:scaleY=".5" />
 </LinearLayout>

@@ -29,7 +29,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/omnipod_wizard_vertical_spacing"
         android:layout_marginBottom="@dimen/omnipod_wizard_vertical_spacing"
-        app:srcCompat="@drawable/ic_toast_check"
+        app:srcCompat="@drawable/ic_omnipod_wizard_success"
         android:visibility="gone" />
 
     <TextView

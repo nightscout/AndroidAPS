@@ -110,5 +110,5 @@ public class UploaderBattery extends BaseComplicationProviderService {
     @Override
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.STATUS;
-    };
+    }
 }

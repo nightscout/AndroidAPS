@@ -114,12 +114,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // variables for handling statuses and history
     private boolean firstRun = true;
     private boolean isRefresh = false;
-    private Map<MedtronicStatusRefreshType, Long> statusRefreshMap = new HashMap<>();
+    private final Map<MedtronicStatusRefreshType, Long> statusRefreshMap = new HashMap<>();
     private boolean isInitialized = false;
     private PumpHistoryEntry lastPumpHistoryEntry;
 
     public static boolean isBusy = false;
-    private List<Long> busyTimestamps = new ArrayList<>();
+    private final List<Long> busyTimestamps = new ArrayList<>();
     private boolean hasTimeDateOrTimeZoneChanged = false;
 
 
@@ -146,6 +146,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(MedtronicFragment.class.getName()) //
+                        .pluginIcon(R.drawable.ic_veo_128)
                         .pluginName(R.string.medtronic_name) //
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic)
@@ -368,9 +369,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 clearBusyQueue();
 
-                if (busyTimestamps.size() > 0) {
-                    return true;
-                }
+                return busyTimestamps.size() > 0;
             }
         }
 
@@ -422,7 +421,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
 
         if (firstRun) {
             initializePump(!isRefresh);
@@ -681,7 +680,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             int hour = basalValue.timeAsSeconds / (60 * 60);
 
-            if (!medtronicUtil.isSame(basalsByHour[hour], basalValueValue)) {
+            if (!MedtronicUtil.isSame(basalsByHour[hour], basalValueValue)) {
                 invalid = true;
             }
 
@@ -991,10 +990,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (!enforceNew) {
 
-            if (medtronicUtil.isSame(tbrCurrent.getInsulinRate(), absoluteRate)) {
+            if (MedtronicUtil.isSame(tbrCurrent.getInsulinRate(), absoluteRate)) {
 
                 boolean sameRate = true;
-                if (medtronicUtil.isSame(0.0d, absoluteRate) && durationInMinutes > 0) {
+                if (MedtronicUtil.isSame(0.0d, absoluteRate) && durationInMinutes > 0) {
                     // if rate is 0.0 and duration>0 then the rate is not the same
                     sameRate = false;
                 }
@@ -1522,13 +1521,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private List<CustomAction> customActions = null;
 
-    private CustomAction customActionWakeUpAndTune = new CustomAction(R.string.medtronic_custom_action_wake_and_tune,
+    private final CustomAction customActionWakeUpAndTune = new CustomAction(R.string.medtronic_custom_action_wake_and_tune,
             MedtronicCustomActionType.WakeUpAndTune);
 
-    private CustomAction customActionClearBolusBlock = new CustomAction(
+    private final CustomAction customActionClearBolusBlock = new CustomAction(
             R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, false);
 
-    private CustomAction customActionResetRLConfig = new CustomAction(
+    private final CustomAction customActionResetRLConfig = new CustomAction(
             R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLinkConfiguration, true);
 
 

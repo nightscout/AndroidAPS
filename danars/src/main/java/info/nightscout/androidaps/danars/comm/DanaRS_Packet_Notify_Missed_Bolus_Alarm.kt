@@ -31,8 +31,7 @@ class DanaRS_Packet_Notify_Missed_Bolus_Alarm(
         dataIndex += dataSize
         dataSize = 1
         endMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        if (endMin == 1 && endMin == endHour && startHour == endHour && startHour == startMin) failed = true
-        else failed = false
+        failed = endMin == 1 && endMin == endHour && startHour == endHour && startHour == startMin
         aapsLogger.debug(LTag.PUMPCOMM, "Start hour: $startHour")
         aapsLogger.debug(LTag.PUMPCOMM, "Start min: $startMin")
         aapsLogger.debug(LTag.PUMPCOMM, "End hour: $endHour")

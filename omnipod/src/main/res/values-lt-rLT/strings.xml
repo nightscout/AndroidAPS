@@ -7,8 +7,6 @@
     <string name="omnipod_config_basal_beeps_enabled">Bazės signalai įjungti</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB signalai įjungti</string>
     <string name="omnipod_config_tbr_beeps_enabled">Laikinos bazės signalai įjungti</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Įgalintas leidimo sustabdymo mygtukas</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Įgalintas Pulse Log mygtukas</string>
     <string name="omnipod_config_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įgalintas</string>
     <string name="omnipod_config_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Valandos prieš išsijungimą</string>
@@ -18,15 +16,16 @@
     <string name="omnipod_preference_category_other">Kiti</string>
     <string name="omnipod_preference_category_alerts">Perspėjimai</string>
     <string name="omnipod_preference_category_confirmation_beeps">Patvirtinimo signalai</string>
+    <string name="omnipod_preference_category_notifications">Pranešimai</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Nėra aktyvaus Pod</string>
+    <string name="omnipod_pod_status_waiting_for_activation">Vykdomas nustatymas (laukiama Pod aktyvavimo)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Vykdomas nustatymas (laukiama kaniulės įvedimo)</string>
     <string name="omnipod_pod_status_running">Vykdoma</string>
     <string name="omnipod_pod_status_suspended">Sustabdyta</string>
     <string name="omnipod_pod_status_pod_fault">Pod klaida</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Viršytas aktyvinimo laikas</string>
     <string name="omnipod_pod_status_inactive">Neaktyvus</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod klaida: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Priminimas apie suporavimo pabaigą</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Priminimas apie sąrankos pabaigą</string>
@@ -36,15 +35,35 @@
     <string name="omnipod_alert_low_reservoir">Žemas rezervuaro lygis</string>
     <string name="omnipod_alert_unknown_alert">Nežinomas perspėjimas</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_history_title">Pod istorija</string>
     <string name="omnipod_history_item_description">Aprašymas</string>
     <string name="omnipod_history_item_source">Šaltinis</string>
     <string name="omnipod_history_item_date">Data</string>
     <string name="omnipod_history_type">Tipas:</string>
+    <string name="omnipod_history_bolus_value">%1$.2f vv</string>
+    <string name="omnipod_history_bolus_value_with_carbs">%1$.2f vv, AV=%2$.1f g</string>
+    <string name="omnipod_history_tbr_value">Kiekis: %1$.2f vv, trukmė: %2$d min</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Perspėjimas</string>
     <string name="omnipod_error_rileylink_address_invalid">RileyLink adresas neteisingas.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operacija negalima.\n\n Pirmiausia turite sukonfigūruoti Omnipod pompą prieš atliekant šią operaciją.</string>
     <string name="omnipod_error_pod_not_attached">Nėra aktyvaus Pod</string>
+    <string name="omnipod_error_unexpected_exception">Įvyko netikėta klaida. Prašome pranešti! (%1$s: %2$s).</string>
+    <string name="omnipod_error_crc_mismatch">Ryšio klaida: pranešimo vientisumo patikra nepavyko</string>
+    <string name="omnipod_error_invalid_packet_type">Ryšio klaida: netinkami įvesties iš Pod parametrai</string>
+    <string name="omnipod_error_invalid_progress_state">Ryšio klaida: Pod būklė yra netinkama</string>
+    <string name="omnipod_error_invalid_response">Ryšio klaida: gautas netinkamas atsakymas iš Pod</string>
+    <string name="omnipod_error_invalid_message_sequence_number">Ryšio klaida: iš Pod gautas pranešimas su negaliojančiu serijos numeriu</string>
+    <string name="omnipod_error_invalid_message_address">Ryšio klaida: iš Pod gautas pranešimas su netinkamu adresu</string>
+    <string name="omnipod_error_message_decoding_failed">Ryšio klaida: nepavyko iššifruoti pranešimo iš Pod</string>
+    <string name="omnipod_error_nonce_resync_failed">Ryšio klaida: nepavyko iš naujo sinchronizuoti unikalų kodą</string>
+    <string name="omnipod_error_nonce_out_of_sync">Ryšio klaida: unikalus kodas nebuvo sinchronizuotas</string>
+    <string name="omnipod_error_not_enough_data">Ryšio klaida: iš Pod gauta nepakankamai duomenų</string>
+    <string name="omnipod_error_pod_fault">Aptikta Pod klaida (%1$03d %2$s). Deaktyvuokite Pod ir aktyvuokite naują</string>
+    <string name="omnipod_error_pod_returned_error_response">Ryšio klaida: Pod pateikė klaidos atsakymą</string>
+    <string name="omnipod_error_communication_failed_no_response_from_riley_link">Nėra atsakymo iš RileyLink</string>
+    <string name="omnipod_error_communication_failed_riley_link_interrupted">RileyLink ryšys pertrauktas</string>
+    <string name="omnipod_error_communication_failed_no_response_from_pod">Nėra atsakymo iš Pod</string>
     <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Nepavyko nustatyti bazės profilio. Insulino leidimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod būseną Omnipod skirtuke ir, jei reikia, atnaujinkite insulino leidimą.</string>
     <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Gali būti, kad bazės profilis nebuvo nustatytas. Insulino leidimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod būseną Omnipod skirtuke ir, jei reikia, atnaujinkite insulino leidimą.</string>
     <string name="omnipod_error_set_basal_failed_delivery_suspended">Nepavyko nustatyti bazės profilio. Insulino leidimas buvo sustabdytas! Rankiniu būdu iš Omnipod skirtuko atnaujinkite insulino leidimą.</string>
@@ -80,7 +99,6 @@
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_custom_action_reset_rileylink">Išvalyti RileyLink nustatymus</string>
     <string name="omnipod_uncertain">neaiški</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_moments_ago">Neseniai</string>

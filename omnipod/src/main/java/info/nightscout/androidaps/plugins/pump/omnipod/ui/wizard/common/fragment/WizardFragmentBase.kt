@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.omnipod_wizard_progress_indication.*
 import kotlin.math.roundToInt
 
 abstract class WizardFragmentBase : DaggerFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +43,7 @@ abstract class WizardFragmentBase : DaggerFragment() {
 
         if (nextPage == null) {
             omnipod_wizard_button_next.text = getString(R.string.omnipod_wizard_button_finish)
-            omnipod_wizard_button_next.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.review_green, context?.theme))
+            omnipod_wizard_button_next.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.omnipod_wizard_finish_button, context?.theme))
         }
 
         updateProgressIndication()

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="dark"
+        android:summary="Dark theme"
+        android:title="@string/pref_dark"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="showBigNumbers"
+        android:summary="Big numbers. (Circle WF)"
+        android:title="@string/pref_big_numbers"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="showRingHistory"
+        android:summary="Graphical history. (Circle WF)"
+        android:title="@string/pref_ring_history"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="softRingHistory"
+        android:summary="Less eyecandy. (Circle WF)"
+        android:title="@string/pref_light_ring_history"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="animation"
+        android:summary="Animations. (Circle WF)"
+        android:title="@string/pref_animations"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+   
+
+    <CheckBoxPreference
+        android:key="vibrate_Hourly"
+        android:title="@string/pref_vibrate_hourly"
+        android:defaultValue="false"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+</PreferenceScreen>

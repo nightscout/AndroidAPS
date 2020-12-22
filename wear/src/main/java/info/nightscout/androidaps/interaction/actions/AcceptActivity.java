@@ -51,10 +51,10 @@ public class AcceptActivity extends ViewSelectorActivity {
 
         setContentView(R.layout.grid_layout);
         final Resources res = getResources();
-        final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
+        final GridViewPager pager = findViewById(R.id.pager);
 
         pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
+        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
 
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -86,15 +86,15 @@ public class AcceptActivity extends ViewSelectorActivity {
 
             if(col == 0){
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_confirm_text, container, false);
-                final TextView headingView = (TextView) view.findViewById(R.id.title);
+                final TextView headingView = view.findViewById(R.id.title);
                 headingView.setText(title);
-                final TextView textView = (TextView) view.findViewById(R.id.message);
+                final TextView textView = view.findViewById(R.id.message);
                 textView.setText(message);
                 container.addView(view);
                 return view;
             } else {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = (ImageView) view.findViewById(R.id.confirmbutton);
+                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -49,9 +49,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="         " />
+                    android:text="         "
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -75,9 +75,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="         " />
+                    android:text="         "
+                    android:textAlignment="center" />
             </LinearLayout>
 
 
@@ -102,9 +102,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="         " />
+                    android:text="         "
+                    android:textAlignment="center" />
             </LinearLayout>
 
 
@@ -129,11 +129,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="         " />
+                    android:text="         "
+                    android:textAlignment="center" />
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,9 +155,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="         " />
+                    android:text="         "
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <!-- Group - Device -->
@@ -197,9 +196,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="        " />
+                    android:text="        "
+                    android:textAlignment="center" />
             </LinearLayout>
 
 
@@ -224,9 +223,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="        " />
+                    android:text="        "
+                    android:textAlignment="center" />
             </LinearLayout>
 
 
@@ -251,9 +250,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="        " />
+                    android:text="        "
+                    android:textAlignment="center" />
             </LinearLayout>
 
 
@@ -278,9 +277,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="        " />
+                    android:text="        "
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -304,9 +303,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="        " />
+                    android:text="        "
+                    android:textAlignment="center" />
             </LinearLayout>
 
 
@@ -331,9 +330,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="65"
-                    android:textAlignment="center"
                     android:gravity="center_vertical"
-                    android:text="        " />
+                    android:text="        "
+                    android:textAlignment="center" />
             </LinearLayout>
 
         </LinearLayout>

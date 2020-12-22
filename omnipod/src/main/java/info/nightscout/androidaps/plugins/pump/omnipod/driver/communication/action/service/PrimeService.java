@@ -32,6 +32,6 @@ public class PrimeService {
 
     public StatusResponse executePrimeBolusCommand(OmnipodRileyLinkCommunicationManager communicationService, PodStateManager podStateManager) {
         return communicationService.executeAction(new BolusAction(podStateManager, OmnipodConstants.POD_PRIME_BOLUS_UNITS,
-                Duration.standardSeconds(1), false, false));
+                Duration.standardSeconds(1), false, true));
     }
 }

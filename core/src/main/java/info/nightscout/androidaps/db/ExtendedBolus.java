@@ -63,7 +63,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     public int durationInMinutes = 0; // duration == 0 means end of extended bolus
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.OREF_RAPID_ACTING;
+    public int insulinInterfaceID = InsulinInterface.InsulinType.OREF_RAPID_ACTING.getValue();
 
     @DatabaseField
     public double dia = Constants.defaultDIA;

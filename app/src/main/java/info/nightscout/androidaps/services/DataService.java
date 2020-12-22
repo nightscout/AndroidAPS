@@ -69,7 +69,7 @@ public class DataService extends DaggerIntentService {
         aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent " + BundleLogger.log(intent.getExtras()));
 
 
-        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
+        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) || config.getNSCLIENT();
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {

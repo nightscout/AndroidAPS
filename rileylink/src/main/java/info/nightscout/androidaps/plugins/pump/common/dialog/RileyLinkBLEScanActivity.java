@@ -61,7 +61,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
 
-    private static String TAG = "RileyLinkBLEScanActivity";
+    private static final String TAG = "RileyLinkBLEScanActivity";
 
     // Stops scanning after 30 seconds.
     private static final long SCAN_PERIOD = 30000;
@@ -164,7 +164,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     }
 
 
-    private ScanCallback mScanCallback2 = new ScanCallback() {
+    private final ScanCallback mScanCallback2 = new ScanCallback() {
 
         @Override
         public void onScanResult(int callbackType, final ScanResult scanRecord) {
@@ -283,9 +283,9 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
     private class LeDeviceListAdapter extends BaseAdapter {
 
-        private ArrayList<BluetoothDevice> mLeDevices;
-        private Map<BluetoothDevice, Integer> rileyLinkDevices;
-        private LayoutInflater mInflator;
+        private final ArrayList<BluetoothDevice> mLeDevices;
+        private final Map<BluetoothDevice, Integer> rileyLinkDevices;
+        private final LayoutInflater mInflator;
         String currentlySelectedAddress;
 
 

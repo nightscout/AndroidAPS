@@ -32,7 +32,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 @Singleton
 public class RileyLinkUtil {
 
-    private List<RLHistoryItem> historyRileyLink = new ArrayList<>();
+    private final List<RLHistoryItem> historyRileyLink = new ArrayList<>();
     private ServiceTask currentTask;
 
     private RileyLinkEncodingType encoding;

@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     companion object {
+
         const val KEY_START_DESTINATION = "startDestination"
     }
 

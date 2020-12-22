@@ -47,7 +47,7 @@ class InsulinLyumjevPluginTest {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.OREF_LYUMJEV, sut.id)
+        assertEquals(InsulinInterface.InsulinType.OREF_LYUMJEV, sut.id)
     }
 
     @Test

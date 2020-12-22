@@ -7,8 +7,6 @@
     <string name="omnipod_config_basal_beeps_enabled">Bip pentru Bazală activat</string>
     <string name="omnipod_config_smb_beeps_enabled">Bip pentru SMB activat</string>
     <string name="omnipod_config_tbr_beeps_enabled">Bip pentru TBR activat</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Butonul \"Suspendare Livrare\" activat</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Butonul \"Pulse Log\" activat</string>
     <string name="omnipod_config_time_change_enabled">Detectare fusului orar activată</string>
     <string name="omnipod_config_expiration_reminder_enabled">Notificare expirare activat</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Numar de ore înainte de oprire</string>
@@ -26,7 +24,6 @@
     <string name="omnipod_pod_status_pod_fault">Defecțiune Pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Timp de activare depăşit</string>
     <string name="omnipod_pod_status_inactive">Inactiv</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod defect: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Notificare Finalizare împerechere</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Finalizare memento setare</string>
@@ -80,7 +77,6 @@
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
     <string name="omnipod_uncertain">incert</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_moments_ago">Acum câteva momente</string>

@@ -17,7 +17,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
@@ -52,7 +51,6 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     boolean first = false;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.rileylink_status_general, container, false);
@@ -79,13 +77,13 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         if (!first) {
 
-            // 7-12
+            // 7-14
             int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
                     R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13};
 
             for (int id : ids) {
 
-                TextView tv = (TextView) getActivity().findViewById(id);
+                TextView tv = getActivity().findViewById(id);
                 tv.setText(tv.getText() + ":");
             }
 
@@ -108,15 +106,12 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                     "-"
                     : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));
 
-            RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
-
             if (firmwareVersion == null) {
                 this.firmwareVersion.setText("BLE113: -\nCC110: -");
             } else {
-                this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + //
-                        "\nCC110: " + firmwareVersion.toString());
+                this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 +
+                        "\nCC110: " + rileyLinkServiceData.versionCC110);
             }
-
         }
 
         RileyLinkPumpDevice pumpPlugin = (RileyLinkPumpDevice) activePlugin.getActivePump();

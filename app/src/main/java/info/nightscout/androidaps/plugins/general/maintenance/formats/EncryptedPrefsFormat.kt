@@ -244,7 +244,7 @@ class EncryptedPrefsFormat @Inject constructor(
             metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(resourceHelper.gs(R.string.prefdecrypt_wrong_json), PrefsStatus.ERROR)
         }
 
-        return metadata;
+        return metadata
     }
 
 }

@@ -30,6 +30,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_bigchart" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_bigchart" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -48,6 +51,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_nochart" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_nochart" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -66,6 +72,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_graph" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_home" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -76,7 +85,7 @@
         <service
             android:name=".watchfaces.Home2"
             android:allowEmbedded="true"
-            android:label="AAPSv2"
+            android:label="@string/label_xdrip_v2"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
@@ -84,6 +93,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_graph_2" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_home2" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -94,7 +106,7 @@
         <service
             android:name=".watchfaces.Cockpit"
             android:allowEmbedded="true"
-            android:label="AAPS(Cockpit)"
+            android:label="@string/label_xdrip_cockpit"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
@@ -102,6 +114,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_cockpit" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_cockpit" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -112,7 +127,7 @@
         <service
             android:name=".watchfaces.Steampunk"
             android:allowEmbedded="true"
-            android:label="AAPS(Steampunk)"
+            android:label="@string/label_xdrip_steampunk"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
@@ -120,6 +135,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_steampunk" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_steampunk" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -138,6 +156,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_dark" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_largehome" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -155,6 +176,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
                 android:resource="@drawable/watchface_circle" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="watch_face_configuration_circle" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -175,7 +199,7 @@
                 android:resource="@drawable/watchface_digitalstyle" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyleConfigAct" />
+                android:value="watch_face_configuration_digitalstyle" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -507,10 +531,19 @@
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:label="@string/menu_tempt" />
-        <activity android:name=".interaction.configurationActivities.DigitalStyleConfigAct">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.interaction.configurationActivities.DigitalStyleConfigAct" />
 
+        <activity android:name=".interaction.ConfigurationActivity">
+            <intent-filter>
+                <!-- action-name must be equal with name of xml-ressource where the configuration is describe -->
+                <action android:name="watch_face_configuration_bigchart" />
+                <action android:name="watch_face_configuration_circle" />
+                <action android:name="watch_face_configuration_cockpit" />
+                <action android:name="watch_face_configuration_digitalstyle" />
+                <action android:name="watch_face_configuration_home" />
+                <action android:name="watch_face_configuration_home2" />
+                <action android:name="watch_face_configuration_largehome" />
+                <action android:name="watch_face_configuration_nochart" />
+                <action android:name="watch_face_configuration_steampunk" />
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

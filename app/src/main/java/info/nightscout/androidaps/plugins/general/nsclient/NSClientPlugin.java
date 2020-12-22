@@ -51,7 +51,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
@@ -73,7 +73,7 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate nsClientReceiverDelegate;
+    private final NsClientReceiverDelegate nsClientReceiverDelegate;
 
     @Inject
     public NSClientPlugin(
@@ -90,6 +90,7 @@ public class NSClientPlugin extends PluginBase {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
                         .fragmentClass(NSClientFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_nightscout_syncs)
                         .pluginName(R.string.nsclientinternal)
                         .shortName(R.string.nsclientinternal_shortname)
                         .preferencesId(R.xml.pref_nsclientinternal)
@@ -209,7 +210,7 @@ public class NSClientPlugin extends PluginBase {
         }
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             aapsLogger.debug(LTag.NSCLIENT, "Service is disconnected");
@@ -276,7 +277,7 @@ public class NSClientPlugin extends PluginBase {
     }
 
     public boolean hasWritePermission() {
-        return nsClientService.hasWriteAuth;
+        return NSClientService.hasWriteAuth;
     }
 
     public void handleClearAlarm(NSAlarm originalAlarm, long silenceTimeInMsec) {

@@ -34,6 +34,7 @@ class EversensePlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_eversense)
     .pluginName(R.string.eversense)
     .shortName(R.string.eversense_shortname)
     .preferencesId(R.xml.pref_bgsource)

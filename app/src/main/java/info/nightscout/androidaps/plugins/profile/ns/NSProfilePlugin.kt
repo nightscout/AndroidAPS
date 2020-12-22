@@ -32,6 +32,7 @@ class NSProfilePlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(NSProfileFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_nightscout_profile)
     .pluginName(R.string.nsprofile)
     .shortName(R.string.profileviewer_shortname)
     .alwaysEnabled(config.NSCLIENT)

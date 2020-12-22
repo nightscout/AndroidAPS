@@ -14,9 +14,9 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
  * {"mgdl":105,"mills":1455136282375,"device":"xDrip-BluetoothWixel","direction":"Flat","filtered":98272,"unfiltered":98272,"noise":1,"rssi":100}
  */
 public class NSSgv {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
-    private JSONObject data;
+    private final JSONObject data;
 
     public NSSgv(JSONObject obj) {
         this.data = obj;
