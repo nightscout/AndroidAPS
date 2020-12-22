@@ -20,7 +20,6 @@
     <string name="omnipod_preference_category_alerts">Alerte</string>
     <string name="omnipod_preference_category_notifications">Notificări</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_pod_status_no_active_pod">Niciun Pod activ</string>
     <string name="omnipod_pod_status_waiting_for_activation">Setare în desfășurare (se așteaptă activarea Pod-ului)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Inițializarea este în curs (se așteaptă inserarea canulei)</string>
     <string name="omnipod_pod_status_running">Rulează</string>
@@ -33,8 +32,6 @@
     <string name="omnipod_alert_expiration">Pod-ul va expira în curând</string>
     <string name="omnipod_alert_expiration_advisory">Pod-ul va expira în curând</string>
     <string name="omnipod_alert_shutdown_imminent">Oprirea este iminentă</string>
-    <string name="omnipod_alert_low_reservoir">Nivel rezervor scăzut</string>
-    <string name="omnipod_alert_unknown_alert">Alertă necunoscută</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Descriere</string>
     <string name="omnipod_history_item_source">Sursă</string>
@@ -106,12 +103,10 @@
     <string name="omnipod_cmd_set_fake_suspended_tbr">Se setează o bazală temporară falsă deoarece Pod-ul este suspendat</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Anulează bazala temporară falsă creată pentru că Pod-ul a fost suspendat</string>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_pod_management_title">Management Pod</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Se așteaptă conexiunea la RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Activează Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Dezactivează Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Renunţă la Pod</string>
-    <string name="omnipod_pod_management_button_pod_history">Istoric Pod</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Anulează</string>
     <string name="omnipod_wizard_button_finish">Finalizare</string>
@@ -129,18 +124,14 @@
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Atașează Pod</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_text">\nPregătiți locul de infuzie. Scoateți capacul acului și suport adeziv și atașați Pod-ul la locul de infuzie.\n\nDacă, canula pare in neregulă, apăsați <b>Anulare</b> și aruncați Pod-ul.\n\nApăsați <b>Următorul</b> pentru a introduce canula și a începe livrarea bazalei.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Când apăsați <b>OK</b>, canula va fi introdusa. Asigurați-vă că ați atașat Pod-ul de locul de inserție.</string>
-    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Inserează canula</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_text">Încercare de programare inițială a ratelor bazale si de inserție a canulei.\n\nCând canula a fost inserata cu succes, puteți apăsa <b>Următorul</b>.</string>
-    <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod activat</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_text">Noul Pod este acum activ.\n\nRata bazala a fost programata si a fost introdusa canula.\n\nVă rugăm să verificați dacă canula a fost inserată corect și să vă schimbați Pod-ul dacă considerati altfel.</string>
     <!-- Omnipod - Pod deactivation Wizard -->
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Dezactivează Pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nApăsați <b>Următorul</b> pentru a dezactiva Pod-ul.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva Pod-ul.</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Se dezactivează Pod-ul</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">Se dezactivează Pod-ul.\n\nCand dezactivarea s-a încheiat cu succes, puteți sa apăsați <b>Următorul</b>.</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod dezactivat</string>
     <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod dezactivat.\n\nScoateți Pod-ul și reciclați-l.</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_discarded_title">Pod eliminat</string>
     <string name="omnipod_pod_deactivation_wizard_pod_discarded_text">Starea Pod-ului a fost eliminată. Livrarea insulinei nu a fost suspendată deoarece Pod-ul nu a fost dezactivat corespunzător!\n\nVa rugăm să eliminați Pod-ul de pe corp și să îl reciclați.</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod_confirmation">Dacă aruncați Pod-ul, nu veți mai putea comunica cu acesta. Ar trebui să faceți acest lucru doar atunci când orice comunicare cu Pod-ul eșuează în mod persistent. Sigur doriți să aruncați Pod-ul?</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Renunţă la Pod</string>
