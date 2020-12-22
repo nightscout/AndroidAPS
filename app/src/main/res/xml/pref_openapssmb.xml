@@ -186,7 +186,7 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:title="@string/keto_protect_basal_title"
-                validate:maxNumber="50"
+                validate:maxNumber="30"
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
