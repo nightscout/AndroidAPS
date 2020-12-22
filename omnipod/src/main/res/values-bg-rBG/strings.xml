@@ -10,6 +10,8 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показвай спряна доставката в раздела Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показване на PULSE LOG в менюто на Pod Management</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Бутон Показване RileyLink Stats в меню Управление на Pod</string>
+    <string name="omnipod_config_use_riley_link_battery_level">Вземи нивото на батерия от EmaLink/OrangeLink</string>
+    <string name="omnipod_config_use_riley_link_battery_level_summary">НЕ работи с оригиналната RileyLink. Може да не работи с други RileyLink алтернативи.</string>
     <string name="omnipod_config_time_change_enabled">Разрешено е Лятно часово време</string>
     <string name="omnipod_config_expiration_reminder_enabled">Напомняне за срок</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часове преди изключване</string>
@@ -24,6 +26,7 @@
     <string name="omnipod_preference_category_alerts">Известия</string>
     <string name="omnipod_preference_category_notifications">Известия</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Няма активен под</string>
     <string name="omnipod_pod_status_waiting_for_activation">Настройка в прогрес (активиране на под)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Настройка в прогрес (въвеждане на канюла)</string>
     <string name="omnipod_pod_status_running">Изпълнява</string>
@@ -36,6 +39,8 @@
     <string name="omnipod_alert_expiration">Подът скоро ще изтече</string>
     <string name="omnipod_alert_expiration_advisory">Подът скоро ще изтече</string>
     <string name="omnipod_alert_shutdown_imminent">Спирането е неизбежно</string>
+    <string name="omnipod_alert_low_reservoir">Минимален инсулин в резервоара</string>
+    <string name="omnipod_alert_unknown_alert">Непозната аларма</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Описание</string>
     <string name="omnipod_history_item_source">Източник</string>
@@ -45,6 +50,7 @@
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f Е, Вх=%2$.1f гр</string>
     <string name="omnipod_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
     <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_no_active_pod">Няма активен под</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Внимание</string>
     <string name="omnipod_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
@@ -111,14 +117,21 @@
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Анулират фалшив временен базал, който е създаден, защото Pod е спряно</string>
     <string name="omnipod_cmd_split_tbr">Раздели временния базал поради грешка в анулация на предишен</string>
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_pod_management_title">Управление на Pod</string>
     <string name="omnipod_pod_management_heading_actions">Действия</string>
     <string name="omnipod_pod_management_heading_tools">Инструменти</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Изчакване на RileyLink връзка…</string>
     <string name="omnipod_pod_management_button_activate_pod">Активирай Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Деактивирай Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Премахни Pod</string>
+    <string name="omnipod_pod_management_button_pod_history">История в Pod</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">RileyLink статус</string>
     <string name="omnipod_pod_management_button_reset_riley_link_config">Нулирай RileyLink конфигурацията</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Прочети Pulse log</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Четене на Pulse log…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Ако натиснете OK, състоянието на Pod ще бъде нулирано и няма да можете да общувате с него повече. Правете това, само ако вече не можете да се свързвате с него. Ако все още можете да общувате с Pod, моля, използвайте опцията <b>Деактивирай Pod</b>!</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Възпроизвеждане на тестов звук</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">Пускам тестов звук…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Откажи</string>
     <string name="omnipod_wizard_button_finish">Край</string>
@@ -136,14 +149,18 @@
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Прикрепете Pod</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_text">\nПодгответе мястото за инфузия. Отстранете капачката на Pod и лепенката и прикрепете капсулата към мястото за инфузия.\n\nАко канюла стърчи, моля натиснете <b>Отказ</b> и изхвърлете вашия Pod.\n\Натиснете <b>Следваща</b> да се вмъкне канюлата и да започне базалната доставка.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Когато натиснете <b>OK</b>, ще бъде вмъкната канюлата. Уверете се, че сте залепили Poda към мястото за инфузия.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Вмъкване на канюла</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_text">Опитвам се да определя първоначалния базален график и да вмъкна канюлата.\n\nКогато всички елементи са проверени, можете да натиснете <b>Следващ</b>.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod активиран</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_text">\Pod е активен.\n\nВашият базален график е програмиран и канюлата вмъкната.\n\nМоля, проверете дали канюлата е поставена правилно или заменете Pod, ако чувствате, че не е.</string>
     <!-- Omnipod - Pod deactivation Wizard -->
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Деактивирай Pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nНатиснете <b>Следващ</b>, за да деактивирате Pod.\n\n<b>Забележка:</b> Това ще спре всички доставки на инсулин и деактивира Pod.</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Деактивиране на Pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">Деактивиране на Pod.\n\nКогато деактивирането завърши успешно, можете да натиснете <b>Следващ</b>.</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod деактивиран</string>
     <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Pod изключен.\n\nмоля, извадете Pod от тялото си и го изхвърлете.</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_discarded_title">Pod неактивен</string>
     <string name="omnipod_pod_deactivation_wizard_pod_discarded_text">Състоянието на Pod е некоректнов. Инсулиновата доставка не е била спряна, тъй като Pod не е бил правилно деактивиран!\n\nМоля, премахнете Pod от тялото си и го рециклирайте.</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod_confirmation">Ако деактивирате Pod, няма да можете да общувате повече с него. Трябва да направите това само когато всички комуникации с Pod упорито се провалят. Сигурни ли сте, че желаете да го направите?</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Изхвърли Pod</string>
@@ -183,5 +200,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d ден</item>
         <item quantity="other">%1$d дни</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod аларма: %1$s</item>
+        <item quantity="other">Pod аларми: %1$s</item>
     </plurals>
 </resources>
