@@ -74,29 +74,57 @@ class TempTargetDialog : DialogFragmentWithDate() {
             overview_temptarget_duration.value = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
             reason = resourceHelper.gs(R.string.manual)
         }
-        overview_temptarget_cancel?.setOnClickListener {
-            overview_temptarget_temptarget.value = 0.0
-            overview_temptarget_duration.value = 0.0
-            reason = resourceHelper.gs(R.string.cancel)
-            if (submit()) dismiss()
+
+        overview_temptarget_cancel?.setOnClickListener { shortClick(it) }
+        overview_temptarget_eating_soon?.setOnClickListener { shortClick(it) }
+        overview_temptarget_activity?.setOnClickListener { shortClick(it) }
+        overview_temptarget_hypo?.setOnClickListener { shortClick(it) }
+
+        overview_temptarget_cancel?.setOnLongClickListener {
+            longClick(it)
+            return@setOnLongClickListener true
         }
-        overview_temptarget_eating_soon?.setOnClickListener {
-            overview_temptarget_temptarget.value = defaultValueHelper.determineEatingSoonTT()
-            overview_temptarget_duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-            reason = resourceHelper.gs(R.string.eatingsoon)
-            if (submit()) dismiss()
+        overview_temptarget_eating_soon?.setOnLongClickListener {
+            longClick(it)
+            return@setOnLongClickListener true
         }
-        overview_temptarget_activity?.setOnClickListener {
-            overview_temptarget_temptarget.value = defaultValueHelper.determineActivityTT()
-            overview_temptarget_duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
-            reason = resourceHelper.gs(R.string.activity)
-            if (submit()) dismiss()
+        overview_temptarget_activity?.setOnLongClickListener {
+            longClick(it)
+            return@setOnLongClickListener true
         }
-        overview_temptarget_hypo?.setOnClickListener {
-            overview_temptarget_temptarget.value = defaultValueHelper.determineHypoTT()
-            overview_temptarget_duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
-            reason = resourceHelper.gs(R.string.hypo)
-            if (submit()) dismiss()
+        overview_temptarget_hypo?.setOnLongClickListener {
+            longClick(it)
+            return@setOnLongClickListener true
+        }
+    }
+
+    private fun shortClick(v:View){
+        v.performLongClick()
+        if (submit()) dismiss()
+    }
+
+    private fun longClick(v:View) {
+        when (v.id) {
+            R.id.overview_temptarget_cancel         -> {
+                overview_temptarget_temptarget.value = 0.0
+                overview_temptarget_duration.value = 0.0
+                reason = resourceHelper.gs(R.string.cancel)
+            }
+            R.id.overview_temptarget_eating_soon    -> {
+                overview_temptarget_temptarget.value = defaultValueHelper.determineEatingSoonTT()
+                overview_temptarget_duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
+                reason = resourceHelper.gs(R.string.eatingsoon)
+            }
+            R.id.overview_temptarget_activity       -> {
+                overview_temptarget_temptarget.value = defaultValueHelper.determineActivityTT()
+                overview_temptarget_duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
+                reason = resourceHelper.gs(R.string.activity)
+            }
+            R.id.overview_temptarget_hypo           -> {
+                overview_temptarget_temptarget.value = defaultValueHelper.determineHypoTT()
+                overview_temptarget_duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
+                reason = resourceHelper.gs(R.string.hypo)
+            }
         }
     }
 
