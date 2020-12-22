@@ -34,7 +34,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         val dia = previousAutotune.dia
         val insulinInterface = activePlugin!!.activeInsulin
         var peak = 75
-        if (insulinInterface.id == InsulinInterface.OREF_ULTRA_RAPID_ACTING) peak = 55 else if (insulinInterface.id == InsulinInterface.OREF_FREE_PEAK) peak = sp!!.getInt(R.string.key_insulin_oref_peak, 75)
+        if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING) peak = 55 else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) peak = sp!!.getInt(R.string.key_insulin_oref_peak, 75)
         val csfGlucose = preppedGlucose.csfGlucoseData
         val isfGlucose = preppedGlucose.isfGlucoseData
         val basalGlucose = preppedGlucose.basalGlucoseData

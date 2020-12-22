@@ -161,11 +161,11 @@ public class ATProfile {
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")));
             json.put("units",profileFunction.getUnits());
             json.put("timezone", TimeZone.getDefault().getID());
-            if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
+            if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
-            else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
+            else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_RAPID_ACTING)
                 json.put("curve","rapid-acting");
-            else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
+            else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
                 int peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75);
                 json.put("curve", peaktime > 50 ? "rapid-acting" : "ultra-rapid");
                 json.put("useCustomPeakTime",true);
