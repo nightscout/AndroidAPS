@@ -27,6 +27,7 @@
     <string name="rileylink_device_model">דגם המכשיר</string>
     <string name="rileylink_last_used_frequency">תדירות השימוש לאחרונה</string>
     <string name="rileylink_last_device_contact">קשר אחרון עם המכשיר</string>
+    <string name="rileylink_firmware_version">קושחה</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">מאתחל בלוטות\'…</string>
     <string name="rileylink_state_bt_error">שגיאת בלוטות\'</string>
