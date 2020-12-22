@@ -24,7 +24,6 @@
     <string name="omnipod_preference_category_alerts">Varningar</string>
     <string name="omnipod_preference_category_notifications">Aviseringar</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_pod_status_no_active_pod">Ingen aktiv pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Konfiguration pågår (väntar på Pod-aktivering)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Konfiguration pågår (väntar på kanylinsättning)</string>
     <string name="omnipod_pod_status_running">Körs</string>
@@ -37,8 +36,6 @@
     <string name="omnipod_alert_expiration">Pod löper snart ut</string>
     <string name="omnipod_alert_expiration_advisory">Pod kommer att gå ut inom kort</string>
     <string name="omnipod_alert_shutdown_imminent">Pod kommer snart att stängas av</string>
-    <string name="omnipod_alert_low_reservoir">Låg reservoar</string>
-    <string name="omnipod_alert_unknown_alert">Okänd varning</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Beskrivning</string>
     <string name="omnipod_history_item_source">Källa</string>
@@ -114,21 +111,14 @@
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Avbryt simulerad temp basal eftersom podden är avaktiverad</string>
     <string name="omnipod_cmd_split_tbr">Dela upp temp basal på grund av okänt fel vid avbrott</string>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_pod_management_title">Podhantering</string>
     <string name="omnipod_pod_management_heading_actions">Åtgärder</string>
     <string name="omnipod_pod_management_heading_tools">Verktyg</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Väntar på RileyLink-anslutning…</string>
     <string name="omnipod_pod_management_button_activate_pod">Aktivera Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Inaktivera pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Ta bort Pod</string>
-    <string name="omnipod_pod_management_button_pod_history">Pod-historik</string>
-    <string name="omnipod_pod_management_button_riley_link_stats">Riley Link-statistik</string>
     <string name="omnipod_pod_management_button_reset_riley_link_config">Återställ Riley Link-konfiguration</string>
-    <string name="omnipod_pod_management_button_read_pulse_log">Läs pulsloggen</string>
-    <string name="omnipod_pod_management_button_reading_pulse_log">Läser pulslogg…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Om du tar bort Pod, kommer du inte att kunna kommunicera med den längre. Du bör bara göra detta när all kommunikation med Pod ständigt misslyckas. Om du fortfarande kan kommunicera med Pod, använd alternativet <b>Inaktivera Pod</b>.\n\nOm du vill fortsätta, se till att ta bort Pod från kroppen!</string>
-    <string name="omnipod_pod_management_button_play_test_beep">Spela testpip</string>
-    <string name="omnipod_pod_management_button_playing_test_beep">Spelar testpip…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Avbryt</string>
     <string name="omnipod_wizard_button_finish">Slutför</string>
@@ -146,18 +136,14 @@
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Fäst Pod</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_text">Förbered infusionsplatsen. Ta bort Podens nålskydd och fäst Pod på infusionsplatsen.\n\nOm kanylen sticker ut, tryck <b>Avbryt</b> och kassera din Pod.\n\nTryck <b>Nästa</b> för att skjuta in kanylen och påbörja basaleverans.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">När du trycker på <b>OK</b>, kommer kanylen att skjutas in. Se till att du har fäst Poden på infusionsplatsen.</string>
-    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Skjut in kanylen</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_text">Försöker ställa in basalprogram och skjuta in kanylen.\n\nNär kanylen är på plats kan du trycka på <b>Nästa</b>.</string>
-    <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod aktiverad</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_text">Den nya Poden är nu aktiv.\n\nDitt basalprogram har lagrats och kanylen är inne.\n\nKontrollera att kanylen har skjutits in på rätt sätt. Byt Pod om du tror att den inte har gjort det.</string>
     <!-- Omnipod - Pod deactivation Wizard -->
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Inaktivera pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">Tryck på <b>Nästa</b> för att inaktivera podden.\n\n<b>OBS!</b> Det här stoppar all insulintillförsel och inaktiverar podden.</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Inaktiverar Pod</string>
     <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">Inaktiverar Pod.\n\nNär inaktiveringen har slutförts kan du trycka på <b>Nästa</b>.</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod inaktiverad</string>
     <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">Din Pod har inaktiverats.\n\nTa bort Pod från kroppen och lämna in för återvinning.</string>
-    <string name="omnipod_pod_deactivation_wizard_pod_discarded_title">Pod kasserad</string>
     <string name="omnipod_pod_deactivation_wizard_pod_discarded_text">Podden har tagits bort. Insulinleveransen har inte stoppats eftersom podden inte har inaktiverats korrekt!\n\nTa bort podden från kroppen och lämna in för återvinning.</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod_confirmation">Om du tar bort podden, kommer du inte att kunna kommunicera med den längre. Du bör bara göra detta när all kommunikation med Pod fortsätter att misslyckas. Är du säker på att du vill ta bort podden?</string>
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Ta bort Pod</string>
@@ -197,9 +183,5 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
-    </plurals>
-    <plurals name="omnipod_pod_alerts">
-        <item quantity="one">Pod-varning: %1$s</item>
-        <item quantity="other">Pod-varningar: %1$s</item>
     </plurals>
 </resources>
