@@ -81,8 +81,6 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse(injector);
         T response = createResponseMessage(radioResponse.getPayload());
 
-        updateBatteryLevel();
-
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
             rememberLastGoodDeviceCommunicationTime();
@@ -116,10 +114,6 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         }
 
         return response;
-    }
-
-    private void updateBatteryLevel() {
-        rileyLinkServiceData.batteryLevel = rfspy.getBatteryLevel();
     }
 
 
