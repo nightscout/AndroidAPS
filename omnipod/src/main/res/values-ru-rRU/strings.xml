@@ -10,6 +10,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показывать кнопку Приостановить подачу на вкладке Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показывать кнопку Pulse Log в меню управления Pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Показывать кнопку статистики RileyLink в меню управления подом</string>
+    <string name="omnipod_config_use_riley_link_battery_level_summary">Не работает с оригинальной RileyLink. Может не работать с другими альтернативами RileyLink.</string>
     <string name="omnipod_config_time_change_enabled">Включено обнаружение часового пояса</string>
     <string name="omnipod_config_expiration_reminder_enabled">Включено напоминание об истечении срока действия</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часов до выключения</string>
@@ -22,21 +23,28 @@
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Другое</string>
     <string name="omnipod_preference_category_alerts">Оповещения</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Звуковые сигналы подтверждения</string>
     <string name="omnipod_preference_category_notifications">Уведомления</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Нет активных Pod</string>
     <string name="omnipod_pod_status_waiting_for_activation">Выполняется настройка (ожидание активации Pod)</string>
     <string name="omnipod_pod_status_waiting_for_cannula_insertion">Выполняется настройка (ожидание ввода катетера)</string>
     <string name="omnipod_pod_status_running">Выполняется</string>
     <string name="omnipod_pod_status_suspended">Приостановлено</string>
+    <string name="omnipod_pod_status_pod_fault">Ошибка Pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Превышено время активации</string>
     <string name="omnipod_pod_status_inactive">Неактивирован</string>
+    <string name="omnipod_pod_status_pod_fault_description">Ошибка Pod: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Напоминание о завершении настройки</string>
     <string name="omnipod_alert_expiration">Срок работы Pod\'a истекает</string>
     <string name="omnipod_alert_expiration_advisory">Срок Pod\'a истекает в ближайшее время</string>
     <string name="omnipod_alert_shutdown_imminent">Остановка неизбежна</string>
+    <string name="omnipod_alert_low_reservoir">В резервуаре мало инсулина</string>
+    <string name="omnipod_alert_unknown_alert">Неизвестное оповещение</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_history_title">Журнал Pod</string>
     <string name="omnipod_history_item_description">Описание</string>
     <string name="omnipod_history_item_source">Источник</string>
     <string name="omnipod_history_item_date">дата</string>
@@ -45,6 +53,13 @@
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f ед, г у =%2$.1f г</string>
     <string name="omnipod_history_tbr_value">Баз Скорость: %1$.2f ед, Продолжительность: %2$d мин</string>
     <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_no_active_pod">Нет активных Pod</string>
+    <string name="omnipod_short_status_last_connection">Недавнее соединение: %1$d мин. назад</string>
+    <string name="omnipod_short_status_last_bolus">Предыдущий болюс: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Временн %1$s</string>
+    <string name="omnipod_short_status_extended_bolus">Пролонгированный: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Резервуар: %1$sед</string>
+    <string name="omnipod_short_status_rl_battery">Батарея РЛ: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Внимание</string>
     <string name="omnipod_error_rileylink_address_invalid">Недопустимый адрес RileyLink.</string>
@@ -72,6 +87,7 @@
     <string name="omnipod_error_set_basal_failed">Настройка базального профиля не состоялась.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Возможно, отмена временного базала завершилась неудачно. Обновите вручную состояние Pod на вкладке Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Не удалось задать временный базал. Если ранее был запущен временный базал, он мог быть отменен. Обновите вручную состояние Pod на вкладке Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Установка врем базала могла иметь сбой. Если tврем базал запущен, ранее, он был отменен. Вручную обновите статус Pod из вкладки Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">Продолжительность TBR должна быть больше нуля и кратной %1$s минутам.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Возможно, не удалось задать время. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите подачу.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Не удалось задать время. Подача инсулина приостановлена! Вручную возобновите подачу с вкладки Omnipod.</string>
