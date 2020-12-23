@@ -27,6 +27,7 @@
     <string name="rileylink_device_model">Модел</string>
     <string name="rileylink_last_used_frequency">Последна честота</string>
     <string name="rileylink_last_device_contact">Последно устройство</string>
+    <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth стартиране…</string>
     <string name="rileylink_state_bt_error">Bluetooth грешка</string>
