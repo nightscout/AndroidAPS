@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
+    <string name="nav_preferences_plugin">Настройки на %1$s</string>
     <string name="nav_preferences">Опции</string>
     <string name="nav_refreshtreatments">Обнови леченията от NS</string>
     <string name="nav_resetdb">Нулирай базата данни</string>
@@ -978,7 +979,9 @@
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom.</string>
     <string name="notification">Известие</string>
     <string name="notification_message">Известие: %1$s</string>
+    <string name="alarm_message">Аларма: %1$s</string>
     <string name="message_short">Съоб:</string>
+    <string name="alarm_short">Алармa:</string>
     <string name="profilepercentage">Профил процент</string>
     <string name="percent_u">Процент [%]:</string>
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
@@ -1180,4 +1183,5 @@
     <string name="filter">Филтър</string>
     <string name="copytolocalprofile_invalid">Не може да се създаде локален профил. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
+    <string name="alarm">Аларма</string>
 </resources>
