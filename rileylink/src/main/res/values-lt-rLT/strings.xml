@@ -27,6 +27,7 @@
     <string name="rileylink_device_model">Įrenginio modelis</string>
     <string name="rileylink_last_used_frequency">Paskutinis naudotas dažnis</string>
     <string name="rileylink_last_device_contact">Paskutinis įrenginio kontaktas</string>
+    <string name="rileylink_firmware_version">Programinė įranga</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inicijuojamas Bluetooth…</string>
     <string name="rileylink_state_bt_error">Bluetooth klaida</string>
