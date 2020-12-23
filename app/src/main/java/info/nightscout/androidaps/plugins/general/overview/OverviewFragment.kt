@@ -186,6 +186,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
         overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
         overview_temptarget?.setOnClickListener(this)
+        overview_temptarget?.setOnLongClickListener(this)
         overview_accepttempbutton?.setOnClickListener(this)
         overview_treatmentbutton?.setOnClickListener(this)
         overview_wizardbutton?.setOnClickListener(this)
@@ -361,6 +362,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 OverviewMenus.showOKCancel = false
                 v.performClick()
             }
+            R.id.overview_temptarget -> v.performClick()
         }
         return false
     }
