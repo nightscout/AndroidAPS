@@ -32,6 +32,7 @@ class ConfigBuilderPlugin @Inject constructor(
     .showInList(true)
     .alwaysEnabled(true)
     .alwaysVisible(false)
+    .pluginIcon(R.drawable.ic_cogs)
     .pluginName(R.string.configbuilder)
     .shortName(R.string.configbuilder_shortname)
     .description(R.string.description_config_builder),

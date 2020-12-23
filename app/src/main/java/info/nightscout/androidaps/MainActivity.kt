@@ -95,6 +95,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
+    private var menu: Menu? = null
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
         it?.let {
@@ -122,6 +123,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
+                setPluginPreferenceMenuName()
                 checkPluginPreferences(main_pager)
             }
         })
@@ -200,6 +202,12 @@ class MainActivity : NoSplashAppCompatActivity() {
             if (p.isEnabled() && p.hasFragment() && !p.isFragmentVisible() && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(p.name)
                 menuItem.isCheckable = true
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
                     intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
@@ -266,9 +274,16 @@ class MainActivity : NoSplashAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    private fun setPluginPreferenceMenuName() {
+        val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
+        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+       this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
+        setPluginPreferenceMenuName()
         checkPluginPreferences(main_pager)
         return true
     }

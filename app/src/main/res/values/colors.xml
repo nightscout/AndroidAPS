@@ -25,6 +25,7 @@
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="exercise">#67DFE8</color>
 
 
     <color name="cardObjectiveText">#779ECB</color>

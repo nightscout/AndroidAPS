@@ -51,6 +51,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.sensitivityweightedaverage)
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_aaps)

@@ -57,6 +57,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
+                        .pluginIcon(R.drawable.ic_ict)
                         .pluginName(R.string.mdi)
                         .description(R.string.description_pump_mdi),
                 injector, aapsLogger, resourceHelper, commandQueue
@@ -132,7 +133,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
     }
 
     @NonNull @Override

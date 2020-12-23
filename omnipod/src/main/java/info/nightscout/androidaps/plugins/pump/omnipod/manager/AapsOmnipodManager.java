@@ -120,8 +120,8 @@ public class AapsOmnipodManager {
     private boolean notificationUncertainSmbSoundEnabled;
     private boolean notificationUncertainBolusSoundEnabled;
     private boolean automaticallyAcknowledgeAlertsEnabled;
-    private boolean testBeepButtonEnabled;
     private boolean rileylinkStatsButtonEnabled;
+    private boolean useRileyLinkBatteryLevel;
 
     @Inject
     public AapsOmnipodManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -165,7 +165,8 @@ public class AapsOmnipodManager {
         tbrBeepsEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TBR_BEEPS_ENABLED, false);
         suspendDeliveryButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED, false);
         pulseLogButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
-        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED, false);
+        rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED, false);
+        useRileyLinkBatteryLevel = sp.getBoolean(OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL, false);
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
         notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, false);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
@@ -218,7 +219,6 @@ public class AapsOmnipodManager {
         addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.comment, result.success);
 
         if (result.success) {
-            uploadCareportalEvent(System.currentTimeMillis() - 2000, CareportalEvent.PUMPBATTERYCHANGE);
             uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
             uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 
@@ -493,7 +493,7 @@ public class AapsOmnipodManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
-            showNotification(Notification.OMNIPOD_UNCERTAIN_TBR, getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+            showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
 
             splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
 
@@ -503,7 +503,7 @@ public class AapsOmnipodManager {
             long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
             if (!OmnipodManager.isCertainFailure(ex)) {
-                showNotification(Notification.OMNIPOD_UNCERTAIN_TBR, getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
 
                 // Assume that setting the temp basal succeeded here, because in case it didn't succeed,
                 // The next StatusResponse that we receive will allow us to recover from the wrong state
@@ -522,6 +522,8 @@ public class AapsOmnipodManager {
 
         addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
 
+        sendEvent(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
+
         return new PumpEnactResult(injector)
                 .duration(tempBasalPair.getDurationMinutes())
                 .absolute(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()))
@@ -533,7 +535,7 @@ public class AapsOmnipodManager {
             executeCommand(() -> delegate.cancelTemporaryBasal(isTbrBeepsEnabled()));
         } catch (Exception ex) {
             if (OmnipodManager.isCertainFailure(ex)) {
-                showNotification(Notification.OMNIPOD_UNCERTAIN_TBR, getStringResource(R.string.omnipod_error_cancel_temp_basal_failed_uncertain), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_error_cancel_temp_basal_failed_uncertain), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? R.raw.boluserror : null);
             } else {
                 splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
             }
@@ -551,6 +553,8 @@ public class AapsOmnipodManager {
                 .source(Source.PUMP);
 
         activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
+
+        sendEvent(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -656,12 +660,12 @@ public class AapsOmnipodManager {
         return pulseLogButtonEnabled;
     }
 
-    public boolean isTestBeepButtonEnabled() {
-        return testBeepButtonEnabled;
-    }
-
     public boolean isRileylinkStatsButtonEnabled() {
         return rileylinkStatsButtonEnabled;
+    }
+
+    public boolean isUseRileyLinkBatteryLevel() {
+        return useRileyLinkBatteryLevel;
     }
 
     public boolean isTimeChangeEventEnabled() {

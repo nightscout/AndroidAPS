@@ -85,7 +85,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
                         .fragmentClass(DanaFragment.class.getName())
-                        .pluginIcon(R.drawable.ic_dana_rs)
+                        .pluginIcon(R.drawable.ic_danars_128)
                         .pluginName(R.string.danarspump)
                         .shortName(R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
@@ -361,7 +361,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         if (sExecutionService != null) {
             sExecutionService.getPumpStatus();
             pumpDescription.basalStep = danaPump.getBasalStep();

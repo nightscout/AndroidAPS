@@ -55,6 +55,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.sensitivityoref1)
                         .shortName(R.string.sensitivity_shortname)
                         .enableByDefault(true)

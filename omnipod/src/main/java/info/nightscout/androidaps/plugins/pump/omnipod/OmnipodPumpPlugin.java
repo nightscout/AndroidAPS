@@ -75,6 +75,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
@@ -89,6 +90,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandPlay
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandUpdateAlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
@@ -117,6 +119,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
+    public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
     private final PodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
@@ -135,8 +138,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final DateUtil dateUtil;
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
+    private final OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
-
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
 
@@ -173,12 +176,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            NSUpload nsUpload
+            NSUpload nsUpload,
+            OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodOverviewFragment.class.getName()) //
-                        .pluginIcon(R.drawable.ic_pod)
+                        .pluginIcon(R.drawable.ic_pod_128)
                         .pluginName(R.string.omnipod_name) //
                         .shortName(R.string.omnipod_name_short) //
                         .preferencesId(R.xml.pref_omnipod) //
@@ -200,6 +204,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
         this.nsUpload = nsUpload;
+        this.omnipodRileyLinkCommunicationManager = omnipodRileyLinkCommunicationManager;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -309,7 +314,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
-                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEYLINK_STATS_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
@@ -390,7 +396,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             activePlugin.getActiveTreatments().removeTempBasal(tempBasal);
         }
 
-        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_UNCERTAIN_TBR));
+        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
     }
 
     private void handleActivePodAlerts() {
@@ -537,18 +543,24 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     /**
      * We don't do periodical status requests because that could drain the Pod's battery
-     * The only actual status requests we send to the Pod here are on startup (in {@link #initializeAfterRileyLinkConnection() initializeAfterRileyLinkConnection()})
+     * The only actual status requests we send to the Pod here are on startup (in {@link #initializeAfterRileyLinkConnection() initializeAfterRileyLinkConnection()}),
+     * When explicitly requested through SMS commands
      * And when the basal and/or temp basal status is uncertain
      * When the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through {@link #executeCustomCommand(CustomCommand)})
      */
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
             firstRun = false;
-        } else if (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain()) {
-            aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request because basal and/or temp basal is uncertain");
-            getPodStatus();
+        } else {
+            if ("SMS".equals(reason)) {
+                aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request it was requested through an SMS");
+                getPodStatus();
+            } else if (podStateManager.isPodRunning() && (!podStateManager.isBasalCertain() || !podStateManager.isTempBasalCertain())) {
+                aapsLogger.info(LTag.PUMP, "Acknowledged AAPS getPumpStatus request because basal and/or temp basal is uncertain");
+                getPodStatus();
+            }
         }
     }
 
@@ -596,15 +608,19 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return 0.0d;
         }
         Double reservoirLevel = podStateManager.getReservoirLevel();
-        return reservoirLevel == null ? 75.0 : reservoirLevel;
+        // Omnipod only reports reservoir level when it's 50 units or less.
+        // When it's over 50 units, we don't know, so return some default over 50 units
+        return reservoirLevel == null ? RESERVOIR_OVER_50_UNITS_DEFAULT : reservoirLevel;
     }
 
     @Override
     public int getBatteryLevel() {
-        if (!podStateManager.isPodRunning()) {
-            return 0;
+        if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
+            Integer batteryLevel = omnipodRileyLinkCommunicationManager.getBatteryLevel();
+            return batteryLevel == null ? 0 : batteryLevel;
         }
-        return 75;
+
+        return 0;
     }
 
     @NonNull @Override
@@ -728,11 +744,22 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
-            pump.put("battery", battery);
+            if (isUseRileyLinkBatteryLevel()) {
+                pump.put("battery", battery);
+            }
+
             pump.put("status", status);
             pump.put("extended", extended);
-            pump.put("reservoir", getReservoirLevel());
-            pump.put("clock", DateUtil.toISOString(new Date()));
+
+            double reservoirLevel = getReservoirLevel();
+            if (reservoirLevel > OmnipodConstants.MAX_RESERVOIR_READING) {
+                pump.put("reservoir_display_override", "50+");
+                pump.put("reservoir", OmnipodConstants.MAX_RESERVOIR_READING);
+            } else {
+                pump.put("reservoir", reservoirLevel);
+            }
+
+            pump.put("clock", DateUtil.toISOString(podStateManager.getTime().toDate()));
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMP, "Unhandled exception", e);
         }
@@ -758,34 +785,35 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         return pumpDescription;
     }
 
-    // FIXME i18n, null checks: iob, TDD
     @NonNull @Override
     public String shortStatus(boolean veryShort) {
         if (!podStateManager.isPodActivationCompleted()) {
-            return "No active pod";
+            return resourceHelper.gs(R.string.omnipod_short_status_no_active_pod);
         }
         String ret = "";
         if (lastConnectionTimeMillis != 0) {
             long agoMsec = System.currentTimeMillis() - lastConnectionTimeMillis;
             int agoMin = (int) (agoMsec / 60d / 1000d);
-            ret += "LastConn: " + agoMin + " min ago\n";
+            ret += resourceHelper.gs(R.string.omnipod_short_status_last_connection, agoMin) + "\n";
         }
         if (podStateManager.getLastBolusStartTime() != null) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(podStateManager.getLastBolusAmount()) + "U @" + //
-                    android.text.format.DateFormat.format("HH:mm", podStateManager.getLastBolusStartTime().toDate()) + "\n";
+            ret += resourceHelper.gs(R.string.omnipod_short_status_last_bolus, DecimalFormatter.to2Decimal(podStateManager.getLastBolusAmount()),
+                    android.text.format.DateFormat.format("HH:mm", podStateManager.getLastBolusStartTime().toDate())) + "\n";
         }
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
-            ret += "Temp: " + activeTemp.toStringFull() + "\n";
+            ret += resourceHelper.gs(R.string.omnipod_short_status_temp_basal, activeTemp.toStringFull()) + "\n";
         }
         ExtendedBolus activeExtendedBolus = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(
                 System.currentTimeMillis());
         if (activeExtendedBolus != null) {
-            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
+            ret += resourceHelper.gs(R.string.omnipod_short_status_extended_bolus, activeExtendedBolus.toString()) + "\n";
         }
-        ret += "Reserv: " + DecimalFormatter.to0Decimal(getReservoirLevel()) + "U\n";
-        ret += "Batt: " + getBatteryLevel();
-        return ret;
+        ret += resourceHelper.gs(R.string.omnipod_short_status_reservoir, (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+" : DecimalFormatter.to0Decimal(getReservoirLevel()))) + "\n";
+        if (isUseRileyLinkBatteryLevel()) {
+            ret += resourceHelper.gs(R.string.omnipod_short_status_rl_battery, getBatteryLevel()) + "\n";
+        }
+        return ret.trim();
     }
 
     @Override
@@ -1018,6 +1046,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @NonNull @Override public PumpEnactResult loadTDDs() {
         aapsLogger.debug(LTag.PUMP, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
+    }
+
+    public boolean isUseRileyLinkBatteryLevel() {
+        return aapsOmnipodManager.isUseRileyLinkBatteryLevel();
     }
 
     private void initializeAfterRileyLinkConnection() {
