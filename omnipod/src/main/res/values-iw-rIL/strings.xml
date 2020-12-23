@@ -206,6 +206,10 @@
     <string name="omnipod_overview_total_delivered">סה\"כ שהוזרק</string>
     <string name="omnipod_overview_total_delivered_value">%1$.2f יח\'</string>
     <string name="omnipod_overview_pod_address">כתובת הפוד</string>
+    <string name="omnipod_overview_last_connection">חיבור אחרון</string>
+    <string name="omnipod_overview_last_bolus">בולוס אחרון</string>
+    <string name="omnipod_overview_temp_basal_rate">ערך בזאלי זמני</string>
+    <string name="omnipod_overview_base_basal_rate">ערך בזאלי בסיסי</string>
     <string name="omnipod_overview_reservoir">מכל</string>
     <string name="omnipod_overview_time_on_pod">זמן פעילות הפוד</string>
     <string name="omnipod_overview_temp_basal_value">%1$.2f יח\'\ש\' @ %2$s (%3$d\%4$d דק\')</string>
