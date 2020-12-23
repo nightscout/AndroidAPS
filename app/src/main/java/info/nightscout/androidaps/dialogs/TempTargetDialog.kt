@@ -85,23 +85,11 @@ class TempTargetDialog : DialogFragmentWithDate() {
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             overview_temptarget_reason.adapter = adapterReason
 
-            overview_temptarget_custom?.setOnClickListener {
-                overview_temptarget_temptarget.value = savedInstanceState?.getDouble("overview_temptarget_temptarget") ?: if (profileFunction.getUnits() == Constants.MMOL) Constants.MIN_TT_MMOL else Constants.MIN_TT_MGDL
-                overview_temptarget_duration.value = savedInstanceState?.getDouble("overview_temptarget_duration")  ?: 0.0
-                overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.manual)));
-            }
-
             overview_temptarget_cancel?.setOnClickListener { shortClick(it) }
             overview_temptarget_eating_soon?.setOnClickListener { shortClick(it) }
             overview_temptarget_activity?.setOnClickListener { shortClick(it) }
             overview_temptarget_hypo?.setOnClickListener { shortClick(it) }
-            /*
-            overview_temptarget_cancel?.setOnLongClickListener {
-                longClick(it)
-                return@setOnLongClickListener true
-            }
 
-             */
             overview_temptarget_eating_soon?.setOnLongClickListener {
                 longClick(it)
                 return@setOnLongClickListener true
@@ -124,11 +112,6 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
     private fun longClick(v:View) {
         when (v.id) {
-            R.id.overview_temptarget_cancel         -> {
-                overview_temptarget_temptarget.value = 0.0
-                overview_temptarget_duration.value = 0.0
-                overview_temptarget_reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.cancel)))
-            }
             R.id.overview_temptarget_eating_soon    -> {
                 overview_temptarget_temptarget.value = defaultValueHelper.determineEatingSoonTT()
                 overview_temptarget_duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()

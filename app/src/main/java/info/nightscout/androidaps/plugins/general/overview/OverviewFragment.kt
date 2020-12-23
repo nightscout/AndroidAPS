@@ -185,7 +185,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
         overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
-        //overviewMenus.setupPopupMenu(overview_temptarget, requireContext(), childFragmentManager)
         overview_temptarget?.setOnClickListener(this)
         overview_accepttempbutton?.setOnClickListener(this)
         overview_treatmentbutton?.setOnClickListener(this)
@@ -358,7 +357,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
             }
-            R.id.overview_apsmode, R.id.overview_activeprofile, R.id.overview_temptarget -> {
+            R.id.overview_apsmode, R.id.overview_activeprofile -> {
                 OverviewMenus.showOKCancel = false
                 v.performClick()
             }

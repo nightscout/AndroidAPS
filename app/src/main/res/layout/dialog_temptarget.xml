@@ -142,26 +142,11 @@
         </LinearLayout>
 
         <include layout="@layout/datetime" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/overview_temptarget_custom"
-                style="?android:attr/buttonStyle"
-                android:layout_width="0px"
-                android:layout_height="fill_parent"
-                android:layout_marginEnd="-4dp"
-                android:layout_weight="0.5"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:drawableTop="@drawable/ic_target_manual"
-                android:text="@string/manual"
-                android:textColor="@color/tempTargetConfirmation"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:visibility="gone"
-                android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/overview_temptarget_cancel"

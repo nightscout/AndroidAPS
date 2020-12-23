@@ -226,30 +226,15 @@ class OverviewMenus @Inject constructor(
                         popup.menu.add(resourceHelper.gs(R.string.careportal_profileswitch))
                     }
                 }
-                R.id.overview_temptarget    -> {
-                    val item = popup.menu.add(Menu.NONE,1,Menu.NONE,resourceHelper.gs(R.string.careportal_temporarytarget))                   // title
-                    val title = item.title
-                    val s = SpannableString(title)
-                    s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.colorAccent)), 0, s.length, 0)
-                    item.setTitle(s)
-                    popup.menu.add(resourceHelper.gs(R.string.custom))
-                    popup.menu.add(resourceHelper.gs(R.string.eatingsoon))
-                    popup.menu.add(resourceHelper.gs(R.string.activity))
-                    popup.menu.add(resourceHelper.gs(R.string.hypo))
-                    if (activePlugin.activeTreatments.tempTargetFromHistory != null) {
-                        popup.menu.add(resourceHelper.gs(R.string.cancel))
-                    }
-                }
             }
             popup.setOnMenuItemClickListener {
                 if (it.itemId != 1) {
                     if (showOKCancel) {
                         when (it.title) {
                             resourceHelper.gs(R.string.careportal_profileswitch),
-                            resourceHelper.gs(R.string.viewprofile),
-                            resourceHelper.gs(R.string.custom) -> onItemSelected(it, manager)
+                            resourceHelper.gs(R.string.viewprofile)  -> onItemSelected(it, manager)
 
-                            else                               -> {
+                            else   -> {
                                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.confirm), it.title.toString(),
                                     Runnable {
                                         onItemSelected(it, manager)
@@ -393,60 +378,6 @@ class OverviewMenus @Inject constructor(
                 val pvd = ProfileViewerDialog()
                 pvd.arguments = args
                 pvd.show(manager, "ProfileViewDialog")
-            }
-
-            resourceHelper.gs(R.string.eatingsoon)               -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON")
-                val target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), profileFunction.getUnits())
-                val tempTarget = TempTarget()
-                    .date(System.currentTimeMillis())
-                    .duration(defaultValueHelper.determineEatingSoonTTDuration())
-                    .reason(resourceHelper.gs(R.string.eatingsoon))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-            }
-
-            resourceHelper.gs(R.string.activity)                                      -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET ACTIVITY")
-                val target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), profileFunction.getUnits())
-                val tempTarget = TempTarget()
-                    .date(DateUtil.now())
-                    .duration(defaultValueHelper.determineActivityTTDuration())
-                    .reason(resourceHelper.gs(R.string.activity))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-            }
-
-            resourceHelper.gs(R.string.hypo)                                          -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET HYPO")
-                val target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), profileFunction.getUnits())
-                val tempTarget = TempTarget()
-                    .date(DateUtil.now())
-                    .duration(defaultValueHelper.determineHypoTTDuration())
-                    .reason(resourceHelper.gs(R.string.hypo))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-            }
-
-            resourceHelper.gs(R.string.custom)                                        -> {
-                TempTargetDialog().show(manager, "Overview")
-            }
-
-            resourceHelper.gs(R.string.cancel)                                        -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET CANCEL")
-                val tempTarget = TempTarget()
-                    .source(Source.USER)
-                    .date(DateUtil.now())
-                    .duration(0)
-                    .low(0.0)
-                    .high(0.0)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
             }
         }
         return false
