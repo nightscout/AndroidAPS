@@ -31,11 +31,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.dialogs.CalibrationDialog
-import info.nightscout.androidaps.dialogs.CarbsDialog
-import info.nightscout.androidaps.dialogs.InsulinDialog
-import info.nightscout.androidaps.dialogs.TreatmentDialog
-import info.nightscout.androidaps.dialogs.WizardDialog
+import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -189,7 +185,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
         overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
-        overviewMenus.setupPopupMenu(overview_temptarget, requireContext(), childFragmentManager)
+        //overviewMenus.setupPopupMenu(overview_temptarget, requireContext(), childFragmentManager)
+        overview_temptarget?.setOnClickListener(this)
         overview_accepttempbutton?.setOnClickListener(this)
         overview_treatmentbutton?.setOnClickListener(this)
         overview_wizardbutton?.setOnClickListener(this)
@@ -201,7 +198,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_quickwizardbutton?.setOnLongClickListener(this)
         overview_apsmode?.setOnLongClickListener(this)
         overview_activeprofile?.setOnLongClickListener(this)
-        overview_temptarget?.setOnLongClickListener(this)
     }
 
     override fun onPause() {
@@ -294,7 +290,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
                 R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
-
+                R.id.overview_temptarget -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_cgmbutton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
