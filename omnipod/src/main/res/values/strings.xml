@@ -44,7 +44,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Show Suspend Delivery button in Omnipod tab</string>
     <string name="omnipod_config_pulse_log_button_enabled">Show Pulse Log button in Pod Management menu</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Show RileyLink Stats button in Pod Management menu</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Use battery level reported by EmaLink/OrangeLink</string>
+    <string name="omnipod_config_use_riley_link_battery_level">Use battery level reported by OrangeLink/EmaLink</string>
     <string name="omnipod_config_use_riley_link_battery_level_summary">DOES NOT work with the original RileyLink. May not work with other RileyLink alternatives.</string>
     <string name="omnipod_config_time_change_enabled">DST/Time zone detection enabled</string>
     <string name="omnipod_config_expiration_reminder_enabled">Expiration reminder enabled</string>
