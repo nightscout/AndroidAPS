@@ -10,7 +10,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показвай спряна доставката в раздела Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показване на PULSE LOG в менюто на Pod Management</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Бутон Показване RileyLink Stats в меню Управление на Pod</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Вземи нивото на батерия от EmaLink/OrangeLink</string>
     <string name="omnipod_config_use_riley_link_battery_level_summary">НЕ работи с оригиналната RileyLink. Може да не работи с други RileyLink алтернативи.</string>
     <string name="omnipod_config_time_change_enabled">Разрешено е Лятно часово време</string>
     <string name="omnipod_config_expiration_reminder_enabled">Напомняне за срок</string>
