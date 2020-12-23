@@ -72,7 +72,7 @@ public class Objective2 extends Objective {
         tasks.add(new ExamTask(R.string.profileswitch_label, R.string.profileswitch_pctwillchange,"profileswitch")
                 .option(new Option(R.string.profileswitch_basallower, true))
                 .option(new Option(R.string.profileswitch_isfhigher, true))
-                .option(new Option(R.string.profileswitch_iclower, true))
+                .option(new Option(R.string.profileswitch_iclower, false))
                 .option(new Option(R.string.profileswitch_unchanged, false))
                 .hint(new Hint(R.string.profileswitch_hint1))
         );
