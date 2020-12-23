@@ -66,6 +66,7 @@
                 android:text="@string/manual"
                 android:textColor="@color/tempTargetConfirmation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="gone"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -194,6 +195,29 @@
                 android:paddingEnd="5dp"
                 android:text="@string/unit_minute_short"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/reason"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/overview_temptarget_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
 
         </LinearLayout>
 
