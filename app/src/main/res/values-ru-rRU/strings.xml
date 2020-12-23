@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
     <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы (г)</string>
+    <string name="nav_preferences_plugin">Настройки %1$s</string>
     <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
     <string name="nav_resetdb">обнулить базы</string>
