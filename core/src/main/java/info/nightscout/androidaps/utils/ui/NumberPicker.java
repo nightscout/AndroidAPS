@@ -134,12 +134,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         setTextWatcher(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -155,11 +153,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             }
         });
 
-        editText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
-                focused = hasFocus;
-                updateEditText();
-            }
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            focused = hasFocus;
+            if (!focused) getValue(); // check min/max
+            updateEditText();
         });
     }
 
@@ -211,7 +208,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
-        this.formatter = formater;
+        this.formatter = formatter;
         this.allowZero = allowZero;
         callValueChangedListener();
         this.okButton = okButton;
@@ -236,6 +233,14 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     }
 
     public Double getValue() {
+        if (value > maxValue) {
+            value = maxValue;
+            ToastUtils.showToastInUiThread(getContext(), getContext().getString(R.string.youareonallowedlimit));
+        }
+        if (value < minValue) {
+            value = minValue;
+            ToastUtils.showToastInUiThread(getContext(), getContext().getString(R.string.youareonallowedlimit));
+        }
         return value;
     }
 
