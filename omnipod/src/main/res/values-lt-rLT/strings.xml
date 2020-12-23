@@ -7,11 +7,16 @@
     <string name="omnipod_config_basal_beeps_enabled">Bazės signalai įjungti</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB signalai įjungti</string>
     <string name="omnipod_config_tbr_beeps_enabled">Laikinos bazės signalai įjungti</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Omnipod skirtuke rodyti mygtuką Sustabdyti tiekimą</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Pod valdymo meniu rodyti mygtuką Pulse log</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Pod valdymo meniu rodyti mygtuką RileyLink Stats</string>
     <string name="omnipod_config_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įgalintas</string>
     <string name="omnipod_config_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Valandos prieš išsijungimą</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Įgalintas įspėjimas apie žemą rezervuaro lygį</string>
     <string name="omnipod_config_low_reservoir_alert_units">Vienetų skaičius</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Įjungtas garsas neaiškiems SMB perspėjimams</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Kiti</string>
     <string name="omnipod_preference_category_alerts">Perspėjimai</string>
