@@ -184,7 +184,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         prepareGraphs()
 
         overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
-        overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
+        //overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
+        overview_activeprofile?.setOnClickListener(this)
+        overview_activeprofile?.setOnLongClickListener(this)
         overview_temptarget?.setOnClickListener(this)
         overview_temptarget?.setOnLongClickListener(this)
         overview_accepttempbutton?.setOnClickListener(this)
@@ -290,6 +292,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
                 R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_activeprofile -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_temptarget -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_cgmbutton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
@@ -358,11 +361,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
             }
-            R.id.overview_apsmode, R.id.overview_activeprofile -> {
+            R.id.overview_apsmode           -> {
                 OverviewMenus.showOKCancel = false
                 v.performClick()
             }
-            R.id.overview_temptarget -> v.performClick()
+            R.id.overview_temptarget        -> v.performClick()
+            R.id.overview_activeprofile     -> {
+                val args = Bundle()
+                args.putLong("time", DateUtil.now())
+                args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                val pvd = ProfileViewerDialog()
+                pvd.arguments = args
+                pvd.show(childFragmentManager, "ProfileViewDialog")
+            }
         }
         return false
     }
