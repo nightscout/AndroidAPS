@@ -82,6 +82,7 @@
     <string name="omnipod_error_set_basal_failed">Impostazione profilo basale fallita.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">La cancellazione della basale temporanea potrebbe essere fallita. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">L\'Impostazione dell\'ora potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione dalla scheda Omnipod.</string>
