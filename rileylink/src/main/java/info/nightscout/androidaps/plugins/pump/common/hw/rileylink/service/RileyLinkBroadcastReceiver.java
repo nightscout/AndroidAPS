@@ -159,7 +159,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
 
 //            if (isLoggingEnabled())
             aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): " + rlVersion.name());
-            this.rileyLinkServiceData.versionCC110 = rlVersion;
+            this.rileyLinkServiceData.firmwareVersion = rlVersion;
 
             ServiceTask task = new InitializePumpManagerTask(injector, context);
             serviceTaskExecutor.startTask(task);

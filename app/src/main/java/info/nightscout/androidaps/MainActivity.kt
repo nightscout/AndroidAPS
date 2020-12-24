@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,6 +20,7 @@ import android.text.util.Linkify
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.*
+import android.view.MenuItem.SHOW_AS_ACTION_ALWAYS
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -66,8 +68,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.source.DexcomPlugin
-import info.nightscout.androidaps.plugins.source.XdripPlugin
+import info.nightscout.androidaps.plugins.source.*
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -127,6 +128,11 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var config: Config
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var xdripPlugin: XdripPlugin
+    @Inject lateinit var glimpPlugin: GlimpPlugin
+    @Inject lateinit var tomatoPlugin: TomatoPlugin
+    @Inject lateinit var randomPlugin: RandomBgPlugin
+    @Inject lateinit var nSClientSourcePlugin: NSClientSourcePlugin
+    @Inject lateinit var pochTechPlugin: PoctechPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var quickWizard: QuickWizard
@@ -294,6 +300,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 // do the trick to show bottombar >> performHide and than performShow
                 bottom_app_bar.performHide()
                 bottom_app_bar.performShow()
+                setPluginPreferenceMenuName()
                 checkPluginPreferences(main_pager)
                 setPluginPreferenceMenuName()
                 setDisabledMenuItemColorPluginPreferences()
@@ -351,7 +358,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
             careportal_pbage?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
             careportal_batterylevel?.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12F)
         }
+
     }
+
 
     open fun onClick(view: View) {
         action(view, view.id, supportFragmentManager)
@@ -378,6 +387,30 @@ open class MainActivity : NoSplashAppCompatActivity() {
             reservoir?.visibility = View.VISIBLE
             canula?.visibility = View.VISIBLE
             battery?.visibility = View.VISIBLE
+        }
+
+        //set sensor icon if possible
+        if(dexcomPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+        } else if(tomatoPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sensor))
+        } else if(pochTechPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_poctech))
+        } else if(glimpPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_glimp))
+        } else if(nSClientSourcePlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_nsclient_bg))
+        } else if(randomPlugin.isEnabled()) {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dice))
+        }
+
+        else if(xdripPlugin.isEnabled()) {
+            if( xdripPlugin.advancedFilteringSupported())
+                sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_dexcom_g6))
+            else
+                sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_xdrip))
+        } else {
+            sensorage?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_generic_cgm))
         }
     }
 
@@ -840,7 +873,8 @@ open class MainActivity : NoSplashAppCompatActivity() {
         var itemId = 0
         for (p in activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p)
-            if (p.hasFragment() && p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
+            if (
+                p.hasFragment() && p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
                 if(p.menuIcon != -1) {
                     menuItem.setIcon(p.menuIcon)
@@ -849,6 +883,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     menuItem.setIcon(R.drawable.ic_settings)
                 }
                 menuItem.isCheckable = true
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     main_drawer_layout.closeDrawers()
                     main_pager.setCurrentItem(it.itemId, true)
@@ -910,7 +950,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
 
     private fun setPluginPreferenceMenuName() {
         val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = plugin.name + ' ' + resourceHelper.gs(R.string.nav_preferences)
+        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -919,7 +959,13 @@ open class MainActivity : NoSplashAppCompatActivity() {
         var itemId = 0
         for (p in activePlugin.getPluginsList()) {
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
-                val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name)
+                val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name )
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
                     intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))

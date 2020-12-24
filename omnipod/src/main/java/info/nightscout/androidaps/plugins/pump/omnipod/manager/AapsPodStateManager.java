@@ -5,6 +5,8 @@ import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.omnipod.definition.OmnipodStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.event.EventOmnipodActiveAlertsChanged;
@@ -49,5 +51,9 @@ public class AapsPodStateManager extends PodStateManager {
 
     @Override protected void onFaultEventChanged() {
         rxBus.send(new EventOmnipodFaultEventChanged());
+    }
+
+    @Override protected void onUpdatedFromResponse() {
+        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED));
     }
 }

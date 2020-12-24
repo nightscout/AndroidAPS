@@ -57,10 +57,11 @@
         <item name="iconCanula">@drawable/ic_katheter</item>
         <item name="iconBattery">@drawable/ic_battery</item>
         <!-- Icons of bottom naviagtion bar -->
-        <item name="iconInsulin">@drawable/ic_iob_48</item>
+        <item name="iconInsulin">@drawable/ic_insulin</item>
         <item name="iconCarbs">@drawable/ic_carb_48</item>
         <item name="iconWizzard">@drawable/ic_calculator_48</item>
         <item name="iconCgm">@drawable/ic_blooddrop_48</item>
+        <item name="iconTreatment">@drawable/ic_treatments</item>
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
         <!-- Graph specific colors  -->
@@ -134,6 +135,7 @@
         <item name="iconCarbs">@drawable/carb_white_shadow</item>
         <item name="iconWizzard">@drawable/calculator_white_shadow</item>
         <item name="iconCgm">@drawable/blooddrop_white_shadow</item>
+        <item name="iconTreatment">@drawable/ic_treatments</item>
         <item name="android:backgroundDimAmount">0.2</item>
         <item name="android:textColorPrimary">@color/ios_blue_default</item>
         <!-- Color of dialogs -->

@@ -137,6 +137,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
     lintOptions {
         checkReleaseBuilds false
         disable 'MissingTranslation'
@@ -246,7 +249,7 @@ dependencies {
 
     testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20200518'
-    testImplementation "org.mockito:mockito-core:3.5.10"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"

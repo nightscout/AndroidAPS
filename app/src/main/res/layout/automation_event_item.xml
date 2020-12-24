@@ -14,22 +14,22 @@
     android:padding="8dp">
 
     <CheckBox
-        android:id="@+id/automation_enabled"
+        android:id="@+id/enabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
     <TextView
-        android:id="@+id/viewEventTitle"
+        android:id="@+id/eventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/automation_enabled"
-        android:layout_alignBottom="@+id/automation_enabled"
+        android:layout_alignTop="@+id/enabled"
+        android:layout_alignBottom="@+id/enabled"
         android:layout_centerVertical="true"
         android:layout_marginTop="6dp"
         android:layout_toStartOf="@+id/iconTrash"
-        android:layout_toEndOf="@id/automation_enabled"
+        android:layout_toEndOf="@id/enabled"
         android:text="Title"
         android:textAlignment="viewStart"
         android:textStyle="bold" />
@@ -59,7 +59,7 @@
         android:id="@+id/iconLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/automation_enabled"
+        android:layout_below="@id/enabled"
         android:orientation="horizontal" />
 
 

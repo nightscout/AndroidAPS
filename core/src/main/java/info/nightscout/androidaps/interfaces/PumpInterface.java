@@ -43,7 +43,7 @@ public interface PumpInterface {
 
     void stopConnecting();
 
-    void getPumpStatus();
+    void getPumpStatus(String reason);
 
     // Upload to pump new basal profile
     @NotNull

@@ -45,7 +45,7 @@
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_actions_temptarget"
+                android:drawableTop="@drawable/ic_temptarget_high"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/careportal_temporarytarget"

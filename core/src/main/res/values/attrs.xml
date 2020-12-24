@@ -28,6 +28,7 @@
     <attr name="iconCarbs" format="reference|color" />
     <attr name="iconWizzard" format="reference|color" />
     <attr name="iconCgm" format="reference|color" />
+    <attr name="iconTreatment" format="reference|color" />
     <!-- Fragment background for some themes default transparent  -->
     <attr name="fragmentbackground" format="reference|color" />
     <!-- Graph specific colors  -->

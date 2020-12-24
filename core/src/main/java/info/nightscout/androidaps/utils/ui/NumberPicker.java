@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.google.android.material.button.MaterialButton;
+import com.j256.ormlite.stmt.query.IsNotNull;
 
 import java.text.NumberFormat;
 import java.util.concurrent.Executors;
@@ -41,7 +43,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     Button minusButton;
     Button plusButton;
 
-    Double value;
+    Double value = 0d;
     Double minValue = 0d;
     Double maxValue = 1d;
     Double step = 1d;
@@ -134,12 +136,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         setTextWatcher(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -155,11 +155,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             }
         });
 
-        editText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
-                focused = hasFocus;
-                updateEditText();
-            }
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            focused = hasFocus;
+            if (!focused) getValue(); // check min/max
+            updateEditText();
         });
     }
 
@@ -206,12 +205,12 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             editText.addTextChangedListener(textWatcher);
     }
 
-    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, MaterialButton okButton) {
+    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formatter, boolean allowZero, MaterialButton okButton) {
         this.value = initValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
-        this.formatter = formater;
+        this.formatter = formatter;
         this.allowZero = allowZero;
         callValueChangedListener();
         this.okButton = okButton;
@@ -236,6 +235,14 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     }
 
     public Double getValue() {
+        if (value > maxValue) {
+            value = maxValue;
+            ToastUtils.showToastInUiThread(getContext(), getContext().getString(R.string.youareonallowedlimit));
+        }
+        if (value < minValue) {
+            value = minValue;
+            ToastUtils.showToastInUiThread(getContext(), getContext().getString(R.string.youareonallowedlimit));
+        }
         return value;
     }
 
@@ -273,7 +280,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         if (value == 0d && !allowZero)
             editText.setText("");
         else
-            editText.setText(formatter.format(value));
+         editText.setText(formatter.format(value));
     }
 
     private void callValueChangedListener() {

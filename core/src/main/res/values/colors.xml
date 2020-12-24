@@ -75,6 +75,7 @@
 
     <color name="tempTargetConfirmation">#77dd77</color>
     <color name="tempTargetDisabledBackground">#303F9F</color>
+    <color name="exercise">#67DFE8</color>
 
     <color name="dialog_title_background">#303030</color>
     <color name="activity_title_background">#121212</color>
@@ -598,5 +599,6 @@
     <color name="toastError">#ff0400</color>
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
+
 
 </resources>
