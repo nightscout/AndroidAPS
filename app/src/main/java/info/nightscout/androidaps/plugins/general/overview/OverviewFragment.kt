@@ -287,13 +287,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
-                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_activeprofile -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_temptarget -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_temptarget        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_activeprofile     -> {
+                    val args = Bundle()
+                    args.putLong("time", DateUtil.now())
+                    args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                    val pvd = ProfileViewerDialog()
+                    pvd.arguments = args
+                    pvd.show(childFragmentManager, "ProfileViewDialog")
+                }
                 R.id.overview_cgmbutton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
@@ -366,14 +373,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 v.performClick()
             }
             R.id.overview_temptarget        -> v.performClick()
-            R.id.overview_activeprofile     -> {
-                val args = Bundle()
-                args.putLong("time", DateUtil.now())
-                args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
-                val pvd = ProfileViewerDialog()
-                pvd.arguments = args
-                pvd.show(childFragmentManager, "ProfileViewDialog")
-            }
+            R.id.overview_activeprofile     -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })}
+
         }
         return false
     }
