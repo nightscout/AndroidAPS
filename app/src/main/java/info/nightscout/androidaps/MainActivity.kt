@@ -225,7 +225,11 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (sp.getBoolean(R.string.key_short_tabtitles, false)) {
             tabs_normal.visibility = View.GONE
             tabs_compact.visibility = View.VISIBLE
-            toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(R.dimen.compact_height).toInt())
+            val typedValue = TypedValue()
+            if (theme.resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
+                toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
+                    TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics))
+            }
             TabLayoutMediator(tabs_compact, main_pager) { tab, position ->
                 tab.text = (main_pager.adapter as TabPageAdapter).getPluginAt(position).nameShort
             }.attach()
