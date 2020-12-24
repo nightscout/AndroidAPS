@@ -5,7 +5,7 @@
     <string name="dia_minimumis3h">Il valore minimo è 3 ore.</string>
     <string name="dia_minimumis5h">Il valore minimo è 5 ore.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Il significato è uguale al parametro DIA utilizzato nel tuo micro.</string>
+    <string name="dia_meaningisequaltodiapump">Il significato è uguale al parametro DIA usato nel tuo micro.</string>
     <string name="dia_valuemustbedetermined">Devi determinare il tuo valore individuale (ma non meno di 5 ore).</string>
     <string name="hypott_label">Argomento: Temp-Target \"Ipoglicemia\"</string>
     <string name="hypott_whenhypott">Qual è la ragione principale per impostare un TT Ipoglicemia?</string>
@@ -14,7 +14,7 @@
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Quale profilo può essere usato e configurato offline?</string>
     <string name="offlineprofile_label">Argomento: profilo offline</string>
-    <string name="offlineprofile_nsprofile">Il profilo NS può essere utilizzato, ma non configurato.</string>
+    <string name="offlineprofile_nsprofile">Il profilo NS può essere usato, ma non configurato.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Argomento: disconnessione dal micro</string>
     <string name="pumpdisconnect_letknow">Click su \'Disconnetti micro\' cosicché AAPS sappia che non viene erogata alcuna insulina.</string>
@@ -41,7 +41,7 @@
     <string name="noisycgm_checksmoothing">Verificare che la tua app CGM faccia lo smoothing dei dati della glicemia.</string>
     <string name="exercise_label">Argomento: esercizio fisico</string>
     <string name="exercise_whattodo">Come puoi aiutare il sistema a gestire l\'esercizio fisico?</string>
-    <string name="exercise_setactivitytt">Utilizzo della funzione temp-target.</string>
+    <string name="exercise_setactivitytt">Uso della funzione temp-target.</string>
     <string name="exercise_switchprofilebelow100">Fare un cambio profilo sotto il 100%.</string>
     <string name="exercise_switchprofileabove100">Fare un cambio profilo sopra il 100%.</string>
     <string name="exercise_stoploop">Stoppare il loop.</string>
@@ -101,16 +101,16 @@
     <string name="sensitivity_label">Argomento: plugin di sensibilità</string>
     <string name="sensitivity_which">Quale algoritmo di sensibilità ha un intervallo di tempo configurabile?</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="sensitivityuam_which">Quale plugin di sensibilità deve essere utilizzato per la funzione UAM?</string>
+    <string name="sensitivityuam_which">Quale plugin di sensibilità deve essere usato per la funzione UAM?</string>
     <string name="wrongcarbs_label">Argomento: errori di immissione carboidrati</string>
     <string name="wrongcarbs_whattodo">Cosa dovresti fare se hai fatto un inserimento non corretto di carboidrati?</string>
     <string name="wrongcarbs_treatmentstab">Nella sezione Trattamenti, eliminare la voce carboidrati non corretta. Inserire nuovi carboidrati.</string>
     <string name="wrongcarbs_addfakeinsulin">Aggiungere insulina fittizia usando la funzione di riempimento</string>
     <string name="extendedcarbs_label">Argomento: cibo con grassi e proteine</string>
     <string name="extendedcarbs_handling">Cosa fare se il tuo cibo contiene una grande quantità di grassi e/o proteine?</string>
-    <string name="extendedcarbs_useextendedcarbs">Convertire grassi e proteine in carboidrati e utilizzare la funzione \"carboidrati estesi\" (eCarbs).</string>
+    <string name="extendedcarbs_useextendedcarbs">Convertire grassi e proteine in carboidrati e usare la funzione \"carboidrati estesi\" (eCarbs).</string>
     <string name="extendedcarbs_add">Convertire grassi e proteine in carboidrati e aggiungerli al calcolo del bolo.</string>
-    <string name="extendedcarbs_useextendedbolus">Utilizzare il bolo esteso per coprire grassi e proteine.</string>
+    <string name="extendedcarbs_useextendedbolus">Usare il bolo esteso per coprire grassi e proteine.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Argomento: monitoraggio remoto</string>
     <string name="nsclient_howcanyou">Come puoi monitorare AAPS del tuo bambino in remoto?</string>
@@ -163,5 +163,5 @@
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Altri medicinali</string>
     <string name="other_medication_text">AAPS riduce la velocità basale per aumentare la glicemia. Farmaci appartenenti al gruppo degli inibitori dell\'SGLT2 (gliflozine) possono ostacolare l\'aumento previsto della glicemia e, quindi, provocare una pericolosa carenza di insulina (DKA).
-\nI marchi più comuni sono: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nCon ciò prometto che non prenderò tali farmaci durante l\'utilizzo di AAPS o disattiverò il loop prima di usare questi farmaci.</string>
+\nI marchi più comuni sono: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nCon ciò prometto che non prenderò tali farmaci durante l\'uso di AAPS o disattiverò il loop prima di usare questi farmaci.</string>
 </resources>
