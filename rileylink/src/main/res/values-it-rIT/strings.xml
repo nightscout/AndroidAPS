@@ -25,7 +25,7 @@
     <string name="rileylink_device">Dispositivo</string>
     <string name="rileylink_device_type">Tipo dispositivo</string>
     <string name="rileylink_device_model">Modello dispositivo</string>
-    <string name="rileylink_last_used_frequency">Ultima frequenza utilizzata</string>
+    <string name="rileylink_last_used_frequency">Ultima frequenza usata</string>
     <string name="rileylink_last_device_contact">Ultimo contatto dispositivo</string>
     <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
