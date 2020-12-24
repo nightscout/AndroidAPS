@@ -35,6 +35,7 @@ public class RileyLinkServiceData {
     public RileyLinkFirmwareVersion firmwareVersion; // here we have "compatibility level" version
     public RileyLinkTargetFrequency rileyLinkTargetFrequency;
     public String rileylinkAddress;
+    public String rileyLinkName;
     long lastTuneUpTime = 0L;
     public Double lastGoodFrequency;
 
