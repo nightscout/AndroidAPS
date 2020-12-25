@@ -152,9 +152,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             String bleVersion = rileyLinkService.rfspy.getBLEVersionCached();
             RileyLinkFirmwareVersion rlVersion = rileyLinkServiceData.firmwareVersion;
 
-            rileyLinkServiceData.rileyLinkName = rileyLinkService.rfspy.getBleDeviceName();
-            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE device name: {}", rileyLinkServiceData.rileyLinkName);
-
             aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy version (BLE113): " + bleVersion);
             rileyLinkService.rileyLinkServiceData.versionBLE113 = bleVersion;
 
