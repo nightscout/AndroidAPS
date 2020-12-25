@@ -18,15 +18,7 @@
     <string name="medtronic_pump_status">Pumpstatus</string>
     <string name="title_activity_rileylink_settings">Inställningar för Riley Link</string>
     <string name="rileylink_title">Riley Link</string>
-    <string name="rileylink_configured_address">Konfigurerad adress</string>
-    <string name="rileylink_connected_device">Ansluten enhet</string>
-    <string name="rileylink_connection_status">Anslutningsstatus</string>
-    <string name="rileylink_connection_error">Anslutningsproblem</string>
     <string name="rileylink_device">Enhet</string>
-    <string name="rileylink_device_type">Enhetstyp</string>
-    <string name="rileylink_device_model">Modell</string>
-    <string name="rileylink_last_used_frequency">Senast använda frekvens</string>
-    <string name="rileylink_last_device_contact">Senaste anslutning</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth initieras…</string>
     <string name="rileylink_state_bt_error">Bluetoothfel</string>
