@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 
 import java.util.Locale;
@@ -31,6 +32,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RileyLinkStatusGeneralFragment extends DaggerFragment implements RefreshableInterface {
 
+    private static final String PLACEHOLDER = "-";
+
     @Inject ActivePluginProvider activePlugin;
     @Inject ResourceHelper resourceHelper;
     @Inject AAPSLogger aapsLogger;
@@ -39,6 +42,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     TextView connectionStatus;
     TextView configuredAddress;
+    TextView connectedRileyLinkName;
     TextView connectedDevice;
     TextView connectionError;
     TextView deviceType;
@@ -65,6 +69,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         this.connectionStatus = getActivity().findViewById(R.id.rls_t1_connection_status);
         this.configuredAddress = getActivity().findViewById(R.id.rls_t1_configured_address);
+        this.connectedRileyLinkName = getActivity().findViewById(R.id.rls_t1_connected_riley_link_name);
         this.connectedDevice = getActivity().findViewById(R.id.rls_t1_connected_device);
         this.connectionError = getActivity().findViewById(R.id.rls_t1_connection_error);
         this.deviceType = getActivity().findViewById(R.id.rls_t1_device_type);
@@ -75,10 +80,11 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.lastDeviceContact = getActivity().findViewById(R.id.rls_t1_last_device_contact);
         this.firmwareVersion = getActivity().findViewById(R.id.rls_t1_firmware_version);
 
+        // BS: FIXME Remove
         if (!first) {
 
             // 7-14
-            int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
+            int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv14, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
                     R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13};
 
             for (int id : ids) {
@@ -100,14 +106,16 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
 
+        // BS FIXME rileyLinkServiceData is injected so I suppose it cannot be null?
         if (rileyLinkServiceData != null) {
-            this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
+            this.configuredAddress.setText(StringUtils.isEmpty(rileyLinkServiceData.rileylinkAddress) ? PLACEHOLDER : rileyLinkServiceData.rileylinkAddress);
+            this.connectedRileyLinkName.setText(StringUtils.isEmpty(rileyLinkServiceData.rileyLinkName) ? PLACEHOLDER : rileyLinkServiceData.rileyLinkName);
             this.connectionError.setText(rileyLinkServiceData.rileyLinkError == null ? //
-                    "-"
+                    PLACEHOLDER
                     : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));
 
             if (firmwareVersion == null) {
-                this.firmwareVersion.setText("BLE113: -\nCC110: -");
+                this.firmwareVersion.setText("BLE113: " + PLACEHOLDER + "\nCC110: " + PLACEHOLDER);
             } else {
                 this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 +
                         "\nCC110: " + rileyLinkServiceData.versionCC110);

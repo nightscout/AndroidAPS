@@ -112,6 +112,17 @@ public class RFSpy {
         reader.newDataIsAvailable();
     }
 
+    public String getBleDeviceName() {
+        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(UUID.fromString(GattAttributes.SERVICE_GAP), UUID.fromString(GattAttributes.CHARA_GAP_NAME));
+        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
+            String value = new String(result.value);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE device name: {}", value);
+            return value;
+        } else {
+            aapsLogger.error(LTag.PUMPBTCOMM, "getBleDeviceName failed with code: " + result.resultCode);
+            return null;
+        }
+    }
 
     public Integer getBatteryLevel() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);

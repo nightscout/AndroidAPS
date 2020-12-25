@@ -64,6 +64,7 @@
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
 
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
+    <string name="rileylink_connected_riley_link_name">Connected RileyLink name</string>
 
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>
