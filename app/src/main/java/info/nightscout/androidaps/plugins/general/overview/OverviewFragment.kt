@@ -31,11 +31,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.dialogs.CalibrationDialog
-import info.nightscout.androidaps.dialogs.CarbsDialog
-import info.nightscout.androidaps.dialogs.InsulinDialog
-import info.nightscout.androidaps.dialogs.TreatmentDialog
-import info.nightscout.androidaps.dialogs.WizardDialog
+import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -187,6 +183,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overviewMenus.setupChartMenu(overview_chartMenuButton)
         prepareGraphs()
 
+        overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
+        //overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
+        overview_activeprofile?.setOnClickListener(this)
+        overview_activeprofile?.setOnLongClickListener(this)
+        overview_temptarget?.setOnClickListener(this)
+        overview_temptarget?.setOnLongClickListener(this)
         overview_accepttempbutton?.setOnClickListener(this)
         overview_treatmentbutton?.setOnClickListener(this)
         overview_wizardbutton?.setOnClickListener(this)
@@ -196,15 +198,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_carbsbutton?.setOnClickListener(this)
         overview_quickwizardbutton?.setOnClickListener(this)
         overview_quickwizardbutton?.setOnLongClickListener(this)
+        overview_apsmode?.setOnLongClickListener(this)
+        overview_activeprofile?.setOnLongClickListener(this)
     }
 
     override fun onPause() {
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacksAndMessages(null)
-        overview_apsmode_llayout?.let { unregisterForContextMenu(it) }
-        overview_activeprofile?.let { unregisterForContextMenu(it) }
-        overview_temptarget?.let { unregisterForContextMenu(it) }
     }
 
     override fun onResume() {
@@ -276,20 +277,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
-        overview_activeprofile?.let { registerForContextMenu(it) }
-        overview_temptarget?.let { registerForContextMenu(it) }
         updateGUI("onResume")
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        overviewMenus.createContextMenu(menu, v)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
-    }
 
     override fun onClick(v: View) {
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
@@ -297,12 +287,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
-                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
-
+                R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_temptarget        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_activeprofile     -> {
+                    val args = Bundle()
+                    args.putLong("time", DateUtil.now())
+                    args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                    val pvd = ProfileViewerDialog()
+                    pvd.arguments = args
+                    pvd.show(childFragmentManager, "ProfileViewDialog")
+                }
                 R.id.overview_cgmbutton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
@@ -370,6 +368,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
             }
+            R.id.overview_apsmode           -> {
+                OverviewMenus.showOKCancel = false
+                v.performClick()
+            }
+            R.id.overview_temptarget        -> v.performClick()
+            R.id.overview_activeprofile     -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })}
+
         }
         return false
     }

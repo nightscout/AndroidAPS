@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -38,6 +37,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -75,6 +75,7 @@ class OverviewMenus @Inject constructor(
 
     companion object {
         const val MAX_GRAPHS = 5 // including main
+        var showOKCancel = true
     }
 
     fun enabledTypes(graph: Int): String {
@@ -175,65 +176,83 @@ class OverviewMenus @Inject constructor(
         }
     }
 
-    fun createContextMenu(menu: ContextMenu, v: View) {
-        when (v.id) {
-            R.id.overview_apsmode       -> {
-                val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-                if (!profileFunction.isProfileValid("ContextMenuCreation")) return
-                menu.setHeaderTitle(resourceHelper.gs(R.string.loop))
-                if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                    menu.add(resourceHelper.gs(R.string.disableloop))
-                    if (!loopPlugin.isSuspended) {
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor1h))
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor2h))
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor3h))
-                        menu.add(resourceHelper.gs(R.string.suspendloopfor10h))
-                    } else {
+    fun setupPopupMenu(v: View, context: Context, manager: FragmentManager) {
+        v.setOnClickListener {
+            val popup = PopupMenu(v.context, v)
+            when (v.id) {
+                R.id.overview_apsmode       -> {
+                    val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
+                    if (profileFunction.isProfileValid("ContextMenuCreation")) {
+                        val item = popup.menu.add(Menu.NONE,1,Menu.NONE,resourceHelper.gs(R.string.loop))                 // title
+                        val title = item.title
+                        val s = SpannableString(title)
+                        s.setSpan( ForegroundColorSpan(resourceHelper.gc(R.color.colorAccent)), 0, s.length, 0)
+                        item.setTitle(s)
+                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                            popup.menu.add(resourceHelper.gs(R.string.disableloop))
+                            if (!loopPlugin.isSuspended) {
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor1h))
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor2h))
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor3h))
+                                popup.menu.add(resourceHelper.gs(R.string.suspendloopfor10h))
+                            } else {
+                                if (!loopPlugin.isDisconnected) {
+                                    popup.menu.add(resourceHelper.gs(R.string.resume))
+                                }
+                            }
+                        }
+                        if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+                            popup.menu.add(resourceHelper.gs(R.string.enableloop))
+                        }
                         if (!loopPlugin.isDisconnected) {
-                            menu.add(resourceHelper.gs(R.string.resume))
+                            if (pumpDescription.tempDurationStep15mAllowed) popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor15m))
+                            if (pumpDescription.tempDurationStep30mAllowed) popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor30m))
+                            popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor1h))
+                            popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor2h))
+                            popup.menu.add(resourceHelper.gs(R.string.disconnectpumpfor3h))
+                        } else {
+                            popup.menu.add(resourceHelper.gs(R.string.reconnect))
                         }
                     }
                 }
-                if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-                    menu.add(resourceHelper.gs(R.string.enableloop))
-                }
-                if (!loopPlugin.isDisconnected) {
-                    showSuspendPump(menu, pumpDescription)
-                } else {
-                    menu.add(resourceHelper.gs(R.string.reconnect))
+                R.id.overview_activeprofile -> {
+                    val item = popup.menu.add(Menu.NONE,1,Menu.NONE,resourceHelper.gs(R.string.profile))                // title
+                    val title = item.title
+                    val s = SpannableString(title)
+                    s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.colorAccent)), 0, s.length, 0)
+                    item.setTitle(s)
+                    popup.menu.add(resourceHelper.gs(R.string.viewprofile))
+                    if (activePlugin.activeProfileInterface.profile != null) {
+                        popup.menu.add(resourceHelper.gs(R.string.careportal_profileswitch))
+                    }
                 }
             }
+            popup.setOnMenuItemClickListener {
+                if (it.itemId != 1) {
+                    if (showOKCancel) {
+                        when (it.title) {
+                            resourceHelper.gs(R.string.careportal_profileswitch),
+                            resourceHelper.gs(R.string.viewprofile)  -> onItemSelected(it, manager)
 
-            R.id.overview_activeprofile -> {
-                menu.setHeaderTitle(resourceHelper.gs(R.string.profile))
-                menu.add(resourceHelper.gs(R.string.viewprofile))
-                if (activePlugin.activeProfileInterface.profile != null) {
-                    menu.add(resourceHelper.gs(R.string.careportal_profileswitch))
+                            else   -> {
+                                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.confirm), it.title.toString(),
+                                    Runnable {
+                                        onItemSelected(it, manager)
+                                    })
+                            }
+                        }
+                    } else {
+                        onItemSelected(it, manager)
+                    }
                 }
+                return@setOnMenuItemClickListener true
             }
-
-            R.id.overview_temptarget    -> {
-                menu.setHeaderTitle(resourceHelper.gs(R.string.careportal_temporarytarget))
-                menu.add(resourceHelper.gs(R.string.custom))
-                menu.add(resourceHelper.gs(R.string.eatingsoon))
-                menu.add(resourceHelper.gs(R.string.activity))
-                menu.add(resourceHelper.gs(R.string.hypo))
-                if (activePlugin.activeTreatments.tempTargetFromHistory != null) {
-                    menu.add(resourceHelper.gs(R.string.cancel))
-                }
-            }
+            popup.setOnDismissListener { showOKCancel = true }
+            popup.show()
         }
     }
 
-    private fun showSuspendPump(menu: ContextMenu, pumpDescription: PumpDescription) {
-        if (pumpDescription.tempDurationStep15mAllowed) menu.add(resourceHelper.gs(R.string.disconnectpumpfor15m))
-        if (pumpDescription.tempDurationStep30mAllowed) menu.add(resourceHelper.gs(R.string.disconnectpumpfor30m))
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor1h))
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor2h))
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor3h))
-    }
-
-    fun onContextItemSelected(item: MenuItem, manager: FragmentManager): Boolean {
+    fun onItemSelected(item: MenuItem, manager: FragmentManager): Boolean {
         val profile = profileFunction.getProfile() ?: return true
         when (item.title) {
             resourceHelper.gs(R.string.disableloop)                                   -> {
@@ -359,60 +378,6 @@ class OverviewMenus @Inject constructor(
                 val pvd = ProfileViewerDialog()
                 pvd.arguments = args
                 pvd.show(manager, "ProfileViewDialog")
-            }
-
-            resourceHelper.gs(R.string.eatingsoon)               -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON")
-                val target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), profileFunction.getUnits())
-                val tempTarget = TempTarget()
-                    .date(System.currentTimeMillis())
-                    .duration(defaultValueHelper.determineEatingSoonTTDuration())
-                    .reason(resourceHelper.gs(R.string.eatingsoon))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-            }
-
-            resourceHelper.gs(R.string.activity)                                      -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET ACTIVITY")
-                val target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), profileFunction.getUnits())
-                val tempTarget = TempTarget()
-                    .date(DateUtil.now())
-                    .duration(defaultValueHelper.determineActivityTTDuration())
-                    .reason(resourceHelper.gs(R.string.activity))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-            }
-
-            resourceHelper.gs(R.string.hypo)                                          -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET HYPO")
-                val target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), profileFunction.getUnits())
-                val tempTarget = TempTarget()
-                    .date(DateUtil.now())
-                    .duration(defaultValueHelper.determineHypoTTDuration())
-                    .reason(resourceHelper.gs(R.string.hypo))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-            }
-
-            resourceHelper.gs(R.string.custom)                                        -> {
-                TempTargetDialog().show(manager, "Overview")
-            }
-
-            resourceHelper.gs(R.string.cancel)                                        -> {
-                aapsLogger.debug("USER ENTRY: TEMP TARGET CANCEL")
-                val tempTarget = TempTarget()
-                    .source(Source.USER)
-                    .date(DateUtil.now())
-                    .duration(0)
-                    .low(0.0)
-                    .high(0.0)
-                activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
             }
         }
         return false

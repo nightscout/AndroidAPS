@@ -230,6 +230,7 @@ public abstract class RileyLinkService extends DaggerService {
         if (rileyLinkBLE.isConnected()) {
             rileyLinkBLE.disconnect();
             rileyLinkServiceData.rileylinkAddress = null;
+            rileyLinkServiceData.rileyLinkName = null;
         }
 
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothReady);
@@ -260,5 +261,9 @@ public abstract class RileyLinkService extends DaggerService {
             return null;
     }
 
-    public abstract boolean verifyConfiguration();
+    public boolean verifyConfiguration() {
+        return verifyConfiguration(false);
+    }
+
+    public abstract boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal);
 }

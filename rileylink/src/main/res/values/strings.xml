@@ -20,16 +20,19 @@
     <string name="medtronic_pump_status">Pump Status</string>
     <string name="title_activity_rileylink_settings">RileyLink Settings</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Configured Address</string>
-    <string name="rileylink_connected_device">Connected Device</string>
-    <string name="rileylink_connection_status">Connection Status</string>
-    <string name="rileylink_connection_error">Connection Error</string>
+    <string name="rileylink_configured_address">Configured Address:</string>
+    <string name="rileylink_connected_device">Connected Device:</string>
+    <string name="rileylink_connection_status">Connection Status:</string>
+    <string name="rileylink_connection_error">Connection Error:</string>
     <string name="rileylink_device">Device</string>
-    <string name="rileylink_device_type">Device Type</string>
-    <string name="rileylink_device_model">Device Model</string>
-    <string name="rileylink_last_used_frequency">Last used frequency</string>
-    <string name="rileylink_last_device_contact">Last device contact</string>
-    <string name="rileylink_firmware_version">Firmware</string>
+    <string name="rileylink_device_type">Device Type:</string>
+    <string name="rileylink_device_model">Device Model:</string>
+    <string name="rileylink_last_used_frequency">Last Used Frequency:</string>
+    <string name="rileylink_last_device_contact">Last Device Contact:</string>
+    <string name="rileylink_firmware_version">Firmware Version:</string>
+    <string name="rileylink_connected_riley_link_name">Connected RileyLink Name:</string>
+    <string name="rileylink_pump_serial_number">Pump Serial Number:</string>
+    <string name="rileylink_pump_frequency">Pump Frequency:</string>
 
 
     <!-- RL State -->
