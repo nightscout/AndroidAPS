@@ -151,8 +151,8 @@ public class RileyLinkBLE {
 
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
                         (newState == BluetoothProfile.STATE_DISCONNECTING)) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM,"We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
-                     "Disconnecting");
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
+                            "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected, context);
                     if (manualDisconnect)
@@ -392,6 +392,9 @@ public class RileyLinkBLE {
             if (gattDebugEnabled) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.");
             }
+
+            rileyLinkServiceData.rileylinkAddress = bluetoothConnectionGatt.getDevice().getAddress();
+            rileyLinkServiceData.rileyLinkName = bluetoothConnectionGatt.getDevice().getName();
         }
     }
 
