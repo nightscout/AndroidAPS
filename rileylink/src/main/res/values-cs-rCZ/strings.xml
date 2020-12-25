@@ -18,16 +18,7 @@
     <string name="medtronic_pump_status">Stav pumpy</string>
     <string name="title_activity_rileylink_settings">Nastavení RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Nastavená adresa</string>
-    <string name="rileylink_connected_device">Připojené zařízení</string>
-    <string name="rileylink_connection_status">Stav připojení</string>
-    <string name="rileylink_connection_error">Chyba spojení</string>
     <string name="rileylink_device">Zařízení</string>
-    <string name="rileylink_device_type">Typ zařízení</string>
-    <string name="rileylink_device_model">Model zařízení</string>
-    <string name="rileylink_last_used_frequency">Poslední použitá frekvence</string>
-    <string name="rileylink_last_device_contact">Poslední spojení se zařízením</string>
-    <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth se incializuje…</string>
     <string name="rileylink_state_bt_error">Chyba Bluetooth</string>
@@ -50,7 +41,6 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omipod</string>
-    <string name="rileylink_connected_riley_link_name">Název připojeného RileyLinku</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
