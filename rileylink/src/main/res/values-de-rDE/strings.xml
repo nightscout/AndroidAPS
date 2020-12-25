@@ -49,6 +49,7 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic Pumpe</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="rileylink_connected_riley_link_name">Name des verbundenen RileyLinks</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
