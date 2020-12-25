@@ -139,7 +139,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             } else {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
             }
-            rileyLinkServiceData.rileyLinkName = null;
 
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkReady)) {
@@ -170,7 +169,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkNewAddressSet)) {
             String RileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
-            rileyLinkServiceData.rileyLinkName = null;
             if (RileylinkBLEAddress.equals("")) {
                 aapsLogger.error("No Rileylink BLE Address saved in app");
             } else {
@@ -183,8 +181,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnect)) {
             rileyLinkService.disconnectRileyLink();
-            rileyLinkServiceData.rileyLinkName = null;
-
             return true;
         } else {
             return false;
