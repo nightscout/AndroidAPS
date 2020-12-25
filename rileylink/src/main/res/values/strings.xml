@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SCAN</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Selected</string>
-    <string name="rileylink_scanner_title">RileyLink Scan</string>
-    <string name="location_yes">Enable</string>
-    <string name="location_no">No</string>
-    <string name="rileylink_scanner_scanning">Scanning</string>
-    <string name="rileylink_scanner_scanning_finished">Scanning finished</string>
-    <string name="rileylink_scanner_scanning_error">Scanning error: %1$d</string>
-    <string name="common_never">Never</string>
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scan</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Selected</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
+    <string name="riley_link_ble_config_scan_scanning">Scanning</string>
+    <string name="riley_link_ble_config_scan_finished">Scanning finished</string>
+    <string name="riley_link_ble_config_scan_error">Scanning error: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Never</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Currently Selected RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Remove</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Are you sure that you want to remove your RileyLink?</string>
 
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Settings</string>
@@ -33,7 +34,6 @@
     <string name="rileylink_connected_riley_link_name">Connected RileyLink Name:</string>
     <string name="rileylink_pump_serial_number">Pump Serial Number:</string>
     <string name="rileylink_pump_frequency">Pump Frequency:</string>
-
 
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth Initializing…</string>
@@ -67,6 +67,10 @@
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
 
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
+    <string name="riley_link_common_yes">Yes</string>
+    <string name="riley_link_common_no">No</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remove RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">No RileyLink selected</string>
 
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>
@@ -76,6 +80,5 @@
         <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
     </plurals>
-
 
 </resources>

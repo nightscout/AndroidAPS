@@ -23,10 +23,10 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
 
     // 21, 49, 50, 35, 52, 37, 38, 22, 26, 25, 42, 11, 44, 13, 14, 28
 
-    public abstract byte[] encode4b6b(byte[] data);
+    @Override public abstract byte[] encode4b6b(byte[] data);
 
 
-    public abstract byte[] decode4b6b(byte[] data) throws RileyLinkCommunicationException;
+    @Override public abstract byte[] decode4b6b(byte[] data) throws RileyLinkCommunicationException;
 
 
     protected short convertUnsigned(byte x) {

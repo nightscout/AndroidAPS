@@ -78,7 +78,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         refreshData();
     }
 
-    public void refreshData() {
+    @Override public void refreshData() {
         RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
         this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
@@ -114,7 +114,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         long lastConnectionTimeMillis = pumpPlugin.getLastConnectionTimeMillis();
         if (lastConnectionTimeMillis == 0) {
-            this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));
+            this.lastDeviceContact.setText(resourceHelper.gs(R.string.riley_link_ble_config_connected_never));
         } else {
             this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(lastConnectionTimeMillis)));
         }
