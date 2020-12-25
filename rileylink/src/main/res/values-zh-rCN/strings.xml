@@ -16,15 +16,7 @@
     <string name="medtronic_pump_status">泵状态</string>
     <string name="title_activity_rileylink_settings">RileyLink 设置</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">已配置地址</string>
-    <string name="rileylink_connected_device">已连接的设备</string>
-    <string name="rileylink_connection_status">连接状态</string>
-    <string name="rileylink_connection_error">连接错误</string>
     <string name="rileylink_device">设备</string>
-    <string name="rileylink_device_type">设备类型</string>
-    <string name="rileylink_device_model">设备型号</string>
-    <string name="rileylink_last_used_frequency">上次使用频率</string>
-    <string name="rileylink_last_device_contact">最后一个设备联系人</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">蓝牙初始化…</string>
     <string name="rileylink_state_bt_error">蓝牙错误</string>
