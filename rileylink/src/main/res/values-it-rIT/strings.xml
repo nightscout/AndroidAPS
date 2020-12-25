@@ -18,16 +18,7 @@
     <string name="medtronic_pump_status">Stato micro</string>
     <string name="title_activity_rileylink_settings">Impostazioni RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Indirizzo configurato</string>
-    <string name="rileylink_connected_device">Dispositivo connesso</string>
-    <string name="rileylink_connection_status">Stato connessione</string>
-    <string name="rileylink_connection_error">Errore connessione</string>
     <string name="rileylink_device">Dispositivo</string>
-    <string name="rileylink_device_type">Tipo dispositivo</string>
-    <string name="rileylink_device_model">Modello dispositivo</string>
-    <string name="rileylink_last_used_frequency">Ultima frequenza usata</string>
-    <string name="rileylink_last_device_contact">Ultimo contatto dispositivo</string>
-    <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inizializzazione bluetooth…</string>
     <string name="rileylink_state_bt_error">Errore bluetooth</string>
@@ -50,7 +41,6 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Micro Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
-    <string name="rileylink_connected_riley_link_name">Nome RileyLink connesso</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
