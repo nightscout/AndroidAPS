@@ -50,6 +50,7 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Micro Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="rileylink_connected_riley_link_name">Nome RileyLink connesso</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
