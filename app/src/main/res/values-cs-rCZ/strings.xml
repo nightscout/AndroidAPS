@@ -1184,4 +1184,6 @@
     <string name="copytolocalprofile_invalid">Nelze vytvořit lokální profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
     <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Odeslat SMS, pokud je detekována nedostupná pumpa</string>
+    <string name="smscommunicator_pump_ureachable">Nahlásit nedostupnou pumpu</string>
 </resources>
