@@ -50,6 +50,7 @@
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omipod</string>
+    <string name="rileylink_connected_riley_link_name">Název připojeného RileyLinku</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
