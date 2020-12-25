@@ -18,15 +18,7 @@
     <string name="medtronic_pump_status">Stare pompă</string>
     <string name="title_activity_rileylink_settings">Setări RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Adresă configurate</string>
-    <string name="rileylink_connected_device">Dispozitiv conectat</string>
-    <string name="rileylink_connection_status">Stare conexiune</string>
-    <string name="rileylink_connection_error">Eroare conexiune</string>
     <string name="rileylink_device">Dispozitiv</string>
-    <string name="rileylink_device_type">Tip dispozitiv</string>
-    <string name="rileylink_device_model">Model dispozitiv</string>
-    <string name="rileylink_last_used_frequency">Ultima frecvență utilizată</string>
-    <string name="rileylink_last_device_contact">Ultima conexiune cu dispozitivul</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Se inițializează conexiunea Bluetooth…</string>
     <string name="rileylink_state_bt_error">Eroare Bluetooth</string>
