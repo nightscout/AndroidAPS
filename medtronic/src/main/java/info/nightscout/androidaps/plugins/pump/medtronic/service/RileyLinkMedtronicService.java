@@ -180,7 +180,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    public boolean verifyConfiguration() {
+    public boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal) {
         try {
             String regexSN = "[0-9]{6}";
             String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
@@ -316,7 +316,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(resourceHelper.gs(R.string.common_on));
             //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
 
-            reconfigureService();
+            reconfigureService(forceRileyLinkAddressRenewal);
 
             return true;
 
@@ -327,7 +327,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         }
     }
 
-    private boolean reconfigureService() {
+    private boolean reconfigureService(boolean forceRileyLinkAddressRenewal) {
 
         if (!inPreInit) {
 
@@ -336,7 +336,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                 serialChanged = false;
             }
 
-            if (rileyLinkAddressChanged) {
+            if (rileyLinkAddressChanged || forceRileyLinkAddressRenewal) {
                 rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
                 rileyLinkAddressChanged = false;
             }
@@ -380,6 +380,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     public boolean setNotInPreInit() {
         this.inPreInit = false;
 
-        return reconfigureService();
+        return reconfigureService(false);
     }
 }

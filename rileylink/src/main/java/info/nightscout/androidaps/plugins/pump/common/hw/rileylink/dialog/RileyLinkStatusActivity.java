@@ -16,7 +16,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
@@ -66,49 +65,13 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
             RefreshableInterface selectableInterface = (RefreshableInterface) mSectionsPagerAdapter
                     .getItem(tabLayout.getSelectedTabPosition());
             selectableInterface.refreshData();
-
-            // refreshData(tabLayout.getSelectedTabPosition());
-
-            // Toast.makeText(getApplicationContext(), "Test pos: " + tabLayout.getSelectedTabPosition(),
-            // Toast.LENGTH_LONG);
         });
 
         this.connectionStatus = findViewById(R.id.rls_t1_connection_status);
         this.configuredAddress = findViewById(R.id.rls_t1_configured_address);
         this.connectedDevice = findViewById(R.id.rls_t1_connected_device);
         this.connectionError = findViewById(R.id.rls_t1_connection_error);
-
-        // // 7-12
-        // int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
-        // R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12};
-        //
-        // for (int id : ids) {
-        //
-        // TextView tv = (TextView) findViewById(id);
-        // tv.setText(tv.getText() + ":");
-        // }
-
-        // refreshData(0);
-        // refreshData(1);
-
     }
-
-
-    public void refreshData(int position) {
-        if (position == 0) {
-            // FIXME i18n
-            this.connectionStatus.setText(rileyLinkServiceData.rileyLinkServiceState.name());
-            this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
-            // FIXME
-            this.connectedDevice.setText("???");
-            // FIXME i18n
-            this.connectionError.setText(rileyLinkServiceData.rileyLinkError.name());
-        } else {
-
-        }
-
-    }
-
 
     public void setupViewPager(ViewPager pager) {
 

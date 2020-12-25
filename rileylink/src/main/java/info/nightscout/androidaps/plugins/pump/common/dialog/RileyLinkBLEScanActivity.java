@@ -79,6 +79,8 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     private String actionTitleStart, actionTitleStop;
     private MenuItem menuItem;
 
+    private boolean rlDisconnected;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
             RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePlugin.getActivePump();
-            rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
+            rileyLinkPump.getRileyLinkService().verifyConfiguration(true); // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
             rileyLinkPump.triggerPumpConfigurationChangedEvent();
 
             finish();
@@ -115,10 +117,12 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         toolbarBTScan = findViewById(R.id.rileylink_toolbarBTScan);
         toolbarBTScan.setTitle(R.string.rileylink_scanner_title);
         setSupportActionBar(toolbarBTScan);
-
-        prepareForScanning();
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        prepareForScanning();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,6 +142,10 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getTitle().equals(actionTitleStart)) {
+            // disable currently selected RL, so that we can discover it
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this);
+            rlDisconnected = true;
+
             scanLeDevice(true);
             return true;
         } else if (item.getTitle().equals(actionTitleStop)) {
@@ -148,8 +156,21 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         }
     }
 
+    @Override public void onBackPressed() {
+        super.onBackPressed();
+        if (rlDisconnected) {
+            // Reconnect RL if it was disconnected for the scan
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
+        }
+    }
 
-    public void prepareForScanning() {
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        mScanning = false;
+        mLEScanner.stopScan(mScanCallback2);
+    }
+
+    private void prepareForScanning() {
         boolean checkOK = blePrecheck.prerequisitesCheck(this);
 
         if (checkOK) {
@@ -158,9 +179,6 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
             filters = Collections.singletonList(new ScanFilter.Builder().setServiceUuid(
                     ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)).build());
         }
-
-        // disable currently selected RL, so that we can discover it
-        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this);
     }
 
 
