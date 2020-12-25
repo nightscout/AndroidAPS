@@ -40,28 +40,23 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject DateUtil dateUtil;
 
-    TextView connectionStatus;
-    TextView configuredAddress;
-    TextView connectedRileyLinkName;
-    TextView connectedDevice;
-    TextView connectionError;
-    TextView deviceType;
-    TextView deviceModel;
-    TextView serialNumber;
-    TextView pumpFrequency;
-    TextView lastUsedFrequency;
-    TextView lastDeviceContact;
-    TextView firmwareVersion;
-
-    boolean first = false;
+    private TextView connectionStatus;
+    private TextView configuredAddress;
+    private TextView connectedRileyLinkName;
+    private TextView connectedDevice;
+    private TextView connectionError;
+    private TextView deviceType;
+    private TextView deviceModel;
+    private TextView serialNumber;
+    private TextView pumpFrequency;
+    private TextView lastUsedFrequency;
+    private TextView lastDeviceContact;
+    private TextView firmwareVersion;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.rileylink_status_general, container, false);
-
-        return rootView;
+        return inflater.inflate(R.layout.rileylink_status_general, container, false);
     }
-
 
     @Override
     public void onStart() {
@@ -80,28 +75,10 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.lastDeviceContact = getActivity().findViewById(R.id.rls_t1_last_device_contact);
         this.firmwareVersion = getActivity().findViewById(R.id.rls_t1_firmware_version);
 
-        // BS: FIXME Remove
-        if (!first) {
-
-            // 7-14
-            int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv14, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
-                    R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13};
-
-            for (int id : ids) {
-
-                TextView tv = getActivity().findViewById(id);
-                tv.setText(tv.getText() + ":");
-            }
-
-            first = true;
-        }
-
         refreshData();
     }
 
-
     public void refreshData() {
-
         RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
         this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
