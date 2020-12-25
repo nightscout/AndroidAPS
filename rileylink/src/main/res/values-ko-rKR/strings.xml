@@ -16,15 +16,7 @@
     <string name="medtronic_pump_status">펌프 상태</string>
     <string name="title_activity_rileylink_settings">RileyLink 설정</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">구성된 주소</string>
-    <string name="rileylink_connected_device">연결된 장치</string>
-    <string name="rileylink_connection_status">연결상태</string>
-    <string name="rileylink_connection_error">연결에러</string>
     <string name="rileylink_device">장치</string>
-    <string name="rileylink_device_type">장치타입</string>
-    <string name="rileylink_device_model">장치모델</string>
-    <string name="rileylink_last_used_frequency">최근사용 주파수</string>
-    <string name="rileylink_last_device_contact">최근장치연결</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">블루투스 초기화중...</string>
     <string name="rileylink_state_bt_error">블루투스 에러</string>
