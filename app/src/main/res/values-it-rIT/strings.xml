@@ -1184,4 +1184,6 @@
     <string name="copytolocalprofile_invalid">Impossibile creare il profilo locale. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="alarm">Allarme</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
+    <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
 </resources>
