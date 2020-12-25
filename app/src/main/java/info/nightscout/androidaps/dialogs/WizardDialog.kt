@@ -146,7 +146,7 @@ class WizardDialog : DaggerDialogFragment() {
         treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
         treatments_wizard_sbcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
 
-        val showCalc = sp.getBoolean(resourceHelper.gs(R.string.key_wizard_calculation_visible), false)
+        val showCalc = sp.getBoolean(R.string.key_wizard_calculation_visible, false)
         treatments_wizard_delimiter.visibility = showCalc.toVisibility()
         treatments_wizard_resulttable.visibility = showCalc.toVisibility()
         treatments_wizard_calculationcheckbox.isChecked = showCalc
@@ -211,8 +211,8 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun loadCheckedStates() {
-        treatments_wizard_bgtrendcheckbox.isChecked = sp.getBoolean(resourceHelper.gs(R.string.key_wizard_include_trend_bg), false)
-        treatments_wizard_cobcheckbox.isChecked = sp.getBoolean(resourceHelper.gs(R.string.key_wizard_include_cob), false)
+        treatments_wizard_bgtrendcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
+        treatments_wizard_cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
     }
 
     private fun initDialog() {

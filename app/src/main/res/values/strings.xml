@@ -1415,5 +1415,8 @@
     <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Alarm</string>
+    <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
+    <string name="smscommunicator_pump_ureachable">Report  pump ureachable</string>
 
 </resources>
