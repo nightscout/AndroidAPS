@@ -1184,4 +1184,5 @@ Unerwartetes Verhalten.</string>
     <string name="copytolocalprofile_invalid">Lokales Profil kann nicht erstellt werden. Profil ist ungültig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
 </resources>
