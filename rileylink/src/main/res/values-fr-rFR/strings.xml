@@ -18,16 +18,7 @@
     <string name="medtronic_pump_status">État de la pompe</string>
     <string name="title_activity_rileylink_settings">Paramètres RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Adresse configurée</string>
-    <string name="rileylink_connected_device">Appareil connecté</string>
-    <string name="rileylink_connection_status">État de la connexion</string>
-    <string name="rileylink_connection_error">Erreur de Connexion</string>
     <string name="rileylink_device">Appareil</string>
-    <string name="rileylink_device_type">Type d\'appareil</string>
-    <string name="rileylink_device_model">Modèle d’appareil</string>
-    <string name="rileylink_last_used_frequency">Dernière fréquence utilisée</string>
-    <string name="rileylink_last_device_contact">Dernier contact appareil</string>
-    <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Initialisation Bluetooth…</string>
     <string name="rileylink_state_bt_error">Erreur Bluetooth</string>
