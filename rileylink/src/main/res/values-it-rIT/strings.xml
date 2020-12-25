@@ -18,7 +18,19 @@
     <string name="medtronic_pump_status">Stato micro</string>
     <string name="title_activity_rileylink_settings">Impostazioni RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Indirizzo configurato:</string>
+    <string name="rileylink_connected_device">Dispositivo connesso:</string>
+    <string name="rileylink_connection_status">Stato connessione:</string>
+    <string name="rileylink_connection_error">Errore connessione:</string>
     <string name="rileylink_device">Dispositivo</string>
+    <string name="rileylink_device_type">Tipo dispositivo:</string>
+    <string name="rileylink_device_model">Modello dispositivo:</string>
+    <string name="rileylink_last_used_frequency">Ultima frequenza usata:</string>
+    <string name="rileylink_last_device_contact">Ultimo contatto dispositivo:</string>
+    <string name="rileylink_firmware_version">Versione firmware:</string>
+    <string name="rileylink_connected_riley_link_name">Nome RileyLink connesso:</string>
+    <string name="rileylink_pump_serial_number">Numero seriale micro:</string>
+    <string name="rileylink_pump_frequency">Frequenza micro:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inizializzazione bluetooth…</string>
     <string name="rileylink_state_bt_error">Errore bluetooth</string>
