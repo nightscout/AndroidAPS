@@ -763,8 +763,6 @@
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="setupwizard_profile_description">Kies een bron van het profiel. Als de patiënt een kind is, moet u het NS-profiel gebruiken. Als er niemand is die je volgt op Nightscout, zul je waarschijnlijk een lokaal profiel prefereren. Onthoud dat u alleen de profielbron selecteert. Om het te gebruiken, moet u het activeren door \"Profiel wisselen\" uit te voeren</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Wachten op verbinding met RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> je kunt de setup voortzetten zodra de pomp geïnitialiseerd is.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vragen om toestemming</string>
