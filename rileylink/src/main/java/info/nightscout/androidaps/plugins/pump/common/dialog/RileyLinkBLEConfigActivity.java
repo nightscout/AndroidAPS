@@ -116,7 +116,12 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
             startLeDeviceScan();
         });
 
-        buttonStopScan.setOnClickListener(view -> stopLeDeviceScan());
+        buttonStopScan.setOnClickListener(view -> {
+            if (scanning) {
+                stopLeDeviceScan();
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+            }
+        });
 
         buttonRemoveRileyLink.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -125,6 +130,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
                 .setPositiveButton(getString(R.string.riley_link_common_yes), (dialog, which) -> {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, RileyLinkBLEConfigActivity.this);
                     sp.remove(RileyLinkConst.Prefs.RileyLinkAddress);
+                    sp.remove(RileyLinkConst.Prefs.RileyLinkName);
                     updateCurrentlySelectedRileyLink();
                 })
                 .setNegativeButton(getString(R.string.riley_link_common_no), null)
@@ -153,17 +159,12 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         updateCurrentlySelectedRileyLink();
     }
 
-    @Override public void onBackPressed() {
-        super.onBackPressed();
-        if (rlDisconnected) {
-            // Reconnect RL if it was disconnected for the scan
-            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
-        }
-    }
-
     @Override protected void onDestroy() {
         super.onDestroy();
-        stopLeDeviceScan();
+        if (scanning) {
+            stopLeDeviceScan();
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+        }
     }
 
     private void prepareForScanning() {
@@ -246,7 +247,12 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         deviceListAdapter.notifyDataSetChanged();
 
         // Stops scanning after a pre-defined scan period.
-        handler.postDelayed(this::stopLeDeviceScan, SCAN_PERIOD_MILLIS);
+        handler.postDelayed(() -> {
+            if (scanning) {
+                stopLeDeviceScan();
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+            }
+        }, SCAN_PERIOD_MILLIS);
 
         buttonStartScan.setEnabled(false);
         buttonStopScan.setVisibility(View.VISIBLE);
@@ -260,6 +266,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
     private void stopLeDeviceScan() {
         if (scanning) {
             scanning = false;
+
             bleScanner.stopScan(bleScanCallback);
 
             aapsLogger.debug(LTag.PUMPBTCOMM, "stopLeDeviceScan: Scanning Stop");
