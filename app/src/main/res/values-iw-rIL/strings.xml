@@ -763,8 +763,6 @@
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="setupwizard_profile_description">נא לבחור מקור פרופיל. אם המטופל הוא ילד כדאי להשתמש בפרופיל NS. אם אף אחד לא עוקב אחרייך ב-Nightscout כנראה שתעדיף פרופיל מקומי. יש זכור כי אתם בוחרים רק את מקור הפרופיל. כדי להשתמש בו יש להפעילו הפעלת \"החלפת פרופיל\"</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">ממתין לחיבור לריילילינק…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן להמשיך בהתקנה לאחר אתחול המשאבה.\n</string>
     <string name="startobjective">התחלת המשימה הראשונה שלכם</string>
     <string name="permission">הרשאה</string>
     <string name="askforpermission">מבקש הרשאה</string>
