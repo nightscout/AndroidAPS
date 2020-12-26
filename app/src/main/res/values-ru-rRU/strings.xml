@@ -1186,4 +1186,6 @@ Context | Edit Context</string>
     <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
     <string name="alarm">Сигнал</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
+    <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
 </resources>
