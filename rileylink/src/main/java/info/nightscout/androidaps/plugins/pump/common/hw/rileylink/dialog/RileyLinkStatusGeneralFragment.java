@@ -41,8 +41,8 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject DateUtil dateUtil;
 
     private TextView connectionStatus;
-    private TextView configuredAddress;
-    private TextView connectedRileyLinkName;
+    private TextView configuredRileyLinkAddress;
+    private TextView configuredRileyLinkName;
     private TextView connectedDevice;
     private TextView connectionError;
     private TextView deviceType;
@@ -63,8 +63,8 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         super.onStart();
 
         this.connectionStatus = getActivity().findViewById(R.id.rls_t1_connection_status);
-        this.configuredAddress = getActivity().findViewById(R.id.rls_t1_configured_address);
-        this.connectedRileyLinkName = getActivity().findViewById(R.id.rls_t1_connected_riley_link_name);
+        this.configuredRileyLinkAddress = getActivity().findViewById(R.id.rls_t1_configured_riley_link_address);
+        this.configuredRileyLinkName = getActivity().findViewById(R.id.rls_t1_configured_riley_link_name);
         this.connectedDevice = getActivity().findViewById(R.id.rls_t1_connected_device);
         this.connectionError = getActivity().findViewById(R.id.rls_t1_connection_error);
         this.deviceType = getActivity().findViewById(R.id.rls_t1_device_type);
@@ -85,8 +85,8 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         // BS FIXME rileyLinkServiceData is injected so I suppose it cannot be null?
         if (rileyLinkServiceData != null) {
-            this.configuredAddress.setText(StringUtils.isEmpty(rileyLinkServiceData.rileylinkAddress) ? PLACEHOLDER : rileyLinkServiceData.rileylinkAddress);
-            this.connectedRileyLinkName.setText(StringUtils.isEmpty(rileyLinkServiceData.rileyLinkName) ? PLACEHOLDER : rileyLinkServiceData.rileyLinkName);
+            this.configuredRileyLinkAddress.setText(StringUtils.isEmpty(rileyLinkServiceData.rileyLinkAddress) ? PLACEHOLDER : rileyLinkServiceData.rileyLinkAddress);
+            this.configuredRileyLinkName.setText(StringUtils.isEmpty(rileyLinkServiceData.rileyLinkName) ? PLACEHOLDER : rileyLinkServiceData.rileyLinkName);
             this.connectionError.setText(rileyLinkServiceData.rileyLinkError == null ? //
                     PLACEHOLDER
                     : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));

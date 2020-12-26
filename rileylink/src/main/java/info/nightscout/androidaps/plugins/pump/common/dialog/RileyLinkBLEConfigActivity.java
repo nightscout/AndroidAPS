@@ -60,7 +60,8 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private ListView deviceList;
-    private TextView currentlySelectedRileyLink;
+    private TextView currentlySelectedRileyLinkName;
+    private TextView currentlySelectedRileyLinkAddress;
     private Button buttonRemoveRileyLink;
     private Button buttonStartScan;
     private Button buttonStopScan;
@@ -81,7 +82,8 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         deviceListAdapter = new LeDeviceListAdapter();
         handler = new Handler();
-        currentlySelectedRileyLink = findViewById(R.id.riley_link_ble_config_currently_selected_riley_link);
+        currentlySelectedRileyLinkName = findViewById(R.id.riley_link_ble_config_currently_selected_riley_link_name);
+        currentlySelectedRileyLinkAddress = findViewById(R.id.riley_link_ble_config_currently_selected_riley_link_address);
         buttonRemoveRileyLink = findViewById(R.id.riley_link_ble_config_button_remove_riley_link);
         buttonStartScan = findViewById(R.id.riley_link_ble_config_scan_start);
         buttonStopScan = findViewById(R.id.riley_link_ble_config_button_scan_stop);
@@ -94,8 +96,10 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
             }
 
             String bleAddress = ((TextView) view.findViewById(R.id.riley_link_ble_config_scan_item_device_address)).getText().toString();
+            String deviceName = ((TextView) view.findViewById(R.id.riley_link_ble_config_scan_item_device_name)).getText().toString();
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
+            sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName);
 
             RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePlugin.getActivePump();
             rileyLinkPump.getRileyLinkService().verifyConfiguration(true); // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
@@ -130,11 +134,15 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
     private void updateCurrentlySelectedRileyLink() {
         String address = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
         if (StringUtils.isEmpty(address)) {
-            currentlySelectedRileyLink.setText(R.string.riley_link_ble_config_no_riley_link_selected);
+            currentlySelectedRileyLinkName.setText(R.string.riley_link_ble_config_no_riley_link_selected);
+            currentlySelectedRileyLinkAddress.setVisibility(View.GONE);
             buttonRemoveRileyLink.setVisibility(View.GONE);
         } else {
-            currentlySelectedRileyLink.setText(address);
+            currentlySelectedRileyLinkAddress.setVisibility(View.VISIBLE);
             buttonRemoveRileyLink.setVisibility(View.VISIBLE);
+
+            currentlySelectedRileyLinkName.setText(sp.getString(RileyLinkConst.Prefs.RileyLinkName, "RileyLink (?)"));
+            currentlySelectedRileyLinkAddress.setText(address);
         }
     }
 
@@ -308,7 +316,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
             ViewHolder viewHolder;
             // General ListView optimization code.
             if (view == null) {
-                view = mInflator.inflate(R.layout.rileylink_scan_item, null);
+                view = mInflator.inflate(R.layout.riley_link_ble_config_scan_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.deviceAddress = view.findViewById(R.id.riley_link_ble_config_scan_item_device_address);
                 viewHolder.deviceName = view.findViewById(R.id.riley_link_ble_config_scan_item_device_name);

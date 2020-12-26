@@ -72,7 +72,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
         rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
-        rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
 
         rfspy.startReader();
 

@@ -21,7 +21,8 @@
     <string name="medtronic_pump_status">Pump Status</string>
     <string name="title_activity_rileylink_settings">RileyLink Settings</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Configured Address:</string>
+    <string name="rileylink_configured_riley_link_address">Configured RileyLink Address:</string>
+    <string name="rileylink_configured_riley_link_name">Configured RileyLink Name:</string>
     <string name="rileylink_connected_device">Connected Device:</string>
     <string name="rileylink_connection_status">Connection Status:</string>
     <string name="rileylink_connection_error">Connection Error:</string>
@@ -31,7 +32,6 @@
     <string name="rileylink_last_used_frequency">Last Used Frequency:</string>
     <string name="rileylink_last_device_contact">Last Device Contact:</string>
     <string name="rileylink_firmware_version">Firmware Version:</string>
-    <string name="rileylink_connected_riley_link_name">Connected RileyLink Name:</string>
     <string name="rileylink_pump_serial_number">Pump Serial Number:</string>
     <string name="rileylink_pump_frequency">Pump Frequency:</string>
 
@@ -64,6 +64,7 @@
     <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
 
     <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_rileylink_name" translatable="false">pref_rileylink_name</string>
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
 
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
