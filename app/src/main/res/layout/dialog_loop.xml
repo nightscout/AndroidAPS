@@ -56,12 +56,13 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/overview_loop_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/loop"
+                android:text="@string/disableloop"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton

@@ -110,6 +110,7 @@ class LoopDialog : DaggerDialogFragment() {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
                 overview_enable?.visibility = View.GONE          //sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
                 overview_disable?.visibility = View.VISIBLE
+                overview_loop_header?.text = resourceHelper.gs(R.string.disableloop)
                 if (!loopPlugin.isSuspended) {
                     overview_suspend_header?.text=resourceHelper.gs(R.string.suspendloop)
                     overview_resume?.visibility = View.GONE
@@ -127,6 +128,7 @@ class LoopDialog : DaggerDialogFragment() {
             } else {
                 overview_enable?.visibility = View.VISIBLE
                 overview_disable?.visibility = View.GONE
+                overview_loop_header?.text = resourceHelper.gs(R.string.enableloop)
                 overview_suspend?.visibility = View.GONE
             }
             if (!loopPlugin.isDisconnected) {
