@@ -59,7 +59,6 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
 
     private ScanSettings settings;
     private List<ScanFilter> filters;
-    private ListView deviceList;
     private TextView currentlySelectedRileyLinkName;
     private TextView currentlySelectedRileyLinkAddress;
     private Button buttonRemoveRileyLink;
@@ -71,7 +70,6 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
     private Handler handler;
 
     public boolean scanning;
-    private boolean rlDisconnected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         buttonRemoveRileyLink = findViewById(R.id.riley_link_ble_config_button_remove_riley_link);
         buttonStartScan = findViewById(R.id.riley_link_ble_config_scan_start);
         buttonStopScan = findViewById(R.id.riley_link_ble_config_button_scan_stop);
-        deviceList = findViewById(R.id.riley_link_ble_config_scan_device_list);
+        ListView deviceList = findViewById(R.id.riley_link_ble_config_scan_device_list);
         deviceList.setAdapter(deviceListAdapter);
         deviceList.setOnItemClickListener((parent, view, position, id) -> {
             // stop scanning if still active
@@ -111,8 +109,6 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         buttonStartScan.setOnClickListener(view -> {
             // disable currently selected RL, so that we can discover it
             rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this);
-            rlDisconnected = true;
-
             startLeDeviceScan();
         });
 
