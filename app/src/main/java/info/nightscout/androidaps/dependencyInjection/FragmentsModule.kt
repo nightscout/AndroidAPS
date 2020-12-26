@@ -109,6 +109,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
     @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
+    @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
     @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
     @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog

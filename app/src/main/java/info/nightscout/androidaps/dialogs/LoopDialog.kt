@@ -1,78 +1,48 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.CompoundButton
+import android.view.*
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.dialog_wizard.*
-import java.text.DecimalFormat
-import java.util.*
+import kotlinx.android.synthetic.main.dialog_loop.*
 import javax.inject.Inject
-import kotlin.math.abs
 
 class LoopDialog : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-
-    private var wizard: BolusWizard? = null
-
-    //one shot guards
-    private var okClicked: Boolean = false
-
-    private val textWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable) {}
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            calculateInsulin()
-        }
-    }
+    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+
+    private var showOkCancel: Boolean = true
 
     override fun onStart() {
         super.onStart()
@@ -81,103 +51,51 @@ class LoopDialog : DaggerDialogFragment() {
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("treatments_wizard_bg_input", treatments_wizard_bg_input.value)
-        savedInstanceState.putDouble("treatments_wizard_carbs_input", treatments_wizard_carbs_input.value)
-        savedInstanceState.putDouble("treatments_wizard_correction_input", treatments_wizard_correction_input.value)
-        savedInstanceState.putDouble("treatments_wizard_carb_time_input", treatments_wizard_carb_time_input.value)
+        savedInstanceState.putInt("showOkCancel", if (showOkCancel) 1 else 0)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        // load data from bundle
+        (savedInstanceState ?: arguments)?.let { bundle ->
+            showOkCancel = bundle.getInt("showOkCancel", 1) == 1
+        }
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        return inflater.inflate(R.layout.dialog_wizard, container, false)
+        return inflater.inflate(R.layout.dialog_loop, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        loadCheckedStates()
-        processCobCheckBox()
-        treatments_wizard_sbcheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
-        treatments_wizard_notes_layout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        updateGUI("LoopDialogOnViewCreated")
 
-        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
-        val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
+        overview_disable?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_enable?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_resume?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_reconnect?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_suspend_1h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_suspend_2h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_suspend_3h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_suspend_10h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_disconnect_15m?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_disconnect_30m?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_disconnect_1h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_disconnect_2h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_disconnect_3h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
 
-        if (profileFunction.getUnits() == Constants.MGDL)
-            treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
-                ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        else
-            treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
-                ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
-        treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
-            ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
-        treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
-            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, ok, textWatcher)
-        treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
-            ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
-        initDialog()
-
-        treatments_wizard_percent_used.text = resourceHelper.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
-        // ok button
-        ok.setOnClickListener {
-            if (okClicked) {
-                aapsLogger.debug(LTag.UI, "guarding: ok already clicked")
-            } else {
-                okClicked = true
-                calculateInsulin()
-                context?.let { context ->
-                    wizard?.confirmAndExecute(context)
-                }
-            }
-            dismiss()
-        }
         // cancel button
-        cancel.setOnClickListener { dismiss() }
-        // checkboxes
-        treatments_wizard_bgcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_ttcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_cobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_basaliobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_sbcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        cancel?.setOnClickListener { dismiss() }
 
-        val showCalc = sp.getBoolean(resourceHelper.gs(R.string.key_wizard_calculation_visible), false)
-        treatments_wizard_delimiter.visibility = showCalc.toVisibility()
-        treatments_wizard_resulttable.visibility = showCalc.toVisibility()
-        treatments_wizard_calculationcheckbox.isChecked = showCalc
-        treatments_wizard_calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
-            run {
-                sp.putBoolean(resourceHelper.gs(R.string.key_wizard_calculation_visible), isChecked)
-                treatments_wizard_delimiter.visibility = isChecked.toVisibility()
-                treatments_wizard_resulttable.visibility = isChecked.toVisibility()
-            }
-        }
-        // profile spinner
-        treatments_wizard_profile.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofileselected))
-                ok.visibility = View.GONE
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                calculateInsulin()
-                ok.visibility = View.VISIBLE
-            }
-        }
         // bus
         disposable.add(rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
+            .toObservable(EventNewOpenLoopNotification::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                activity?.runOnUiThread { calculateInsulin() }
+                activity?.runOnUiThread { updateGUI("EventNewOpenLoopNotification") }
             }, { fabricPrivacy.logException(it) })
         )
-
     }
 
     override fun onDestroyView() {
@@ -185,37 +103,44 @@ class LoopDialog : DaggerDialogFragment() {
         disposable.clear()
     }
 
-    private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
-        saveCheckedStates()
-        treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && treatmentsPlugin.tempTargetFromHistory != null
-        if (buttonView.id == treatments_wizard_cobcheckbox.id)
-            processCobCheckBox()
-        calculateInsulin()
-    }
-
-    private fun processCobCheckBox() {
-        if (treatments_wizard_cobcheckbox.isChecked) {
-            treatments_wizard_bolusiobcheckbox.isEnabled = false
-            treatments_wizard_basaliobcheckbox.isEnabled = false
-            treatments_wizard_bolusiobcheckbox.isChecked = true
-            treatments_wizard_basaliobcheckbox.isChecked = true
-        } else {
-            treatments_wizard_bolusiobcheckbox.isEnabled = true
-            treatments_wizard_basaliobcheckbox.isEnabled = true
+    fun updateGUI(from: String) {
+        aapsLogger.debug("UpdateGUI from $from")
+        val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
+        if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
+            if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                overview_enable?.visibility = View.GONE          //sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+                overview_disable?.visibility = View.VISIBLE
+                if (!loopPlugin.isSuspended) {
+                    overview_suspend_header?.text=resourceHelper.gs(R.string.suspendloop)
+                    overview_resume?.visibility = View.GONE
+                    overview_suspend_buttons?.visibility=View.VISIBLE
+                    overview_suspend?.visibility=View.VISIBLE
+                } else {
+                    if (!loopPlugin.isDisconnected) {
+                        overview_suspend_header?.text = resourceHelper.gs(R.string.resumeloop)
+                        overview_resume?.visibility = View.VISIBLE
+                        overview_suspend_buttons?.visibility=View.GONE
+                        overview_suspend?.visibility=View.VISIBLE
+                    } else
+                        overview_suspend?.visibility = View.GONE
+                }
+            } else {
+                overview_enable?.visibility = View.VISIBLE
+                overview_disable?.visibility = View.GONE
+                overview_suspend?.visibility = View.GONE
+            }
+            if (!loopPlugin.isDisconnected) {
+                overview_pump_header?.text = resourceHelper.gs(R.string.disconnectpump)
+                overview_disconnect_15m?.visibility = if (pumpDescription.tempDurationStep15mAllowed) View.VISIBLE else View.GONE
+                overview_disconnect_15m?.visibility = if (pumpDescription.tempDurationStep30mAllowed) View.VISIBLE else View.GONE
+                overview_disconnect_buttons?.visibility = View.VISIBLE
+                overview_reconnect?.visibility = View.GONE
+            } else {
+                overview_pump_header?.text = resourceHelper.gs(R.string.reconnect)
+                overview_disconnect_buttons?.visibility = View.GONE
+                overview_reconnect?.visibility = View.VISIBLE
+            }
         }
-    }
-
-    private fun saveCheckedStates() {
-        sp.putBoolean(resourceHelper.gs(R.string.key_wizard_include_cob), treatments_wizard_cobcheckbox.isChecked)
-        sp.putBoolean(resourceHelper.gs(R.string.key_wizard_include_trend_bg), treatments_wizard_bgtrendcheckbox.isChecked)
-    }
-
-    private fun loadCheckedStates() {
-        treatments_wizard_bgtrendcheckbox.isChecked = sp.getBoolean(resourceHelper.gs(R.string.key_wizard_include_trend_bg), false)
-        treatments_wizard_cobcheckbox.isChecked = sp.getBoolean(resourceHelper.gs(R.string.key_wizard_include_cob), false)
-    }
-
-    private fun initDialog() {
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileInterface.profile
 
@@ -225,139 +150,149 @@ class LoopDialog : DaggerDialogFragment() {
             return
         }
 
-        val profileList: ArrayList<CharSequence>
-        profileList = profileStore.getProfileList()
-        profileList.add(0, resourceHelper.gs(R.string.active))
-        context?.let { context ->
-            val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
-            treatments_wizard_profile.adapter = adapter
-        } ?: return
-
-        val units = profileFunction.getUnits()
-        treatments_wizard_bgunits.text = units
-        if (units == Constants.MGDL)
-            treatments_wizard_bg_input.setStep(1.0)
-        else
-            treatments_wizard_bg_input.setStep(0.1)
-
-        // Set BG if not old
-        val lastBg = iobCobCalculatorPlugin.actualBg()
-
-        if (lastBg != null) {
-            treatments_wizard_bg_input.value = lastBg.valueToUnits(units)
-        } else {
-            treatments_wizard_bg_input.value = 0.0
-        }
-        treatments_wizard_ttcheckbox.isEnabled = treatmentsPlugin.tempTargetFromHistory != null
-
-        // IOB calculation
-        treatmentsPlugin.updateTotalIOBTreatments()
-        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
-        treatmentsPlugin.updateTotalIOBTempBasals()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
-
-        treatments_wizard_bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
-        treatments_wizard_basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -basalIob.basaliob)
-
-        calculateInsulin()
-
-        treatments_wizard_percent_used.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100).toVisibility()
     }
 
-    private fun calculateInsulin() {
-        val profileStore = activePlugin.activeProfileInterface.profile
-        if (treatments_wizard_profile?.selectedItem == null || profileStore == null)
-            return  // not initialized yet
-        var profileName = treatments_wizard_profile.selectedItem.toString()
-        val specificProfile: Profile?
-        if (profileName == resourceHelper.gs(R.string.active)) {
-            specificProfile = profileFunction.getProfile()
-            profileName = profileFunction.getProfileName()
-        } else
-            specificProfile = profileStore.getSpecificProfile(profileName)
-
-        if (specificProfile == null) return
-
-        // Entered values
-        var bg = SafeParse.stringToDouble(treatments_wizard_bg_input.text)
-        val carbs = SafeParse.stringToInt(treatments_wizard_carbs_input.text)
-        val correction = SafeParse.stringToDouble(treatments_wizard_correction_input.text)
-        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
-        if (abs(carbs - carbsAfterConstraint) > 0.01) {
-            treatments_wizard_carbs_input.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
-            return
+    fun onClick_OkCancelEnabled(v: View): Boolean {
+        var description = ""
+        when(v.id) {
+            R.id.overview_disable           -> description = resourceHelper.gs(R.string.disableloop)
+            R.id.overview_enable            -> description = resourceHelper.gs(R.string.enableloop)
+            R.id.overview_resume            -> description = resourceHelper.gs(R.string.resume)
+            R.id.overview_reconnect         -> description = resourceHelper.gs(R.string.reconnect)
+            R.id.overview_suspend_1h        -> description = resourceHelper.gs(R.string.suspendloopfor1h)
+            R.id.overview_suspend_2h        -> description = resourceHelper.gs(R.string.suspendloopfor2h)
+            R.id.overview_suspend_3h        -> description = resourceHelper.gs(R.string.suspendloopfor3h)
+            R.id.overview_suspend_10h       -> description = resourceHelper.gs(R.string.suspendloopfor10h)
+            R.id.overview_disconnect_15m    -> description = resourceHelper.gs(R.string.disconnectpumpfor15m)
+            R.id.overview_disconnect_30m    -> description = resourceHelper.gs(R.string.disconnectpumpfor30m)
+            R.id.overview_disconnect_1h     -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
+            R.id.overview_disconnect_2h     -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
+            R.id.overview_disconnect_3h     -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
         }
-
-        bg = if (treatments_wizard_bgcheckbox.isChecked) bg else 0.0
-        val tempTarget = if (treatments_wizard_ttcheckbox.isChecked) treatmentsPlugin.tempTargetFromHistory else null
-
-        // COB
-        var cob = 0.0
-        if (treatments_wizard_cobcheckbox.isChecked) {
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard COB")
-            cobInfo.displayCob?.let { cob = it }
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirm), description, Runnable {
+                onClick(v)
+            })
         }
+        return true
+    }
 
-        val carbTime = SafeParse.stringToInt(treatments_wizard_carb_time_input.text)
-
-        wizard = BolusWizard(mainApp).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
-            sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
-            treatments_wizard_bgcheckbox.isChecked,
-            treatments_wizard_cobcheckbox.isChecked,
-            treatments_wizard_bolusiobcheckbox.isChecked,
-            treatments_wizard_basaliobcheckbox.isChecked,
-            treatments_wizard_sbcheckbox.isChecked,
-            treatments_wizard_ttcheckbox.isChecked,
-            treatments_wizard_bgtrendcheckbox.isChecked,
-            treatment_wizard_notes.text.toString(), carbTime)
-
-        wizard?.let { wizard ->
-            treatments_wizard_bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
-            treatments_wizard_bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
-
-            treatments_wizard_carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
-            treatments_wizard_carbsinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
-
-            treatments_wizard_bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
-            treatments_wizard_basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBasalsIOB)
-
-            treatments_wizard_correctioninsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
-
-            // Superbolus
-            treatments_wizard_sb.text = if (treatments_wizard_sbcheckbox.isChecked) resourceHelper.gs(R.string.twohours) else ""
-            treatments_wizard_sbinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
-
-            // Trend
-            if (treatments_wizard_bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
-                treatments_wizard_bgtrend.text = ((if (wizard.trend > 0) "+" else "")
-                    + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
-                    + " " + profileFunction.getUnits())
-            } else {
-                treatments_wizard_bgtrend.text = ""
-            }
-            treatments_wizard_bgtrendinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
-
-            // COB
-            if (treatments_wizard_cobcheckbox.isChecked) {
-                treatments_wizard_cob.text = String.format(resourceHelper.gs(R.string.format_cob_ic), cob, wizard.ic)
-                treatments_wizard_cobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
-            } else {
-                treatments_wizard_cob.text = ""
-                treatments_wizard_cobinsulin.text = ""
+    fun onClick(v: View): Boolean {
+        val profile = profileFunction.getProfile() ?: return true
+        when (v.id) {
+            R.id.overview_disable                               -> {
+                aapsLogger.debug("USER ENTRY: LOOP DISABLED")
+                loopPlugin.setPluginEnabled(PluginType.LOOP, false)
+                loopPlugin.setFragmentVisible(PluginType.LOOP, false)
+                configBuilderPlugin.storeSettings("DisablingLoop")
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                commandQueue.cancelTempBasal(true, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                        }
+                    }
+                })
+                loopPlugin.createOfflineEvent(24 * 60) // upload 24h, we don't know real duration
+                return true
             }
 
-            if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) resourceHelper.gs(R.string.format_carbs, carbsAfterConstraint) else ""
-                treatments_wizard_total.text = resourceHelper.gs(R.string.result_insulin_carbs, insulinText, carbsText)
-                ok.visibility = View.VISIBLE
-            } else {
-                treatments_wizard_total.text = resourceHelper.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
-                ok.visibility = View.INVISIBLE
+            R.id.overview_enable                                -> {
+                aapsLogger.debug("USER ENTRY: LOOP ENABLED")
+                loopPlugin.setPluginEnabled(PluginType.LOOP, true)
+                loopPlugin.setFragmentVisible(PluginType.LOOP, true)
+                configBuilderPlugin.storeSettings("EnablingLoop")
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                loopPlugin.createOfflineEvent(0)
+                return true
+            }
+
+            R.id.overview_resume, R.id.overview_reconnect       -> {
+                aapsLogger.debug("USER ENTRY: RESUME")
+                loopPlugin.suspendTo(0L)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                commandQueue.cancelTempBasal(true, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            val i = Intent(context, ErrorHelperActivity::class.java)
+                            i.putExtra("soundid", R.raw.boluserror)
+                            i.putExtra("status", result.comment)
+                            i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context?.startActivity(i)
+                        }
+                    }
+                })
+                sp.putBoolean(R.string.key_objectiveusereconnect, true)
+                loopPlugin.createOfflineEvent(0)
+                return true
+            }
+
+            R.id.overview_suspend_1h                            -> {
+                aapsLogger.debug("USER ENTRY: SUSPEND 1h")
+                loopPlugin.suspendLoop(60)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_suspend_2h                            -> {
+                aapsLogger.debug("USER ENTRY: SUSPEND 2h")
+                loopPlugin.suspendLoop(120)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_suspend_3h                            -> {
+                aapsLogger.debug("USER ENTRY: SUSPEND 3h")
+                loopPlugin.suspendLoop(180)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_suspend_10h                           -> {
+                aapsLogger.debug("USER ENTRY: SUSPEND 10h")
+                loopPlugin.suspendLoop(600)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_disconnect_15m                        -> {
+                aapsLogger.debug("USER ENTRY: DISCONNECT 15m")
+                loopPlugin.disconnectPump(15, profile)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_disconnect_30m                        -> {
+                aapsLogger.debug("USER ENTRY: DISCONNECT 30m")
+                loopPlugin.disconnectPump(30, profile)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_disconnect_1h                         -> {
+                aapsLogger.debug("USER ENTRY: DISCONNECT 1h")
+                loopPlugin.disconnectPump(60, profile)
+                sp.putBoolean(R.string.key_objectiveusedisconnect, true)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_disconnect_2h                         -> {
+                aapsLogger.debug("USER ENTRY: DISCONNECT 2h")
+                loopPlugin.disconnectPump(120, profile)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
+            }
+
+            R.id.overview_disconnect_3h                         -> {
+                aapsLogger.debug("USER ENTRY: DISCONNECT 3h")
+                loopPlugin.disconnectPump(180, profile)
+                rxBus.send(EventRefreshOverview("suspendmenu"))
+                return true
             }
         }
-
+        return false
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
