@@ -68,8 +68,14 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
     private BluetoothLeScanner bleScanner;
     private LeDeviceListAdapter deviceListAdapter;
     private Handler handler;
-
     public boolean scanning;
+
+    private final Runnable stopScanAfterTimeoutRunnable = () -> {
+        if (scanning) {
+            stopLeDeviceScan();
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -242,13 +248,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
         deviceListAdapter.clear();
         deviceListAdapter.notifyDataSetChanged();
 
-        // Stops scanning after a pre-defined scan period.
-        handler.postDelayed(() -> {
-            if (scanning) {
-                stopLeDeviceScan();
-                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this); // Reconnect current RL
-            }
-        }, SCAN_PERIOD_MILLIS);
+        handler.postDelayed(stopScanAfterTimeoutRunnable, SCAN_PERIOD_MILLIS);
 
         buttonStartScan.setEnabled(false);
         buttonStopScan.setVisibility(View.VISIBLE);
@@ -267,6 +267,7 @@ public class RileyLinkBLEConfigActivity extends NoSplashAppCompatActivity {
 
             aapsLogger.debug(LTag.PUMPBTCOMM, "stopLeDeviceScan: Scanning Stop");
             Toast.makeText(this, R.string.riley_link_ble_config_scan_finished, Toast.LENGTH_SHORT).show();
+            handler.removeCallbacks(stopScanAfterTimeoutRunnable);
         }
 
         buttonStartScan.setEnabled(true);
