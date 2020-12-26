@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SKENAVIMAS</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Parinkta</string>
-    <string name="rileylink_scanner_title">RileyLink skanavimas</string>
-    <string name="location_yes">Įjungti</string>
-    <string name="location_no">Ne</string>
-    <string name="rileylink_scanner_scanning">Skanuojama</string>
-    <string name="rileylink_scanner_scanning_finished">Skanavimas baigtas</string>
-    <string name="rileylink_scanner_scanning_error">Skanavimo klaida: %1$d</string>
-    <string name="common_never">Niekada</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Parametrai</string>
     <string name="rileylink_settings_tab2">Istorija</string>
@@ -38,7 +29,7 @@
     <string name="rileylink_error_tuneup_failed">TuneUp klaida</string>
     <string name="rileylink_error_pump_unreachable">Pompa nepasiekiama</string>
     <string name="rileylink_error_pod_unreachable">Pod nepasiekiamas</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
