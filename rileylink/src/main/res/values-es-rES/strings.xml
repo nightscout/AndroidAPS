@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">ESCANEAR</string>
-    <string name="rileylink_scanner_scan_stop">DETENER</string>
-    <string name="rileylink_scanner_selected_device">Seleccionado</string>
-    <string name="rileylink_scanner_title">Escaneo de RileyLink</string>
-    <string name="location_yes">Habilitar</string>
-    <string name="location_no">No</string>
-    <string name="rileylink_scanner_scanning">Buscando</string>
-    <string name="rileylink_scanner_scanning_finished">Búsqueda Finalizada</string>
-    <string name="rileylink_scanner_scanning_error">Error de escaneo: %1$d</string>
-    <string name="common_never">Nunca</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Configuración</string>
     <string name="rileylink_settings_tab2">Historico</string>
@@ -38,7 +29,7 @@
     <string name="rileylink_error_tuneup_failed">Error al configurar</string>
     <string name="rileylink_error_pump_unreachable">Bomba no alcanzable</string>
     <string name="rileylink_error_pod_unreachable">Infusora no alcanzable</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Infusora Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
