@@ -9,7 +9,15 @@
     <string name="medtronic_pump_status">Estado de Infusora</string>
     <string name="title_activity_rileylink_settings">Ajustes de RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_connected_device">Dispositivo conectado:</string>
+    <string name="rileylink_connection_status">Estado de conexión:</string>
+    <string name="rileylink_connection_error">Error de conexión:</string>
     <string name="rileylink_device">Dispositivo</string>
+    <string name="rileylink_device_type">Tipo de dispositivo:</string>
+    <string name="rileylink_device_model">Modelo del dispositivo:</string>
+    <string name="rileylink_last_used_frequency">Última frecuencia usada:</string>
+    <string name="rileylink_last_device_contact">Último contacto del dispositivo:</string>
+    <string name="rileylink_pump_serial_number">Número de serie de la Infusora:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inicializando Bluetooth…</string>
     <string name="rileylink_state_bt_error">Error Bluetooth</string>
