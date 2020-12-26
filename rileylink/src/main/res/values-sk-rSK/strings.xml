@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">VYHĽADAŤ</string>
-    <string name="rileylink_scanner_scan_stop">ZASTAVIŤ</string>
-    <string name="rileylink_scanner_selected_device">Vybrané</string>
-    <string name="rileylink_scanner_title">Vyhľadávanie RileyLinku</string>
-    <string name="location_yes">Aktivovať</string>
-    <string name="location_no">Nie</string>
-    <string name="rileylink_scanner_scanning">Vyhľadávanie</string>
-    <string name="rileylink_scanner_scanning_finished">Vyhľadávanie dokončené</string>
-    <string name="rileylink_scanner_scanning_error">Chyba vyhľadávania: %1$d</string>
-    <string name="common_never">Nikdy</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Nastavenia</string>
     <string name="rileylink_settings_tab2">História</string>
@@ -38,7 +29,7 @@
     <string name="rileylink_error_tuneup_failed">Ladenie zlyhalo</string>
     <string name="rileylink_error_pump_unreachable">Pumpa nedostupná</string>
     <string name="rileylink_error_pod_unreachable">Pod nedostupný</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
