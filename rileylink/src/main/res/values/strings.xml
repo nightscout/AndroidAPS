@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- RL keys -->
+    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
+    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
+    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_rileylink_name" translatable="false">pref_rileylink_name</string>
+    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Scan</string>
     <string name="riley_link_ble_config_scan_stop">Stop</string>
@@ -13,6 +20,8 @@
     <string name="riley_link_ble_config_scan_currently_selected_riley_link">Currently Selected RileyLink</string>
     <string name="riley_link_ble_config_remove_riley_link">Remove</string>
     <string name="riley_link_ble_config_remove_riley_link_confirmation">Are you sure that you want to remove your RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remove RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">No RileyLink selected</string>
 
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Settings</string>
@@ -56,22 +65,11 @@
     <string name="rileylink_error_pump_unreachable">Pump unreachable</string>
     <string name="rileylink_error_pod_unreachable">Pod unreachable</string>
 
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
-
-    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
-    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
-
-    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
-    <string name="key_rileylink_name" translatable="false">pref_rileylink_name</string>
-    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
-
-    <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="riley_link_common_yes">Yes</string>
     <string name="riley_link_common_no">No</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remove RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">No RileyLink selected</string>
 
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>
