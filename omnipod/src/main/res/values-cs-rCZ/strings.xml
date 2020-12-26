@@ -3,6 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">Konfigurace RileyLinku</string>
     <string name="omnipod_config_bolus_beeps_enabled">Pípnutí při bolusu povoleno</string>
     <string name="omnipod_config_basal_beeps_enabled">Pípnutí při bazálu povoleno</string>
     <string name="omnipod_config_smb_beeps_enabled">Pípnutí při SMB povoleno</string>
