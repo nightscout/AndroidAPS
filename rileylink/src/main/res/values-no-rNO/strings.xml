@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SØK</string>
-    <string name="rileylink_scanner_scan_stop">STOPP</string>
-    <string name="rileylink_scanner_selected_device">Valgt</string>
-    <string name="rileylink_scanner_title">RileyLink Søk</string>
-    <string name="location_yes">Aktiver</string>
-    <string name="location_no">Nei</string>
-    <string name="rileylink_scanner_scanning">Søker</string>
-    <string name="rileylink_scanner_scanning_finished">Søk fullført</string>
-    <string name="rileylink_scanner_scanning_error">Søk feilet: %1$d</string>
-    <string name="common_never">Aldri</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Innstillinger</string>
     <string name="rileylink_settings_tab2">Historikk</string>
@@ -18,7 +9,6 @@
     <string name="medtronic_pump_status">Pumpe Status</string>
     <string name="title_activity_rileylink_settings">RileyLink Innstillinger</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Konfigurert adresse:</string>
     <string name="rileylink_connected_device">Tilkoblet enhet:</string>
     <string name="rileylink_connection_status">Tilkoblingsstatus:</string>
     <string name="rileylink_connection_error">Tilkoblings feil:</string>
@@ -28,7 +18,6 @@
     <string name="rileylink_last_used_frequency">Sist brukte frekvens:</string>
     <string name="rileylink_last_device_contact">Siste tilkobling:</string>
     <string name="rileylink_firmware_version">Firmware versjon:</string>
-    <string name="rileylink_connected_riley_link_name">Tilkoblet RileyLink navn:</string>
     <string name="rileylink_pump_serial_number">Pumpens serienummer:</string>
     <string name="rileylink_pump_frequency">Pumpens frekvens:</string>
     <!-- RL State -->
@@ -50,7 +39,7 @@
     <string name="rileylink_error_tuneup_failed">TuneUp mislyktes</string>
     <string name="rileylink_error_pump_unreachable">Pumpe utilgjengelig</string>
     <string name="rileylink_error_pod_unreachable">Pod utilgjengelig</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic pumpe</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
