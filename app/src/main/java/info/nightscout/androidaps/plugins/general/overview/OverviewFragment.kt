@@ -11,10 +11,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import android.view.ContextMenu
-import android.view.ContextMenu.ContextMenuInfo
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
@@ -183,8 +180,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overviewMenus.setupChartMenu(overview_chartMenuButton)
         prepareGraphs()
 
-        //overviewMenus.setupPopupMenu(overview_apsmode, requireContext(), childFragmentManager)
-        //overviewMenus.setupPopupMenu(overview_activeprofile, requireContext(), childFragmentManager)
         overview_activeprofile?.setOnClickListener(this)
         overview_activeprofile?.setOnLongClickListener(this)
         overview_temptarget?.setOnClickListener(this)
@@ -377,7 +372,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
             }
-            // R.id.overview_apsmode     -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { LoopDialog().show(childFragmentManager, "Overview") })}
             R.id.overview_apsmode     -> {
                 val args = Bundle()
                 args.putInt("showOkCancel", 0)                  // 0-> false
@@ -385,14 +379,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 pvd.arguments = args
                 pvd.show(childFragmentManager, "Overview")
             }
-
-            /*
-            R.id.overview_apsmode           -> {
-                OverviewMenus.showOKCancel = false
-                v.performClick()
-            }
-
-  */
             R.id.overview_temptarget        -> v.performClick()
             R.id.overview_activeprofile     -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })}
 
