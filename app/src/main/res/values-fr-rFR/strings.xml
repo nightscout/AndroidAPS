@@ -1185,4 +1185,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="copytolocalprofile_invalid">Impossible de créer le profil local. Le profil est invalide.</string>
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
     <string name="alarm">Alarme</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
+    <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
 </resources>
