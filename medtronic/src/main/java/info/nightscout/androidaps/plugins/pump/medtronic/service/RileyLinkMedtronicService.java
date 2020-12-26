@@ -96,8 +96,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
-        // get most recently used RileyLink address
-        rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        // get most recently used RileyLink address and name
+        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
 
         rfspy.startReader();
 

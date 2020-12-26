@@ -42,10 +42,10 @@
                     android:layout_marginLeft="30dp"
                     android:layout_weight="35"
                     android:gravity="center_vertical"
-                    android:text="@string/rileylink_configured_address" />
+                    android:text="@string/rileylink_configured_riley_link_address" />
 
                 <TextView
-                    android:id="@+id/rls_t1_configured_address"
+                    android:id="@+id/rls_t1_configured_riley_link_address"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -69,10 +69,10 @@
                     android:layout_marginLeft="30dp"
                     android:layout_weight="35"
                     android:gravity="center_vertical"
-                    android:text="@string/rileylink_connected_riley_link_name" />
+                    android:text="@string/rileylink_configured_riley_link_name" />
 
                 <TextView
-                    android:id="@+id/rls_t1_connected_riley_link_name"
+                    android:id="@+id/rls_t1_configured_riley_link_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
