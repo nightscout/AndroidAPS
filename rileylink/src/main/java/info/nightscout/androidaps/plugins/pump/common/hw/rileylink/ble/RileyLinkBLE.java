@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by geoff on 5/26/16.
@@ -46,6 +47,7 @@ public class RileyLinkBLE {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject SP sp;
 
     private final Context context;
     private final boolean gattDebugEnabled = true;
@@ -393,8 +395,16 @@ public class RileyLinkBLE {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.");
             }
 
-            rileyLinkServiceData.rileylinkAddress = bluetoothConnectionGatt.getDevice().getAddress();
-            rileyLinkServiceData.rileyLinkName = bluetoothConnectionGatt.getDevice().getName();
+            String deviceName = bluetoothConnectionGatt.getDevice().getName();
+            if (StringUtils.isNotEmpty(deviceName)) {
+                // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
+                sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName);
+            } else {
+                sp.remove(RileyLinkConst.Prefs.RileyLinkName);
+            }
+
+            rileyLinkServiceData.rileyLinkName = deviceName;
+            rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt.getDevice().getAddress();
         }
     }
 
