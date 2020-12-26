@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SÖK</string>
-    <string name="rileylink_scanner_scan_stop">AVBRYT</string>
-    <string name="rileylink_scanner_selected_device">Vald</string>
-    <string name="rileylink_scanner_title">Riley Link-sökning</string>
-    <string name="location_yes">Aktivera</string>
-    <string name="location_no">Nej</string>
-    <string name="rileylink_scanner_scanning">Söker</string>
-    <string name="rileylink_scanner_scanning_finished">Sökning avslutad</string>
-    <string name="rileylink_scanner_scanning_error">Fel vid sökning: %1$d</string>
-    <string name="common_never">Aldrig</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Inställningar</string>
     <string name="rileylink_settings_tab2">Historik</string>
@@ -38,7 +29,7 @@
     <string name="rileylink_error_tuneup_failed">Frekvensjustering misslyckades</string>
     <string name="rileylink_error_pump_unreachable">Pumpen kan inte nås</string>
     <string name="rileylink_error_pod_unreachable">Podden kan inte nås</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronicpump</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
