@@ -763,6 +763,8 @@
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilů. Pokud jde o dítě, využijte nejspíše NS profil. Pokud Vás nikdo přes NS nesleduje, budete patrně preferovat Místní profil. Uvědomte si, že nastavujete pouze zdroj profilů. Na to aby se opravdu profil začal používat, je třeba provést aktivaci profilu použitím \"Přepnutí profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svůj RileyLink níže. Po výběru RileyLinku bude možné pokračovat v nastavení, jakmile stav RileyLinku je \"Připojeno\". Tato akce může chvilku trvat.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy můžete pokračovat v nastavení.\n</string>
     <string name="startobjective">Spusťte první cíl</string>
     <string name="permission">Povolení</string>
     <string name="askforpermission">Získat povolení</string>
