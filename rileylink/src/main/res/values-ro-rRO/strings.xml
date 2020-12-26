@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SCAN</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Selectat</string>
-    <string name="rileylink_scanner_title">Scanare RileyLink</string>
-    <string name="location_yes">Activează</string>
-    <string name="location_no">Nu</string>
-    <string name="rileylink_scanner_scanning">Scanează</string>
-    <string name="rileylink_scanner_scanning_finished">Scanare terminată</string>
-    <string name="rileylink_scanner_scanning_error">Eroare la scanare: %1$d</string>
-    <string name="common_never">Niciodată</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Setări</string>
     <string name="rileylink_settings_tab2">Istoric</string>
@@ -38,7 +29,7 @@
     <string name="rileylink_error_tuneup_failed">Conectare eșuată</string>
     <string name="rileylink_error_pump_unreachable">Pompă indisponibilă</string>
     <string name="rileylink_error_pod_unreachable">Nu se poate comunica cu pod-ul</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompă Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
