@@ -764,8 +764,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="diawarning">Rappel : les nouveaux profils d\'insuline requièrent une DIA d\'au moins 5h. Une DIA 5-6h dans les nouveaux profils d\'insuline équivaut à une DIA 3h dans les anciens profils d\'insuline.</string>
     <string name="setupwizard_profile_description">Sélectionnez la source du profil. Si le patient est un enfant vous devriez utiliser un profil NS. Si personne ne vous suit sur Nightscout, vous préférerez probablement un profil local. N\'oubliez pas que vous êtes simplement en train de sélectionner la source du profil. Afin de pouvoir l\'utiliser vous devrez l\'activer via \"Changement de Profil\"</string>
     <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont organisés du plus ancien au plus récent. Les algorithmes les plus récents sont habituellement plus puissants et plus agressifs. De ce fait, si vous êtes un nouvel utilisateur, vous devriez probablement démarrer avec AMA au lieu de choisir un algorithme plus récent. N\'oubliez pas de lire la documentation OpenAPS et en faire la configuration avant utilisation.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">En attente de connexion RileyLink...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois que la pompe a été initialisée.\n</string>
     <string name="startobjective">Démarrez votre premier objectif</string>
     <string name="permission">Autorisation</string>
     <string name="askforpermission">Demande d\'autorisation</string>
