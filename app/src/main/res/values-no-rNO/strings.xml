@@ -1184,4 +1184,6 @@
     <string name="copytolocalprofile_invalid">Klarte ikke å opprette lokal profil. Profilen er ikke gyldig.</string>
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
     <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
+    <string name="smscommunicator_pump_ureachable">Rapporter når pumpe ikke kan tilkobles</string>
 </resources>
