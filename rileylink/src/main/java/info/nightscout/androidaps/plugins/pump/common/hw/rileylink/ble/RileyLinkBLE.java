@@ -395,11 +395,16 @@ public class RileyLinkBLE {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Gatt Connected.");
             }
 
-            rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt.getDevice().getAddress();
-            rileyLinkServiceData.rileyLinkName = bluetoothConnectionGatt.getDevice().getName();
+            String deviceName = bluetoothConnectionGatt.getDevice().getName();
+            if (StringUtils.isNotEmpty(deviceName)) {
+                // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
+                sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName);
+            } else {
+                sp.remove(RileyLinkConst.Prefs.RileyLinkName);
+            }
 
-            // Update stored name upon connecting (also for backwards compatibility for device where a name was not yet stored)
-            sp.putString(RileyLinkConst.Prefs.RileyLinkName, rileyLinkServiceData.rileyLinkName);
+            rileyLinkServiceData.rileyLinkName = deviceName;
+            rileyLinkServiceData.rileyLinkAddress = bluetoothConnectionGatt.getDevice().getAddress();
         }
     }
 
