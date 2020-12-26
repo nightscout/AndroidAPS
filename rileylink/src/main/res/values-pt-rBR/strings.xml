@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">PROCURAR</string>
-    <string name="rileylink_scanner_scan_stop">PARAR</string>
-    <string name="rileylink_scanner_selected_device">Seleccionado</string>
-    <string name="rileylink_scanner_title">Procura RileyLink</string>
-    <string name="location_yes">Ativar</string>
-    <string name="rileylink_scanner_scanning">A procurar</string>
-    <string name="rileylink_scanner_scanning_finished">Procura terminada</string>
-    <string name="rileylink_scanner_scanning_error">Erro de Procura: %1$d</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Definições</string>
     <string name="rileylink_settings_tab2">Histórico</string>
@@ -34,7 +27,7 @@
     <string name="rileylink_error_no_bt_adapter">Nenhum Adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">TuneUp Falhou</string>
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
 </resources>
