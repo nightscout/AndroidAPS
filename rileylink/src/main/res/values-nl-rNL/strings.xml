@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SCAN</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Geselecteerd</string>
-    <string name="rileylink_scanner_title">RileyLink Scan</string>
-    <string name="location_yes">Inschakelen</string>
-    <string name="location_no">Nee</string>
-    <string name="rileylink_scanner_scanning">Scannen</string>
-    <string name="rileylink_scanner_scanning_finished">Scannen voltooid</string>
-    <string name="rileylink_scanner_scanning_error">Scanfout: %1$d</string>
-    <string name="common_never">Nooit</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Instellingen</string>
     <string name="rileylink_settings_tab2">Geschiedenis</string>
@@ -38,7 +29,7 @@
     <string name="rileylink_error_tuneup_failed">Verbinding maken mislukt</string>
     <string name="rileylink_error_pump_unreachable">Pomp niet beschikbaar</string>
     <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
     <plurals name="duration_days">
