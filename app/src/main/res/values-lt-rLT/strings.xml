@@ -763,8 +763,6 @@
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
     <string name="setupwizard_profile_description">Prašome pasirinkti profilį. Jei pacientas yra vaikas, turite naudoti NS profilį. Jei niekas neseka jūsų Nightscout platformoje, tada geriau pasirinkti Vietinį profilį. Atminkite, kad čia Jūs tik pasirenkate profilio šaltinį. Norėdami jį aktyvuoti, turite atlikti Profilio keitimą</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Laukiama RileyLink ryšio...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b> Pastaba:</b> sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
     <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
