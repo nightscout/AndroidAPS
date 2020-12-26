@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="nav_preferences_plugin">%1$s preferencias</string>
     <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde NS</string>
     <string name="nav_resetdb">Restablecer las bases de datos</string>
@@ -976,7 +977,9 @@
     <string name="description_source_dexcom">Recibir valores de glucosa de la app parcheada de Dexcom.</string>
     <string name="notification">Notificación</string>
     <string name="notification_message">Notificación: %1$s</string>
+    <string name="alarm_message">Alarma: %1$s</string>
     <string name="message_short">Msj:</string>
+    <string name="alarm_short">Alarma:</string>
     <string name="profilepercentage">Porcentaje de perfil</string>
     <string name="percent_u">Porcentaje [%]:</string>
     <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
@@ -1178,4 +1181,6 @@
     <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">No se puede crear el perfil local. El perfil no es válido.</string>
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
+    <string name="alarm">Alarma</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
 </resources>
