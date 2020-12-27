@@ -3,6 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">Конфигурация RileyLink</string>
     <string name="omnipod_config_bolus_beeps_enabled">Звуковой сигнал болюса включен</string>
     <string name="omnipod_config_basal_beeps_enabled">Звуковой сигнал базала включен</string>
     <string name="omnipod_config_smb_beeps_enabled">Звуковой сигнал микроболюса SMB включен</string>
