@@ -406,11 +406,18 @@
     <string name="suspendloopfor3h">השהה לולאה ל-3 שע\'</string>
     <string name="suspendloopfor10h">השהה לולאה ל-10 שע\'</string>
     <string name="suspendloopforXmin">השהה לולאה ל-%1$d דקות</string>
+    <string name="disconnectpump">ניתוק משאבה</string>
     <string name="disconnectpumpfor15m">נתק את המשאבה למשך 15 דקות</string>
     <string name="disconnectpumpfor30m">נתק את המשאבה למשך 30 דקות</string>
     <string name="disconnectpumpfor1h">נתק את המשאבה למשך שעה</string>
     <string name="disconnectpumpfor2h">נתק את המשאבה למשך שעתיים</string>
     <string name="disconnectpumpfor3h">נתק את המשאבה למשך שלוש שעות</string>
+    <string name="duration15m">15 דקות</string>
+    <string name="duration30m">30 דקות</string>
+    <string name="duration1h">שעה אחת</string>
+    <string name="duration2h">שעתיים</string>
+    <string name="duration3h">3 שעות</string>
+    <string name="duration10h">10 שעות</string>
     <string name="resume">חידוש</string>
     <string name="reconnect">חיבור משאבה מחדש</string>
     <string name="smscommunicator_wrongduration">משך שגוי</string>
@@ -763,6 +770,8 @@
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="setupwizard_profile_description">נא לבחור מקור פרופיל. אם המטופל הוא ילד כדאי להשתמש בפרופיל NS. אם אף אחד לא עוקב אחרייך ב-Nightscout כנראה שתעדיף פרופיל מקומי. יש זכור כי אתם בוחרים רק את מקור הפרופיל. כדי להשתמש בו יש להפעילו הפעלת \"החלפת פרופיל\"</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן יהיה להמשיך בהתקנה לאחר חיבור ההמשאבה.\n</string>
     <string name="startobjective">התחלת המשימה הראשונה שלכם</string>
     <string name="permission">הרשאה</string>
     <string name="askforpermission">מבקש הרשאה</string>
@@ -1182,4 +1191,6 @@
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
     <string name="alarm">התראה</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
+    <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
 </resources>
