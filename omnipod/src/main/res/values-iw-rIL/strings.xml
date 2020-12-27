@@ -3,6 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">תצורת ריילילינק</string>
     <string name="omnipod_config_bolus_beeps_enabled">צפצופי בולוס מופעלים</string>
     <string name="omnipod_config_basal_beeps_enabled">צפצופי בזאלי מופעלים</string>
     <string name="omnipod_config_smb_beeps_enabled">צפצופי SMB מופעלים</string>
