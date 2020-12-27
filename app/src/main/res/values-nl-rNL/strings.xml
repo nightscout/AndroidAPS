@@ -763,6 +763,8 @@
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="setupwizard_profile_description">Kies een bron van het profiel. Als de patiënt een kind is, moet u het NS-profiel gebruiken. Als er niemand is die je volgt op Nightscout, zul je waarschijnlijk een lokaal profiel prefereren. Onthoud dat u alleen de profielbron selecteert. Om het te gebruiken, moet u het activeren door \"Profiel wisselen\" uit te voeren</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vragen om toestemming</string>
@@ -977,7 +979,9 @@
     <string name="description_source_dexcom">Ontvang BG waardes van de aangepaste Dexcom G app.</string>
     <string name="notification">Notificatie</string>
     <string name="notification_message">Notificatie: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Boodsch:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Profiel percentage</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
@@ -1177,4 +1181,9 @@
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">De volgende gegevens worden geüpload naar je Open Humans account: glucosewaarden, bolussen, koolhydraten, careportal-events (met uitzondering van notities), verlengde bolussen, profielwissels, totale dagelijkse doses, tijdelijke basaalstanden, tijdelijke doelen, voorkeuren, app-versie, apparaatmodel en schermafmetingen. Geheime of persoonlijke gegevens zoals je Nightscout-URL of API-secret worden niet geüpload.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Lokaal profiel kan niet worden gemaakt. Profiel is ongeldig.</string>
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
+    <string name="smscommunicator_pump_ureachable">Melden wanneer de pomp onbereikbaar is</string>
 </resources>
