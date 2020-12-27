@@ -2,6 +2,19 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Søk</string>
+    <string name="riley_link_ble_config_scan_stop">Stopp</string>
+    <string name="riley_link_ble_config_scan_selected">Valgt</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink søk</string>
+    <string name="riley_link_ble_config_scan_scanning">Søker</string>
+    <string name="riley_link_ble_config_scan_finished">Søk fullført</string>
+    <string name="riley_link_ble_config_scan_error">Søk feilet: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Aldri</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Valgt RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Fjern</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Er du sikker på at du vil fjerne din RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Fjern RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Ingen RileyLink er valgt</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Innstillinger</string>
     <string name="rileylink_settings_tab2">Historikk</string>
@@ -9,6 +22,8 @@
     <string name="medtronic_pump_status">Pumpe Status</string>
     <string name="title_activity_rileylink_settings">RileyLink Innstillinger</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_riley_link_address">Konfigurert RileyLink adresse:</string>
+    <string name="rileylink_configured_riley_link_name">Konfigurert RileyLink navn:</string>
     <string name="rileylink_connected_device">Tilkoblet enhet:</string>
     <string name="rileylink_connection_status">Tilkoblingsstatus:</string>
     <string name="rileylink_connection_error">Tilkoblings feil:</string>
@@ -42,6 +57,8 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic pumpe</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Ja</string>
+    <string name="riley_link_common_no">Nei</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
