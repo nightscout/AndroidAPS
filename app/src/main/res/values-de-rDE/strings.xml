@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
+    <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
     <string name="nav_preferences">Einstellungen</string>
     <string name="nav_refreshtreatments">Behandlungen von NS aktualisieren</string>
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
@@ -762,6 +763,8 @@
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="setupwizard_profile_description">Wähle eine Profilquelle aus. Verwende für ein Kind das NS-Profil. Wenn Dir niemand auf Nightscout folgt, wirst Du wahrscheinlich das lokale Profil bevorzugen. Beachte, dass hier nur die Profilquelle festgelegt wird. Damit das Profil verwendet werden kann, muss es mit einem \"Profil-Wechsel\" aktiviert werden.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
     <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
@@ -1183,4 +1186,5 @@ Unerwartetes Verhalten.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
+    <string name="smscommunicator_pump_ureachable">Bericht Pumpe nicht erreichbar</string>
 </resources>
