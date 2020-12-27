@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
+    <string name="pref_moreWatchfaceSettings">meer Watchface instellingen</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Kijk naar de Watchface configuratie, alsjeblieft.</string>
     <string name="menu_tempt">TijdStreefd</string>
     <string name="menu_wizard">Wizard</string>
     <string name="menu_bolus">Bolus</string>
