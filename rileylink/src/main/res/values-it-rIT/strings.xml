@@ -2,6 +2,11 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_connected_never">Mai</string>
+    <string name="riley_link_ble_config_remove_riley_link">Rimuovi</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Rimuovi RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Nessun RileyLink selezionato</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Impostazioni</string>
     <string name="rileylink_settings_tab2">Storico</string>
@@ -9,6 +14,8 @@
     <string name="medtronic_pump_status">Stato micro</string>
     <string name="title_activity_rileylink_settings">Impostazioni RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_riley_link_address">Indirizzo RileyLink configurato:</string>
+    <string name="rileylink_configured_riley_link_name">Nome RileyLink configurato:</string>
     <string name="rileylink_connected_device">Dispositivo connesso:</string>
     <string name="rileylink_connection_status">Stato connessione:</string>
     <string name="rileylink_connection_error">Errore connessione:</string>
@@ -42,6 +49,8 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Micro Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Sì</string>
+    <string name="riley_link_common_no">No</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
