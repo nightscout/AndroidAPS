@@ -763,6 +763,7 @@
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
     <string name="setupwizard_profile_description">Selecciona origen de perfil. Si el usuario es un niño debe seleccionar perfil NS. Si no hay nadie siguiendo tu Nightscout probablemente preferirás perfil Local. Recuerde que sólo está seleccionando el origen del perfil. Para usarlo debe activarlo ejecutando \"Cambio Perfil\"</string>
     <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres usuario nuevo, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
     <string name="permission">Permiso</string>
     <string name="askforpermission">Pedir permiso</string>
@@ -1183,4 +1184,5 @@
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="alarm">Alarma</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
+    <string name="smscommunicator_pump_ureachable">Reportar bomba no alcanzable</string>
 </resources>
