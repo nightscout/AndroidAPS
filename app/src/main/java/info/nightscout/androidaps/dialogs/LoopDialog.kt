@@ -2,22 +2,29 @@ package info.nightscout.androidaps.dialogs
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -36,7 +43,9 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
@@ -71,6 +80,9 @@ class LoopDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         updateGUI("LoopDialogOnViewCreated")
 
+        overview_closeloop?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_lgsloop?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        overview_openloop?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
         overview_disable?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
         overview_enable?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
         overview_resume?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
@@ -106,12 +118,27 @@ class LoopDialog : DaggerDialogFragment() {
     fun updateGUI(from: String) {
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
+        val closedLoopAllowed = objectivesPlugin.isClosedLoopAllowed(Constraint(true))
+        val lgsEnabled = objectivesPlugin.isLgsAllowed(Constraint(true))
+        var APSmode = sp.getString(R.string.key_aps_mode, "open")
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                if (closedLoopAllowed.value()) {
+                    overview_closeloop?.visibility = if (APSmode == "closed") View.GONE else View.VISIBLE
+                    overview_lgsloop?.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
+                    overview_openloop?.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
+                } else if (lgsEnabled.value() ) {
+                    overview_closeloop?.visibility = View.GONE
+                    overview_lgsloop?.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
+                    overview_openloop?.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
+                } else {
+                    overview_closeloop?.visibility = View.GONE
+                    overview_lgsloop?.visibility = View.GONE
+                    overview_openloop?.visibility = View.GONE
+                }
                 overview_enable?.visibility = View.GONE          //sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
                 overview_disable?.visibility = View.VISIBLE
-                overview_loop_header?.text = resourceHelper.gs(R.string.disableloop)
-                if (!loopPlugin.isSuspended) {
+               if (!loopPlugin.isSuspended) {
                     overview_suspend_header?.text=resourceHelper.gs(R.string.suspendloop)
                     overview_resume?.visibility = View.GONE
                     overview_suspend_buttons?.visibility=View.VISIBLE
@@ -128,7 +155,6 @@ class LoopDialog : DaggerDialogFragment() {
             } else {
                 overview_enable?.visibility = View.VISIBLE
                 overview_disable?.visibility = View.GONE
-                overview_loop_header?.text = resourceHelper.gs(R.string.enableloop)
                 overview_suspend?.visibility = View.GONE
             }
             if (!loopPlugin.isDisconnected) {
@@ -157,6 +183,9 @@ class LoopDialog : DaggerDialogFragment() {
     fun onClick_OkCancelEnabled(v: View): Boolean {
         var description = ""
         when(v.id) {
+            R.id.overview_closeloop         -> description = resourceHelper.gs(R.string.closedloop)
+            R.id.overview_lgsloop           -> description = resourceHelper.gs(R.string.lowglucosesuspend)
+            R.id.overview_openloop          -> description = resourceHelper.gs(R.string.openloop)
             R.id.overview_disable           -> description = resourceHelper.gs(R.string.disableloop)
             R.id.overview_enable            -> description = resourceHelper.gs(R.string.enableloop)
             R.id.overview_resume            -> description = resourceHelper.gs(R.string.resume)
@@ -182,7 +211,19 @@ class LoopDialog : DaggerDialogFragment() {
     fun onClick(v: View): Boolean {
         val profile = profileFunction.getProfile() ?: return true
         when (v.id) {
-            R.id.overview_disable                               -> {
+            R.id.overview_closeloop -> {
+                sp.putString(R.string.key_aps_mode, "closed")
+                rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
+            }
+            R.id.overview_lgsloop -> {
+                sp.putString(R.string.key_aps_mode, "lgs")
+                rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
+            }
+            R.id.overview_openloop -> {
+                sp.putString(R.string.key_aps_mode, "open")
+                rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
+            }
+            R.id.overview_disable -> {
                 aapsLogger.debug("USER ENTRY: LOOP DISABLED")
                 loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, false)
@@ -199,7 +240,7 @@ class LoopDialog : DaggerDialogFragment() {
                 return true
             }
 
-            R.id.overview_enable                                -> {
+            R.id.overview_enable -> {
                 aapsLogger.debug("USER ENTRY: LOOP ENABLED")
                 loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, true)
@@ -209,7 +250,7 @@ class LoopDialog : DaggerDialogFragment() {
                 return true
             }
 
-            R.id.overview_resume, R.id.overview_reconnect       -> {
+            R.id.overview_resume, R.id.overview_reconnect -> {
                 aapsLogger.debug("USER ENTRY: RESUME")
                 loopPlugin.suspendTo(0L)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
@@ -230,49 +271,49 @@ class LoopDialog : DaggerDialogFragment() {
                 return true
             }
 
-            R.id.overview_suspend_1h                            -> {
+            R.id.overview_suspend_1h -> {
                 aapsLogger.debug("USER ENTRY: SUSPEND 1h")
                 loopPlugin.suspendLoop(60)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_suspend_2h                            -> {
+            R.id.overview_suspend_2h -> {
                 aapsLogger.debug("USER ENTRY: SUSPEND 2h")
                 loopPlugin.suspendLoop(120)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_suspend_3h                            -> {
+            R.id.overview_suspend_3h -> {
                 aapsLogger.debug("USER ENTRY: SUSPEND 3h")
                 loopPlugin.suspendLoop(180)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_suspend_10h                           -> {
+            R.id.overview_suspend_10h -> {
                 aapsLogger.debug("USER ENTRY: SUSPEND 10h")
                 loopPlugin.suspendLoop(600)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_15m                        -> {
+            R.id.overview_disconnect_15m -> {
                 aapsLogger.debug("USER ENTRY: DISCONNECT 15m")
                 loopPlugin.disconnectPump(15, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_30m                        -> {
+            R.id.overview_disconnect_30m -> {
                 aapsLogger.debug("USER ENTRY: DISCONNECT 30m")
                 loopPlugin.disconnectPump(30, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_1h                         -> {
+            R.id.overview_disconnect_1h -> {
                 aapsLogger.debug("USER ENTRY: DISCONNECT 1h")
                 loopPlugin.disconnectPump(60, profile)
                 sp.putBoolean(R.string.key_objectiveusedisconnect, true)
@@ -280,14 +321,14 @@ class LoopDialog : DaggerDialogFragment() {
                 return true
             }
 
-            R.id.overview_disconnect_2h                         -> {
+            R.id.overview_disconnect_2h -> {
                 aapsLogger.debug("USER ENTRY: DISCONNECT 2h")
                 loopPlugin.disconnectPump(120, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
-            R.id.overview_disconnect_3h                         -> {
+            R.id.overview_disconnect_3h -> {
                 aapsLogger.debug("USER ENTRY: DISCONNECT 3h")
                 loopPlugin.disconnectPump(180, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
