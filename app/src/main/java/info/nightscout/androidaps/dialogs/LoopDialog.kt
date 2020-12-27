@@ -12,6 +12,7 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.databinding.DialogLoopBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
@@ -30,7 +31,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.dialog_loop.*
 import javax.inject.Inject
 
 class LoopDialog : DaggerDialogFragment() {
@@ -52,6 +52,10 @@ class LoopDialog : DaggerDialogFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var showOkCancel: Boolean = true
+    private var _binding: DialogLoopBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onStart() {
         super.onStart()
@@ -74,31 +78,32 @@ class LoopDialog : DaggerDialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        return inflater.inflate(R.layout.dialog_loop, container, false)
+        _binding = DialogLoopBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         updateGUI("LoopDialogOnViewCreated")
 
-        overview_closeloop?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_lgsloop?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_openloop?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_disable?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_enable?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_resume?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_reconnect?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_suspend_1h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_suspend_2h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_suspend_3h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_suspend_10h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_disconnect_15m?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_disconnect_30m?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_disconnect_1h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_disconnect_2h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        overview_disconnect_3h?.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewCloseloop.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewLgsloop.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewOpenloop.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisable.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewEnable.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewResume.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewReconnect.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend1h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend2h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend3h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend10h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect15m.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect30m.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect1h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect2h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect3h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
 
         // cancel button
-        cancel?.setOnClickListener { dismiss() }
+        binding.cancel.setOnClickListener { dismiss() }
 
         // bus
         disposable.add(rxBus
@@ -124,49 +129,49 @@ class LoopDialog : DaggerDialogFragment() {
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
                 if (closedLoopAllowed.value()) {
-                    overview_closeloop?.visibility = if (APSmode == "closed") View.GONE else View.VISIBLE
-                    overview_lgsloop?.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
-                    overview_openloop?.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
+                    binding.overviewCloseloop.visibility = if (APSmode == "closed") View.GONE else View.VISIBLE
+                    binding.overviewLgsloop.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
+                    binding.overviewOpenloop.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
                 } else if (lgsEnabled.value() ) {
-                    overview_closeloop?.visibility = View.GONE
-                    overview_lgsloop?.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
-                    overview_openloop?.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
+                    binding.overviewCloseloop.visibility = View.GONE
+                    binding.overviewLgsloop.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
+                    binding.overviewOpenloop.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
                 } else {
-                    overview_closeloop?.visibility = View.GONE
-                    overview_lgsloop?.visibility = View.GONE
-                    overview_openloop?.visibility = View.GONE
+                    binding.overviewCloseloop.visibility = View.GONE
+                    binding.overviewLgsloop.visibility = View.GONE
+                    binding.overviewOpenloop.visibility = View.GONE
                 }
-                overview_enable?.visibility = View.GONE          //sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
-                overview_disable?.visibility = View.VISIBLE
+                binding.overviewEnable.visibility = View.GONE          //sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+                binding.overviewDisable.visibility = View.VISIBLE
                if (!loopPlugin.isSuspended) {
-                    overview_suspend_header?.text=resourceHelper.gs(R.string.suspendloop)
-                    overview_resume?.visibility = View.GONE
-                    overview_suspend_buttons?.visibility=View.VISIBLE
-                    overview_suspend?.visibility=View.VISIBLE
+                    binding.overviewSuspendHeader.text=resourceHelper.gs(R.string.suspendloop)
+                    binding.overviewResume.visibility = View.GONE
+                    binding.overviewSuspendButtons.visibility=View.VISIBLE
+                    binding.overviewSuspend.visibility=View.VISIBLE
                 } else {
                     if (!loopPlugin.isDisconnected) {
-                        overview_suspend_header?.text = resourceHelper.gs(R.string.resumeloop)
-                        overview_resume?.visibility = View.VISIBLE
-                        overview_suspend_buttons?.visibility=View.GONE
-                        overview_suspend?.visibility=View.VISIBLE
+                        binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
+                        binding.overviewResume.visibility = View.VISIBLE
+                        binding.overviewSuspendButtons.visibility=View.GONE
+                        binding.overviewSuspend.visibility=View.VISIBLE
                     } else
-                        overview_suspend?.visibility = View.GONE
+                        binding.overviewSuspend.visibility = View.GONE
                 }
             } else {
-                overview_enable?.visibility = View.VISIBLE
-                overview_disable?.visibility = View.GONE
-                overview_suspend?.visibility = View.GONE
+                binding.overviewEnable.visibility = View.VISIBLE
+                binding.overviewDisable.visibility = View.GONE
+                binding.overviewSuspend.visibility = View.GONE
             }
             if (!loopPlugin.isDisconnected) {
-                overview_pump_header?.text = resourceHelper.gs(R.string.disconnectpump)
-                overview_disconnect_15m?.visibility = if (pumpDescription.tempDurationStep15mAllowed) View.VISIBLE else View.GONE
-                overview_disconnect_15m?.visibility = if (pumpDescription.tempDurationStep30mAllowed) View.VISIBLE else View.GONE
-                overview_disconnect_buttons?.visibility = View.VISIBLE
-                overview_reconnect?.visibility = View.GONE
+                binding.overviewPumpHeader.text = resourceHelper.gs(R.string.disconnectpump)
+                binding.overviewDisconnect15m.visibility = if (pumpDescription.tempDurationStep15mAllowed) View.VISIBLE else View.GONE
+                binding.overviewDisconnect30m.visibility = if (pumpDescription.tempDurationStep30mAllowed) View.VISIBLE else View.GONE
+                binding.overviewDisconnectButtons.visibility = View.VISIBLE
+                binding.overviewReconnect.visibility = View.GONE
             } else {
-                overview_pump_header?.text = resourceHelper.gs(R.string.reconnect)
-                overview_disconnect_buttons?.visibility = View.GONE
-                overview_reconnect?.visibility = View.VISIBLE
+                binding.overviewPumpHeader.text = resourceHelper.gs(R.string.reconnect)
+                binding.overviewDisconnectButtons.visibility = View.GONE
+                binding.overviewReconnect.visibility = View.VISIBLE
             }
         }
         val profile = profileFunction.getProfile()
