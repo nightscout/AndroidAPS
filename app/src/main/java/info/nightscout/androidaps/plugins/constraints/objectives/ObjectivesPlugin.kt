@@ -163,6 +163,12 @@ class ObjectivesPlugin @Inject constructor(
         return value
     }
 
+    fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!objectives[MAXBASAL_OBJECTIVE].isStarted)
+            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), MAXBASAL_OBJECTIVE + 1), this)
+        return value
+    }
+
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted)
             value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
