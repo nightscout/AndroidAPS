@@ -2,6 +2,19 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Сканировать</string>
+    <string name="riley_link_ble_config_scan_stop">Прервать</string>
+    <string name="riley_link_ble_config_scan_selected">Выбрано</string>
+    <string name="riley_link_ble_config_scan_title">Сканирование RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">Сканирование</string>
+    <string name="riley_link_ble_config_scan_finished">Сканирование завершено</string>
+    <string name="riley_link_ble_config_scan_error">Ошибка сканирования: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Никогда</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Выбранный RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Удалить</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Подтверждаете удаление RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Удалить RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">RileyLink не выбран</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
@@ -9,6 +22,8 @@
     <string name="medtronic_pump_status">Статус помпы</string>
     <string name="title_activity_rileylink_settings">Настройки RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_riley_link_address">Адрес RileyLink настроен:</string>
+    <string name="rileylink_configured_riley_link_name">Имя подключенного RileyLink:</string>
     <string name="rileylink_connected_device">Подключенное устройство:</string>
     <string name="rileylink_connection_status">Статус подключения:</string>
     <string name="rileylink_connection_error">Ошибка подключения:</string>
@@ -42,6 +57,8 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Помпа Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Да</string>
+    <string name="riley_link_common_no">Нет</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
