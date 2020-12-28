@@ -433,8 +433,6 @@
     <string name="overview_editquickwizard_usebasaliob">Υπολογισμός βασικού IOB</string>
     <string name="overview_editquickwizard_usetrend">Υπολογισμός τάσης</string>
     <string name="overview_editquickwizard_usesuperbolus">Υπολογισμός superbolus</string>
-    <string name="yes">Ναι</string>
-    <string name="no">Όχι</string>
     <string name="positiveonly">Μόνο θετική</string>
     <string name="negativeonly">Μόνο αρνητική</string>
     <string name="overview_editquickwizard_usecob">Υπολογισμός COB</string>
