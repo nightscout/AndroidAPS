@@ -425,8 +425,6 @@
     <string name="overview_editquickwizard_usebasaliob">基础率IOB (活性胰岛素) 计算</string>
     <string name="overview_editquickwizard_usetrend">趋势计算</string>
     <string name="overview_editquickwizard_usesuperbolus">超级大剂量计算</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
     <string name="positiveonly">仅正数</string>
     <string name="negativeonly">仅负数</string>
     <string name="overview_editquickwizard_usecob">COB计算</string>
