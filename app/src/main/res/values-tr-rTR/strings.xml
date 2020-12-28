@@ -406,8 +406,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_editquickwizard_usebasaliob">Bazal IOB hesaplaması</string>
     <string name="overview_editquickwizard_usetrend">Trend hesapla</string>
     <string name="overview_editquickwizard_usesuperbolus">Super Bolus hesapla</string>
-    <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
     <string name="positiveonly">Sadece pozitif</string>
     <string name="negativeonly">Sadece negatif</string>
     <string name="overview_editquickwizard_usecob">COB (Aktif Karbonhidrat) hesaplaması</string>
