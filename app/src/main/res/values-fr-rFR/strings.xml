@@ -573,8 +573,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_editquickwizard_usebasaliob">Calcul IA du Basal</string>
     <string name="overview_editquickwizard_usetrend">Calcul de tendance</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcul SuperBolus</string>
-    <string name="yes">Oui</string>
-    <string name="no">Non</string>
     <string name="positiveonly">Seulement positif</string>
     <string name="negativeonly">Seulement négatif</string>
     <string name="overview_editquickwizard_usecob">Calcul GA</string>
