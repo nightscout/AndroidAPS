@@ -572,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Kalkulace bazálního IOB</string>
     <string name="overview_editquickwizard_usetrend">Kalkulace trendu</string>
     <string name="overview_editquickwizard_usesuperbolus">Kalkulace superbolusu</string>
-    <string name="yes">Ano</string>
-    <string name="no">Ne</string>
     <string name="positiveonly">Pouze kladné</string>
     <string name="negativeonly">Pouze záporné</string>
     <string name="overview_editquickwizard_usecob">Kalkulace COB</string>
