@@ -565,8 +565,6 @@ Eversense-appen.</string>
     <string name="overview_editquickwizard_usebasaliob">Använd basal-IOB</string>
     <string name="overview_editquickwizard_usetrend">Använd BG-trend</string>
     <string name="overview_editquickwizard_usesuperbolus">Använd superbolus</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nej</string>
     <string name="positiveonly">Endast positiva</string>
     <string name="negativeonly">Endast negativa</string>
     <string name="overview_editquickwizard_usecob">Använd COB</string>
