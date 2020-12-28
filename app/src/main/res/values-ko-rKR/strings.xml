@@ -452,8 +452,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal IOB 계산</string>
     <string name="overview_editquickwizard_usetrend">추세계산</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus 계산</string>
-    <string name="yes">네</string>
-    <string name="no">아니오</string>
     <string name="positiveonly">양수만</string>
     <string name="negativeonly">음수만</string>
     <string name="overview_editquickwizard_usecob">COB 계산</string>
