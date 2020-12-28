@@ -263,7 +263,6 @@ class ActionsFragment : DaggerFragment() {
     private fun checkPumpCustomActions() {
         val activePump = activePlugin.activePump
         val customActions = activePump.customActions ?: return
-        val currentContext = context ?: return
         removePumpCustomActions()
 
         for (customAction in customActions) {

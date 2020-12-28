@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.view.View.OnLongClickListener
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
@@ -64,6 +65,7 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -86,7 +88,7 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
-class OverviewFragment : DaggerFragment(), View.OnClickListener {
+class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickListener {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -203,7 +205,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overview_quickwizardbutton?.setOnLongClickListener(this)
         overview_apsmode?.setOnClickListener(this)
         overview_apsmode?.setOnLongClickListener(this)
-        overview_activeprofile?.setOnLongClickListener(this)
     }
 
     override fun onPause() {
@@ -339,7 +340,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         }
         return false
     }
-
 
     private fun updatePumpStatus(event: EventPumpStatusChanged) {
         val status = event.getStatus(resourceHelper)

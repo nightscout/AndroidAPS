@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansLoginActi
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
-import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEScanActivity
+import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity

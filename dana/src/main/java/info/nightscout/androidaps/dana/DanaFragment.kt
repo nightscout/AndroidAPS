@@ -120,10 +120,11 @@ class DanaFragment : DaggerFragment() {
         if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS)
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
-                    OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
+                    OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing), Runnable {
                         aapsLogger.error("USER ENTRY: Clearing pairing keys !!!")
                         (activePlugin.activePump as DanaPumpInterface).clearPairing()
-                    }
+                    })
+
                 }
                 true
             }
