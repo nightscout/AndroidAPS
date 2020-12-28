@@ -572,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">חישוב IOB של בזאלי</string>
     <string name="overview_editquickwizard_usetrend">חישוב מגמה</string>
     <string name="overview_editquickwizard_usesuperbolus">חישוב סופר בולוס</string>
-    <string name="yes">כן</string>
-    <string name="no">לא</string>
     <string name="positiveonly">חיובי בלבד</string>
     <string name="negativeonly">שלילי בלבד</string>
     <string name="overview_editquickwizard_usecob">חישוב פחמ\' פעילות</string>
