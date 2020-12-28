@@ -56,8 +56,8 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.isf_hint2))
         );
         tasks.add(new ExamTask(R.string.ic_label_exam, R.string.blank,"ic")
-                .option(new Option(R.string.ic_increasingvalue, false))
-                .option(new Option(R.string.ic_decreasingvalue, true))
+                .option(new Option(R.string.ic_increasingvalue, true))
+                .option(new Option(R.string.ic_decreasingvalue, false))
                 .option(new Option(R.string.ic_multiple, true))
                 .option(new Option(R.string.ic_isf, false))
                 .hint(new Hint(R.string.ic_hint1))
@@ -179,12 +179,12 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.wronginsulin_label, R.string.wronginsulin_whattodo,"wronginsulin")
                 .option(new Option(R.string.wronginsulin_careportal, false))
-                .option(new Option(R.string.wronginsulin_bolus, false))
+                .option(new Option(R.string.wronginsulin_compare, true))
                 .option(new Option(R.string.wronginsulin_prime, true))
                 .option(new Option(R.string.wrongcarbs_donothing, false))
         );
         tasks.add(new ExamTask(R.string.iob_label, R.string.blank,"iob")
-                .option(new Option(R.string.iob_deviation, true))
+                .option(new Option(R.string.iob_value, true))
                 .option(new Option(R.string.iob_hightemp, false))
                 .option(new Option(R.string.iob_negiob, true))
                 .option(new Option(R.string.iob_posiob, true))
@@ -193,7 +193,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.breadgrams_grams, true))
                 .option(new Option(R.string.breadgrams_exchange, false))
                 .option(new Option(R.string.breadgrams_decay, true))
-                .option(new Option(R.string.breadgrams_calc, false))
+                .option(new Option(R.string.breadgrams_calc, true))
                 .hint(new Hint(R.string.breadgrams_hint1))
         );
         tasks.add(new ExamTask(R.string.extendedcarbs_label, R.string.extendedcarbs_handling,"extendedcarbs")
