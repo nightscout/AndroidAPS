@@ -245,4 +245,8 @@
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
     </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Podwaarschuwing: %1$s</item>
+        <item quantity="other">Podwaarschuwingen: %1$s</item>
+    </plurals>
 </resources>
