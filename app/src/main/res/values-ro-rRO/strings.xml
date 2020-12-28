@@ -559,8 +559,6 @@
     <string name="overview_editquickwizard_usebasaliob">Calcul IOB bazală</string>
     <string name="overview_editquickwizard_usetrend">Calcul pantă</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcul superbolus</string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
     <string name="positiveonly">Doar pozitiv</string>
     <string name="negativeonly">Doar negativ</string>
     <string name="overview_editquickwizard_usecob">Calcul COB</string>
