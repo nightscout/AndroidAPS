@@ -565,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB da basale</string>
     <string name="overview_editquickwizard_usetrend">Calcolo trend</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcolo superbolo</string>
-    <string name="yes">Sì</string>
-    <string name="no">No</string>
     <string name="positiveonly">Solo positivo</string>
     <string name="negativeonly">Solo negativo</string>
     <string name="overview_editquickwizard_usecob">Calcolo COB</string>
