@@ -565,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
     <string name="overview_editquickwizard_usetrend">Калкулиране на тенденция КЗ</string>
     <string name="overview_editquickwizard_usesuperbolus">Калкулиране суперболус</string>
-    <string name="yes">Да</string>
-    <string name="no">Не</string>
     <string name="positiveonly">Само положителни</string>
     <string name="negativeonly">Само отрицателни</string>
     <string name="overview_editquickwizard_usecob">Калкулиране на COB</string>
