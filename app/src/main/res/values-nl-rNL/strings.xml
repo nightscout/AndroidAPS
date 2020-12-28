@@ -1191,4 +1191,12 @@
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
     <string name="smscommunicator_pump_ureachable">Melden wanneer de pomp onbereikbaar is</string>
+    <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
+    <string name="alarminxmin">Start alarm over %1$d min</string>
+    <string name="bolusadvisor">Bolusadviseur</string>
+    <string name="bolusadvisormessage">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je herinneren wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je eraan herinneren.</string>
+    <string name="enablebolusadvisor">Bolusadviseur inschakelen</string>
+    <string name="enablebolusadvisor_summary">Gebruik herinnering om te beginnen eten in plaats van wizard tijdens hoge bloedglucose</string>
+    <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
+    <string name="timetoeat">Tijd om te eten</string>
 </resources>
