@@ -58,6 +58,7 @@ class VirtualPumpPlugin @Inject constructor(
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(VirtualPumpFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_virtual_pump)
     .pluginName(R.string.virtualpump)
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
@@ -178,7 +179,7 @@ class VirtualPumpPlugin @Inject constructor(
 
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
-    override fun getPumpStatus() {
+    override fun getPumpStatus(reason: String?) {
         lastDataTime = System.currentTimeMillis()
     }
 

@@ -103,10 +103,10 @@ class DanaFragment : DaggerFragment() {
         if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS)
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
-                    OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing), {
+                    OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
                         aapsLogger.error("USER ENTRY: Clearing pairing keys !!!")
                         (activePlugin.activePump as DanaPumpInterface).clearPairing()
-                    })
+                    }
                 }
                 true
             }
@@ -119,23 +119,23 @@ class DanaFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(info.nightscout.androidaps.dana.events.EventDanaRNewStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -157,7 +157,7 @@ class DanaFragment : DaggerFragment() {
                 } else {
                     binding.danaPumpstatuslayout.visibility = View.GONE
                 }
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         updateGUI()
     }
 
@@ -168,14 +168,15 @@ class DanaFragment : DaggerFragment() {
         loopHandler.removeCallbacks(refreshLoop)
     }
 
+    @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    // GUI functions
     @Synchronized
     fun updateGUI() {
+        if (_binding == null) return
         val pump = danaPump
         val plugin: PumpInterface = activePlugin.activePump
         if (pump.lastConnection != 0L) {

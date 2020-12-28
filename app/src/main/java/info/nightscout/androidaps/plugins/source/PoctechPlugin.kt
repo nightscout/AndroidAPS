@@ -31,6 +31,7 @@ class PoctechPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_poctech)
     .pluginName(R.string.poctech)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_poctech),

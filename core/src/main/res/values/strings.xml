@@ -95,6 +95,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="pairing">Pairing</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -262,6 +264,7 @@
     <string name="history_group_prime">Prime</string>
     <string name="history_group_alarm">Alarms</string>
     <string name="history_group_glucose">Glucose</string>
+    <string name="mute5min">Mute for 5 minutes</string>
 
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->

@@ -146,7 +146,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(MedtronicFragment.class.getName()) //
-                        .pluginIcon(R.drawable.ic_medtronic_veo)
+                        .pluginIcon(R.drawable.ic_veo_128)
                         .pluginName(R.string.medtronic_name) //
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic)
@@ -421,7 +421,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
 
         if (firstRun) {
             initializePump(!isRefresh);

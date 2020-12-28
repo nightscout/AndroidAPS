@@ -16,6 +16,8 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -126,7 +128,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(CommandAcknowledgeAlerts(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_acknowledge_alerts), false)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_acknowledged_alerts)))
+                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_acknowledged_alerts))
+                    .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) })
         }
 
         omnipod_overview_button_suspend_delivery.setOnClickListener {
@@ -593,12 +596,13 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     // FIXME ideally we should just have access to LocalAlertUtils here
     private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.standardMinutes(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold_minutes), Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
+        return Duration.standardMinutes(sp.getInt(R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
     }
 
     inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {
 
         private var messageOnSuccess: String? = null
+        private var actionOnSuccess: Runnable? = null
 
         override fun run() {
             if (result.success) {
@@ -606,6 +610,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 if (messageOnSuccess != null) {
                     displayOkDialog(resourceHelper.gs(R.string.omnipod_confirmation), messageOnSuccess)
                 }
+                actionOnSuccess?.run()
             } else {
                 displayErrorDialog(resourceHelper.gs(R.string.omnipod_warning), resourceHelper.gs(R.string.omnipod_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
             }
@@ -613,6 +618,11 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
         fun messageOnSuccess(message: String): DisplayResultDialogCallback {
             messageOnSuccess = message
+            return this
+        }
+
+        fun actionOnSuccess(action: Runnable): DisplayResultDialogCallback {
+            actionOnSuccess = action
             return this
         }
     }

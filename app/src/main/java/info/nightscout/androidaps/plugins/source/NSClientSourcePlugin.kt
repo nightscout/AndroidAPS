@@ -32,6 +32,7 @@ class NSClientSourcePlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_nsclient_bg)
     .pluginName(R.string.nsclientbg)
     .description(R.string.description_source_ns_client),
     aapsLogger, resourceHelper, injector

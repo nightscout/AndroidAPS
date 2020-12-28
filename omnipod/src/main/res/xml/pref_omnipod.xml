@@ -7,9 +7,8 @@
         <Preference
             android:enabled="true"
             android:key="@string/key_rileylink_mac_address"
-            android:summary=""
-            android:title="RileyLink Configuration">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+            android:title="@string/omnipod_config_riley_link_configuration">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
 
     </PreferenceCategory>
@@ -112,8 +111,14 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_omnipod_rileylink_stats_button_enabled"
+            android:key="@string/key_omnipod_riley_link_stats_button_enabled"
             android:title="@string/omnipod_config_rileylink_stats_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_use_riley_link_battery_level"
+            android:summary="@string/omnipod_config_use_riley_link_battery_level_summary"
+            android:title="@string/omnipod_config_use_riley_link_battery_level" />
 
         <SwitchPreference
             android:defaultValue="true"

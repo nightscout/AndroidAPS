@@ -219,7 +219,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             DateUtil dateUtil
     ) {
         super(new PluginDescription()
-                        .pluginIcon(R.drawable.ic_insight)
+                        .pluginIcon(R.drawable.ic_insight_128)
                         .pluginName(R.string.insight_local)
                         .shortName(R.string.insightpump_shortname)
                         .mainType(PluginType.PUMP)
@@ -370,7 +370,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
             readHistory();

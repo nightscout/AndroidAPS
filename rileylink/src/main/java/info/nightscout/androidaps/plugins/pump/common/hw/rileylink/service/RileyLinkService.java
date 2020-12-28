@@ -154,19 +154,19 @@ public abstract class RileyLinkService extends DaggerService {
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkInitializing);
 
         if (rileyLinkBLE.isConnected()) {
-            if (deviceAddress.equals(rileyLinkServiceData.rileylinkAddress)) {
+            if (deviceAddress.equals(rileyLinkServiceData.rileyLinkAddress)) {
                 aapsLogger.info(LTag.PUMPBTCOMM, "No change to RL address.  Not reconnecting.");
                 return false;
             } else {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnecting from old RL (" + rileyLinkServiceData.rileylinkAddress
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnecting from old RL (" + rileyLinkServiceData.rileyLinkAddress
                         + "), reconnecting to new: " + deviceAddress);
 
                 rileyLinkBLE.disconnect();
                 // prolly need to shut down listening thread too?
                 // SP.putString(MedtronicConst.Prefs.RileyLinkAddress, deviceAddress);
 
-                rileyLinkServiceData.rileylinkAddress = deviceAddress;
-                rileyLinkBLE.findRileyLink(rileyLinkServiceData.rileylinkAddress);
+                rileyLinkServiceData.rileyLinkAddress = deviceAddress;
+                rileyLinkBLE.findRileyLink(rileyLinkServiceData.rileyLinkAddress);
                 return true;
             }
         } else {
@@ -229,7 +229,8 @@ public abstract class RileyLinkService extends DaggerService {
 
         if (rileyLinkBLE.isConnected()) {
             rileyLinkBLE.disconnect();
-            rileyLinkServiceData.rileylinkAddress = null;
+            rileyLinkServiceData.rileyLinkAddress = null;
+            rileyLinkServiceData.rileyLinkName = null;
         }
 
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothReady);
@@ -260,5 +261,9 @@ public abstract class RileyLinkService extends DaggerService {
             return null;
     }
 
-    public abstract boolean verifyConfiguration();
+    public boolean verifyConfiguration() {
+        return verifyConfiguration(false);
+    }
+
+    public abstract boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal);
 }

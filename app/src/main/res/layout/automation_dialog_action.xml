@@ -29,7 +29,7 @@
                 app:srcCompat="@drawable/ic_action_orange_48dp" />
 
             <TextView
-                android:id="@+id/automation_actionTitle"
+                android:id="@+id/actionTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -49,7 +49,7 @@
             android:padding="5dp" />
 
         <LinearLayout
-            android:id="@+id/automation_editActionLayout"
+            android:id="@+id/editActionLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
