@@ -34,7 +34,7 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
     @ContributesAndroidInjector abstract fun contributesRileyLinkStatusActivity(): RileyLinkStatusActivity
-    @ContributesAndroidInjector abstract fun contributesRileyLinkBLEScanActivity(): RileyLinkBLEScanActivity
+    @ContributesAndroidInjector abstract fun contributesRileyLinkBLEConfigActivity(): RileyLinkBLEConfigActivity
     @ContributesAndroidInjector abstract fun contributesSetupWizardActivity(): SetupWizardActivity
     @ContributesAndroidInjector abstract fun contributesSingleFragmentActivity(): SingleFragmentActivity
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpActivity(): SmsCommunicatorOtpActivity

@@ -15,7 +15,6 @@ import android.util.TypedValue
 import android.view.ContextMenu
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -31,6 +30,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -188,14 +188,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         overviewMenus.setupChartMenu(overview_chartMenuButton)
         prepareGraphs()
 
+        overview_activeprofile?.setOnClickListener(this)
+        overview_activeprofile?.setOnLongClickListener(this)
+        overview_temptarget?.setOnClickListener(this)
+        overview_temptarget?.setOnLongClickListener(this)
+        overview_accepttempbutton?.setOnClickListener(this)
+        overview_treatmentbutton?.setOnClickListener(this)
+        overview_wizardbutton?.setOnClickListener(this)
+        overview_calibrationbutton?.setOnClickListener(this)
+        overview_cgmbutton?.setOnClickListener(this)
+        overview_insulinbutton?.setOnClickListener(this)
+        overview_carbsbutton?.setOnClickListener(this)
+        overview_quickwizardbutton?.setOnClickListener(this)
+        overview_quickwizardbutton?.setOnLongClickListener(this)
+        overview_apsmode?.setOnClickListener(this)
+        overview_apsmode?.setOnLongClickListener(this)
+        overview_activeprofile?.setOnLongClickListener(this)
     }
 
     override fun onPause() {
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacksAndMessages(null)
-        overview_activeprofile?.let { unregisterForContextMenu(it) }
-        overview_temptarget?.let { unregisterForContextMenu(it) }
     }
 
     override fun onResume() {
@@ -267,19 +281,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-        overview_activeprofile?.let { registerForContextMenu(it) }
-        overview_temptarget?.let { registerForContextMenu(it) }
         updateGUI("onResume")
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        //overviewMenus.createContextMenu(menu, v)   !!! we did it it main activity TODO: seperate menue building
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return if (overviewMenus.onContextItemSelected(item, childFragmentManager)) true else super.onContextItemSelected(item)
-    }
 
     override fun onClick(v: View) {
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
@@ -287,7 +291,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-               
+                R.id.overview_temptarget        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_activeprofile     -> {
+                    val args = Bundle()
+                    args.putLong("time", DateUtil.now())
+                    args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                    val pvd = ProfileViewerDialog()
+                    pvd.arguments = args
+                    pvd.show(childFragmentManager, "ProfileViewDialog")
+                }
 
                 R.id.overview_accepttempbutton -> {
                     profileFunction.getProfile() ?: return
@@ -306,8 +318,26 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                         }
                     }
                 }
+
+                R.id.overview_apsmode     -> {
+                    val args = Bundle()
+                    args.putInt("showOkCancel", 1)                  // 1-> true
+                    val pvd = LoopDialog()
+                    pvd.arguments = args
+                    pvd.show(childFragmentManager, "Overview")
+                }
             }
         }
+    }
+
+
+    override fun onLongClick(v: View): Boolean {
+        when (v.id) {
+            R.id.overview_temptarget        -> v.performClick()
+            R.id.overview_activeprofile     -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })}
+
+        }
+        return false
     }
 
 

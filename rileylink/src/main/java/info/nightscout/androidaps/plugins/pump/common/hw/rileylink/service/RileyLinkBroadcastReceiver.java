@@ -84,7 +84,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
     }
 
     private RileyLinkService getServiceInstance() {
-        RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice)activePlugin.getActivePump();
+        RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
         return pumpDevice.getRileyLinkService();
     }
 
@@ -142,7 +142,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
 
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkReady)) {
-
             aapsLogger.warn(LTag.PUMPBTCOMM, "RileyLinkConst.Intents.RileyLinkReady");
             // sendIPCNotification(RT2Const.IPC.MSG_note_WakingPump);
 
@@ -153,7 +152,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             String bleVersion = rileyLinkService.rfspy.getBLEVersionCached();
             RileyLinkFirmwareVersion rlVersion = rileyLinkServiceData.firmwareVersion;
 
-//            if (isLoggingEnabled())
             aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy version (BLE113): " + bleVersion);
             rileyLinkService.rileyLinkServiceData.versionBLE113 = bleVersion;
 
@@ -180,7 +178,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnect)) {
             rileyLinkService.disconnectRileyLink();
-
             return true;
         } else {
             return false;

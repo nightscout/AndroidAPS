@@ -112,6 +112,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         disposable.clear()
     }
 
+    @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -119,6 +120,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     @Synchronized
     private fun updateGui() {
+        if (_binding == null) return
         eventListAdapter.notifyDataSetChanged()
         val sb = StringBuilder()
         for (l in automationPlugin.executionLog.reversed())

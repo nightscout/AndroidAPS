@@ -92,31 +92,28 @@ class EditEventDialog : DialogFragmentWithDate() {
             .subscribe({
                 actionListAdapter?.notifyDataSetChanged()
                 showPreconditions()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationAddAction::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 event.addAction(it.action)
                 actionListAdapter?.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationUpdateTrigger::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 event.trigger = it.trigger
                 binding.triggerDescription.text = event.trigger.friendlyDescription()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationUpdateAction::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 event.actions[it.position] = it.action
                 actionListAdapter?.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
     }
 
     override fun submit(): Boolean {
