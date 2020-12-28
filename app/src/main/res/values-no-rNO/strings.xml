@@ -572,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal IOB beregning</string>
     <string name="overview_editquickwizard_usetrend">Trend beregning</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus beregning</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nei</string>
     <string name="positiveonly">Bare positive</string>
     <string name="negativeonly">Bare negative</string>
     <string name="overview_editquickwizard_usecob">COB beregning</string>
