@@ -406,11 +406,18 @@
     <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
     <string name="suspendloopfor10h">Onderbreek loop voor 10u</string>
     <string name="suspendloopforXmin">Onderbreek loop voor %1$d min</string>
+    <string name="disconnectpump">Pomp afkoppelen</string>
     <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
     <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 uur</string>
+    <string name="duration2h">2 uur</string>
+    <string name="duration3h">3 uur</string>
+    <string name="duration10h">10 uur</string>
     <string name="resume">Hervatten</string>
     <string name="reconnect">Opnieuw verbinden met pomp</string>
     <string name="smscommunicator_wrongduration">Verkeerde tijdsduur</string>
@@ -565,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basaal IOB berekening</string>
     <string name="overview_editquickwizard_usetrend">Trend berekening</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus berekening</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
     <string name="positiveonly">Enkel positief</string>
     <string name="negativeonly">Enkel negatief</string>
     <string name="overview_editquickwizard_usecob">COB berekening</string>
