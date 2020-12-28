@@ -565,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Bazės AIO apskaičiavimas</string>
     <string name="overview_editquickwizard_usetrend">Tendencijos apskaičiavimas</string>
     <string name="overview_editquickwizard_usesuperbolus">Superboluso apskaičiavimas</string>
-    <string name="yes">Taip</string>
-    <string name="no">Ne</string>
     <string name="positiveonly">Tik teigiamas</string>
     <string name="negativeonly">Tik neigiamas</string>
     <string name="overview_editquickwizard_usecob">AAO apskaičiavimas</string>
