@@ -565,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Расчет базального активного инсулина IOB</string>
     <string name="overview_editquickwizard_usetrend">Расчет тренда</string>
     <string name="overview_editquickwizard_usesuperbolus">Расчет супер болюса</string>
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
     <string name="positiveonly">Только положительные</string>
     <string name="negativeonly">Только отрицательные</string>
     <string name="overview_editquickwizard_usecob">Вычисление активных углеводов COB</string>
