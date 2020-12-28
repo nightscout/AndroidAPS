@@ -565,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Obliczenia IOB</string>
     <string name="overview_editquickwizard_usetrend">Obliczenia trendu</string>
     <string name="overview_editquickwizard_usesuperbolus">Obliczenia Superbolusa</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
     <string name="positiveonly">Tylko pozytywne</string>
     <string name="negativeonly">Tylko negatywne</string>
     <string name="overview_editquickwizard_usecob">Obliczenia COB</string>
