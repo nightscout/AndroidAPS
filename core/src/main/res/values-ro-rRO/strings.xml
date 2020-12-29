@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Oprește bluetooth-ul telefonului pentru o secundă dacă nu se poate conecta la pompă. Aceasta poate ajuta în cazul telefoanelor cu bluetooth incompatitibil.</string>
     <string name="pairing">Împerechere</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
