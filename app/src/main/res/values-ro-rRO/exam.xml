@@ -37,6 +37,7 @@
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_whattodo">Ce ar trebui sa faceți dacă ați introdus o cantitate de carbohidrați greșită?</string>
+    <string name="breadgrams_grams">Pentru estimarea și înregistrarea carbohidraților consumați trebuie utilizate numai grame.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_profile">Schimbarea valorii ISF în profil este suficientă pentru a produce efecte.</string>
