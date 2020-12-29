@@ -42,9 +42,6 @@
     <string name="isf_profile">Alterar o valor do ISF no seu perfil é o suficiente para aplicar a alteração.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label_exam">Tópico: Porporção IC</string>
-    <string name="ic_increasingvalue">Proporções IC mais altos levam a menos insulina entregue para uma dada quantidade de carboidratos.</string>
-    <string name="ic_decreasingvalue">Proporções IC mais baixos levam a menos insulina entregue para uma dada quantidade de carboidratos.</string>
     <string name="ic_noeffect">Se tiver 0 COB, alterar a proporção IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da glicemia.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
