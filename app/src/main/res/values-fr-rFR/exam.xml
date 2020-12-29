@@ -87,6 +87,7 @@
     <string name="prerequisites_supportedcgm">Un MGC pris en charge et compatible.</string>
     <string name="prerequisites2_label">Conditions préalables</string>
     <string name="prerequisites2_what">Quelles conditions sont essentiels pour configurer et utiliser AndroidAPS ?</string>
+    <string name="prerequisites2_profile">Informations validées pour configurer un profil (SI, ratio G/I, débits de basal, DAI, etc.).</string>
     <string name="prerequisites2_internet">AndroidAPS nécessite une connexion internet pour fonctionner en boucle fermée.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Module/module.html</string>
     <string name="update_label">Mise à jour de AndroidAPS</string>
