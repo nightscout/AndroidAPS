@@ -615,8 +615,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Insulina nel serbatoio insufficiente per erogare il bolo</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
-    <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
     <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i CHO</string>
@@ -791,7 +789,6 @@
     <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
     <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
     <string name="combo_invalid_setup">Configurazione micro non valida, controlla la documentazione e verifica che il menu Quick Info sia denominato QUICK INFO usando \"360 configuration software\".</string>
-    <string name="custom">Personalizzato</string>
     <string name="careportal_removestartedevents">Rimuovi gli eventi \"AndroidAPS avviato\"</string>
     <string name="storedsettingsfound">Trovate impostazioni memorizzate</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AndroidAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AndroidAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
