@@ -79,8 +79,19 @@
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_whattodo">מה לעשות אם טעית ברישום הפחמימות?</string>
+    <string name="wrongcarbs_bolus">מתן בולוס אינסולין באמצעות כפתור האינסולין בדף הסקירה הכללית.</string>
+    <string name="wronginsulin_label">שגיאות ברישום\הזרקת אינסולין</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
+    <string name="nsclient_label">ניטור מרוחק</string>
+    <string name="nsclient_howcanyou">איך לפקח על AndroidAPS (למשל של הילד שלכם) מרחוק?</string>
+    <string name="nsclient_nightscout">אפלקציית NS Client, אפליקציית נייטסקאוט ואתר נייטסקאוט מאפשרים כולם לעקוב אחר AndroidAPS מרחוק.</string>
+    <string name="nsclient_dexcomfollow">אפליקציות אחרות(לדוגמה, דקסקום Follow ו-xDrip במצב מעקב) מאפשרים לכם לעקוב אחר פרמטרים מסוימים (לדוגמה, ערכי סוכר) מרחוק, אך משתמשים באלגוריתמים שונים, כך עשויים להציג ערכי אינסולין ופחמימות פעילים לא מדויקים.</string>
+    <string name="nsclient_data">כדי לעקוב אחר AndroidAPS מרחוק, שני ההתקנים חייבים להיות בעלי גישה לאינטרנט (למשל באמצעות רשת אינטרנט אלחוטית או אינטרנט סלולרי).</string>
+    <string name="nsclient_fullcontrol">NS Client משמש כעוקב מרוחק יאפשר ניטור ויספק שליטה מלאה ב-AndroidAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
+    <string name="isf_label_exam">יחס התיקון (ISF) </string>
+    <string name="isf_increasingvalue">עלייה בערך יחס התיקון תביא למתן יותר אינסולין לכיסוי כמות נתונה של פחמימות.</string>
+    <string name="isf_decreasingvalue">הפחתת ערך יחס התיקון (ISF) מובילים למתן יותר אינסולין כדי לתקן רמת סוכר שמעל ערך המטרה.</string>
     <string name="isf_profile">שינוי ערך ISF בפרופיל שלכם מספיק כדי להחיל את השינוי.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
@@ -89,6 +100,7 @@
     <string name="ic_meaning">יחס הפחמימות (IC) הוא: כמה יחידות לחם מכוסות ע\"י יחידת אינסולין אחת.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch2_basalhigher">המינון הבזאלי יהיה נמוך ב-20%.</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_where">היכן ניתן לקבל עזרה בנושא מינון בזאלי וכו\'.</string>
