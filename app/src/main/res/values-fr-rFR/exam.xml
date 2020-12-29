@@ -171,6 +171,9 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Profiles.html</string>
     <string name="ic_multiple">Vous pouvez utiliser plus d\'une valeur pour le ratio G/I dans votre profil.</string>
     <string name="ic_isf">Si vous changez votre SI dans votre profil, vous devez toujours modifier votre ratio G/I également.</string>
+    <string name="ic_label_exam">Ratio Glucides sur Insuline (ratio G/I)</string>
+    <string name="ic_increasingvalue">Les ratios G/I plus élevés conduisent à moins d\'insuline injectée pour une quantité donnée de glucides.</string>
+    <string name="ic_decreasingvalue">Les ratios G/I plus faibles conduisent à moins d\'insuline injectée pour une quantité donnée de glucides.</string>
     <string name="ic_noeffect">Si vous avez 0 GA, changer le ratio G/I conduira à différentes quantités d\'insuline pour corriger une valeur de glycémie donnée.</string>
     <string name="ic_different">Le G/I sera différent si vous comptez l\'unité (d\'échange) de pain à 10g ou à 12g.</string>
     <string name="ic_meaning">Le G/I (Ratio Glucides/Insuline) est : combien d\'unités (d\'échange) de pain sont couverte par 1U d\'insuline.</string>
@@ -180,6 +183,7 @@
     <string name="profileswitch_basallower">Le débit de base sera diminuée de 10%.</string>
     <string name="profileswitch_isfhigher">La valeur de SI sera augmentée de 10%.</string>
     <string name="profileswitch_iclower">La valeur du ratio G/I sera un nombre 10% inférieur.</string>
+    <string name="profileswitch_unchanged">Les ratios SI et G/I seront inchangés.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Changement de profil</string>
     <string name="profileswitch2_pctwillchange">Quand vous spécifiez un changement de profil à 120%, quelles réponses sont vraies ?</string>
