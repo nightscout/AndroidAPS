@@ -7,6 +7,7 @@
     <string name="offlineprofile_label">Téma: Offline profil</string>
     <string name="offlineprofile_nsprofile">NS profil môže byť použitý, ale nenakonfigurovaný.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_whattodo">Čo je potrebné urobiť, pri odpojení pumpy?</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#dalsi-nastaveni</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#jake-vybaveni-pro-pripad-nouze-se-doporucuje-brat-s-sebou</string>
