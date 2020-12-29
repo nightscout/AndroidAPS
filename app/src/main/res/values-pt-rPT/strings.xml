@@ -606,8 +606,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Não há insulina suficiente no reservatório para bolus</string>
     <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <string name="insightpump_shortname">Visão</string>
-    <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
-    <string name="set_neutral_temps_summary">Se activado, ele irá cancelar basal temporária antes do final de cada hora. Este método pode ajudar a parar o sinal sonoro/vibração em algumas bombas, de hora em hora.</string>
     <string name="enablesmbalways">SMB sempre activado</string>
     <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbaftercarbs">Activar SMB após hidratos</string>
@@ -781,7 +779,6 @@
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
-    <string name="custom">Personalizado</string>
     <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Configurações encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e activar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil da app tem os mesmos valores que estão na bomba. Em caso contrario pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
