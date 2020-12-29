@@ -23,14 +23,14 @@
     <string name="description_insulin_rapid">Insuline instelling voor Humalog en NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insuline instelling voor Fiasp</string>
     <string name="description_insulin_lyumjev">Insuline instelling voor Lyumjev</string>
-    <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren en deze mag alleen worden gebruikt door gevorderde gebruikers</string>
+    <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren, mag alleen worden gebruikt door gevorderde gebruikers</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
-    <string name="description_profile_local">Maak een profiel dat je offline kunt gebruiken.</string>
+    <string name="description_profile_local">Gebruik profiel(en) die je in AAPS aanmaakt en offline kunt gebruiken.</string>
     <string name="description_profile_nightscout">Gebruik profiel(en) die je hebt aangemaakt in Nightscout</string>
     <string name="description_pump_combo">Pomp integratie voor Accu-Chek Combo pompen, vereist dat ruffy geïnstalleerd is</string>
     <string name="description_pump_mdi">Pomp integratie voor mensen met pen-therapie (meerdere dagelijkse injecties)</string>
@@ -1053,7 +1053,7 @@
     <string name="unitsnosemicolon">Eenheden</string>
     <string name="doyouwantswitchprofile">Wilt u van profiel wisselen en de wijzigingen in het huidige profiel ongedaan maken?</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
-    <string name="objectives_button_unstart">Wissen gestart</string>
+    <string name="objectives_button_unstart">Start wissen</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
     <string name="ns_ploadlocalprofile">Upload lokale profielwijzigingen naar NS</string>
