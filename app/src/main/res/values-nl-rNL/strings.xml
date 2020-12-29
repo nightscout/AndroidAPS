@@ -618,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
-    <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
     <string name="enablesmbalways">Activeer SMB altijd</string>
     <string name="enablesmbalways_summary">SMB altijd aan onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5</string>
     <string name="enablesmbaftercarbs">Activeer SMB na koolhydraten</string>
@@ -796,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Gevoeligheid verhoogt het doel</string>
     <string name="sensitivity_raises_target_summary">Wanneer insulinegevoeligheid wordt gedetecteerd, wordt het BG streefdoel verhoogd</string>
     <string name="combo_invalid_setup">Ongeldige pompinstellingen, controleer de documenten en controleer of het Quick Info-menu QUICK INFO wordt genoemd met behulp van de 360-configuratiesoftware.</string>
-    <string name="custom">Aangepast</string>
     <string name="careportal_removestartedevents">Verwijder AndroidAPS start-meldingen</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die op de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
