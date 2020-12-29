@@ -618,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="set_neutral_temps_title">Nastavit neutrální dočasný bazál</string>
-    <string name="set_neutral_temps_summary">Je-li povoleno, zastaví dočasný bazál před koncem každé hodiny. To může u některých pump pomoci zastavit pípání/vibrace v celou hodinu.</string>
     <string name="enablesmbalways">Vždy povolit SMB</string>
     <string name="enablesmbalways_summary">Povolit SMB nezávisle na bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
     <string name="enablesmbaftercarbs">Povolit SMB po jídle</string>
@@ -796,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
     <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší nastavenou cílovou glykémii</string>
     <string name="combo_invalid_setup">Chybné nastavení pumpy. Projděte si dokumentaci a přesvědčete se, že menu Quick Info se jmenuje QUICK INFO, za použití 360 configuration software.</string>
-    <string name="custom">Volitelný</string>
     <string name="careportal_removestartedevents">Vyčistit události \"AndroidAPS restartován\"</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
