@@ -42,7 +42,7 @@
     <string name="wronganswer">Fel svar</string>
     <string name="unfinshed_button">Nästa icke slutförda</string>
     <string name="requestcode">Begärd kod: %1$s</string>
-    <string name="objectives_hint">(kontrollera alla korrekta svar)</string>
+    <string name="objectives_hint">(välj alla korrekta svar)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
