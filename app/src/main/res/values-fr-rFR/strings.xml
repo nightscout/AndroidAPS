@@ -1189,4 +1189,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="alarm">Alarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
     <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
+    <string name="advisoralarm">Alerter quand il est temps de manger</string>
+    <string name="alarminxmin">Alerter dans %1$d min</string>
+    <string name="bolusadvisor">Assistant bolus</string>
+    <string name="bolusadvisormessage">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
+    <string name="enablebolusadvisor">Activer l\'assistant bolus</string>
+    <string name="enablebolusadvisor_summary">Utiliser le rappel pour commencer à manger au lieu de l\'assistant quand la glycémie est élevée</string>
+    <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
+    <string name="timetoeat">Il est temps de manger</string>
 </resources>
