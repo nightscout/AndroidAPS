@@ -21,8 +21,6 @@
     <string name="objectives_smb_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip SMB (Super Mikro Bolusas)</string>
     <string name="objectives_auto_objective">Automatizavimo įjungimas</string>
     <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti max AIO! Pradžiai patartina skaičiuoti taip: maxAIO=(didžiausia valandinė bazė x 3) + vidutinis bolusas</string>
-    <string name="objectives_auto_gate">Perskaitykite automatizavimo dokumentaciją. Nustatykite pirmąsias paprastas taisykles. Užuot įjungę veiksmus, leiskite AAPS tik rodyti pranešimus. Kai būsite tikri, kad automatizavimas prasidės tinkamu laiku, pakeiskite pranešimą realiu veiksmu.
-(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">KG matoma NS</string>
     <string name="objectives_pumpstatusavailableinns">NS matomas pompos statusas</string>
     <string name="objectives_manualenacts">Įvesti rankiniu būdu</string>
@@ -37,11 +35,9 @@
     <string name="objectives_useloop">Parodyti Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Panaudokite vaizdo dydžio keitimo funkciją ilgai spaudžiant ant glikemijos kreivės</string>
     <string name="objectives_button_enter">Įeiti</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Jei turite bent 3 mėnesių uždaro ciklo patirties kitose sistemose, galite gauti kodą, leidžiantį praleisti tikslus. Visą informaciją galite rasti čia: https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Kodas priimtas</string>
     <string name="codeinvalid">Neteisingas kodas</string>
     <string name="objectives_exam_objective">Patvirtinkite savo žinias</string>
-    <string name="objectives_exam_gate">Išnagrinėkite ir atsakykite į klausimus teisingai</string>
     <string name="answerdisabledto">Atsakymas sustabdytas: %1$s</string>
     <string name="wronganswer">Neteisingas atsakymas!</string>
     <string name="unfinshed_button">Kitas neužbaigtas</string>
