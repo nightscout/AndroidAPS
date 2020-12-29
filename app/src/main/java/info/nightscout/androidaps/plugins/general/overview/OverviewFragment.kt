@@ -177,8 +177,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             sp.putBoolean(R.string.key_objectiveusescale, true)
             false
         }
+        prepareGraphsIfNeeded(overviewMenus.setting.size)
         overviewMenus.setupChartMenu(overview_chartMenuButton)
-        prepareGraphs()
 
         overview_activeprofile?.setOnClickListener(this)
         overview_activeprofile?.setOnLongClickListener(this)
@@ -210,7 +210,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                prepareGraphs()
                 if (it.now) updateGUI(it.from)
                 else scheduleUpdateGUI(it.from)
             }) { fabricPrivacy.logException(it) })
@@ -276,20 +275,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         updateGUI("onResume")
     }
 
-
     override fun onClick(v: View) {
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_treatmentbutton   -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_wizardbutton      -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_treatmentbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TreatmentDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_wizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { WizardDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_insulinbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { InsulinDialog().show(childFragmentManager, "Overview") })
                 R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { onClickQuickWizard() })
-                R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_temptarget        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_activeprofile     -> {
+                R.id.overview_carbsbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { CarbsDialog().show(childFragmentManager, "Overview") })
+                R.id.overview_temptarget -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+
+                R.id.overview_activeprofile -> {
                     val args = Bundle()
                     args.putLong("time", DateUtil.now())
                     args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
@@ -297,6 +296,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     pvd.arguments = args
                     pvd.show(childFragmentManager, "ProfileViewDialog")
                 }
+
                 R.id.overview_cgmbutton -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
@@ -341,7 +341,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
                 }
 
-                R.id.overview_apsmode     -> {
+                R.id.overview_apsmode -> {
                     val args = Bundle()
                     args.putInt("showOkCancel", 1)                  // 1-> true
                     val pvd = LoopDialog()
@@ -372,15 +372,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 startActivity(Intent(v.context, QuickWizardListActivity::class.java))
                 return true
             }
-            R.id.overview_apsmode     -> {
+
+            R.id.overview_apsmode -> {
                 val args = Bundle()
                 args.putInt("showOkCancel", 0)                  // 0-> false
                 val pvd = LoopDialog()
                 pvd.arguments = args
                 pvd.show(childFragmentManager, "Overview")
             }
-            R.id.overview_temptarget        -> v.performClick()
-            R.id.overview_activeprofile     -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") })}
+
+            R.id.overview_temptarget -> v.performClick()
+            R.id.overview_activeprofile -> activity?.let { activity -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "Overview") }) }
 
         }
         return false
@@ -468,10 +470,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     }
 
-    private fun prepareGraphs() {
+    private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
         synchronized(graphLock) {
-            val numOfGraphs = overviewMenus.setting.size
-
             if (numOfGraphs != secondaryGraphs.size - 1) {
                 //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
                 // rebuild needed
@@ -798,6 +798,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
             val menuChartSettings = overviewMenus.setting
+            prepareGraphsIfNeeded(menuChartSettings.size)
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 

@@ -44,6 +44,7 @@ import java.util.*
 import javax.inject.Inject
 
 class HistoryBrowseActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
@@ -144,7 +145,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         historybrowse_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
         overviewMenus.setupChartMenu(overview_chartMenuButton)
-        prepareGraphs()
+        prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
             start = bundle.getLong("start", 0)
@@ -168,7 +169,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = false)
                 }
-            }, fabricPrivacy::logException )
+            }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventAutosensBgLoaded::class.java)
@@ -178,22 +179,21 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = true)
                 }
-            }, fabricPrivacy::logException )
+            }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_iobcalculationprogess?.text = it.progress }, fabricPrivacy::logException )
+            .subscribe({ overview_iobcalculationprogess?.text = it.progress }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (it.now) {
-                    prepareGraphs()
                     updateGUI("EventRefreshOverview", bgOnly = false)
                 }
-            }, fabricPrivacy::logException )
+            }, fabricPrivacy::logException)
         )
         if (start == 0L) {
             // set start of current day
@@ -217,8 +217,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     }
 
-    private fun prepareGraphs() {
-        val numOfGraphs = overviewMenus.setting.size
+    private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
 
         if (numOfGraphs != secondaryGraphs.size - 1) {
             //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
@@ -267,6 +266,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     fun updateGUI(from: String, bgOnly: Boolean) {
         val menuChartSettings = overviewMenus.setting
+        prepareGraphsIfNeeded(menuChartSettings.size)
         aapsLogger.debug(LTag.UI, "updateGUI from: $from")
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
