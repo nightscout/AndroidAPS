@@ -12,6 +12,7 @@
     <string name="riley_link_ble_config_connected_never">Niciodată</string>
     <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink selectat în prezent</string>
     <string name="riley_link_ble_config_remove_riley_link">Șterge</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Sunteți sigur că doriți să eliminați RileyLink?</string>
     <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Elimină RileyLink</string>
     <string name="riley_link_ble_config_no_riley_link_selected">Niciun RileyLink selectat</string>
     <!-- RL Status Page -->
@@ -30,7 +31,9 @@
     <string name="rileylink_device_type">Tip dispozitiv:</string>
     <string name="rileylink_device_model">Model dispozitiv:</string>
     <string name="rileylink_last_used_frequency">Ultima frecvență utilizată:</string>
+    <string name="rileylink_last_device_contact">Ultima conexiune cu dispozitivul:</string>
     <string name="rileylink_firmware_version">Versiune Firmware:</string>
+    <string name="rileylink_pump_serial_number">Număr de serie al pompei:</string>
     <string name="rileylink_pump_frequency">Frecvență pompă:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Se inițializează conexiunea Bluetooth…</string>
