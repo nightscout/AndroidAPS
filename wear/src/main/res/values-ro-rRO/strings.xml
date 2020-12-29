@@ -8,6 +8,7 @@
     <string name="label_xdrip_no_chart">AAPS(FărăGrafic)</string>
     <string name="label_xdrip_circle">AAPS(Cerc)</string>
     <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS(Panou)</string>
     <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
     <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
     <string name="label_warning_sync">Nu există date!</string>
@@ -61,6 +62,7 @@
     <string name="pref_unicode_in_complications">Unicode în complicații</string>
     <string name="pref_version">Versiune:</string>
     <string name="pref_moreWatchfaceSettings">mai multe setări Watchface</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Uitaţi-vă în configurarea Watchface, vă rugăm.</string>
     <string name="menu_tempt">ŢintăTemporară</string>
     <string name="menu_wizard">Asistent</string>
     <string name="menu_bolus">Bolus</string>
@@ -121,6 +123,7 @@
     <string name="digitalstyle_pref_your_style">Stilul tău:</string>
     <string name="digitalstyle_style_none">niciun stil</string>
     <string name="digitalstyle_style_minimal">stil minimal</string>
+    <string name="digitalstyle_style_shape">stil de formă</string>
     <string name="digitalstyle_style_full">stil complet</string>
     <string name="digitalstyle_pref_your_color">Culoarea ta:</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturaţie culori:</string>
