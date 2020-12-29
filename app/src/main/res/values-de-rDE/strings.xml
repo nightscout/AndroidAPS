@@ -618,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nicht mehr genug Insulin im Reservoir für den Bolus</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
-    <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
     <string name="enablesmbalways">SMB immer aktivieren</string>
     <string name="enablesmbalways_summary">Aktiviere SMB immer, unabhängig von Boli. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enablesmbaftercarbs">Aktiviere SMB nach Mahlzeiten.</string>
@@ -796,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
     <string name="combo_invalid_setup">Ungültige Pumpen-Einstellungen. Lies das Wiki und stelle mit der 360° Konfigurations-Software sicher, dass das Quick-Info-Menü \"QUICK INFO\" heißt.</string>
-    <string name="custom">Benutzerdefiniert</string>
     <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
