@@ -81,4 +81,6 @@
     <string name="common_on">Ligado</string>
     <string name="common_off">Desligado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
+    <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
+    <string name="set_neutral_temps_summary">Se activado, ele irá cancelar basal temporária antes do final de cada hora. Este método pode ajudar a parar o sinal sonoro/vibração em algumas bombas, de hora em hora.</string>
 </resources>
