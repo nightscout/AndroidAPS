@@ -95,9 +95,6 @@
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Poți folosi mai mult de o valoare pentru raportul I:C în profilul tău.</string>
-    <string name="ic_label_exam">Subiect: Rația insulină-carbohidrați (IC)</string>
-    <string name="ic_increasingvalue">Valorile IC mai mari determină o cantitate mai mică de insulină livrată pentru o cantitate dată de carbohidrați.</string>
-    <string name="ic_decreasingvalue">Valorile IC mai mici determină o cantitate mai mică de insulină livrată pentru o cantitate dată de carbohidrați.</string>
     <string name="ic_noeffect">Dacă aveți 0 CoB (carbohidrați activi), schimbarea IC va determina modificarea cantității de insulină livrată pentru a corecta glicemia.</string>
     <string name="ic_different">Valoarea IC va fi diferita dacă considerați 1BE (unitate de pâine) ca 10g sau 12g glucide.</string>
     <string name="ic_meaning">IC înseamnă: Câte unități de pâine (BE) sunt acoperite de 1 unitate de insulină.</string>
@@ -107,7 +104,6 @@
     <string name="profileswitch_basallower">Ratele bazale vor fi cu 10% mai mici.</string>
     <string name="profileswitch_isfhigher">Valoarea ISF va fi cu 10% mai mare.</string>
     <string name="profileswitch_iclower">Valoarea raportului I:C va fi cu 10% mai mic.</string>
-    <string name="profileswitch_unchanged">Rațiile ISF și I:C vor rămâne neschimbate.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Schimbare profil</string>
     <string name="profileswitch2_pctwillchange"> Când specificați un schimb de profil de 120% care sunt răspunsurile adevărate?</string>
