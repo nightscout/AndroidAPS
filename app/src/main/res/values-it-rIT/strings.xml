@@ -411,6 +411,10 @@
     <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
     <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
     <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
+    <string name="duration1h">1 ora</string>
+    <string name="duration2h">2 ore</string>
+    <string name="duration3h">3 ore</string>
+    <string name="duration10h">10 ore</string>
     <string name="resume">Riprendi</string>
     <string name="reconnect">Riconnetti micro</string>
     <string name="smscommunicator_wrongduration">Durata errata</string>
@@ -1182,4 +1186,5 @@
     <string name="alarm">Allarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
+    <string name="timetoeat">Tempo di mangiare</string>
 </resources>
