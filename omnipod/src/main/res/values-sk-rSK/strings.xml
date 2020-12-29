@@ -106,6 +106,18 @@
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deaktivovať Pod</string>
     <string name="omnipod_cmd_discard_pod">Vyradiť Pod</string>
+    <string name="omnipod_cmd_set_bolus">Nastaviť bolus</string>
+    <string name="omnipod_cmd_cancel_bolus">Zrušiť bolus</string>
+    <string name="omnipod_cmd_set_tbr">Nastaviť dočasný bazál</string>
+    <string name="omnipod_cmd_set_basal_schedule">Nastaviť plán bazálu</string>
+    <string name="omnipod_cmd_get_pod_status">Zistiť stav Podu</string>
+    <string name="omnipod_cmd_get_pod_info">Zistiť informácie o Pode</string>
+    <string name="omnipod_cmd_set_time">Nastaviť čas</string>
+    <string name="omnipod_cmd_configure_alerts">Nastaviť výstrahy</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Potvrdiť výstrahy</string>
+    <string name="omnipod_cmd_suspend_delivery">Pozastaviť dodávanie inzulínu</string>
+    <string name="omnipod_cmd_resume_delivery">Pokračovať v dodávaní inzulínu</string>
+    <string name="omnipod_cmd_unknown_entry">Neznáma položka</string>
     <string name="omnipod_cmd_initialize_pod">Inicializovať Pod</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Nastaviť falošný dočasný bazál, pretože Pod je pozastavený</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Zrušiť falošný dočasný bazál ktorý bol vytvorený, pretože Pod bol pozastavený</string>

@@ -7,6 +7,7 @@
     <string name="offlineprofile_label">Θέμα: Προφίλ Εκτός Σύνδεσης</string>
     <string name="offlineprofile_nsprofile">Το προφίλ NS μπορεί να χρησιμοποιηθεί, αλλά όχι να ρυθμιστεί.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_whattodo">Τι πρέπει να γίνει όταν αποσυνδέεται η αντλία;</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
@@ -41,8 +42,6 @@
     <string name="isf_profile">Η αλλαγή της τιμής της ISF στο προφίλ σας είναι αρκετό για να εφαρμόσετε την αλλαγή αυτή.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_increasingvalue">Υψηλή αναλογία IC οδηγεί σε λιγότερη χορήγηση ινσουλίνης για μια δεδομένη ποσότητα υδατανθράκων.</string>
-    <string name="ic_decreasingvalue">Μικρή αναλογία IC οδηγεί σε λιγότερη χορήγηση ινσουλίνης για μια δεδομένη ποσότητα υδατανθράκων.</string>
     <string name="ic_noeffect">Αν έχετε 0 COB Ενεργούς Υδατ., αλλάζοντας την αναλογία IC θα οδηγήσει σε μια διαφορετική ποσότητα ινσουλίνης για να διορθωθεί μια συγκεκριμένη τιμή BG.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>

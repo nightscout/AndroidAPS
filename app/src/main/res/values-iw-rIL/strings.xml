@@ -618,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">לא נותר מספיק אינסולין במיכל בשביל להשלים את הבולוס</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="set_neutral_temps_title">הגדרת קצב בזאלי ניטרלי</string>
-    <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
     <string name="enablesmbalways">הפעלת SMB תמיד</string>
     <string name="enablesmbalways_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
     <string name="enablesmbaftercarbs">הפעלת SMB אחרי פחמימות</string>
@@ -796,7 +794,6 @@
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
     <string name="combo_invalid_setup">הגדרת משאבה לא חוקית, בדקו את הוראות ההפעלה וודאו שתפריט \'מידע מהיר\' נקרא בשם QUICK INFO באמצעות תוכנת התצורה 360.</string>
-    <string name="custom">מותאם אישית</string>
     <string name="careportal_removestartedevents">מחק אירועי \"AndroidAPS Started\"</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>

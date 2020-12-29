@@ -619,8 +619,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_reservoir_level_insufficient_for_bolus">Pas assez d\'insuline dans le réservoir pour le bolus</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
     <string name="insightpump_shortname">AC-I</string>
-    <string name="set_neutral_temps_title">Définir des basals temp neutres</string>
-    <string name="set_neutral_temps_summary">Si activé, cela annulera une basal temp avant la fin de chaque heure. Cela peut aider à supprimer les bips/vibrations à chaque heure.</string>
     <string name="enablesmbalways">Activer en permanence les SMB</string>
     <string name="enablesmbalways_summary">Activer toujours SMB de manière autonome pour les bolus. Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbaftercarbs">Activer SMB après ingestion de glucides</string>
@@ -797,7 +795,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
     <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
     <string name="combo_invalid_setup">Paramétrage de la pompe invalide. Vérifiez la documentation et le menu QUICK INFO en utilisant le logiciel de configuration 360.</string>
-    <string name="custom">Personnalisé</string>
     <string name="careportal_removestartedevents">Réinitialiser AndroidAPS</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
@@ -1192,4 +1189,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="alarm">Alarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
     <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
+    <string name="advisoralarm">Alerter quand il est temps de manger</string>
+    <string name="alarminxmin">Alerter dans %1$d min</string>
+    <string name="bolusadvisor">Assistant bolus</string>
+    <string name="bolusadvisormessage">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
+    <string name="enablebolusadvisor">Activer l\'assistant bolus</string>
+    <string name="enablebolusadvisor_summary">Utiliser le rappel pour commencer à manger au lieu de l\'assistant quand la glycémie est élevée</string>
+    <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
+    <string name="timetoeat">Il est temps de manger</string>
 </resources>

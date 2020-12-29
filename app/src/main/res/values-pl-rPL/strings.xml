@@ -611,8 +611,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Za mało insuliny na bolus pozostało w zbiorniku</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Ustawiaj neutralne bazy tymczasowe</string>
-    <string name="set_neutral_temps_summary">Jeśli ta opcja jest włączona, anuluje tymczasową wartość bazową przed końcem każdej godziny. Może to pomóc wyciszyć alarmy/wibracje związane z TBR występujące co godzinę w niektórych pompach.</string>
     <string name="enablesmbalways">Włącz SMB (Super Mikro Bolusy) zawsze</string>
     <string name="enablesmbalways_summary">Włącz SMB (Super Mikro Bolusy) zawsze, niezależnie od bolusów. Możliwe jedynie ze źródłem BG (poziomu cukru) z dobrym filtrowaniem, jak aplikacja G5</string>
     <string name="enablesmbaftercarbs">Włącz SMB po węglowodanach</string>
@@ -787,7 +785,6 @@
     <string name="sensitivity_raises_target_title">Wrażliwość podnosi docelowy poziom glukozy</string>
     <string name="sensitivity_raises_target_summary">Po zwiększeniu wrażliwości zwiększ docelowy poziom glukozy</string>
     <string name="combo_invalid_setup">Nieprawidłowa konfiguracja pompy, sprawdź dokumentację i zweryfikuj, czy menu Quick Info nazwano QUICK INFO za pomocą oprogramowania konfiguracyjnego 360.</string>
-    <string name="custom">Niestandardowe</string>
     <string name="careportal_removestartedevents">Wyczyść zdarzenia \"Start AndroidAPS\"</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AndroidAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AndroidAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>

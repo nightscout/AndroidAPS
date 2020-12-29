@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Bluetooth-övervakare</string>
     <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
     <string name="pairing">Parkoppling</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>

@@ -15,7 +15,7 @@
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codering</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codering</string>
     <string name="medtronic_custom_action_wake_and_tune">Ontwaak en maak verbinding</string>
-    <string name="medtronic_custom_action_clear_bolus_block">Bolus Blok wissen</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Bolus Blokkering wissen</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Configuratie</string>
     <string name="medtronic_pump_battery_select">Batterij type (batterij weergave)</string>
     <string name="medtronic_pump_battery_no">Niet geselecteerd (Eenvoudige weergave)</string>
@@ -81,4 +81,6 @@
     <string name="common_on">Aan</string>
     <string name="common_off">Uit</string>
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
+    <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
+    <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
 </resources>

@@ -47,6 +47,16 @@
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_cmd_discard_pod">Descartar Pod</string>
+    <string name="omnipod_cmd_cancel_bolus">Cancelar Bólus</string>
+    <string name="omnipod_cmd_set_basal_schedule">Definir Programação Basal</string>
+    <string name="omnipod_cmd_get_pod_status">Obter Status do Pod</string>
+    <string name="omnipod_cmd_get_pod_info">Obter Pod Info</string>
+    <string name="omnipod_cmd_set_time">Definir Hora</string>
+    <string name="omnipod_cmd_configure_alerts">Configurar Alertas</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Reconhecer Alertas</string>
+    <string name="omnipod_cmd_suspend_delivery">Suspender Administração</string>
+    <string name="omnipod_cmd_resume_delivery">Retomar Administração</string>
+    <string name="omnipod_cmd_unknown_entry">Entrada Desconhecida</string>
     <string name="omnipod_cmd_initialize_pod">Inicializar Pod</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_heading_actions">Acções</string>

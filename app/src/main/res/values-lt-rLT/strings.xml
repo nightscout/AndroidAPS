@@ -406,11 +406,18 @@
     <string name="suspendloopfor3h">Sustabdyti ciklą 3 val</string>
     <string name="suspendloopfor10h">Sustabdyti ciklą 10 val</string>
     <string name="suspendloopforXmin">Sustabdyti ciklą %1$d min</string>
+    <string name="disconnectpump">Atjungti pompą</string>
     <string name="disconnectpumpfor15m">Atjungti pompą 15 min</string>
     <string name="disconnectpumpfor30m">Atjungti pompą 30 min</string>
     <string name="disconnectpumpfor1h">Atjungti pompą 1 val</string>
     <string name="disconnectpumpfor2h">Atjungti pompą 2 val</string>
     <string name="disconnectpumpfor3h">Atjungti pompą 3 val</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 val.</string>
+    <string name="duration2h">2 val.</string>
+    <string name="duration3h">3 val.</string>
+    <string name="duration10h">10 val.</string>
     <string name="resume">Atnaujinti</string>
     <string name="reconnect">Prijungti pompą</string>
     <string name="smscommunicator_wrongduration">Neteisinga trukmė</string>
@@ -611,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuare nepakanka insulino bolusui</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
-    <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="enablesmbalways">Leisti SMB visada</string>
     <string name="enablesmbalways_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
     <string name="enablesmbaftercarbs">Leisti SMB po angliavandenių įvedimo</string>
@@ -761,6 +766,8 @@
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
     <string name="setupwizard_profile_description">Prašome pasirinkti profilį. Jei pacientas yra vaikas, turite naudoti NS profilį. Jei niekas neseka jūsų Nightscout platformoje, tada geriau pasirinkti Vietinį profilį. Atminkite, kad čia Jūs tik pasirenkate profilio šaltinį. Norėdami jį aktyvuoti, turite atlikti Profilio keitimą</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
     <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
@@ -787,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
     <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinis gliukozės lygis padidinamas</string>
     <string name="combo_invalid_setup">Netinkami pompos nustatymai, patikrinkite dokumentaciją ir įsitikinkite, kad Quick info meniu yra pavadintas QUICK INFO, naudojant 360 configuration software.</string>
-    <string name="custom">Pasirinktinis</string>
     <string name="careportal_removestartedevents">Ištrinti \"AndroidAPS paleista\" įrašus</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite prie aparatinės pompos, AndroidAPS nukopijuos bazės nustatymus iš profilio į pompą, pakeisdamas esančius nustatymus pompoje. Įsitikinkite, kad turimi bazės nustatymai AndroidAPS yra teisingi. Jei nesate tikri arba nenorite iš naujo keisti bazės nustatymų jūsų pompoje, paspauskite atšaukti ir pakartokite prijungimą prie pompos kitą kartą.</string>
@@ -1180,4 +1186,14 @@
     <string name="copytolocalprofile_invalid">Nepavyksta sukurti vietinio profilio. Profilis neteisingas.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Aliarmas</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
+    <string name="smscommunicator_pump_ureachable">Pranešti apie nepasiekiamą pompą</string>
+    <string name="advisoralarm">Pranešti apie laiką valgyti</string>
+    <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="bolusadvisor">Boluso patarėjas</string>
+    <string name="bolusadvisormessage">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
+    <string name="enablebolusadvisor">Įgalinti boluso patarėją</string>
+    <string name="enablebolusadvisor_summary">Jei jūsų glikemija yra aukšta, naudokite priminimą apie laiką valgyti, o ne Boluso patarėją</string>
+    <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
+    <string name="timetoeat">Laikas valgyti</string>
 </resources>

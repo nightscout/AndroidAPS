@@ -611,8 +611,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">В резервуаре недостаточно инсулина для болюса</string>
     <string name="extendedbolusdeliveryerror">Подача пролонгированного болюса не состоялась</string>
     <string name="insightpump_shortname">Поле обзора</string>
-    <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
-    <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
     <string name="enablesmbalways">Всегда включать супер микро болюс SMB</string>
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
@@ -791,7 +789,6 @@ Context | Edit Context</string>
     <string name="sensitivity_raises_target_title">Чувствительность поднимает цель</string>
     <string name="sensitivity_raises_target_summary">При обнаружении чувствительности целевой уровень глюкозы повышается</string>
     <string name="combo_invalid_setup">Недопустимые установки помпы, проверьте документацию и убедитесь, что меню Quick Info называется QUICK INFO, используя приложение 360 для конфигурации помпы.</string>
-    <string name="custom">Пользовательские</string>
     <string name="careportal_removestartedevents">AndroidAPS перезапущен</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AndroidAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AndroidAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>

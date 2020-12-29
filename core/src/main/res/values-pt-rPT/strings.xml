@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Watchdog BT</string>
     <string name="btwatchdog_summary">Desliga o bluetooth do telefone durante um segundo se nenhuma ligação com bomba for possível. Este parâmetro pode ser útil em alguns telefones, onde o bluetooth congela.</string>
     <string name="pairing">A Emparelhar</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>

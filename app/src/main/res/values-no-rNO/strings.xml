@@ -618,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Ikke nok insulin til bolus i ampullen</string>
     <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
-    <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
     <string name="enablesmbalways">Aktiverer alltid SMB</string>
     <string name="enablesmbalways_summary">Aktiver alltid SMB uavhengig av boluser. Bare mulig med en bra filtrert BS kilde som f.eks. Dexcom G5/G6</string>
     <string name="enablesmbaftercarbs">Aktiver SMB etter karbohydrater</string>
@@ -796,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Sensitivitet øker BS målverdi</string>
     <string name="sensitivity_raises_target_summary">Når systemet oppdager økt insulinsensitivitet, vil BS målverdi økes</string>
     <string name="combo_invalid_setup">Ugyldig oppsett av pumpen. Les dokumentasjonen og sjekk at Quick Info menyen heter QUICK INFO ved hjelp av 360 programvaren.</string>
-    <string name="custom">Tilpasset</string>
     <string name="careportal_removestartedevents">Basis AndroidAPS startet</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret der. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
