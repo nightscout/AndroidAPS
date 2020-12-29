@@ -797,6 +797,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateGraph(lastRun: LoopInterface.LastRun?, predictionsAvailable: Boolean, lowLine: Double, highLine: Double, pump: PumpInterface, profile: Profile) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             overview_bggraph ?: return@launch
+            val menuChartSettings = overviewMenus.setting
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
@@ -814,7 +815,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val fromTime: Long
                 val endTime: Long
                 val apsResult = if (config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
-                if (predictionsAvailable && apsResult != null && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
+                if (predictionsAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
                     var predictionHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
                     predictionHours = min(2, predictionHours)
                     predictionHours = max(0, predictionHours)
@@ -836,7 +837,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 graphData.addInRangeArea(fromTime, endTime, lowLine, highLine)
 
                 // **** BG ****
-                if (predictionsAvailable && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal])
+                if (predictionsAvailable && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions)
                 else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
@@ -845,11 +846,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // Treatments
                 graphData.addTreatments(fromTime, endTime)
-                if (overviewMenus.setting[0][OverviewMenus.CharType.ACT.ordinal])
+                if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
                     graphData.addActivity(fromTime, endTime, false, 0.8)
 
                 // add basal data
-                if (pump.pumpDescription.isTempBasalCapable && overviewMenus.setting[0][OverviewMenus.CharType.BAS.ordinal])
+                if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
                     graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2)
 
                 // add target line
@@ -860,7 +861,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // ------------------ 2nd graph
                 synchronized(graphLock) {
-                    for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
+                    for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
                         val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
                         var useABSForScale = false
                         var useIobForScale = false
@@ -870,22 +871,22 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         var useDSForScale = false
                         var useIAForScale = false
                         when {
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                         }
 
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                         // set manual x bounds to have nice steps
                         secondGraphData.formatAxis(fromTime, endTime)
@@ -897,16 +898,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
             synchronized(graphLock) {
-                for (g in 0 until min(secondaryGraphs.size, overviewMenus.setting.size + 1)) {
+                for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
                     secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                     secondaryGraphs[g].visibility = (
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                        menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                         ).toVisibility()
                     secondaryGraphsData[g].performUpdate()
                 }
