@@ -245,6 +245,7 @@
     <string name="valueoutofrange">Valoarea %1$s este mai mare decât limita stabilită</string>
     <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1$d minute, răspundeți cu: %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
@@ -384,10 +385,13 @@
     <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
     <string name="notavailable">indisponibil</string>
+    <string name="patientage">Tip de pacient</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
     <string name="resistantadult">Adult rezistent la insulină</string>
+    <string name="pregnant">Sarcină</string>
+    <string name="patientage_summary">Te rog confirmă tipul de pacient pentru a stabilii limitele de siguranță</string>
     <string name="patient_name">Numele pacientului</string>
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
@@ -429,6 +433,8 @@
     <string name="statuslights_iage_critical">Prag critic vechime insulină [h]</string>
     <string name="statuslights_sage_warning">Prag de avertizare vechime senzor [h]</string>
     <string name="statuslights_sage_critical">Prag critic vechime senzor [h]</string>
+    <string name="statuslights_sbat_warning">Prag de avertizare nivel baterie senzor [%]</string>
+    <string name="statuslights_sbat_critical">Prag nivel critic baterie senzor [%]</string>
     <string name="statuslights_bage_warning">Prag de avertizare nivel baterie [h]</string>
     <string name="statuslights_bage_critical">Prag critic nivel baterie [h]</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
@@ -455,6 +461,7 @@
     <string name="ns_noupload_summary">Toate trimiterile de date către NS sunt oprite. AAPS este conectat la NS dar nu se fac schimbări în NS</string>
     <string name="overview_extendedbolus_cancel_button">Renunță la bolusul extins</string>
     <string name="doprofileswitch">Schimbă profilul</string>
+    <string name="careportal_canula_label">Canulă</string>
     <string name="ns_alarmoptions">Opțiuni alarmare</string>
     <string name="ns_alarms">Creare notificări din alarmele NS</string>
     <string name="ns_announcements">Creare notificări din anunţurile NS</string>
@@ -552,8 +559,6 @@
     <string name="overview_editquickwizard_usebasaliob">Calcul IOB bazală</string>
     <string name="overview_editquickwizard_usetrend">Calcul pantă</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcul superbolus</string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
     <string name="positiveonly">Doar pozitiv</string>
     <string name="negativeonly">Doar negativ</string>
     <string name="overview_editquickwizard_usecob">Calcul COB</string>
@@ -749,8 +754,6 @@
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="setupwizard_profile_description">Selectați sursa sau profilul. Dacă pacientul este copil, ar fi bine să alegeți un profil NS. Dacă nu aveți profil NS, puteți alege profil local. De aici alegeți doar sursa profilului; pentru a utiliza acest profil, trebuie să îl activați prin executarea unei \"Schimbări de profil\"</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Se așteaptă conexiunea la RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
     <string name="permission">Permisiune</string>
     <string name="askforpermission">Solicitați permisiunea</string>

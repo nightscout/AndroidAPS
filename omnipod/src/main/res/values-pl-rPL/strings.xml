@@ -13,11 +13,10 @@
     <string name="omnipod_alert_expiration">Pod wkrótce straci ważność</string>
     <string name="omnipod_alert_expiration_advisory">Pod wkrótce straci ważność</string>
     <string name="omnipod_alert_shutdown_imminent">Wyłączenie jest nieuchronne</string>
-    <string name="omnipod_alert_low_reservoir">Niski poziom w zbiorniku</string>
-    <string name="omnipod_alert_unknown_alert">Nieznany alarm</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Opis</string>
     <string name="omnipod_history_item_date">Data</string>
+    <!-- Omnipod - Short status -->
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Ostrzeżenie</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować Omnipod przed uruchomieniem tego działania.</string>

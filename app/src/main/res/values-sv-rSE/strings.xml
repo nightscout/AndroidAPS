@@ -565,8 +565,6 @@ Eversense-appen.</string>
     <string name="overview_editquickwizard_usebasaliob">Använd basal-IOB</string>
     <string name="overview_editquickwizard_usetrend">Använd BG-trend</string>
     <string name="overview_editquickwizard_usesuperbolus">Använd superbolus</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nej</string>
     <string name="positiveonly">Endast positiva</string>
     <string name="negativeonly">Endast negativa</string>
     <string name="overview_editquickwizard_usecob">Använd COB</string>
@@ -680,6 +678,7 @@ Eversense-appen.</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Basalen ändrad i pumpen, men det gick inte att läsa till vad</string>
     <string name="combo_activity_checking_for_history_changes">Letar efter förändringar i historiken</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flera bolusar med samma mängd insulin importerades just. Endast en kan läggas till i Careportal. Vänligen kontrollera pumpen och gör ändringar i Careportal manuellt vid behov. Observera att man bara kan ha en bolus per klockslag.</string>
+    <string name="about_link_urls">\n\ndokumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Den senaste bolusen är äldre än 24 timmar eller i framtiden. Vänligen kontrollera tid och datum i pumpen.</string>
     <string name="combo_suspious_bolus_time">Tid/datum för bolusen verkar fel. IOB är troligen missvisande. Vänligen kontrollera tid och datum i pumpen.</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
@@ -762,8 +761,6 @@ Eversense-appen.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="setupwizard_profile_description">Vänligen välj källa för profil. Om patienten är ett barn bör du använda NS profil. Om ingen följer dig på Nightscout kommer du förmodligen föredra lokal profil. Kom ihåg att du endast väljer profilkälla här. För att använda den måste du aktivera den genom att köra ”Byt Profil”</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Väntar på Riley Link-anslutning...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har initierats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
     <string name="permission">Behörighet</string>
     <string name="askforpermission">Be om behörighet</string>
@@ -978,7 +975,9 @@ Eversense-appen.</string>
     <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
     <string name="notification">Avisering</string>
     <string name="notification_message">Avisering: %1$s</string>
+    <string name="alarm_message">Larm: %1$s</string>
     <string name="message_short">Medd:</string>
+    <string name="alarm_short">Larm:</string>
     <string name="profilepercentage">Procent av profil</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
@@ -1177,4 +1176,8 @@ Eversense-appen.</string>
     <string name="uploaded_data">Uppladdad data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Följande data kommer att överföras till ditt Open Humans-konto: Glukosvärden, careportalhändelser (utom anteckningar), utökade bolusar, profilbyten, totala dagliga doser, temp basaler, temp mål, inställningar, appversion, enhetsmodell och skärmstorlek. Hemlig eller privat information, t. ex. din Nightscout-adress eller API-hemlighet, kommer inte att överföras.</string>
     <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
+    <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Kan inte att skapa den lokala profilen. Profilen är ogiltig.</string>
+    <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
+    <string name="alarm">Larm</string>
 </resources>

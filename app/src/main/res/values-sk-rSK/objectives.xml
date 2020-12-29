@@ -21,7 +21,6 @@
     <string name="objectives_smb_objective">Povoliť ďalšie funkcie pre bežné používanie ako SMB</string>
     <string name="objectives_auto_objective">Povolenie automatiky</string>
     <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
-    <string name="objectives_auto_gate">Prečítajte si dokumentáciu na wiki, ako automatika funguje. Najskôr nastavte iba jednoduché pravidlá. Namiesto vykonávania akcií nechajte AAPS zobrazovať iba oznámenia. Pokiaľ ste si istý, že automatika je spustená v správnom čase, môžete oznámenie nahradiť vykonaním akcie.(https://androidaps.readdocs.io/en/latest/CROWDIN/cs/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glykémia dostupná v NS</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="objectives_manualenacts">Spustené manuálne</string>
@@ -36,11 +35,9 @@
     <string name="objectives_useloop">Zobrazte obsah modulu uzavretý okruh</string>
     <string name="objectives_usescale">Prepnite režim zobrazenia dlhým stlačením grafu glykémie</string>
     <string name="objectives_button_enter">Zadať</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Pokiaľ máte aspoň 3 mesiace skúseností s uzavretým okruhom na iných systémoch, môžete získať kód, ktorý vám umožní preskočiť ciele. Viac informácií nájdete na https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Kód akceptovaný</string>
     <string name="codeinvalid">Neplatný kód</string>
     <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
-    <string name="objectives_exam_gate">Preštudujte a správne odpovedajte na otázky</string>
     <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
     <string name="wronganswer">Nesprávna odpoveď!</string>
     <string name="unfinshed_button">Ďalšia nedokončená</string>

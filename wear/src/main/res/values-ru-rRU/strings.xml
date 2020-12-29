@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
     <string name="pref_unicode_in_complications">Юникод в репликации</string>
     <string name="pref_version">Версия:</string>
+    <string name="pref_moreWatchfaceSettings">еще настройки циферблатов</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
     <string name="menu_tempt">ВремЦ</string>
     <string name="menu_wizard">Мастер настройки</string>
     <string name="menu_bolus">Болюс</string>

@@ -212,6 +212,7 @@
     <string name="history_group_prime">Förfyllningar</string>
     <string name="history_group_alarm">Larm</string>
     <string name="history_group_glucose">Glukos</string>
+    <string name="mute5min">Tysta i 5 minuter</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

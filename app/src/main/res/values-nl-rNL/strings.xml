@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
+    <string name="nav_preferences_plugin">%1$s Instellingen</string>
     <string name="nav_preferences">Instellingen</string>
     <string name="nav_refreshtreatments">Haal behandelingen op van NS</string>
     <string name="nav_resetdb">Reset database</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
     <string name="suspendloopfor10h">Onderbreek loop voor 10u</string>
     <string name="suspendloopforXmin">Onderbreek loop voor %1$d min</string>
+    <string name="disconnectpump">Pomp afkoppelen</string>
     <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
     <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 uur</string>
+    <string name="duration2h">2 uur</string>
+    <string name="duration3h">3 uur</string>
+    <string name="duration10h">10 uur</string>
     <string name="resume">Hervatten</string>
     <string name="reconnect">Opnieuw verbinden met pomp</string>
     <string name="smscommunicator_wrongduration">Verkeerde tijdsduur</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basaal IOB berekening</string>
     <string name="overview_editquickwizard_usetrend">Trend berekening</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus berekening</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
     <string name="positiveonly">Enkel positief</string>
     <string name="negativeonly">Enkel negatief</string>
     <string name="overview_editquickwizard_usecob">COB berekening</string>
@@ -679,6 +685,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basaal patroon op de pomp is gewijzigd, maar kunnen niet worden uitgelezen</string>
     <string name="combo_activity_checking_for_history_changes">Controle van historiek op wijzigingen</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Verschillende bolussen met dezelfde hoeveelheid op hetzelfde tijdstip zijn geïmporteerd. Er is er maar 1 toegevoegd aan de behandelingen lijst. Controleer op de pomp en voeg eventueel toe via het Careportal menu. Er mogen geen 2 bolussen op hetzelfde tijdstip aanwezig zijn.</string>
+    <string name="about_link_urls">\n\ndocumentatie:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">De laatste bolus is ouder dan 24 uren of bevind zich in de toekomst. Controleer de datum en tijd in de pomp aub.</string>
     <string name="combo_suspious_bolus_time">Datum/tijd van de geleverde bolus op de pomp is niet correct, IOB is waarschijnlijk foutief. Controleer aub de datum/tijd op de pomp.</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
@@ -761,8 +768,8 @@
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="setupwizard_profile_description">Kies een bron van het profiel. Als de patiënt een kind is, moet u het NS-profiel gebruiken. Als er niemand is die je volgt op Nightscout, zul je waarschijnlijk een lokaal profiel prefereren. Onthoud dat u alleen de profielbron selecteert. Om het te gebruiken, moet u het activeren door \"Profiel wisselen\" uit te voeren</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Wachten op verbinding met RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> je kunt de setup voortzetten zodra de pomp geïnitialiseerd is.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
     <string name="permission">Toestemming</string>
     <string name="askforpermission">Vragen om toestemming</string>
@@ -977,7 +984,9 @@
     <string name="description_source_dexcom">Ontvang BG waardes van de aangepaste Dexcom G app.</string>
     <string name="notification">Notificatie</string>
     <string name="notification_message">Notificatie: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Boodsch:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Profiel percentage</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
@@ -1177,4 +1186,17 @@
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">De volgende gegevens worden geüpload naar je Open Humans account: glucosewaarden, bolussen, koolhydraten, careportal-events (met uitzondering van notities), verlengde bolussen, profielwissels, totale dagelijkse doses, tijdelijke basaalstanden, tijdelijke doelen, voorkeuren, app-versie, apparaatmodel en schermafmetingen. Geheime of persoonlijke gegevens zoals je Nightscout-URL of API-secret worden niet geüpload.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Lokaal profiel kan niet worden gemaakt. Profiel is ongeldig.</string>
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
+    <string name="smscommunicator_pump_ureachable">Melden wanneer de pomp onbereikbaar is</string>
+    <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
+    <string name="alarminxmin">Start alarm over %1$d min</string>
+    <string name="bolusadvisor">Bolusadviseur</string>
+    <string name="bolusadvisormessage">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je herinneren wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je eraan herinneren.</string>
+    <string name="enablebolusadvisor">Bolusadviseur inschakelen</string>
+    <string name="enablebolusadvisor_summary">Gebruik herinnering om te beginnen eten in plaats van wizard tijdens hoge bloedglucose</string>
+    <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
+    <string name="timetoeat">Tijd om te eten</string>
 </resources>

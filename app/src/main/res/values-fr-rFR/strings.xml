@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Traitements de sécurité</string>
     <string name="treatmentssafety_maxbolus_title">Maximum Bolus autorisé [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximum de Glucides autorisé [g]</string>
+    <string name="nav_preferences_plugin">Préférences de %1$s</string>
     <string name="nav_preferences">Préférences</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
     <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
@@ -406,11 +407,18 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="suspendloopfor3h">Suspendre la Boucle pour 3h</string>
     <string name="suspendloopfor10h">Suspendre la Boucle pour 10h</string>
     <string name="suspendloopforXmin">Suspendre la Boucle pour %1$d min</string>
+    <string name="disconnectpump">Déconnecter la pompe</string>
     <string name="disconnectpumpfor15m">Déconnecter la pompe 15 min</string>
     <string name="disconnectpumpfor30m">Déconnecter la pompe 30 min</string>
     <string name="disconnectpumpfor1h">Déconnecter la pompe 1h</string>
     <string name="disconnectpumpfor2h">Déconnecter la pompe 2h</string>
     <string name="disconnectpumpfor3h">Déconnecter la pompe 3h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 heure</string>
+    <string name="duration2h">2 heures</string>
+    <string name="duration3h">3 heures</string>
+    <string name="duration10h">10 heures</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Rebrancher la pompe</string>
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
@@ -466,8 +474,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pile pompe</string>
-    <string name="careportal_age_label">Âge:</string>
-    <string name="careportal_level_label">Niveau:</string>
+    <string name="careportal_age_label">âge:</string>
+    <string name="careportal_level_label">niveau:</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
     <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
     <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
@@ -565,8 +573,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_editquickwizard_usebasaliob">Calcul IA du Basal</string>
     <string name="overview_editquickwizard_usetrend">Calcul de tendance</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcul SuperBolus</string>
-    <string name="yes">Oui</string>
-    <string name="no">Non</string>
     <string name="positiveonly">Seulement positif</string>
     <string name="negativeonly">Seulement négatif</string>
     <string name="overview_editquickwizard_usecob">Calcul GA</string>
@@ -680,6 +686,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_error_failure_reading_changed_basal_rate">Le pourcentage de basal a changé dans la pompe mais sa lecture a échoué</string>
     <string name="combo_activity_checking_for_history_changes">Vérification des modifications de l\'historique</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Merci de vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
+    <string name="about_link_urls">\n\ndocumentation :\nhttps://androidaps.readthedocs.io/en/latest/CROWDIN/fr\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Le dernier bolus enregistré date d\'il y a plus de 24h ou est dans le futur. Vérifiez que la date dans la pompe est correctement définie.</string>
     <string name="combo_suspious_bolus_time">L\'heure/date sur la pompe du dernier bolus administré semble erroné. L\'IA est probablement incorrecte. Vérifiez l\'heure/date de la pompe.</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
@@ -762,8 +769,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="diawarning">Rappel : les nouveaux profils d\'insuline requièrent une DIA d\'au moins 5h. Une DIA 5-6h dans les nouveaux profils d\'insuline équivaut à une DIA 3h dans les anciens profils d\'insuline.</string>
     <string name="setupwizard_profile_description">Sélectionnez la source du profil. Si le patient est un enfant vous devriez utiliser un profil NS. Si personne ne vous suit sur Nightscout, vous préférerez probablement un profil local. N\'oubliez pas que vous êtes simplement en train de sélectionner la source du profil. Afin de pouvoir l\'utiliser vous devrez l\'activer via \"Changement de Profil\"</string>
     <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont organisés du plus ancien au plus récent. Les algorithmes les plus récents sont habituellement plus puissants et plus agressifs. De ce fait, si vous êtes un nouvel utilisateur, vous devriez probablement démarrer avec AMA au lieu de choisir un algorithme plus récent. N\'oubliez pas de lire la documentation OpenAPS et en faire la configuration avant utilisation.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">En attente de connexion RileyLink...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois que la pompe a été initialisée.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Veuillez configurer votre RileyLink ci-dessous. Après avoir sélectionné un RileyLink, il sera possible de continuer l\'installation une fois que le statut de RileyLink sera « Connecté ». Cela peut prendre une minute.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois la pompe configurée.\n</string>
     <string name="startobjective">Démarrez votre premier objectif</string>
     <string name="permission">Autorisation</string>
     <string name="askforpermission">Demande d\'autorisation</string>
@@ -978,7 +985,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée.</string>
     <string name="notification">Notification</string>
     <string name="notification_message">Notification : %1$s</string>
+    <string name="alarm_message">Alarme: %1$s</string>
     <string name="message_short">Mess :</string>
+    <string name="alarm_short">Alarme:</string>
     <string name="profilepercentage">Pourcentage du profil</string>
     <string name="percent_u">Pourcentage [%]:</string>
     <string name="startprofile">Début du profil %1$d%% pour %2$d min</string>
@@ -1178,4 +1187,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Les données suivantes seront téléchargées sur votre compte Open Humans : glycémie, bolus, glucides, événements Careportal (sauf les notes), bolus étendus, changements de profil, doses quotidiennes totales, basales temporaires, cibles temporaires, préférences, version de l\'application, modèle de l\'appareil et dimensions de l\'écran. Les informations secrètes ou privées telles que votre URL Nightscout ou votre API secret ne seront pas téléchargés.</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
     <string name="filter">Filtrer</string>
+    <string name="copytolocalprofile_invalid">Impossible de créer le profil local. Le profil est invalide.</string>
+    <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
+    <string name="alarm">Alarme</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
+    <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
 </resources>

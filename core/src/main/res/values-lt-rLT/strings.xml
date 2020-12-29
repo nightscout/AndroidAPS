@@ -170,6 +170,7 @@
     <string name="waitingforpumpresult">Laukiama rezultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">Būtina suvartoti %1$d g papildomų AV per %2$d min</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistika</string>
     <string name="cumulative_tdd">BPD viso</string>
@@ -211,6 +212,7 @@
     <string name="history_group_prime">Užpildyti sistemą</string>
     <string name="history_group_alarm">Aliarmai</string>
     <string name="history_group_glucose">Gliukozė</string>
+    <string name="mute5min">Nutildyti 5 minutėms</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

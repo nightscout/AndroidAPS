@@ -65,7 +65,7 @@
     <string name="bluetooth">בלוטות\'</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן לתקשר עם המשאבה. זה עשוי לעזור במס\' דגמי טלפונים שבהם מערכת הבלוטות\' קופאת.</string>
-    <string name="pairing">מזווג</string>
+    <string name="pairing">מצמד</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -83,7 +83,7 @@
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
     <string name="ble_not_enabled">בלוטות\' כבוי.</string>
     <string name="location_not_found_title">המיקום אינו מופעל</string>
-    <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר את שירות המיקום. AAPS לא עוקב אחר המיקום שלכם וניתן להפסיק את השירות לאחר סיום הזיווג.</string>
+    <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר את שירות המיקום. AAPS לא עוקב אחר המיקום שלכם וניתן להפסיק את השירות לאחר סיום הצימוד.</string>
     <!--    DateUtil-->
     <string name="minago">לפני %1$d דקות</string>
     <string name="hoursago">לפני %1$.1f שעות</string>
@@ -212,6 +212,7 @@
     <string name="history_group_prime">מילוי</string>
     <string name="history_group_alarm">התראות</string>
     <string name="history_group_glucose">גלוקוז</string>
+    <string name="mute5min">השתקה ל-5 דקות</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
