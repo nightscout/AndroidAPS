@@ -114,5 +114,7 @@
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="pump_time_updated">Pump time updated</string>
     <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
+    <string name="set_neutral_temps_title">Set neutral temp basals</string>
+    <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
 
 </resources>

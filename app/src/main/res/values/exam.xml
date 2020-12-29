@@ -183,7 +183,7 @@
     <string name="profileswitch_basallower">Basal rates will be 10% lower.</string>
     <string name="profileswitch_isfhigher">ISF will be 10% higher.</string>
     <string name="profileswitch_iclower">The value of the I:C ratio will be a 10% lower number.</string>
-    <string name="profileswitch_unchanged">ISF and I:C rations will be unchanged.</string>
+    <string name="profileswitch_unchanged">ISF and I:C ratios will be unchanged.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Profile Switching</string>
     <string name="profileswitch2_pctwillchange"> When specifying a 120% profile switch, which answers are true?</string>
