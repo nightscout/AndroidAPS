@@ -81,4 +81,6 @@
     <string name="common_on">מופעל</string>
     <string name="common_off">כבוי</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
+    <string name="set_neutral_temps_title">הגדרת קצב בזאלי ניטרלי</string>
+    <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
 </resources>
