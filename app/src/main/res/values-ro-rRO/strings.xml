@@ -605,8 +605,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
     <string name="insightpump_shortname">Obiectiv</string>
-    <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
-    <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
     <string name="enablesmbalways">Activează SMB întotdeauna</string>
     <string name="enablesmbalways_summary">Activează SMB întotdeauna independent de bolusuri. Este posibil doar în cazul unei surse de glicemii filtrate, cum ar fi G5</string>
     <string name="enablesmbaftercarbs">Activează SMB după carbohidrați</string>
@@ -780,7 +778,6 @@
     <string name="sensitivity_raises_target_title">Sensibilitatea la insulină crește targetul</string>
     <string name="sensitivity_raises_target_summary">Când este detectată sensibilitate la insulină, crește targetul</string>
     <string name="combo_invalid_setup">Setare pompă invalidă, verificați documentația și asigurați-vă că meniul Quick Info este denumit QUICK INFO, folosind aplicația 360 Configuration Software.</string>
-    <string name="custom">Personalizat</string>
     <string name="careportal_removestartedevents">AndroidAPS pornit curat</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AndroidAPS va copia setările bazalelor din profilurile din aplicație în pompă, suprascriindu-le pe cele existente deja în pompă. Asigurați-vă că aveți setările corecte ale bazalelor în AndroidAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
