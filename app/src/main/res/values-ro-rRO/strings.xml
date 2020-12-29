@@ -766,6 +766,8 @@
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="setupwizard_profile_description">Selectați sursa sau profilul. Dacă pacientul este copil, ar fi bine să alegeți un profil NS. Dacă nu aveți profil NS, puteți alege profil local. De aici alegeți doar sursa profilului; pentru a utiliza acest profil, trebuie să îl activați prin executarea unei \"Schimbări de profil\"</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configuraţi RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuaţi setarea odată ce starea RieyLink este \"Connected\". Acest lucru ar putea dura un minut.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
     <string name="permission">Permisiune</string>
     <string name="askforpermission">Solicitați permisiunea</string>
@@ -1114,6 +1116,8 @@
     <string name="smscommunicator_otp_reset_prompt">Sunteți sigur că vreți sa resetați cheia pentru Authenticator? Acest lucru va invalida toți Authenticatorii configurați și va trebui să ii setați din nou.</string>
     <string name="smscommunicator_otp_reset_successful">S-a generat o nouă cheie pentru Authenticator! Vă rugăm să utilizați QRCode actualizat pentru a configura autentificatori.</string>
     <string name="smscommunicator_otp_export_title">Se exporta secretul OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Sunteţi sigur că doriţi să copiaţi secretul OTP în clipboard?\n\nS-ar putea să aveţi nevoie doar dacă aplicaţia dumneavoastră de autentificare are probleme de scanare a QRCode, doriţi să o introduceţi manual sau doriţi să configuraţi token-ul hardware OTP folosind aplicaţia dedicată.</string>
+    <string name="smscommunicator_otp_export_successful">Secret OTP (în formatul Base32) exportat şi copiat în clipboard. Lipiţi-l în autentificator sau in hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanați codul pentru a seta codurile unice pentru AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testați o parolă unică</string>
@@ -1132,6 +1136,7 @@
     <string name="statuslights_copy_ns">Copiați setările din NS</string>
     <string name="copyexistingvalues">Copiaţi setările NS (dacă există)?</string>
     <string name="classic_description">Tema originală</string>
+    <string name="lowres_description">Skin de rezoluție redusă</string>
     <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
     <string name="largedisplay_description">Display mare</string>
     <string name="skin">Tema</string>
@@ -1177,9 +1182,18 @@
     <string name="uploaded_data">Date încărcate</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Următoarele date vor fi încărcate în contul Open Humans: glicemii, evenimente careportal (cu excepția notelor), bolusuri extinse, schimbări de profil, doze zilnice totale, bazale temporare, ținte temporare, preferințe, versiunea aplicației, model dispozitiv și dimensiunile ecranului. Informațiile secrete sau private, cum ar fi URL-ul Nightscout sau secretul API, nu vor fi încărcate.</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
+    <string name="filter">Filtru</string>
+    <string name="copytolocalprofile_invalid">Nu se poate crea profilul local. Profilul este invalid.</string>
+    <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="alarm">Alarmă</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
+    <string name="smscommunicator_pump_ureachable">Raportează eroare conexiune pompa</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
     <string name="bolusadvisor">Consilier bolus</string>
+    <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
     <string name="enablebolusadvisor">Activare consilier bolus</string>
+    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci în loc de calculatorul de bolus în timpul hiperglicemiei</string>
+    <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
+    <string name="timetoeat">Timpul sa mănânci</string>
 </resources>
