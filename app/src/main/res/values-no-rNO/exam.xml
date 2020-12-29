@@ -42,9 +42,6 @@
     <string name="isf_profile">Å endre ISF verdien i din profil er tilstrekkelig for å ta i bruk endringen.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label_exam">Tema: Insulin-karbo (IK) forholdet</string>
-    <string name="ic_increasingvalue">Høyere IK forhold fører til at mindre insulin leveres for en gitt mengde karbohydrater.</string>
-    <string name="ic_decreasingvalue">Lavere IK forhold fører til at mindre insulin leveres for en gitt mengde karbohydrater.</string>
     <string name="ic_noeffect">Hvis du har 0 COB, vil endring av IK forholdet føre til endring av insulinmengden som trengs for å korrigere ditt BS nivå.</string>
     <string name="ic_different">IK vil være forskjellig hvis du regner en skive brød som 10g eller 12g.</string>
     <string name="ic_meaning">IK betyr: Hvor mange brødenheter som dekkes av 1E insulin.</string>
