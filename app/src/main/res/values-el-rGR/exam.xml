@@ -7,6 +7,7 @@
     <string name="offlineprofile_label">Θέμα: Προφίλ Εκτός Σύνδεσης</string>
     <string name="offlineprofile_nsprofile">Το προφίλ NS μπορεί να χρησιμοποιηθεί, αλλά όχι να ρυθμιστεί.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_whattodo">Τι πρέπει να γίνει όταν αποσυνδέεται η αντλία;</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
