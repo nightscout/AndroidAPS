@@ -611,8 +611,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuare nepakanka insulino bolusui</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
-    <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="enablesmbalways">Leisti SMB visada</string>
     <string name="enablesmbalways_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
     <string name="enablesmbaftercarbs">Leisti SMB po angliavandenių įvedimo</string>
@@ -787,7 +785,6 @@
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
     <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinis gliukozės lygis padidinamas</string>
     <string name="combo_invalid_setup">Netinkami pompos nustatymai, patikrinkite dokumentaciją ir įsitikinkite, kad Quick info meniu yra pavadintas QUICK INFO, naudojant 360 configuration software.</string>
-    <string name="custom">Pasirinktinis</string>
     <string name="careportal_removestartedevents">Ištrinti \"AndroidAPS paleista\" įrašus</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite prie aparatinės pompos, AndroidAPS nukopijuos bazės nustatymus iš profilio į pompą, pakeisdamas esančius nustatymus pompoje. Įsitikinkite, kad turimi bazės nustatymai AndroidAPS yra teisingi. Jei nesate tikri arba nenorite iš naujo keisti bazės nustatymų jūsų pompoje, paspauskite atšaukti ir pakartokite prijungimą prie pompos kitą kartą.</string>
