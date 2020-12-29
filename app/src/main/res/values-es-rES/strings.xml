@@ -618,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">No hay suficiente insulina en el depósito para emitir bolo</string>
     <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
-    <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
     <string name="enablesmbalways">Habilitar SMB siempre</string>
     <string name="enablesmbalways_summary">Habilitar SMB siempre de forma independiente a los Bolos. Solo posible con fuente BG con buen filtrado de datos como G5</string>
     <string name="enablesmbaftercarbs">Habilitar SMB después de Carbohidratos</string>
@@ -796,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a insulina, aumenta el objetivo de glucosa</string>
     <string name="combo_invalid_setup">Configuración de la bomba incorrecta, leer la documentación y comprobar que el menú de Quick Info se llama QUICK INFO usando el software de configuración 360.</string>
-    <string name="custom">Personalizado</string>
     <string name="careportal_removestartedevents">Limpiar eventos AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Ajustes guardados encontrados</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas al hardware de la bomba, AndroidAPS copiará los ajustes basales del perfil de la bomba, sobrescribiendo el actual perfil basal de la bomba. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite cambio de la bomba más tarde.</string>
