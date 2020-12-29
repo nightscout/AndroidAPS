@@ -42,9 +42,6 @@
     <string name="isf_profile">Zmiana wartości ISF w profilu wystarczy, aby zastosować zmianę.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_label_exam">Temat: Węglowodany na jednostkę Insuliny (IC)</string>
-    <string name="ic_increasingvalue">Wyższe wartości ICprowadzą do mniejszej ilości insuliny dostarczonej do podanej ilości węglowodanów.</string>
-    <string name="ic_decreasingvalue">Niższe wartości IC prowadzą do mniejszej ilości insuliny podanej do wprowadzonej ilości węglowodanów.</string>
     <string name="ic_noeffect">Załóżmy, że masz 0 COB. Zmiana IC doprowadzi do podania innej ilości insuliny w celu skorygowania twojej wartości BG.</string>
     <string name="ic_different">IC będzie inny, jeśli policzysz jednostkę chlebową (wymiennik węglowodanów) jako 10g lub 12g.</string>
     <string name="ic_meaning">Znaczenie IC to: Ile jednostek chlebowych (wymienników węglowodanowych) jest pokrytych 1U insuliny.</string>
