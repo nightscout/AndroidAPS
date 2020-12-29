@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Coupe le Bluetooth du téléphone une seconde si la connexion pompe n’est pas possible. Cela peut aider pour les téléphones dont la connexion Bluetooth se bloque.</string>
     <string name="pairing">Appairage</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
