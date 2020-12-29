@@ -88,7 +88,7 @@
     <string name="prerequisites2_label">Būtinosios sąlygos</string>
     <string name="prerequisites2_what">Ko reikia norint įvesti nustatymus ir naudoti AndroidAPS?</string>
     <string name="prerequisites2_profile">Patikrintos profilio informacijos (JIF, IA, bazė, IVT ir pan.).</string>
-    <string name="prerequisites2_device">Suderinamo Android įrenginio (pvz.: išmaniojo telefono, AndroidOS laikrodžio ar planšetės).</string>
+    <string name="prerequisites2_device">Suderinamo Android įrenginio (pvz.: išmaniojo telefono, laikrodžio su full Android ar planšetės).</string>
     <string name="prerequisites2_internet">AndroidAPS reikalingas interneto ryšys, kad veiktų uždaras ciklas.</string>
     <string name="prerequisites2_supportedcgm">Palaikomo NGJ ir tinkamos programėlės glikemijos duomenims gauti telefone/įrenginyje.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
@@ -145,7 +145,7 @@
     <string name="breadgrams_grams">Apskaičiuojant ir įrašant angliavandenius, reikia naudoti tik gramus.</string>
     <string name="breadgrams_exchange">Suvartotus angliavandenius galima įrašyti naudojant atitinkamą perskaičiavimo sistemą (pvz., DAFNE „CHO“ perskaičiavimą ar europinius duonos vienetus).</string>
     <string name="breadgrams_decay">AndroidAPS naudoja dinaminį modelį, kad įvertintų angliavandenių įsisavinimą ir apskaičiuotų AAO.</string>
-    <string name="breadgrams_calc">Jei gliukozės kiekis kraujyje viršija leistinas ribas (per žemas ar per aukštas), boluso kalkuliatorius gali pateikti pasiūlymus dėl angliavandenių ar korekcinio boluso.</string>
+    <string name="breadgrams_calc">Jei gliukozės kiekis kraujyje viršija leistinas ribas (per žemas ar per aukštas), skaičiuotuvas gali pateikti pasiūlymus dėl angliavandenių ar korekcinio boluso.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">i-AV</string>
     <string name="extendedcarbs_handling">Kam naudojami i-AV (ištęsti angliavandeniai)?</string>
@@ -171,7 +171,7 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Jūs galite naudoti daugiau nei vieną IA santykio reikšmę savo profilyje.</string>
     <string name="ic_isf">Jei profilyje pakeičiate JIF reikšmę, visada taip pat turite pakeisti IA santykį.</string>
-    <string name="ic_label_exam">Tema: Insulino ir angliavandenių santykis</string>
+    <string name="ic_label_exam">Insulino ir angliavandenių santykis (IA santykis)</string>
     <string name="ic_increasingvalue">Didesnis insulino ir angliavandenių IA santykis reiškia, kad mažiau insulino reikia padengti tam tikram angliavandenių kiekiui.</string>
     <string name="ic_decreasingvalue">Mažesnis insulino ir angliavandenių IA santykis reiškia, kad mažiau insulino reikia padengti tam tikram angliavandenių kiekiui.</string>
     <string name="ic_noeffect">Jei turite 0 AAO (aktyvių angliavandenių organizme), pakeitus IA, glikemija bus koreguojama kitokiu insulino kiekiu.</string>
