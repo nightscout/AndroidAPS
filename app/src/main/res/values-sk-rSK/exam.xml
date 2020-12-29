@@ -42,9 +42,6 @@
     <string name="isf_profile">Zmena hodnoty citlivosti vo vašom profile stačí k tomu, aby se táto zmena použila.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#korekcni-faktor-citlivost-na-inzulin-isf-mmol-l-u-nebo-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html</string>
-    <string name="ic_label_exam">Téma: Inzulínovo-sacharidový pomer</string>
-    <string name="ic_increasingvalue">Vyššie hodnoty IC vedú k menšej dávke inzulínu ku rovnakému množstvu sacharidov.</string>
-    <string name="ic_decreasingvalue">Nižšie hodnoty IC vedú k menšej dávke inzulínu ku rovnakému množstvu sacharidov.</string>
     <string name="ic_noeffect">Pokiaľ máte 0 COB, zmena inzulíno-sacharidového pomeru povedie k inému množstvu inzulínu vydanému pre korekciu glykémie.</string>
     <string name="ic_different">Inzulíno-sacharidový pomer sa bude líšiť podľa toho, či počítate sacharidovú jednotku ako 10 g, alebo ako 12 g sacharidov.</string>
     <string name="ic_meaning">Inzulíno-sacharidový pomer vyjadruje: koľko sacharidových jednotiek pokryje 1 jednotka inzulínu.</string>
