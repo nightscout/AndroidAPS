@@ -42,8 +42,6 @@
     <string name="isf_profile">변경사항을 적용하는데 프로파일에서 ISF 값 변경하는 것으로 충분합니다.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Usage/Profiles.html</string>
-    <string name="ic_increasingvalue">높은 IC 비율은 탄수화물 섭취시 인슐린이 보다 덜 주입되게 합니다.</string>
-    <string name="ic_decreasingvalue">낮은 IC 비율은 탄수화물 섭취시 인슐린이 보다 덜 주입되게 합니다.</string>
     <string name="ic_noeffect">COB가 0 인 경우 IC 비율을 변경하면 혈당을 교정하기 위해 다른 양의 인슐린이 주입됩니다.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
