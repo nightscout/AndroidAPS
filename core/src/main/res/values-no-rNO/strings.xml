@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT overvåker</string>
     <string name="btwatchdog_summary">Restarter telefonens bluetooth i ett sekund hvis tilkobling til pumpen mislykkes. Dette hjelper på enkelte telefoner hvor bluetooth av og til stopper.</string>
     <string name="pairing">Kobler sammen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nei</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
