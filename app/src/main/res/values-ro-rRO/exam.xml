@@ -7,6 +7,7 @@
     <string name="offlineprofile_label">Subiect: Profil Offline</string>
     <string name="offlineprofile_nsprofile">Profilul NS poate fi folosit, dar nu modificat.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_whattodo">Ce trebuie să faceți atunci când deconectați pompa?</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
