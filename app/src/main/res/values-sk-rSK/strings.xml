@@ -564,8 +564,6 @@
     <string name="overview_editquickwizard_usebasaliob">Výpočet bazálneho IOB</string>
     <string name="overview_editquickwizard_usetrend">Výpočet trendu</string>
     <string name="overview_editquickwizard_usesuperbolus">Výpočet superbolusu</string>
-    <string name="yes">Áno</string>
-    <string name="no">Nie</string>
     <string name="positiveonly">Iba kladné</string>
     <string name="negativeonly">Iba záporné</string>
     <string name="overview_editquickwizard_usecob">Výpočet COB</string>
@@ -612,8 +610,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatok inzulínu v zásobníku pre takýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Nastaviť neutrálny dočasný bazál</string>
-    <string name="set_neutral_temps_summary">Ak je povolená táto možnosť, zastaví sa dočasný bazál pred koncom každej hodiny. To môže u niektorých púmp pomôcť zastaviť pípanie/vibrácie na celú hodinu.</string>
     <string name="enablesmbalways">Vždy povoliť SMB</string>
     <string name="enablesmbalways_summary">Povoliť SMB nezávisle na bolusoch. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
     <string name="enablesmbaftercarbs">Povoliť SMB po jedle</string>
@@ -762,8 +758,6 @@
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilov. Pokiaľ ide o dieťa, využijete pravdepodobne NS profil. Pokiaľ Vás nikto cez NS nesleduje, budete pravdepodobne preferovať lokálny profil. Uvedomte si, že nastavujete iba zdroj profilov. Na to aby se naozaj profil začal používať, je potrebné vykonať aktiváciu profilu použitím funkcie \"Prepnutie profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Čakám na pripojenie RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po inicializácii pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
     <string name="permission">Povolenie</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
@@ -790,7 +784,6 @@
     <string name="sensitivity_raises_target_title">Citlivosť zvyšuje cieľ</string>
     <string name="sensitivity_raises_target_summary">Ak je zistená vyššia citlivosť, zvýši cieľovú hladinu glykémie</string>
     <string name="combo_invalid_setup">Chybné nastavenie pumpy. Prejdite si dokumentáciu a presvedčte sa, že menu Quick Info se nazýva QUICK INFO, s použitím 360° Configuration Software.</string>
-    <string name="custom">Voliteľný</string>
     <string name="careportal_removestartedevents">Vymazať udalosti \"AndroidAPS reštartovaný\"</string>
     <string name="storedsettingsfound">Nájdené uložené nastavenia</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje (a bude udržiavať) nastavenie bazálu z aktívneho profilu do pumpy. Nastavenie bazálu v pumpe bude prepísané. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>

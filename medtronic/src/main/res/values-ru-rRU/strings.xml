@@ -81,4 +81,6 @@
     <string name="common_on">Вкл.</string>
     <string name="common_off">Выкл.</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
+    <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
+    <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
 </resources>

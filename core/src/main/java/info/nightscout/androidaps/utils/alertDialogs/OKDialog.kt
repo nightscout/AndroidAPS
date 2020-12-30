@@ -134,7 +134,7 @@ object OKDialog {
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(activity)
         adb
             .setMessage(message)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
+            //.setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {

@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Strážny pes BT</string>
     <string name="btwatchdog_summary">Vypne na 1 sekundu Bluetooth v telefóne, pokiaľ se nedarí pripojiť k pumpe. Môže to pomôcť pri telefónoch, ktoré majú problémy s BT.</string>
     <string name="pairing">Párovanie</string>
+    <string name="yes">Áno</string>
+    <string name="no">Nie</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>

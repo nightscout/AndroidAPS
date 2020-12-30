@@ -8,6 +8,7 @@
     <string name="label_xdrip_no_chart">AAPS(BeGrafiko)</string>
     <string name="label_xdrip_circle">AAPS(Apvalus)</string>
     <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
     <string name="label_warning_sync">Nėra duomenų!</string>

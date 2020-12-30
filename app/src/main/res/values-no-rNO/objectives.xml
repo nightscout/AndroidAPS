@@ -21,7 +21,6 @@
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
     <string name="objectives_auto_objective">Aktiver Automatisering</string>
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er maxIOB = gjennomsnittlig måltidsbolus + 3*max daglig basal</string>
-    <string name="objectives_auto_gate">Les dokumentasjonen på hvordan Automatisering virker. Lag din første enkle regel. I stedet for å utføre en behandling, få AAPS AAPS til å bare vise en melding. Kun når du er sikker på at Automatisering virker riktig kan du erstatte meldingsvarselet med en behandlingskommando. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BS tilgjengelig i NS</string>
     <string name="objectives_pumpstatusavailableinns">Pumpe status tilgjengelig i NS</string>
     <string name="objectives_manualenacts">Manuell kommando</string>
@@ -36,11 +35,9 @@
     <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
     <string name="objectives_usescale">Test skaleringsfunksjonen ved et langt trykk på BS grafen</string>
     <string name="objectives_button_enter">Angi</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Hvis du har minst 3 måneder erfaring med andre lukkede loop systemer kan du kanskje kvalifisere for en kode som lar deg hoppe over Læringsmålene. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for mer detaljer.</string>
     <string name="codeaccepted">Kode akseptert</string>
     <string name="codeinvalid">Kode ugyldig</string>
     <string name="objectives_exam_objective">Bevis kunnskapen din</string>
-    <string name="objectives_exam_gate">Studer og besvare spørsmålene riktig</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
     <string name="wronganswer">Feil svar!</string>
     <string name="unfinshed_button">Neste uferdig</string>

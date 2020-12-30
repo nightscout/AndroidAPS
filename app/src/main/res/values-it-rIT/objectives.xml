@@ -8,7 +8,7 @@
     <string name="objectives_0_objective">Impostazione della visualizzazione e del monitoraggio. Analisi di basali e rapporti</string>
     <string name="objectives_0_gate">Verifica che la glicemia sia disponibile su Nightscout e che i dati sull\'insulina del micro siano in fase di caricamento</string>
     <string name="objectives_openloop_objective">Avvio in un loop aperto</string>
-    <string name="objectives_openloop_gate">Esegui l\'applicazione in modalità loop aperto per alcuni giorni. Attiva manualmente il maggior numero possibile di basali temporanee suggerite. Imposta e utilizza i target temporanei, anche quelli predefiniti (ad esempio per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
+    <string name="objectives_openloop_gate">Esegui l\'applicazione in modalità loop aperto per alcuni giorni. Attiva manualmente il maggior numero possibile di basali temporanee suggerite. Imposta e usa i target temporanei, anche quelli predefiniti (ad esempio per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
     <string name="objectives_maxbasal_objective">Comprensione del tuo loop aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
     <string name="objectives_maxbasal_gate">Sulla base di tale esperienza, decidi quale dovrebbe essere il valore di \'max basale\' e impostalo sul microinfusore e nelle preferenze</string>
     <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
@@ -21,8 +21,6 @@
     <string name="objectives_smb_objective">Abilitazione funzioni aggiuntive per l\'uso diurno, come SMB</string>
     <string name="objectives_auto_objective">Abilitazione automazione</string>
     <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
-    <string name="objectives_auto_gate">Leggi la documentazione su come funziona l\'automazione. Configura le tue prime semplici regole. Consenti ad AAPS solo di visualizzare una notifica, non di eseguire un\'azione. Quando sei sicuro che l\'automazione viene attivata al momento giusto, sostituisci la notifica con un\'azione reale.
-(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicemia disponibile in NS</string>
     <string name="objectives_pumpstatusavailableinns">Stato micro disponibile in NS</string>
     <string name="objectives_manualenacts">Attivazioni manuali</string>
@@ -37,11 +35,9 @@
     <string name="objectives_useloop">Visualizza il contenuto del plugin Loop</string>
     <string name="objectives_usescale">Usa la funzione di ridimensionamento premendo a lungo sul grafico delle glicemie</string>
     <string name="objectives_button_enter">Entra</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se hai almeno 3 mesi di esperienza in loop chiuso con altri sistemi potresti beneficiare di un codice per saltare gli obiettivi. Guarda https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives per i dettagli.</string>
     <string name="codeaccepted">Codice accettato</string>
     <string name="codeinvalid">Codice non valido</string>
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
-    <string name="objectives_exam_gate">Studia e rispondi correttamente alle domande</string>
     <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
     <string name="wronganswer">Risposta errata!</string>
     <string name="unfinshed_button">Prossimo N.C.</string>

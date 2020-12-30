@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -27,6 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
+                app:tint="?attr/iconColorDialog"
                 app:srcCompat="@drawable/ic_loop_closed_white" />
 
             <TextView

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SÖK</string>
-    <string name="rileylink_scanner_scan_stop">AVBRYT</string>
-    <string name="rileylink_scanner_selected_device">Vald</string>
-    <string name="rileylink_scanner_title">Riley Link-sökning</string>
-    <string name="location_yes">Aktivera</string>
-    <string name="location_no">Nej</string>
-    <string name="rileylink_scanner_scanning">Söker</string>
-    <string name="rileylink_scanner_scanning_finished">Sökning avslutad</string>
-    <string name="rileylink_scanner_scanning_error">Fel vid sökning: %1$d</string>
-    <string name="common_never">Aldrig</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Sök</string>
+    <string name="riley_link_ble_config_scan_stop">Stopp</string>
+    <string name="riley_link_ble_config_scan_selected">Vald</string>
+    <string name="riley_link_ble_config_scan_title">Riley Link-sökning</string>
+    <string name="riley_link_ble_config_scan_scanning">Söker</string>
+    <string name="riley_link_ble_config_scan_finished">Sökning avslutad</string>
+    <string name="riley_link_ble_config_scan_error">Fel vid sökning: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Aldrig</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Vald Riley Link</string>
+    <string name="riley_link_ble_config_remove_riley_link">Ta bort</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Är du säker på att du vill ta bort din Riley Link?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Ta bort Riley Link</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Ingen Riley Link vald</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Inställningar</string>
     <string name="rileylink_settings_tab2">Historik</string>
@@ -18,16 +22,19 @@
     <string name="medtronic_pump_status">Pumpstatus</string>
     <string name="title_activity_rileylink_settings">Inställningar för Riley Link</string>
     <string name="rileylink_title">Riley Link</string>
-    <string name="rileylink_configured_address">Konfigurerad adress</string>
-    <string name="rileylink_connected_device">Ansluten enhet</string>
-    <string name="rileylink_connection_status">Anslutningsstatus</string>
-    <string name="rileylink_connection_error">Anslutningsproblem</string>
+    <string name="rileylink_configured_riley_link_address">Riley Link-adress:</string>
+    <string name="rileylink_configured_riley_link_name">Riley Link-namn:</string>
+    <string name="rileylink_connected_device">Ansluten enhet:</string>
+    <string name="rileylink_connection_status">Anslutningsstatus:</string>
+    <string name="rileylink_connection_error">Anslutningsproblem:</string>
     <string name="rileylink_device">Enhet</string>
-    <string name="rileylink_device_type">Enhetstyp</string>
-    <string name="rileylink_device_model">Modell</string>
-    <string name="rileylink_last_used_frequency">Senast använda frekvens</string>
-    <string name="rileylink_last_device_contact">Senaste anslutning</string>
-    <string name="rileylink_firmware_version">Firmware</string>
+    <string name="rileylink_device_type">Enhetstyp:</string>
+    <string name="rileylink_device_model">Modell:</string>
+    <string name="rileylink_last_used_frequency">Senast använda frekvens:</string>
+    <string name="rileylink_last_device_contact">Senaste anslutning:</string>
+    <string name="rileylink_firmware_version">Firmwareversion:</string>
+    <string name="rileylink_pump_serial_number">Serienummer på pumpen:</string>
+    <string name="rileylink_pump_frequency">Pumpfrekvens:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth initieras…</string>
     <string name="rileylink_state_bt_error">Bluetoothfel</string>
@@ -47,9 +54,11 @@
     <string name="rileylink_error_tuneup_failed">Frekvensjustering misslyckades</string>
     <string name="rileylink_error_pump_unreachable">Pumpen kan inte nås</string>
     <string name="rileylink_error_pod_unreachable">Podden kan inte nås</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronicpump</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Ja</string>
+    <string name="riley_link_common_no">Nej</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

@@ -433,8 +433,6 @@
     <string name="overview_editquickwizard_usebasaliob">Υπολογισμός βασικού IOB</string>
     <string name="overview_editquickwizard_usetrend">Υπολογισμός τάσης</string>
     <string name="overview_editquickwizard_usesuperbolus">Υπολογισμός superbolus</string>
-    <string name="yes">Ναι</string>
-    <string name="no">Όχι</string>
     <string name="positiveonly">Μόνο θετική</string>
     <string name="negativeonly">Μόνο αρνητική</string>
     <string name="overview_editquickwizard_usecob">Υπολογισμός COB</string>
@@ -639,7 +637,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">Ο χαμηλός προσωρινός στόχος μειώνει την ευαισθησία</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Χαμηλότερη ευαισθησία για προσωρινό στόχο < 100]]></string>
     <string name="combo_invalid_setup">Εσφαλμένη ρύθμιση αντλίας. Ελέγξτε τα κείμενα και βεβαιωθείτε ότι η Quick Info ονομάζεται QUICK INFO χρησιμοποιώντας το λογισμικό διαμόρφωσης 360.</string>
-    <string name="custom">Προσαρμογή</string>
     <string name="careportal_removestartedevents">Ξεκίνησε το AndroidAPS καθαρό</string>
     <string name="storedsettingsfound">Βρέθηκαν αποθηκευμένες ρυθμίσεις</string>
     <string name="allow_hardware_pump_text">Προσοχή: Εάν ενεργοποιήσετε και συνδεθείτε με μια αντλία, το AndroidAPS θα αντιγράψει τις ρυθμίσεις βασικού από το προφίλ στην αντλία, αντικαθιστώντας τον υπάρχων βασικό ρυθμό της αντλίας. Βεβαιωθείτε ότι έχετε τον σωστό βασικό ρυθμό στο AndroidAPS. Εάν δεν είστε βέβαιοι ή δεν θέλετε να αντικαταστήσετε τον βασικό ρυθμό στην αντλία σας, πατήστε Άκυρο και επαναλάβετε εναλλαγή προς την αντλία σε μεταγενέστερο χρόνο.</string>
