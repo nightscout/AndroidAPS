@@ -288,9 +288,9 @@
     <string name="ns_upload_only">העלאה ל-nightscout בלבד (סנכרון מבוטל)</string>
     <string name="ns_upload_only_summary">העלאה ל- NS בלבד. ללא השפעה על SGV אלא אם נבחר מקור מקומי כגון Xdrip. ללא השפעה על הפרופילים כל עוד פרופיל NS בשימוש.</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
-    <string name="primefill">הפעלה/מילוי</string>
+    <string name="primefill">תיחול\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
-    <string name="fillbolus_title">מילוי\מילוי מראש כמויות סטנדרטיות של אינסולין</string>
+    <string name="fillbolus_title">מילוי\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
@@ -1188,4 +1188,12 @@
     <string name="alarm">התראה</string>
     <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
+    <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
+    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
+    <string name="bolusadvisor">יועץ הבולוסים</string>
+    <string name="bolusadvisormessage">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
+    <string name="enablebolusadvisor">אפשר את יועץ הבולוסים</string>
+    <string name="enablebolusadvisor_summary">קובע תזכורת לאכול במקום להשתמש באשף במהלך היפרגליקמיה</string>
+    <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
+    <string name="timetoeat">זמן לאכול</string>
 </resources>
