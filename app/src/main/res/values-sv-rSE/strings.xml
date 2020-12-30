@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Säkerhetsbegränsningar</string>
     <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH [g]</string>
+    <string name="nav_preferences_plugin">Inställningar för %1$s</string>
     <string name="nav_preferences">Inställningar</string>
     <string name="nav_refreshtreatments">Uppdatera behandlingar från Nightscout</string>
     <string name="nav_resetdb">Återställ databaserna</string>
@@ -406,11 +407,18 @@ Eversense-appen.</string>
     <string name="suspendloopfor3h">Pausa loop i 3 timmar</string>
     <string name="suspendloopfor10h">Pausa loop i 10 timmar</string>
     <string name="suspendloopforXmin">Pausa loop i %1$d min</string>
+    <string name="disconnectpump">Koppla ifrån pump</string>
     <string name="disconnectpumpfor15m">Koppla loss pump i 15 min</string>
     <string name="disconnectpumpfor30m">Koppla loss pump i 30 min</string>
     <string name="disconnectpumpfor1h">Koppla loss pump i 1 timme</string>
     <string name="disconnectpumpfor2h">Koppla loss pump i 2 timmar</string>
     <string name="disconnectpumpfor3h">Koppla loss pump i 3 timmar</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 tim</string>
+    <string name="duration2h">2 tim</string>
+    <string name="duration3h">3 tim</string>
+    <string name="duration10h">10 tim</string>
     <string name="resume">Återuppta</string>
     <string name="reconnect">Återanslut Pump</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
@@ -565,8 +573,6 @@ Eversense-appen.</string>
     <string name="overview_editquickwizard_usebasaliob">Använd basal-IOB</string>
     <string name="overview_editquickwizard_usetrend">Använd BG-trend</string>
     <string name="overview_editquickwizard_usesuperbolus">Använd superbolus</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nej</string>
     <string name="positiveonly">Endast positiva</string>
     <string name="negativeonly">Endast negativa</string>
     <string name="overview_editquickwizard_usecob">Använd COB</string>
@@ -613,8 +619,6 @@ Eversense-appen.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Inte tillräckligt med insulin i reservoaren för att ge bolus</string>
     <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
-    <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
     <string name="enablesmbalways">Använd alltid SMB</string>
     <string name="enablesmbalways_summary">Använd alltid SMB oberoende av bolus. Endast möjligt med en bra filtrerad BG-källa, t ex Dexcom G5.</string>
     <string name="enablesmbaftercarbs">Använd SMB efter kolhydrater</string>
@@ -680,6 +684,7 @@ Eversense-appen.</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Basalen ändrad i pumpen, men det gick inte att läsa till vad</string>
     <string name="combo_activity_checking_for_history_changes">Letar efter förändringar i historiken</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flera bolusar med samma mängd insulin importerades just. Endast en kan läggas till i Careportal. Vänligen kontrollera pumpen och gör ändringar i Careportal manuellt vid behov. Observera att man bara kan ha en bolus per klockslag.</string>
+    <string name="about_link_urls">\n\ndokumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Den senaste bolusen är äldre än 24 timmar eller i framtiden. Vänligen kontrollera tid och datum i pumpen.</string>
     <string name="combo_suspious_bolus_time">Tid/datum för bolusen verkar fel. IOB är troligen missvisande. Vänligen kontrollera tid och datum i pumpen.</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
@@ -762,8 +767,8 @@ Eversense-appen.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="setupwizard_profile_description">Vänligen välj källa för profil. Om patienten är ett barn bör du använda NS profil. Om ingen följer dig på Nightscout kommer du förmodligen föredra lokal profil. Kom ihåg att du endast väljer profilkälla här. För att använda den måste du aktivera den genom att köra ”Byt Profil”</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Väntar på Riley Link-anslutning...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har initierats.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
     <string name="permission">Behörighet</string>
     <string name="askforpermission">Be om behörighet</string>
@@ -790,7 +795,6 @@ Eversense-appen.</string>
     <string name="sensitivity_raises_target_title">Insulinkänslighet höjer mål-BG</string>
     <string name="sensitivity_raises_target_summary">Om systemet upptäcker tillfällig insulinkänslighet, höj mål-BG för att på så sätt minska insulindoseringen</string>
     <string name="combo_invalid_setup">Felaktig pumpinstallation. Kontrollera dokumentationen och verifiera att Snabbmenyn heter QUICK INFO med hjälp av 360-mjukvaran.</string>
-    <string name="custom">Anpassad</string>
     <string name="careportal_removestartedevents">Rensa alla \"AndroidAPS startad\"</string>
     <string name="storedsettingsfound">Tidigare sparade inställningar hittade</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
@@ -978,7 +982,9 @@ Eversense-appen.</string>
     <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
     <string name="notification">Avisering</string>
     <string name="notification_message">Avisering: %1$s</string>
+    <string name="alarm_message">Larm: %1$s</string>
     <string name="message_short">Medd:</string>
+    <string name="alarm_short">Larm:</string>
     <string name="profilepercentage">Procent av profil</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
@@ -1177,4 +1183,18 @@ Eversense-appen.</string>
     <string name="uploaded_data">Uppladdad data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Följande data kommer att överföras till ditt Open Humans-konto: Glukosvärden, careportalhändelser (utom anteckningar), utökade bolusar, profilbyten, totala dagliga doser, temp basaler, temp mål, inställningar, appversion, enhetsmodell och skärmstorlek. Hemlig eller privat information, t. ex. din Nightscout-adress eller API-hemlighet, kommer inte att överföras.</string>
     <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
+    <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Kan inte att skapa den lokala profilen. Profilen är ogiltig.</string>
+    <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
+    <string name="alarm">Larm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
+    <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
+    <string name="advisoralarm">Larma när det är dags att äta</string>
+    <string name="alarminxmin">Larma om %1$d min</string>
+    <string name="bolusadvisor">Bolusguide</string>
+    <string name="bolusadvisormessage">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrektionsbolus nu och påminna dig när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
+    <string name="enablebolusadvisor">Aktivera bolusguiden</string>
+    <string name="enablebolusadvisor_summary">Använd påminnelse om att börja äta istället för kalkylatorn under hög glykemi</string>
+    <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
+    <string name="timetoeat">Dags att äta</string>
 </resources>

@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Bluetooth-övervakare</string>
     <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
     <string name="pairing">Parkoppling</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Förfyllningar</string>
     <string name="history_group_alarm">Larm</string>
     <string name="history_group_glucose">Glukos</string>
+    <string name="mute5min">Tysta i 5 minuter</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

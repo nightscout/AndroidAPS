@@ -3,6 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">Configurazione RileyLink</string>
     <string name="omnipod_config_bolus_beeps_enabled">BIP bolo abilitato</string>
     <string name="omnipod_config_basal_beeps_enabled">BIP basale abilitato</string>
     <string name="omnipod_config_smb_beeps_enabled">BIP SMB abilitato</string>
@@ -10,6 +11,8 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Mostra tasto \"sospendi erogazione\" nella scheda Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Mostra tasto \"log impulsi\" nel menu gestione pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Mostra tasto \"statistiche RileyLink\" nel menu gestione pod</string>
+    <string name="omnipod_config_use_riley_link_battery_level">Usa livello batteria riportato da OrangeLink/EmaLink</string>
+    <string name="omnipod_config_use_riley_link_battery_level_summary">NON funziona con il RileyLink originale. Potrebbe non funzionare con altre alternative al RileyLink.</string>
     <string name="omnipod_config_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_config_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
@@ -22,7 +25,7 @@
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Altro</string>
     <string name="omnipod_preference_category_alerts">Avvisi</string>
-    <string name="omnipod_preference_category_confirmation_beeps">Beep di conferma</string>
+    <string name="omnipod_preference_category_confirmation_beeps">BIP di conferma</string>
     <string name="omnipod_preference_category_notifications">Notifiche</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Nessun pod attivo</string>
@@ -51,6 +54,14 @@
     <string name="omnipod_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
     <string name="omnipod_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
+    <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_no_active_pod">Nessun pod attivo</string>
+    <string name="omnipod_short_status_last_connection">Ultima conn.: %1$d min fa</string>
+    <string name="omnipod_short_status_last_bolus">Ultimo bolo: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Temp: %1$s</string>
+    <string name="omnipod_short_status_extended_bolus">Esteso: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Serb: %1$sU</string>
+    <string name="omnipod_short_status_rl_battery">RLBatt: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Avviso</string>
     <string name="omnipod_error_rileylink_address_invalid">Indirizzo RileyLink non valido.</string>
@@ -78,7 +89,7 @@
     <string name="omnipod_error_set_basal_failed">Impostazione profilo basale fallita.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">La cancellazione della basale temporanea potrebbe essere fallita. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Impostazione basale temporanea fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">L\'Impostazione dell\'ora potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Impostazione ora fallita. L\'erogazione è sospesa! Riprendi manualmente l\'erogazione dalla scheda Omnipod.</string>
@@ -101,7 +112,7 @@
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Il tempo di attivazione del pod è stato superato. Questo pod non può più essere attivato.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Impossibile verificare l\'avanzamento dell\'attivazione. Riprova.</string>
     <string name="omnipod_error_pod_suspended">Pod sospeso</string>
-    <string name="omnipod_error_failed_to_play_test_beep">Impossibile eseguire BIP di test</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Impossibile eseguire BIP di prova</string>
     <string name="omnipod_error_tbr_running_but_aaps_not_aware">Una basale temporanea è in esecuzione sul pod, ma AAPS non ne è a conoscenza. Cancella manualmente la tua basale temporanea.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Conferma</string>
@@ -135,7 +146,7 @@
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
     <string name="omnipod_cmd_split_tbr">Divisione basale temporanea a causa di un errore indeterminato nella cancellazione</string>
     <string name="omnipod_cmd_beep_config">Configurazione BIP</string>
-    <string name="omnipod_cmd_play_test_beep">Esegui BIP di test</string>
+    <string name="omnipod_cmd_play_test_beep">Esegui BIP di prova</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Gestione pod</string>
     <string name="omnipod_pod_management_heading_actions">Azioni</string>
@@ -150,8 +161,8 @@
     <string name="omnipod_pod_management_button_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Lettura log impulsi…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Se scarti il pod, non sarai più in grado di comunicare con esso. Dovresti farlo solo quando tutte le comunicazioni col pod falliscono persistentemente. Se puoi ancora comunicare col pod, usa l\'opzione <b>Disattiva pod</b>.\n\nSe desideri procedere, assicurati di rimuovere il pod dal tuo corpo!</string>
-    <string name="omnipod_pod_management_button_play_test_beep">Esegui BIP di test</string>
-    <string name="omnipod_pod_management_button_playing_test_beep">BIP di test in esecuzione…</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Esegui BIP di prova</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">BIP di prova in esecuzione…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Annulla</string>
     <string name="omnipod_wizard_button_finish">Fine</string>

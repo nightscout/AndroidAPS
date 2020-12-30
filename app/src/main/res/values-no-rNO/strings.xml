@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Sikkerhetsbegrensninger for behandlinger</string>
     <string name="treatmentssafety_maxbolus_title">Maks tillat bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks tillat karbo [g]</string>
+    <string name="nav_preferences_plugin">%1$s innstillinger</string>
     <string name="nav_preferences">Innstillinger</string>
     <string name="nav_refreshtreatments">Oppdater behandlinger fra NS</string>
     <string name="nav_resetdb">Nullstill databasene</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Pause loop i 3t</string>
     <string name="suspendloopfor10h">Pause loop i 10t</string>
     <string name="suspendloopforXmin">Pause loop i %1$d min</string>
+    <string name="disconnectpump">Frakoble pumpe</string>
     <string name="disconnectpumpfor15m">Koble fra pumpen i 15 min</string>
     <string name="disconnectpumpfor30m">Koble fra pumpen i 30 min</string>
     <string name="disconnectpumpfor1h">Koble fra pumpen i 1t</string>
     <string name="disconnectpumpfor2h">Koble fra pumpen i 2t</string>
     <string name="disconnectpumpfor3h">Koble fra pumpen i 3t</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 time</string>
+    <string name="duration2h">2 timer</string>
+    <string name="duration3h">3 timer</string>
+    <string name="duration10h">10 timer</string>
     <string name="resume">Gjenoppta</string>
     <string name="reconnect">Tilkoble pumpen</string>
     <string name="smscommunicator_wrongduration">Feil varighet</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal IOB beregning</string>
     <string name="overview_editquickwizard_usetrend">Trend beregning</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus beregning</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nei</string>
     <string name="positiveonly">Bare positive</string>
     <string name="negativeonly">Bare negative</string>
     <string name="overview_editquickwizard_usecob">COB beregning</string>
@@ -612,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Ikke nok insulin til bolus i ampullen</string>
     <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
-    <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
     <string name="enablesmbalways">Aktiverer alltid SMB</string>
     <string name="enablesmbalways_summary">Aktiver alltid SMB uavhengig av boluser. Bare mulig med en bra filtrert BS kilde som f.eks. Dexcom G5/G6</string>
     <string name="enablesmbaftercarbs">Aktiver SMB etter karbohydrater</string>
@@ -762,8 +766,8 @@
     <string name="diawarning">Husk: nye insulinprofiler krever en DIA på minst 5t. DIA 5-6t på ny profil er lik DIA 3t på gamle insulinprofiler.</string>
     <string name="setupwizard_profile_description">Vennligst velg kilde for din profil. Hvis pasienten er et barn anbefales det å bruke NS profil. Hvis ingen følger deg på Nightscout anbefales det å bruke en Lokal Profil. Husk at du her kun velger hvor profilen din ligger lagret. For å bruke den må du velge Profilbytte</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Venter på RileyLink tilkobling...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er initialisert.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Vennligst konfigurer din RileyLink under. Etter å ha valgt en RileyLink, vil det være mulig å fortsette konfigureringen når RileyLink statusen er \"Tilkoblet\". Dette kan ta et minutt.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er satt opp.\n</string>
     <string name="startobjective">Start første læringsmål</string>
     <string name="permission">Tillatelse</string>
     <string name="askforpermission">Spør om tillatelse</string>
@@ -790,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Sensitivitet øker BS målverdi</string>
     <string name="sensitivity_raises_target_summary">Når systemet oppdager økt insulinsensitivitet, vil BS målverdi økes</string>
     <string name="combo_invalid_setup">Ugyldig oppsett av pumpen. Les dokumentasjonen og sjekk at Quick Info menyen heter QUICK INFO ved hjelp av 360 programvaren.</string>
-    <string name="custom">Tilpasset</string>
     <string name="careportal_removestartedevents">Basis AndroidAPS startet</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret der. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
@@ -978,7 +981,9 @@
     <string name="description_source_dexcom">Motta BS verdier fra den patchede Dexcom appen.</string>
     <string name="notification">Varsling</string>
     <string name="notification_message">Varsel: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Meld:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Profil prosent</string>
     <string name="percent_u">Prosent [%]:</string>
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
@@ -1180,4 +1185,7 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Klarte ikke å opprette lokal profil. Profilen er ikke gyldig.</string>
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
+    <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
+    <string name="smscommunicator_pump_ureachable">Rapporter når pumpe ikke kan tilkobles</string>
 </resources>

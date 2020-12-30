@@ -406,8 +406,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_editquickwizard_usebasaliob">Bazal IOB hesaplaması</string>
     <string name="overview_editquickwizard_usetrend">Trend hesapla</string>
     <string name="overview_editquickwizard_usesuperbolus">Super Bolus hesapla</string>
-    <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
     <string name="positiveonly">Sadece pozitif</string>
     <string name="negativeonly">Sadece negatif</string>
     <string name="overview_editquickwizard_usecob">COB (Aktif Karbonhidrat) hesaplaması</string>
@@ -606,7 +604,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="low_temptarget_lowers_sensitivity_title">Düşük geçici hedefler duyarlılığı azaltır</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Geçici Hedefi < 100 duyarlılığı düşürün]]></string>
     <string name="combo_invalid_setup">Geçersiz pompa kurulumu, dokümanları kontrol edin ve Hızlı Bilgi menüsünün 360 konfigürasyon yazılımını kullanarak QUICK INFO olarak adlandırıldığını doğrulayın.</string>
-    <string name="custom">Özel</string>
     <string name="careportal_removestartedevents">Temiz AndroidAPS başladı</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>

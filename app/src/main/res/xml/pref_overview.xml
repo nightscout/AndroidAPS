@@ -491,6 +491,12 @@
 
             <SwitchPreference
                 android:defaultValue="false"
+                android:key="@string/key_usebolusadvisor"
+                android:summary="@string/enablebolusadvisor_summary"
+                android:title="@string/enablebolusadvisor" />
+
+            <SwitchPreference
+                android:defaultValue="false"
                 android:key="@string/key_usesuperbolus"
                 android:summary="@string/enablesuperbolus_summary"
                 android:title="@string/enablesuperbolus" />

@@ -16,6 +16,7 @@
     <color name="basebasal">#C83F51B5</color>
     <color name="graphgrid">#757575</color>
     <color name="warning">#ff1a1a</color>
+    <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
     <color name="ok_background">#323232</color>
 
@@ -25,6 +26,7 @@
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="exercise">#67DFE8</color>
 
 
     <color name="cardObjectiveText">#779ECB</color>

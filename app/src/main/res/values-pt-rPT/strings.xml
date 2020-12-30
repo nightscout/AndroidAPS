@@ -384,10 +384,12 @@
     <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
     <string name="notavailable">n/d</string>
+    <string name="patientage">Tipo de Paciente</string>
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente insulina</string>
+    <string name="pregnant">Gravidez</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou alcunha para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
@@ -455,6 +457,12 @@
     <string name="ns_noupload_summary">Todos os dados enviados para NS são descartados. AAPS está conectado ao NS, mas não é feita nenhuma alteração no NS</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
+    <string name="careportal_sensor_label">Sensor</string>
+    <string name="careportal_canula_label">Cânula</string>
+    <string name="careportal_insulin_label">Insulina</string>
+    <string name="careportal_pb_label">Bateria da Bomba</string>
+    <string name="careportal_age_label">idade:</string>
+    <string name="careportal_level_label">nível:</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
     <string name="ns_alarms">Criar notificações dos alarmes NS</string>
     <string name="ns_announcements">Criar notificações a partir dos anúncios NS</string>
@@ -552,8 +560,6 @@
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IOB</string>
     <string name="overview_editquickwizard_usetrend">Cálculo tendência</string>
     <string name="overview_editquickwizard_usesuperbolus">Cálculo de superbolus</string>
-    <string name="yes">Sim</string>
-    <string name="no">Não</string>
     <string name="positiveonly">Positivo apenas</string>
     <string name="negativeonly">Negativo apenas</string>
     <string name="overview_editquickwizard_usecob">Cálculo COB</string>
@@ -600,8 +606,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Não há insulina suficiente no reservatório para bolus</string>
     <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <string name="insightpump_shortname">Visão</string>
-    <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
-    <string name="set_neutral_temps_summary">Se activado, ele irá cancelar basal temporária antes do final de cada hora. Este método pode ajudar a parar o sinal sonoro/vibração em algumas bombas, de hora em hora.</string>
     <string name="enablesmbalways">SMB sempre activado</string>
     <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbaftercarbs">Activar SMB após hidratos</string>
@@ -775,7 +779,6 @@
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
-    <string name="custom">Personalizado</string>
     <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Configurações encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e activar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil da app tem os mesmos valores que estão na bomba. Em caso contrario pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
@@ -963,6 +966,7 @@
     <string name="notification">Notificação</string>
     <string name="notification_message">Notificação: %1$s</string>
     <string name="message_short">Mnsg:</string>
+    <string name="alarm_short">Alarme:</string>
     <string name="profilepercentage">Percentagem do Perfil</string>
     <string name="percent_u">Percentagem [%]:</string>
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
@@ -1086,6 +1090,7 @@
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_code_verify_label">Código para verificar:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
     <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados actualmente como inválidos, e precisará de os configurar novamente.</string>
@@ -1139,4 +1144,6 @@
     <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
     <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
     <string name="uploaded_data">Dados Enviados</string>
+    <string name="filter">Filtro</string>
+    <string name="alarm">Alarme</string>
 </resources>

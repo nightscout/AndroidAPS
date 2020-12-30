@@ -90,6 +90,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandPlay
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.CommandUpdateAlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.queue.command.OmnipodCustomCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.OmnipodOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
@@ -137,8 +138,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final DateUtil dateUtil;
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
+    private final OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
-
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
 
@@ -175,7 +176,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            NSUpload nsUpload
+            NSUpload nsUpload,
+            OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -202,6 +204,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
         this.nsUpload = nsUpload;
+        this.omnipodRileyLinkCommunicationManager = omnipodRileyLinkCommunicationManager;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -613,7 +616,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @Override
     public int getBatteryLevel() {
         if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
-            return rileyLinkServiceData.batteryLevel == null ? 0 : rileyLinkServiceData.batteryLevel;
+            Integer batteryLevel = omnipodRileyLinkCommunicationManager.getBatteryLevel();
+            return batteryLevel == null ? 0 : batteryLevel;
         }
 
         return 0;

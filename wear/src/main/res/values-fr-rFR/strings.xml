@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Action Appui Complication</string>
     <string name="pref_unicode_in_complications">Unicode dans Complications</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Veuillez regardez dans la configuration du cadran.</string>
     <string name="menu_tempt">Cible Temp.</string>
     <string name="menu_wizard">Assistant</string>
     <string name="menu_bolus">Bolus</string>

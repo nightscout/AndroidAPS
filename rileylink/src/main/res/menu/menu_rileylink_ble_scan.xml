@@ -6,5 +6,5 @@
     <item
         android:id="@+id/rileylink_miScan"
         app:showAsAction="ifRoom"
-        android:title="@string/rileylink_scanner_scan_scan"></item>
+        android:title="@string/riley_link_ble_config_button_scan_start"></item>
 </menu>

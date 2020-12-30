@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">스캔</string>
-    <string name="rileylink_scanner_scan_stop">중지</string>
-    <string name="rileylink_scanner_selected_device">선택됨</string>
-    <string name="rileylink_scanner_title">RileyLink 스캔</string>
-    <string name="location_yes">활성화</string>
-    <string name="rileylink_scanner_scanning">스캔중</string>
-    <string name="rileylink_scanner_scanning_finished">스캔 완료</string>
-    <string name="rileylink_scanner_scanning_error">스캔 에러: %1$d</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">설정</string>
     <string name="rileylink_settings_tab2">이력</string>
@@ -16,16 +9,7 @@
     <string name="medtronic_pump_status">펌프 상태</string>
     <string name="title_activity_rileylink_settings">RileyLink 설정</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">구성된 주소</string>
-    <string name="rileylink_connected_device">연결된 장치</string>
-    <string name="rileylink_connection_status">연결상태</string>
-    <string name="rileylink_connection_error">연결에러</string>
     <string name="rileylink_device">장치</string>
-    <string name="rileylink_device_type">장치타입</string>
-    <string name="rileylink_device_model">장치모델</string>
-    <string name="rileylink_last_used_frequency">최근사용 주파수</string>
-    <string name="rileylink_last_device_contact">최근장치연결</string>
-    <string name="rileylink_firmware_version">RL 펌웨어</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">블루투스 초기화중...</string>
     <string name="rileylink_state_bt_error">블루투스 에러</string>
@@ -42,7 +26,7 @@
     <string name="rileylink_error_no_bt_adapter">블루투스 어댑터 없음</string>
     <string name="rileylink_error_tuneup_failed">튜닝 실패</string>
     <string name="rileylink_error_pod_unreachable">포드에 연결할 수 없습니다.</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">메드트로닉 펌프</string>
     <string name="rileylink_target_device_omnipod">옴니포드</string>
 </resources>

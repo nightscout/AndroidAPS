@@ -52,5 +52,5 @@
         <item name="android:textColor">#ff0000</item>
     </style>
 
-    <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+    <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.NoActionBar"/>
 </resources>

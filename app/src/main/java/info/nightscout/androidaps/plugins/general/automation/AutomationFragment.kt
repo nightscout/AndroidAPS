@@ -15,8 +15,8 @@ import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.AutomationEventItemBinding
 import info.nightscout.androidaps.databinding.AutomationFragmentBinding
@@ -46,7 +46,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var injector: HasAndroidInjector
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
@@ -76,7 +76,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         binding.fabAddEvent.setOnClickListener {
             val dialog = EditEventDialog()
             val args = Bundle()
-            args.putString("event", AutomationEvent(mainApp).toJSON())
+            args.putString("event", AutomationEvent(injector).toJSON())
             args.putInt("position", -1) // New event
             dialog.arguments = args
             dialog.show(childFragmentManager, "EditEventDialog")
@@ -112,6 +112,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         disposable.clear()
     }
 
+    @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -119,6 +120,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     @Synchronized
     private fun updateGui() {
+        if (_binding == null) return
         eventListAdapter.notifyDataSetChanged()
         val sb = StringBuilder()
         for (l in automationPlugin.executionLog.reversed())
@@ -159,7 +161,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val event = automationPlugin.automationEvents[position]
+            val event = automationPlugin.at(position)
             holder.binding.eventTitle.text = event.title
             holder.binding.enabled.isChecked = event.isEnabled
             holder.binding.enabled.isEnabled = !event.readOnly
@@ -190,15 +192,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
                 rxBus.send(EventAutomationDataChanged())
             }
             // edit event
-            if (!event.readOnly)
-                holder.binding.rootLayout.setOnClickListener {
-                    val dialog = EditEventDialog()
-                    val args = Bundle()
-                    args.putString("event", event.toJSON())
-                    args.putInt("position", position)
-                    dialog.arguments = args
-                    dialog.show(childFragmentManager, "EditEventDialog")
-                }
+            holder.binding.rootLayout.setOnClickListener {
+                val dialog = EditEventDialog()
+                val args = Bundle()
+                args.putString("event", event.toJSON())
+                args.putInt("position", position)
+                dialog.arguments = args
+                dialog.show(childFragmentManager, "EditEventDialog")
+            }
             // Start a drag whenever the handle view it touched
             holder.binding.iconSort.setOnTouchListener { v: View, motionEvent: MotionEvent ->
                 if (motionEvent.action == MotionEvent.ACTION_DOWN) {
@@ -209,36 +210,33 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             }
             // remove event
             holder.binding.iconTrash.setOnClickListener {
-                showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.automationEvents[position].title,
+                showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     Runnable {
-                        automationPlugin.automationEvents.removeAt(position)
+                        automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
-                        rxBus.send(EventAutomationDataChanged())
-                        rxBus.send(EventAutomationUpdateGui())
                     }, Runnable {
                     rxBus.send(EventAutomationUpdateGui())
                 })
             }
             holder.binding.iconTrash.visibility = (!event.readOnly).toVisibility()
+            holder.binding.aapsLogo.visibility = (event.systemAction).toVisibility()
         }
 
-        override fun getItemCount(): Int = automationPlugin.automationEvents.size
+        override fun getItemCount(): Int = automationPlugin.size()
 
         override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-            Collections.swap(automationPlugin.automationEvents, fromPosition, toPosition)
+            automationPlugin.swap(fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
-            rxBus.send(EventAutomationDataChanged())
             return true
         }
 
         override fun onItemDismiss(position: Int) {
             activity?.let { activity ->
-                showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.automationEvents[position].title,
+                showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     Runnable {
-                        automationPlugin.automationEvents.removeAt(position)
+                        automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())
-                        rxBus.send(EventAutomationUpdateGui())
                     }, Runnable { rxBus.send(EventAutomationUpdateGui()) })
             }
         }

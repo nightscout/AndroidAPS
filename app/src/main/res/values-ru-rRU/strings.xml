@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
     <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы (г)</string>
+    <string name="nav_preferences_plugin">Настройки %1$s</string>
     <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
     <string name="nav_resetdb">обнулить базы</string>
@@ -564,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Расчет базального активного инсулина IOB</string>
     <string name="overview_editquickwizard_usetrend">Расчет тренда</string>
     <string name="overview_editquickwizard_usesuperbolus">Расчет супер болюса</string>
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
     <string name="positiveonly">Только положительные</string>
     <string name="negativeonly">Только отрицательные</string>
     <string name="overview_editquickwizard_usecob">Вычисление активных углеводов COB</string>
@@ -612,8 +611,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">В резервуаре недостаточно инсулина для болюса</string>
     <string name="extendedbolusdeliveryerror">Подача пролонгированного болюса не состоялась</string>
     <string name="insightpump_shortname">Поле обзора</string>
-    <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
-    <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
     <string name="enablesmbalways">Всегда включать супер микро болюс SMB</string>
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
@@ -764,8 +761,8 @@ Context | Edit Context</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="setupwizard_profile_description">Пожалуйста выберите источник профиля. Если пациент ребенок пользуйтесь профилем Nightscout. Если никто не отслеживает ваш СК на NS, вы вероятно предпочтете Локальный профиль. Напоминание - вы всего лишь выбираете профиль. Активируйте его \"Переключателем профиля\"</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Ожидание соединения RileyLink\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы вы можете продолжить установку\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
     <string name="startobjective">Начните первую Цель</string>
     <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>
@@ -792,7 +789,6 @@ Context | Edit Context</string>
     <string name="sensitivity_raises_target_title">Чувствительность поднимает цель</string>
     <string name="sensitivity_raises_target_summary">При обнаружении чувствительности целевой уровень глюкозы повышается</string>
     <string name="combo_invalid_setup">Недопустимые установки помпы, проверьте документацию и убедитесь, что меню Quick Info называется QUICK INFO, используя приложение 360 для конфигурации помпы.</string>
-    <string name="custom">Пользовательские</string>
     <string name="careportal_removestartedevents">AndroidAPS перезапущен</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AndroidAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AndroidAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
@@ -980,7 +976,9 @@ Context | Edit Context</string>
     <string name="description_source_dexcom">Получать данные ГК от модифицированного приложения Dexcom.</string>
     <string name="notification">Уведомление</string>
     <string name="notification_message">Уведомление: %1$s</string>
+    <string name="alarm_message">Сигнал оповещения: %1$s</string>
     <string name="message_short">Сообщение:</string>
+    <string name="alarm_short">Сигнал:</string>
     <string name="profilepercentage">Процент профиля</string>
     <string name="percent_u">Процент [%]:</string>
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
@@ -1180,5 +1178,9 @@ Context | Edit Context</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">На ваш аккаунт Open Humans будут загружены следующие данные: значения ГК, события careportal (за исключением примечаний), пролонгированные болюсы, переключения профиля, суммарные суточные дозы, временные базалы, временные цели, настройки, версии приложения, модель устройства и размеры экрана. Секретная или конфиденциальная информация, такая как адрес вашего сайта Nightscout или API secret, не будет загружена.</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="filter">Фильтр</string>
+    <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
+    <string name="alarm">Сигнал</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
+    <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
 </resources>

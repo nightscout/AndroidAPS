@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
+    <string name="nav_preferences_plugin">Настройки на %1$s</string>
     <string name="nav_preferences">Опции</string>
     <string name="nav_refreshtreatments">Обнови леченията от NS</string>
     <string name="nav_resetdb">Нулирай базата данни</string>
@@ -564,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
     <string name="overview_editquickwizard_usetrend">Калкулиране на тенденция КЗ</string>
     <string name="overview_editquickwizard_usesuperbolus">Калкулиране суперболус</string>
-    <string name="yes">Да</string>
-    <string name="no">Не</string>
     <string name="positiveonly">Само положителни</string>
     <string name="negativeonly">Само отрицателни</string>
     <string name="overview_editquickwizard_usecob">Калкулиране на COB</string>
@@ -612,8 +611,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
-    <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
     <string name="enablesmbalways">Разреши SMB постоянно</string>
     <string name="enablesmbalways_summary">Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  </string>
     <string name="enablesmbaftercarbs">Разреши SMB след въглехидрати</string>
@@ -762,8 +759,6 @@
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Изчакване на RileyLink връзка…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
     <string name="startobjective">Започнете първа цел</string>
     <string name="permission">Разрешение</string>
     <string name="askforpermission">Питане за разрешение</string>
@@ -790,7 +785,6 @@
     <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
     <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
     <string name="combo_invalid_setup">Невалидни настройки на помпата, проверете wiki и се уверете че меню Quick Info се казва QUICK INFO, с помощта на 360 софтуера.</string>
-    <string name="custom">По избор</string>
     <string name="careportal_removestartedevents"> AndroidAPS стартира</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
@@ -978,7 +972,9 @@
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom.</string>
     <string name="notification">Известие</string>
     <string name="notification_message">Известие: %1$s</string>
+    <string name="alarm_message">Аларма: %1$s</string>
     <string name="message_short">Съоб:</string>
+    <string name="alarm_short">Алармa:</string>
     <string name="profilepercentage">Профил процент</string>
     <string name="percent_u">Процент [%]:</string>
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
@@ -1180,4 +1176,5 @@
     <string name="filter">Филтър</string>
     <string name="copytolocalprofile_invalid">Не може да се създаде локален профил. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
+    <string name="alarm">Аларма</string>
 </resources>

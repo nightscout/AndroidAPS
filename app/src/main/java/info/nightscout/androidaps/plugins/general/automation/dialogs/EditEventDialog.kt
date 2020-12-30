@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCon
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -66,9 +67,13 @@ class EditEventDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.okcancel.ok.visibility = (!event.readOnly).toVisibility()
+
         binding.inputEventTitle.setText(event.title)
+        binding.inputEventTitle.isFocusable = false
         binding.triggerDescription.text = event.trigger.friendlyDescription()
 
+        binding.editTrigger.visibility = (!event.readOnly).toVisibility()
         binding.editTrigger.setOnClickListener {
             val args = Bundle()
             args.putString("trigger", event.trigger.toJSON())
@@ -82,6 +87,7 @@ class EditEventDialog : DialogFragmentWithDate() {
         binding.actionListView.layoutManager = LinearLayoutManager(context)
         binding.actionListView.adapter = actionListAdapter
 
+        binding.addAction.visibility = (!event.readOnly).toVisibility()
         binding.addAction.setOnClickListener { ChooseActionDialog().show(childFragmentManager, "ChooseActionDialog") }
 
         showPreconditions()
@@ -92,31 +98,28 @@ class EditEventDialog : DialogFragmentWithDate() {
             .subscribe({
                 actionListAdapter?.notifyDataSetChanged()
                 showPreconditions()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationAddAction::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 event.addAction(it.action)
                 actionListAdapter?.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationUpdateTrigger::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 event.trigger = it.trigger
                 binding.triggerDescription.text = event.trigger.friendlyDescription()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationUpdateAction::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 event.actions[it.position] = it.action
                 actionListAdapter?.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
     }
 
     override fun submit(): Boolean {
@@ -140,9 +143,9 @@ class EditEventDialog : DialogFragmentWithDate() {
         }
         // store
         if (position == -1)
-            automationPlugin.automationEvents.add(event)
+            automationPlugin.add(event)
         else
-            automationPlugin.automationEvents[position] = event
+            automationPlugin.set(event, position)
 
         rxBus.send(EventAutomationDataChanged())
         return true
@@ -189,20 +192,24 @@ class EditEventDialog : DialogFragmentWithDate() {
         inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
             fun bind(action: Action, recyclerView: RecyclerView.Adapter<ViewHolder>, position: Int) {
-                view.findViewById<LinearLayout>(R.id.automation_layoutText).setOnClickListener {
-                    if (action.hasDialog()) {
-                        val args = Bundle()
-                        args.putInt("actionPosition", position)
-                        args.putString("action", action.toJSON())
-                        val dialog = EditActionDialog()
-                        dialog.arguments = args
-                        dialog.show(childFragmentManager, "EditActionDialog")
+                if (!event.readOnly)
+                    view.findViewById<LinearLayout>(R.id.automation_layoutText).setOnClickListener {
+                        if (action.hasDialog()) {
+                            val args = Bundle()
+                            args.putInt("actionPosition", position)
+                            args.putString("action", action.toJSON())
+                            val dialog = EditActionDialog()
+                            dialog.arguments = args
+                            dialog.show(childFragmentManager, "EditActionDialog")
+                        }
                     }
-                }
-                view.findViewById<ImageView>(R.id.automation_iconTrash).setOnClickListener {
-                    event.actions.remove(action)
-                    recyclerView.notifyDataSetChanged()
-                    rxBus.send(EventAutomationUpdateGui())
+                view.findViewById<ImageView>(R.id.automation_iconTrash).run {
+                    visibility = (!event.readOnly).toVisibility()
+                    setOnClickListener {
+                        event.actions.remove(action)
+                        recyclerView.notifyDataSetChanged()
+                        rxBus.send(EventAutomationUpdateGui())
+                    }
                 }
                 view.findViewById<ImageView>(R.id.automation_action_image).setImageResource(action.icon())
                 view.findViewById<TextView>(R.id.automation_viewActionTitle).text = action.shortDescription()

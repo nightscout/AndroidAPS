@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SCAN</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Selectat</string>
-    <string name="rileylink_scanner_title">Scanare RileyLink</string>
-    <string name="location_yes">Activează</string>
-    <string name="location_no">Nu</string>
-    <string name="rileylink_scanner_scanning">Scanează</string>
-    <string name="rileylink_scanner_scanning_finished">Scanare terminată</string>
-    <string name="rileylink_scanner_scanning_error">Eroare la scanare: %1$d</string>
-    <string name="common_never">Niciodată</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scanare</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Selectat</string>
+    <string name="riley_link_ble_config_scan_title">Scanare RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">Scanează</string>
+    <string name="riley_link_ble_config_scan_finished">Scanare terminată</string>
+    <string name="riley_link_ble_config_scan_error">Eroare la scanare: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Niciodată</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink selectat în prezent</string>
+    <string name="riley_link_ble_config_remove_riley_link">Șterge</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Sunteți sigur că doriți să eliminați RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Elimină RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Niciun RileyLink selectat</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Setări</string>
     <string name="rileylink_settings_tab2">Istoric</string>
@@ -18,16 +22,19 @@
     <string name="medtronic_pump_status">Stare pompă</string>
     <string name="title_activity_rileylink_settings">Setări RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Adresă configurate</string>
-    <string name="rileylink_connected_device">Dispozitiv conectat</string>
-    <string name="rileylink_connection_status">Stare conexiune</string>
-    <string name="rileylink_connection_error">Eroare conexiune</string>
+    <string name="rileylink_configured_riley_link_address">Adresă RileyLink configurată:</string>
+    <string name="rileylink_configured_riley_link_name">Nume RileyLink configurat:</string>
+    <string name="rileylink_connected_device">Dispozitiv conectat:</string>
+    <string name="rileylink_connection_status">Stare conexiune:</string>
+    <string name="rileylink_connection_error">Eroare conexiune:</string>
     <string name="rileylink_device">Dispozitiv</string>
-    <string name="rileylink_device_type">Tip dispozitiv</string>
-    <string name="rileylink_device_model">Model dispozitiv</string>
-    <string name="rileylink_last_used_frequency">Ultima frecvență utilizată</string>
-    <string name="rileylink_last_device_contact">Ultima conexiune cu dispozitivul</string>
-    <string name="rileylink_firmware_version">Firmware RL</string>
+    <string name="rileylink_device_type">Tip dispozitiv:</string>
+    <string name="rileylink_device_model">Model dispozitiv:</string>
+    <string name="rileylink_last_used_frequency">Ultima frecvență utilizată:</string>
+    <string name="rileylink_last_device_contact">Ultima conexiune cu dispozitivul:</string>
+    <string name="rileylink_firmware_version">Versiune Firmware:</string>
+    <string name="rileylink_pump_serial_number">Număr de serie al pompei:</string>
+    <string name="rileylink_pump_frequency">Frecvență pompă:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Se inițializează conexiunea Bluetooth…</string>
     <string name="rileylink_state_bt_error">Eroare Bluetooth</string>
@@ -47,9 +54,11 @@
     <string name="rileylink_error_tuneup_failed">Conectare eșuată</string>
     <string name="rileylink_error_pump_unreachable">Pompă indisponibilă</string>
     <string name="rileylink_error_pod_unreachable">Nu se poate comunica cu pod-ul</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompă Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Da</string>
+    <string name="riley_link_common_no">Nu</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

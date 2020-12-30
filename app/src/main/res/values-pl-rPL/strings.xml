@@ -565,8 +565,6 @@
     <string name="overview_editquickwizard_usebasaliob">Obliczenia IOB</string>
     <string name="overview_editquickwizard_usetrend">Obliczenia trendu</string>
     <string name="overview_editquickwizard_usesuperbolus">Obliczenia Superbolusa</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
     <string name="positiveonly">Tylko pozytywne</string>
     <string name="negativeonly">Tylko negatywne</string>
     <string name="overview_editquickwizard_usecob">Obliczenia COB</string>
@@ -613,8 +611,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Za mało insuliny na bolus pozostało w zbiorniku</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Ustawiaj neutralne bazy tymczasowe</string>
-    <string name="set_neutral_temps_summary">Jeśli ta opcja jest włączona, anuluje tymczasową wartość bazową przed końcem każdej godziny. Może to pomóc wyciszyć alarmy/wibracje związane z TBR występujące co godzinę w niektórych pompach.</string>
     <string name="enablesmbalways">Włącz SMB (Super Mikro Bolusy) zawsze</string>
     <string name="enablesmbalways_summary">Włącz SMB (Super Mikro Bolusy) zawsze, niezależnie od bolusów. Możliwe jedynie ze źródłem BG (poziomu cukru) z dobrym filtrowaniem, jak aplikacja G5</string>
     <string name="enablesmbaftercarbs">Włącz SMB po węglowodanach</string>
@@ -680,6 +676,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Dawka podstawowa zmieniła się na pompie, ale jej odczyt nie powiódł się</string>
     <string name="combo_activity_checking_for_history_changes">Sprawdzanie zmian w historii</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Wielokrotne bolusy o tej samej wielkości w tej samej minucie zostały właśnie zaimportowane. Do leczenia można dodać tylko jeden taki rekord. Sprawdź pompę i ręcznie dodaj zapis bolusa za pomocą zakładki PortalOpieki. Upewnij się, że tworzysz bolus z czasem, którego nie używa żaden inny bolus.</string>
+    <string name="about_link_urls">\n\ndokumentacja:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Ostatni bolus jest starszy niż 24 godziny lub jest w przyszłości. Sprawdź, czy data na pompie jest ustawiona prawidłowo.</string>
     <string name="combo_suspious_bolus_time">Czas/data dostarczonego bolusa na pompie wydaje się błędna, IOB jest prawdopodobnie niepoprawny. Sprawdź czas/datę pompy.</string>
     <string name="profileswitch_ismissing">Brakuje ZmianyProfilu. Proszę wykonać ZmianęProfilu lub nacisnąć \"Aktywuj Profil\" w ProfiluLokalnym</string>
@@ -762,8 +759,6 @@
     <string name="diawarning">Pamiętaj: nowe profile insuliny wymagają ustawienia DIA (czas działania insuliny) powyżej 5h. DIA między 5-6h na nowym profilu odpowiada 3h DIA na starych profilach insuliny.</string>
     <string name="setupwizard_profile_description">Proszę wybrać źródło profilu. Jeśli pacjent jest dzieckiem, należy skorzystać z profilu Nightscout. Jeśli nikt nie obserwuje twojej terapii przez Nightscout, prawdopodobnie wolisz profil Lokalny. Przypomnienie - wybierasz tylko źródło profilu. Musisz go później aktywować za pomocą \"Przełącznika profilu\"</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Oczekiwanie na połączenie RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po zainicjowaniu pompy.\n</string>
     <string name="startobjective">Rozpocznij swoje pierwsze Zadanie</string>
     <string name="permission">Uprawnienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
@@ -790,7 +785,6 @@
     <string name="sensitivity_raises_target_title">Wrażliwość podnosi docelowy poziom glukozy</string>
     <string name="sensitivity_raises_target_summary">Po zwiększeniu wrażliwości zwiększ docelowy poziom glukozy</string>
     <string name="combo_invalid_setup">Nieprawidłowa konfiguracja pompy, sprawdź dokumentację i zweryfikuj, czy menu Quick Info nazwano QUICK INFO za pomocą oprogramowania konfiguracyjnego 360.</string>
-    <string name="custom">Niestandardowe</string>
     <string name="careportal_removestartedevents">Wyczyść zdarzenia \"Start AndroidAPS\"</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AndroidAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AndroidAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
@@ -978,7 +972,9 @@
     <string name="description_source_dexcom">Pobieraj wartości BG ze spatchowanej aplikacji Dexcom.</string>
     <string name="notification">Powiadomienie</string>
     <string name="notification_message">Powiadomienie: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Inf:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Procent profilu</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Uruchom profil %1$d%% na %2$d min</string>
@@ -1177,4 +1173,8 @@
     <string name="uploaded_data">Przesłane dane</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Następujące dane zostaną przesłane na konto Open Humans: wartości Glikemii, bolusy, węglowodany, zdarzenia z portalu opieki (z wyjątkiem notatek), rozszerzone bolusy, przełączenia profilu, całkowite dawki dobowe, bazy tymczasowe, cele tymczasowe, preferencje, wersja aplikacji, model urządzenia i wymiary ekranu. Dane niejawne lub prywatne, takie jak adres URL strony Nightscout lub klucz autoryzacji API, nie zostaną przesłane.</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
+    <string name="filter">Filtr</string>
+    <string name="copytolocalprofile_invalid">Nie można utworzyć profilu lokalnego. Profil jest niepoprawny.</string>
+    <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
+    <string name="alarm">Alarm</string>
 </resources>
