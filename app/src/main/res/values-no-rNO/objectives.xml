@@ -21,6 +21,7 @@
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
     <string name="objectives_auto_objective">Aktiver Automatisering</string>
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er maxIOB = gjennomsnittlig måltidsbolus + 3*max daglig basal</string>
+    <string name="objectives_auto_gate">Les dokumentasjonen på hvordan Automatisering virker. La din første regel være enkel. I stedet for å utføre en behandling, få AAPS til å vise en melding i stedet. Kun når du er sikker på at Automatisering aktiveres korrekt kan du erstatte meldingsvarselet med en behandlingskommando. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BS tilgjengelig i NS</string>
     <string name="objectives_pumpstatusavailableinns">Pumpe status tilgjengelig i NS</string>
     <string name="objectives_manualenacts">Manuell kommando</string>
@@ -35,9 +36,11 @@
     <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
     <string name="objectives_usescale">Test skaleringsfunksjonen ved et langt trykk på BS grafen</string>
     <string name="objectives_button_enter">Angi</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Om du kan dokumentere minst 3 måneders erfaring med et annet lukket loop system så kan det hende du kvalifiserer for å hoppe over læringsmålene. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for flere detaljer.</string>
     <string name="codeaccepted">Kode akseptert</string>
     <string name="codeinvalid">Kode ugyldig</string>
     <string name="objectives_exam_objective">Bevis kunnskapen din</string>
+    <string name="objectives_exam_gate">Studer spørsmålene. Hvert spørsmål har fire svaralternativer. Det kan være flere enn ett riktig svar. Marker alle riktige svar og velg KONTROLLER.</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
     <string name="wronganswer">Feil svar!</string>
     <string name="unfinshed_button">Neste uferdig</string>
