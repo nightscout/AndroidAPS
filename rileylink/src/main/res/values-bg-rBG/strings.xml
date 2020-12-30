@@ -2,6 +2,10 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Текущо избран RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Сте сигурни, че искате да премахнете Вашия RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Премахване на RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Няма избран RileyLink</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
@@ -9,7 +13,11 @@
     <string name="medtronic_pump_status">Статус на помпата</string>
     <string name="title_activity_rileylink_settings">RileyLink настройки</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_riley_link_address">Адрес на RileyLink:</string>
+    <string name="rileylink_configured_riley_link_name">Име на RileyLink:</string>
     <string name="rileylink_device">Устройство</string>
+    <string name="rileylink_last_used_frequency">Последна честота:</string>
+    <string name="rileylink_last_device_contact">Последно връзка:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth стартиране…</string>
     <string name="rileylink_state_bt_error">Bluetooth грешка</string>
