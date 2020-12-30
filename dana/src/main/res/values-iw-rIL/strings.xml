@@ -64,7 +64,7 @@
     <string name="danar_history_glucose">גלוקוז</string>
     <string name="danar_history_refill">מילוי מחדש</string>
     <string name="danar_history_syspend">השהיה</string>
-    <string name="danar_history_prime">מילוי</string>
+    <string name="danar_history_prime">תיחול</string>
     <string name="danar_useroptions">אפשרויות משתמש</string>
     <string name="danar_timedisplay">מבנה הצגת השעה</string>
     <string name="danar_buttonscroll">לחצן גלילה</string>

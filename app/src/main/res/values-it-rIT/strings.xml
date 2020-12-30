@@ -1183,5 +1183,7 @@
     <string name="alarm">Allarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
+    <string name="bolusadvisor">Consiglio bolo</string>
+    <string name="enablebolusadvisor">Abilita consiglio bolo</string>
     <string name="timetoeat">Tempo di mangiare</string>
 </resources>

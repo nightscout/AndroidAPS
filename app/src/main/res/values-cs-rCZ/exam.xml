@@ -171,6 +171,9 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html</string>
     <string name="ic_multiple">Ve svém profilu můžete použít více než jednu hodnotu poměru I:C.</string>
     <string name="ic_isf">Změníte-li ISF ve svém profilu, měli byste vždy změnit také poměr I:C.</string>
+    <string name="ic_label_exam">Inzulínosacharidový poměr (I:C)</string>
+    <string name="ic_increasingvalue">Vyšší hodnoty I:C vedou k menší dávce inzulínu pro stejné množství sacharidů.</string>
+    <string name="ic_decreasingvalue">Nižší hodnoty I:C vedou k menší dávce inzulínu pro stejné množství sacharidů.</string>
     <string name="ic_noeffect">Pokud máte 0 COB změna inzulino-sacharidového poměru povede k jinému množství inzulínu vydanému pro korekci glykémie.</string>
     <string name="ic_different">Inzulino-sacharidový poměr se bude lišit podle toho, zda počítáte výměnnou jednotku jako 10 g nebo jako 12 g sacharidů.</string>
     <string name="ic_meaning">Inzulino-sacharidový poměr vyjadřuje: kolik výměnných jednotek pokryje 1 jednotka inzulinu.</string>
@@ -180,6 +183,7 @@
     <string name="profileswitch_basallower">Bazály budou o 10 % nižší.</string>
     <string name="profileswitch_isfhigher">Hodnota citlivosti bude o 10 % vyšší.</string>
     <string name="profileswitch_iclower">Hodnota poměru I:C bude o 10% nižší.</string>
+    <string name="profileswitch_unchanged">Hodnoty ISF a I:C nebudou změněny.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html?highlight=p%C5%99epnut%C3%AD%20profilu</string>
     <string name="profileswitch2_label">Přepnutí profilu</string>
     <string name="profileswitch2_pctwillchange">Když zadáte 120% profil, které odpovědi jsou pravdivé?</string>
