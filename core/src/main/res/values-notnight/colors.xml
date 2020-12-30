@@ -58,7 +58,7 @@
     <color name="graphgrid">#757575</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="warning">#ff1a1a</color>
-
+    <color name="info">#77dd77</color>
     <color name="defaultbackground">#BBBBBB</color>
     <color name="defaulttext">#BBBBBB</color>
 
