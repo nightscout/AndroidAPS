@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן לתקשר עם המשאבה. זה עשוי לעזור במס\' דגמי טלפונים שבהם מערכת הבלוטות\' קופאת.</string>
     <string name="pairing">מצמד</string>
+    <string name="yes">כן</string>
+    <string name="no">לא</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -209,7 +211,7 @@
     <string name="history_group_unknown">לא ידועים</string>
     <string name="history_group_all">כל</string>
     <string name="history_group_bolus">בולוסים</string>
-    <string name="history_group_prime">מילוי</string>
+    <string name="history_group_prime">תיחול</string>
     <string name="history_group_alarm">התראות</string>
     <string name="history_group_glucose">גלוקוז</string>
     <string name="mute5min">השתקה ל-5 דקות</string>
