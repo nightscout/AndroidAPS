@@ -7,7 +7,6 @@
     <string name="offlineprofile_label">Argomento: profilo offline</string>
     <string name="offlineprofile_nsprofile">Il profilo NS può essere usato, ma non configurato.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
-    <string name="pumpdisconnect_whattodo">Cosa dovrebbe essere fatto quando si disconnette il micro?</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
