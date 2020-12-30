@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Cosa è vero riguardo DIA?</string>
+    <string name="dia_label_exam">Durata attività insulina (DIA)</string>
+    <string name="dia_profile">Dovresti impostare il valore DIA nel tuo profilo.</string>
+    <string name="dia_minimumis5h">Il valore minimo consentito è 5 ore.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Quale profilo può essere usato e configurato offline?</string>
@@ -8,26 +11,35 @@
     <string name="offlineprofile_nsprofile">Il profilo NS può essere usato, ma non configurato.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
+    <string name="objectives_label">Impostazioni AndroidAPS</string>
+    <string name="objectives2_label">Impostazioni AndroidAPS</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="noisycgm_label">Letture CGM \"rumorose\" (noisy)</string>
     <string name="noisycgm_whattodo">Cosa dovrebbe essere fatto se i dati CGM sono \"rumorosi\"?</string>
+    <string name="noisycgm_nothing">Nulla - AndroidAPS se ne occuperà.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_doigetinsulin">Ricevo insulina quando il loop è disabilitato/sospeso?</string>
     <string name="suspendloop_yes">Sì, l\'insulina basale continua a essere erogata.</string>
     <string name="suspendloop_no">No, l\'erogazione di insulina è interrotta.</string>
     <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#androidaps-settings</string>
+    <string name="prerequisites_label">Prerequisiti</string>
     <string name="prerequisites_determinedcorrectprofile">Informazioni profilo convalidate (basale, IC, ISF, DIA).</string>
+    <string name="prerequisites_computer">Un computer con Android Studio installato e configurato.</string>
     <string name="prerequisites_phone">Un telefono supportato.</string>
     <string name="prerequisites_tidepoolaccount">Un account Tidepool.</string>
     <string name="prerequisites_googleaccount">Un account Google.</string>
     <string name="prerequisites_githubaccount">Un account Github.</string>
+    <string name="prerequisites_beanandroiddeveloper">Esperienza in programmazione o modifica di codice.</string>
     <string name="prerequisites_own670g">Un micro MiniMed 670G.</string>
     <string name="prerequisites_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="prerequisites_smartwatch">Uno smartwatch.</string>
     <string name="prerequisites_supportedcgm">Un CGM Supportato.</string>
+    <string name="prerequisites2_label">Prerequisiti</string>
     <string name="update_neverupdate">Non aggiornare mai se il sistema funziona bene.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
+    <string name="troubleshooting_label">Risoluzione problemi</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
@@ -45,9 +57,15 @@
     <string name="ic_different">IC sarà diverso se consideri l\'unità di pane (BE) come 10g o 12g.</string>
     <string name="ic_meaning">Il significato di IC è: quante unità di pane (BE) sono coperte da 1U di insulina.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
+    <string name="profileswitch_label">Cambio profilo</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch2_label">Cambio profilo</string>
+    <string name="profileswitchtime_label">Cambio profilo</string>
+    <string name="profileswitchtime_100">Fare un cambio profilo sopra il 100%.</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitch4_label">Modifiche ai profili</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
+    <string name="basalhelp_label">Aiuto con le velocità basali</string>
     <string name="basalhelp_where">Dove andare per avere aiuto con le velocità basali e il resto.</string>
     <string name="basalhelp_diabetesteam">Il tuo team diabetologico</string>
     <string name="basalhelp_google">Google</string>
