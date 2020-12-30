@@ -680,8 +680,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
     <string name="overview_editquickwizard_usetrend">Trend calculation</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus calculation</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="positiveonly">Positive only</string>
     <string name="negativeonly">Negative only</string>
     <string name="overview_editquickwizard_usecob">COB calculation</string>
@@ -1432,5 +1430,14 @@
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
     <string name="smscommunicator_pump_ureachable">Report  pump ureachable</string>
+    <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="alarminxmin">Run alarm in %1$d min</string>
+    <string name="bolusadvisor">Bolus advisor</string>
+    <string name="bolusadvisormessage">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
+    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
+    <string name="enablebolusadvisor">Enable bolus advisor</string>
+    <string name="enablebolusadvisor_summary">Use reminder to start eating instead of wizard during high glycemia</string>
+    <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
+    <string name="timetoeat">Time to eat</string>
 
 </resources>
