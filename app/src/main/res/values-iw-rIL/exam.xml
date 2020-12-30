@@ -63,7 +63,7 @@
     <string name="suspendloop_doigetinsulin">האם אני מקבל\ת אינסולין כאשר הלולאה מושבתת/מושהית?</string>
     <string name="suspendloop_yes">כן, אינסולין בזאלי ממשיך להינתן.</string>
     <string name="suspendloop_no">לא, אספקת האינסולין נפסקת.</string>
-    <string name="basaltest_label">באזאל, פקטור תיקון, ויחס אינסולין פחמימה.</string>
+    <string name="basaltest_label">מינון באזלי, יחס תיקון, ויחס פחמימות.</string>
     <string name="basaltest_when">מתי יש לאמת את הערכים האלה?</string>
     <string name="basaltest_beforeloop">לפני שאני מתחיל\ה לולאה.</string>
     <string name="basaltest_havingregularhighlow">כאשר חווים רמת סוכר גבוהה או נמוכה לעיתים קרובות.</string>
