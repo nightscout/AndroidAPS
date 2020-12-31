@@ -31,6 +31,7 @@
     <string name="exerciseprofile_suspendloop">Sospendere il loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_whattodo">Come puoi usare i target temporanei per aiutare al meglio il sistema a gestire l\'esercizio aerobico?</string>
+    <string name="exercise_setunchanged">Lasciare il tuo target glicemico invariato.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="suspendloop_doigetinsulin">Ricevo insulina quando il loop è disabilitato/sospeso?</string>
@@ -82,9 +83,13 @@
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_label">Errori inserimento CHO</string>
     <string name="wrongcarbs_whattodo">Cosa dovresti fare se hai fatto un inserimento non corretto di carboidrati?</string>
-    <string name="wronginsulin_label">Errori erogazione/immissione insulina</string>
+    <string name="wrongcarbs_donothing">Non fare nulla - AndroidAPS effettuerà gli opportuni aggiustamenti.</string>
+    <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
+    <string name="wronginsulin_donothing">Non fare nulla e permettere ad AndroidAPS di correggere eventuali glicemie alte.</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <string name="iob_which">Seleziona tutte le risposte corrette.</string>
+    <string name="breadgrams_label">Inserimento CHO e boli</string>
+    <string name="breadgrams_grams">Solo i grammi dovrebbero essere utilizzati per stimare e registrare i carboidrati consumati.</string>
     <string name="breadgrams_exchange">I carboidrati consumati possono essere registrati utilizzando un sistema di scambio appropriato (ad esempio: gli scambi CHO \"DAFNE\" o le unità di pane europee \"Bread Units\").</string>
     <string name="breadgrams_decay">AndroidAPS usa un modello dinamico per stimare il \"decadimento\" dei carboidrati e calcolare COB.</string>
     <string name="extendedcarbs_label">e-carbs</string>
@@ -102,6 +107,7 @@
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Puoi usare più di un valore per il rapporto I:C nel tuo profilo.</string>
+    <string name="ic_increasingvalue">Rapporti I:C più alti portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_decreasingvalue">Rapporti I:C più bassi portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_noeffect">Se hai 0 COB, cambiare il rapporto IC porterà a una differente quantità di insulina necessaria a correggere una determinata glicemia.</string>
     <string name="ic_different">IC sarà diverso se consideri l\'unità di pane (BE) come 10g o 12g.</string>
@@ -111,11 +117,15 @@
     <string name="profileswitch_basallower">Le velocità basali saranno il 10% più basse.</string>
     <string name="profileswitch_isfhigher">ISF sarà il 10% più alto.</string>
     <string name="profileswitch_iclower">Il valore del rapporto I:C sarà un numero il 10% più basso.</string>
+    <string name="profileswitch_unchanged">ISF e rapporti I:C rimarranno invariati.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Cambio profilo</string>
+    <string name="profileswitch2_bghigher">La glicemia target sarà il 20% più alta.</string>
     <string name="profileswitch2_basalhigher">Le velocità basali saranno il 20% più alte.</string>
+    <string name="profileswitch2_bgunchanged">La glicemia target rimarrà invariata.</string>
     <string name="profileswitch2_isfhigher">ISF sarà il 20% più alto.</string>
     <string name="profileswitchtime_label">Cambio profilo</string>
+    <string name="profileswitchtime_iwant">Se ti svegli 2 ore prima del solito, come dovresti informare AndroidAPS del cambiamento nei tuoi programmi?</string>
     <string name="profileswitchtime_2">Avviare un cambio profilo con un timeshift di 2</string>
     <string name="profileswitchtime__2">Avviare un cambio profilo con un timeshift di -2</string>
     <string name="profileswitchtime_100">Fare un cambio profilo sopra il 100%.</string>
