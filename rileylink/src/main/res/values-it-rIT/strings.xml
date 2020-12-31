@@ -2,6 +2,7 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scansione</string>
     <string name="riley_link_ble_config_scan_stop">Stop</string>
     <string name="riley_link_ble_config_scan_selected">Selezionato</string>
     <string name="riley_link_ble_config_scan_title">Scansione RileyLink</string>
@@ -9,6 +10,7 @@
     <string name="riley_link_ble_config_scan_finished">Scansione terminata</string>
     <string name="riley_link_ble_config_scan_error">Errore scansione: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Mai</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink attualmente selezionato</string>
     <string name="riley_link_ble_config_remove_riley_link">Rimuovi</string>
     <string name="riley_link_ble_config_remove_riley_link_confirmation">Sei sicuro di voler rimuovere il tuo RileyLink?</string>
     <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Rimuovi RileyLink</string>
