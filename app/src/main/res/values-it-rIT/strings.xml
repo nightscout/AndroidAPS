@@ -406,11 +406,14 @@
     <string name="suspendloopfor3h">Sospendi loop per 3h</string>
     <string name="suspendloopfor10h">Sospendi loop per 10h</string>
     <string name="suspendloopforXmin">Sospendi loop per %1$d min</string>
+    <string name="disconnectpump">Disconnetti micro</string>
     <string name="disconnectpumpfor15m">Disconnetti micro per 15 min</string>
     <string name="disconnectpumpfor30m">Disconnetti micro per 30 min</string>
     <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
     <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
     <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
     <string name="duration1h">1 ora</string>
     <string name="duration2h">2 ore</string>
     <string name="duration3h">3 ore</string>
@@ -1183,6 +1186,8 @@
     <string name="alarm">Allarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
+    <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
+    <string name="alarminxmin">Esegui allarme in %1$d min</string>
     <string name="bolusadvisor">Consiglio bolo</string>
     <string name="enablebolusadvisor">Abilita consiglio bolo</string>
     <string name="timetoeat">Tempo di mangiare</string>
