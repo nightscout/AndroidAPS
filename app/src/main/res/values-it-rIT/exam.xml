@@ -37,6 +37,7 @@
     <string name="prerequisites_smartwatch">Uno smartwatch.</string>
     <string name="prerequisites_supportedcgm">Un CGM Supportato.</string>
     <string name="prerequisites2_label">Prerequisiti</string>
+    <string name="update_asap">Quando vengono rilasciate versioni aggiornate di AndroidAPS, le precedenti potrebbero essere limitate da remoto dopo un determinato periodo di tempo.</string>
     <string name="update_neverupdate">Non aggiornare mai se il sistema funziona bene.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Risoluzione problemi</string>
