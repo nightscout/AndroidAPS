@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Что верно о длительности работы инсулина DIA?</string>
+    <string name="dia_label_exam">Время действия инсулина (DIA)</string>
+    <string name="dia_profile">Следует задать значение DIA в вашем профиле.</string>
+    <string name="dia_minimumis5h">Минимально допустимое значение-5 часов.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением DIA в помпе до AndroidAPS, то при запуске цикла изменять это значение не требуется.</string>
+    <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
+    <string name="hypott_label">Временная цель Гипо </string>
+    <string name="hypott_whenhypott">Какова основная причина установки временной цели гипо?</string>
+    <string name="hypott_wrongbasal">Для коррекции гипо, вызванных неверными настройками базальной скорости.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Какой профиль можно применить и настроить в автономном режиме?</string>
     <string name="offlineprofile_label">Тема: Автономный профиль</string>
@@ -13,6 +21,7 @@
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_whattodo">Что следует делать, если данные мониторинга зашумлены?</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_doigetinsulin">Получаю ли я инсулин, когда цикл отключен/приостановлен?</string>
     <string name="suspendloop_yes">Да, базальный инсулин продолжает подаваться.</string>
@@ -27,8 +36,11 @@
     <string name="prerequisites_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="prerequisites_smartwatch">Смарт часы.</string>
     <string name="prerequisites_supportedcgm">Поддерживаемый мониторинг.</string>
+    <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
+    <string name="whatistrue">Отметьте все правильные ответы.</string>
     <string name="update_neverupdate">Никогда не обновлять, если система работает хорошо.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
+    <string name="troubleshooting_label">Устранение неполадок</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS
@@ -37,8 +49,10 @@ Context | Edit Context</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_humalog">Хумалог®</string>
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
+    <string name="sensitivity_which">Отметьте все правильные ответы.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_whattodo">Что нужно делать, если сделан неправильный ввод углеводов?</string>
+    <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_profile">Изменение значения ISF в профиле достаточно для применения изменений.</string>
@@ -49,6 +63,8 @@ Context | Edit Context</string>
     <string name="ic_meaning">Смысл соотношения инсулин-углеводы IC таков: сколько хлебных единиц покрываются одной ед. инсулина.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitchtime_2">Выполнить переключение профиля со сдвигом времени 2</string>
+    <string name="profileswitchtime__2">Выполнить переключение профиля со сдвигом времени -2</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_where">Куда обращаться за помощью по скорости базала и т. д.</string>
