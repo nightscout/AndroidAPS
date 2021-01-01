@@ -332,7 +332,7 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="overview_shortname">HOME</string>
+    <string name="overview_shortname">OVZ</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="profileviewer_shortname">NSPROFIEL</string>
     <string name="treatments_shortname">BEHAND</string>
