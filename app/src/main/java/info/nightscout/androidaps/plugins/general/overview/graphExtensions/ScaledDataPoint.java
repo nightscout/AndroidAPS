@@ -12,10 +12,10 @@ import java.util.Date;
 public class ScaledDataPoint implements DataPointInterface, Serializable {
     private static final long serialVersionUID=1428263342645L;
 
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
 
-    private Scale scale;
+    private final Scale scale;
 
     public ScaledDataPoint(double x, double y, Scale scale) {
         this.x=x;

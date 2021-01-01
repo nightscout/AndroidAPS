@@ -20,7 +20,6 @@ jacoco {
 ext {
     wearableVersion = "2.4.0"
     playServicesWearable = "17.0.0"
-    powermockVersion = "1.7.3"
 }
 
 def generateGitBuild = { ->
@@ -49,7 +48,7 @@ android {
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 24
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.2"
@@ -128,7 +127,7 @@ dependencies {
 
     testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20200518'
-    testImplementation("org.mockito:mockito-core:2.8.47") {
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}") {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'

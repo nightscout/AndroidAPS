@@ -145,8 +145,12 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                                 profileSwitch.profileObject?.let {
                                     val nonCustomized = it.convertToNonCustomizedProfile()
-                                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
-                                    rxBus.send(EventLocalProfileChanged())
+                                    if (nonCustomized.isValid(resourceHelper.gs(R.string.careportal_profileswitch, false))) {
+                                        localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
+                                        rxBus.send(EventLocalProfileChanged())
+                                    } else {
+                                        OKDialog.show(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile_invalid))
+                                    }
                                 }
                             })
                         }

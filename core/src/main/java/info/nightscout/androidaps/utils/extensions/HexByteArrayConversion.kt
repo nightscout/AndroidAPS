@@ -24,8 +24,8 @@ fun String.hexStringToByteArray() : ByteArray {
 
     val lowerCased = this.toLowerCase(Locale.getDefault())
     for (i in 0 until length step 2) {
-        val firstIndex = HEX_CHARS.indexOf(lowerCased[i]);
-        val secondIndex = HEX_CHARS.indexOf(lowerCased[i + 1]);
+        val firstIndex = HEX_CHARS.indexOf(lowerCased[i])
+        val secondIndex = HEX_CHARS.indexOf(lowerCased[i + 1])
 
         val octet = firstIndex.shl(4).or(secondIndex)
         result.set(i.shr(1), octet.toByte())

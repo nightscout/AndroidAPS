@@ -67,12 +67,17 @@ public class Notification {
     public static final int OVER_24H_TIME_CHANGE_REQUESTED = 54;
     public static final int INVALID_VERSION = 55;
     public static final int PERMISSION_SYSTEM_WINDOW = 56;
-    public static final int OMNIPOD_PUMP_ALARM = 57;
     public static final int TIME_OR_TIMEZONE_CHANGE = 58;
     public static final int OMNIPOD_POD_NOT_ATTACHED = 59;
     public static final int CARBS_REQUIRED = 60;
     public static final int OMNIPOD_POD_SUSPENDED = 61;
     public static final int OMNIPOD_POD_ALERTS_UPDATED = 62;
+    public static final int OMNIPOD_POD_ALERTS = 63;
+    public static final int OMNIPOD_TBR_ALERTS = 64;
+    public static final int OMNIPOD_POD_FAULT = 66;
+    public static final int OMNIPOD_UNCERTAIN_SMB = 67;
+    public static final int OMNIPOD_UNKNOWN_TBR = 68;
+    public static final int OMNIPOD_STARTUP_STATUS_REFRESH_FAILED = 69;
 
     public static final int IMPORTANCE_HIGH = 2;
 

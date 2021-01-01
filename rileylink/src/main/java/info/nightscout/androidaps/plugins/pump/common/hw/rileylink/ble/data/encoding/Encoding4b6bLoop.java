@@ -33,7 +33,7 @@ public class Encoding4b6bLoop extends Encoding4b6bAbstract {
      * @param data
      * @return
      */
-    public byte[] encode4b6b(byte[] data) {
+    @Override public byte[] encode4b6b(byte[] data) {
 
         List<Byte> buffer = new ArrayList<Byte>();
         int bitAccumulator = 0x0;
@@ -78,7 +78,7 @@ public class Encoding4b6bLoop extends Encoding4b6bAbstract {
      * @return
      * @throws RileyLinkCommunicationException
      */
-    public byte[] decode4b6b(byte[] data) throws RileyLinkCommunicationException {
+    @Override public byte[] decode4b6b(byte[] data) throws RileyLinkCommunicationException {
         List<Byte> buffer = new ArrayList<Byte>();
         int availBits = 0;
         int bitAccumulator = 0;

@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.omnipod_wizard_action_page_fragment.*
 import kotlinx.android.synthetic.main.omnipod_wizard_nav_buttons.*
 
 abstract class ActionFragmentBase : WizardFragmentBase() {
+
     protected lateinit var viewModel: ActionViewModelBase
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

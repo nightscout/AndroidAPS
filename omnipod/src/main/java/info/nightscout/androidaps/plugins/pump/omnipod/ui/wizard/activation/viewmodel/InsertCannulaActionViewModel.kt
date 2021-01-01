@@ -7,5 +7,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.viewmode
 import javax.inject.Inject
 
 class InsertCannulaActionViewModel @Inject constructor(private val aapsOmnipodManager: AapsOmnipodManager, private val profileFunction: ProfileFunction) : ActionViewModelBase() {
+
     override fun doExecuteAction(): PumpEnactResult = aapsOmnipodManager.insertCannula(profileFunction.getProfile())
 }

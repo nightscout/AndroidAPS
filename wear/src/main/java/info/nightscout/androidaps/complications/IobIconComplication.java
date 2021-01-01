@@ -52,5 +52,5 @@ public class IobIconComplication extends BaseComplicationProviderService {
     @Override
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.BOLUS;
-    };
+    }
 }

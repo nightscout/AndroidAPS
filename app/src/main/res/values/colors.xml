@@ -25,13 +25,10 @@
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="exercise">#67DFE8</color>
 
-
-    <color name="mdtp_accent_color">#40bbaa</color>
 
     <color name="cardObjectiveText">#779ECB</color>
-
-    <color name="linearBlockBackground">#3e3d3d</color>
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>
@@ -63,8 +60,6 @@
     <color name="ribbonCritical">#ff0400</color>
     <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
-    <color name="ribbonUnusual">#01017A</color>
-    <color name="ribbonTextCritical">#FFFFFF</color>
 
     <color name="splashBackground">#2E2E2E</color>
 

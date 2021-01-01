@@ -13,7 +13,6 @@
     <string name="omnipod_pod_status_suspended">Suspenso</string>
     <string name="omnipod_pod_status_pod_fault">Falha no Pod</string>
     <string name="omnipod_pod_status_inactive">Inactivo</string>
-    <string name="omnipod_pod_status_pod_fault_description">Falha no Pod: %1$s %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>

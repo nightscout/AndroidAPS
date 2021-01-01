@@ -35,12 +35,12 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/danars_blescanner_listview"
+        android:id="@+id/blescanner_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/danars_blescanner_nodevice"
+        android:id="@+id/blescanner_nodevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

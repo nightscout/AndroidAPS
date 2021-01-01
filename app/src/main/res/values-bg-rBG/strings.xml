@@ -25,14 +25,12 @@
     <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
-    <string name="description_ma">Алгоритъма, какъвто е бил през 2016</string>
     <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
     <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
     <string name="description_profile_nightscout">Работа с профила, които сте дефинирали в Nightscout</string>
-    <string name="description_profile_simple">Работа с профил със само една стойност за всички часове.</string>
     <string name="description_pump_combo">Поддръжка за Accu-Chek Combo помпи, изискваща инсталиран ruffy</string>
     <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
@@ -84,7 +82,6 @@
     <string name="configbuilder">Конфигурация</string>
     <string name="overview">Общ</string>
     <string name="nsprofile">NS Профил</string>
-    <string name="simpleprofile">Обикновен профил</string>
     <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="careportal">Careportal</string>
@@ -106,13 +103,11 @@
     <string name="loop_aps_label">Алгоритъм за APS</string>
     <string name="loop_constraintsprocessed_label">След ограничения</string>
     <string name="loop_tbrsetbypump_label">Временният базал зададен от помпата</string>
-    <string name="openapsma_lastenact_label">Последно зададено</string>
     <string name="noapsselected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="safety">Сигурност</string>
     <string name="openapsma_disabled">Модула е изключен</string>
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="treatmentdeliveryerror">Грешка при подаване на болус</string>
-    <string name="overview_newtempbasal_basalpercent">Базална стойност [%]</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
@@ -141,17 +136,11 @@
     <string name="careportal_newnstreatment_other">Друго</string>
     <string name="careportal_newnstreatment_meter">Глюкомер</string>
     <string name="careportal_newnstreatment_sensor">Сензор</string>
-    <string name="careportal_newnstreatment_carbs_label">Въглехидрати</string>
-    <string name="careportal_newnstreatment_insulin_label">Инсулин</string>
     <string name="careportal_newnstreatment_carbtime_label">ВХ след</string>
-    <string name="careportal_newnstreatment_split_label">Разделяне</string>
     <string name="careportal_newnstreatment_duration_label">Продължителност</string>
-    <string name="careportal_newnstreatment_percent_label">Процент</string>
-    <string name="careportal_newnstreatment_absolute_label">Абсолютна</string>
     <string name="careportal_newnstreatment_notes_label">Бележки</string>
     <string name="event_time_label">Време</string>
     <string name="careportal_newnstreatment_profile_label">Профил</string>
-    <string name="careportal_newnstreatment_enteredby_title">Въведено от</string>
     <string name="careportal_newnstreatment_glucosetype">Тип КЗ</string>
     <string name="noprofile">Още не е зареден профила от NS</string>
     <string name="overview_tempbasal_button">Временен базал</string>
@@ -215,7 +204,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Грешка при декриптиране, грешна парола или файлът с настройки е модифициран! Възможно е импортираният файл да е експортиран с различна парола.</string>
     <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
-    <string name="exported_today">експортирани днес</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
     <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
@@ -247,10 +235,6 @@
     <string name="smscommunicator_tt_set">Временна цел от %1$s за %2$d минути стартирана успешно</string>
     <string name="smscommunicator_tt_canceled">Временна цел успешно спряна</string>
     <string name="smscommunicator_remotecommandsallowed">Позволи отдалечени команди чрез SMS</string>
-    <string name="danarprofile">DanaR профил</string>
-    <string name="danarprofile_dia">DIA (Време на действие на инсулина) ч.:</string>
-    <string name="danarprofile_dia_summary">Време на действие на инсулина</string>
-    <string name="uploading">Качване</string>
     <string name="bolusstopped">Болусът е спрян</string>
     <string name="bolusstopping">Спиране на болус</string>
     <string name="smscommunicator_loophasbeendisabled">APS е деактивиран</string>
@@ -261,7 +245,7 @@
     <string name="valueoutofrange">Стойността %1$s е извън ограниченията</string>
     <string name="smscommunicator_pumpconnectwithcode">За свързване с помпа отговорете с код %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Връзката с помпата е неуспешна</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1d минути отговорете с код %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1$d минути отговорете с код %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Помпата е разкачена</string>
     <string name="smscommunicator_reconnect">Връзката с помпа е възстановена</string>
     <string name="smscommunicator_remotecommandnotallowed">Отдалеченото управление е забранено</string>
@@ -305,7 +289,6 @@
     <string name="pumpNotInitialized">Помпата не е инициализирана!</string>
     <string name="primefill">Пълнене на сет</string>
     <string name="fillwarning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
-    <string name="othersettings_title">Други</string>
     <string name="fillbolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>
@@ -313,7 +296,6 @@
     <string name="units_colon">Единици:</string>
     <string name="units">Единици</string>
     <string name="dia">DIA</string>
-    <string name="target_range">Целева КЗ:</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
     <string name="low_mark">Ниска КЗ под</string>
@@ -347,7 +329,6 @@
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
     <string name="loop_shortname">ЦИК</string>
-    <string name="simpleprofile_shortname">ОПр</string>
     <string name="oaps_shortname">APS</string>
     <string name="localprofile_shortname">ЛПр</string>
     <string name="overview_shortname">ОСН</string>
@@ -372,7 +353,6 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
     <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
     <string name="overview_calibration">Калибрация</string>
-    <string name="send_calibration">Изпрати калибрация %1$.1f към xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
     <string name="calibrationsent">Калибрацията е изпратена към xDrip</string>
     <string name="smscommunicator_calibrationsent">Неуспешно. Получаването трябва да е разрешено в xDrip.</string>
@@ -405,12 +385,13 @@
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">---</string>
-    <string name="patientage">Възраст на потребителя</string>
+    <string name="patientage">Тип пациент</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
     <string name="adult">Възрастен</string>
     <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
-    <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
+    <string name="pregnant">Бременност</string>
+    <string name="patientage_summary">Моля, изберете тип на пациента за настройка на границите за безопастност</string>
     <string name="patient_name">Име на пациента</string>
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
@@ -418,7 +399,6 @@
     <string name="needwhitelisting">%1$s се нуждае от изключване от списъка за оптимизиране на батерията за пълна функционалност</string>
     <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor">Изключен (%1$d мин)</string>
-    <string name="loopsuperbolusfor">Суперболус (%1$d мин)</string>
     <string name="suspendloop">Изключи APS</string>
     <string name="suspendloopfor1h">Изключи APS за 1ч</string>
     <string name="suspendloopfor2h">Изключи APS за 2ч</string>
@@ -441,7 +421,6 @@
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
     <string name="restartingapp">Рестартиране за да се приложат новите настройки.</string>
     <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
-    <string name="fastactinginsulin">Бързодействащ инсулин</string>
     <string name="fastactinginsulincomment">Novorapid Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">ИНС</string>
@@ -454,6 +433,8 @@
     <string name="statuslights_iage_critical">Праг за критична инсулинова възраст [часа]</string>
     <string name="statuslights_sage_warning">Праг за възраст на сензор [часа]</string>
     <string name="statuslights_sage_critical">Праг за критична възраст на сензор [часа]</string>
+    <string name="statuslights_sbat_warning">Аларма при заряд на батерия под [%]</string>
+    <string name="statuslights_sbat_critical">Критично ниво на сензорната батерия под [%]</string>
     <string name="statuslights_bage_warning">Аларма при възраст на батерия над [часа]</string>
     <string name="statuslights_bage_critical">Праг за критична възраст на батерията над [часа]</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
@@ -479,11 +460,13 @@
     <string name="ns_noupload">Без качване на данни в NS</string>
     <string name="ns_noupload_summary">Всички данни за NS се пропускат. AAPS е свързан с NS, но не прави промени в NS</string>
     <string name="overview_extendedbolus_cancel_button">Спри удължен болус</string>
-    <string name="careportal_sensorage_label">Възраст на сензора</string>
-    <string name="careportal_canulaage_label">Възраст на канюла</string>
-    <string name="careportal_insulinage_label">Възраст на инсулина</string>
     <string name="doprofileswitch">Смени профил</string>
-    <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
+    <string name="careportal_sensor_label">Сензор</string>
+    <string name="careportal_canula_label">Канюла</string>
+    <string name="careportal_insulin_label">Инсулин</string>
+    <string name="careportal_pb_label">Батерия на помпата</string>
+    <string name="careportal_age_label">възраст:</string>
+    <string name="careportal_level_label">ниво:</string>
     <string name="ns_alarmoptions">Опции за аларми</string>
     <string name="ns_alarms">Известяване при NS аларми</string>
     <string name="ns_announcements">Създаване на известия от NS съобщения</string>
@@ -497,20 +480,14 @@
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
-    <string name="sensitivityoref0">чрез Oref0</string>
     <string name="sensitivityoref1">Чрез Oref1</string>
     <string name="sensitivityaaps">чрез AAPS</string>
     <string name="absorptionsettings_title">Настройки за абсорбция</string>
     <string name="absorption_maxtime_title">Максимално време за усвояване на храненето [ч]</string>
     <string name="absorption_maxtime_summary">Брой часове, за които се очаква храненето да бъде напълно усвоено в организма</string>
-    <string name="careportal_sensorage_label_short">ВСенз</string>
-    <string name="careportal_insulinage_label_short">ВИнс</string>
-    <string name="careportal_canulaage_label_short">ВКан</string>
-    <string name="careportal_pbage_label_short">ВБат</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">КАЧВ</string>
     <string name="basal_short">БАЗА</string>
-    <string name="virtualpump_extendedbolus_label_short">УД.</string>
     <string name="keep_screen_on_title">Винаги включен екран</string>
     <string name="keep_screen_on_summary">Предотвратяване на андроид да изключва екрана. Това ще доведе до консумацията на много енергия, когато устройството не е включено в контакта.</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
@@ -521,10 +498,6 @@
     <string name="valuesnotstored">Стойностите не са запазени!</string>
     <string name="ns_localbroadcasts">Активирайте предаване на данни към други приложения (като xDrip). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
-    <string name="careportal_activity_label">АКТИВНОСТ И ОБРАТНА ВРЪЗКА</string>
-    <string name="careportal_carbsandbolus_label">ХРАНА И БОЛУС</string>
-    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-    <string name="careportal_pump_label">ПОМПА</string>
     <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Разреши UAM</string>
@@ -578,7 +551,6 @@
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
     <string name="smbinterval_summary">Интервал между SMB в минути</string>
-    <string name="smbmaxminutes">Максимум минути SMB</string>
     <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
     <string name="uamsmbmaxminutes">Максимум минути за отчитане на необявени хранения UAM</string>
     <string name="uamsmbmaxminutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
@@ -632,7 +604,6 @@
     <string name="combo_reservoir_empty">Празен</string>
     <string name="combo_reservoir_normal">Нормално</string>
     <string name="combo_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
-    <string name="combo_warning">Внимание</string>
     <string name="combo_pump_tbr_cancelled_warrning">Отказването на временният базал беше потвърдено</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Помпата е недостъпна. Не беше доставен болус.</string>
     <string name="combo_error_no_bolus_delivered">Болусът беше неуспешен.  За да сте сигурни, моля, проверете помпата, за да избегнете повторение на вече доставен болус. За да се избегнат бъгове болусите не се повтарят автоматично.</string>
@@ -641,7 +612,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="ago">преди</string>
     <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
     <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
     <string name="enablesmbalways">Разреши SMB постоянно</string>
@@ -700,7 +670,6 @@
     <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
-    <string name="not_eng_mode_or_release">Режим за раработчици (Engineering mode) не е активиран и не е release версия</string>
     <string name="combo_actvity_reading_basal_profile">Прочита базалният профил</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус.</string>
     <string name="combo_error_updating_treatment_record">Болус успешно инжектиран, но добавянето на лечение в базата данни е неуспешно. Това може да се случи, ако два малки болуса със същия размер са направени в рамките на последните две минути. Проверете записите в историята на помпата и използвайте Careportal, за да добавите липсващи записи. Уверете се,че не добавяте еднакви записи за точно една и съща минута и същото количество инсулин.</string>
@@ -710,7 +679,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Базалният процент е променен в помпата, но прочитането е неуспешно</string>
     <string name="combo_activity_checking_for_history_changes">Проверка за промени в историята на помпата</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Бяха внесени няколко болуса със същото количество в рамките на една и съща минута. Само един запис може да бъде добавен към лечението. Моля, проверете помпата и ръчно добавете болус запис, като използвате раздела Careportal . Уверете се, че сте създали болус и нямате друг болус за същото време.</string>
-    <string name="about_link_urls"> http://www.androidaps.org  facebook: http://facebook.androidaps.org</string>
+    <string name="about_link_urls">\n\nдокументация:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Последният болус е с време от преди 24 часа или е в бъдеще. Моля, проверете дали датата на помпата е зададена правилно.</string>
     <string name="combo_suspious_bolus_time">Времето/датата на доставения болус на помпата изглежда погрешно, IOB вероятно е неправилно. Моля, проверете часа/датата на помпата.</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
@@ -741,7 +710,6 @@
     <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
     <string name="food_short">Храна</string>
     <string name="reset">нулиране</string>
-    <string name="loopdisconnectedfor">Разкачена помпа (%1$d мин)</string>
     <string name="openapssmb_maxiob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>
     <string name="openapssmb_maxiob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
     <string name="pump_stopped">Помпата е спряна</string>
@@ -755,7 +723,6 @@
     <string name="previous_button">Предишен</string>
     <string name="nav_setupwizard">Съветник за настройване</string>
     <string name="setupwizard_finish">КРАЙ</string>
-    <string name="setupwizard_language_prompt">Избиране на език</string>
     <string name="firstinsulinincrement">Стойност на първия бърз бутон [e]</string>
     <string name="secondinsulinincrement">Стойност на втория бърз бутон [e]</string>
     <string name="thirdinsulinincrement">Стойност на третия бърз бутон [e]</string>
@@ -785,18 +752,14 @@
     <string name="wear_general_settings">Основни настройки</string>
     <string name="enable_nsclient">Разреши NSClient</string>
     <string name="welcometosetupwizard">Добре дошли в съветника за настройки. Той ще ви преведе през етапите на настройка.</string>
-    <string name="pumpsetup">Настройки на помпата</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <string name="adjustprofileinns">Промени трябва да се направят и в NS</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_loop_description">Натиснете бутона по-долу за да позволите AndroidAPS да предлага/прави промени в базалните стойности</string>
-    <string name="apssetup">Конфигуриране на APS модул</string>
-    <string name="sensitivitysetup">Конфигуриране на модул за чувствителност</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато не го настроите.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
-    <string name="bgsourcesetup">Конфигуриране на източник на КЗ</string>
     <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Изчакване на RileyLink връзка…\n</string>
@@ -808,7 +771,6 @@
     <string name="needlocationpermission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
     <string name="needstoragepermission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
     <string name="request">Искане</string>
-    <string name="insulinsourcesetup">Конфигуриране на модула за Инсулин</string>
     <string name="exit">Изход</string>
     <string name="open_navigation">Отвори меню</string>
     <string name="close_navigation">Затвори меню</string>
@@ -848,7 +810,6 @@
     <string name="nav_logsettings">Настройки на логовете</string>
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
-    <string name="as">АS</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
     <string name="time_offset">времево отместване</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
@@ -990,6 +951,7 @@
     <string name="storage">Ограничение поради липса на памет</string>
     <string name="diskfull">Освободете поне %1$d Мб в паметта на телефона! Loop изключен!</string>
     <string name="wrongformat">Грешен формат</string>
+    <string name="wrongTbrDuration">Продължителността на временния база; трябва да бъде кратна на %1$d минути и по-голяма от 0.</string>
     <string name="sms_wrongcode">Грешен код. Командата не е изпълнена.</string>
     <string name="notconfigured">Не е конфигуриран</string>
     <string name="profileswitchcreated">Създаден запис - Промяна на профил</string>
@@ -1085,12 +1047,9 @@
     <string name="selected_profile">Избрано:</string>
     <string name="unitsnosemicolon">Единици</string>
     <string name="doyouwantswitchprofile">Искате да смените профила и премахнете на промените, направени в текущия профил?</string>
-    <string name="common_on">Вкл</string>
-    <string name="common_off">Изкл</string>
     <string name="objectives_button_unfinish">Изчисти приключение</string>
     <string name="objectives_button_unstart">Изчисти стартираните</string>
     <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
-    <string name="nopumpselected">Не е избрана помпа</string>
     <string name="setupwizard_units_prompt">Изберете единиците, в които искате да работите</string>
     <string name="ns_ploadlocalprofile">Качване на локални промени в НС профила</string>
     <string name="dia_short">DIA</string>
@@ -1111,7 +1070,6 @@
     <string name="submit">Изпрати</string>
     <string name="mostcommonprofile">Най-често използван профил:</string>
     <string name="survey_comment">Забележка: Само данни, видими на този екран, ще бъдат анонимно изпратени. Номер се дава за тази инсталация на AndroidAPS. Отново можете да изпратите данните, ако вашият основен профил се промени, но нека да работи поне една седмица, за да  се види резултата във Време в границите. Много благодарим за Вашата помощ.</string>
-    <string name="nav_survey">Проучване</string>
     <string name="invalidage">Невалидна възраст</string>
     <string name="invalidweight">Невалидно тегло</string>
     <string name="invalidpct">Невалидна стойност в %</string>
@@ -1131,10 +1089,8 @@
     <string name="clearqueueconfirm">Изтрий опашка? Всички данни ще се загубят!</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
     <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
-    <string name="extended_bolus_short">УБ</string>
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Меню на графиката</string>
-    <string name="sensitivity_short">АS</string>
     <string name="loop_smbrequest_time_label">Диапазон между изпълнение на SMB</string>
     <string name="loop_smbexecution_time_label">Макс. време за изпълнение за SMB</string>
     <string name="loop_tbrrequest_time_label">Диапазон между временни базали</string>
@@ -1150,17 +1106,18 @@
     <string name="smscommunicator_code_verify_label">Код за проверка:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Кодът за проверката се състои от 6 цифри, от приложението за аудиентикация (известно като OTP), следвани от 3 или повече цифри на задължителния PIN.</string>
-    <string name="smscommunicator_otp_verify_label">ОТР за проверка:</string>
     <string name="smscommunicator_otp_reset_btn">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_reset_title">Нулиране на ключва</string>
     <string name="smscommunicator_otp_reset_prompt">Сигурни ли сте, че ще анулирате ключа на Authenticator? Той ще направи всички конфигурирани в момента аудиентикатори невалидни, и вие ще трябва да ги настроите отново.</string>
     <string name="smscommunicator_otp_reset_successful">Генериран е нов ключ! Моля, използвайте актуализирания QRCode.</string>
+    <string name="smscommunicator_otp_export_title">Експортиране на OTP парола</string>
+    <string name="smscommunicator_otp_export_prompt">Сигурни ли сте, че искате да копирате OTP паролата в клипборда?\n\nВие може да се нуждаете само от това, ако вашето приложение за автентичност има проблеми със сканирането на QRCode, искате да го въведете ръчно или искате да конфигурирате хардуерен OTP токен чрез специално приложение.</string>
+    <string name="smscommunicator_otp_export_successful">OTP парола (във Base32 формат) е експортирана и копирана в клипборда. Поставете го в автентикатор или хардуерен OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Инсталиране на удостоверител</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Сканиране на кода за настройка на AndroidAPS OTP </string>
     <string name="smscommunicator_otp_step3_test_header">3. Тест на еднократна парола</string>
     <string name="smscommunicator_otp_reset_header">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_install_info">На всеки следящ телефона инсталирайте приложение Аутентификатор, който поддържа RFC 6238 ТОТР токени. Популярни безплатни приложения:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_provisioning_warning">Не давайте този код е онлайн!\nИзползвайте го само за сканиране на телефони последовател.</string>
     <string name="smscommunicator_otp_reset_warning">При нулиране на на удостоверителя, всички вече използвани удостоверения са невалидни. Ще трябва да ги настроите отново!</string>
     <string name="onconnect">При свързване</string>
     <string name="ondisconnect">При изключване</string>
@@ -1174,6 +1131,7 @@
     <string name="statuslights_copy_ns">Копиране на настройки от NS</string>
     <string name="copyexistingvalues">Копиране на профил от NS (ако има)?</string>
     <string name="classic_description">Оригинален изглед</string>
+    <string name="lowres_description">Скин за ниска резолюция</string>
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
@@ -1218,4 +1176,8 @@
     <string name="worker_state">Статус: %s</string>
     <string name="uploaded_data">Качени данни</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Следните данни ще бъдат качвани във вашия Open Humans акаунт: Глюкозни стойности, болуси, въглехидрати, удължени болуси, профилни смени, общи дневни дози, временни базали, временни цели, предпочитания, версия на AAPS, модел на телефона и размери на екрана. Тайна или лична информация, като например вашия адрес на Nightscout или API, няма да бъдат качени.</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
+    <string name="filter">Филтър</string>
+    <string name="copytolocalprofile_invalid">Не може да се създаде локален профил. Профилът е невалиден.</string>
+    <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
 </resources>

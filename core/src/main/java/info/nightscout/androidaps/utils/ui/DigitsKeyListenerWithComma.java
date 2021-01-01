@@ -22,13 +22,13 @@ class DigitsKeyListenerWithComma extends NumberKeyListener {
     };
 
     private char[] mAccepted;
-    private boolean mSign;
-    private boolean mDecimal;
+    private final boolean mSign;
+    private final boolean mDecimal;
 
     private static final int SIGN = 1;
     private static final int DECIMAL = 2;
 
-    private static DigitsKeyListenerWithComma[] sInstance = new DigitsKeyListenerWithComma[4];
+    private static final DigitsKeyListenerWithComma[] sInstance = new DigitsKeyListenerWithComma[4];
 
     @Override
     protected char[] getAcceptedChars() {
@@ -190,10 +190,6 @@ class DigitsKeyListenerWithComma extends NumberKeyListener {
 
         if (stripped != null) {
             return stripped;
-        } else if (out != null) {
-            return out;
-        } else {
-            return null;
-        }
+        } else return out;
     }
 }

@@ -25,14 +25,12 @@
     <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren en deze mag alleen worden gebruikt door gevorderde gebruikers</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
-    <string name="description_ma">Het algoritme uit 2016</string>
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="description_profile_local">Maak een profiel dat je offline kunt gebruiken.</string>
     <string name="description_profile_nightscout">Gebruik profiel(en) die je hebt aangemaakt in Nightscout</string>
-    <string name="description_profile_simple">Maak een profiel met slechts één tijdsblok.</string>
     <string name="description_pump_combo">Pomp integratie voor Accu-Chek Combo pompen, vereist dat ruffy geïnstalleerd is</string>
     <string name="description_pump_mdi">Pomp integratie voor mensen met pen-therapie (meerdere dagelijkse injecties)</string>
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
@@ -84,7 +82,6 @@
     <string name="configbuilder">Configurator</string>
     <string name="overview">Overzicht</string>
     <string name="nsprofile">NS Profiel</string>
-    <string name="simpleprofile">Eenvoudig profiel</string>
     <string name="treatments">Behandelingen</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="careportal">Careportal</string>
@@ -106,13 +103,11 @@
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
     <string name="loop_tbrsetbypump_label">Tijdelijk basaal gezet door pomp</string>
-    <string name="openapsma_lastenact_label">Laatste uitvoering</string>
     <string name="noapsselected">GEEN APS GESELECTEERD OF TOEGEKEND RESULTAAT</string>
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="treatmentdeliveryerror">Bolus toedien storing</string>
-    <string name="overview_newtempbasal_basalpercent">Basaal waarde [%]</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
@@ -141,17 +136,11 @@
     <string name="careportal_newnstreatment_other">Andere</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbs_label">Koolhydraten</string>
-    <string name="careportal_newnstreatment_insulin_label">Insuline</string>
     <string name="careportal_newnstreatment_carbtime_label">KH tijdsduur</string>
-    <string name="careportal_newnstreatment_split_label">Splitsen</string>
     <string name="careportal_newnstreatment_duration_label">Tijdsduur</string>
-    <string name="careportal_newnstreatment_percent_label">Procent</string>
-    <string name="careportal_newnstreatment_absolute_label">Absoluut</string>
     <string name="careportal_newnstreatment_notes_label">Notities</string>
     <string name="event_time_label">Tijdstip gebeurtenis</string>
     <string name="careportal_newnstreatment_profile_label">Profiel</string>
-    <string name="careportal_newnstreatment_enteredby_title">Ingegeven door</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="noprofile">Nog geen profiel geladen van NS</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
@@ -215,7 +204,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Decoderingsfout, het opgegeven wachtwoord is ongeldig of het instellingenbestand is gewijzigd / mee geknoeid. Wellicht was het geïmporteerde bestand geëxporteerd met een ander masterwachtwoord.</string>
     <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
-    <string name="exported_today">vandaag geëxporteerd</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
     <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
     <string name="exported_less_than_hour_ago">minder dan een uur geleden geëxporteerd</string>
@@ -247,10 +235,6 @@
     <string name="smscommunicator_tt_set">Streefdoel %1$s gedurende %2$d minuten succesvol ingesteld</string>
     <string name="smscommunicator_tt_canceled">Tijdelijk streefdoel is geannuleerd</string>
     <string name="smscommunicator_remotecommandsallowed">Sta SMS commando\'s toe</string>
-    <string name="danarprofile">DanaR profiel instellingen</string>
-    <string name="danarprofile_dia">DIA [uur]</string>
-    <string name="danarprofile_dia_summary">Duur van insuline activiteit</string>
-    <string name="uploading">Uploaden</string>
     <string name="bolusstopped">Bolus gestopt</string>
     <string name="bolusstopping">Stoppen van bolus</string>
     <string name="smscommunicator_loophasbeendisabled">Loop was uitgeschakeld</string>
@@ -261,7 +245,7 @@
     <string name="valueoutofrange">Waarde %1$s valt buiten de toegestane harde limieten</string>
     <string name="smscommunicator_pumpconnectwithcode">Om verbinding te maken met pomp antwoord met code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbinding maken met pomp is mislukt</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Om verbinding te verbreken met pomp gedurende %1d minuten antwoord met code %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Om de pomp te ontkoppelen voor %1$d minuten antwoord met code %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pomp verbinding verbroken</string>
     <string name="smscommunicator_reconnect">Pomp opnieuw verbonden</string>
     <string name="smscommunicator_remotecommandnotallowed">Commando\'s op afstand zijn niet toegestaan</string>
@@ -305,7 +289,6 @@
     <string name="pumpNotInitialized">Pomp niet geïnitialiseerd!</string>
     <string name="primefill">Ontlucht/vul</string>
     <string name="fillwarning">Verzeker u dat de vulhoeveelheid overeenkomt met de infusieset!</string>
-    <string name="othersettings_title">Andere</string>
     <string name="fillbolus_title">Vul/Prime standaard insuline hoeveelheden</string>
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
@@ -313,7 +296,6 @@
     <string name="units_colon">Eenheden:</string>
     <string name="units">Eenheden</string>
     <string name="dia">DIA</string>
-    <string name="target_range">Streefdoel:</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
     <string name="low_mark">LAAG grens</string>
@@ -347,7 +329,6 @@
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
-    <string name="simpleprofile_shortname">EP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
@@ -372,7 +353,6 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Opgelet!\n Onderstaande waardes moeten normaal gezien niet worden aangepast. KLIK HIER en LEES de tekst zodat je alles volledig BEGRIJPT voordat je een waarde wijzigt.</string>
     <string name="smscommunicator_invalidphonennumber">Foutief SMS telefoon nummer</string>
     <string name="overview_calibration">Kalibratie</string>
-    <string name="send_calibration">Calibratie %1$.1f naar xDrip verzenden?</string>
     <string name="xdripnotinstalled">xDrip+ niet geïnstalleerd</string>
     <string name="calibrationsent">Kalibratie naar xDrip verzonden</string>
     <string name="smscommunicator_calibrationsent">Kalibratie verzonden. Het ontvangen van kalibraties moet actief zijn in xDrip.</string>
@@ -405,12 +385,13 @@
     <string name="wear_detailedIOB_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="nosuccess">Niet geslaagd - controleer de telefoon</string>
     <string name="notavailable">n.v.t.</string>
-    <string name="patientage">Leeftijd Patient</string>
+    <string name="patientage">Type patiënt</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
     <string name="resistantadult">insuline resistente volwassene</string>
-    <string name="patientage_summary">Kies leeftijd van de patient voor veiligheids limieten</string>
+    <string name="pregnant">Zwangerschap</string>
+    <string name="patientage_summary">Selecteer het type patiënt om de veiligheidslimieten in te stellen</string>
     <string name="patient_name">Naam patiënt</string>
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Gebruiker</string>
@@ -418,7 +399,6 @@
     <string name="needwhitelisting">Voor een goede werking van %1$s moeten de accubesparing-opties zijn uitgeschakeld in de telefooninstellingen</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor">Gepauzeerd (%1$d m)</string>
-    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloop">Onderbreek Loop</string>
     <string name="suspendloopfor1h">Onderbreek loop voor 1u</string>
     <string name="suspendloopfor2h">Onderbreek loop voor 2u</string>
@@ -441,7 +421,6 @@
     <string name="ns_logappstartedevent">Log app start naar NS</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
-    <string name="fastactinginsulin">Snel werkende insuline</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
@@ -454,6 +433,8 @@
     <string name="statuslights_iage_critical">Drempel alarm insuline leeftijd [h]</string>
     <string name="statuslights_sage_warning">Drempel waarschuwing sensor leeftijd [h]</string>
     <string name="statuslights_sage_critical">Drempel alarm sensor leeftijd [h]</string>
+    <string name="statuslights_sbat_warning">Drempel waarschuwing batterij niveau [%]</string>
+    <string name="statuslights_sbat_critical">Drempel alarm batterij niveau [%]</string>
     <string name="statuslights_bage_warning">Drempel waarschuwing batterij leeftijd [h]</string>
     <string name="statuslights_bage_critical">Drempel alarm batterij niveau [h]</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
@@ -479,11 +460,13 @@
     <string name="ns_noupload">Geen upload naar NS</string>
     <string name="ns_noupload_summary">AAPS is verbonden met NS maar er worden geen wijzigingen uitgevoerd op NS</string>
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
-    <string name="careportal_sensorage_label">Ouderdom sensor</string>
-    <string name="careportal_canulaage_label">Ouderdom infusie set</string>
-    <string name="careportal_insulinage_label">Ouderdom insuline</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
-    <string name="careportal_pbage_label">Ouderdom batterij</string>
+    <string name="careportal_sensor_label">Sensor</string>
+    <string name="careportal_canula_label">Canule</string>
+    <string name="careportal_insulin_label">Insuline</string>
+    <string name="careportal_pb_label">Pomp batterij</string>
+    <string name="careportal_age_label">leeftijd:</string>
+    <string name="careportal_level_label">level:</string>
     <string name="ns_alarmoptions">Alarm opties</string>
     <string name="ns_alarms">Maak meldingen van NS alarmen</string>
     <string name="ns_announcements">Maak meldingen van NS aankondigingen</string>
@@ -497,20 +480,14 @@
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
     <string name="configbuilder_sensitivity_description">Welke gevoeligheid algoritme moet worden gebruikt?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Gevoeligheid Oref0</string>
     <string name="sensitivityoref1">Gevoeligheid Oref1</string>
     <string name="sensitivityaaps">Gevoeligheid AAPS</string>
     <string name="absorptionsettings_title">Opname instellingen</string>
     <string name="absorption_maxtime_title">Max absorptietijd maaltijd [uur]</string>
     <string name="absorption_maxtime_summary">Verwachte tijd in uren totdat alle koolhydraten opgenomen zijn</string>
-    <string name="careportal_sensorage_label_short">SAGE</string>
-    <string name="careportal_insulinage_label_short">IAGE</string>
-    <string name="careportal_canulaage_label_short">CAGE</string>
-    <string name="careportal_pbage_label_short">PBAGE</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
-    <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="keep_screen_on_title">Laat scherm aan</string>
     <string name="keep_screen_on_summary">Voorkomen dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
@@ -521,10 +498,6 @@
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="ns_localbroadcasts">Schakel broadcasts in naar andere apps (zoals xDrip). Schakel niet in als je NSClient of meer dan één installatie van AAPS hebt geïnstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
-    <string name="careportal_activity_label">ACTIVITEIT &amp; FEEDBACK</string>
-    <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
-    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-    <string name="careportal_pump_label">POMP</string>
     <string name="careportal_newnstreatment_duration_min_label">Tijdsduur [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Activeer UAM</string>
@@ -578,7 +551,6 @@
     <string name="wear_detailed_delta_title">Toon gedetailleerde delta</string>
     <string name="wear_detailed_delta_summary">Toon delta met een extra decimaal punt</string>
     <string name="smbinterval_summary">Tijdsinterval in minuten tussen afgeven van SMBs</string>
-    <string name="smbmaxminutes">SMB max minuten</string>
     <string name="smbmaxminutes_summary">Max minuten basaal om SMB tot te limiteren</string>
     <string name="uamsmbmaxminutes">UAM SMB max minuten</string>
     <string name="uamsmbmaxminutes_summary">Max minuten basaal om SMB tot te limiteren voor UAM</string>
@@ -632,7 +604,6 @@
     <string name="combo_reservoir_empty">Leeg</string>
     <string name="combo_reservoir_normal">Normaal</string>
     <string name="combo_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
-    <string name="combo_warning">Waarschuwing</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR GEANNULEERD waarschuwing is bevestigd</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Er kon geen verbinding met de pomp gemaakt worden. De Bolus is niet toegediend.</string>
     <string name="combo_error_no_bolus_delivered">Bolus toedienen mislukt. Waarschijnlijk is er geen bolus toegediend. Gelieve de pomp te controleren om een dubbele bolus te voorkomen. Indien nodig geef je een nieuwe bolus. Als bescherming tegen programmeerfouten worden bolussen niet automatisch opnieuw uitgevoerd.</string>
@@ -641,7 +612,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="ago">voorbij</string>
     <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
     <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
     <string name="enablesmbalways">Activeer SMB altijd</string>
@@ -700,7 +670,6 @@
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
-    <string name="not_eng_mode_or_release">Engineering modus is niet geactiveerd en dit is niet de release branche</string>
     <string name="combo_actvity_reading_basal_profile">Basaal profiel wordt gelezen</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berekend was. De bolus is Niet toegediend. Programmeer een nieuwe bolus indien nodig.</string>
     <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegen van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het Careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
@@ -710,7 +679,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basaal patroon op de pomp is gewijzigd, maar kunnen niet worden uitgelezen</string>
     <string name="combo_activity_checking_for_history_changes">Controle van historiek op wijzigingen</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Verschillende bolussen met dezelfde hoeveelheid op hetzelfde tijdstip zijn geïmporteerd. Er is er maar 1 toegevoegd aan de behandelingen lijst. Controleer op de pomp en voeg eventueel toe via het Careportal menu. Er mogen geen 2 bolussen op hetzelfde tijdstip aanwezig zijn.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org \n\nfacebook:\nhttp://facebook.androidaps.org</string>
     <string name="combo_check_date">De laatste bolus is ouder dan 24 uren of bevind zich in de toekomst. Controleer de datum en tijd in de pomp aub.</string>
     <string name="combo_suspious_bolus_time">Datum/tijd van de geleverde bolus op de pomp is niet correct, IOB is waarschijnlijk foutief. Controleer aub de datum/tijd op de pomp.</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
@@ -741,7 +709,6 @@
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
     <string name="food_short">Voeding</string>
     <string name="reset">Reset</string>
-    <string name="loopdisconnectedfor">Verbinding verbroken (%1$d m)</string>
     <string name="openapssmb_maxiob_title">Max totaal IOB dat OpenAPS niet kan overschrijden [E]</string>
     <string name="openapssmb_maxiob_summary">Deze waarde heet MAX IOB in OpenAPS context\nOpenAPS zal geen extra insuline toedienen als de actuele IOB onderstaande waarde overschreden heeft</string>
     <string name="pump_stopped">Pomp gestopt</string>
@@ -755,7 +722,6 @@
     <string name="previous_button">Vorige</string>
     <string name="nav_setupwizard">Setup Wizard</string>
     <string name="setupwizard_finish">FINISH</string>
-    <string name="setupwizard_language_prompt">Selecteer uw taal</string>
     <string name="firstinsulinincrement">Eerste insuline increment</string>
     <string name="secondinsulinincrement">Tweede insuline increment</string>
     <string name="thirdinsulinincrement">Derde  insuline increment</string>
@@ -785,18 +751,14 @@
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="enable_nsclient">NSClient inschakelen</string>
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
-    <string name="pumpsetup">Pomp setup</string>
     <string name="readstatus">Lees status</string>
     <string name="adjustprofileinns">Wijzigingen moeten worden gedaan in Nightscout</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AndroidAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
-    <string name="apssetup">APS plugin configureren</string>
-    <string name="sensitivitysetup">Gevoeligheid plugin configureren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient zorgt voor verbinding met Nightscout. Je kunt dit deel nu overslaan, maar pas de Doelen afronden als je het hebt ingesteld.</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
-    <string name="bgsourcesetup">BG bron configureren</string>
     <string name="setupwizard_profile_description">Kies een bron van het profiel. Als de patiënt een kind is, moet u het NS-profiel gebruiken. Als er niemand is die je volgt op Nightscout, zul je waarschijnlijk een lokaal profiel prefereren. Onthoud dat u alleen de profielbron selecteert. Om het te gebruiken, moet u het activeren door \"Profiel wisselen\" uit te voeren</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Wachten op verbinding met RileyLink…\n</string>
@@ -808,7 +770,6 @@
     <string name="needlocationpermission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
     <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>
     <string name="request">Verzoek</string>
-    <string name="insulinsourcesetup">Gevoeligheid plugin configureren</string>
     <string name="exit">Afsluiten</string>
     <string name="open_navigation">Open navigatie</string>
     <string name="close_navigation">Sluit navigatie</string>
@@ -848,7 +809,6 @@
     <string name="nav_logsettings">Log instellingen</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
-    <string name="as">AS</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <string name="time_offset">Tijdverschuiving</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
@@ -1086,12 +1046,9 @@
     <string name="selected_profile">Geselecteerd:</string>
     <string name="unitsnosemicolon">Eenheden</string>
     <string name="doyouwantswitchprofile">Wilt u van profiel wisselen en de wijzigingen in het huidige profiel ongedaan maken?</string>
-    <string name="common_on">Aan</string>
-    <string name="common_off">Uit</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
     <string name="objectives_button_unstart">Wissen gestart</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
-    <string name="nopumpselected">Geen pomp geselecteerd</string>
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
     <string name="ns_ploadlocalprofile">Upload lokale profielwijzigingen naar NS</string>
     <string name="dia_short">DIA</string>
@@ -1112,7 +1069,6 @@
     <string name="submit">Verzenden</string>
     <string name="mostcommonprofile">Meest voorkomende profiel:</string>
     <string name="survey_comment">Opmerking: Alleen gegevens die zichtbaar zijn op dit scherm worden anoniem geüpload. ID is toegewezen aan deze installatie van AndroidAPS. U kunt gegevens opnieuw indienen als uw hoofdprofiel wordt gewijzigd, maar laat het ten minste een week draaien om resultaat zichtbaar te maken in de tijd in het bereik. Uw hulp wordt gewaardeerd.</string>
-    <string name="nav_survey">Enquête</string>
     <string name="invalidage">Ongeldige leeftijd invoer</string>
     <string name="invalidweight">Ongeldige gewicht invoer</string>
     <string name="invalidpct">Ongeldig % invoer</string>
@@ -1132,10 +1088,8 @@
     <string name="clearqueueconfirm">Wachtrij leegmaken? Alle gegevens in de wachtrij zullen verloren gaan!</string>
     <string name="ebstopsloop">Gebruik van Vertraagde bolus functie zal de closed loop modus stoppen voor de duur van de vertraagde bolus. Wil je dit toch?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
-    <string name="extended_bolus_short">VertrB</string>
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Grafiek menu</string>
-    <string name="sensitivity_short">AS</string>
     <string name="loop_smbrequest_time_label">SMB aanvraagtijd</string>
     <string name="loop_smbexecution_time_label">SMB uitvoeringstijd</string>
     <string name="loop_tbrrequest_time_label">Tijdelijk basaal aanvraag tijd</string>
@@ -1151,7 +1105,6 @@
     <string name="smscommunicator_code_verify_label">Te controleren code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">De verificatiecode bestaat uit 6 cijfers die worden afgebeeld door de Authenticator-app (bekend als OTP), gevolgd door 3 of meer cijfers van de verplichte PIN-code.</string>
-    <string name="smscommunicator_otp_verify_label">Te controleren OTP:</string>
     <string name="smscommunicator_otp_reset_btn">Reset Authentificatie</string>
     <string name="smscommunicator_otp_reset_title">Reset Authentificatie-sleutel</string>
     <string name="smscommunicator_otp_reset_prompt">Weet je zeker dat je de Autentificatie-sleutel wilt resetten? Met deze actie maak je alle Authentificatie instellingen van verbonden telefoons ongeldig, en je zult ze opnieuw moeten instellen.</string>
@@ -1164,7 +1117,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_provisioning_warning">DEEL deze code met NIEMAND ANDERS!\nGebruik hem alleen om de Authenticator-app in te stellen op telefoons van volgers.</string>
     <string name="smscommunicator_otp_reset_warning">Door de Athentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="onconnect">Bij verbinden</string>
     <string name="ondisconnect">Bij verbinding verbreken</string>
@@ -1178,6 +1130,7 @@
     <string name="statuslights_copy_ns">Kopieer instellingen van NS</string>
     <string name="copyexistingvalues">NS instellingen kopiëren (indien aanwezig)?</string>
     <string name="classic_description">Klassiek weergave thema</string>
+    <string name="lowres_description">Lage resolutie skin</string>
     <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
     <string name="largedisplay_description">Groot scherm</string>
     <string name="skin">Skin</string>
@@ -1223,4 +1176,5 @@
     <string name="uploaded_data">Geüploade gegevens</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">De volgende gegevens worden geüpload naar je Open Humans account: glucosewaarden, bolussen, koolhydraten, careportal-events (met uitzondering van notities), verlengde bolussen, profielwissels, totale dagelijkse doses, tijdelijke basaalstanden, tijdelijke doelen, voorkeuren, app-versie, apparaatmodel en schermafmetingen. Geheime of persoonlijke gegevens zoals je Nightscout-URL of API-secret worden niet geüpload.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
+    <string name="filter">Filter</string>
 </resources>

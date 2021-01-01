@@ -63,6 +63,7 @@ class DanaRSPlugin @Inject constructor(
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(info.nightscout.androidaps.dana.DanaFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_danars_128)
     .pluginName(R.string.danarspump)
     .shortName(R.string.danarspump_shortname)
     .preferencesId(R.xml.pref_danars)
@@ -164,7 +165,7 @@ class DanaRSPlugin @Inject constructor(
         danaRSService?.stopConnecting()
     }
 
-    override fun getPumpStatus() {
+    override fun getPumpStatus(reason: String?) {
         danaRSService?.readPumpStatus()
         pumpDesc.basalStep = danaPump.basalStep
         pumpDesc.bolusStep = danaPump.bolusStep
@@ -210,7 +211,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun isSuspended(): Boolean {
-        return danaPump.pumpSuspended
+        return danaPump.pumpSuspended || danaPump.errorState != DanaPump.ErrorState.NONE
     }
 
     override fun isBusy(): Boolean {

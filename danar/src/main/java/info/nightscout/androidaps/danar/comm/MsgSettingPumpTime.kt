@@ -28,6 +28,7 @@ class MsgSettingPumpTime(
     }
 
     override fun handleMessageNotReceived() {
+        super.handleMessageNotReceived()
         danaPump.resetPumpTime()
     }
 }

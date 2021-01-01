@@ -25,14 +25,12 @@
     <string name="description_insulin_free_peak">Lar deg stille inn tidspunktet for toppen av insulinvirkningen. Bør bare benyttes av erfarne brukere</string>
     <string name="description_loop">Aktiver eller deaktiver hendelsen som trigger loop.</string>
     <string name="description_ns_client">Synkroniserer dine data med Nightscout</string>
-    <string name="description_ma">Slik algoritmen var definert i 2016</string>
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
     <string name="description_smb">Siste utgave av algoritmen for avanserte brukere</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
     <string name="description_profile_nightscout">Bruker profiler som du har definert i Nightscout</string>
-    <string name="description_profile_simple">Definer en profil med bare en tidsperiode.</string>
     <string name="description_pump_combo">Tilkobling mot Accu-Chek Combo pumper krever at ruffy er installert</string>
     <string name="description_pump_mdi">Integrasjon mot de som kun bruker insulinpenner i sin diabetesbehandling</string>
     <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
@@ -84,7 +82,6 @@
     <string name="configbuilder">Konfigurasjonsverktøy</string>
     <string name="overview">Oversikt</string>
     <string name="nsprofile">NS profil</string>
-    <string name="simpleprofile">Enkel profil</string>
     <string name="treatments">Behandlinger</string>
     <string name="virtualpump">Virtuell pumpe</string>
     <string name="careportal">Careportal</string>
@@ -106,13 +103,11 @@
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Etter behandling av begrensninger</string>
     <string name="loop_tbrsetbypump_label">Temp Basal satt av pumpen</string>
-    <string name="openapsma_lastenact_label">Siste utført</string>
     <string name="noapsselected">INGEN APS ER VALGT ELLER HAR LEVERT RESULTAT</string>
     <string name="safety">Sikkerhet</string>
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="treatmentdeliveryerror">Mislykket bolus levering</string>
-    <string name="overview_newtempbasal_basalpercent">Basal verdi [%]</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkulator</string>
@@ -141,17 +136,11 @@
     <string name="careportal_newnstreatment_other">Annet</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbs_label">Karbo</string>
-    <string name="careportal_newnstreatment_insulin_label">Insulin</string>
     <string name="careportal_newnstreatment_carbtime_label">Karbo tid</string>
-    <string name="careportal_newnstreatment_split_label">Delt</string>
     <string name="careportal_newnstreatment_duration_label">Varighet</string>
-    <string name="careportal_newnstreatment_percent_label">Prosent</string>
-    <string name="careportal_newnstreatment_absolute_label">Absolutt</string>
     <string name="careportal_newnstreatment_notes_label">Merknader</string>
     <string name="event_time_label">Hendelse tidspunkt</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
-    <string name="careportal_newnstreatment_enteredby_title">Angitt av</string>
     <string name="careportal_newnstreatment_glucosetype">Glukosetype</string>
     <string name="noprofile">Ingen profil innlest fra NS enda</string>
     <string name="overview_tempbasal_button">Temp basal</string>
@@ -215,7 +204,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfeil, det oppgitte passordet er ugyldig eller filen har blitt endret! Det kan hende filen ble eksportert med et annet passord.</string>
     <string name="prefdecrypt_issue_wrong_format">Mangler krypteringsinformasjon, formatet på innstillinger er ugyldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ugyldig eller ikke spesifisert krypteringsalgoritme!</string>
-    <string name="exported_today">eksportert i dag</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportert for %1$s siden</string>
     <string name="exported_at" comment="at placeholder we add export date">eksportert den %1$s</string>
     <string name="exported_less_than_hour_ago">eksportert for mindre enn time siden</string>
@@ -247,10 +235,6 @@
     <string name="smscommunicator_tt_set">Temp target på %1$s for %2$d minutter ble vellykket definert</string>
     <string name="smscommunicator_tt_canceled">Temp Target ble vellykket avbrutt</string>
     <string name="smscommunicator_remotecommandsallowed">Tillat fjernstyring via SMS meldinger</string>
-    <string name="danarprofile">Innstillinger for DanaR profil</string>
-    <string name="danarprofile_dia">DIA [h]</string>
-    <string name="danarprofile_dia_summary">Insulinets virkningstid</string>
-    <string name="uploading">Laster opp</string>
     <string name="bolusstopped">Bolus stoppet</string>
     <string name="bolusstopping">Stopper bolus</string>
     <string name="smscommunicator_loophasbeendisabled">Loop har blitt deaktivert</string>
@@ -261,7 +245,7 @@
     <string name="valueoutofrange">Verdien %1$s er utenfor angitt begrensning</string>
     <string name="smscommunicator_pumpconnectwithcode">For å koble til pumpen, svar med kode %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Tilkobling til pumpen mislyktes</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">For å koble fra pumpen i %1d minutter, svar med koden %2$s</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">For å koble fra pumpen i %1$d minutter, svar med koden %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pumpe frakoblet</string>
     <string name="smscommunicator_reconnect">Pumpen tilkoblet igjen</string>
     <string name="smscommunicator_remotecommandnotallowed">Fjernstyringskommando er ikke tillatt</string>
@@ -305,7 +289,6 @@
     <string name="pumpNotInitialized">Pumpen ikke initialisert!</string>
     <string name="primefill">Prime/fylling</string>
     <string name="fillwarning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
-    <string name="othersettings_title">Annet</string>
     <string name="fillbolus_title">Standardverdier for påfyll/prime</string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
@@ -313,7 +296,6 @@
     <string name="units_colon">Enheter:</string>
     <string name="units">Enheter</string>
     <string name="dia">DIA</string>
-    <string name="target_range">Målområde:</string>
     <string name="prefs_range_title">Område for visualisering</string>
     <string name="prefs_range_summary">Høy og lav verdi for grafen i Oversikt og smartklokke</string>
     <string name="low_mark">Lav verdi</string>
@@ -347,7 +329,6 @@
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
-    <string name="simpleprofile_shortname">SP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HJEM</string>
@@ -372,7 +353,6 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Advarsel!\nNormalt vil du ikke trenge å endre verdiene under. Vennligst TRYKK HER og LES teksten for å være sikker på at du FORSTÅR konsekvensene før du gjør endringer.</string>
     <string name="smscommunicator_invalidphonennumber">Ugyldig SMS mobilnummer</string>
     <string name="overview_calibration">Kalibrering</string>
-    <string name="send_calibration">Send kalibrering %1$.1f til xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ ikke installert</string>
     <string name="calibrationsent">Kalibrering er sendt til xDrip</string>
     <string name="smscommunicator_calibrationsent">Kalibrering sendt. Vær oppmerksom på at xDrip må være konfigurert til å ta imot kalibreringer.</string>
@@ -405,12 +385,13 @@
     <string name="wear_detailedIOB_summary">Vis IOB med bolus och basal IOB på klokke</string>
     <string name="nosuccess">mislykket - sjekk telefonen</string>
     <string name="notavailable">n/a</string>
-    <string name="patientage">Pasientens alder</string>
+    <string name="patientage">Pasient type</string>
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
     <string name="adult">Voksen</string>
     <string name="resistantadult">Insulin resistent voksen</string>
-    <string name="patientage_summary">Velg pasientens alder for oppsett av sikkerhetsgrenser</string>
+    <string name="pregnant">Graviditet</string>
+    <string name="patientage_summary">Velg pasientens type for oppsett av sikkerhetsgrenser</string>
     <string name="patient_name">Pasientens navn</string>
     <string name="patient_name_summary">Angi pasientnavn eller kallenavn for å kunne skille mellom flere oppsett</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
@@ -418,7 +399,6 @@
     <string name="needwhitelisting">%1$s behøver å omgå batterispare funksjonene for å fungere tilfredsstillende</string>
     <string name="loopsuspended">Loop pauset</string>
     <string name="loopsuspendedfor">Pauset (%1$d m)</string>
-    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloop">Pause loop</string>
     <string name="suspendloopfor1h">Pause loop i 1t</string>
     <string name="suspendloopfor2h">Pause loop i 2t</string>
@@ -441,7 +421,6 @@
     <string name="ns_logappstartedevent">Logg app start til NS</string>
     <string name="restartingapp">Avslutter appen for at innstillinger skal tas i bruk.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruker du?</string>
-    <string name="fastactinginsulin">Hurtigvirkende insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
@@ -454,6 +433,8 @@
     <string name="statuslights_iage_critical">Advarsel: alder insulin [h]</string>
     <string name="statuslights_sage_warning">OBS: alder CGM [h]</string>
     <string name="statuslights_sage_critical">Advarsel: alder CGM [h]</string>
+    <string name="statuslights_sbat_warning">Nivå for når batterivarsel skal gis [%]</string>
+    <string name="statuslights_sbat_critical">Nivå for når kritisk batteriadvarsel skal gis [%]</string>
     <string name="statuslights_bage_warning">OBS: alder batteri [h]</string>
     <string name="statuslights_bage_critical">Advarsel: alder batteri [h]</string>
     <string name="statuslights_res_warning">OBS: nivå insulinreservoar [U]</string>
@@ -479,11 +460,13 @@
     <string name="ns_noupload">Ingen opplast til NS</string>
     <string name="ns_noupload_summary">Alle data som sendes til NS blir slettet. Selv om AAPS er tilknyttet NS, gjøres det ingen endring i NS</string>
     <string name="overview_extendedbolus_cancel_button">Avbryt forlenget bolus</string>
-    <string name="careportal_sensorage_label">Sensor alder</string>
-    <string name="careportal_canulaage_label">Kanyle alder</string>
-    <string name="careportal_insulinage_label">Insulin alder</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
-    <string name="careportal_pbage_label">Alder pumpebatteri</string>
+    <string name="careportal_sensor_label">Sensor</string>
+    <string name="careportal_canula_label">Kanyle</string>
+    <string name="careportal_insulin_label">Insulin</string>
+    <string name="careportal_pb_label">Pumpe batteri</string>
+    <string name="careportal_age_label">alder:</string>
+    <string name="careportal_level_label">nivå:</string>
     <string name="ns_alarmoptions">Alarm valg</string>
     <string name="ns_alarms">Opprett varsler fra NS alarmer</string>
     <string name="ns_announcements">Opprett varsler fra NS meldinger</string>
@@ -497,20 +480,14 @@
     <string name="configbuilder_sensitivity">Sensitivitets deteksjon</string>
     <string name="configbuilder_sensitivity_description">Hvilken sensitivitetsalgoritme skal benyttes?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Sensitivitet Oref0</string>
     <string name="sensitivityoref1">Sensitivitet Oref1</string>
     <string name="sensitivityaaps">Sensitivitet AAPS</string>
     <string name="absorptionsettings_title">Absorpsjon innstillinger</string>
     <string name="absorption_maxtime_title">Maks absorpsjonstid for måltid [h]</string>
     <string name="absorption_maxtime_summary">Tid i timer hvor det forventes at alle karbohydrater fra måltid vil være absorbert</string>
-    <string name="careportal_sensorage_label_short">SAGE</string>
-    <string name="careportal_insulinage_label_short">IAGE</string>
-    <string name="careportal_canulaage_label_short">CAGE</string>
-    <string name="careportal_pbage_label_short">PBAGE</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
-    <string name="virtualpump_extendedbolus_label_short">FORL</string>
     <string name="keep_screen_on_title">Hold skjermen påslått</string>
     <string name="keep_screen_on_summary">Forhindre Android å slå av skjermen. Mobil vil bruke mye batteri hvis den ikke plugges til strømledning.</string>
     <string name="sensitivity_warning">Hvis du slår på Autosense funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil KH avvik gi feil i sensitivitetsberegningen !!</string>
@@ -521,10 +498,6 @@
     <string name="valuesnotstored">Verdier ikke lagret!</string>
     <string name="ns_localbroadcasts">Aktiver sending til andre apper (som xDrip). Ikke aktiver dette hvis du har mer enn en AAPS eller NSClient installert!</string>
     <string name="ns_localbroadcasts_title">Aktiver lokale sendinger.</string>
-    <string name="careportal_activity_label">AKTIVITET &amp; TILBAKEMELDING</string>
-    <string name="careportal_carbsandbolus_label">KARBO &amp; BOLUS</string>
-    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-    <string name="careportal_pump_label">PUMPE</string>
     <string name="careportal_newnstreatment_duration_min_label">Varighet [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Aktiver UAM</string>
@@ -578,7 +551,6 @@
     <string name="wear_detailed_delta_title">Vis detaljer om delta</string>
     <string name="wear_detailed_delta_summary">Vis delta med én ekstra desimal</string>
     <string name="smbinterval_summary">Minste antall minutter mellom hver SMB</string>
-    <string name="smbmaxminutes">SMB maks minutter</string>
     <string name="smbmaxminutes_summary">Maks antall minutter med basal som kan bli SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB maks minutter</string>
     <string name="uamsmbmaxminutes_summary">Maks antall minutter basal som kan bli SMB ved UAM</string>
@@ -632,7 +604,6 @@
     <string name="combo_reservoir_empty">Tom</string>
     <string name="combo_reservoir_normal">Normal</string>
     <string name="combo_notification_check_time_date">Pumpens tid må oppdateres</string>
-    <string name="combo_warning">Varsel</string>
     <string name="combo_pump_tbr_cancelled_warrning">Varsel om kansellering av temp basal er bekreftet</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Ingen kontakt med pumpen. Ingen bolus er levert</string>
     <string name="combo_error_no_bolus_delivered">Bolus avbrutt. Det virker som ingen bolus er levert. For å være sikker, sjekk pumpen for å unngå levering av dobbel bolus og gjør evt et nytt forsøk. For å unngå feil vil systemet aldri prøve å levere ny bolus.</string>
@@ -641,7 +612,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Ikke nok insulin til bolus i ampullen</string>
     <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="ago">siden</string>
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
     <string name="enablesmbalways">Aktiverer alltid SMB</string>
@@ -700,7 +670,6 @@
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktivert</string>
-    <string name="not_eng_mode_or_release">Engineering Mode ikke aktivert og appen kjøres ikke som standard utgivelse</string>
     <string name="combo_actvity_reading_basal_profile">Leser basalprofil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Pumpe historikken har blitt endret siden bolus kalkuleringen ble utført. Bolus har ikke blitt levert. Vennligst rekalkuler om bolus fortsatt er nødvendig.</string>
     <string name="combo_error_updating_treatment_record">Bolus har blitt levert, men det oppsto en feil ved loggføring i behandlinger. Dette kan oppstå hvis to små bolus på samme størrelse blir levert i løpet av to minutter. Vennligst sjekk pumpe historikken og behandlinger logg, og bruk Careportal for å legge til de manglende behandlingene. Pass på at du ikke legger til to identiske behandlinger på samme minutt.</string>
@@ -710,7 +679,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basal raten i pumpen er endret, men feilet i å lese ny verdi</string>
     <string name="combo_activity_checking_for_history_changes">Sjekker for endringer i historikken</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flere boluser levert i samme minutt og med samme insulinmengde ble importert. Bare en av doseringene ble lagt til i behandlinger. Vennligst sjekk pumpen og legg til manuelt ekstra bolus doseringer i Careportal. Ikke legg til flere boluser i samme minutt.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
+    <string name="about_link_urls">\n\ndokumentasjon:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Den siste bolus er eldre enn 24t eller er i fremtiden. Vennligst sjekk at datoen i pumpen er korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for levert bolus i pumpen er trolig feil, og IOB beregningen blir da feil. Vennligst sjekk pumpens tid/dato.</string>
     <string name="profileswitch_ismissing">Profil bytte mangler. Utfør et profil bytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
@@ -741,7 +710,6 @@
     <string name="smbnotallowedinopenloopmode">SMB ikke tillatt i åpen loop</string>
     <string name="food_short">Mat</string>
     <string name="reset">tilbakestill</string>
-    <string name="loopdisconnectedfor">Frakoblet (%1$d m)</string>
     <string name="openapssmb_maxiob_title">Maks total IOB OpenAPS ikke kan overstige [U]</string>
     <string name="openapssmb_maxiob_summary">Denne verdien kalles Maks IOB av OpenAPS\nOpenAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
     <string name="pump_stopped">Pumpen stoppet</string>
@@ -755,7 +723,6 @@
     <string name="previous_button">Forrige</string>
     <string name="nav_setupwizard">Installasjonsguide</string>
     <string name="setupwizard_finish">Avslutt</string>
-    <string name="setupwizard_language_prompt">Velg språk</string>
     <string name="firstinsulinincrement">Første økning hurtigknapp for insulin</string>
     <string name="secondinsulinincrement">Andre økning hurtigknapp for insulin</string>
     <string name="thirdinsulinincrement">Tredje økning hurtigknapp for insulin</string>
@@ -785,18 +752,14 @@
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="enable_nsclient">Aktiver NSClient</string>
     <string name="welcometosetupwizard">Velkommen til oppsettveiviseren. Den vil lede deg gjennom installasjonsprosessen\n</string>
-    <string name="pumpsetup">Oppsett av pumpe</string>
     <string name="readstatus">Les status</string>
     <string name="adjustprofileinns">Endringer må gjøres i NS</string>
     <string name="exitwizard">Hopp over oppsettsveiviser</string>
     <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basal endringer</string>
-    <string name="apssetup">Konfigurer APS programtillegg</string>
-    <string name="sensitivitysetup">Konfigurer Sensitivitets plugin</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient håndterer tilkobling til Nightscout. Du kan hoppe over denne delen nå, men du vil ikke kunne bestå læringsmålene før den er satt opp.</string>
     <string name="diawarning">Husk: nye insulinprofiler krever en DIA på minst 5t. DIA 5-6t på ny profil er lik DIA 3t på gamle insulinprofiler.</string>
-    <string name="bgsourcesetup">Konfigurer BS kilde</string>
     <string name="setupwizard_profile_description">Vennligst velg kilde for din profil. Hvis pasienten er et barn anbefales det å bruke NS profil. Hvis ingen følger deg på Nightscout anbefales det å bruke en Lokal Profil. Husk at du her kun velger hvor profilen din ligger lagret. For å bruke den må du velge Profilbytte</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Venter på RileyLink tilkobling...\n</string>
@@ -808,7 +771,6 @@
     <string name="needlocationpermission">App trenger tilgang til Posisjon for å søke etter Bluetooth og Wifi enheter</string>
     <string name="needstoragepermission">App trenger tilgang til Lagring for lagre logg filer og eksportere innstillinger</string>
     <string name="request">Forespørsel</string>
-    <string name="insulinsourcesetup">Konfigurer insulin plugin</string>
     <string name="exit">Avslutt</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>
@@ -848,7 +810,6 @@
     <string name="nav_logsettings">Logginnstillinger</string>
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
-    <string name="as">AS</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <string name="time_offset">Tidsforskyvning</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
@@ -1086,12 +1047,9 @@
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheter</string>
     <string name="doyouwantswitchprofile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
-    <string name="common_on">På</string>
-    <string name="common_off">Av</string>
     <string name="objectives_button_unfinish">Sletting ferdig</string>
     <string name="objectives_button_unstart">Sletting startet</string>
     <string name="doyouwantresetstart">Ønsker du å omstarte læringsmålet? Du vil miste fullførte trinn.</string>
-    <string name="nopumpselected">Ingen pumpe valgt</string>
     <string name="setupwizard_units_prompt">Velg enheter som du vil vise verdier i</string>
     <string name="ns_ploadlocalprofile">Last opp lokale profilendringer til NS</string>
     <string name="dia_short">DIA</string>
@@ -1112,7 +1070,6 @@
     <string name="submit">Lagre</string>
     <string name="mostcommonprofile">Mest vanlig profil:</string>
     <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
-    <string name="nav_survey">Undersøkelse</string>
     <string name="invalidage">Ugyldig alder</string>
     <string name="invalidweight">Ugyldig vekt</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
@@ -1132,10 +1089,8 @@
     <string name="clearqueueconfirm">Slett køen? All data i køen vil gå tapt!</string>
     <string name="ebstopsloop">Bruk av forlenget bolus funksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
-    <string name="extended_bolus_short">FB</string>
     <string name="phonechecker">\"Telefonkontroll \"</string>
     <string name="chartmenu">Diagram meny</string>
-    <string name="sensitivity_short">AS</string>
     <string name="loop_smbrequest_time_label">SMB forespurt</string>
     <string name="loop_smbexecution_time_label">SMB utført</string>
     <string name="loop_tbrrequest_time_label">Temp basal endring forespurt</string>
@@ -1151,17 +1106,18 @@
     <string name="smscommunicator_code_verify_label">Kode som skal kontrolleres:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Bekreftelseskoden består av 6 sifre som vises av Authenticator appen (kjent som OTP) etterfulgt av 3 eller flere siffer for obligatorisk PIN-kode.</string>
-    <string name="smscommunicator_otp_verify_label">OTP som skal sjekkes:</string>
     <string name="smscommunicator_otp_reset_btn">Tilbakestill Authenticators</string>
     <string name="smscommunicator_otp_reset_title">Tilbakestill Authenticator nøkkel</string>
     <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil tilbakestille Authenticator nøkkel? Dette vil gjøre alle lagrede Authenticators ugyldige, og du må sette dem opp på nytt igjen.</string>
     <string name="smscommunicator_otp_reset_successful">Ny Authenticator nøkkel ble generert! Vennligst bruk oppdatert QR kode til å aktivere autentiserere.</string>
+    <string name="smscommunicator_otp_export_title">Eksporterer OTP hemmelig kode</string>
+    <string name="smscommunicator_otp_export_prompt">Er du sikker på at du vil kopiere OTP hemmelig kode til utklippstavlen?\n\nDu trenger bare det hvis din Authenticator app har problemer med skanning av QRCode og du ønsker å legge den inn manuelt, eller du ønsker å konfigurere maskinvare OTP-kode ved hjelp av dedikert app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP hemmelig kode (i base32-format) er eksportert og kopiert til utklippstavlen. Lim den inn i Authenticator app eller hardware OTP system!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installer Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skann kode for å sette opp AndroidAPS OTP koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>
     <string name="smscommunicator_otp_reset_header">Tilbakestill Authenticators</string>
     <string name="smscommunicator_otp_install_info">I hver følger telefon installerer du en Authenticator-app som støtter RFC 6238 TOTP token. Populære gratis apper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_provisioning_warning">IKKE DEL DENNE KODEN online!\nBruk den bare til å sette opp Authenticator app på følger telefoner.</string>
     <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille authenticator vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
     <string name="onconnect">Ved tilkobling</string>
     <string name="ondisconnect">Ved frakobling</string>
@@ -1175,6 +1131,7 @@
     <string name="statuslights_copy_ns">Kopier innstillingene fra NS</string>
     <string name="copyexistingvalues">Kopiere NS innstillinger (hvis de eksisterer)?</string>
     <string name="classic_description">Opprinnelig visningstema</string>
+    <string name="lowres_description">Tema for lav oppløsning</string>
     <string name="buttonson_description">Knapper vises alltid på bunnen av skjermen</string>
     <string name="largedisplay_description">Stor skjerm</string>
     <string name="skin">Tema</string>
@@ -1220,4 +1177,7 @@
     <string name="uploaded_data">Opplastede data</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Følgende data vil bli lastet opp til din Open Humans konto: glukoseverdier, boluser, karbohydrater, careportalhendelser (bortsett fra merknader), forlengede boluser, profilbytter, totale daglige doser, temp basaler, endringer i BS mål, innstillinger, app versjon, mobilmerke og skjermstørrelser. Hemmelig eller privat informasjon som din Nightscout URL eller API secret vil ikke bli lastet opp.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
+    <string name="filter">Filter</string>
+    <string name="copytolocalprofile_invalid">Klarte ikke å opprette lokal profil. Profilen er ikke gyldig.</string>
+    <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
 </resources>

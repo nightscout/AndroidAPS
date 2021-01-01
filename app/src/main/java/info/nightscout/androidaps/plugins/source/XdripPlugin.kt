@@ -25,12 +25,14 @@ class XdripPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon((R.drawable.ic_blooddrop_48))
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     private var advancedFiltering = false
+    private var sensorBatteryLevel = -1
 
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering
@@ -45,6 +47,7 @@ class XdripPlugin @Inject constructor(
         bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP)
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW)
+        if (bundle.containsKey(Intents.EXTRA_SENSOR_BATTERY)) sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY)
         val source = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "no Source specified")
         setSource(source)
         MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP")
@@ -52,5 +55,9 @@ class XdripPlugin @Inject constructor(
 
     private fun setSource(source: String) {
         advancedFiltering = source.contains("G5 Native") || source.contains("G6 Native")
+    }
+
+    override fun getSensorBatteryLevel(): Int {
+        return sensorBatteryLevel
     }
 }

@@ -59,8 +59,8 @@ public class OmnipodPumpPluginTest {
         PowerMockito.mockStatic(Looper.class);
         OmnipodPumpPlugin plugin = new OmnipodPumpPlugin(injector, aapsLogger, rxBusWrapper, null,
                 resourceHelper, activePluginProvider, null, null, aapsOmnipodManager, commandQueueProvider,
-                null, null, null, null, null,
-                rileyLinkUtil, null, null
+                null, null, null, null,
+                rileyLinkUtil, null, null, null, null
         );
         when(activePluginProvider.getActiveTreatments().getTempBasalFromHistory(anyLong())).thenReturn(null);
         when(rileyLinkUtil.getRileyLinkHistory()).thenReturn(new ArrayList<>());

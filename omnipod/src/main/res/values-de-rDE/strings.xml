@@ -7,8 +7,9 @@
     <string name="omnipod_config_basal_beeps_enabled">Basal-Piep aktiviert</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB-Piep aktiviert</string>
     <string name="omnipod_config_tbr_beeps_enabled">TBR-Piep aktiviert</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Button Abgabe aussetzen aktiviert</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Pulse Log Button aktiviert</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Button \'Insulinabgabe unterbrechen\' im Omnipod Tab anzeigen</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>
     <string name="omnipod_config_time_change_enabled">Sommerzeit/Zeitzonen-Erkennung aktiviert</string>
     <string name="omnipod_config_expiration_reminder_enabled">Ablauferinnerung aktiviert</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Stunden bis zum Podende</string>
@@ -17,6 +18,7 @@
     <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
     <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Ton für unsichere SMB-Benachrichtigungen aktiviert</string>
     <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Ton für unsichere Bolus-Benachrichtigungen aktiviert</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Pod-Alarme automatisch bestätigen</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Andere</string>
     <string name="omnipod_preference_category_alerts">Alarme</string>
@@ -31,7 +33,7 @@
     <string name="omnipod_pod_status_pod_fault">Pod-Fehler</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Aktivierungszeit überschritten</string>
     <string name="omnipod_pod_status_inactive">Inaktiv</string>
-    <string name="omnipod_pod_status_pod_fault_description">Pod-Fehler: %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Pod-Fehler: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Erinnerung Setup beendet</string>
@@ -85,6 +87,7 @@
     <string name="omnipod_error_unknown_custom_command">Unbekannter benutzerdefinierter Befehl: %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Fehler beim Lesen des Pulse-Log</string>
     <string name="omnipod_error_failed_to_refresh_status">Status konnte nicht aktualisiert werden.</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Status konnte beim Start nicht aktualisiert werden</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Warnungen konnten nicht bestätigt werden.</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Insulinabgabe konnte nicht unterbrochen werden.</string>
     <string name="omnipod_error_failed_to_set_time">Zeiteinstellung fehlgeschlagen</string>
@@ -96,6 +99,10 @@
     <string name="omnipod_error_failed_to_initialize_pod">Pod konnte nicht initalisiert werden.</string>
     <string name="omnipod_error_failed_to_insert_cannula">Kanüle konnte nicht eingeführt werden.</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">Die Aktivierungszeit des Pods wurde überschritten. Dieser Pod kann nicht mehr aktiviert werden.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Überprüfen des Aktivierungsfortschritts gescheitert. Bitte erneut versuchen.</string>
+    <string name="omnipod_error_pod_suspended">Pod unterbrochen</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Test-Piepton konnte nicht abgespielt werden</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">Auf dem Pod läuft eine temp. Basalrate, aber AAPS kennt diese nicht. Brich die TBR bitte manuell ab.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Bestätigung</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Zeit und/oder Zeitzone auf dem Pod geändert.</string>
@@ -104,7 +111,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Insulinabgabe komplett ausgesetzt.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Aktive Warnungen wurden bestätigt.</string>
     <string name="omnipod_confirmation_delivery_resumed">Insulinabgabe wieder aufgenommen.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod unterbrochen</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_cmd_discard_pod">Pod ablegen</string>
@@ -127,14 +133,24 @@
     <string name="omnipod_cmd_read_pulse_log">Pulse-Log lesen</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Fake TBR gesetzt, da der Pod pausiert ist.</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Abbruch der Fake TBR. Diese wurde eingestellt, da der Pod pausiert war.</string>
+    <string name="omnipod_cmd_beep_config">Piep-Ton Konfiguration</string>
+    <string name="omnipod_cmd_play_test_beep">Testton abspielen</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod Management</string>
+    <string name="omnipod_pod_management_heading_actions">Aktionen</string>
+    <string name="omnipod_pod_management_heading_tools">Tools</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">Warte auf Verbindung mit RileyLink…</string>
     <string name="omnipod_pod_management_button_activate_pod">Pod aktivieren</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_pod_management_button_discard_pod">Pod verwerfen</string>
     <string name="omnipod_pod_management_button_pod_history">Pod Historie</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Wenn Du den Pod verwirfst, kannst Du nicht mehr mit ihm kommunizieren. Mache das nur, wenn jede Kommunikation mit dem Pod dauerhaft fehlschlägt. Falls Du noch mit dem Pod kommunizieren kannst, verwende bitte die Option <b>Pod deaktivieren</b>.\n\nWenn Du fortfahren willst, entferne jetzt den Pod von Deinem Körper!</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">RileyLink Statistik</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">RileyLink-Konfiguration zurücksetzen</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Pulse-Log lesen</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Lese Puls-Log...</string>
+    <string name="omnipod_pod_management_discard_pod_confirmation">Wenn Du den Pod verwirfst, kannst Du nicht mehr mit ihm kommunizieren. Mache das nur, wenn jede Kommunikation mit dem Pod dauerhaft fehlschlägt. Falls Du noch mit dem Pod kommunizieren kannst, verwende bitte die Option <b>Pod deaktivieren</b>.\n\nWenn Du fortfahren willst, entferne jetzt den Pod von Deinem Körper!</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Testton abspielen</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">Spiele Testton ab....</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Abbrechen</string>
     <string name="omnipod_wizard_button_finish">Beenden</string>
@@ -170,8 +186,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Zeit einstellen</string>
     <string name="omnipod_overview_button_suspend_delivery">Unterbrechen</string>
-    <string name="omnipod_overview_button_riley_link_stats">RL Stats</string>
-    <string name="omnipod_overview_button_read_pulse_log">Pulse Log</string>
     <string name="omnipod_overview_button_refresh">Aktualisieren</string>
     <string name="omnipod_overview_button_resume_delivery">Abgabe fortsetzen</string>
     <string name="omnipod_overview_button_pod_management">Pod Mgmt.</string>
@@ -195,7 +209,6 @@
     <string name="omnipod_overview_errors">Fehler</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Um den Omnipod nutzen zu können, brauchst Du einen RileyLink (mind. Firmware 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">RileyLink-Konfiguration zurücksetzen</string>
     <string name="omnipod_uncertain">unsicher</string>
     <string name="omnipod_pulse_log">Pulse Log</string>
     <string name="omnipod_pulse_log_value">Pulse Log (in Zwischenablage kopiert)</string>
@@ -219,5 +232,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Pod-Alarm: %1$s</item>
+        <item quantity="other">Pod-Alarme: %1$s</item>
     </plurals>
 </resources>

@@ -106,9 +106,9 @@ class LocalProfileFragment : DaggerFragment() {
         localprofile_name.removeTextChangedListener(textWatch)
         localprofile_name.setText(currentProfile.name)
         localprofile_name.addTextChangedListener(textWatch)
-        localprofile_dia.setParams(currentProfile.dia, hardLimits.MINDIA, hardLimits.MAXDIA, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
+        localprofile_dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
         localprofile_dia.tag = "LP_DIA"
-        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.MINIC, hardLimits.MAXIC, 0.1, DecimalFormat("0.0"), save)
+        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_ic, "IC", resourceHelper.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), save)
         basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_basal, "BASAL", resourceHelper.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
             TimeListEdit(context, aapsLogger, dateUtil, view, R.id.localprofile_isf, "ISF", resourceHelper.gs(R.string.isf_label), currentProfile.isf, null, hardLimits.MINISF, hardLimits.MAXISF, 1.0, DecimalFormat("0"), save)

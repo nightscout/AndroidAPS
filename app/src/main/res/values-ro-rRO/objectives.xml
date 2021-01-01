@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Înapoi</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verifică</string>
     <string name="nth_objective">Obiectiv %1$d</string>

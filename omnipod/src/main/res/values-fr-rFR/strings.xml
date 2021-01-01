@@ -7,17 +7,22 @@
     <string name="omnipod_config_basal_beeps_enabled">Bips basal activés</string>
     <string name="omnipod_config_smb_beeps_enabled">Bips SMB activés</string>
     <string name="omnipod_config_tbr_beeps_enabled">Bips DBT activés</string>
-    <string name="omnipod_config_suspend_delivery_button_enabled">Bouton Suspendre l\'injection activé</string>
-    <string name="omnipod_config_pulse_log_button_enabled">Bouton Journal d\'impulsions activé</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Montrer le bouton Suspendre l\'injection dans l\'onglet Omnipod</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Afficher le bouton Journal d\'impulsions dans le menu de gestion des pods</string>
     <string name="omnipod_config_time_change_enabled">Changement de Zone/Heure Activé</string>
     <string name="omnipod_config_expiration_reminder_enabled">Rappel d\'expiration activé</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Heures avant arrêt</string>
     <string name="omnipod_config_low_reservoir_alert_enabled">Alerte Réservoir bas activée</string>
     <string name="omnipod_config_low_reservoir_alert_units">Nombre d\'unités</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Son pour les notifications DBT incertains activé</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Son pour les notifications SMB incertains activé</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Son pour les notifications bolus incertains activé</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Accepter automatiquement les alertes Pod</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Autres</string>
     <string name="omnipod_preference_category_alerts">Alertes</string>
     <string name="omnipod_preference_category_confirmation_beeps">Bips de confirmation</string>
+    <string name="omnipod_preference_category_notifications">Notifications</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Pas de Pod actif</string>
     <string name="omnipod_pod_status_waiting_for_activation">Configuration en cours (en attente d\'activation du Pod)</string>
@@ -27,7 +32,7 @@
     <string name="omnipod_pod_status_pod_fault">Erreur Pod</string>
     <string name="omnipod_pod_status_activation_time_exceeded">Délai d\'activation dépassé</string>
     <string name="omnipod_pod_status_inactive">Inactif</string>
-    <string name="omnipod_pod_status_pod_fault_description">Défaut du Pod : %1$s %2$s</string>
+    <string name="omnipod_pod_status_pod_fault_description">Défaut Pod : %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Rappel fin de configuration</string>
@@ -73,6 +78,7 @@
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">L\'annulation de la basale temporaire peut avoir échouée. Veuillez actualiser manuellement l\'état du Pod depuis l\'onglet Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Le paramétrage de la basal temp a échoué. Si une basal temp était en cours d\'exécution, elle a peut-être été annulée. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Le paramétrage de la basal temp a peut-être échoué. Si une basal temp était en cours d\'exécution, elle a été annulée. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Le paramétrage de l\'heure a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Le paramétrage de l\'heure a échoué. L\'injection est suspendue ! Veuillez poursuivre manuellement l\'injection à partir de l\'onglet Omnipod.</string>
     <string name="omnipod_error_failed_to_set_profile_empty_profile">Impossible de définir le profil Basal : profil vide reçu. Vérifiez que votre profil de basal est activé.</string>
@@ -80,6 +86,7 @@
     <string name="omnipod_error_unknown_custom_command">Commande personnalisée inconnue : %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Échec lecture Journal d\'impulsions</string>
     <string name="omnipod_error_failed_to_refresh_status">Échec pour rafraichir l\'état</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Échec pour rafraichir l\'état au démarrage</string>
     <string name="omnipod_error_failed_to_acknowledge_alerts">Échec pour confirmer les alertes</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Échec pour suspendre l\'injection</string>
     <string name="omnipod_error_failed_to_set_time">Échec pour définir l\'heure</string>
@@ -91,6 +98,10 @@
     <string name="omnipod_error_failed_to_initialize_pod">Impossible d’initialiser le Pod</string>
     <string name="omnipod_error_failed_to_insert_cannula">Impossible d\'insérer la canule</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">La durée d\'activation du Pod a été dépassée. Ce Pod ne peut plus être activé.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Échec de la vérification de l\'activation. Veuillez réessayer.</string>
+    <string name="omnipod_error_pod_suspended">Pod suspendu</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Échec du test des bips</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">Un basal temporaire est en cours d\'exécution sur le Pod, mais AAPS n\'est pas au courant de ce basal temporaire. Veuillez annuler votre basal temporaire manuellement.</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_confirmation">Confirmation</string>
     <string name="omnipod_confirmation_time_or_timezone_change">Heure et/ou fuseau horaire changé sur le Pod.</string>
@@ -99,7 +110,6 @@
     <string name="omnipod_confirmation_suspended_delivery">Toutes les injections d\'insuline ont été suspendues.</string>
     <string name="omnipod_confirmation_acknowledged_alerts">Les alertes actives ont été acceptées.</string>
     <string name="omnipod_confirmation_delivery_resumed">L\'injection de l\'insuline a été reprise.</string>
-    <string name="omnipod_confirmation_pod_suspended">Pod suspendu</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Désactiver Pod</string>
     <string name="omnipod_cmd_discard_pod">Supprimer le Pod</string>
@@ -122,6 +132,8 @@
     <string name="omnipod_cmd_read_pulse_log">Lire Journal d\'impulsions</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Définir un faux débit de basal temporaire car le Pod est suspendu</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Annuler le faux débit de basal temporaire créé à cause du Pod suspendu</string>
+    <string name="omnipod_cmd_beep_config">Configuration des bips</string>
+    <string name="omnipod_cmd_play_test_beep">Tester les bips</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Gestion du Pod</string>
     <string name="omnipod_pod_management_waiting_for_rileylink_connection">En attente de connexion RileyLink...</string>
@@ -129,7 +141,11 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Désactiver le Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Supprimer le Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Historique du Pod</string>
-    <string name="omnipod_pod_management_discard_pod_state_confirmation">Si vous supprimez le Pod, vous ne pourrez plus communiquer avec lui. Vous ne devez le faire que lorsque toutes les communications avec le Pod échouent de manière permanente. Si vous pouvez toujours communiquer avec le Pod, veuillez utiliser l\'option <b>Désactiver le Pod</b> .\n\nSi vous souhaitez continuer, assurez-vous de retirer la Pod de votre corps !</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Lire Journal d\'impulsions</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Lecture journal d\'impulsion…</string>
+    <string name="omnipod_pod_management_discard_pod_confirmation">Si vous supprimez le Pod, vous ne pourrez plus communiquer avec lui. Vous ne devez le faire que lorsque toutes les communications avec le Pod échouent de manière permanente. Si vous pouvez toujours communiquer avec le Pod, veuillez utiliser l\'option <b>Désactiver le Pod</b> .\n\nSi vous souhaitez continuer, assurez-vous de retirer la Pod de votre corps !</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Tester les bips</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">Test des bips…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Annuler</string>
     <string name="omnipod_wizard_button_finish">Terminer</string>
@@ -165,11 +181,9 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Définir l\'heure</string>
     <string name="omnipod_overview_button_suspend_delivery">Arrêter</string>
-    <string name="omnipod_overview_button_riley_link_stats">État RL</string>
-    <string name="omnipod_overview_button_read_pulse_log">Journal d\'impulsions</string>
     <string name="omnipod_overview_button_refresh">Actualiser</string>
     <string name="omnipod_overview_button_resume_delivery">Reprendre l\'injection</string>
-    <string name="omnipod_overview_button_pod_management">Pod mngt</string>
+    <string name="omnipod_overview_button_pod_management">Gest. Pod</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Accepter les alertes</string>
     <string name="omnipod_overview_pod_status">État du Pod</string>
     <string name="omnipod_overview_total_delivered">Total injecté</string>
@@ -190,7 +204,6 @@
     <string name="omnipod_overview_errors">Erreurs</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">L\'intégration de la pompe Omnipod nécessite un boitier RileyLink (avec au minimum un firmware 2.0).</string>
-    <string name="omnipod_custom_action_reset_rileylink">Réinitialiser la config. RileyLink</string>
     <string name="omnipod_uncertain">incertain</string>
     <string name="omnipod_pulse_log">Journal d\'impulsions</string>
     <string name="omnipod_pulse_log_value">Journal d\'impulsions (copié dans presse-papiers)</string>
@@ -214,5 +227,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Alerte Pod : %1$s</item>
+        <item quantity="other">Alertes Pod : %1$s</item>
     </plurals>
 </resources>

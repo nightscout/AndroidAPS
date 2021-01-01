@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r7_description"><![CDATA[כמות: <b>%1$d%%</b>\nמשך: <b>%2$s h</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[תכולת מיכל: <b>%1$s U</b>]]></string>
+    <string name="alert_w32_description">החלף סוללה.</string>
+    <string name="alert_w33_description">קבע זמן/תאריך.</string>
+    <string name="alert_w34_description">צור קשר עם תמיכת Accu-Chek.</string>
+    <string name="alert_w36_description"><![CDATA[כמות: <b>%1$d%%</b>\nמשך: <b>%2$s h</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[כמות מתוכננת: <b>%1$s U</b><br/>כמות שניתנה: <b>%2$s U</b>]]></string>
+    <string name="alert_m20_description">הכנס מיכל.</string>
+    <string name="alert_m21_description">החלף מיכל.</string>
+    <string name="alert_m22_description">החלף סוללה.</string>
+    <string name="alert_m23_description">בדוק סטטוס משאבה.</string>
+    <string name="alert_m24_description">החלף פרפרית.</string>
+    <string name="alert_m25_description">צור קשר עם תמיכת Accu-Chek.</string>
+    <string name="alert_m26_description">החלף מיכל.</string>
+    <string name="alert_m27_description">הפעילו מחדש את הורדת הנתונים.</string>
+    <string name="alert_m28_description">בדוק סטטוס משאבה.</string>
+    <string name="alert_m29_description">קבע סוג סוללה.</string>
+    <string name="alert_m30_description">קבע סוג מיכל.</string>
+    <string name="alert_e6_description">החלף סוללה ומיכל.</string>
+    <string name="alert_e10_description">החלף מיכל.</string>
+    <string name="alert_e13_description">שנה שפה.</string>
+</resources>

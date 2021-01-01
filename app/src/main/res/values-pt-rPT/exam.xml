@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Perfil NS pode ser usado, mas não configurado.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Tópico: Desligar a Bomba</string>
-    <string name="pumpdisconnect_whattodo">O que deve ser feito ao desligar a bomba?</string>
     <string name="pumpdisconnect_letknow">Clique em \'Desligar bomba\' para que o AAPS saiba que nenhuma insulina está a ser administrada.</string>
     <string name="pumpdisconnect_suspend">Clique em \'Suspender loop\' para que AAPS pare o looping enquanto a bomba estiver desconectada.</string>
     <string name="pumpdisconnect_dontchnage">Não altere nada no AAPS, apenas desconecte a bomba.</string>
@@ -134,8 +133,6 @@
     <string name="ic_increasingvalue">Rácios IC mais altos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
     <string name="ic_decreasingvalue">Rácios IC mais baixos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
     <string name="ic_noeffect">Se tiver 0 COB, alterar o rácio IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da Glic.</string>
-    <string name="ic_different">IC será diferente se contar a unidade de pão como 10g ou 12g.</string>
-    <string name="ic_meaning">O significado do IC é: Quantas unidades de pão são cobertas por 1U de insulina.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Tópico: Mudança De Perfil</string>
     <string name="profileswitch_pctwillchange"> Ao especificar 90% na mudança de perfil…</string>

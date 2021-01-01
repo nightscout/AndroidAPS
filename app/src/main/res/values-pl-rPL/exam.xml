@@ -17,7 +17,6 @@
     <string name="offlineprofile_nsprofile">Profil NS może być używany, ale nie jest skonfigurowany.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Temat: Odłączanie od pompy</string>
-    <string name="pumpdisconnect_whattodo">Co należy zrobić przy rozłączeniu pompy?</string>
     <string name="pumpdisconnect_letknow">Naciśnij \"WYłącz pompę\" aby AAPS wiedział, że insulina nie jest dostarczana.</string>
     <string name="pumpdisconnect_suspend">Naciśnij \"Wstrzymaj pętlę\"aby AAPS zatrzymał pętlę, gdy pompa jest odłączona.</string>
     <string name="pumpdisconnect_dontchnage">Nie zmieniaj niczego w AAPS, po prostu odłącz pompę.</string>
@@ -134,8 +133,8 @@
     <string name="ic_increasingvalue">Wyższe wartości ICprowadzą do mniejszej ilości insuliny dostarczonej do podanej ilości węglowodanów.</string>
     <string name="ic_decreasingvalue">Niższe wartości IC prowadzą do mniejszej ilości insuliny podanej do wprowadzonej ilości węglowodanów.</string>
     <string name="ic_noeffect">Załóżmy, że masz 0 COB. Zmiana IC doprowadzi do podania innej ilości insuliny w celu skorygowania twojej wartości BG.</string>
-    <string name="ic_different">IC będzie inny, jeśli policzysz jednostkę chleba jako 10 g lub 12 g.</string>
-    <string name="ic_meaning">Znaczenie IC to: Ile jednostek chleba jest pokrytych 1U insuliny.</string>
+    <string name="ic_different">IC będzie inny, jeśli policzysz jednostkę chlebową (wymiennik węglowodanów) jako 10g lub 12g.</string>
+    <string name="ic_meaning">Znaczenie IC to: Ile jednostek chlebowych (wymienników węglowodanowych) jest pokrytych 1U insuliny.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Temat: Przełączanie profili</string>
     <string name="profileswitch_pctwillchange"> Jeśli podasz 90% podczas zmiany profilu… </string>

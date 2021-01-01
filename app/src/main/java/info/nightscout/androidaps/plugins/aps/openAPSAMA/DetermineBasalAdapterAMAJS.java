@@ -40,7 +40,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class DetermineBasalAdapterAMAJS {
-    private HasAndroidInjector injector;
+    private final HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;
@@ -48,7 +48,7 @@ public class DetermineBasalAdapterAMAJS {
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject OpenHumansUploader openHumansUploader;
 
-    private ScriptReader mScriptReader;
+    private final ScriptReader mScriptReader;
 
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;

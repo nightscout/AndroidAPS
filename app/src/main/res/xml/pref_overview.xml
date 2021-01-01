@@ -361,6 +361,32 @@
                 validate:testType="numericRange" />
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="25"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_sbat_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_sbat_warning"
+                validate:maxNumber="100"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="5"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_sbat_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_sbat_critical"
+                validate:maxNumber="100"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="216"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"

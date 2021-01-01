@@ -8,6 +8,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
+import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -21,7 +22,6 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.danar_user_options_activity.*
 import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.max
@@ -47,6 +47,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
     var minBacklight = 1
 
+    private lateinit var binding: DanarUserOptionsActivityBinding
+
     @Synchronized
     override fun onResume() {
         super.onResume()
@@ -64,9 +66,10 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.danar_user_options_activity)
+        binding = DanarUserOptionsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        save_user_options.setOnClickListener { onSaveClick() }
+        binding.saveUserOptions.setOnClickListener { onSaveClick() }
 
         minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero
 
@@ -80,28 +83,28 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
                 + "\npumpUnits:" + danaPump.units
                 + "\nlowReservoir:" + danaPump.lowReservoirRate)
 
-        danar_screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, save_user_options)
-        danar_backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
-        danar_shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, save_user_options)
-        danar_lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, save_user_options)
+        binding.screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, binding.saveUserOptions)
+        binding.backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, binding.saveUserOptions)
+        binding.shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, binding.saveUserOptions)
+        binding.lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, binding.saveUserOptions)
         when (danaPump.beepAndAlarm) {
-            0b01 -> danar_pumpalarm_sound.isChecked = true
-            0b10 -> danar_pumpalarm_vibrate.isChecked = true
-            0b11 -> danar_pumpalarm_both.isChecked = true
+            0b01 -> binding.pumpalarmSound.isChecked = true
+            0b10 -> binding.pumpalarmVibrate.isChecked = true
+            0b11 -> binding.pumpalarmBoth.isChecked = true
 
             0b101 -> {
-                danar_pumpalarm_sound.isChecked = true
-                danar_beep.isChecked = true
+                binding.pumpalarmSound.isChecked = true
+                binding.beep.isChecked = true
             }
 
             0b110 -> {
-                danar_pumpalarm_vibrate.isChecked = true
-                danar_beep.isChecked = true
+                binding.pumpalarmVibrate.isChecked = true
+                binding.beep.isChecked = true
             }
 
             0b111 -> {
-                danar_pumpalarm_both.isChecked = true
-                danar_beep.isChecked = true
+                binding.pumpalarmBoth.isChecked = true
+                binding.beep.isChecked = true
             }
         }
         if (danaPump.lastSettingsRead == 0L && danaPump.hwModel < 0x05) // RS+ doesn't use lastSettingsRead
@@ -112,42 +115,42 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
     fun setData() {
         // in DanaRS timeDisplay values are reversed
-        danar_timeformat.isChecked = danaPump.timeDisplayType24
-        danar_buttonscroll.isChecked = danaPump.buttonScrollOnOff
-        danar_beep.isChecked = danaPump.beepAndAlarm > 4
-        danar_screentimeout.value = danaPump.lcdOnTimeSec.toDouble()
-        danar_backlight.value = danaPump.backlightOnTimeSec.toDouble()
-        danar_units.isChecked = danaPump.getUnits() == Constants.MMOL
-        danar_shutdown.value = danaPump.shutdownHour.toDouble()
-        danar_lowreservoir.value = danaPump.lowReservoirRate.toDouble()
+        binding.timeformat.isChecked = danaPump.timeDisplayType24
+        binding.buttonscroll.isChecked = danaPump.buttonScrollOnOff
+        binding.beep.isChecked = danaPump.beepAndAlarm > 4
+        binding.screentimeout.value = danaPump.lcdOnTimeSec.toDouble()
+        binding.backlight.value = danaPump.backlightOnTimeSec.toDouble()
+        binding.units.isChecked = danaPump.getUnits() == Constants.MMOL
+        binding.shutdown.value = danaPump.shutdownHour.toDouble()
+        binding.lowreservoir.value = danaPump.lowReservoirRate.toDouble()
     }
 
     private fun onSaveClick() {
         //exit if pump is not DanaRS, DanaR, or DanaR with upgraded firmware
         if (!isRS() && !isDanaR() && !isDanaRv2()) return
 
-        danaPump.timeDisplayType24 = danar_timeformat.isChecked
+        danaPump.timeDisplayType24 = binding.timeformat.isChecked
 
-        danaPump.buttonScrollOnOff = danar_buttonscroll.isChecked
+        danaPump.buttonScrollOnOff = binding.buttonscroll.isChecked
         danaPump.beepAndAlarm = when {
-            danar_pumpalarm_sound.isChecked   -> 1
-            danar_pumpalarm_vibrate.isChecked -> 2
-            danar_pumpalarm_both.isChecked    -> 3
-            else                              -> 1
+            binding.pumpalarmSound.isChecked   -> 1
+            binding.pumpalarmVibrate.isChecked -> 2
+            binding.pumpalarmBoth.isChecked    -> 3
+            else                               -> 1
         }
-        if (danar_beep.isChecked) danaPump.beepAndAlarm += 4
+        if (binding.beep.isChecked) danaPump.beepAndAlarm += 4
 
         // step is 5 seconds, 5 to 240
-        danaPump.lcdOnTimeSec = min(max(danar_screentimeout.value.toInt() / 5 * 5, 5), 240)
+        danaPump.lcdOnTimeSec = min(max(binding.screentimeout.value.toInt() / 5 * 5, 5), 240)
         // 1 to 60
-        danaPump.backlightOnTimeSec = min(max(danar_backlight.value.toInt(), minBacklight), 60)
+        danaPump.backlightOnTimeSec = min(max(binding.backlight.value.toInt(), minBacklight), 60)
 
-        danaPump.units = if (danar_units.isChecked) 1 else 0
+        danaPump.units = if (binding.units.isChecked) 1 else 0
 
-        danaPump.shutdownHour = min(danar_shutdown.value.toInt(), 24)
+        danaPump.shutdownHour = min(binding.shutdown.value.toInt(), 24)
 
         // 10 to 50
-        danaPump.lowReservoirRate = min(max(danar_lowreservoir.value.toInt() * 10 / 10, 10), 50)
+        danaPump.lowReservoirRate = min(max(binding.lowreservoir.value.toInt() * 10 / 10, 10), 50)
 
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {

@@ -32,6 +32,7 @@ class ConfigBuilderPlugin @Inject constructor(
     .showInList(true)
     .alwaysEnabled(true)
     .alwaysVisible(false)
+    .pluginIcon(R.drawable.ic_cogs)
     .pluginName(R.string.configbuilder)
     .shortName(R.string.configbuilder_shortname)
     .description(R.string.description_config_builder),
@@ -46,17 +47,17 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     private fun setAlwaysEnabledPluginsEnabled() {
-        for (plugin in activePlugin.pluginsList) {
+        for (plugin in activePlugin.getPluginsList()) {
             if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true)
         }
         storeSettings("setAlwaysEnabledPluginsEnabled")
     }
 
     override fun storeSettings(from: String) {
-        activePlugin.pluginsList
+        activePlugin.getPluginsList()
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: $from")
         activePlugin.verifySelectionInCategories()
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible) continue
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
@@ -82,7 +83,7 @@ class ConfigBuilderPlugin @Inject constructor(
 
     private fun loadSettings() {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
             loadPref(p, type, true)
             if (p.getType() == PluginType.PUMP) {
@@ -110,7 +111,7 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     fun logPluginStatus() {
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             aapsLogger.debug(LTag.CONFIGBUILDER, p.name + ":" +
                 (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
                 (if (p.isEnabled(PluginType.TREATMENT)) " TREATMENT" else "") +
@@ -147,7 +148,7 @@ class ConfigBuilderPlugin @Inject constructor(
         }
     }
 
-    fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
+    override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
