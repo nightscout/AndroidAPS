@@ -18,6 +18,7 @@
     <string name="offlineprofile_label">Argomento: profilo offline</string>
     <string name="offlineprofile_nsprofile">Il profilo NS può essere usato, ma non configurato.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_label">Motivi per azionare la funzione \"Disconnetti micro\" in AndroidAPS</string>
     <string name="pumpdisconnect_whattodo">Cosa dovrebbe essere fatto quando si disconnette il micro?</string>
     <string name="pumpdisconnect_unnecessary">Questo non è necessario poiché l\'insulina non verrà erogata se il micro è fisicamente disconnesso.</string>
     <string name="pumpdisconnect_missinginsulin">Evita che AndroidAPS tenga conto di insulina che non è stata erogata mentre il micro è fisicamente disconnesso.</string>
@@ -32,6 +33,7 @@
     <string name="objectives_afterchange">Esportare le tue impostazioni dopo aver fatto delle modifiche.</string>
     <string name="objectives_afterinitialsetup">Esportare le tue impostazioni dopo aver terminato la tua configurazione iniziale e aver impostato le tue preferenze.</string>
     <string name="objectives2_maintenance">Esportare le tue impostazioni localmente utilizzando il menu manutenzione.</string>
+    <string name="objectives2_cloud">Copiare il file delle tue preferenze in un luogo sicuro al di fuori del tuo telefono (ad esempio usando un\'unità cloud, un computer, l\'email, ecc.)</string>
     <string name="objectives2_easyrestore">Se il tuo telefono è danneggiato o smarrito, ci sono modi semplici per recuperare da remoto le tue impostazioni senza avere un backup.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
@@ -40,13 +42,16 @@
     <string name="noisycgm_nothing">Nulla - AndroidAPS se ne occuperà.</string>
     <string name="noisycgm_pause">Disabilitare il loop chiuso per evitare un possibile sovra-dosaggio o sotto-dosaggio.</string>
     <string name="noisycgm_replacesensor">Sostituire i sensori costantemente \"rumorosi\" o inaccurati.</string>
+    <string name="noisycgm_checksmoothing">Verificare che la tua app CGM faccia lo smoothing dei dati della glicemia.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="exerciseprofile_label">Esercizio e profili</string>
     <string name="exerciseprofile_whattodo">Come puoi usare i profili per aiutare al meglio il sistema a gestire l\'esercizio aerobico?</string>
     <string name="exerciseprofile_switchprofilebelow100">Fare un cambio profilo sotto il 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Fare un cambio profilo sopra il 100%.</string>
     <string name="exerciseprofile_leaveat100">Lasciare il profilo al 100%.</string>
     <string name="exerciseprofile_suspendloop">Sospendere il loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
+    <string name="exercise_label">Esercizio e target temporanei</string>
     <string name="exercise_whattodo">Come puoi usare i target temporanei per aiutare al meglio il sistema a gestire l\'esercizio aerobico?</string>
     <string name="exercise_setunchanged">Lasciare il tuo target glicemico invariato.</string>
     <string name="exercise_15g">Attendere che la glicemia scenda al di sotto del tuo target temporaneo \"ipoglicemia\" e poi mangiare 15 g di carboidrati a rapido assorbimento.</string>
@@ -94,7 +99,9 @@
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Risoluzione problemi</string>
     <string name="troubleshooting_wheretoask">Dove puoi cercare aiuto con AndroidAPS?</string>
+    <string name="troubleshooting_fb">Puoi chiedere consiglio nel gruppo Facebook degli utenti AndroidAPS.</string>
     <string name="troubleshooting_wiki">Dovresti leggere (e rileggere) la documentazione di AndroidAPS.</string>
+    <string name="troubleshooting_gitter">Puoi chiedere consigli e segnalare problemi tecnici nella stanza Gitter di AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Dovresti chiedere al tuo endocrinologo/centro diabetologico.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
@@ -108,6 +115,7 @@
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Plugin sensibilità</string>
     <string name="sensitivity_which">Seleziona tutte le risposte corrette.</string>
+    <string name="sensitivity_adjust">I plugin di sensibilità consentono ad AndroidAPS di adattarsi a cambiamenti temporanei o di breve durata nella sensibilità all\'insulina (ad esempio cambiamenti ormonali o problemi di assorbimento legati al sito di infusione).</string>
     <string name="sensitivity_time">Alcune opzioni del plugin hanno intervalli di tempo configurabili che possono essere impostati dall\'utente.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_label">Errori inserimento CHO</string>
@@ -117,12 +125,16 @@
     <string name="wrongcarbs_donothing">Non fare nulla - AndroidAPS effettuerà gli opportuni aggiustamenti.</string>
     <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
     <string name="wronginsulin_whattodo">Cosa dovresti fare se hai ricevuto meno insulina di quanto lo storico del micro suggerisce? Ad esempio a causa di un\'occlusione, una cannula difettosa o l\'aver dimenticato di riattaccare il micro dopo una doccia? </string>
+    <string name="wronginsulin_careportal">Eliminare dal portale Nightscout i dati relativi all\'insulina per rimuoverli dallo storico del micro.</string>
     <string name="wronginsulin_compare">Confrontare i valori in AndroidAPS e lo storico del micro.</string>
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
     <string name="wronginsulin_donothing">Non fare nulla e permettere ad AndroidAPS di correggere eventuali glicemie alte.</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <string name="iob_which">Seleziona tutte le risposte corrette.</string>
     <string name="iob_value">Il valore IOB è influenzato dalle basali temporanee emesse.</string>
+    <string name="iob_hightemp">Non verrà emessa una basale temporanea alta quando la tua glicemia è al di sotto del target.</string>
+    <string name="iob_negiob">IOB negativo per un periodo considerevole in assenza di esercizio fisico suggerisce che il tuo profilo è troppo incisivo e che è necessaria meno insulina nelle tue impostazioni.</string>
+    <string name="iob_posiob">IOB positivo per un periodo considerevole suggerisce resistenza all\'insulina o pasti non annunciati.</string>
     <string name="breadgrams_label">Inserimento CHO e boli</string>
     <string name="breadgrams_grams">Solo i grammi dovrebbero essere utilizzati per stimare e registrare i carboidrati consumati.</string>
     <string name="breadgrams_exchange">I carboidrati consumati possono essere registrati utilizzando un sistema di scambio appropriato (ad esempio: gli scambi CHO \"DAFNE\" o le unità di pane europee \"Bread Units\").</string>
@@ -142,6 +154,7 @@
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Fattore di Sensibilità Insulinica (ISF)</string>
     <string name="isf_increasingvalue">Aumentare i valori di ISF porterà a una maggiore erogazione di insulina per coprire una specifica quantità di carboidrati.</string>
+    <string name="isf_decreasingvalue">Ridurre i valori ISF porta a una maggiore erogazione di insulina per correggere una glicemia al di sopra del target.</string>
     <string name="isf_noeffect">Aumentare o ridurre ISF non ha alcun effetto sull\'erogazione di insulina quando le glicemie sono al di sotto del target.</string>
     <string name="isf_preferences">ISF dovrebbe essere inserito nelle tue preferenze di AndroidAPS.</string>
     <string name="isf_profile">Cambiare il valore ISF nel tuo profilo è sufficiente per applicare la modifica.</string>
@@ -157,12 +170,14 @@
     <string name="ic_meaning">Il significato di IC è: quante unità di pane (BE) sono coperte da 1U di insulina.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Cambio profilo</string>
+    <string name="profileswitch_pctwillchange"> Quando si specifica un cambio profilo del 90%, quali risposte sono vere?</string>
     <string name="profileswitch_basallower">Le velocità basali saranno il 10% più basse.</string>
     <string name="profileswitch_isfhigher">ISF sarà il 10% più alto.</string>
     <string name="profileswitch_iclower">Il valore del rapporto I:C sarà un numero il 10% più basso.</string>
     <string name="profileswitch_unchanged">ISF e rapporti I:C rimarranno invariati.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Cambio profilo</string>
+    <string name="profileswitch2_pctwillchange"> Quando si specifica un cambio profilo del 120%, quali risposte sono vere?</string>
     <string name="profileswitch2_bghigher">La glicemia target sarà il 20% più alta.</string>
     <string name="profileswitch2_basalhigher">Le velocità basali saranno il 20% più alte.</string>
     <string name="profileswitch2_bgunchanged">La glicemia target rimarrà invariata.</string>
