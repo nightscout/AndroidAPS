@@ -23,7 +23,7 @@
     <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
     <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e deve essere usato solo dagli utenti avanzati</string>
+    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
