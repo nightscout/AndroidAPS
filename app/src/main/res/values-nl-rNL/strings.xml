@@ -740,8 +740,8 @@
     <string name="connectionsettings_title">Verbindings instellingen</string>
     <string name="ns_wifi_allowedssids">Toegelaten SSIDs (gescheiden door puntkomma)</string>
     <string name="ns_allowroaming">Sta verbinding tijdens roaming toe</string>
-    <string name="openapsama_autosens_max">Max autosens factor</string>
-    <string name="openapsama_autosens_min">Min autosens factor</string>
+    <string name="openapsama_autosens_max">Max autosens ratio</string>
+    <string name="openapsama_autosens_min">Min autosens ratio</string>
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsama_max_daily_safety_multiplier">Maximale dagelijkse veiligheids vermeningvuldigings factor</string>
     <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
