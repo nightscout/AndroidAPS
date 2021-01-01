@@ -33,6 +33,7 @@
     <string name="objectives_afterchange">Esportare le tue impostazioni dopo aver fatto delle modifiche.</string>
     <string name="objectives_afterinitialsetup">Esportare le tue impostazioni dopo aver terminato la tua configurazione iniziale e aver impostato le tue preferenze.</string>
     <string name="objectives2_maintenance">Esportare le tue impostazioni localmente utilizzando il menu manutenzione.</string>
+    <string name="objectives2_internalstorage">Il file delle tue impostazioni si trova nella cartella Internal Storage (memoria interna)/AAPS/preferences del tuo telefono.</string>
     <string name="objectives2_cloud">Copiare il file delle tue preferenze in un luogo sicuro al di fuori del tuo telefono (ad esempio usando un\'unità cloud, un computer, l\'email, ecc.)</string>
     <string name="objectives2_easyrestore">Se il tuo telefono è danneggiato o smarrito, ci sono modi semplici per recuperare da remoto le tue impostazioni senza avere un backup.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
@@ -116,6 +117,8 @@
     <string name="sensitivity_label">Plugin sensibilità</string>
     <string name="sensitivity_which">Seleziona tutte le risposte corrette.</string>
     <string name="sensitivity_adjust">I plugin di sensibilità consentono ad AndroidAPS di adattarsi a cambiamenti temporanei o di breve durata nella sensibilità all\'insulina (ad esempio cambiamenti ormonali o problemi di assorbimento legati al sito di infusione).</string>
+    <string name="sensitivity_edit">I plugin di sensibilità forniscono all\'utente suggerimenti su cambi a velocità basali, rapporti I:C e ISF che possono essere utilizzati per modificare il profilo.</string>
+    <string name="sensitivity_cannula">La registrazione di un cambio cannula ripristinerà il rapporto Autosens al 100%.</string>
     <string name="sensitivity_time">Alcune opzioni del plugin hanno intervalli di tempo configurabili che possono essere impostati dall\'utente.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_label">Errori inserimento CHO</string>
@@ -123,6 +126,7 @@
     <string name="wrongcarbs_treatmentstab">Eliminare nei Trattamenti l\'inserimento non corretto e immettere il nuovo valore CHO.</string>
     <string name="wrongcarbs_addinsulin">Erogare un bolo di insulina usando il menu caricamento set di infusione.</string>
     <string name="wrongcarbs_donothing">Non fare nulla - AndroidAPS effettuerà gli opportuni aggiustamenti.</string>
+    <string name="wrongcarbs_bolus">Erogare un bolo di insulina usando il tasto Insulina nella sezione Panoramica.</string>
     <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
     <string name="wronginsulin_whattodo">Cosa dovresti fare se hai ricevuto meno insulina di quanto lo storico del micro suggerisce? Ad esempio a causa di un\'occlusione, una cannula difettosa o l\'aver dimenticato di riattaccare il micro dopo una doccia? </string>
     <string name="wronginsulin_careportal">Eliminare dal portale Nightscout i dati relativi all\'insulina per rimuoverli dallo storico del micro.</string>
@@ -139,9 +143,12 @@
     <string name="breadgrams_grams">Solo i grammi dovrebbero essere utilizzati per stimare e registrare i carboidrati consumati.</string>
     <string name="breadgrams_exchange">I carboidrati consumati possono essere registrati utilizzando un sistema di scambio appropriato (ad esempio: gli scambi CHO \"DAFNE\" o le unità di pane europee \"Bread Units\").</string>
     <string name="breadgrams_decay">AndroidAPS usa un modello dinamico per stimare il \"decadimento\" dei carboidrati e calcolare COB.</string>
+    <string name="breadgrams_calc">Se la glicemia è di fuori dei valori accettabili (troppo bassa o troppo alta) il calcolatore di boli può essere utilizzato per fornire suggerimenti per le correzioni con carboidrati o insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">Per cosa potresti usare gli e-carbs (carboidrati estesi)?</string>
+    <string name="extendedcarbs_future">Per indicare i carboidrati nel futuro e/o distribuiti su un intervallo di tempo (similmente a un bolo esteso che distribuisce insulina sullo stesso intervallo).</string>
+    <string name="extendedcarbs_free">Per registrare i carboidrati \"liberi\" relativi all\'esercizio fisico e che vuoi nascondere da AndroidAPS.</string>
     <string name="extendedcarbs_fat">Gli e-carbs (distribuiti nel futuro) possono aiutare AndroidAPS a gestire pasti ricchi di grassi/proteine.</string>
     <string name="extendedcarbs_rescue">Per registrare i carboidrati che usi per trattare la glicemia bassa.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
