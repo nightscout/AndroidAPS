@@ -3,6 +3,7 @@ package info.nightscout.androidaps.dialogs
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,10 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.databinding.DialogLoopBinding
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -30,8 +29,6 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class LoopDialog : DaggerDialogFragment() {
@@ -50,11 +47,10 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
-
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
-
+    private var loopHandler = Handler()
+    private var refreshDialog: Runnable? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -107,21 +103,33 @@ class LoopDialog : DaggerDialogFragment() {
         // cancel button
         binding.cancel.setOnClickListener { dismiss() }
 
-        // bus
-        disposable.add(rxBus
-            .toObservable(EventNewOpenLoopNotification::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                activity?.runOnUiThread { updateGUI("EventNewOpenLoopNotification") }
-            }, fabricPrivacy::logException)
-        )
+        refreshDialog = Runnable {
+            scheduleUpdateGUI("refreshDialog")
+            loopHandler.postDelayed(refreshDialog, 15 * 1000L)
+        }
+        loopHandler.postDelayed(refreshDialog, 15 * 1000L)
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        disposable.clear()
         _binding = null
+        loopHandler.removeCallbacksAndMessages(null)
+    }
+
+    var task: Runnable? = null
+
+    private fun scheduleUpdateGUI(from: String) {
+        class UpdateRunnable : Runnable {
+
+            override fun run() {
+                updateGUI(from)
+                task = null
+            }
+        }
+        view?.removeCallbacks(task)
+        task = UpdateRunnable()
+        view?.postDelayed(task, 500)
     }
 
     @Synchronized
