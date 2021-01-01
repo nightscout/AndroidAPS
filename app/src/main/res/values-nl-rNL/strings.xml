@@ -1193,7 +1193,7 @@
     <string name="bolusadvisor">Bolusadviseur</string>
     <string name="bolusadvisormessage">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je herinneren wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je eraan herinneren.</string>
     <string name="enablebolusadvisor">Bolusadviseur inschakelen</string>
-    <string name="enablebolusadvisor_summary">Gebruik herinnering om te beginnen eten in plaats van wizard tijdens hoge bloedglucose</string>
+    <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet de wizard maar een herinnering om met eten te beginnen</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="timetoeat">Tijd om te eten</string>
 </resources>

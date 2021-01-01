@@ -1188,4 +1188,12 @@
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
     <string name="smscommunicator_pump_ureachable">Rapporter når pumpe ikke kan tilkobles</string>
+    <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
+    <string name="alarminxmin">Aktiver alarm om %1$d min</string>
+    <string name="bolusadvisor">Bolusguide</string>
+    <string name="bolusadvisormessage">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korrigerings bolus nå og få en påminnelse om når den er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
+    <string name="enablebolusadvisor">Aktiver boluskalkulator</string>
+    <string name="enablebolusadvisor_summary">Få påminnelse om å spise i stedet for å bruke wizard når du har høyt blodsukker</string>
+    <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
+    <string name="timetoeat">Nå må du spise</string>
 </resources>

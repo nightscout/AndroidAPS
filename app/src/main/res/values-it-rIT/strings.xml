@@ -406,11 +406,14 @@
     <string name="suspendloopfor3h">Sospendi loop per 3h</string>
     <string name="suspendloopfor10h">Sospendi loop per 10h</string>
     <string name="suspendloopforXmin">Sospendi loop per %1$d min</string>
+    <string name="disconnectpump">Disconnetti micro</string>
     <string name="disconnectpumpfor15m">Disconnetti micro per 15 min</string>
     <string name="disconnectpumpfor30m">Disconnetti micro per 30 min</string>
     <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
     <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
     <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
     <string name="duration1h">1 ora</string>
     <string name="duration2h">2 ore</string>
     <string name="duration3h">3 ore</string>
@@ -430,7 +433,7 @@
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
-    <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRADOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
+    <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
     <string name="statuslights_cage_warning">Soglia di avviso età cannula [h]</string>
     <string name="statuslights_cage_critical">Soglia età cannula critica [h]</string>
@@ -763,6 +766,7 @@
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5-6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino dovresti usare il profilo NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per usarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio profilo\"</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato configurato.\n</string>
     <string name="startobjective">Avvia il tuo primo obiettivo</string>
     <string name="permission">Autorizzazione</string>
     <string name="askforpermission">Chiedi l\'autorizzazione</string>
@@ -1183,7 +1187,11 @@
     <string name="alarm">Allarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
+    <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
+    <string name="alarminxmin">Esegui allarme in %1$d min</string>
     <string name="bolusadvisor">Consiglio bolo</string>
+    <string name="bolusadvisormessage">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="enablebolusadvisor">Abilita consiglio bolo</string>
+    <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="timetoeat">Tempo di mangiare</string>
 </resources>

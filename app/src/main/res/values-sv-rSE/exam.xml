@@ -171,6 +171,9 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Du kan använda mer än ett värde för KH-kvot i din profil.</string>
     <string name="ic_isf">Om du ändrar din ISF-profil i din profil bör du alltid ändra din KH-kvot också.</string>
+    <string name="ic_label_exam">Insulin till kolhydratförhållandet (I:C förhållande)</string>
+    <string name="ic_increasingvalue">Högre kolhydratskvot leder till att mindre insulin levereras för en given mängd kolhydrater.</string>
+    <string name="ic_decreasingvalue">Lägre kolhydratskvot leder till att mindre insulin levereras för en given mängd kolhydrater.</string>
     <string name="ic_noeffect">Om du har 0 COB, kommer en förändring av IC-kvoten leda till en annan mängd insulin för att korrigera din BG-nivå.</string>
     <string name="ic_different">IC kommer att vara annorlunda om du räknar brödenheter (utbytesenhet) som 10g eller 12g.</string>
     <string name="ic_meaning">IC betyder: Hur många brödenheter (utbytesenheter) som omfattas av 1U insulin.</string>
@@ -180,6 +183,7 @@
     <string name="profileswitch_basallower">Basaldoserna kommer att bli 10% lägre.</string>
     <string name="profileswitch_isfhigher">ISF kommer att bli 10% högre.</string>
     <string name="profileswitch_iclower">KH-kvoten kommer att bli 10% lägre.</string>
+    <string name="profileswitch_unchanged">ISF och KH-kvoterna kommer att vara oförändrade.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Profilbyte</string>
     <string name="profileswitch2_pctwillchange"> När du anger ett profilbyte till 120%, vilka svar är sanna?</string>
