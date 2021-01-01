@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +10,6 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.databinding.DialogLoopBinding
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class LoopDialog : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -190,14 +190,14 @@ class LoopDialog : DaggerDialogFragment() {
         val profileStore = activePlugin.activeProfileInterface.profile
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
             dismiss()
             return
         }
 
     }
 
-    fun onClickOkCancelEnabled(v: View): Boolean {
+    private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
         when (v.id) {
             R.id.overview_closeloop -> description = resourceHelper.gs(R.string.closedloop)
@@ -255,7 +255,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.tempbasaldeliveryerror))
                         }
                     }
                 })
@@ -280,12 +280,12 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(context, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context?.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })

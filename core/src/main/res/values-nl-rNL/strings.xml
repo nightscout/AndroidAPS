@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Zet de bluetooth van de telefoon even kort uit en weer aan. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="pairing">Koppelen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Vullen</string>
     <string name="history_group_alarm">Alarmen</string>
     <string name="history_group_glucose">Glucose</string>
+    <string name="mute5min">5 minuten dempen</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

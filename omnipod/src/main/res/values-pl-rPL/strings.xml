@@ -13,17 +13,27 @@
     <string name="omnipod_alert_expiration">Pod wkrótce straci ważność</string>
     <string name="omnipod_alert_expiration_advisory">Pod wkrótce straci ważność</string>
     <string name="omnipod_alert_shutdown_imminent">Wyłączenie jest nieuchronne</string>
-    <string name="omnipod_alert_low_reservoir">Niski poziom w zbiorniku</string>
-    <string name="omnipod_alert_unknown_alert">Nieznany alarm</string>
     <!-- Omnipod - History -->
     <string name="omnipod_history_item_description">Opis</string>
     <string name="omnipod_history_item_date">Data</string>
+    <!-- Omnipod - Short status -->
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Ostrzeżenie</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować Omnipod przed uruchomieniem tego działania.</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Odłącz Pod</string>
+    <string name="omnipod_cmd_set_bolus">Podanie bolusa</string>
+    <string name="omnipod_cmd_cancel_bolus">Anulowanie bolusa</string>
+    <string name="omnipod_cmd_set_basal_schedule">Ustaw harmonogram Dawki bazowej</string>
+    <string name="omnipod_cmd_get_pod_status">Pobierz status Pod</string>
+    <string name="omnipod_cmd_get_pod_info">Pobierz informacje o Pod</string>
+    <string name="omnipod_cmd_set_time">Ustaw czas</string>
+    <string name="omnipod_cmd_configure_alerts">Konfigurowanie alertów</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Potwierdź alerty</string>
+    <string name="omnipod_cmd_suspend_delivery">Wstrzymaj podawanie</string>
+    <string name="omnipod_cmd_resume_delivery">Wznów podawanie</string>
+    <string name="omnipod_cmd_unknown_entry">Nieznany Wpis</string>
     <!-- Omnipod - Pod Management -->
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_next">Dalej</string>

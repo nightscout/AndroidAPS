@@ -428,8 +428,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basale IAB berekening</string>
     <string name="overview_editquickwizard_usetrend">Tendens berekening</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus berekening</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
     <string name="positiveonly">Slegs positiewe</string>
     <string name="negativeonly">Slegs negatiewe</string>
     <string name="overview_editquickwizard_usecob">COB berekening</string>
@@ -633,7 +631,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">Lae tydelike doelwitte verlaag sensitiwiteit</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Laer sensitiwiteit vir tydelike doelwitte < 100]]></string>
     <string name="combo_invalid_setup">Ongeldige pomp opstelling kontroleer die hulpdokumente en verifieer dat die vinnige inligting kieslys wel QUICK INFO benaam is met behulp van die 360 konfigurasie sagteware.</string>
-    <string name="custom">Gepasmaak</string>
     <string name="careportal_removestartedevents">Skoon AndroidAPS begin</string>
     <string name="storedsettingsfound">Gestoorde instellings gevind</string>
     <string name="allow_hardware_pump_text">Aandag: As jy aktiveer en koppel aan \'n hardeware pomp, AndroidAPS sal die basale instellings uit die profiel aan die pomp kopieer, die bestaande basale koers gestoor op die pomp sal oorskryf word. Maak seker jy het die korrekte basale instelling in AndroidAPS. As jy nie seker is of nie die basale instellings wil oorskryf op jou pomp, druk Kanselleer en herhaal oorskakel na die pomp op \'n later tyd.</string>

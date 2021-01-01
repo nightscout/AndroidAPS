@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
     <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [U]</string>
     <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [g]</string>
+    <string name="nav_preferences_plugin">%1$s העדפות</string>
     <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
@@ -28,14 +29,14 @@
     <string name="description_ama">מצב האלגוריתם ב-2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה, ולחצני פעולות שימושיות</string>
-    <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלך עושה</string>
+    <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
-    <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo מחייב התקנת ruffy</string>
+    <string name="description_pump_combo">חיבור משאבת Accu-Chek Combo, מחייב התקנת ruffy</string>
     <string name="description_pump_mdi">טיפול בזריקות יום-יומיות</string>
     <string name="description_pump_virtual">שילוב משאבה עבור משאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
-    <string name="description_sensitivity_oref1">הרגישות מחושבת מנתונים מ-8 או 24 השעות האחרונות (הרגישות הנמוכה מביניהם). הפחמימות (אם לא נספגו) מפסיקות להיחשב לאחר משך זמן שהוגדר בהגדרות. פלאגין זה מחשב גם ארוחות לא מוכרזות (UAM).</string>
+    <string name="description_sensitivity_oref1">הרגישות מחושבת מנתונים מ-8 או 24 השעות האחרונות (הרגישות הנמוכה מביניהם). הפחמימות (אם לא נספגו) מפסיקות להיחשב לאחר משך זמן שהוגדר בהגדרות. תוסף זה מחשב גם ארוחות לא ידועות מראש (UAM).</string>
     <string name="description_sensitivity_weighted_average">הרגישות מחושבת כממוצע משוקלל מערכי הסטיות. ערכי סטיות חדשים יותר יזכו לשקלול גבוה יותר. ספיגת הפחמימות המינימלית מחושבת על בסיס נתון משך ספיגת פחמימות מקסימלי מההגדרות. אלגוריתם זה הוא המהיר ביותר במעקב אחר שינויי רגישות.</string>
     <string name="description_source_eversense">קבלת ערכי רמת סוכר מאפליקצית Eversense עם פאץ\'.</string>
     <string name="description_source_glimp">קבלת ערכי סוכר בדם מ-Glimp.</string>
@@ -287,9 +288,9 @@
     <string name="ns_upload_only">העלאה ל-nightscout בלבד (סנכרון מבוטל)</string>
     <string name="ns_upload_only_summary">העלאה ל- NS בלבד. ללא השפעה על SGV אלא אם נבחר מקור מקומי כגון Xdrip. ללא השפעה על הפרופילים כל עוד פרופיל NS בשימוש.</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
-    <string name="primefill">הפעלה/מילוי</string>
+    <string name="primefill">תיחול\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
-    <string name="fillbolus_title">מילוי\מילוי מראש כמויות סטנדרטיות של אינסולין</string>
+    <string name="fillbolus_title">מילוי\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">השהה לולאה ל-3 שע\'</string>
     <string name="suspendloopfor10h">השהה לולאה ל-10 שע\'</string>
     <string name="suspendloopforXmin">השהה לולאה ל-%1$d דקות</string>
+    <string name="disconnectpump">ניתוק משאבה</string>
     <string name="disconnectpumpfor15m">נתק את המשאבה למשך 15 דקות</string>
     <string name="disconnectpumpfor30m">נתק את המשאבה למשך 30 דקות</string>
     <string name="disconnectpumpfor1h">נתק את המשאבה למשך שעה</string>
     <string name="disconnectpumpfor2h">נתק את המשאבה למשך שעתיים</string>
     <string name="disconnectpumpfor3h">נתק את המשאבה למשך שלוש שעות</string>
+    <string name="duration15m">15 דקות</string>
+    <string name="duration30m">30 דקות</string>
+    <string name="duration1h">שעה אחת</string>
+    <string name="duration2h">שעתיים</string>
+    <string name="duration3h">3 שעות</string>
+    <string name="duration10h">10 שעות</string>
     <string name="resume">חידוש</string>
     <string name="reconnect">חיבור משאבה מחדש</string>
     <string name="smscommunicator_wrongduration">משך שגוי</string>
@@ -543,7 +551,7 @@
     <string name="enable_pump_unreachable_alert">התראה אם המשאבה בלתי נגישה</string>
     <string name="pump_unreachable_threshold">סף משאבה בלתי נגישה [min]</string>
     <string name="enable_carbs_req_alert">התראה אם יש צורך בפחמימות</string>
-    <string name="urgent_alarm">התרעה דחופה</string>
+    <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
     <string name="dexcomg5_nsupload_title">טעינת נתוני סוכר ל-Nightscout</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">חישוב IOB של בזאלי</string>
     <string name="overview_editquickwizard_usetrend">חישוב מגמה</string>
     <string name="overview_editquickwizard_usesuperbolus">חישוב סופר בולוס</string>
-    <string name="yes">כן</string>
-    <string name="no">לא</string>
     <string name="positiveonly">חיובי בלבד</string>
     <string name="negativeonly">שלילי בלבד</string>
     <string name="overview_editquickwizard_usecob">חישוב פחמ\' פעילות</string>
@@ -612,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">לא נותר מספיק אינסולין במיכל בשביל להשלים את הבולוס</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="set_neutral_temps_title">הגדרת קצב בזאלי ניטרלי</string>
-    <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
     <string name="enablesmbalways">הפעלת SMB תמיד</string>
     <string name="enablesmbalways_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
     <string name="enablesmbaftercarbs">הפעלת SMB אחרי פחמימות</string>
@@ -762,8 +766,8 @@
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="setupwizard_profile_description">נא לבחור מקור פרופיל. אם המטופל הוא ילד כדאי להשתמש בפרופיל NS. אם אף אחד לא עוקב אחרייך ב-Nightscout כנראה שתעדיף פרופיל מקומי. יש זכור כי אתם בוחרים רק את מקור הפרופיל. כדי להשתמש בו יש להפעילו הפעלת \"החלפת פרופיל\"</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">ממתין לחיבור לריילילינק…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן להמשיך בהתקנה לאחר אתחול המשאבה.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן יהיה להמשיך בהתקנה לאחר חיבור ההמשאבה.\n</string>
     <string name="startobjective">התחלת המשימה הראשונה שלכם</string>
     <string name="permission">הרשאה</string>
     <string name="askforpermission">מבקש הרשאה</string>
@@ -790,7 +794,6 @@
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
     <string name="combo_invalid_setup">הגדרת משאבה לא חוקית, בדקו את הוראות ההפעלה וודאו שתפריט \'מידע מהיר\' נקרא בשם QUICK INFO באמצעות תוכנת התצורה 360.</string>
-    <string name="custom">מותאם אישית</string>
     <string name="careportal_removestartedevents">מחק אירועי \"AndroidAPS Started\"</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
@@ -819,9 +822,9 @@
     <string name="loop_openmode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="searching_for_devices">מחפש התקנים…</string>
-    <string name="pairing_completed">הזיווג הושלם</string>
+    <string name="pairing_completed">הצימוד הושלם</string>
     <string name="code_compare">האם הקודים המוצגים בהתקן זה ובמשאבה זהים?</string>
-    <string name="insight_pairing">זיווג Insight</string>
+    <string name="insight_pairing">צימוד Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_delivered">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
@@ -853,8 +856,8 @@
     <string name="bluetooth_address">כתובת בלוטות\'</string>
     <string name="system_id_appendix">נספח זהות מערכת</string>
     <string name="manufacturing_date">תאריך ייצור</string>
-    <string name="delete_pairing">מחיקת זיווג</string>
-    <string name="pairing_information">פרטי זיווג</string>
+    <string name="delete_pairing">מחיקת צימוד</string>
+    <string name="pairing_information">פרטי צימוד</string>
     <string name="start_pump">הפעל משאבה</string>
     <string name="stop_pump">עצור משאבה</string>
     <string name="operating_mode">מצב פעולה</string>
@@ -863,7 +866,7 @@
     <string name="tdd_basal">מינון בזאלי יומי מצטבר</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
     <string name="recovering">משחזר</string>
-    <string name="not_paired">לא מזווג</string>
+    <string name="not_paired">לא מצומד</string>
     <string name="last_connected">התחברות אחרונה</string>
     <string name="started">החל</string>
     <string name="stopped">נעצר</string>
@@ -978,7 +981,9 @@
     <string name="description_source_dexcom">קבלת ערכי רמת סוכר מאפליקציית Dexcom עם פאץ\'.</string>
     <string name="notification">התראה</string>
     <string name="notification_message">התראה: %1$s</string>
+    <string name="alarm_message">התראה: %1$s</string>
     <string name="message_short">הודעה:</string>
+    <string name="alarm_short">התראה:</string>
     <string name="profilepercentage">אחוז הפרופיל</string>
     <string name="percent_u">אחוז [%]:</string>
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
@@ -1180,4 +1185,15 @@
     <string name="filter">סינון</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
+    <string name="alarm">התראה</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
+    <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
+    <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
+    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
+    <string name="bolusadvisor">יועץ הבולוסים</string>
+    <string name="bolusadvisormessage">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
+    <string name="enablebolusadvisor">אפשר את יועץ הבולוסים</string>
+    <string name="enablebolusadvisor_summary">קובע תזכורת לאכול במקום להשתמש באשף במהלך היפרגליקמיה</string>
+    <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
+    <string name="timetoeat">זמן לאכול</string>
 </resources>
