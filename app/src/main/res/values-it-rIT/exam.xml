@@ -92,6 +92,7 @@
     <string name="breadgrams_grams">Solo i grammi dovrebbero essere utilizzati per stimare e registrare i carboidrati consumati.</string>
     <string name="breadgrams_exchange">I carboidrati consumati possono essere registrati utilizzando un sistema di scambio appropriato (ad esempio: gli scambi CHO \"DAFNE\" o le unità di pane europee \"Bread Units\").</string>
     <string name="breadgrams_decay">AndroidAPS usa un modello dinamico per stimare il \"decadimento\" dei carboidrati e calcolare COB.</string>
+    <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">Per cosa potresti usare gli e-carbs (carboidrati estesi)?</string>
     <string name="extendedcarbs_fat">Gli e-carbs (distribuiti nel futuro) possono aiutare AndroidAPS a gestire pasti ricchi di grassi/proteine.</string>
