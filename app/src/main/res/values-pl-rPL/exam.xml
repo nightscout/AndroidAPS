@@ -116,7 +116,9 @@
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid ® /Humulin R ®/\"zwykła\" insulina ludzka.</string>
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
+    <string name="sensitivity_label">Wtyczki wrażliwości</string>
     <string name="sensitivity_which">Sprawdź/Zaznacz wszystkie prawidłowe odpowiedzi.</string>
+    <string name="sensitivity_adjust">Wtyczki wrażliwości pozwalają AndroidAPS dostosować się do czasowych lub krótkotrwałych zmian wrażliwości na insulinę (na przykład zmiany hormonalne lub problemy z wchłanianiem w miejscu wkłucia).</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_whattodo">Co powinieneś zrobić, gdy wprowadziłeś niewłaściwą ilość węglowodanów?</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>
