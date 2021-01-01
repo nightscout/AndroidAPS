@@ -54,6 +54,8 @@
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_label">Esercizio e target temporanei</string>
     <string name="exercise_whattodo">Come puoi usare i target temporanei per aiutare al meglio il sistema a gestire l\'esercizio aerobico?</string>
+    <string name="exercise_settt">Impostare un target glicemico per l\'attività fisica in un momento adeguato, sufficientemente prima dell\'inizio dell\'esercizio.</string>
+    <string name="exercise_setfinished">Impostare un target glicemico per l\'attività fisica dopo la fine dell\'esercizio.</string>
     <string name="exercise_setunchanged">Lasciare il tuo target glicemico invariato.</string>
     <string name="exercise_15g">Attendere che la glicemia scenda al di sotto del tuo target temporaneo \"ipoglicemia\" e poi mangiare 15 g di carboidrati a rapido assorbimento.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
@@ -130,7 +132,7 @@
     <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
     <string name="wronginsulin_whattodo">Cosa dovresti fare se hai ricevuto meno insulina di quanto lo storico del micro suggerisce? Ad esempio a causa di un\'occlusione, una cannula difettosa o l\'aver dimenticato di riattaccare il micro dopo una doccia? </string>
     <string name="wronginsulin_careportal">Eliminare dal portale Nightscout i dati relativi all\'insulina per rimuoverli dallo storico del micro.</string>
-    <string name="wronginsulin_compare">Confrontare i valori in AndroidAPS e lo storico del micro.</string>
+    <string name="wronginsulin_compare">Confrontare i valori in AndroidAPS con lo storico del micro.</string>
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
     <string name="wronginsulin_donothing">Non fare nulla e permettere ad AndroidAPS di correggere eventuali glicemie alte.</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
@@ -159,7 +161,7 @@
     <string name="nsclient_data">Per seguire AndroidAPS da remoto, entrambi i dispositivi devono avere accesso a internet (ad esempio via Wi-Fi o dati da rete mobile/cellulare).</string>
     <string name="nsclient_fullcontrol">NS Client utilizzato come follower remoto monitorerà AndroidAPS e ne fornirà il pieno controllo.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
-    <string name="isf_label_exam">Fattore di Sensibilità Insulinica (ISF)</string>
+    <string name="isf_label_exam">Fattore di sensibilità insulinica (ISF)</string>
     <string name="isf_increasingvalue">Aumentare i valori di ISF porterà a una maggiore erogazione di insulina per coprire una specifica quantità di carboidrati.</string>
     <string name="isf_decreasingvalue">Ridurre i valori ISF porta a una maggiore erogazione di insulina per correggere una glicemia al di sopra del target.</string>
     <string name="isf_noeffect">Aumentare o ridurre ISF non ha alcun effetto sull\'erogazione di insulina quando le glicemie sono al di sotto del target.</string>
