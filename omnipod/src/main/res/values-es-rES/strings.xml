@@ -1,37 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Omnipod -->
-    <!-- Omnipod - Base -->
-    <string name="description_pump_omnipod">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
-    <!-- Omnipod Configuration -->
-    <!-- Omnipod - Fragment -->
-    <string name="omnipod_reservoir_left">%1$.2f U restantes</string>
-    <string name="omnipod_reservoir_over50">Más De 50 U</string>
-    <!-- Omnipod - Dialogs -->
-    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
-    <!-- Omnipod - Error -->
-    <string name="omnipod_error_illegal_init_action_type">Ilegal PodInitActionType: %1$s</string>
-    <string name="omnipod_driver_error_unexpected_exception_type">Error inesperado. Por favor, informe! (tipo: %1$s).</string>
-    <string name="omnipod_driver_error_communication_failed_unexpected_exception">La comunicación ha fallado: error inesperado. ¡Por favor, Informe!</string>
-    <!-- Omnipod - Pod Mgmt -->
-    <string name="omnipod_cmd_init_pod">Iniciar Pod</string>
-    <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
-    <string name="omnipod_cmd_pod_history_na">Historial del Pod no disponible en el momento.</string>
-    <string name="omnipod_init_pod_wizard_step1_title">Llenar el Pod</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Cebado</string>
-    <string name="omnipod_init_pod_wizard_step3_title">Adherir el Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPreparar el sitio de infusión. Retire el capuchón de la aguja del Pod y el adhesivo y aplique el Pod al sitio de perfusión.\n\nSi la cánula se queda fuera, por favor presione <b>Cancel</b> y descarte su Pod.\n\nPress <b>Next</b> para insertar la cánula y comenzar la entrega basal.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Insertar cánula</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Intentando establecer la programación basal inicial e insertar la cánula.\n\nCuando todos los elementos están marcados, puede pulsar <b>Siguiente</b>.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nEl Pod ahora está activo.\n\nSu horario basal ha sido programado y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si usted siente que no lo ha hecho.</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega insulina y desactivará el Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Desactivando el Pod</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod desactivado.\n\nPor favor, retire el Pod de su cuerpo y desecharlo.</string>
-    <string name="omnipod_init_pod_pair_pod">Emparejar Pod</string>
-    <string name="omnipod_init_pod_prime_pod">Llenado de cánula del Pod</string>
-    <!-- Omnipod - Base -->
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Non translatable -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">Configuración de RileyLink</string>
+    <string name="omnipod_config_bolus_beeps_enabled">Pitidos de bolo habilitados</string>
+    <string name="omnipod_config_basal_beeps_enabled">Pitidos de basales habilitados</string>
+    <string name="omnipod_config_smb_beeps_enabled">Pitidos SMB habilitados</string>
+    <string name="omnipod_config_tbr_beeps_enabled">Aviso de TBR activado</string>
+    <string name="omnipod_config_suspend_delivery_button_enabled">Mostrar el botón Suspender entrega en la pestaña Omnipod</string>
+    <string name="omnipod_config_pulse_log_button_enabled">Mostrar botón de registro de pulso en el menú de gestión del pod</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Mostrar botón de estadísticas de RileyLink en el menú de gestión del pod</string>
+    <string name="omnipod_config_use_riley_link_battery_level">Usar el nivel de batería reportado por EmaLink/Orangelink</string>
+    <string name="omnipod_config_use_riley_link_battery_level_summary">NO funciona con el RileyLink original. Puede que no funcione con otras alternativas de RiyeyLink.</string>
+    <string name="omnipod_config_time_change_enabled">Detección de zona DST/hora activada</string>
+    <string name="omnipod_config_expiration_reminder_enabled">Recordatorio de expiración activado</string>
+    <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Horas antes del apagado</string>
+    <string name="omnipod_config_low_reservoir_alert_enabled">Alerta de depósito bajo habilitada</string>
+    <string name="omnipod_config_low_reservoir_alert_units">Número de Unidades</string>
+    <string name="omnipod_config_notification_uncertain_tbr_sound_enabled">Sonido para notificaciones TBR inciertas habilitadas</string>
+    <string name="omnipod_config_notification_uncertain_smb_sound_enabled">Sonido para notificaciones SMB inciertas habilitadas</string>
+    <string name="omnipod_config_notification_uncertain_bolus_sound_enabled">Sonido para notificaciones de bolo incierto activadas</string>
+    <string name="omnipod_config_automatically_acknowledge_alerts">Reconocer automáticamente alertas de Pod</string>
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Otros</string>
+    <string name="omnipod_preference_category_alerts">Alertas</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Pitidos de confirmación</string>
+    <string name="omnipod_preference_category_notifications">Notificaciones</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Ningún pod activo</string>
+    <string name="omnipod_pod_status_waiting_for_activation">Configuración en curso (a la espera de activación del Pod)</string>
+    <string name="omnipod_pod_status_waiting_for_cannula_insertion">Configuración en curso (en espera de inserción de cánula)</string>
+    <string name="omnipod_pod_status_running">Funcionando</string>
+    <string name="omnipod_pod_status_suspended">Suspendido</string>
+    <string name="omnipod_pod_status_pod_fault">Error del Pod</string>
+    <string name="omnipod_pod_status_activation_time_exceeded">Tiempo de activación excedido</string>
+    <string name="omnipod_pod_status_inactive">Inactivo</string>
+    <string name="omnipod_pod_status_pod_fault_description">Error del Pod: %1$03d %2$s</string>
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_alert_finish_pairing_reminder">Finalizar recordatorio de emparejamiento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Recordatorio de configuración finalizado</string>
+    <string name="omnipod_alert_expiration">Pod a punto de caducar</string>
+    <string name="omnipod_alert_expiration_advisory">Pod a punto de caducar</string>
     <string name="omnipod_alert_shutdown_imminent">El apagado es inminente</string>
     <string name="omnipod_alert_low_reservoir">Reservorio bajo</string>
     <string name="omnipod_alert_unknown_alert">Alerta desconocida</string>
+    <!-- Omnipod - History -->
+    <string name="omnipod_history_title">Historial de Pod</string>
+    <string name="omnipod_history_item_description">Descripción</string>
+    <string name="omnipod_history_item_source">Fuente</string>
+    <string name="omnipod_history_item_date">Fecha</string>
+    <string name="omnipod_history_type">Tipo:</string>
+    <string name="omnipod_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
+    <string name="omnipod_history_tbr_value">Tasa: %1$.2f U, duración: %2$d minutos</string>
+    <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_no_active_pod">Ningún pod activo</string>
+    <string name="omnipod_short_status_last_connection">Última conn: hace %1$d minutos</string>
+    <string name="omnipod_short_status_last_bolus">ÚltimoBolo: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Temp: %1$s</string>
+    <string name="omnipod_short_status_extended_bolus">Extendido: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Reserv: %1$sU</string>
+    <string name="omnipod_short_status_rl_battery">RLBat: %1$d</string>
+    <!-- Omnipod - Error -->
+    <string name="omnipod_warning">Alerta</string>
+    <string name="omnipod_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">La operación no es posible.\n\nDebe configurar Omnipod primero, antes de poder usar esta operación.</string>
+    <string name="omnipod_error_pod_not_attached">Ningún pod activo</string>
+    <string name="omnipod_error_unexpected_exception">Error inesperado. Por favor, informe! (tipo: %1$s:%2$s).</string>
+    <string name="omnipod_error_crc_mismatch">Comunicación fallida: falló la verificación de integridad del mensaje</string>
+    <string name="omnipod_error_invalid_packet_type">La comunicación ha fallado: se ha recibido una respuesta no válida del Pod</string>
+    <string name="omnipod_error_invalid_progress_state">La comunicación ha fallado: el Pod está en un estado incorrecto</string>
+    <string name="omnipod_error_invalid_response">La comunicación ha fallado: se ha recibido una respuesta no válida del Pod</string>
+    <string name="omnipod_error_invalid_message_sequence_number">Ha fallado la comunicación: se ha recibido un mensaje con un número de secuencia no válido del Pod</string>
+    <string name="omnipod_error_invalid_message_address">La comunicación ha fallado: se ha recibido un mensaje con una dirección no válida desde el Pod</string>
+    <string name="omnipod_error_message_decoding_failed">Comunicación fallida: no se pudo descifrar el mensaje del Pod</string>
+    <string name="omnipod_error_nonce_resync_failed">La comunicación ha fallado: nonce resync ha fallado</string>
+    <string name="omnipod_error_nonce_out_of_sync">La comunicación ha fallado: nonce fuera de sincronización</string>
+    <string name="omnipod_error_not_enough_data">La comunicación ha fallado: no se han recibido suficientes datos del Pod</string>
+    <string name="omnipod_error_pod_fault">Un error de Pod (%1$03d %2$s) se ha detectado. Por favor, desactive su Pod e inicie uno nuevo</string>
+    <string name="omnipod_error_pod_returned_error_response">Fallo en la comunicación: el Pod devolvió una respuesta de error</string>
+    <string name="omnipod_error_communication_failed_no_response_from_riley_link">No hay respuesta de RileyLink</string>
+    <string name="omnipod_error_communication_failed_riley_link_interrupted">RileyLink interrumpido</string>
+    <string name="omnipod_error_communication_failed_no_response_from_pod">Sin respuesta del Pod</string>
+    <string name="omnipod_error_set_basal_failed_delivery_might_be_suspended">Error al configurar el perfil basal. ¡La entrega podría suspenderse! Por favor, actualiza manualmente el estado de Pod desde la pestaña Omnipod y reanuda la entrega si es necesario.</string>
+    <string name="omnipod_error_set_basal_might_have_failed_delivery_might_be_suspended">Possible error al configurar el perfil basal. ¡La entrega puede haber suspendida! Por favor, actualiza manualmente el estado de Pod desde la pestaña Omnipod y reanuda la entrega si es necesario.</string>
+    <string name="omnipod_error_set_basal_failed_delivery_suspended">Error al establecer el perfil basal. ¡La entrega está suspendida! Reanude manualmente la entrega desde la pestaña Omnipod.</string>
+    <string name="omnipod_error_set_basal_failed">Error al establecer el perfil basal.</string>
+    <string name="omnipod_error_cancel_temp_basal_failed_uncertain">La cancelación de basal temporal puede haber fallado. Por favor, actualice manualmente el estado de Pod desde la pestaña Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Error al establecer la basal temporal. Si anteriormente se estaba ejecutando un basal temporal, es posible que se haya cancelado. Renueve manualmente el estado de Pod en la pestaña Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Posible error al establecer basal temporal. Si anteriormente se estaba ejecutando una basal temporal, se ha cancelado. Renueve manualmente el estado de Pod en la pestaña Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_validation">La duración de la TBR debe ser mayor que cero y múltiplo de %1$s minutos.</string>
+    <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Possible error al establecer la hora. ¡La entrega puede haber suspendida! Por favor, actualiza manualmente el estado de Pod desde la pestaña Omnipod y reanuda la entrega si es necesario.</string>
+    <string name="omnipod_error_set_time_failed_delivery_suspended">Error al establecer el tiempo. ¡La entrega está suspendida! Reanude manualmente la entrega desde la pestaña Omnipod.</string>
+    <string name="omnipod_error_failed_to_set_profile_empty_profile">No se ha podido establecer el perfil basal: se ha recibido un perfil vacío. Asegúrese de activar su perfil basal.</string>
+    <string name="omnipod_error_set_initial_basal_schedule_no_profile">Ningún perfil basal está activo. Asegúrese de activar su perfil basal.</string>
+    <string name="omnipod_error_unknown_custom_command">Comando personalizado desconocido: %1$s</string>
+    <string name="omnipod_error_failed_to_read_pulse_log">Fallo al leer el registro de pulso</string>
+    <string name="omnipod_error_failed_to_refresh_status">Error al actualizar el estado</string>
+    <string name="omnipod_error_failed_to_refresh_status_on_startup">Error al actualizar el estado al iniciar</string>
+    <string name="omnipod_error_failed_to_acknowledge_alerts">Error al reconocer alertas</string>
+    <string name="omnipod_error_failed_to_suspend_delivery">Error al suspender la entrega</string>
+    <string name="omnipod_error_failed_to_set_time">Error al establecer la hora</string>
+    <string name="omnipod_error_failed_to_resume_delivery">Error al aceptar la entrega</string>
+    <string name="omnipod_error_automatic_time_or_timezone_change_failed">No se pudo cambiar automáticamente la hora en el Pod. Debe sincronizar manualmente la hora en la pestaña Omnipod.</string>
+    <string name="omnipod_error_bolus_failed_uncertain">No se ha podido verificar si el bolo ha sido entregado. Por favor, verifique manualmente si su Pod está entregando escuchando los clics. <b>Si está seguro de que el bolo no ha sido entregado debe eliminar manualmente la entrada en bolo de los tratamientos, incluso si hace clic en \'Cancelar bolo\' ahora!</b></string>
+    <string name="omnipod_error_bolus_failed_uncertain_smb">No se puede verificar si el bolo SMB (%1$.2f U) ha sido entregado. <b>Si está seguro de que el Bolus no ha tenido éxito, debe eliminar manualmente la entrada SMB de los Tratamientos.</b></string>
+    <string name="omnipod_error_bolus_did_not_succeed">Bolo no entregado.</string>
+    <string name="omnipod_error_failed_to_initialize_pod">Error al iniciar el Pod</string>
+    <string name="omnipod_error_failed_to_insert_cannula">Fallo al insertar cánula</string>
+    <string name="omnipod_error_pod_fault_activation_time_exceeded">Se ha excedido el tiempo de activación del Pod. Este Pod ya no se puede activar.</string>
+    <string name="omnipod_error_failed_to_verify_activation_progress">Error al verificar el progreso de activación. Vuelva a intentarlo.</string>
+    <string name="omnipod_error_pod_suspended">Pod suspendido</string>
+    <string name="omnipod_error_failed_to_play_test_beep">Error al reproducir el pitido de prueba</string>
+    <string name="omnipod_error_tbr_running_but_aaps_not_aware">Una base temporal se está ejecutando en el Pod, pero AAPS no está al tanto de esta base temporal. Por favor cancele su basal temporal manualmente.</string>
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_confirmation">Confirmación</string>
+    <string name="omnipod_confirmation_time_or_timezone_change">Tiempo y/o zona horaria cambiados en el Pod.</string>
+    <string name="omnipod_confirmation_expiration_alerts_updated">La configuración de alerta ha sido actualizada en el Pod.</string>
+    <string name="omnipod_confirmation_time_on_pod_updated">La hora del Pod se ha actualizado.</string>
+    <string name="omnipod_confirmation_suspended_delivery">Se han suspendido todas las entregas de insulina.</string>
+    <string name="omnipod_confirmation_acknowledged_alerts">Las alertas activas han sido reconocidas.</string>
+    <string name="omnipod_confirmation_delivery_resumed">La entrega de insulina se ha reanudado.</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_cmd_discard_pod">Descartar Pod</string>
+    <string name="omnipod_cmd_set_bolus">Asignar bolo</string>
+    <string name="omnipod_cmd_cancel_bolus">Cancelar bolo</string>
+    <string name="omnipod_cmd_set_tbr">Establecer base temporal</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Cancelar base temporal (Internamente por controlador)</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancelar base temporal</string>
+    <string name="omnipod_cmd_set_basal_schedule">Establecer programación basal</string>
+    <string name="omnipod_cmd_get_pod_status">Obtener estado de Pod</string>
+    <string name="omnipod_cmd_get_pod_info">Obtener información de Pod</string>
+    <string name="omnipod_cmd_set_time">Establecer hora</string>
+    <string name="omnipod_cmd_configure_alerts">Configurar alertas</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Confirmar Alertas</string>
+    <string name="omnipod_cmd_suspend_delivery">Suspender la entrega</string>
+    <string name="omnipod_cmd_resume_delivery">Reanudar la entrega</string>
+    <string name="omnipod_cmd_unknown_entry">Entrada desconocida</string>
+    <string name="omnipod_cmd_initialize_pod">Activar Pod</string>
+    <string name="omnipod_cmd_insert_cannula">Insertar cánula</string>
+    <string name="omnipod_cmd_read_pulse_log">Leer registro pulso</string>
+    <string name="omnipod_cmd_set_fake_suspended_tbr">Establece una base temporal falsa porque el Pod está suspendido</string>
+    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Cancelar la base temporal falsa que se ha creado porque el Pod se ha suspendido</string>
+    <string name="omnipod_cmd_split_tbr">Dividir basal temporal debido a un fallo incierto en la cancelación</string>
+    <string name="omnipod_cmd_beep_config">Configuración pitido</string>
+    <string name="omnipod_cmd_play_test_beep">Reproducir pitido de prueba</string>
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_pod_management_title">Administración de Pod</string>
+    <string name="omnipod_pod_management_heading_actions">Acciones</string>
+    <string name="omnipod_pod_management_heading_tools">Herramientas</string>
+    <string name="omnipod_pod_management_waiting_for_rileylink_connection">Esperando la conexión de RileyLink…</string>
+    <string name="omnipod_pod_management_button_activate_pod">Activar Pod</string>
+    <string name="omnipod_pod_management_button_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_pod_management_button_discard_pod">Descartar Pod</string>
+    <string name="omnipod_pod_management_button_pod_history">Historial de Pod</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">Estadísticas de RileyLink</string>
+    <string name="omnipod_pod_management_button_reset_riley_link_config">Restablecer configuración de RileyLink</string>
+    <string name="omnipod_pod_management_button_read_pulse_log">Leer registro pulso</string>
+    <string name="omnipod_pod_management_button_reading_pulse_log">Leyendo registro de pulso…</string>
+    <string name="omnipod_pod_management_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla continuamente. Si todavía puede comunicarse con el Pod, utilice la opción <b>Desactivar Pod</b>.\n\nSi desea continuar, por favor asegúrese de quitar el Pod de su cuerpo!</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Reproducir pitido de prueba</string>
+    <string name="omnipod_pod_management_button_playing_test_beep">Reproduciendo pitido de prueba…</string>
+    <!-- Omnipod - Wizard common -->
+    <string name="omnipod_wizard_button_cancel">Cancelar</string>
+    <string name="omnipod_wizard_button_finish">Terminar</string>
+    <string name="omnipod_wizard_button_next">Siguiente</string>
+    <string name="omnipod_wizard_button_retry">Reintentar</string>
+    <string name="omnipod_wizard_button_deactivate_pod">Desactivar Pod</string>
+    <string name="omnipod_wizard_button_discard_pod">Descartar Pod</string>
+    <string name="omnipod_wizard_exit_confirmation_text">Todavía no has completado todos los pasos. ¿Está seguro de que desea salir?</string>
+    <string name="omnipod_wizard_exit_confirmation_title">Salir</string>
+    <!-- Omnipod - Pod activation Wizard -->
+    <string name="omnipod_pod_activation_wizard_fill_pod_title">Llenar Pod</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_text">\nLlenar el nuevo Pod con suficiente insulina para 3 días.\n\nEscucha dos pitidos del Pod durante el proceso de llenado. Esto indica que se ha insertado la cantidad mínima de 85U. Asegúrese de vaciar completamente la jeringa, incluso después de escuchar los dos pitidos.\n\nDespués de llenar el Pod, por favor pulse <b>siguiente</b>.\n\n<b>Nota:</b> no retire el capuchón de la aguja del Pod en este momento.\n<b>Nota:</b> por favor coloque el RileyLink cerca del Pod y en posición vertical.</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_title">Activar Pod</string>
+    <string name="omnipod_pod_activation_wizard_initialize_pod_text">Intentando emparejar con el nuevo Pod y llenarlo.\n\nCuando se ha inicializado con éxito, puedes pulsar <b>Siguiente</b>.\n\n<b>Nota:</b> por favor mantenga el RileyLink muy cerca del Pod y en posición vertical en este momento.</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_title">Adherir el Pod</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_text">Prepara el sitio de infusión. Retire el tapón de agujas y el adhesivo del Pod y coloca el Pod al sitio de infusión.\n\nSi la cánula se queda fuera pulsa <b>Cancelar</b> y descartar tu Pod.\n\nPresione <b>Siguiente</b> para insertar la cánula y comenzar la entrega basal.</string>
+    <string name="omnipod_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Al pulsar <b>OK</b>, se insertará la cánula. Asegúrese de que ha colocado el Pod al sitio de infusión.</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_title">Insertar cánula</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">Intentando establecer la programación basal inicial e insertar la cánula.\n\n si la cánula ha sido insertada correctamente puede pulsar <b>Siguiente</b>.</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod activado</string>
+    <string name="omnipod_pod_activation_wizard_pod_activated_text">\nEl Pod nuevo ahora está activo.\n\nSu tasa basal ha sido programada y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si tiene dudas.</string>
+    <!-- Omnipod - Pod deactivation Wizard -->
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Desactivar Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivate_pod_text">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega de insulina y desactivará el Pod.</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_title">Desactivando el Pod</string>
+    <string name="omnipod_pod_deactivation_wizard_deactivating_pod_text">Desactivando el Pod.\n\nCuando la desactivación se haya completado correctamente, puede pulsar <b>Next</b>.</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_title">Pod desactivado</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_deactivated_text">El Pod se ha desactivado.\n\nPor favor, retire el Pod de su cuerpo y recíclelo.</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_discarded_title">Pod descartado</string>
+    <string name="omnipod_pod_deactivation_wizard_pod_discarded_text">El estado de Pod se ha descartado. La entrega de insulina no se ha suspendido porque el Pod no se ha desactivado correctamente!\n\nPor favor, elimine el Pod de su cuerpo y recíclelo.</string>
+    <string name="omnipod_pod_deactivation_wizard_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla persistentemente. ¿Estás seguro de que quieres descartar el Pod?</string>
+    <string name="omnipod_pod_deactivation_wizard_discard_pod">Descartar Pod</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_overview_button_set_time">Ajustar la hora</string>
+    <string name="omnipod_overview_button_suspend_delivery">Suspender</string>
+    <string name="omnipod_overview_button_refresh">Actualizar</string>
+    <string name="omnipod_overview_button_resume_delivery">Reanudar la entrega</string>
+    <string name="omnipod_overview_button_pod_management">Pod Mgmt</string>
+    <string name="omnipod_overview_button_acknowledge_active_alerts">Alertas Ack</string>
+    <string name="omnipod_overview_pod_status">Estado de Pod</string>
+    <string name="omnipod_overview_total_delivered">Entrega completa</string>
+    <string name="omnipod_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_overview_pod_address">Dirección de Pod</string>
+    <string name="omnipod_overview_pod_expiry_date">Pod caduca</string>
+    <string name="omnipod_overview_last_connection">Última conexión</string>
+    <string name="omnipod_overview_last_bolus">Último bolo</string>
+    <string name="omnipod_overview_temp_basal_rate">Tasa basal temporal</string>
+    <string name="omnipod_overview_base_basal_rate">Tasa basal básica</string>
+    <string name="omnipod_overview_reservoir">Depósito</string>
+    <string name="omnipod_overview_pod_active_alerts">Alertas de Pod activas</string>
+    <string name="omnipod_overview_firmware_version">Version de Firmware</string>
+    <string name="omnipod_overview_time_on_pod">Hora en Pod</string>
+    <string name="omnipod_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutos)</string>
+    <string name="omnipod_overview_reservoir_value">%1$.2f U restantes</string>
+    <string name="omnipod_overview_reservoir_value_over50">Más de 50 U restantes</string>
+    <string name="omnipod_overview_errors">Errores</string>
+    <!-- Omnipod - Other -->
+    <string name="omnipod_pump_description">La integración de la bomba para Omnipod requiere el dispositivo RileyLink (con al menos 2,0 firmware).</string>
+    <string name="omnipod_uncertain">incierto</string>
+    <string name="omnipod_pulse_log">Registro de pulso</string>
+    <string name="omnipod_pulse_log_value">Registro de Pulso (copiado al portapapeles)</string>
+    <string name="omnipod_yes">Si</string>
+    <string name="omnipod_no">No</string>
+    <string name="omnipod_ok">Ok</string>
+    <string name="omnipod_cancel">Cancelar</string>
+    <!-- Omnipod - Times -->
+    <string name="omnipod_moments_ago">Hace un momento</string>
+    <string name="omnipod_less_than_a_minute_ago">Hace menos de un minuto</string>
+    <string name="omnipod_composite_time">%1$s y %2$s</string>
+    <string name="omnipod_time_ago">hace %1$s</string>
+    <plurals name="omnipod_minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <plurals name="omnipod_hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="omnipod_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Alerta Pod: %1$s</item>
+        <item quantity="other">Alertas Pod: %1$s</item>
+    </plurals>
 </resources>

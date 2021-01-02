@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Terug</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verifieer</string>
     <string name="nth_objective">%1$d. Doel</string>
@@ -22,7 +21,7 @@
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
-    <string name="objectives_auto_gate">Zorg ervoor dat je goed begrijpt hoe automatisering werkt voordat je jouw eerste eenvoudige regel aanmaakt. In plaats van de regel een actie te laten uitvoeren, laat hem alleen een notificatie tonen. Pas als je zeker weet dat de automatisering op het juiste moment wordt geactiveerd, vervang je de melding door een echte actie. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Zorg ervoor dat je goed begrijpt hoe automatisering werkt voordat je jouw eerste eenvoudige regel aanmaakt. In plaats van de regel een actie te laten uitvoeren, laat hem alleen een notificatie tonen. Pas als je zeker weet dat de automatisering op het juiste moment wordt geactiveerd, vervang je de melding door een echte actie. (https://androidaps.readthedocs.io/en/latest/NL/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG beschikbaar in NS</string>
     <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS</string>
     <string name="objectives_manualenacts">Handmatige aanpassingen</string>
@@ -41,7 +40,7 @@
     <string name="codeaccepted">Code geaccepteerd</string>
     <string name="codeinvalid">Code ongeldig</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>
-    <string name="objectives_exam_gate">Bestudeer en beantwoord de vragen correct</string>
+    <string name="objectives_exam_gate">Beantwoord de vragen.  Bij elke vraag worden vier antwoordmogelijkheden gegeven. Het kan zijn dat er meer dan één antwoord moet worden aangevinkt. Vink alle antwoorden aan die jij denkt dat juist zijn en kies VERIFIEER.</string>
     <string name="answerdisabledto">Beantwoorden uitgeschakeld tot: %1$s</string>
     <string name="wronganswer">Verkeerd antwoord!</string>
     <string name="unfinshed_button">Volgende onvoltooide</string>

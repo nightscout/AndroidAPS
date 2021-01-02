@@ -55,7 +55,7 @@ public class DetermineBasalAdapterSMBJS {
     @Inject OpenHumansUploader openHumansUploader;
 
 
-    private ScriptReader mScriptReader;
+    private final ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
     private JSONArray mIobData;
@@ -65,6 +65,7 @@ public class DetermineBasalAdapterSMBJS {
     private boolean mMicrobolusAllowed;
     private boolean mSMBAlwaysAllowed;
     private long mCurrentTime;
+    private boolean mIsSaveCgmSource;
 
     private String storedCurrentTemp = null;
     private String storedIobData = null;
@@ -108,6 +109,7 @@ public class DetermineBasalAdapterSMBJS {
         aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
         aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
         aapsLogger.debug(LTag.APS, "CurrentTime: " + (storedCurrentTime = "" + mCurrentTime));
+        aapsLogger.debug(LTag.APS, "isSaveCgmSource: " + mIsSaveCgmSource);
 
 
         DetermineBasalResultSMB determineBasalResultSMB = null;
@@ -237,7 +239,8 @@ public class DetermineBasalAdapterSMBJS {
                         boolean tempTargetSet,
                         boolean microBolusAllowed,
                         boolean uamAllowed,
-                        boolean advancedFiltering
+                        boolean advancedFiltering,
+                        boolean isSaveCgmSource
     ) throws JSONException {
 
         String units = profile.getUnits();
@@ -264,8 +267,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("low_temptarget_lowers_sensitivity", false);
 
 
-        mProfile.put("sensitivity_raises_target", sp.getBoolean(resourceHelper.gs(R.string.key_sensitivity_raises_target),SMBDefaults.sensitivity_raises_target));
-        mProfile.put("resistance_lowers_target", sp.getBoolean(resourceHelper.gs(R.string.key_resistance_lowers_target),SMBDefaults.resistance_lowers_target));
+        mProfile.put("sensitivity_raises_target", sp.getBoolean(R.string.key_sensitivity_raises_target,SMBDefaults.sensitivity_raises_target));
+        mProfile.put("resistance_lowers_target", sp.getBoolean(R.string.key_resistance_lowers_target,SMBDefaults.resistance_lowers_target));
         mProfile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments);
         mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
@@ -281,8 +284,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableUAM", uamAllowed);
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
 
-        boolean smbEnabled = sp.getBoolean(resourceHelper.gs(R.string.key_use_smb), false);
-        mProfile.put("SMBInterval", sp.getInt("key_smbinterval", SMBDefaults.SMBInterval));
+        boolean smbEnabled = sp.getBoolean(R.string.key_use_smb, false);
+        mProfile.put("SMBInterval", sp.getInt(R.string.key_smbinterval, SMBDefaults.SMBInterval));
         mProfile.put("enableSMB_with_COB", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", smbEnabled && sp.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
@@ -354,6 +357,7 @@ public class DetermineBasalAdapterSMBJS {
 
         mCurrentTime = now;
 
+        mIsSaveCgmSource = isSaveCgmSource;
     }
 
     private Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {

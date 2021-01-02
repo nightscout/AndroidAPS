@@ -27,9 +27,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
-import info.nightscout.androidaps.activities.ProfileHelperActivity
+import dev.doubledot.doki.ui.DokiActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.activities.StatsActivity
 import info.nightscout.androidaps.events.EventAppExit
@@ -45,6 +46,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
+import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -68,6 +71,7 @@ import javax.inject.Inject
 import kotlin.system.exitProcess
 
 class MainActivity : NoSplashAppCompatActivity() {
+
     private val disposable = CompositeDisposable()
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -87,9 +91,17 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
+    private var menu: Menu? = null
+
+    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
+        it?.let {
+            importExportPrefs.importSharedPreferences(this, it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +123,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
+                setPluginPreferenceMenuName()
                 checkPluginPreferences(main_pager)
             }
         })
@@ -126,16 +139,17 @@ class MainActivity : NoSplashAppCompatActivity() {
                 if (it.recreate) recreate()
                 else setupViews()
                 setWakeLock()
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
+            .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
-            val intent = Intent(this, SetupWizardActivity::class.java)
-            startActivity(intent)
+            protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
+                startActivity(Intent(this, SetupWizardActivity::class.java))
+            })
         }
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
@@ -163,8 +177,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) }),
-            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) })
+            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } },
+            UIRunnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed)) { finish() } }
         )
     }
 
@@ -183,14 +197,20 @@ class MainActivity : NoSplashAppCompatActivity() {
         val pageAdapter = TabPageAdapter(this)
         main_navigation_view.setNavigationItemSelectedListener { true }
         val menu = main_navigation_view.menu.also { it.clear() }
-        for (p in activePlugin.pluginsList) {
+        for (p in activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p)
             if (p.isEnabled() && p.hasFragment() && !p.isFragmentVisible() && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(p.name)
                 menuItem.isCheckable = true
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
-                    intent.putExtra("plugin", activePlugin.pluginsList.indexOf(p))
+                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
                     startActivity(intent)
                     main_drawer_layout.closeDrawers()
                     true
@@ -228,7 +248,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (permissions.isNotEmpty()) {
             if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
-                    AndroidPermission.CASE_STORAGE                                                                                                                                        ->                         //show dialog after permission is granted
+                    AndroidPermission.CASE_STORAGE ->                         //show dialog after permission is granted
                         OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
 
                     AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY, AndroidPermission.CASE_PHONE_STATE, AndroidPermission.CASE_SYSTEM_WINDOW -> {
@@ -254,17 +274,24 @@ class MainActivity : NoSplashAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    private fun setPluginPreferenceMenuName() {
+        val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
+        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+       this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
+        setPluginPreferenceMenuName()
         checkPluginPreferences(main_pager)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_preferences        -> {
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
+            R.id.nav_preferences -> {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", -1)
                     startActivity(i)
@@ -272,17 +299,19 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 
-            R.id.nav_historybrowser     -> {
+            R.id.nav_historybrowser -> {
                 startActivity(Intent(this, HistoryBrowseActivity::class.java))
                 return true
             }
 
-            R.id.nav_setupwizard        -> {
-                startActivity(Intent(this, SetupWizardActivity::class.java))
+            R.id.nav_setupwizard -> {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
+                    startActivity(Intent(this, SetupWizardActivity::class.java))
+                })
                 return true
             }
 
-            R.id.nav_about              -> {
+            R.id.nav_about -> {
                 var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.nightscoutVersionName}"
@@ -295,14 +324,15 @@ class MainActivity : NoSplashAppCompatActivity() {
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(resourceHelper.gs(R.string.ok), null)
-                    .create().also {
-                        it.show()
-                        (it.findViewById<View>(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
+                    .setNeutralButton(resourceHelper.gs(R.string.cta_dont_kill_my_app_info)) { _, _ -> DokiActivity.start(context = this@MainActivity) }
+                    .create().apply {
+                        show()
+                        findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
                     }
                 return true
             }
 
-            R.id.nav_exit               -> {
+            R.id.nav_exit -> {
                 aapsLogger.debug(LTag.CORE, "Exiting")
                 rxBus.send(EventAppExit())
                 finish()
@@ -312,7 +342,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
             R.id.nav_plugin_preferences -> {
                 val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", plugin.preferencesId)
                     startActivity(i)
@@ -325,12 +355,12 @@ class MainActivity : NoSplashAppCompatActivity() {
                 return true
             }
 */
-            R.id.nav_defaultprofile     -> {
+            R.id.nav_defaultprofile -> {
                 startActivity(Intent(this, ProfileHelperActivity::class.java))
                 return true
             }
 
-            R.id.nav_stats              -> {
+            R.id.nav_stats -> {
                 startActivity(Intent(this, StatsActivity::class.java))
                 return true
             }

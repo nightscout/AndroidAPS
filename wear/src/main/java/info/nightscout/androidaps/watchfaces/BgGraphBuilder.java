@@ -31,12 +31,12 @@ import lecho.lib.hellocharts.model.Viewport;
  */
 public class BgGraphBuilder {
     public static final double MAX_PREDICTION__TIME_RATIO = (3d / 5);
-    private long predictionEndTime;
-    private List<BgWatchData> predictionsList;
-    private ArrayList<BolusWatchData> bolusWatchDataList;
-    private ArrayList<BasalWatchData> basalWatchDataList;
+    private final long predictionEndTime;
+    private final List<BgWatchData> predictionsList;
+    private final ArrayList<BolusWatchData> bolusWatchDataList;
+    private final ArrayList<BasalWatchData> basalWatchDataList;
     public List<TempWatchData> tempWatchDataList;
-    private int timespan;
+    private final int timespan;
     public long end_time;
     public long start_time;
     public double fuzzyTimeDenom = (1000 * 60 * 1);
@@ -52,14 +52,14 @@ public class BgGraphBuilder {
     public int gridColour;
     public int basalCenterColor;
     public int basalBackgroundColor;
-    private int bolusInvalidColor;
-    private int carbsColor;
+    private final int bolusInvalidColor;
+    private final int carbsColor;
 
     public boolean singleLine = false;
 
-    private List<PointValue> inRangeValues = new ArrayList<PointValue>();
-    private List<PointValue> highValues = new ArrayList<PointValue>();
-    private List<PointValue> lowValues = new ArrayList<PointValue>();
+    private final List<PointValue> inRangeValues = new ArrayList<PointValue>();
+    private final List<PointValue> highValues = new ArrayList<PointValue>();
+    private final List<PointValue> lowValues = new ArrayList<PointValue>();
     public Viewport viewport;
 
 
@@ -227,7 +227,7 @@ public class BgGraphBuilder {
 
         for (BasalWatchData bwd: basalWatchDataList) {
             if(bwd.endTime > start_time) {
-                long begin = (long) Math.max(start_time, bwd.startTime);
+                long begin = Math.max(start_time, bwd.startTime);
                 pointValues.add(new PointValue(fuzz(begin), offset + (float) (factor * bwd.amount)));
                 pointValues.add(new PointValue(fuzz(bwd.endTime), offset + (float) (factor * bwd.amount)));
             }
@@ -249,7 +249,7 @@ public class BgGraphBuilder {
 
         for (BolusWatchData bwd: bolusWatchDataList) {
             if(bwd.date > start_time && bwd.date <= end_time && !bwd.isSMB && bwd.isValid && bwd.bolus > 0) {
-                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
+                pointValues.add(new PointValue(fuzz(bwd.date), offset -2));
             }
         }
         Line line = new Line(pointValues);
@@ -266,7 +266,7 @@ public class BgGraphBuilder {
 
         for (BolusWatchData bwd: bolusWatchDataList) {
             if(bwd.date > start_time && bwd.date <= end_time && bwd.isSMB && bwd.isValid && bwd.bolus > 0) {
-                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
+                pointValues.add(new PointValue(fuzz(bwd.date), offset -2));
             }
         }
         Line line = new Line(pointValues);
@@ -283,7 +283,7 @@ public class BgGraphBuilder {
 
         for (BolusWatchData bwd: bolusWatchDataList) {
             if(bwd.date > start_time && bwd.date <= end_time && !(bwd.isValid && (bwd.bolus > 0 || bwd.carbs > 0))) {
-                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
+                pointValues.add(new PointValue(fuzz(bwd.date), offset -2));
             }
         }
         Line line = new Line(pointValues);
@@ -300,7 +300,7 @@ public class BgGraphBuilder {
 
         for (BolusWatchData bwd: bolusWatchDataList) {
             if(bwd.date > start_time && bwd.date <= end_time && !bwd.isSMB && bwd.isValid && bwd.carbs > 0) {
-                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset+2));
+                pointValues.add(new PointValue(fuzz(bwd.date), offset +2));
             }
         }
         Line line = new Line(pointValues);
@@ -372,7 +372,7 @@ public class BgGraphBuilder {
 
     public Line tempValuesLine(TempWatchData twd, float offset, double factor, boolean isHighlightLine, int strokeWidth) {
         List<PointValue> lineValues = new ArrayList<PointValue>();
-        long begin = (long) Math.max(start_time, twd.startTime);
+        long begin = Math.max(start_time, twd.startTime);
         lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.startBasal)));
         lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.amount)));
         lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.amount)));

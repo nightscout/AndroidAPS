@@ -30,8 +30,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * <p>
  * Created by andy on 5/10/18.
  */
-public abstract class RileyLinkCommunicationManager {
-
+public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     @Inject protected AAPSLogger aapsLogger;
     @Inject protected SP sp;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
@@ -51,23 +50,23 @@ public abstract class RileyLinkCommunicationManager {
 
 
     // All pump communications go through this function.
-    protected RLMessage sendAndListen(RLMessage msg, int timeout_ms)
+    protected T sendAndListen(T msg, int timeout_ms)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, null);
     }
 
-    private RLMessage sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms)
+    private T sendAndListen(T msg, int timeout_ms, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms);
     }
 
     // For backward compatibility
-    private RLMessage sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms)
+    private T sendAndListen(T msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms);
     }
 
-    protected RLMessage sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms)
+    protected T sendAndListen(T msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
 
         // internal flag
@@ -80,14 +79,14 @@ public abstract class RileyLinkCommunicationManager {
                 (byte) 0, (byte) repeatCount, (byte) 0, (byte) 0, timeout_ms, (byte) retryCount, extendPreamble_ms);
 
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse(injector);
-        RLMessage response = createResponseMessage(radioResponse.getPayload());
+        T response = createResponseMessage(radioResponse.getPayload());
 
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
             rememberLastGoodDeviceCommunicationTime();
         } else {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Response is invalid ! [interrupted={}, timeout={}, unknownCommand={}, invalidParam={}]", rfSpyResponse.wasInterrupted(),
-                    rfSpyResponse.wasTimeout(), rfSpyResponse.isUnknownCommand(), rfSpyResponse.isInvalidParam());
+            aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Response is invalid ! [noResponseFromRileyLink={}, interrupted={}, timeout={}, unknownCommand={}, invalidParam={}]",
+                    rfSpyResponse.wasNoResponseFromRileyLink(), rfSpyResponse.wasInterrupted(), rfSpyResponse.wasTimeout(), rfSpyResponse.isUnknownCommand(), rfSpyResponse.isInvalidParam());
 
             if (rfSpyResponse.wasTimeout()) {
                 if (rileyLinkServiceData.targetDevice.isTuneUpEnabled()) {
@@ -105,6 +104,8 @@ public abstract class RileyLinkCommunicationManager {
                 throw new RileyLinkCommunicationException(RileyLinkBLEError.Timeout);
             } else if (rfSpyResponse.wasInterrupted()) {
                 throw new RileyLinkCommunicationException(RileyLinkBLEError.Interrupted);
+            } else if (rfSpyResponse.wasNoResponseFromRileyLink()) {
+                throw new RileyLinkCommunicationException(RileyLinkBLEError.NoResponse);
             }
         }
 
@@ -116,7 +117,7 @@ public abstract class RileyLinkCommunicationManager {
     }
 
 
-    public abstract RLMessage createResponseMessage(byte[] payload);
+    public abstract T createResponseMessage(byte[] payload);
 
 
     public abstract void setPumpDeviceState(PumpDeviceState pumpDeviceState);
@@ -313,7 +314,7 @@ public abstract class RileyLinkCommunicationManager {
 
     private int tune_tryFrequency(double freqMHz) {
         rfspy.setBaseFrequency(freqMHz);
-        // RLMessage msg = makeRLMessage(RLMessageType.ReadSimpleData);
+        // T msg = makeRLMessage(RLMessageType.ReadSimpleData);
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
         RadioPacket pkt = new RadioPacket(injector, pumpMsgContent);
         RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte) 0, (byte) 0, (byte) 0, (byte) 0, SCAN_TIMEOUT, (byte) 0);

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -15,8 +15,8 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_extendedbolus.*
@@ -27,7 +27,8 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class ExtendedBolusDialog : DialogFragmentWithDate() {
-    @Inject lateinit var mainApp: MainApp
+
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -62,7 +63,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val insulin = SafeParse.stringToDouble(actions_extendedbolus_insulin.text)
+        val insulin = SafeParse.stringToDouble(actions_extendedbolus_insulin?.text ?: return false)
         val durationInMinutes = actions_extendedbolus_duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
         val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
@@ -77,12 +78,12 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            mainApp.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })

@@ -8,7 +8,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class NSMbg {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
     public long date;
     public double mbg;
     public String json;

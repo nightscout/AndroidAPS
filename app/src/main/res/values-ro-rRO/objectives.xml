@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Înapoi</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verifică</string>
     <string name="nth_objective">Obiectiv %1$d</string>
@@ -41,7 +40,7 @@
     <string name="codeaccepted">Cod acceptat</string>
     <string name="codeinvalid">Cod invalid</string>
     <string name="objectives_exam_objective">Dovediți-vă cunoștințele</string>
-    <string name="objectives_exam_gate">Studiați și răspundeți corect la întrebări</string>
+    <string name="objectives_exam_gate">Studiați întrebările. Vi se dau patru răspunsuri posibile pentru fiecare întrebare. Poate exista mai mult de un răspuns corect. Vă rugăm să bifați toate cele care sunt corecte și selectați VERIFICA.</string>
     <string name="answerdisabledto">Posibilitatea de a răspunde este dezactivată până la: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>

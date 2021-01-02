@@ -16,7 +16,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
         }
-        setOnPreferenceChangeListener { preference, newValue ->
+        setOnPreferenceChangeListener { _, _ ->
             validator?.testValidity(false) ?: true
         }
     }

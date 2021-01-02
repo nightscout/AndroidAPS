@@ -20,7 +20,7 @@ public class Encoding4b6bGo extends Encoding4b6bAbstract {
     private static Map<Short, Short> decodeGoMap;
 
 
-    public byte[] encode4b6b(byte[] src) {
+    @Override public byte[] encode4b6b(byte[] src) {
         // 2 input bytes produce 3 output bytes.
         // Odd final input byte, if any, produces 2 output bytes.
         int n = src.length;
@@ -54,7 +54,7 @@ public class Encoding4b6bGo extends Encoding4b6bAbstract {
      * @param src
      * @return
      */
-    public byte[] decode4b6b(byte[] src) throws RileyLinkCommunicationException {
+    @Override public byte[] decode4b6b(byte[] src) throws RileyLinkCommunicationException {
         int n = src.length;
 
         if (decodeGoMap == null)

@@ -73,10 +73,10 @@ public class IobCobOref1Thread extends Thread {
     private final HasAndroidInjector injector;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin; // cannot be injected : HistoryBrowser uses different instance
     private final TreatmentsPlugin treatmentsPlugin;             // cannot be injected : HistoryBrowser uses different instance
-    private boolean bgDataReload;
-    private boolean limitDataToOldestAvailable;
-    private String from;
-    private long end;
+    private final boolean bgDataReload;
+    private final boolean limitDataToOldestAvailable;
+    private final String from;
+    private final long end;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -300,10 +300,7 @@ public class IobCobOref1Thread extends Thread {
 
                     // If mealCOB is zero but all deviations since hitting COB=0 are positive, exclude from autosens
                     if (autosensData.cob > 0 || autosensData.absorbing || autosensData.mealCarbs > 0) {
-                        if (deviation > 0)
-                            autosensData.absorbing = true;
-                        else
-                            autosensData.absorbing = false;
+                        autosensData.absorbing = deviation > 0;
                         // stop excluding positive deviations as soon as mealCOB=0 if meal has been absorbing for >5h
                         if (autosensData.mealStartCounter > 60 && autosensData.cob < 0.5) {
                             autosensData.absorbing = false;
@@ -329,10 +326,7 @@ public class IobCobOref1Thread extends Thread {
                         //if (iob.iob > currentBasal || uam ) {
                         if (iob.iob > 2 * currentBasal || autosensData.uam || autosensData.mealStartCounter < 9) {
                             autosensData.mealStartCounter++;
-                            if (deviation > 0)
-                                autosensData.uam = true;
-                            else
-                                autosensData.uam = false;
+                            autosensData.uam = deviation > 0;
                             if (!autosensData.type.equals("uam")) {
 //                                    process.stderr.write("u(");
                             }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Wstecz</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Zweryfikuj</string>
     <string name="nth_objective">%1$d. Zadanie</string>
@@ -22,7 +21,7 @@
     <string name="objectives_smb_objective">Włączanie dodatkowych funkcji do użytku, jak SMB (Super Mikro Bolusy)</string>
     <string name="objectives_auto_objective">Włączanie automatyzacji</string>
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus + 3 x maks. dzienna dawka bazowa</string>
-    <string name="objectives_auto_gate">Przeczytaj dokumenty jak działa automatyzacja. Skonfiguruj swoje pierwsze proste zasady. Na początku zamiast działań pozwól AAPS wyświetlać powiadomienia. Gdy jesteś pewien, że automatyzacja jest uruchamiana we właściwym czasie, zastąp powiadomienie prawdziwymi działaniami. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Przeczytaj dokumentację dotyczącą działania automatyzacji. Skonfiguruj swoje pierwsze proste zasady. Zamiast działania niech AAPS wyświetli tylko powiadomienie. Gdy masz pewność, że automatyzacja zostaje uruchomiona we właściwym czasie, zastąp powiadomienie rzeczywistą akcją. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG dostępne w NS</string>
     <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS</string>
     <string name="objectives_manualenacts">Ręczne zarządzanie</string>
@@ -37,11 +36,11 @@
     <string name="objectives_useloop">Wyświetl zawartość wtyczki Pętla (Loop)</string>
     <string name="objectives_usescale">Użyj funkcji skalowania przez dłuższe przytrzymanie wykresu glikemii</string>
     <string name="objectives_button_enter">Wprowadź</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Jeśli masz co najmniej 3 miesiące doświadczenia w zamkniętej pętli z innymi systemami, możesz zakwalifikować się do otrzymania kodu do pominięcia etapu nauki. Zobacz https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-targets.</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Jeśli masz co najmniej 3 miesiące doświadczenia w zamkniętej pętli z innymi systemami, możesz kwalifikować się do kodu umożliwiającego pominięcie celów. Szczegółowe informacje można znaleźć pod adresem https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Kod został zaakceptowany</string>
     <string name="codeinvalid">Niepoprawny kod</string>
     <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>
-    <string name="objectives_exam_gate">Ucz się i odpowiadaj poprawnie na pytania</string>
+    <string name="objectives_exam_gate">Przestudiuj pytania.  Na każde pytanie masz cztery możliwe odpowiedzi. Może być więcej niż jedna poprawna odpowiedź. Sprawdź wszystkie poprawne i wybierz WERYFIKUJ.</string>
     <string name="answerdisabledto">Odpowiadanie wyłączone na: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>

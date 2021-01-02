@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SKANUJ</string>
-    <string name="rileylink_scanner_scan_stop">ZATRZYMAJ</string>
-    <string name="rileylink_scanner_selected_device">Wybrany</string>
-    <string name="rileylink_scanner_title">Skan RileyLink</string>
-    <string name="location_yes">Uruchom</string>
-    <string name="rileylink_scanner_scanning">Skanowanie</string>
-    <string name="rileylink_scanner_scanning_finished">Skanowanie zakończono</string>
-    <string name="rileylink_scanner_scanning_error">Błąd skanowania: %1$d</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Skanuj</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Wybrany</string>
+    <string name="riley_link_ble_config_scan_title">Skan RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">Skanowanie</string>
+    <string name="riley_link_ble_config_scan_finished">Skanowanie zakończono</string>
+    <string name="riley_link_ble_config_scan_error">Błąd skanowania: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Nigdy</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Aktualnie wybrany RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Usuń</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Czy na pewno chcesz usunąć swój RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Usuń RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Nie wybrano RileyLink</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Ustawienia</string>
     <string name="rileylink_settings_tab2">Historia</string>
@@ -16,16 +22,19 @@
     <string name="medtronic_pump_status">Stan pompy</string>
     <string name="title_activity_rileylink_settings">Ustawienia RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Ustawiony adres</string>
-    <string name="rileylink_connected_device">Połączone urządzenie</string>
-    <string name="rileylink_connection_status">Status połączenia</string>
-    <string name="rileylink_connection_error">Błąd połączenia</string>
+    <string name="rileylink_configured_riley_link_address">Skonfigurowany adres RileyLink:</string>
+    <string name="rileylink_configured_riley_link_name">Skonfigurowana nazwa RileyLink:</string>
+    <string name="rileylink_connected_device">Połączone urządzenie:</string>
+    <string name="rileylink_connection_status">Status połączenia:</string>
+    <string name="rileylink_connection_error">Błąd połączenia:</string>
     <string name="rileylink_device">Urządzenie</string>
-    <string name="rileylink_device_type">Typ urządzenia</string>
-    <string name="rileylink_device_model">Model urządzenia</string>
-    <string name="rileylink_last_used_frequency">Ostatnio używana częstotliwość</string>
-    <string name="rileylink_last_device_contact">Ostatnie połączenie z urządzeniem</string>
-    <string name="rileylink_firmware_version">Oprogramowanie RL</string>
+    <string name="rileylink_device_type">Typ urządzenia:</string>
+    <string name="rileylink_device_model">Model urządzenia:</string>
+    <string name="rileylink_last_used_frequency">Ostatnio używana częstotliwość:</string>
+    <string name="rileylink_last_device_contact">Ostatnie połączenie z urządzeniem:</string>
+    <string name="rileylink_firmware_version">Wersja oprogramowania:</string>
+    <string name="rileylink_pump_serial_number">Numer seryjny pompy:</string>
+    <string name="rileylink_pump_frequency">Częstotliwość pompy:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Uruchamianie Bluetooth…</string>
     <string name="rileylink_state_bt_error">Błąd Bluetooth</string>
@@ -35,14 +44,31 @@
     <string name="rileylink_state_rl_error">Błąd RileyLink</string>
     <string name="rileylink_state_pc_tune_up">Dostrojenie RileyLink i pompy</string>
     <string name="rileylink_state_pc_error">Problem z połączeniem z pompą</string>
+    <string name="rileylink_state_connected">Połączono</string>
+    <string name="rileylink_state_rl_ready">RileyLink gotowy</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">Urządzenie to nie RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink nie osiągalny</string>
     <string name="rileylink_error_bt_disabled">Bluetooth wyłączony</string>
     <string name="rileylink_error_no_bt_adapter">Brak modułu Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Dostrojenie nie powiodło się</string>
+    <string name="rileylink_error_pump_unreachable">Pompa nieosiągalna</string>
     <string name="rileylink_error_pod_unreachable">Pod nieosiągalny</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Tak</string>
+    <string name="riley_link_common_no">Nie</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dzień</item>
+        <item quantity="few">%1$d dni</item>
+        <item quantity="many">%1$d dni</item>
+        <item quantity="other">%1$d dni</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d godzina</item>
+        <item quantity="few">%1$d godziny</item>
+        <item quantity="many">%1$d godzin</item>
+        <item quantity="other">%1$d godzin</item>
+    </plurals>
 </resources>

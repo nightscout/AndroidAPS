@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
     <string name="pairing">Associazione</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -170,7 +172,7 @@
     <string name="waitingforpumpresult">In attesa del risultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%d g di CHO aggiuntivi richiesti entro %d minuti</string>
+    <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiche</string>
     <string name="cumulative_tdd">TDD cumulativo</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Caricamento</string>
     <string name="history_group_alarm">Allarmi</string>
     <string name="history_group_glucose">Glicemia</string>
+    <string name="mute5min">Muto per 5 minuti</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

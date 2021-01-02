@@ -33,7 +33,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private inner class RecyclerViewAdapter internal constructor(internal var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>() {
+    private inner class RecyclerViewAdapter(var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickWizardEntryViewHolder {
             return QuickWizardEntryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overview_quickwizardlist_item, parent, false), fragmentManager)
@@ -48,7 +48,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
 
         override fun getItemCount(): Int = quickWizard.size()
 
-        private inner class QuickWizardEntryViewHolder internal constructor(itemView: View, internal var fragmentManager: FragmentManager) : RecyclerView.ViewHolder(itemView) {
+        private inner class QuickWizardEntryViewHolder(itemView: View, var fragmentManager: FragmentManager) : RecyclerView.ViewHolder(itemView) {
             val buttonText: TextView = itemView.findViewById(R.id.overview_quickwizard_item_buttonText)
             val carbs: TextView = itemView.findViewById(R.id.overview_quickwizard_item_carbs)
             val from: TextView = itemView.findViewById(R.id.overview_quickwizard_item_from)

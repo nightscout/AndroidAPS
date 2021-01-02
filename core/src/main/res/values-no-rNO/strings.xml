@@ -2,27 +2,219 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="error">Feil</string>
+    <string name="not_set_short">Ikke angitt</string>
+    <string name="failedupdatebasalprofile">Kunne ikke oppdatere basal profil</string>
+    <string name="profile_set_ok">Basal profil i pumpen er oppdatert</string>
+    <string name="invalidinput">Ugyldig inndata</string>
+    <string name="tempbasaldeliveryerror">Feil ved justering av Temp Basal</string>
+    <string name="goingtodeliver">Kommer til å levere %1$.2f enheter</string>
+    <string name="waitingforpump">Venter på pumpen</string>
+    <string name="connectingfor">Tilkobler i %1$d sek</string>
+    <string name="bolusdelivering">Leverer %1$.2f enheter</string>
+    <string name="handshaking">Tilkobling verifiseres</string>
+    <string name="connecting">Tilkobler</string>
+    <string name="connected">Tilkoblet</string>
+    <string name="disconnected">Frakoblet</string>
+    <string name="disconnecting">Frakobler</string>
+    <string name="androidaps_start">AndroidAPS startet</string>
+    <string name="formatinsulinunits1">%1$.1f E</string>
+    <string name="formatinsulinunits">%1$.2f E</string>
+    <string name="formatsignedinsulinunits">%1$+.2f E</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="reservoirvalue">%1$.0f / %2$d E</string>
+    <string name="pump_basebasalrate">%1$.2f E/t</string>
+    <string name="format_hours">%1$.2f t</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="pumpbusy">Pumpen er opptatt</string>
+    <string name="connectionerror">Tilkoblingsfeil til pumpe</string>
+    <string name="youareonallowedlimit">Du har nådd din tillatte grense</string>
+    <string name="objectives">Opplæringsmål</string>
+    <string name="close">Lukk</string>
+    <string name="please_wait">Vennligst vent…</string>
+    <string name="mute">Lyd av</string>
+    <string name="reload">Last på nytt</string>
+    <string name="stoppressed">STOPP trykket</string>
+    <string name="stop">Stopp</string>
+    <string name="carbs">Karbohydrater</string>
+    <string name="invalidprofile">Ugyldig profil!!!</string>
+    <string name="noprofileset">INGEN PROFIL VALGT</string>
+    <string name="date">Dato</string>
+    <string name="units_label">Enheter</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IK</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Målverdi</string>
+    <string name="initializing">Starter opp...</string>
+    <string name="serialnumber">Serienummer</string>
+    <string name="battery_label">Batteri</string>
+    <string name="lastconnection_label">Siste tilkobling</string>
+    <string name="lastbolus_label">Siste bolus</string>
+    <string name="dailyunits">Daglige enheter</string>
+    <string name="basebasalrate_label">Basis basal dose</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="virtualpump_extendedbolus_label">Forlenget bolus</string>
+    <string name="reservoir_label">Reservoar</string>
+    <string name="pumphistory">Pumpe historikk</string>
+    <string name="viewprofile">Vis profil</string>
+    <string name="eventtype">Hendelsestype</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="advancedsettings_title">Avanserte innstillinger</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT overvåker</string>
+    <string name="btwatchdog_summary">Restarter telefonens bluetooth i ett sekund hvis tilkobling til pumpen mislykkes. Dette hjelper på enkelte telefoner hvor bluetooth av og til stopper.</string>
+    <string name="pairing">Kobler sammen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nei</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
+    <string name="pumplimit">pumpebegrensning</string>
+    <string name="limitingpercentrate">Begrenser maks prosent sats til %1$d%% på grunn av %2$s</string>
+    <string name="itmustbepositivevalue">det på være positiv verdi</string>
+    <string name="limitingbolus">Begrenser bolus til %1$.1f E på grunn av %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pumpen ikke initialisert, ingen profil valgt!</string>
     <!--    Dialogs-->
+    <string name="confirmation">Bekreftelse</string>
+    <string name="message">Melding</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Avbryt</string>
+    <string name="dismiss">Avvis</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Lavenergi Bluetooth BLE er ikke støttet.</string>
+    <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
+    <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
+    <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d min siden</string>
+    <string name="hoursago">%1$.1f timer siden</string>
+    <string name="shorthour">t</string>
+    <string name="days">dager</string>
+    <string name="hours">timer</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minutt</string>
+    <string name="unit_hour">time</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">uke</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minutter</string>
+    <string name="unit_hours">timer</string>
+    <string name="unit_days">dager</string>
+    <string name="unit_weeks">uker</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
     <!--    Protection-->
+    <string name="wrongpassword">Feil passord</string>
+    <string name="passwords_dont_match">Passord stemmer ikke overens</string>
     <!--    Profile-->
+    <string name="basalprofilenotaligned">Basal verdier er ikke angitt på hele timer: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal verdi erstattet med laveste tillate verdi: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal verdi erstattet med høyeste tillate verdi: %1$s</string>
+    <string name="profile_per_unit">/E</string>
+    <string name="profile_ins_units_per_hour">E/t</string>
+    <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
+    <string name="noprofileselected">Ingen profil valgt</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
     <!--    APSResult-->
+    <string name="canceltemp">Avbryt temp basal</string>
+    <string name="let_temp_basal_run">Fortsett temp basal</string>
+    <string name="rate">Dose</string>
+    <string name="duration">Varighet</string>
+    <string name="reason">Årsak</string>
+    <string name="nochangerequested">Ingen endring behøves</string>
     <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Karbo: <b>%6$.0f g</b>]]></string>
     <!--    Translator-->
+    <string name="careportal_bgcheck">BS kontroll</string>
+    <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
+    <string name="careportal_announcement">Melding</string>
+    <string name="careportal_note">Merknad</string>
+    <string name="careportal_question">Spørsmål</string>
+    <string name="careportal_exercise">Trening</string>
+    <string name="careportal_pumpsitechange">Bytte av pumpens kanyle</string>
+    <string name="careportal_cgmsensorinsert">Bytte av CGM sensor</string>
+    <string name="careportal_cgmsensorstart">CGM sensor start</string>
+    <string name="careportal_insulincartridgechange">Bytte insulinreservoar</string>
+    <string name="careportal_profileswitch">Profil bytte</string>
+    <string name="careportal_snackbolus">Mellommåltids bolus</string>
+    <string name="careportal_mealbolus">Måltids bolus</string>
+    <string name="careportal_correctionbolus">Korreksjons bolus</string>
+    <string name="careportal_combobolus">Kombo bolus</string>
+    <string name="careportal_tempbasalstart">Temp Basal start</string>
+    <string name="careportal_tempbasalend">Temp basal slutt</string>
+    <string name="careportal_carbscorrection">Karbo korreksjon</string>
+    <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="careportal_pumpbatterychange">Bytte pumpebatteri</string>
+    <string name="careportal_temporarytarget">Temp mål</string>
+    <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manuell</string>
+    <string name="unknown">ukjent</string>
     <!--    Command-->
+    <string name="connectiontimedout">Tilkoblingen ble tidsavbrutt</string>
     <!--    PumpEnactResult-->
+    <string name="enacted">Utført</string>
+    <string name="comment">Kommentar</string>
+    <string name="success">Suksess</string>
+    <string name="percent">Prosent</string>
+    <string name="absolute">Absolutt</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">E</string>
+    <string name="waitingforpumpresult">Venter på resultat</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g ekstra karbohydrater kreves innen %2$d minutter</string>
     <!--    TDDStatsActivity-->
+    <string name="stats">Statistikk</string>
+    <string name="cumulative_tdd">Akkumulert TDD</string>
+    <string name="expweight">Eksponentielt vektet TDD</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Ratio</string>
+    <string name="amount_days">Antall dager</string>
+    <string name="weight">Vekt</string>
+    <string name="warning_Message">Kan vise feil hvis bolus brukes for priming/fylling!</string>
+    <string name="olddata_Message">Gamle data. Vennligst trykk \"HENT\"</string>
+    <string name="tbb">Total grunnbasal</string>
+    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
+    <string name="timedetection">Tidsdetektering</string>
+    <string name="format_hour_minute">%1$dt %2$dm</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operasjonen støttes ikke av pumpen og/eller driveren.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operasjonen støttes ikke av pumpen ennå.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Aldri kontaktet</string>
+    <string name="pump_status_waking_up">Våkner opp</string>
+    <string name="pump_status_error_comm">Kommunikasjonsfeil</string>
+    <string name="pump_status_timeout_comm">Tidsavbrudd kommunikasjon</string>
+    <string name="pump_status_pump_unreachable">Pumpe utilgjengelig</string>
+    <string name="pump_status_invalid_config">Ugyldig oppsett</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_sleeping">Sover</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basaldoser</string>
+    <string name="history_group_configuration">Innstillinger</string>
+    <string name="history_group_notification">Varsler</string>
+    <string name="history_group_statistic">Statistikk</string>
+    <string name="history_group_unknown">Ukjente</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Boluser</string>
+    <string name="history_group_prime">Prime</string>
+    <string name="history_group_alarm">Alarmer</string>
+    <string name="history_group_glucose">Glukose</string>
+    <string name="mute5min">Demp i 5 minutter</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

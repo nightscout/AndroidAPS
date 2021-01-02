@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.definition;
 import java.util.Locale;
 
 public enum FaultEventCode {
-    NO_FAULTS((byte) 0x00),
     FAILED_FLASH_ERASE((byte) 0x01),
     FAILED_FLASH_STORE((byte) 0x02),
     TABLE_CORRUPTION_BASAL_SUBCOMMAND((byte) 0x03),
@@ -129,6 +128,9 @@ public enum FaultEventCode {
     }
 
     public static FaultEventCode fromByte(byte value) {
+        if (value == 0x00) { // No faults
+            return null;
+        }
         for (FaultEventCode type : values()) {
             if (type.value == value) {
                 return type;

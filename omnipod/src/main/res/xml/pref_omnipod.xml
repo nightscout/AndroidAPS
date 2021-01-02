@@ -7,9 +7,8 @@
         <Preference
             android:enabled="true"
             android:key="@string/key_rileylink_mac_address"
-            android:summary=""
-            android:title="RileyLink Configuration">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+            android:title="@string/omnipod_config_riley_link_configuration">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
 
     </PreferenceCategory>
@@ -32,7 +31,7 @@
             android:title="@string/omnipod_config_smb_beeps_enabled" />
 
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="@string/key_omnipod_tbr_beeps_enabled"
             android:title="@string/omnipod_config_tbr_beeps_enabled" />
 
@@ -72,6 +71,30 @@
             validate:minNumber="5"
             validate:testType="numericRange" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_automatically_acknowledge_alerts_enabled"
+            android:title="@string/omnipod_config_automatically_acknowledge_alerts" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/omnipod_preference_category_notifications">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_notification_uncertain_tbr_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_tbr_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_smb_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_smb_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_bolus_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_bolus_sound_enabled" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/omnipod_preference_category_other">
@@ -85,6 +108,17 @@
             android:defaultValue="false"
             android:key="@string/key_omnipod_pulse_log_button_enabled"
             android:title="@string/omnipod_config_pulse_log_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_riley_link_stats_button_enabled"
+            android:title="@string/omnipod_config_rileylink_stats_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_use_riley_link_battery_level"
+            android:summary="@string/omnipod_config_use_riley_link_battery_level_summary"
+            android:title="@string/omnipod_config_use_riley_link_battery_level" />
 
         <SwitchPreference
             android:defaultValue="true"

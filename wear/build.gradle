@@ -20,7 +20,6 @@ jacoco {
 ext {
     wearableVersion = "2.4.0"
     playServicesWearable = "17.0.0"
-    powermockVersion = "1.7.3"
 }
 
 def generateGitBuild = { ->
@@ -49,7 +48,7 @@ android {
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 24
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.2"
@@ -113,7 +112,7 @@ dependencies {
     //implementation files("libs/hellocharts-library-1.5.5.jar")
     //compile "com.ustwo.android:clockwise-wearable:1.0.2"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.appcompat:appcompat:$appcompat_verison"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
@@ -122,21 +121,21 @@ dependencies {
     implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.wear:wear:1.0.0'
+    implementation 'androidx.wear:wear:1.1.0'
     implementation('me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
-    testImplementation 'junit:junit:4.13'
+    testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20200518'
-    testImplementation("org.mockito:mockito-core:2.8.47") {
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}") {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
     }
     // to fix org.mockito:mockito-core dependency issues, fixed in mockito 3+
-    testImplementation 'net.bytebuddy:byte-buddy:1.8.22'
-    testImplementation 'net.bytebuddy:byte-buddy-android:1.8.22'
-    testImplementation 'net.bytebuddy:byte-buddy-agent:1.8.22'
+    testImplementation 'net.bytebuddy:byte-buddy:1.10.17'
+    testImplementation 'net.bytebuddy:byte-buddy-android:1.10.17'
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.10.17'
 
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"

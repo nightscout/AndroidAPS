@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -155,11 +157,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
-    private PumpDescription pumpDescription;
+    private final PumpDescription pumpDescription;
     private InsightAlertService alertService;
     private InsightConnectionService connectionService;
     private long timeOffset;
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             if (binder instanceof InsightConnectionService.LocalBinder) {
@@ -217,6 +219,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             DateUtil dateUtil
     ) {
         super(new PluginDescription()
+                        .pluginIcon(R.drawable.ic_insight_128)
                         .pluginName(R.string.insight_local)
                         .shortName(R.string.insightpump_shortname)
                         .mainType(PluginType.PUMP)
@@ -367,7 +370,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @Override
-    public void getPumpStatus() {
+    public void getPumpStatus(String reason) {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
             readHistory();
@@ -1171,7 +1174,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
+    }
 
+    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
+        return null;
     }
 
     private void readHistory() {

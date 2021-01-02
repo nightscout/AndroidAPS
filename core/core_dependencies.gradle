@@ -1,0 +1,120 @@
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    api "androidx.core:core-ktx:$coreVersion"
+    api 'androidx.legacy:legacy-support-v13:1.0.0'
+    api 'androidx.legacy:legacy-support-v4:1.0.0'
+    api "androidx.appcompat:appcompat:$appcompat_verison"
+    api "androidx.preference:preference-ktx:$preferencektx_version"
+    api 'androidx.biometric:biometric:1.0.1'
+    api "androidx.activity:activity-ktx:${activityVersion}"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'androidx.recyclerview:recyclerview:1.1.0'
+    api 'androidx.gridlayout:gridlayout:1.0.0'
+    api 'androidx.percentlayout:percentlayout:1.0.0'
+    api "com.google.android.material:material:$material_version"
+
+    api "com.google.dagger:dagger-android:$dagger_version"
+    api "com.google.dagger:dagger-android-support:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    //Logger
+    api 'org.slf4j:slf4j-api:1.7.30'
+    api("com.github.tony19:logback-android-classic:1.1.1-6") {
+        exclude group: "com.google.android", module: "android"
+    }
+
+    //Firebase
+    api platform('com.google.firebase:firebase-bom:25.12.0')
+    api "com.google.firebase:firebase-analytics-ktx"
+    api "com.google.firebase:firebase-crashlytics-ktx"
+    api "com.google.firebase:firebase-messaging-ktx"
+    api 'com.google.firebase:firebase-auth-ktx'
+    api 'com.google.firebase:firebase-database-ktx'
+
+    //RxBus
+    api "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
+    api "org.apache.commons:commons-lang3:$commonslang3_version"
+
+    //CryptoUtil
+    api 'com.madgag.spongycastle:core:1.58.0.0'
+
+    // Graphview cannot be upgraded
+    api "com.jjoe64:graphview:4.0.1"
+
+    //DateUtil
+    api 'net.danlew:android.joda:2.10.6'
+
+    //db
+    api "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
+    api "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
+
+    // pumpCommon
+    api "com.google.code.gson:gson:2.8.6"
+
+    // don't kill my app
+    api('dev.doubledot.doki:library:0.0.1@aar') {
+        transitive = true
+    }
+
+    //WorkManager
+    api "androidx.work:work-runtime:$work_version"
+    api "androidx.work:work-runtime-ktx:$work_version"
+    api "androidx.work:work-rxjava2:$work_version"
+    api 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1'
+    api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
+    // new for tidepool
+    api "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    api "com.squareup.retrofit2:retrofit:$retrofit2Version"
+    api "com.squareup.retrofit2:adapter-rxjava2:$retrofit2Version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit2Version"
+
+    api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
+    api 'net.danlew:android.joda:2.10.6'
+
+    api "androidx.fragment:fragment-ktx:$fragmentktx_version"
+    api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    api "androidx.navigation:navigation-runtime-ktx:$nav_version"
+    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    api "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    api 'com.google.android.gms:play-services-wearable:17.0.0'
+    api 'com.google.android.gms:play-services-location:17.1.0'
+
+    api("com.google.android:flexbox:0.3.0") {
+        exclude group: "com.android.support"
+    }
+    api("io.socket:socket.io-client:1.0.0") {
+        // excluding org.json which is provided by Android
+        exclude group: "org.json", module: "json"
+    }
+
+    api('com.google.guava:guava:30.0-jre') {
+        exclude group: "com.google.code.findbugs", module: "jsr305"
+    }
+    api 'com.google.code.findbugs:jsr305:3.0.2'
+
+    api 'org.mozilla:rhino:1.7.13'
+
+    api 'com.github.DavidProdinger:weekdays-selector:1.1.0'
+
+    api 'com.github.kenglxn.QRGen:android:2.6.0'
+    api 'com.eatthepath:java-otp:0.2.0'
+
+    // Phone checker
+    api 'com.scottyab:rootbeer-lib:0.0.8'
+
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
+    androidTestImplementation "androidx.test:rules:$androidx_rules"
+}

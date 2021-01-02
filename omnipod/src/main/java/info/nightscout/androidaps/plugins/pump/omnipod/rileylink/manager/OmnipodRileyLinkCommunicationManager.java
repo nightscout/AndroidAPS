@@ -8,14 +8,15 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
@@ -24,13 +25,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.mess
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.ErrorResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfo;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActivationTimeExceededException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalMessageSequenceNumberException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.IllegalPacketTypeException;
@@ -41,13 +42,18 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.NotEnoug
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodReturnedErrorResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkTimeoutException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkUnexpectedException;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.RileyLinkUnreachableException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 
 /**
  * Created by andy on 6/29/18.
  */
 @Singleton
-public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager {
+public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager<OmnipodPacket> {
+    private Integer batteryLevel;
+
     // This empty constructor must be kept, otherwise dagger injection might break!
     @Inject
     public OmnipodRileyLinkCommunicationManager() {
@@ -69,7 +75,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     }
 
     @Override
-    public RLMessage createResponseMessage(byte[] payload) {
+    public OmnipodPacket createResponseMessage(byte[] payload) {
         return new OmnipodPacket(payload);
     }
 
@@ -77,6 +83,21 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
         // Intentionally left blank
         // We don't use PumpDeviceState in the Omnipod driver
+    }
+
+    @Override protected OmnipodPacket sendAndListen(OmnipodPacket msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms) throws RileyLinkCommunicationException {
+        OmnipodPacket response = super.sendAndListen(msg, timeout_ms, repeatCount, retryCount, extendPreamble_ms);
+
+        PumpInterface activePump = activePluginProvider.getActivePump();
+        if (activePump instanceof OmnipodPumpPlugin && ((OmnipodPumpPlugin) activePump).isUseRileyLinkBatteryLevel()) {
+            updateBatteryLevel();
+        }
+
+        return response;
+    }
+
+    public Integer getBatteryLevel() {
+        return batteryLevel;
     }
 
     public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodStateManager podStateManager, MessageBlock command) {
@@ -127,17 +148,17 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Received response from the Pod [responseMessageBlock={}]", responseMessageBlock);
 
                 if (responseMessageBlock instanceof StatusUpdatableResponse) {
-                    podStateManager.updateFromResponse((StatusUpdatableResponse) responseMessageBlock);
+                    podStateManager.updateFromResponse((StatusUpdatableResponse) responseMessageBlock, message);
                 } else if (responseMessageBlock instanceof PodInfoResponse) {
                     PodInfo podInfo = ((PodInfoResponse) responseMessageBlock).getPodInfo();
                     if (podInfo instanceof StatusUpdatableResponse) {
-                        podStateManager.updateFromResponse((StatusUpdatableResponse) podInfo);
+                        podStateManager.updateFromResponse((StatusUpdatableResponse) podInfo, message);
                     }
                 }
 
                 if (responseClass.isInstance(responseMessageBlock)) {
                     podStateManager.setLastSuccessfulCommunication(DateTime.now());
-                    return (T) responseMessageBlock;
+                    return responseClass.cast(responseMessageBlock);
                 } else {
                     if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
                         ErrorResponse error = (ErrorResponse) responseMessageBlock;
@@ -155,12 +176,21 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                             podStateManager.setLastFailedCommunication(DateTime.now());
                             throw new PodReturnedErrorResponseException(error);
                         }
-                    } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
-                        PodInfoFaultEvent faultEvent = (PodInfoFaultEvent) ((PodInfoResponse) responseMessageBlock).getPodInfo();
-                        podStateManager.setFaultEvent(faultEvent);
-                        // Treat as successful communication as the user will get notified and can work with this response
-                        podStateManager.setLastSuccessfulCommunication(DateTime.now());
-                        throw new PodFaultException(faultEvent);
+                    } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.DETAILED_STATUS) {
+                        PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) ((PodInfoResponse) responseMessageBlock).getPodInfo();
+                        if (detailedStatus.isFaulted()) {
+                            // Treat as successful communication in order to prevent false positive pump unreachable alarms
+                            podStateManager.setLastSuccessfulCommunication(DateTime.now());
+                            throw new PodFaultException(detailedStatus);
+                        } else if (detailedStatus.isActivationTimeExceeded()) {
+                            // Treat as successful communication in order to prevent false positive pump unreachable alarms
+                            podStateManager.setLastSuccessfulCommunication(DateTime.now());
+                            throw new ActivationTimeExceededException();
+                        } else {
+                            // Shouldn't happen
+                            podStateManager.setLastFailedCommunication(DateTime.now());
+                            throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
+                        }
                     } else {
                         podStateManager.setLastFailedCommunication(DateTime.now());
                         throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
@@ -173,6 +203,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         } finally {
             podStateManager.storePodState();
         }
+
     }
 
     private MessageBlock transportMessages(PodStateManager podStateManager, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
@@ -194,13 +225,13 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         // receive an ACK instead of a normal response, or a partial response and a communication timeout
         if (message.isNonceResyncable() && !message.containsBlock(DeactivatePodCommand.class)) {
             OmnipodMessage paddedMessage = new OmnipodMessage(message);
-            // If messages are nonce resyncable, we want do distinguish between certain and uncertain failures for verification purposes
+            // If messages are nonce resyncable, we want to distinguish between certain and uncertain failures for verification purposes
             // However, some commands (e.g. cancel delivery) are single packet command by nature. When we get a timeout with a single packet,
             // we are unsure whether or not the command was received by the pod
             // However, if we send > 1 packet, we know that the command wasn't received if we never send the subsequent packets,
             // because the last packet contains the CRC.
             // So we pad the message with get status commands to make it > packet
-            paddedMessage.padWithGetStatusCommands(PacketType.PDM.getMaxBodyLength()); // First packet is of type PDM
+            paddedMessage.padWithGetStatusCommands(PacketType.PDM.getMaxBodyLength(), aapsLogger); // First packet is of type PDM
             encodedMessage = paddedMessage.getEncoded();
         } else {
             encodedMessage = message.getEncoded();
@@ -219,23 +250,16 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
             try {
                 // We actually ignore previous (ack) responses if it was not last packet to send
                 response = exchangePackets(podStateManager, packet);
-            } catch (Exception ex) {
-                OmnipodException newException;
-                if (ex instanceof OmnipodException) {
-                    newException = (OmnipodException) ex;
-                } else {
-                    newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
-                }
-
+            } catch (OmnipodException ex) {
                 boolean lastPacket = encodedMessage.length == 0;
 
                 // If this is not the last packet, the message wasn't fully sent,
                 // so it's impossible for the pod to have received the message
-                newException.setCertainFailure(!lastPacket);
+                ex.setCertainFailure(!lastPacket);
 
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Caught exception in transportMessages. Set certainFailure to {} because encodedMessage.length={}", newException.isCertainFailure(), encodedMessage.length);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Caught OmnipodException in transportMessages. Set certainFailure to {} because encodedMessage.length={}", ex.isCertainFailure(), encodedMessage.length);
 
-                throw newException;
+                throw ex;
             }
         }
 
@@ -247,6 +271,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         byte[] receivedMessageData = response.getEncodedMessage();
         while (receivedMessage == null) {
             try {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Attempting to decode message: {}", ByteUtil.shortHexStringWithoutSpaces(receivedMessageData));
                 receivedMessage = OmnipodMessage.decodeMessage(receivedMessageData);
                 if (receivedMessage.getAddress() != message.getAddress()) {
                     throw new IllegalMessageAddressException(message.getAddress(), receivedMessage.getAddress());
@@ -261,18 +286,11 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
 
                 OmnipodPacket ackForCon = createAckPacket(podStateManager, packetAddress, ackAddressOverride);
 
-                try {
-                    OmnipodPacket conPacket = exchangePackets(podStateManager, ackForCon, 3, 40);
-                    if (conPacket.getPacketType() != PacketType.CON) {
-                        throw new IllegalPacketTypeException(PacketType.CON, conPacket.getPacketType());
-                    }
-                    receivedMessageData = ByteUtil.concat(receivedMessageData, conPacket.getEncodedMessage());
-                } catch (OmnipodException ex2) {
-                    throw ex2;
-                } catch (Exception ex2) {
-                    throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex2);
+                OmnipodPacket conPacket = exchangePackets(podStateManager, ackForCon, 3, 40);
+                if (conPacket.getPacketType() != PacketType.CON) {
+                    throw new IllegalPacketTypeException(PacketType.CON, conPacket.getPacketType());
                 }
-
+                receivedMessageData = ByteUtil.concat(receivedMessageData, conPacket.getEncodedMessage());
             }
         }
 
@@ -317,8 +335,6 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
             }
         } catch (OmnipodException ex) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
-        } catch (Exception ex) {
-            throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
         }
 
         podStateManager.increasePacketNumber();
@@ -337,24 +353,32 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
 
         podStateManager.increasePacketNumber();
 
+        boolean gotResponseFromRileyLink = false;
+
         while (System.currentTimeMillis() < timeoutTime) {
             OmnipodPacket response;
             try {
-                response = (OmnipodPacket) sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds);
-            } catch (RileyLinkCommunicationException | OmnipodException ex) {
+                response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds);
+                gotResponseFromRileyLink = true;
+            } catch (RileyLinkCommunicationException ex) {
+                if (ex.getErrorCode() != RileyLinkBLEError.NoResponse) {
+                    gotResponseFromRileyLink = true;
+                }
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in exchangePackets: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                continue;
+            } catch (OmnipodException ex) {
+                gotResponseFromRileyLink = true;
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in exchangePackets: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
                 continue;
             } catch (Exception ex) {
-                throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
+                throw new RileyLinkUnexpectedException(ex);
             }
 
-            if (response == null) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "exchangePackets response is null");
-                continue;
-            } else if (!response.isValid()) {
+            if (!response.isValid()) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "exchangePackets response is invalid: " + response);
                 continue;
             }
+
             if (response.getAddress() != packet.getAddress() &&
                     response.getAddress() != OmnipodConstants.DEFAULT_ADDRESS) { // In some (strange) cases, the Pod remains a packet address of 0xffffffff during it's lifetime
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Packet address " + response.getAddress() + " doesn't match " + packet.getAddress());
@@ -371,7 +395,15 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
 
             return response;
         }
-        throw new CommunicationException(CommunicationException.Type.TIMEOUT);
+
+        if (gotResponseFromRileyLink) {
+            throw new RileyLinkTimeoutException();
+        }
+
+        throw new RileyLinkUnreachableException();
     }
 
+    private void updateBatteryLevel() {
+        batteryLevel = rfspy.getBatteryLevel();
+    }
 }

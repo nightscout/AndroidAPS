@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">PROCURAR</string>
-    <string name="rileylink_scanner_scan_stop">PARAR</string>
-    <string name="rileylink_scanner_selected_device">Seleccionado</string>
-    <string name="rileylink_scanner_title">Procura RileyLink</string>
-    <string name="location_yes">Ativar</string>
-    <string name="rileylink_scanner_scanning">A procurar</string>
-    <string name="rileylink_scanner_scanning_finished">Procura terminada</string>
-    <string name="rileylink_scanner_scanning_error">Erro de Procura: %1$d</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Definições</string>
     <string name="rileylink_settings_tab2">Histórico</string>
@@ -16,16 +9,7 @@
     <string name="medtronic_pump_status">Estado da Bomba</string>
     <string name="title_activity_rileylink_settings">Configurações do RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Endereço Configurado</string>
-    <string name="rileylink_connected_device">Dispositivo Ligado</string>
-    <string name="rileylink_connection_status">Estado de Ligação</string>
-    <string name="rileylink_connection_error">Erro de Ligação</string>
     <string name="rileylink_device">Dispositivo</string>
-    <string name="rileylink_device_type">Tipo de dispositivo</string>
-    <string name="rileylink_device_model">Modelo do dispositivo</string>
-    <string name="rileylink_last_used_frequency">Frequência da última utilização</string>
-    <string name="rileylink_last_device_contact">Último contacto do dispositivo</string>
-    <string name="rileylink_firmware_version">Firmware RL</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">A iniciar o Bluetooth...</string>
     <string name="rileylink_state_bt_error">Erro de Bluetooth</string>
@@ -43,7 +27,7 @@
     <string name="rileylink_error_no_bt_adapter">Nenhum Adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">TuneUp Falhou</string>
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
 </resources>

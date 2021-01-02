@@ -3,11 +3,12 @@ package info.nightscout.androidaps.danars.activities
 import android.os.Bundle
 import android.util.Base64
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
+import info.nightscout.androidaps.danars.databinding.DanarsEnterPinActivityBinding
+import info.nightscout.androidaps.danars.services.BLEComm
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danars.services.BLEComm
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
@@ -17,8 +18,6 @@ import info.nightscout.androidaps.utils.textValidator.DefaultEditTextValidator
 import info.nightscout.androidaps.utils.textValidator.EditTextValidator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.danars_enter_pin_activity.*
-import kotlinx.android.synthetic.main.okcancel.*
 import javax.inject.Inject
 import kotlin.experimental.xor
 
@@ -33,25 +32,28 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
 
     private val disposable = CompositeDisposable()
 
+    private lateinit var binding: DanarsEnterPinActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.danars_enter_pin_activity)
+        binding = DanarsEnterPinActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val p1 = DefaultEditTextValidator(rs_v3_pin1, this)
+        val p1 = DefaultEditTextValidator(binding.rsV3Pin1, this)
             .setTestErrorString(resourceHelper.gs(R.string.error_mustbe12hexadidits), this)
             .setCustomRegexp(resourceHelper.gs(R.string.twelvehexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
-        val p2 = DefaultEditTextValidator(rs_v3_pin2, this)
+        val p2 = DefaultEditTextValidator(binding.rsV3Pin2, this)
             .setTestErrorString(resourceHelper.gs(R.string.error_mustbe8hexadidits), this)
             .setCustomRegexp(resourceHelper.gs(R.string.eighthexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
 
-        ok.setOnClickListener {
+        binding.okcancel.ok.setOnClickListener {
             if (p1.testValidity(false) && p2.testValidity(false)) {
                 val result = checkPairingCheckSum(
-                    rs_v3_pin1.text.toString().hexStringToByteArray(),
-                    rs_v3_pin2.text.toString().substring(0..5).hexStringToByteArray(),
-                    rs_v3_pin2.text.toString().substring(6..7).hexStringToByteArray())
+                    binding.rsV3Pin1.text.toString().hexStringToByteArray(),
+                    binding.rsV3Pin2.text.toString().substring(0..5).hexStringToByteArray(),
+                    binding.rsV3Pin2.text.toString().substring(6..7).hexStringToByteArray())
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()
@@ -59,7 +61,7 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
                 else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
             }
         }
-        cancel.setOnClickListener { finish() }
+        binding.okcancel.cancel.setOnClickListener { finish() }
     }
 
     override fun onResume() {

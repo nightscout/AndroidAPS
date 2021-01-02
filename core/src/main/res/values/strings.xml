@@ -26,6 +26,9 @@
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
+    <string name="key_ns_sync_use_absolute" translatable="false">ns_sync_use_absolute</string>
+    <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
+    <string name="key_quickwizard" translatable="false">QuickWizard</string>
 
     <!--    General-->
     <string name="error">Error</string>
@@ -92,6 +95,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="pairing">Pairing</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -212,7 +217,7 @@
     <string name="smb_shortname">SMB</string>
 
     <!--    CarbsReq-->
-    <string name="carbsreq">%d g Additional Carbs Required Within %d Minutes</string>
+    <string name="carbsreq">%1$d g Additional Carbs Required Within %2$d Minutes</string>
 
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
@@ -259,6 +264,7 @@
     <string name="history_group_prime">Prime</string>
     <string name="history_group_alarm">Alarms</string>
     <string name="history_group_glucose">Glucose</string>
+    <string name="mute5min">Mute for 5 minutes</string>
 
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->

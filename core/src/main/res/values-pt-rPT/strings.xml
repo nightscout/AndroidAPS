@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Watchdog BT</string>
     <string name="btwatchdog_summary">Desliga o bluetooth do telefone durante um segundo se nenhuma ligação com bomba for possível. Este parâmetro pode ser útil em alguns telefones, onde o bluetooth congela.</string>
     <string name="pairing">A Emparelhar</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
@@ -170,7 +172,6 @@
     <string name="waitingforpumpresult">À espera de resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%d g Hidratos Adicionais Necessários Dentro de %d Minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
     <string name="cumulative_tdd">Dose diária acumulativa</string>
@@ -212,6 +213,7 @@
     <string name="history_group_prime">Purgar</string>
     <string name="history_group_alarm">Alarmes</string>
     <string name="history_group_glucose">Glucose</string>
+    <string name="mute5min">Silenciar por 5 minutos</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

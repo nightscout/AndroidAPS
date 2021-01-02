@@ -17,6 +17,7 @@
     <string name="disconnecting">A desligar</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="pumpbusy">A bomba está ocupada</string>
     <string name="connectionerror">Erro de conexão com a bomba</string>
@@ -58,6 +59,8 @@
     <string name="btwatchdog_title">Watchdog BT</string>
     <string name="btwatchdog_summary">Desliga o bluetooth do telefone durante um segundo se nenhuma conexão com bomba for possível. Este parâmetro pode ser util em alguns telefones, onde a pilha bluetooth congela.</string>
     <string name="pairing">A emparelhar</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
@@ -92,6 +95,7 @@
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
     <!--    Protection-->
+    <string name="passwords_dont_match">As passwords não coincidem</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>

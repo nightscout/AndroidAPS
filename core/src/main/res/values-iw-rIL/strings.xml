@@ -2,27 +2,219 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="error">שגיאה</string>
+    <string name="not_set_short">לא הוגדר</string>
+    <string name="failedupdatebasalprofile">עדכון הפרופיל הבזאלי נכשל</string>
+    <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
+    <string name="invalidinput">קלט לא חוקי</string>
+    <string name="tempbasaldeliveryerror">שגיאת אספקה של בזאלי זמני</string>
+    <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
+    <string name="waitingforpump">ממתין למשאבה</string>
+    <string name="connectingfor">מתחבר במשך %1$d שניות</string>
+    <string name="bolusdelivering">מזריק כעת %1$.2f יח\'</string>
+    <string name="handshaking">לוחץ יד</string>
+    <string name="connecting">מתחבר</string>
+    <string name="connected">מחובר</string>
+    <string name="disconnected">מנותק</string>
+    <string name="disconnecting">מתנתק</string>
+    <string name="androidaps_start">AndroidAPS הופעל</string>
+    <string name="formatinsulinunits1">%1$.1f יח\'</string>
+    <string name="formatinsulinunits">%1$.2f יח\'</string>
+    <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
+    <string name="format_carbs">%1$d גר\'</string>
+    <string name="reservoirvalue">%1$.0f / %2$d יח\'</string>
+    <string name="pump_basebasalrate">%1$.2f יח\' לשעה</string>
+    <string name="format_hours">%1$.2f שע\'</string>
+    <string name="format_mins">%1$d דק\'</string>
+    <string name="pumpbusy">המשאבה אינה פנויה</string>
+    <string name="connectionerror">שגיאה בחיבור המשאבה</string>
+    <string name="youareonallowedlimit">הגיעתם למגבלה המותרת</string>
+    <string name="objectives">משימות</string>
+    <string name="close">סגור</string>
+    <string name="please_wait">נא להמתין…</string>
+    <string name="mute">השתק</string>
+    <string name="reload">טען מחדש</string>
+    <string name="stoppressed">נלחץ עצור</string>
+    <string name="stop">עצור</string>
+    <string name="carbs">פחמימות</string>
+    <string name="invalidprofile">פרופיל לא חוקי !!!</string>
+    <string name="noprofileset">לא הוגדר פרופיל</string>
+    <string name="date">תאריך</string>
+    <string name="units_label">יחידות</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">אינסולין בזאלי</string>
+    <string name="target_label">ערך מטרה</string>
+    <string name="initializing">מאתחל...</string>
+    <string name="serialnumber">מספר סידורי</string>
+    <string name="battery_label">סוללה</string>
+    <string name="lastconnection_label">התחברות אחרונה</string>
+    <string name="lastbolus_label">בולוס אחרון</string>
+    <string name="dailyunits">יחידות יומיות</string>
+    <string name="basebasalrate_label">בזאלי בסיסי</string>
+    <string name="tempbasal_label">בזאלי זמני</string>
+    <string name="virtualpump_extendedbolus_label">בולוס ממושך</string>
+    <string name="reservoir_label">מכל</string>
+    <string name="pumphistory">היסטוריית המשאבה</string>
+    <string name="viewprofile">הצג פרופיל</string>
+    <string name="eventtype">סוג האירוע</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="advancedsettings_title">הגדרות מתקדמות</string>
+    <string name="bluetooth">בלוטות\'</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן לתקשר עם המשאבה. זה עשוי לעזור במס\' דגמי טלפונים שבהם מערכת הבלוטות\' קופאת.</string>
+    <string name="pairing">מצמד</string>
+    <string name="yes">כן</string>
+    <string name="no">לא</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
+    <string name="pumplimit">מגבלת משאבה</string>
+    <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
+    <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
+    <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">משאבה לא אותחלה! לא נקבע פרופיל!</string>
     <!--    Dialogs-->
+    <string name="confirmation">אישור</string>
+    <string name="message">הודעה</string>
+    <string name="ok">אישור</string>
+    <string name="cancel">ביטול</string>
+    <string name="dismiss">בטל</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
+    <string name="ble_not_enabled">בלוטות\' כבוי.</string>
+    <string name="location_not_found_title">המיקום אינו מופעל</string>
+    <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר את שירות המיקום. AAPS לא עוקב אחר המיקום שלכם וניתן להפסיק את השירות לאחר סיום הצימוד.</string>
     <!--    DateUtil-->
+    <string name="minago">לפני %1$d דקות</string>
+    <string name="hoursago">לפני %1$.1f שעות</string>
+    <string name="shorthour">ש\'</string>
+    <string name="days">ימים</string>
+    <string name="hours">שעות</string>
+    <string name="unit_second">שניה</string>
+    <string name="unit_minute">דקה</string>
+    <string name="unit_hour">שעה</string>
+    <string name="unit_day">יום</string>
+    <string name="unit_week">שבוע</string>
+    <string name="unit_seconds">שניות</string>
+    <string name="unit_minutes">דקות</string>
+    <string name="unit_hours">שעות</string>
+    <string name="unit_days">ימים</string>
+    <string name="unit_weeks">שבועות</string>
+    <string name="shortminute">דק\'</string>
+    <string name="shortday">י\'</string>
     <!--    Protection-->
+    <string name="wrongpassword">סיסמה שגויה</string>
+    <string name="passwords_dont_match">הסיסמאות אינן תואמות</string>
     <!--    Profile-->
+    <string name="basalprofilenotaligned">ערכי הבזאלי לא מותאמים לשעות: %1$s</string>
+    <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בהערכים המינימליים שנתמכים: %1$s</string>
+    <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
+    <string name="profile_per_unit">/יח\'</string>
+    <string name="profile_ins_units_per_hour">יח\'\שע\'</string>
+    <string name="profile_carbs_per_unit">גר\'\יח\'</string>
     <!--    ProfileFunction-->
+    <string name="noprofileselected">לא נבחר פרופיל</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
     <!--    APSResult-->
+    <string name="canceltemp">ביטול בזאלי זמני</string>
+    <string name="let_temp_basal_run">אפשר לבזאלי זמני לרוץ</string>
+    <string name="rate">דרג</string>
+    <string name="duration">משך</string>
+    <string name="reason">סיבה</string>
+    <string name="nochangerequested">אין בקשות החלפה</string>
     <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">פרופיל לא חוקי: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d דק\'</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b> פחמ: <b>%6$.0f גרם</b>]]></string>
     <!--    Translator-->
+    <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
+    <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
+    <string name="careportal_announcement">הודעה</string>
+    <string name="careportal_note">הערה</string>
+    <string name="careportal_question">שאלה</string>
+    <string name="careportal_exercise">פעילות גופנית</string>
+    <string name="careportal_pumpsitechange">החלפת פרפרית</string>
+    <string name="careportal_cgmsensorinsert">חיבור סנסור</string>
+    <string name="careportal_cgmsensorstart">התחלת סנסור חדש</string>
+    <string name="careportal_insulincartridgechange">החלפת מחסנית אינסולין</string>
+    <string name="careportal_profileswitch">החלפת פרופיל</string>
+    <string name="careportal_snackbolus">בולוס חטיף</string>
+    <string name="careportal_mealbolus">בולוס ארוחה</string>
+    <string name="careportal_correctionbolus">בולוס תיקון</string>
+    <string name="careportal_combobolus">בולוס משולב</string>
+    <string name="careportal_tempbasalstart">התחלת בזאלי זמני</string>
+    <string name="careportal_tempbasalend">סיום בזאלי זמני</string>
+    <string name="careportal_carbscorrection">תיקון פחמימות</string>
+    <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
+    <string name="careportal_pumpbatterychange">החלפת סוללת משאבה</string>
+    <string name="careportal_temporarytarget">ערך מטרה זמני</string>
+    <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
+    <string name="glucosetype_finger">אצבע</string>
+    <string name="glucosetype_sensor">חיישן</string>
+    <string name="manual">ידני</string>
+    <string name="unknown">לא ידוע</string>
     <!--    Command-->
+    <string name="connectiontimedout">החיבור חרג ממגבלת הזמן</string>
     <!--    PumpEnactResult-->
+    <string name="enacted">נקבע</string>
+    <string name="comment">תגובה</string>
+    <string name="success">הצלחה</string>
+    <string name="percent">אחוז</string>
+    <string name="absolute">מוחלט</string>
+    <string name="configbuilder_insulin">אינסולין</string>
+    <string name="insulin_unit_shortname">יחידות</string>
+    <string name="waitingforpumpresult">ממתין לתוצאות</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
     <!--    TDDStatsActivity-->
+    <string name="stats">סטטיסטיקה</string>
+    <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
+    <string name="expweight">TDD משוקלל אקספוננציאלי</string>
+    <string name="basalrate">בזאלי</string>
+    <string name="bolus">בולוס</string>
+    <string name="tdd">מינון יומי כולל (TDD)</string>
+    <string name="ratio">יחס</string>
+    <string name="amount_days"># ימים</string>
+    <string name="weight">משקל</string>
+    <string name="warning_Message">שימוש בבולוס למילוי / פריימינג עשוי לגרום לחוסר דיוק!</string>
+    <string name="olddata_Message">הנתונים ישנים. לרענון לחצו \"טען מחדש\"</string>
+    <string name="tbb">סה\"כ בזאלי בסיסי</string>
+    <string name="tbb2">סה\"כ בזאלי בסיסי * 2</string>
     <!--    Ntp-->
+    <string name="timedetection">זיהוי שעה</string>
+    <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\או מנהל התקן.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">הפעולה עוד לא נתמכת על ידי המשאבה.</string>
+    <string name="common_resultok">אישור</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
+    <string name="pump_status_waking_up">מתעורר</string>
+    <string name="pump_status_error_comm">שגיאת תקשורת</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן בתקשורת</string>
+    <string name="pump_status_pump_unreachable">המשאבה לא זמינה</string>
+    <string name="pump_status_invalid_config">קונפיגורציה לא חוקית</string>
+    <string name="pump_status_active">פעיל</string>
+    <string name="pump_status_sleeping">ישן</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">בזאלים</string>
+    <string name="history_group_configuration">קונפיגורציות</string>
+    <string name="history_group_notification">התראות</string>
+    <string name="history_group_statistic">סטטיסטיקה</string>
+    <string name="history_group_unknown">לא ידועים</string>
+    <string name="history_group_all">כל</string>
+    <string name="history_group_bolus">בולוסים</string>
+    <string name="history_group_prime">תיחול</string>
+    <string name="history_group_alarm">התראות</string>
+    <string name="history_group_glucose">גלוקוז</string>
+    <string name="mute5min">השתקה ל-5 דקות</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

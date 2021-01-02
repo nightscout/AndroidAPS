@@ -8,13 +8,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.Reset;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetHardwareEncoding;
@@ -34,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
-
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -55,11 +52,13 @@ public class RFSpy {
     private static final long RILEYLINK_FREQ_XTAL = 24000000;
     private static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
     public int notConnectedCount = 0;
-    private RileyLinkBLE rileyLinkBle;
+    private final RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
-    private UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
-    private UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
-    private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
+    private final UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
+    private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
+    private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
+    private final UUID batteryServiceUUID = UUID.fromString(GattAttributes.SERVICE_BATTERY);
+    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_UNK);
     //private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
@@ -101,7 +100,9 @@ public class RFSpy {
     // firmware version
     public void initializeRileyLink() {
         bleVersion = getVersion();
-        rileyLinkServiceData.firmwareVersion = getFirmwareVersion();
+        String cc1110Version = getCC1110Version();
+        rileyLinkServiceData.versionCC110 = cc1110Version;
+        rileyLinkServiceData.firmwareVersion = getFirmwareVersion(aapsLogger, bleVersion, cc1110Version);
     }
 
 
@@ -109,6 +110,18 @@ public class RFSpy {
     private void newDataIsAvailable() {
         // pass the message to the reader (which should be internal to RFSpy)
         reader.newDataIsAvailable();
+    }
+
+    public Integer getBatteryLevel() {
+        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
+        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
+            int value = result.value[0];
+            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: {}", value);
+            return value;
+        } else {
+            aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel failed with code: " + result.resultCode);
+            return null;
+        }
     }
 
 
@@ -126,15 +139,7 @@ public class RFSpy {
         }
     }
 
-    public boolean isRileyLinkStillAvailable() {
-        RileyLinkFirmwareVersion firmwareVersion = getFirmwareVersion();
-
-        return (firmwareVersion != RileyLinkFirmwareVersion.UnknownVersion);
-    }
-
-
-    private RileyLinkFirmwareVersion getFirmwareVersion() {
-
+    private String getCC1110Version() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version. Get Version - Start");
 
         for (int i = 0; i < 5; i++) {
@@ -149,16 +154,26 @@ public class RFSpy {
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
                 String versionString = StringUtil.fromBytes(response);
-
-                RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
-                        .fromBytes(response));
-
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", versionString, version);
-
-                if (version != RileyLinkFirmwareVersion.UnknownVersion)
-                    return version;
-
+                if (versionString.length() > 3) {
+                    if (versionString.indexOf('s') >= 0) {
+                        versionString = versionString.substring(versionString.indexOf('s'));
+                    }
+                    return versionString;
+                }
                 SystemClock.sleep(1000);
+            }
+        }
+
+        return null;
+    }
+
+    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
+        if (cc1110Version != null) {
+            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Firmware Version string: {}, resolved to {}.", cc1110Version, version);
+
+            if (version != RileyLinkFirmwareVersion.UnknownVersion) {
+                return version;
             }
         }
 
@@ -170,7 +185,6 @@ public class RFSpy {
 
         return RileyLinkFirmwareVersion.UnknownVersion;
     }
-
 
     private byte[] writeToDataRaw(byte[] bytes, int responseTimeout_ms) {
         SystemClock.sleep(100);
@@ -212,24 +226,22 @@ public class RFSpy {
         if (rawResponse == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: No response from RileyLink");
             notConnectedCount++;
+        } else if (resp.wasInterrupted()) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted");
+        } else if (resp.wasTimeout()) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout");
+            notConnectedCount++;
+        } else if (resp.isOK()) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "writeToData: RileyLink reports OK");
+            resetNotConnectedCount();
         } else {
-            if (resp.wasInterrupted()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink was interrupted");
-            } else if (resp.wasTimeout()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "writeToData: RileyLink reports timeout");
-                notConnectedCount++;
-            } else if (resp.isOK()) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "writeToData: RileyLink reports OK");
+            if (resp.looksLikeRadioPacket()) {
+                // RadioResponse radioResp = resp.getRadioResponse();
+                // byte[] responsePayload = radioResp.getPayload();
+                aapsLogger.debug(LTag.PUMPBTCOMM, "writeToData: received radio response. Will decode at upper level");
                 resetNotConnectedCount();
-            } else {
-                if (resp.looksLikeRadioPacket()) {
-                    // RadioResponse radioResp = resp.getRadioResponse();
-                    // byte[] responsePayload = radioResp.getPayload();
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeToData: received radio response. Will decode at upper level");
-                    resetNotConnectedCount();
-                }
-                // Log.i(TAG, "writeToData: raw response is " + ByteUtil.shortHexString(rawResponse));
             }
+            // Log.i(TAG, "writeToData: raw response is " + ByteUtil.shortHexString(rawResponse));
         }
         return resp;
     }
@@ -378,7 +390,7 @@ public class RFSpy {
     private void setMedtronicEncoding() {
         RileyLinkEncodingType encoding = RileyLinkEncodingType.FourByteSixByteLocal;
 
-        if (RileyLinkFirmwareVersion.isSameVersion(rileyLinkServiceData.firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
+        if (rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             if (sp.getString(RileyLinkConst.Prefs.Encoding, "None")
                     .equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;

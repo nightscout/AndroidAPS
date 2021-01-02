@@ -46,7 +46,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private static final boolean ENABLE_OPERATING_MODE_BUTTON = false;
 

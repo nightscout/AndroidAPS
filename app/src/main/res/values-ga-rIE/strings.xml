@@ -14,7 +14,6 @@
     <string name="MM640g">MM640g</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
-    <string name="careportal_pbage_label_short">PBAGE</string>
     <string name="openaps_short">OAPS</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>

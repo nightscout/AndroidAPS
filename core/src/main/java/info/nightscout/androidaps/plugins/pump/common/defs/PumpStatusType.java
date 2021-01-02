@@ -9,7 +9,7 @@ public enum PumpStatusType {
     Suspended("suspended") //
     ;
 
-    private String statusString;
+    private final String statusString;
 
 
     PumpStatusType(String statusString) {

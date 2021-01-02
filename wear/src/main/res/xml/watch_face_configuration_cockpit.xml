@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+
+    <CheckBoxPreference
+        android:key="vibrate_Hourly"
+        android:title="@string/pref_vibrate_hourly"
+        android:defaultValue="false"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+</PreferenceScreen>

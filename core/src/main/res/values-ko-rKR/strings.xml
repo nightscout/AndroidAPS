@@ -2,6 +2,9 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
+    <string name="yes">네</string>
+    <string name="no">아니오</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
