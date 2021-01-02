@@ -680,8 +680,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
     <string name="overview_editquickwizard_usetrend">Trend calculation</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus calculation</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="positiveonly">Positive only</string>
     <string name="negativeonly">Negative only</string>
     <string name="overview_editquickwizard_usecob">COB calculation</string>
@@ -734,9 +732,6 @@
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
     <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
     <string name="key_allowSMB_with_high_temptarget" translatable="false">enableSMB_with_high_temptarget</string>
-    <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
-    <string name="set_neutral_temps_title">Set neutral temp basals</string>
-    <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
     <string name="enablesmbalways">Enable SMB always</string>
     <string name="enablesmbalways_summary">Enable SMB always independently to boluses. Possible only with BG source with nice filtering of data like G5</string>
     <string name="enablesmbaftercarbs">Enable SMB after carbs</string>
@@ -957,7 +952,6 @@
     <string name="sensitivity_raises_target_title">Sensitivity raises target</string>
     <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named QUICK INFO using the 360 configuration software.</string>
-    <string name="custom">Custom</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
     <string name="storedsettingsfound">Stored settings found</string>
@@ -1425,5 +1419,14 @@
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
     <string name="smscommunicator_pump_ureachable">Report  pump ureachable</string>
+    <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="alarminxmin">Run alarm in %1$d min</string>
+    <string name="bolusadvisor">Bolus advisor</string>
+    <string name="bolusadvisormessage">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
+    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
+    <string name="enablebolusadvisor">Enable bolus advisor</string>
+    <string name="enablebolusadvisor_summary">Use reminder to start eating instead of wizard during high glycemia</string>
+    <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
+    <string name="timetoeat">Time to eat</string>
 
 </resources>

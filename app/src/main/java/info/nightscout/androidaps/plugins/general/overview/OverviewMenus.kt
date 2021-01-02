@@ -50,17 +50,22 @@ class OverviewMenus @Inject constructor(
 
     fun enabledTypes(graph: Int): String {
         val r = StringBuilder()
-        for (type in CharType.values()) if (setting[graph][type.ordinal]) {
+        for (type in CharType.values()) if (_setting[graph][type.ordinal]) {
             r.append(resourceHelper.gs(type.shortnameId))
             r.append(" ")
         }
         return r.toString()
     }
 
-    var setting: MutableList<Array<Boolean>> = ArrayList()
+
+
+    private var _setting: MutableList<Array<Boolean>> = ArrayList()
+
+    val setting: List<Array<Boolean>>
+     get() = _setting.toMutableList() // implicitly does a list copy
 
     private fun storeGraphConfig() {
-        val sts = Gson().toJson(setting)
+        val sts = Gson().toJson(_setting)
         sp.putString(R.string.key_graphconfig, sts)
         aapsLogger.debug(sts)
     }
@@ -68,22 +73,22 @@ class OverviewMenus @Inject constructor(
     private fun loadGraphConfig() {
         val sts = sp.getString(R.string.key_graphconfig, "")
         if (sts.isNotEmpty()) {
-            setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
+            _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
             // reset when new CharType added
-            for (s in setting)
+            for (s in _setting)
                 if (s.size != CharType.values().size) {
-                    setting = ArrayList()
-                    setting.add(Array(CharType.values().size) { true })
+                    _setting = ArrayList()
+                    _setting.add(Array(CharType.values().size) { true })
                 }
         } else {
-            setting = ArrayList()
-            setting.add(Array(CharType.values().size) { true })
+            _setting = ArrayList()
+            _setting.add(Array(CharType.values().size) { true })
         }
     }
 
     fun setupChartMenu(chartButton: ImageButton) {
         loadGraphConfig()
-        val numOfGraphs = setting.size // 1 main + x secondary
+        val numOfGraphs = _setting.size // 1 main + x secondary
 
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
@@ -112,7 +117,7 @@ class OverviewMenus @Inject constructor(
                         s.setSpan(ForegroundColorSpan(resourceHelper.gc(m.colorId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
-                        item.isChecked = setting[g][m.ordinal]
+                        item.isChecked = _setting[g][m.ordinal]
                     }
                 }
             }
@@ -126,14 +131,14 @@ class OverviewMenus @Inject constructor(
                 // id < 100 graph header - divider 1, 2, 3 .....
                 if (it.itemId == numOfGraphs) {
                     // add new empty
-                    setting.add(Array(CharType.values().size) { false })
+                    _setting.add(Array(CharType.values().size) { false })
                 } else if (it.itemId < 100) {
                     // remove graph
-                    setting.removeAt(it.itemId)
+                    _setting.removeAt(it.itemId)
                 } else {
                     val graphNumber = it.itemId / 100 - 1
                     val item = it.itemId % 100
-                    setting[graphNumber][item] = !it.isChecked
+                    _setting[graphNumber][item] = !it.isChecked
                 }
                 storeGraphConfig()
                 setupChartMenu(chartButton)

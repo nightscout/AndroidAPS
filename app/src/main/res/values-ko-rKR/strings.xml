@@ -452,8 +452,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal IOB 계산</string>
     <string name="overview_editquickwizard_usetrend">추세계산</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus 계산</string>
-    <string name="yes">네</string>
-    <string name="no">아니오</string>
     <string name="positiveonly">양수만</string>
     <string name="negativeonly">음수만</string>
     <string name="overview_editquickwizard_usecob">COB 계산</string>
@@ -659,7 +657,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">낮은 임시목표는 민감도를 내립니다.</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[임시목표 100미만을 위해 민감도를 낮춥니다.]]></string>
     <string name="combo_invalid_setup">유효하지 않은 펌프 설정, 문서를 확인하고 360 구성 소프트웨어를 사용하여 Quick Info menu의 이름이 QUICK INFO인지 확인하십시오.</string>
-    <string name="custom">사용자 정의</string>
     <string name="careportal_removestartedevents">\"AndroidAPS 시작\" 기록 삭제하기</string>
     <string name="storedsettingsfound">저장된 설정이 있습니다.</string>
     <string name="allow_hardware_pump_text">주의: 활성화하고 펌프에 연결하게되면, AndroidAPS는 프로파일의 Basal설정을 복사해서 기존에 펌프에 저장되어 있던 Basal설정을 덮어쓰게 될것입니다. AndroidAPS의 Basal설정이 올바른지 반드시 확인하세요. 만약 확실치 않거나 Basal설정을 덮어씌우길 원치않는다면, 취소버튼을 누르고 나중에 다시 연결하세요.</string>

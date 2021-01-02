@@ -425,8 +425,6 @@
     <string name="overview_editquickwizard_usebasaliob">基础率IOB (活性胰岛素) 计算</string>
     <string name="overview_editquickwizard_usetrend">趋势计算</string>
     <string name="overview_editquickwizard_usesuperbolus">超级大剂量计算</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
     <string name="positiveonly">仅正数</string>
     <string name="negativeonly">仅负数</string>
     <string name="overview_editquickwizard_usecob">COB计算</string>
@@ -630,7 +628,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">低临时目标降低灵敏度</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[当临时目标 ＜= 100 mg/dl (5.5 mmol/l) 时降低灵敏度]]></string>
     <string name="combo_invalid_setup">泵设置的无效，检查文档并核实这个Quick Info 菜单被命名为 QUICK INFO，使用360 configuration 这个软件　</string>
-    <string name="custom">自定义</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS 启动了</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
     <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>

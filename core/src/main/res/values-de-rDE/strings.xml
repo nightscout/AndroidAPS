@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Deaktiviert Bluetooth kurzzeitig, falls keine Verbindung zur Pumpe besteht. Dies kann für Smartphones mit Verbindungsproblemen nützlich sein.</string>
     <string name="pairing">Koppeln</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Füllen</string>
     <string name="history_group_alarm">Alarme</string>
     <string name="history_group_glucose">Glukose</string>
+    <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
