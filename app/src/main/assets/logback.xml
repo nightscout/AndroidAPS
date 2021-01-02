@@ -18,7 +18,7 @@
             <maxHistory>120</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %.-1level/%logger: [%class{0}.%M\(\):%line]: %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %.-1level/%logger: %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -27,7 +27,7 @@
             <pattern>%logger{0}</pattern>
         </tagEncoder>
         <encoder>
-            <pattern>[%thread] [%class{0}.%M\(\):%line]: %msg%n</pattern>
+            <pattern>[%thread]: %msg%n</pattern>
         </encoder>
     </appender>
 

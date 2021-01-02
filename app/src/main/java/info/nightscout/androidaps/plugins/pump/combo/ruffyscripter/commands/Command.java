@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.CommandResult;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
 
 /**
  * Interface for all commands to be executed by the pump.

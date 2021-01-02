@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -25,18 +26,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/primefill"
-                android:src="@drawable/icon_cp_pump_canula" />
+                android:tint="?attr/iconColorDialog"
+                app:srcCompat="@drawable/ic_cp_pump_canula" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:text="@string/primefill"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 
@@ -82,13 +84,13 @@
                 android:text="@string/overview_insulin_label"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/fill_insulinamount"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,6 +108,8 @@
                 android:id="@+id/fill_preset_button1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="0.3U" />
 
@@ -113,6 +117,8 @@
                 android:id="@+id/fill_preset_button2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="0.7U" />
 
@@ -120,6 +126,8 @@
                 android:id="@+id/fill_preset_button3"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="1.2U" />
 

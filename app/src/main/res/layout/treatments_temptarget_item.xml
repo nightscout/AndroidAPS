@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/temptargetrange_cardview"
+    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="?android:colorBackground">
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
+    app:strokeColor="@color/plastic_grey"
+    app:strokeWidth="2dp"
+    app:cardCornerRadius="3dp"
+    app:contentPadding="2dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="false"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,15 +33,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical|right"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
                 android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/temptargetrange_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="1.1.2000 18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -40,14 +49,14 @@
                 android:id="@+id/temptargetrange_low"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="80"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
                 android:text="-"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -55,7 +64,7 @@
                 android:id="@+id/temptargetrange_high"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
                 android:text="100"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -63,7 +72,7 @@
                 android:id="@+id/temptargetrange_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="30 min"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -102,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/reason"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -110,7 +119,7 @@
                 android:id="@+id/temptargetrange_reason_colon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
+                android:paddingEnd="5dp"
                 android:text=":" />
 
             <TextView
@@ -119,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text="Activity"
                 android:textStyle="bold" />
 
@@ -134,16 +143,7 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/listdelimiter" />
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

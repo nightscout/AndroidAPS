@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView android:id="@+id/main_activity_content_frame"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="false"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".activities.ProfileHelperActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/profilehelper_compareprofile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/comapareprofile"
+            app:icon="@drawable/ic_compare_profiles"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
+            app:tabMode="fixed"
+            app:tabIndicatorAnimationDuration="1400"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorColor="@color/iconColor"
+            app:tabUnboundedRipple="false"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_height="28dp"
+            android:layout_width="match_parent">
+        </com.google.android.material.tabs.TabLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profilehelper_profiletype_title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/profiletype">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profilehelper_profiletype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:importantForAutofill="no" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/profilehelper_default_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profilehelper_age_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:labelFor="@+id/profilehelper_age"
+                        android:text="@string/age"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                        android:id="@+id/profilehelper_age"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/profilehelper_tdd_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profilehelper_tdd_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:labelFor="@+id/profilehelper_weight"
+                        android:text="@string/tdd_total"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                        android:id="@+id/profilehelper_tdd"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/profilehelper_weight_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profilehelper_weigth_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:labelFor="@+id/profilehelper_weight"
+                        android:text="@string/weight_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                        android:id="@+id/profilehelper_weight"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/profilehelper_basalpctfromtdd_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profilehelper_basalpctfromtdd_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:labelFor="@+id/profilehelper_basalpctfromtdd"
+                        android:text="@string/basalpctfromtdd_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                        android:id="@+id/profilehelper_basalpctfromtdd"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/profilehelper_tdds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/profilehelper_copytolocalprofile"
+                style="@style/Widget.MaterialComponents.Button"
+                app:icon="@drawable/ic_clone_48"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="70dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="0dp"
+                android:text="@string/cloneProfile"
+                android:textSize="14sp"
+                app:cornerRadius="20dp"
+                app:layout_gravity="fill_horizontal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profilehelper_current_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profilehelper_current_profile_text"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profilehelper_available_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/selected_profile">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profilehelper_available_profile_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:importantForAutofill="no" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profilehelper_profile_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/careportal_profileswitch">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profilehelper_profileswitch_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:importantForAutofill="no" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

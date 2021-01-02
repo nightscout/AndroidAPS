@@ -3,17 +3,17 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
 
 public class ReadQuickInfoCommand extends BaseCommand {
-    private static final Logger log = LoggerFactory.getLogger(ReadQuickInfoCommand.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(ReadQuickInfoCommand.class);
 
     private final int numberOfBolusRecordsToRetrieve;
 

@@ -5,6 +5,7 @@
     <item
         android:id="@+id/nav_preferences"
         app:showAsAction="never"
+        android:icon="@drawable/ic_generic_icon"
         android:title="@string/nav_preferences" />
     <item
         android:id="@+id/nav_plugin_preferences"
@@ -14,6 +15,11 @@
         android:id="@+id/nav_historybrowser"
         app:showAsAction="never"
         android:title="@string/nav_historybrowser" />
+    <item
+        android:id="@+id/nav_themeselector"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_palette"
+        android:title="@string/nav_themeselector" />
     <item
         android:id="@+id/nav_setupwizard"
         app:showAsAction="never"
@@ -27,6 +33,10 @@
         app:showAsAction="never"
         android:title="@string/nav_survey" />
 -->
+    <item
+        android:id="@+id/nav_defaultprofile"
+        app:showAsAction="never"
+        android:title="@string/nav_profilehelper" />
     <item
         android:id="@+id/nav_about"
         app:showAsAction="never"

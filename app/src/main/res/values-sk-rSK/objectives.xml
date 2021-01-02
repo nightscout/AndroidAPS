@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Naspäť</string>
     <string name="objectives_button_start">Začiatok</string>
-    <string name="objectives_button_verify">Overenie</string>
+    <string name="objectives_button_verify">Kontrola</string>
     <string name="nth_objective">%1$d. Cieľ</string>
     <string name="objectivenotstarted">Výukový cieľ %1$d nespustený</string>
     <string name="objectivenotfinished">Výukový cieľ %1$d nedokončený</string>
@@ -20,7 +19,9 @@
     <string name="objectives_autosens_gate">Jeden týždeň úspešného používania s bežným príjmom sacharidov</string>
     <string name="objectives_ama_objective">Povolenie doplnkových funkcií pre každodenné použitie, ako napr. pokročilý asistent jedál (AMA)</string>
     <string name="objectives_smb_objective">Povoliť ďalšie funkcie pre bežné používanie ako SMB</string>
+    <string name="objectives_auto_objective">Povolenie automatiky</string>
     <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
+    <string name="objectives_auto_gate">Prečítajte si dokumentáciu na wiki, ako automatika funguje. Najskôr nastavte iba jednoduché pravidlá. Namiesto vykonávania akcií nechajte AAPS zobrazovať iba oznámenia. Pokiaľ ste si istý, že automatika je spustená v správnom čase, môžete oznámenie nahradiť vykonaním akcie.(https://androidaps.readdocs.io/en/latest/CROWDIN/cs/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glykémia dostupná v NS</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="objectives_manualenacts">Spustené manuálne</string>
@@ -39,7 +40,7 @@
     <string name="codeaccepted">Kód akceptovaný</string>
     <string name="codeinvalid">Neplatný kód</string>
     <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
-    <string name="objectives_exam_gate">Preštudujte a správne odpovedajte na otázky</string>
+    <string name="objectives_exam_gate">Preštudujte si otázky. Dostali ste štyri možné odpovede na každú otázku. Môže existovať viac ako jedna správna odpoveď. Zaškrtnite všetky správne odpovede a potvrďte voľbou KONTROLA.</string>
     <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
     <string name="wronganswer">Nesprávna odpoveď!</string>
     <string name="unfinshed_button">Ďalšia nedokončená</string>

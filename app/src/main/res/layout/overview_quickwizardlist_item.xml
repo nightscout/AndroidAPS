@@ -26,7 +26,7 @@
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:scaleType="fitStart"
-                card_view:srcCompat="@drawable/icon_quickwizard" />
+                card_view:srcCompat="@drawable/ic_quickwizard" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -44,9 +44,9 @@
                         android:id="@+id/overview_quickwizard_item_buttonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:text="Sample button text"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold"
                         android:textColor="@color/cardObjectiveText" />
 
@@ -54,9 +54,9 @@
                         android:id="@+id/overview_quickwizard_item_carbs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:text="36g"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/cardObjectiveText"
                         android:textStyle="normal|bold" />
 
@@ -72,19 +72,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/overview_editquickwizard_valid"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <TextView
                         android:id="@+id/overview_quickwizard_item_from"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
                         android:text="07:45"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold" />
 
                     <TextView
@@ -97,9 +97,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:text="11:45"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold" />
 
                 </LinearLayout>

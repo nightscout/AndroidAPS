@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,32 +13,58 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.CompoundButton
-import androidx.fragment.app.DialogFragment
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
+import androidx.fragment.app.FragmentManager
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.db.DatabaseHelper
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.dialog_wizard.*
-import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.abs
 
-class WizardDialog : DialogFragment() {
-    private val log = LoggerFactory.getLogger(WizardDialog::class.java)
+class WizardDialog : BlurDialogFragment() {
+
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var sp: SP
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     private var wizard: BolusWizard? = null
 
@@ -51,7 +79,22 @@ class WizardDialog : DialogFragment() {
         }
     }
 
+    private val timeTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable) {}
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            calculateInsulin()
+            binding.alarm.isChecked = binding.carbTimeInput.value > 0
+        }
+    }
+
     private var disposable: CompositeDisposable = CompositeDisposable()
+
+    private var _binding: DialogWizardBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onStart() {
         super.onStart()
@@ -60,48 +103,75 @@ class WizardDialog : DialogFragment() {
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("treatments_wizard_bg_input", treatments_wizard_bg_input.value)
-        savedInstanceState.putDouble("treatments_wizard_carbs_input", treatments_wizard_carbs_input.value)
-        savedInstanceState.putDouble("treatments_wizard_correction_input", treatments_wizard_correction_input.value)
-        savedInstanceState.putDouble("treatments_wizard_carb_time_input", treatments_wizard_carb_time_input.value)
+        savedInstanceState.putDouble("bg_input", binding.bgInput.value)
+        savedInstanceState.putDouble("carbs_input", binding.carbsInput.value)
+        savedInstanceState.putDouble("correction_input", binding.correctionInput.value)
+        savedInstanceState.putDouble("carb_time_input", binding.carbTimeInput.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        return inflater.inflate(R.layout.dialog_wizard, container, false)
+        if ( sp.getBoolean("daynight", true)) {
+            val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+            dialog?.window?.setBackgroundDrawable(drawable)
+        } else {
+            val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+            dialog?.window?.setBackgroundDrawable(drawable)
+        }
+
+       context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(resourceHelper.gc(R.color.white_alpha_40))  // semi-transparent white color
+                .debug(false)
+                .asyncPolicy(it)
+                .build()
+        }
+
+       // return inflater.inflate(R.layout.dialog_wizard, container, false)
+        _binding = DialogWizardBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadCheckedStates()
         processCobCheckBox()
-        treatments_wizard_sbcheckbox.visibility = SP.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
-        treatments_wizard_notes_layout.visibility = SP.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        binding.sbcheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+        binding.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
-        val maxCarbs = MainApp.getConstraintChecker().maxCarbsAllowed.value()
-        val maxCorrection = MainApp.getConstraintChecker().maxBolusAllowed.value()
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
+        val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
 
-        treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
-            ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
-        treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
-            ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
-            ?: 0.1
-        treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
-            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
-        treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
-            ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
+        if (profileFunction.getUnits() == Constants.MGDL)
+            binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
+                ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
+        else
+            binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
+                ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.ok, textWatcher)
+        binding.carbsInput.setParams(savedInstanceState?.getDouble("carbs_input")
+            ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
+            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+        binding.carbTimeInput.setParams(savedInstanceState?.getDouble("carb_time_input")
+            ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
         initDialog()
 
-        treatments_wizard_percent_used.text = MainApp.gs(R.string.format_percent, SP.getInt(R.string.key_boluswizard_percentage, 100))
+        binding.percentUsed.text = resourceHelper.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
-        ok.setOnClickListener {
+        binding.ok.setOnClickListener {
             if (okClicked) {
-                log.debug("guarding: ok already clicked")
+                aapsLogger.debug(LTag.UI, "guarding: ok already clicked")
             } else {
                 okClicked = true
                 calculateInsulin()
@@ -112,48 +182,46 @@ class WizardDialog : DialogFragment() {
             dismiss()
         }
         // cancel button
-        cancel.setOnClickListener { dismiss() }
+        binding.cancel.setOnClickListener { dismiss() }
         // checkboxes
-        treatments_wizard_bgcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_ttcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_cobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_basaliobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        treatments_wizard_sbcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.bgcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.ttcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.cobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.basaliobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.bolusiobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.bgtrendcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.sbcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
 
-        val showCalc = SP.getBoolean(MainApp.gs(R.string.key_wizard_calculation_visible), false)
-        treatments_wizard_delimiter.visibility = showCalc.toVisibility()
-        treatments_wizard_resulttable.visibility = showCalc.toVisibility()
-        treatments_wizard_calculationcheckbox.isChecked = showCalc
-        treatments_wizard_calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
+        val showCalc = sp.getBoolean(R.string.key_wizard_calculation_visible, false)
+        binding.delimiter.visibility = showCalc.toVisibility()
+        binding.resulttable.visibility = showCalc.toVisibility()
+        binding.calculationcheckbox.isChecked = showCalc
+        binding.calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
             run {
-                SP.putBoolean(MainApp.gs(R.string.key_wizard_calculation_visible), isChecked)
-                treatments_wizard_delimiter.visibility = isChecked.toVisibility()
-                treatments_wizard_resulttable.visibility = isChecked.toVisibility()
+                sp.putBoolean(resourceHelper.gs(R.string.key_wizard_calculation_visible), isChecked)
+                binding.delimiter.visibility = isChecked.toVisibility()
+                binding.resulttable.visibility = isChecked.toVisibility()
             }
         }
         // profile spinner
-        treatments_wizard_profile.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.noprofileselected))
-                ok.visibility = View.GONE
+                ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofileselected))
+                binding.ok.visibility = View.GONE
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 calculateInsulin()
-                ok.visibility = View.VISIBLE
+                binding.ok.visibility = View.VISIBLE
             }
         }
         // bus
-        disposable.add(RxBus
+        disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 activity?.runOnUiThread { calculateInsulin() }
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         )
 
     }
@@ -161,180 +229,194 @@ class WizardDialog : DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         disposable.clear()
+        _binding = null
     }
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
-        if (buttonView.id == treatments_wizard_cobcheckbox.id)
+        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && treatmentsPlugin.tempTargetFromHistory != null
+        if (buttonView.id == binding.cobcheckbox.id)
             processCobCheckBox()
         calculateInsulin()
     }
 
     private fun processCobCheckBox() {
-        if (treatments_wizard_cobcheckbox.isChecked) {
-            treatments_wizard_bolusiobcheckbox.isEnabled = false
-            treatments_wizard_basaliobcheckbox.isEnabled = false
-            treatments_wizard_bolusiobcheckbox.isChecked = true
-            treatments_wizard_basaliobcheckbox.isChecked = true
+        if (binding.cobcheckbox.isChecked) {
+            binding.bolusiobcheckbox.isEnabled = false
+            binding.basaliobcheckbox.isEnabled = false
+            binding.bolusiobcheckbox.isChecked = true
+            binding.basaliobcheckbox.isChecked = true
         } else {
-            treatments_wizard_bolusiobcheckbox.isEnabled = true
-            treatments_wizard_basaliobcheckbox.isEnabled = true
+            binding.bolusiobcheckbox.isEnabled = true
+            binding.basaliobcheckbox.isEnabled = true
         }
     }
 
     private fun saveCheckedStates() {
-        SP.putBoolean(MainApp.gs(R.string.key_wizard_include_cob), treatments_wizard_cobcheckbox.isChecked)
-        SP.putBoolean(MainApp.gs(R.string.key_wizard_include_trend_bg), treatments_wizard_bgtrendcheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_include_cob, binding.cobcheckbox.isChecked)
+        sp.putBoolean(R.string.key_wizard_include_trend_bg, binding.bgtrendcheckbox.isChecked)
     }
 
     private fun loadCheckedStates() {
-        treatments_wizard_bgtrendcheckbox.isChecked = SP.getBoolean(MainApp.gs(R.string.key_wizard_include_trend_bg), false)
-        treatments_wizard_cobcheckbox.isChecked = SP.getBoolean(MainApp.gs(R.string.key_wizard_include_cob), false)
+        binding.bgtrendcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
+        binding.cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
     }
 
     private fun initDialog() {
-        val profile = ProfileFunctions.getInstance().profile
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
+        val profile = profileFunction.getProfile()
+        val profileStore = activePlugin.activeProfileInterface.profile
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.noprofile))
+            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
             dismiss()
             return
         }
 
+
         val profileList: ArrayList<CharSequence>
         profileList = profileStore.getProfileList()
-        profileList.add(0, MainApp.gs(R.string.active))
+        profileList.add(0, resourceHelper.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
-            treatments_wizard_profile.adapter = adapter
+            binding.profile.adapter = adapter
         } ?: return
 
-        val units = ProfileFunctions.getSystemUnits()
-        treatments_wizard_bgunits.text = units
+        val units = profileFunction.getUnits()
+        binding.bgunits.text = units
         if (units == Constants.MGDL)
-            treatments_wizard_bg_input.setStep(1.0)
+            binding.bgInput.setStep(1.0)
         else
-            treatments_wizard_bg_input.setStep(0.1)
+            binding.bgInput.setStep(0.1)
 
         // Set BG if not old
-        val lastBg = DatabaseHelper.actualBg()
+        val lastBg = iobCobCalculatorPlugin.actualBg()
 
         if (lastBg != null) {
-            treatments_wizard_bg_input.value = lastBg.valueToUnits(units)
+            binding.bgInput.value = lastBg.valueToUnits(units)
         } else {
-            treatments_wizard_bg_input.value = 0.0
+            binding.bgInput.value = 0.0
         }
-        treatments_wizard_ttcheckbox.isEnabled = TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
+        binding.ttcheckbox.isEnabled = treatmentsPlugin.tempTargetFromHistory != null
 
         // IOB calculation
-        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments()
-        val bolusIob = TreatmentsPlugin.getPlugin().lastCalculationTreatments.round()
-        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals()
-        val basalIob = TreatmentsPlugin.getPlugin().lastCalculationTempBasals.round()
+        treatmentsPlugin.updateTotalIOBTreatments()
+        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
+        treatmentsPlugin.updateTotalIOBTempBasals()
+        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
 
-        treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(-bolusIob.iob)
-        treatments_wizard_basaliobinsulin.text = StringUtils.formatInsulin(-basalIob.basaliob)
+        binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
+        binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -basalIob.basaliob)
 
         calculateInsulin()
 
-        treatments_wizard_percent_used.visibility = (SP.getInt(R.string.key_boluswizard_percentage, 100) != 100).toVisibility()
+        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100).toVisibility()
     }
 
     private fun calculateInsulin() {
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
-        if (treatments_wizard_profile.selectedItem == null || profileStore == null)
+        val profileStore = activePlugin.activeProfileInterface.profile
+        if (binding.profile.selectedItem == null || profileStore == null)
             return  // not initialized yet
-        var profileName = treatments_wizard_profile.selectedItem.toString()
+        var profileName = binding.profile.selectedItem.toString()
         val specificProfile: Profile?
-        if (profileName == MainApp.gs(R.string.active)) {
-            specificProfile = ProfileFunctions.getInstance().profile
-            profileName = ProfileFunctions.getInstance().profileName
+        if (profileName == resourceHelper.gs(R.string.active)) {
+            specificProfile = profileFunction.getProfile()
+            profileName = profileFunction.getProfileName()
         } else
             specificProfile = profileStore.getSpecificProfile(profileName)
 
         if (specificProfile == null) return
 
         // Entered values
-        var bg = SafeParse.stringToDouble(treatments_wizard_bg_input.text)
-        val carbs = SafeParse.stringToInt(treatments_wizard_carbs_input.text)
-        val correction = SafeParse.stringToDouble(treatments_wizard_correction_input.text)
-        val carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(carbs)).value()
+        var bg = SafeParse.stringToDouble(binding.bgInput.text)
+        val carbs = SafeParse.stringToInt(binding.carbsInput.text)
+        val correction = SafeParse.stringToDouble(binding.correctionInput.text)
+        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
-            treatments_wizard_carbs_input.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.carbsconstraintapplied))
+            binding.carbsInput.value = 0.0
+            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
             return
         }
 
-        bg = if (treatments_wizard_bgcheckbox.isChecked) bg else 0.0
-        val tempTarget = if (treatments_wizard_ttcheckbox.isChecked) TreatmentsPlugin.getPlugin().tempTargetFromHistory else null
+        bg = if (binding.bgcheckbox.isChecked) bg else 0.0
+        val tempTarget = if (binding.ttcheckbox.isChecked) treatmentsPlugin.tempTargetFromHistory else null
 
         // COB
         var cob = 0.0
-        if (treatments_wizard_cobcheckbox.isChecked) {
-            val cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard COB")
+        if (binding.cobcheckbox.isChecked) {
+            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard COB")
             cobInfo.displayCob?.let { cob = it }
         }
 
-        val carbTime = SafeParse.stringToInt(treatments_wizard_carb_time_input.text)
+        val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
-        wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
-            SP.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
-            treatments_wizard_bgcheckbox.isChecked,
-            treatments_wizard_cobcheckbox.isChecked,
-            treatments_wizard_bolusiobcheckbox.isChecked,
-            treatments_wizard_basaliobcheckbox.isChecked,
-            treatments_wizard_sbcheckbox.isChecked,
-            treatments_wizard_ttcheckbox.isChecked,
-            treatments_wizard_bgtrendcheckbox.isChecked,
-            treatment_wizard_notes.text.toString(), carbTime)
+        wizard = BolusWizard(mainApp).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
+            sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
+            binding.bgcheckbox.isChecked,
+            binding.cobcheckbox.isChecked,
+            binding.bolusiobcheckbox.isChecked,
+            binding.basaliobcheckbox.isChecked,
+            binding.sbcheckbox.isChecked,
+            binding.ttcheckbox.isChecked,
+            binding.bgtrendcheckbox.isChecked,
+            binding.alarm.isChecked,
+            binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, ProfileFunctions.getSystemUnits())).valueToUnitsToString(ProfileFunctions.getSystemUnits()), wizard.sens)
-            treatments_wizard_bginsulin.text = StringUtils.formatInsulin(wizard.insulinFromBG)
+            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
+            binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
-            treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
-            treatments_wizard_carbsinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCarbs)
+            binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
+            binding.carbsinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
 
-            treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromBolusIOB)
-            treatments_wizard_basaliobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromBasalsIOB)
+            binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
+            binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBasalIOB)
 
-            treatments_wizard_correctioninsulin.text = StringUtils.formatInsulin(wizard.insulinFromCorrection)
+            binding.correctioninsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
 
             // Superbolus
-            treatments_wizard_sb.text = if (treatments_wizard_sbcheckbox.isChecked) MainApp.gs(R.string.twohours) else ""
-            treatments_wizard_sbinsulin.text = StringUtils.formatInsulin(wizard.insulinFromSuperBolus)
+            binding.sb.text = if (binding.sbcheckbox.isChecked) resourceHelper.gs(R.string.twohours) else ""
+            binding.sbinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
 
             // Trend
-            if (treatments_wizard_bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
-                treatments_wizard_bgtrend.text = ((if (wizard.trend > 0) "+" else "")
-                    + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, ProfileFunctions.getSystemUnits())
-                    + " " + ProfileFunctions.getSystemUnits())
+            if (binding.bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
+                binding.bgtrend.text = ((if (wizard.trend > 0) "+" else "")
+                    + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
+                    + " " + profileFunction.getUnits())
             } else {
-                treatments_wizard_bgtrend.text = ""
+                binding.bgtrend.text = ""
             }
-            treatments_wizard_bgtrendinsulin.text = StringUtils.formatInsulin(wizard.insulinFromTrend)
+            binding.bgtrendinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
 
             // COB
-            if (treatments_wizard_cobcheckbox.isChecked) {
-                treatments_wizard_cob.text = String.format(MainApp.gs(R.string.format_cob_ic), cob, wizard.ic)
-                treatments_wizard_cobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCOB)
+            if (binding.cobcheckbox.isChecked) {
+                binding.cob.text = String.format(resourceHelper.gs(R.string.format_cob_ic), cob, wizard.ic)
+                binding.cobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
             } else {
-                treatments_wizard_cob.text = ""
-                treatments_wizard_cobinsulin.text = ""
+                binding.cob.text = ""
+                binding.cobinsulin.text = ""
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) MainApp.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) MainApp.gs(R.string.format_carbs, carbsAfterConstraint) else ""
-                treatments_wizard_total.text = MainApp.gs(R.string.result_insulin_carbs, insulinText, carbsText)
-                ok.visibility = View.VISIBLE
+                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) resourceHelper.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) resourceHelper.gs(R.string.format_carbs, carbsAfterConstraint) else ""
+                binding.total.text = resourceHelper.gs(R.string.result_insulin_carbs, insulinText, carbsText)
+                binding.ok.visibility = View.VISIBLE
             } else {
-                treatments_wizard_total.text = MainApp.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
-                ok.visibility = View.INVISIBLE
+                binding.total.text = resourceHelper.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
+                binding.ok.visibility = View.INVISIBLE
             }
         }
 
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        try {
+            manager.beginTransaction().let {
+                it.add(this, tag)
+                it.commitAllowingStateLoss()
+            }
+        } catch (e: IllegalStateException) {
+            aapsLogger.debug(e.localizedMessage)
+        }
     }
 }

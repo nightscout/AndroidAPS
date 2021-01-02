@@ -2,25 +2,41 @@ package info.nightscout.androidaps.dialogs
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Resources
+import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
+import androidx.fragment.app.FragmentManager
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.toVisibility
+import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.datetime.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import org.slf4j.LoggerFactory
+import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
 import java.util.*
+import javax.inject.Inject
 
-abstract class DialogFragmentWithDate : DialogFragment() {
-    val log = LoggerFactory.getLogger(DialogFragmentWithDate::class.java)
+abstract class DialogFragmentWithDate : BlurDialogFragment()  {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
+    @Inject lateinit var dateUtil: DateUtil
 
     var eventTime = DateUtil.now()
     var eventTimeChanged = false
@@ -29,6 +45,7 @@ abstract class DialogFragmentWithDate : DialogFragment() {
     private var okClicked: Boolean = false
 
     companion object {
+
         private var seconds: Int = (Math.random() * 59.0).toInt()
     }
 
@@ -44,17 +61,47 @@ abstract class DialogFragmentWithDate : DialogFragment() {
     }
 
     fun onCreateViewGeneral() {
+
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if ( sp.getBoolean("daynight", true)) {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+        } else {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
+
+        context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
+                .debug(false)
+                .asyncPolicy(it)
+                .build()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
         overview_eventdate?.text = DateUtil.dateString(eventTime)
-        overview_eventtime?.text = DateUtil.timeString(eventTime)
+        overview_eventtime?.text = dateUtil.timeString(eventTime)
+
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.theme
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            theme?.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -89,7 +136,7 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventtime?.text = DateUtil.timeString(eventTime)
+            overview_eventtime?.text = dateUtil.timeString(eventTime)
         }
 
         overview_eventtime?.setOnClickListener {
@@ -104,12 +151,12 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             }
         }
 
-        notes_layout?.visibility = SP.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        notes_layout?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         ok.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked) {
-                    log.debug("guarding: ok already clicked")
+                    aapsLogger.warn(LTag.UI, "guarding: ok already clicked")
                 } else {
                     okClicked = true
                     if (submit()) dismiss()
@@ -118,6 +165,17 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             }
         }
         cancel.setOnClickListener { dismiss() }
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        try {
+            manager.beginTransaction().let {
+                it.add(this, tag)
+                it.commitAllowingStateLoss()
+            }
+        } catch (e: IllegalStateException) {
+            aapsLogger.debug(e.localizedMessage)
+        }
     }
 
     abstract fun submit(): Boolean

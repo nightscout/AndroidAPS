@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="actions_x5F_refill">
+    <path fill="none" stroke="#E93057" stroke-width="1.2756" stroke-linecap="round" stroke-miterlimit="10" d="M18.693,9.268
+            c-1.078-2.638-3.669-4.497-6.695-4.497c-3.993,0-7.229,3.237-7.229,7.229"/>
+    <line fill="none" stroke="#E93057" stroke-width="1.2756" stroke-linecap="round" stroke-miterlimit="10" x1="18.693" y1="9.268" x2="18.937" y2="4.778"/>
+    <line fill="none" stroke="#E93057" stroke-width="1.2756" stroke-linecap="round" stroke-miterlimit="10" x1="18.693" y1="9.268" x2="14.54" y2="7.538"/>
+    <path fill="none" stroke="#E93057" stroke-width="1.2756" stroke-linecap="round" stroke-miterlimit="10" d="M5.307,14.733
+            c1.078,2.638,3.669,4.497,6.695,4.497c3.993,0,7.229-3.237,7.229-7.229"/>
+    <line fill="none" stroke="#E93057" stroke-width="1.2756" stroke-linecap="round" stroke-miterlimit="10" x1="5.307" y1="14.733" x2="5.063" y2="19.223"/>
+    <line fill="none" stroke="#E93057" stroke-width="1.2756" stroke-linecap="round" stroke-miterlimit="10" x1="5.307" y1="14.733" x2="9.46" y2="16.463"/>
+</g>
+</svg>

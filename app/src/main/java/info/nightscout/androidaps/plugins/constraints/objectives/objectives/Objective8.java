@@ -2,14 +2,14 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
 import java.util.List;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.utils.T;
 
 public class Objective8 extends Objective {
 
-    public Objective8() {
-        super("ama", R.string.objectives_ama_objective, 0);
+    public Objective8(HasAndroidInjector injector) {
+        super(injector, "ama", R.string.objectives_ama_objective, 0);
     }
 
     @Override

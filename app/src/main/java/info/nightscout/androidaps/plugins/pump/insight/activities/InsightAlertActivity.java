@@ -12,17 +12,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerAppCompatActivity;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
-import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtilsKt;
+import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
+import info.nightscout.androidaps.utils.HtmlHelper;
 
-public class InsightAlertActivity extends AppCompatActivity {
+public class InsightAlertActivity extends DaggerAppCompatActivity {
+
+    @Inject AlertUtils alertUtils;
 
     private InsightAlertService alertService;
 
@@ -33,7 +37,7 @@ public class InsightAlertActivity extends AppCompatActivity {
     private Button mute;
     private Button confirm;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             alertService = ((InsightAlertService.LocalBinder) binder).getService();
@@ -81,14 +85,14 @@ public class InsightAlertActivity extends AppCompatActivity {
         mute.setEnabled(true);
         mute.setVisibility(alert.getAlertStatus() == AlertStatus.SNOOZED ? View.GONE : View.VISIBLE);
         confirm.setEnabled(true);
-        this.icon.setImageDrawable(ContextCompat.getDrawable(this, AlertUtilsKt.getAlertIcon(alert.getAlertCategory())));
-        this.errorCode.setText(AlertUtilsKt.getAlertCode(alert.getAlertType()));
-        this.errorTitle.setText(AlertUtilsKt.getAlertTitle(alert.getAlertType()));
-        String description = AlertUtilsKt.getAlertDescription(alert);
+        this.icon.setImageDrawable(ContextCompat.getDrawable(this, alertUtils.getAlertIcon(alert.getAlertCategory())));
+        this.errorCode.setText(alertUtils.getAlertCode(alert.getAlertType()));
+        this.errorTitle.setText(alertUtils.getAlertTitle(alert.getAlertType()));
+        String description = alertUtils.getAlertDescription(alert);
         if (description == null) this.errorDescription.setVisibility(View.GONE);
         else {
             this.errorDescription.setVisibility(View.VISIBLE);
-            this.errorDescription.setText(Html.fromHtml(description));
+            this.errorDescription.setText(HtmlHelper.INSTANCE.fromHtml(description));
         }
     }
 

@@ -20,7 +20,6 @@ import androidx.test.rule.GrantPermissionRule
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -28,8 +27,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.isRunningTest
+import info.nightscout.androidaps.utils.extensions.isRunningTest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -60,7 +58,7 @@ class SetupWizardActivityTest {
 
     @Before
     fun clear() {
-        SP.clear()
+        sp.clear()
     }
 /*
 
@@ -77,7 +75,7 @@ adb shell settings put global animator_duration_scale 0 &
 
     @Test
     fun setupWizardActivityTest() {
-        SP.clear()
+        sp.clear()
         Assert.assertTrue(isRunningTest())
         // Welcome page
         onView(withId(R.id.next_button)).perform(click())

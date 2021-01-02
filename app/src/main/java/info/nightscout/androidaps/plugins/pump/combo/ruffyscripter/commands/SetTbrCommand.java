@@ -6,18 +6,18 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
 
 public class SetTbrCommand extends BaseCommand {
-    private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(SetTbrCommand.class);
 
     private final long percentage;
     private final long duration;

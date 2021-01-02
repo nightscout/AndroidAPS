@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -25,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_temporarytarget"
-                android:src="@drawable/icon_actions_temptarget" />
+                app:tint="?attr/iconColorDialog"
+                app:srcCompat="@drawable/ic_temptarget_high" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -36,7 +38,7 @@
                 android:layout_marginRight="10dp"
                 android:text="@string/careportal_temporarytarget"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 
@@ -58,34 +60,11 @@
                 android:layout_gravity="center_vertical"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/reason"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:text="@string/target_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/overview_temptarget_reason"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/nsprofileview_target_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/overview_temptarget_temptarget"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -117,10 +96,10 @@
                 android:width="120dp"
                 android:padding="10dp"
                 android:text="@string/careportal_newnstreatment_duration_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.NumberPicker
+            <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/overview_temptarget_duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -138,11 +117,99 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/reason"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/overview_temptarget_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
         <include layout="@layout/datetime" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:orientation="horizontal">
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_cancel"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_cancel"
+                android:text="@string/cancel"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12dp" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_eating_soon"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_eatingsoon"
+                android:text="@string/eatingsoon"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12dp" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_activity"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_activity"
+                android:text="@string/activity"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12dp" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_hypo"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_hypo"
+                android:text="@string/hypo"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12dp" />
+
+        </LinearLayout>
 
         <include layout="@layout/okcancel" />
 
     </LinearLayout>
 
 </ScrollView>
-

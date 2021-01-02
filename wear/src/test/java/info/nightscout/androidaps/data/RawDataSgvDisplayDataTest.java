@@ -1,148 +1,170 @@
-package info.nightscout.androidaps.data;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.google.android.gms.wearable.DataMap;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.interaction.utils.Constants;
-import info.nightscout.androidaps.interaction.utils.Persistence;
-import info.nightscout.androidaps.interaction.utils.WearUtil;
-import info.nightscout.androidaps.testing.mockers.AAPSMocker;
-import info.nightscout.androidaps.testing.mockers.AndroidMocker;
-import info.nightscout.androidaps.testing.mockers.WearUtilMocker;
-import info.nightscout.androidaps.testing.mocks.BundleMock;
-import info.nightscout.androidaps.testing.mocks.IntentMock;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, aaps.class, android.util.Base64.class, Intent.class } )
-public class RawDataSgvDisplayDataTest {
-
-    @Before
-    public void mock() throws Exception {
-        AAPSMocker.prepareMock();
-        AAPSMocker.resetMockedSharedPrefs();
-        AndroidMocker.mockBase64();
-        WearUtilMocker.prepareMockNoReal();
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
-    //==============================================================================================
-    // SGV DATA
-    //==============================================================================================
-
-    private DataMap dataMapForData() {
-        DataMap dataMap = new DataMap();
-        dataMap.putLong("sgvLevel", 1L);
-        dataMap.putLong("timestamp", WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS);
-        dataMap.putString("sgvString", "106");
-        dataMap.putString("slopeArrow", "↗");
-        dataMap.putString("delta", "5.4");
-        dataMap.putString("avgDelta", "3.7");
-        dataMap.putString("glucoseUnits", "mg/dl");
-        return dataMap;
+    dependencies {
+        //classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'com.hiya:jacoco-android:0.2'
     }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'jacoco-android'
+apply plugin: 'com.hiya.jacoco-android'
+apply plugin: 'com.google.firebase.crashlytics'
 
-    private void assertDataEmpty(RawDisplayData newRaw) {
-        assertThat(newRaw.sgvLevel, is(0L));
-        assertThat(newRaw.datetime, is(0L));
-        assertThat(newRaw.sSgv, is("---"));
-        assertThat(newRaw.sDirection, is("--"));
-        assertThat(newRaw.sDelta, is("--"));
-        assertThat(newRaw.sAvgDelta, is("--"));
-        assertThat(newRaw.sUnits, is("-"));
+jacoco {
+    toolVersion = "0.8.3"
+}
+
+ext {
+    powermockVersion = "2.0.7"
+    dexmakerVersion = "1.2"
+    retrofit2Version = '2.9.0'
+    okhttp3Version = '4.8.1'
+}
+
+
+repositories {
+    jcenter { url "https://jcenter.bintray.com/" }
+    mavenCentral()
+    google()
+}
+
+def generateGitBuild = { ->
+    StringBuilder stringBuilder = new StringBuilder()
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--always'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        stringBuilder.append('NoGitSystemAvailable')
     }
+    return stringBuilder.toString()
+}
 
-    private void assertDataOk(RawDisplayData newRaw) {
-        assertThat(newRaw.sgvLevel, is(1L));
-        assertThat(newRaw.datetime, is(WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS));
-        assertThat(newRaw.sSgv, is("106"));
-        assertThat(newRaw.sDirection, is("↗"));
-        assertThat(newRaw.sDelta, is("5.4"));
-        assertThat(newRaw.sAvgDelta, is("3.7"));
-        assertThat(newRaw.sUnits, is("mg/dl"));
+def generateGitRemote = { ->
+    StringBuilder stringBuilder = new StringBuilder()
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'remote', 'get-url', 'origin'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        stringBuilder.append('NoGitSystemAvailable')
     }
+    return stringBuilder.toString()
+}
 
-    @Test
-    public void updateDataFromEmptyPersistenceTest() {
-        // GIVEN
-        Persistence persistence = new Persistence();
-        RawDisplayData newRaw = new RawDisplayData();
+def generateDate = { ->
+    StringBuilder stringBuilder = new StringBuilder()
+    stringBuilder.append((new Date()).format('yyyy.MM.dd-HH:mm'))
+    return stringBuilder.toString()
+}
 
-        // WHEN
-        newRaw.updateFromPersistence(persistence);
+def isMaster = { ->
+    return !version.contains('-')
+}
 
-        // THEN
-        assertDataEmpty(newRaw);
+def gitAvailable = { ->
+    StringBuilder stringBuilder = new StringBuilder()
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', '--version'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        return false // NoGitSystemAvailable
     }
-
-    @Test
-    public void updateDataFromPersistenceTest() {
-        // GIVEN
-        Persistence persistence = new Persistence();
-        RawDisplayData newRaw = new RawDisplayData();
-
-        // WHEN
-        Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMapForData());
-        newRaw.updateFromPersistence(persistence);
-
-        // THEN
-        assertDataOk(newRaw);
-    }
-
-    @Test
-    public void partialUpdateDataFromPersistenceTest() {
-        // GIVEN
-        Persistence persistence = new Persistence();
-        RawDisplayData newRaw = new RawDisplayData();
-
-        // WHEN
-        Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMapForData());
-        newRaw.updateForComplicationsFromPersistence(persistence);
-
-        // THEN
-        assertDataOk(newRaw);
-    }
-
-    @Test
-    public void updateDataFromMessageTest() {
-        // GIVEN
-        Intent intent = IntentMock.mock();
-        Bundle bundle = BundleMock.mock(dataMapForData());
-
-        intent.putExtra("data", bundle);
-        RawDisplayData newRaw = new RawDisplayData();
-
-        // WHEN
-        newRaw.updateDataFromMessage(intent, null);
-
-        // THEN
-        assertDataOk(newRaw);
-    }
-
-    @Test
-    public void updateDataFromEmptyMessageTest() {
-        // GIVEN
-        Intent intent = IntentMock.mock();
-        RawDisplayData newRaw = new RawDisplayData();
-
-        // WHEN
-        newRaw.updateDataFromMessage(intent, null);
-
-        // THEN
-        assertDataEmpty(newRaw);
-    }
+    return !stringBuilder.toString().isEmpty()
 
 }
+
+def allCommited = { ->
+    StringBuilder stringBuilder = new StringBuilder()
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'status', '-s'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        return false // NoGitSystemAvailable
+    }
+    return stringBuilder.toString().isEmpty()
+
+}
+
+tasks.matching { it instanceof Test }.all {
+    testLogging.events = ["failed", "skipped", "started"]
+    testLogging.exceptionFormat = "full"
+}
+
+android {
+    compileSdkVersion 28
+    ndkVersion "21.1.6352462"
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 28
+        multiDexEnabled true
+        versionCode 1500
+        version "2.6.7-dev"
+        buildConfigField "String", "VERSION", '"' + version + '"'
+        buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
+        buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
+        buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // if you change minSdkVersion to less than 11, you need to change executeTask for wear
+
+        ndk {
+            moduleName "BleCommandUtil"
+        }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled(project.hasProperty('coverage'))
+        }
+        firebaseDisable {
+            System.setProperty("disableFirebase", "true")
+            ext.enableCrashlytics = false
+        }
+    }
+    productFlavors {
+        flavorDimensions "standard"
+        full {
+            applicationId "info.nightscout.androidaps"
+            dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon     : "@mipmap/ic_launcher

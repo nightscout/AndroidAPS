@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
@@ -8,48 +8,79 @@
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
-    android:clickable="true"
-    android:focusable="true"
     android:background="@color/ribbonDefault"
-    android:padding="8dp">
+    android:clickable="true"
+    android:focusable="true">
 
     <CheckBox
-        android:id="@+id/automation_enabled"
+        android:id="@+id/enabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        app:layout_constraintBottom_toTopOf="@+id/iconLayout"
+        app:layout_constraintEnd_toStartOf="@+id/aapsLogo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/aapsLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:contentDescription="@string/remove_label"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
+        android:src="@drawable/ic_notif_aaps"
+        app:layout_constraintBottom_toTopOf="@+id/iconLayout"
+        app:layout_constraintEnd_toStartOf="@+id/eventTitle"
+        app:layout_constraintStart_toEndOf="@+id/enabled"
+        app:layout_constraintTop_toTopOf="@+id/enabled" />
 
     <TextView
-        android:id="@+id/viewEventTitle"
+        android:id="@+id/eventTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/iconLayout"
+        app:layout_constraintEnd_toStartOf="@+id/iconTrash"
+        app:layout_constraintStart_toEndOf="@+id/aapsLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iconTrash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/automation_enabled"
-        android:layout_alignBottom="@+id/automation_enabled"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="6dp"
-        android:layout_toStartOf="@+id/iconSort"
-        android:layout_toEndOf="@id/automation_enabled"
-        android:text="Title"
-        android:textAlignment="viewStart"
-        android:textStyle="bold" />
+        android:layout_marginEnd="20dp"
+        android:contentDescription="@string/remove_label"
+        android:orientation="horizontal"
+        android:src="@drawable/ic_trash_outline"
+        app:layout_constraintBottom_toTopOf="@+id/iconLayout"
+        app:layout_constraintEnd_toStartOf="@+id/iconSort"
+        app:layout_constraintStart_toEndOf="@+id/eventTitle"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iconSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:contentDescription="@string/reorder_label"
         android:orientation="horizontal"
-        android:src="@drawable/ic_reorder_gray_24dp" />
+        app:layout_constraintBottom_toTopOf="@+id/iconLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iconTrash"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_reorder_gray_24dp" />
 
     <LinearLayout
         android:id="@+id/iconLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/automation_enabled"
-        android:orientation="horizontal" />
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconSort" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

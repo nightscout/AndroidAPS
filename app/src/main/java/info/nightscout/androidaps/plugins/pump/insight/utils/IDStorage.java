@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class IDStorage<T, I> {
 
-    private Map<T, I> types = new HashMap<>();
-    private Map<I, T> ids = new HashMap<>();
+    private final Map<T, I> types = new HashMap<>();
+    private final Map<I, T> ids = new HashMap<>();
 
     public void put(T type, I id) {
         types.put(type, id);

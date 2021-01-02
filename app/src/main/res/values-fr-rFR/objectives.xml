@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Retour</string>
     <string name="objectives_button_start">Départ</string>
     <string name="objectives_button_verify">Vérifier</string>
     <string name="nth_objective">%1$d. Objectif</string>
@@ -20,7 +19,9 @@
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>
     <string name="objectives_ama_objective">Activation de fonctionnalités supplémentaires en journée, comme l\'Aide au Repas Améliorée ARA (AMA)</string>
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
+    <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
+    <string name="objectives_auto_gate">Lisez la documentation comment l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
     <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
     <string name="objectives_manualenacts">Activation manuelle</string>
@@ -39,7 +40,7 @@
     <string name="codeaccepted">Code accepté</string>
     <string name="codeinvalid">Code invalide</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
-    <string name="objectives_exam_gate">Étudiez et répondez correctement aux questions</string>
+    <string name="objectives_exam_gate">Étudiez les questions. Vous avez quatre réponses possibles pour chaque question. Il peut y avoir plusieurs réponses correctes. Veuillez vérifier celles qui sont correctes et sélectionnez VÉRIFIER.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>
     <string name="unfinshed_button">Prochain non terminé</string>

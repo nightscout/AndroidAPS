@@ -5,16 +5,16 @@ import android.os.SystemClock;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
 
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.DELIVERED;
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.DELIVERING;
@@ -23,7 +23,7 @@ import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusP
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.STOPPING;
 
 public class BolusCommand extends BaseCommand {
-    private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(BolusCommand.class);
 
     protected final double bolus;
     private final BolusProgressReporter bolusProgressReporter;

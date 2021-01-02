@@ -1,7 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="4dp"
     tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTemporaryBasalsFragment">
 
     <LinearLayout
@@ -19,7 +20,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:text="@string/tempbasals_iobtotal_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -27,7 +28,7 @@
                 android:id="@+id/tempbasals_totaltempiob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -41,4 +42,4 @@
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
