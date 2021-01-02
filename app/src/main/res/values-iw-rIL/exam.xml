@@ -143,8 +143,8 @@
     <string name="iob_posiob">אינסולין פעיל חיובי עבור תקופה משמעותית מצביע על תנגודת לאינסולין או על ארוחות שלא הוכרזו.</string>
     <string name="breadgrams_label">רישום פחמימות ובולוסים</string>
     <string name="breadgrams_grams">יש להשתמש אך ורק בגרמים להערכה ורישום צריכת הפחמימות.</string>
-    <string name="breadgrams_exchange">ניתן לתעד צריכת פחמימות באמצעות מערכת המרה מתאימה (לדוגמה, המרות DAFNE \"CHO\", מערכת המרת \"יחידות לחם\" אירופאית).</string>
-    <string name="breadgrams_decay">AndroidAPS משתמש במודל דינאמי כדי להעריך את דעיכת הפחמימות ולחשב פחמימות פעילות.</string>
+    <string name="breadgrams_exchange">ניתן לתעד צריכת פחמימות באמצעות מערכת המרה מתאימה (לדוגמה, המרות \"DAFNE \"CHO, מערכת המרת \"יחידות לחם\" אירופאית).</string>
+    <string name="breadgrams_decay">אפליקציית AndroidAPS משתמש במודל דינאמי כדי להעריך את דעיכת הפחמימות ולחשב פחמימות פעילות.</string>
     <string name="breadgrams_calc">אם רמות הסוכר מחוץ לערכים המקובלים (נמוך מדי או גבוה מדי) ניתן להשתמש במחשבון הבולוס כדי לספק הצעות לתיקוני פחמימות או אינסולין.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">פחמימות ממושכות</string>
