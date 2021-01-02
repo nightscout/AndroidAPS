@@ -276,6 +276,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
 
 
+        overview_apsmode?.setOnClickListener  { view: View? -> onClick(view!!) }
+        overview_apsmode?.setOnLongClickListener{ view: View? -> onLongClick(view!!) }
+
         treatmentButton.setOnClickListener { view: View? -> onClick(view!!) }
         calibrationButton.setOnClickListener { view: View? -> onClick(view!!) }
         quickwizardButton.setOnClickListener { view: View? -> onClick(view!!) }
@@ -372,6 +375,13 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 val i = Intent(v.context, QuickWizardListActivity::class.java)
                 startActivity(i)
                 return true
+            }
+            R.id.overview_apsmode     -> {
+                val args = Bundle()
+                args.putInt("showOkCancel", 0)                  // 0-> false
+                val pvd = LoopDialog()
+                pvd.arguments = args
+                pvd.show(supportFragmentManager, "Overview")
             }
         }
         return false
@@ -545,6 +555,14 @@ open class MainActivity : NoSplashAppCompatActivity() {
                             ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.g5appnotdetected))
                         }
                     }
+                }
+
+                R.id.overview_apsmode     -> {
+                    val args = Bundle()
+                    args.putInt("showOkCancel", 1)
+                    val pvd = LoopDialog()
+                    pvd.arguments = args
+                    pvd.show(manager!!, "Overview")
                 }
             }
         }
@@ -815,7 +833,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
         upDateStatusLight()
         upDateLoop()
         scheduleUpdateGUI("onResume")
@@ -846,6 +863,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
         processButtonsVisibility()
     }
 
+    /*
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         overviewMenus.createContextMenu(menu, v)
@@ -854,6 +872,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return if (overviewMenus.onContextItemSelected(item, supportFragmentManager)) true else super.onContextItemSelected(item)
     }
+     */
 
         private fun setWakeLock() {
         val keepScreenOn = sp.getBoolean(R.string.key_keep_screen_on, false)

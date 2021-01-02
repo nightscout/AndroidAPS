@@ -36,7 +36,7 @@ Translations
 ------------
 
 * If possible, always use Android translation mechanism (with strings.xml and @strings/id) instead of hardcoded texts
-* Provide only English strings - all other languages will be crowd translated via Crowdn https://translations.androidaps.org/
+* Provide only English strings - all other languages will be crowd translated via Crowdin (https://crowdin.com/project/androidaps and https://crowdin.com/project/androidapsdocs)
 
 Hints
 -----

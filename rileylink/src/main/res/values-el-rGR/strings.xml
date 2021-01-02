@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">SCAN</string>
-    <string name="rileylink_scanner_scan_stop">STOP</string>
-    <string name="rileylink_scanner_selected_device">Επιλεγμένο</string>
-    <string name="rileylink_scanner_title">RileyLink Scan</string>
-    <string name="location_yes">Ενεργοποίηση</string>
-    <string name="rileylink_scanner_scanning">Σάρωση</string>
-    <string name="rileylink_scanner_scanning_finished">Η σάρωση ολοκληρώθηκε</string>
-    <string name="rileylink_scanner_scanning_error">Λάθος σάρωσης: %1$d</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Ρυθμίσεις</string>
     <string name="rileylink_settings_tab2">Ιστορικό</string>
@@ -16,16 +9,7 @@
     <string name="medtronic_pump_status">Κατάσταση Αντλίας</string>
     <string name="title_activity_rileylink_settings">Ρυθμίσεις RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Διαμορφωμένη Διεύθυνση</string>
-    <string name="rileylink_connected_device">Συνδεδεμένες συσκευές</string>
-    <string name="rileylink_connection_status">Κατάσταση Σύνδεσης</string>
-    <string name="rileylink_connection_error">Σφάλμα σύνδεσης</string>
     <string name="rileylink_device">Συσκευή</string>
-    <string name="rileylink_device_type">Τύπος Συσκευής</string>
-    <string name="rileylink_device_model">Μοντέλο συσκευής</string>
-    <string name="rileylink_last_used_frequency">Τελευταία χρησιμοποιημένη συχνότητα</string>
-    <string name="rileylink_last_device_contact">Τελευταία επαφή συσκευής</string>
-    <string name="rileylink_firmware_version">Έκδοση RL</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Επαναφορά Bluetooth…</string>
     <string name="rileylink_state_bt_error">Σφάλμα Bluetooth</string>
@@ -42,7 +26,7 @@
     <string name="rileylink_error_no_bt_adapter">Δεν υπάρχει προσαρμογέας Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">TuneUp απέτυχε</string>
     <string name="rileylink_error_pod_unreachable">Το Pod δεν είναι διαθέσιμο</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Αντλία Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
 </resources>

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Provider
 
 object OKDialog {
+
     @SuppressLint("InflateParams")
     fun show(context: Context, title: String, message: String, runnable: Runnable? = null , sp: SP? = null) {
         var okClicked = false
@@ -27,7 +28,7 @@ object OKDialog {
 
         val adb: AlertDialog.Builder = AlertDialog.Builder(context)
         adb
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
+           // .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
@@ -102,7 +103,7 @@ object OKDialog {
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(activity)
         adb
             .setMessage(message)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
+           // .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -133,7 +134,7 @@ object OKDialog {
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(activity)
         adb
             .setMessage(message)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
+            //.setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -168,7 +169,7 @@ object OKDialog {
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(context)
         adb
             .setMessage(message)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
+            //.setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -264,4 +265,36 @@ object OKDialog {
         alertdialog.setOnShowListener { setdrawableBackground(context, alertdialog, sp) }
         alertdialog.show()
     }
+
+    @SuppressLint("InflateParams")
+    fun showYesNoCancel(context: Context, title: String, message: String, yes: Runnable?, no: Runnable? = null) {
+        var okClicked = false
+        AlertDialogHelper.Builder(context)
+            .setMessage(message)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
+            .setPositiveButton(R.string.yes) { dialog: DialogInterface, _: Int ->
+                if (okClicked) return@setPositiveButton
+                else {
+                    okClicked = true
+                    dialog.dismiss()
+                    SystemClock.sleep(100)
+                    runOnUiThread(yes)
+                }
+            }
+            .setNegativeButton(R.string.no) { dialog: DialogInterface, _: Int ->
+                if (okClicked) return@setNegativeButton
+                else {
+                    okClicked = true
+                    dialog.dismiss()
+                    SystemClock.sleep(100)
+                    runOnUiThread(no)
+                }
+            }
+            .setNeutralButton(R.string.cancel) { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+            .show()
+            .setCanceledOnTouchOutside(false)
+    }
+
 }

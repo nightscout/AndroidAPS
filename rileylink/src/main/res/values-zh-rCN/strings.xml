@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">扫描</string>
-    <string name="rileylink_scanner_scan_stop">停止</string>
-    <string name="rileylink_scanner_selected_device">已选择</string>
-    <string name="rileylink_scanner_title">RileyLink 扫描</string>
-    <string name="location_yes">启用</string>
-    <string name="rileylink_scanner_scanning">扫描中</string>
-    <string name="rileylink_scanner_scanning_finished">扫描完成</string>
-    <string name="rileylink_scanner_scanning_error">扫描错误: %1$d</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">设置</string>
     <string name="rileylink_settings_tab2">历史</string>
@@ -16,16 +9,7 @@
     <string name="medtronic_pump_status">泵状态</string>
     <string name="title_activity_rileylink_settings">RileyLink 设置</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">已配置地址</string>
-    <string name="rileylink_connected_device">已连接的设备</string>
-    <string name="rileylink_connection_status">连接状态</string>
-    <string name="rileylink_connection_error">连接错误</string>
     <string name="rileylink_device">设备</string>
-    <string name="rileylink_device_type">设备类型</string>
-    <string name="rileylink_device_model">设备型号</string>
-    <string name="rileylink_last_used_frequency">上次使用频率</string>
-    <string name="rileylink_last_device_contact">最后一个设备联系人</string>
-    <string name="rileylink_firmware_version">固件</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">蓝牙初始化…</string>
     <string name="rileylink_state_bt_error">蓝牙错误</string>
@@ -42,7 +26,7 @@
     <string name="rileylink_error_no_bt_adapter">未找到蓝牙适配器</string>
     <string name="rileylink_error_tuneup_failed">调整失败</string>
     <string name="rileylink_error_pod_unreachable">无法连接主机</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">美敦力泵</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
 </resources>

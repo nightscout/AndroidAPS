@@ -59,8 +59,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:text="@string/initializing"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 

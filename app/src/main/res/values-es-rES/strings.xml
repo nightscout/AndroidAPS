@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="nav_preferences_plugin">%1$s preferencias</string>
     <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde NS</string>
     <string name="nav_resetdb">Restablecer las bases de datos</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Desactivar lazo por 3h</string>
     <string name="suspendloopfor10h">Desactivar lazo por 10 h</string>
     <string name="suspendloopforXmin">Suspender lazo durante %1$d min</string>
+    <string name="disconnectpump">Desconectar bomba</string>
     <string name="disconnectpumpfor15m">Desconectar bomba por 15 min</string>
     <string name="disconnectpumpfor30m">Desconectar bomba por 30 min</string>
     <string name="disconnectpumpfor1h">Desconectar bomba por 1 h</string>
     <string name="disconnectpumpfor2h">Desconectar bomba por 2 h</string>
     <string name="disconnectpumpfor3h">Desconectar bomba por 3 h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 horas</string>
+    <string name="duration3h">3 horas</string>
+    <string name="duration10h">10 horas</string>
     <string name="resume">Reanudar</string>
     <string name="reconnect">Vuelva a conectar la bomba</string>
     <string name="smscommunicator_wrongduration">Duración incorrecta</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Cálculo basal IOB</string>
     <string name="overview_editquickwizard_usetrend">Cálculo tendencia</string>
     <string name="overview_editquickwizard_usesuperbolus">Cálculo superbolo</string>
-    <string name="yes">Si</string>
-    <string name="no">No</string>
     <string name="positiveonly">Solo positivo</string>
     <string name="negativeonly">Solo negativo</string>
     <string name="overview_editquickwizard_usecob">Cálculo COB</string>
@@ -612,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">No hay suficiente insulina en el depósito para emitir bolo</string>
     <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
-    <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
     <string name="enablesmbalways">Habilitar SMB siempre</string>
     <string name="enablesmbalways_summary">Habilitar SMB siempre de forma independiente a los Bolos. Solo posible con fuente BG con buen filtrado de datos como G5</string>
     <string name="enablesmbaftercarbs">Habilitar SMB después de Carbohidratos</string>
@@ -762,8 +766,8 @@
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
     <string name="setupwizard_profile_description">Selecciona origen de perfil. Si el usuario es un niño debe seleccionar perfil NS. Si no hay nadie siguiendo tu Nightscout probablemente preferirás perfil Local. Recuerde que sólo está seleccionando el origen del perfil. Para usarlo debe activarlo ejecutando \"Cambio Perfil\"</string>
     <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres usuario nuevo, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Esperando la conexión de RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar la configuración una vez que la bomba se haya inicializado.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configure su RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
     <string name="permission">Permiso</string>
     <string name="askforpermission">Pedir permiso</string>
@@ -790,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a insulina, aumenta el objetivo de glucosa</string>
     <string name="combo_invalid_setup">Configuración de la bomba incorrecta, leer la documentación y comprobar que el menú de Quick Info se llama QUICK INFO usando el software de configuración 360.</string>
-    <string name="custom">Personalizado</string>
     <string name="careportal_removestartedevents">Limpiar eventos AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Ajustes guardados encontrados</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas al hardware de la bomba, AndroidAPS copiará los ajustes basales del perfil de la bomba, sobrescribiendo el actual perfil basal de la bomba. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite cambio de la bomba más tarde.</string>
@@ -978,7 +981,9 @@
     <string name="description_source_dexcom">Recibir valores de glucosa de la app parcheada de Dexcom.</string>
     <string name="notification">Notificación</string>
     <string name="notification_message">Notificación: %1$s</string>
+    <string name="alarm_message">Alarma: %1$s</string>
     <string name="message_short">Msj:</string>
+    <string name="alarm_short">Alarma:</string>
     <string name="profilepercentage">Porcentaje de perfil</string>
     <string name="percent_u">Porcentaje [%]:</string>
     <string name="startprofile">Iniciar perfil %1$d%% durante %2$d min</string>
@@ -1180,4 +1185,15 @@
     <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">No se puede crear el perfil local. El perfil no es válido.</string>
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
+    <string name="alarm">Alarma</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
+    <string name="smscommunicator_pump_ureachable">Reportar bomba no alcanzable</string>
+    <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
+    <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
+    <string name="bolusadvisor">Asistente de bolo</string>
+    <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
+    <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
+    <string name="enablebolusadvisor_summary">Usar un recordatorio para empezar a comer en lugar del asistente durante la glucemia alta</string>
+    <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y cálcular de nuevo.</string>
+    <string name="timetoeat">Hora de comer</string>
 </resources>

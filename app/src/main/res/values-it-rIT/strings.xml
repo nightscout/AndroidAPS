@@ -7,22 +7,23 @@
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <string name="treatmentssafety_maxbolus_title">Max bolo consentito [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max CHO consentiti [g]</string>
+    <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
     <string name="nav_resetdb">Resetta database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="nav_exit">Esci</string>
-    <string name="ns_sync_use_absolute_title">Utilizza sempre valori basali assoluti</string>
+    <string name="ns_sync_use_absolute_title">Usa sempre valori basali assoluti</string>
     <string name="alert_dialog_storage_permission_text">Per favore riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
-    <string name="description_config_builder">Utilizzato per configurare i plugin attivi</string>
+    <string name="description_config_builder">Usato per configurare i plugin attivi</string>
     <string name="description_objectives">Programma di apprendimento</string>
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
     <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
     <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e deve essere utilizzato solo dagli utenti avanzati</string>
+    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
@@ -35,7 +36,7 @@
     <string name="description_pump_mdi">Per le persone in terapia multi-iniettiva</string>
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
     <string name="description_sensitivity_aaps">La sensibilità è calcolata allo stesso modo di Oref0, ma puoi specificare l\'intervallo di tempo al passato. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze.</string>
-    <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h o 24h (utilizzando tra i due periodi il più sensibile) e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il plugin calcola anche UAM.</string>
+    <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h o 24h (usando tra i due periodi il più sensibile) e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il plugin calcola anche UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilità è calcolata come media ponderata dalle deviazioni. Le deviazioni più recenti hanno peso maggiore. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze. Questo algoritmo è il più veloce nel seguire i cambiamenti di sensibilità.</string>
     <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
     <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
@@ -45,7 +46,7 @@
     <string name="description_treatments">Salva tutti i trattamenti che sono stati fatti</string>
     <string name="description_wear">Monitora e controlla AndroidAPS usando il tuo smartwatch WearOS.</string>
     <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
-    <string name="description_sms_communicator">Controlla AndroidAPS in remoto utilizzando i comandi SMS.</string>
+    <string name="description_sms_communicator">Controlla AndroidAPS in remoto usando i comandi SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -86,9 +87,9 @@
     <string name="virtualpump">Micro virtuale</string>
     <string name="careportal">Portale</string>
     <string name="configbuilder_pump">Micro</string>
-    <string name="configbuilder_pump_description">Quale microinfusore desideri utilizzare con AndroidAPS?</string>
+    <string name="configbuilder_pump_description">Quale microinfusore desideri usare con AndroidAPS?</string>
     <string name="configbuilder_treatments">Trattamenti</string>
-    <string name="configbuilder_treatments_description">Quale plugin dovrebbe essere utilizzato per la gestione del trattamento?</string>
+    <string name="configbuilder_treatments_description">Quale plugin dovrebbe essere usato per la gestione del trattamento?</string>
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_profile_description">Quale profilo AndroidAPS dovrebbe usare?</string>
     <string name="configbuilder_aps">APS</string>
@@ -158,7 +159,7 @@
     <string name="openapsma_maxbasal_summary">Questo valore è chiamato max basale nel contesto OpenAPS</string>
     <string name="openapsma_maxiob_title">Max IOB da basale a cui limitare OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
-    <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà utilizzata per crittografare le preferenze esportate.</string>
+    <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
     <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
     <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
@@ -177,7 +178,7 @@
     <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
     <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
     <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
-    <string name="metadata_warning_outdated_format">Stai utilizzando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Utilizzalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
+    <string name="metadata_warning_outdated_format">Stai usando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Usalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
     <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
     <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
     <string name="metadata_warning_different_version">Le preferenze arrivano da una differente versione secondaria dell\'applicazione (minor). Va bene se le stai importando dopo l\'aggiornamento, ma controlla che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
@@ -195,7 +196,7 @@
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
     <string name="prefdecrypt_settings_tampered">File delle impostazioni manomesso</string>
     <string name="prefdecrypt_settings_secure">Il file delle impostazioni è sicuro</string>
-    <string name="prefdecrypt_settings_unencrypted">Utilizzo non sicuro, formato impostazioni non crittografato</string>
+    <string name="prefdecrypt_settings_unencrypted">Uso non sicuro, formato impostazioni non crittografato</string>
     <string name="prefdecrypt_wrong_json">Errore formato JSON, campo obbligatorio mancante (formato, contenuto, metadati o sicurezza)</string>
     <string name="prefdecrypt_wrong_password">Errore decrittazione, la password data non può decrittare il file</string>
     <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) mancante, impossibile verificare l\'autenticità delle impostazioni!</string>
@@ -209,7 +210,7 @@
     <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
     <string name="in_directory" comment="placeholder is for exported file path">nella directory: %1$s</string>
     <string name="end_user_license_agreement">Contratto di licenza per l\'utente</string>
-    <string name="end_user_license_agreement_text">NON DEVE ESSERE UTILIZZATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
+    <string name="end_user_license_agreement_text">NON DEVE ESSERE USATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
     <string name="end_user_license_agreement_i_understand">COMPRENDO E ACCETTO</string>
     <string name="save">Salva</string>
     <string name="reloadprofile">Ricarica profilo</string>
@@ -285,7 +286,7 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
     <string name="ns_upload_only">NS: solo upload (sincron. disabilitata)</string>
-    <string name="ns_upload_only_summary">NS: solo upload. Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip. Non ha effetto sui profili durante l\'utilizzo dei profili NS.</string>
+    <string name="ns_upload_only_summary">NS: solo upload. Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip. Non ha effetto sui profili durante l\'uso dei profili NS.</string>
     <string name="pumpNotInitialized">Micro non inizializzato!</string>
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
@@ -339,7 +340,7 @@
     <string name="wear_shortname">SMWA</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Accorcia titoli schede</string>
-    <string name="always_use_shortavg">Utilizza sempre il delta medio ridotto</string>
+    <string name="always_use_shortavg">Usa sempre il delta medio ridotto</string>
     <string name="always_use_shortavg_summary">Utile quando i dati provenienti da sorgenti non filtrate come xDrip diventano \"rumorosi\" (instabili).</string>
     <string name="profile">Profilo</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">[Valore predefinito: 3] Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare le tue basali a essere 3 volte, al più, la tua velocità basale massima. Probabilmente non avrai bisogno di cambiare questo valore, ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
@@ -347,7 +348,7 @@
     <string name="openapsama_autosens_max_summary">[Valore predefinito: 1.2]\nQuesto è un moltiplicatore di sicurezza per autosens (e presto autotune) per impostare un limite massimo del 20%% (col valore predefinito) su quanto alto può essere il rapporto di autosens, che a sua volta determina quanto in alto autosens può regolare le basali, quanto in basso può regolare ISF e quanto in basso può impostare il target glicemico.</string>
     <string name="openapsama_autosens_min_summary">[Valore predefinito: 0.7]\nUn altro limite di sicurezza di autosens, imposta un blocco a quanto in basso autosens può regolare le basali e a quanto in alto può regolare ISF e target glicemici.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens regola anche i target</string>
-    <string name="openapsama_autosens_adjusttargets_summary">[Valore predefinito: vero]\nViene utilizzato per consentire ad autosens di regolare i target glicemici, in aggiunta a ISF e basali.</string>
+    <string name="openapsama_autosens_adjusttargets_summary">[Valore predefinito: vero]\nViene usato per consentire ad autosens di regolare i target glicemici, in aggiunta a ISF e basali.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">[Valore predefinito: 2]\nBolus snooze è attivato dopo un bolo pasto per fare in modo che il loop non imposti basali temporanee basse quando hai appena mangiato. AndroidAPS non imposterà velocità basali troppo basse nel periodo corrispondente a DIA diviso il parametro bolus snooze - divisore DIA. Con DIA di 3 ore \"bolus snooze\" durerà 1.5 ore (3/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">[Valore predefinito: 3.0 (AMA) o 8.0 (SMB)]. Questa è un\'impostazione per l\'impatto di assorbimento predefinito dei carboidrati in 5 minuti. L\'impostazione predefinita è una previsione di 3mg/dl/5min. Ha effetto sulla velocità di decadimento dei COB (carboidrati attivi) e su quanto il loro assorbimento incide nella previsione dell’andamento glicemico, quando la glicemia sta scendendo più del previsto o non sta salendo quanto previsto.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attenzione!\nNormalmente non dovresti modificare questi valori. FAI CLICK QUI e leggi il testo e assicurati di AVERLO CAPITO prima di cambiare uno di questi valori.</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Sospendi loop per 3h</string>
     <string name="suspendloopfor10h">Sospendi loop per 10h</string>
     <string name="suspendloopforXmin">Sospendi loop per %1$d min</string>
+    <string name="disconnectpump">Disconnetti micro</string>
     <string name="disconnectpumpfor15m">Disconnetti micro per 15 min</string>
     <string name="disconnectpumpfor30m">Disconnetti micro per 30 min</string>
     <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
     <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
     <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 ora</string>
+    <string name="duration2h">2 ore</string>
+    <string name="duration3h">3 ore</string>
+    <string name="duration10h">10 ore</string>
     <string name="resume">Riprendi</string>
     <string name="reconnect">Riconnetti micro</string>
     <string name="smscommunicator_wrongduration">Durata errata</string>
@@ -425,7 +433,7 @@
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
-    <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRADOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
+    <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
     <string name="statuslights_cage_warning">Soglia di avviso età cannula [h]</string>
     <string name="statuslights_cage_critical">Soglia età cannula critica [h]</string>
@@ -478,7 +486,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Rilevamento sensibilità</string>
-    <string name="configbuilder_sensitivity_description">Quale algoritmo di sensibilità dovrebbe essere utilizzato?</string>
+    <string name="configbuilder_sensitivity_description">Quale algoritmo di sensibilità dovrebbe essere usato?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref1">Sensibilità Oref1</string>
     <string name="sensitivityaaps">Sensibilità AAPS</string>
@@ -502,7 +510,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Abilita UAM</string>
     <string name="enablesmb">Abilita SMB</string>
-    <string name="enablesmb_summary">Utilizza super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
+    <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enableuam_summary">Rilevamento dei pasti non annunciati</string>
     <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
     <string name="insulin_peak_time">Tempo del picco [min]</string>
@@ -510,7 +518,7 @@
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA di %1$f troppo breve - utilizzo %2$f.</string>
+    <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="invalid">NON VALIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentuale</string>
@@ -522,7 +530,7 @@
     <string name="activity_target">target \"attività fisica\"</string>
     <string name="hypo_duration">target \"ipoglicemia\" - durata</string>
     <string name="hypo_target">target \"ipoglicemia\"</string>
-    <string name="reuse">riutilizzo</string>
+    <string name="reuse">riuso</string>
     <string name="wearcontrol_title">Controlli da smartwatch</string>
     <string name="wearcontrol_summary">Imposta Temp-Target e inserisci trattamenti dallo smartwatch.</string>
     <string name="food">Cibo</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB da basale</string>
     <string name="overview_editquickwizard_usetrend">Calcolo trend</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcolo superbolo</string>
-    <string name="yes">Sì</string>
-    <string name="no">No</string>
     <string name="positiveonly">Solo positivo</string>
     <string name="negativeonly">Solo negativo</string>
     <string name="overview_editquickwizard_usecob">Calcolo COB</string>
@@ -591,8 +597,8 @@
     <string name="combo_pump_action_bolusing">Erogazione bolo (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Aggiornamento</string>
     <string name="combo_pump_unsupported_operation">Operazione richiesta non supportata dal micro</string>
-    <string name="combo_low_suspend_forced_notification">Utilizzo non sicuro: sono attivi boli estesi o multiwave. Il loop è stato messo in modalità di sola sospensione dell\'erogazione di insulina a glicemia bassa (LGS), per 6 ore. In modalità loop sono supportati solo boli normali</string>
-    <string name="combo_force_disabled_notification">Utilizzo non sicuro: il micro utilizza un profilo della velocità basale diverso dal primo in elenco tra le sue impostazioni. Il loop è stato disabilitato. Selezionare sul micro il profilo basale numero 1.</string>
+    <string name="combo_low_suspend_forced_notification">Uso non sicuro: sono attivi boli estesi o multiwave. Il loop è stato messo in modalità di sola sospensione dell\'erogazione di insulina a glicemia bassa (LGS), per 6 ore. In modalità loop sono supportati solo boli normali</string>
+    <string name="combo_force_disabled_notification">Uso non sicuro: il micro usa un profilo della velocità basale diverso dal primo in elenco tra le sue impostazioni. Il loop è stato disabilitato. Selezionare sul micro il profilo basale numero 1.</string>
     <string name="bolus_frequency_exceeded">Un bolo con la stessa quantità è stato richiesto negli ultimi due minuti. Questo non è consentito al fine di evitare boli doppi accidentali e a protezione di eventuali \"bug\".</string>
     <string name="combo_pump_connected_now">Adesso</string>
     <string name="combo_activity_reading_pump_history">Lettura storico micro</string>
@@ -612,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Insulina nel serbatoio insufficiente per erogare il bolo</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
-    <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
     <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i CHO</string>
@@ -648,7 +652,7 @@
     <string name="wear_predictions_title">Predizioni</string>
     <string name="data_choices">Scelta dei dati</string>
     <string name="fabric_upload">Invio a fabric.io</string>
-    <string name="allow_automated_crash_reporting">Consenti la segnalazione automatica degli errori e l\'invio dei dati di utilizzo delle funzioni dell\'app agli sviluppatori tramite il servizio fabric.io.</string>
+    <string name="allow_automated_crash_reporting">Consenti la segnalazione automatica degli errori e l\'invio dei dati d\'uso delle funzioni dell\'app agli sviluppatori tramite il servizio fabric.io.</string>
     <string name="g5appnotdetected">Aggiorna la tua app Dexcom a una versione supportata</string>
     <string name="dexcom_app_not_installed">App Dexcom non installata.</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
@@ -672,13 +676,13 @@
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
     <string name="combo_actvity_reading_basal_profile">Lettura profilo basale</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Lo storico del micro è cambiato dopo il calcolo del bolo. Il bolo non è stato erogato. Ricalcolare se un bolo è ancora necessario.</string>
-    <string name="combo_error_updating_treatment_record">Bolo erogato con successo, ma non è possibile aggiungere la voce ai trattamenti. Questo può accadere se due piccoli boli della stessa quantità sono stati somministrati negli ultimi due minuti. Controlla lo storico del micro e le voci della sezione Trattamenti e utilizza la sezione Portale per aggiungere eventuali voci mancanti. Assicurati di non aggiungere voci che si riferiscano al medesimo minuto e alla stessa quantità.</string>
+    <string name="combo_error_updating_treatment_record">Bolo erogato con successo, ma non è possibile aggiungere la voce ai trattamenti. Questo può accadere se due piccoli boli della stessa quantità sono stati somministrati negli ultimi due minuti. Controlla lo storico del micro e le voci della sezione Trattamenti e usa la sezione Portale per aggiungere eventuali voci mancanti. Assicurati di non aggiungere voci che si riferiscano al medesimo minuto e alla stessa quantità.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rifiuto basale temporanea \"alta\" in quanto il calcolo non ha considerato i cambiamenti recenti allo storico del micro</string>
     <string name="combo_activity_checking_pump_state">Aggiornamento stato micro</string>
     <string name="combo_warning_pump_basal_rate_changed">La velocità basale sul micro è cambiata e verrà aggiornata a breve</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Velocità basale cambiata sul micro, ma la sua lettura è fallita</string>
     <string name="combo_activity_checking_for_history_changes">Controllo modifiche allo storico</string>
-    <string name="combo_error_multiple_boluses_with_identical_timestamp">Sono appena stati importati più boli con la stessa quantità nello stesso minuto. Solo un record può essere aggiunto ai trattamenti. Controlla il micro e aggiungi manualmente un record di bolo utilizzando la sezione Portale. Assicurati di creare un bolo con un\'ora non utilizzata da nessun altro bolo.</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Sono appena stati importati più boli con la stessa quantità nello stesso minuto. Solo un record può essere aggiunto ai trattamenti. Controlla il micro e aggiungi manualmente un record di bolo usando la sezione Portale. Assicurati di creare un bolo con un\'ora non usata da nessun altro bolo.</string>
     <string name="about_link_urls">\n\ndocumentazione:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers\nhttps://www.facebook.com/groups/aapsitalia</string>
     <string name="combo_check_date">L\'ultimo bolo è più vecchio di 24 ore o ha una data nel futuro. Controlla che la data sul micro sia impostata correttamente.</string>
     <string name="combo_suspious_bolus_time">L\'ora/la data del bolo erogato sul micro sembra errata, IOB probabilmente non è corretto. Controlla l\'ora e/o la data del micro.</string>
@@ -702,7 +706,7 @@
     <string name="limitingiob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="maxvalueinpreferences">valore max nelle preferenze</string>
     <string name="hardlimit">limite fisso</string>
-    <string name="unsafeusage">utilizzo non sicuro</string>
+    <string name="unsafeusage">uso non sicuro</string>
     <string name="readstatusfailed">Lettura stato fallita</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
@@ -756,14 +760,14 @@
     <string name="adjustprofileinns">Le modifiche devono essere fatte in NS</string>
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AndroidAPS di proporre/fare modifiche alla basale</string>
-    <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è utilizzato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
+    <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient gestisce la connessione a Nightscout. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non ne porterai a termine la configurazione.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5-6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
-    <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino dovresti utilizzare il profilo di NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per utilizzarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio profilo\"</string>
+    <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino dovresti usare il profilo NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per usarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio profilo\"</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Attesa connessione RileyLink…\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato inizializzato.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato configurato.\n</string>
     <string name="startobjective">Avvia il tuo primo obiettivo</string>
     <string name="permission">Autorizzazione</string>
     <string name="askforpermission">Chiedi l\'autorizzazione</string>
@@ -789,8 +793,7 @@
     <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
     <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
     <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
-    <string name="combo_invalid_setup">Configurazione micro non valida, controlla la documentazione e verifica che il menu Quick Info sia denominato QUICK INFO utilizzando \"360 configuration software\".</string>
-    <string name="custom">Personalizzato</string>
+    <string name="combo_invalid_setup">Configurazione micro non valida, controlla la documentazione e verifica che il menu Quick Info sia denominato QUICK INFO usando \"360 configuration software\".</string>
     <string name="careportal_removestartedevents">Rimuovi gli eventi \"AndroidAPS avviato\"</string>
     <string name="storedsettingsfound">Trovate impostazioni memorizzate</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AndroidAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AndroidAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
@@ -978,7 +981,9 @@
     <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom modificata.</string>
     <string name="notification">Notifica</string>
     <string name="notification_message">Notifica: %1$s</string>
+    <string name="alarm_message">Allarme: %1$s</string>
     <string name="message_short">Msg:</string>
+    <string name="alarm_short">Allarme:</string>
     <string name="profilepercentage">Percentuale profilo</string>
     <string name="percent_u">Percentuale [%]:</string>
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
@@ -1099,7 +1104,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore: %1$s seguito da PIN</string>
     <string name="smscommunicator_otp_enabled">Abilita autenticatore</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentica i comandi utilizzando OTP (One Time Password) generate da Google Authenticator o app 2FA simili.</string>
+    <string name="smscommunicator_otp_enabled_summary">Autentica i comandi usando OTP (One Time Password) generate da Google Authenticator o app 2FA simili.</string>
     <string name="smscommunicator_otp_pin">PIN obbligatorio aggiuntivo a fine token</string>
     <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
     <string name="smscomunicator_tab_otp_label">Configurazione autenticatore</string>
@@ -1109,7 +1114,7 @@
     <string name="smscommunicator_otp_reset_btn">Resetta autenticatori</string>
     <string name="smscommunicator_otp_reset_title">Resetta chiave autenticatore</string>
     <string name="smscommunicator_otp_reset_prompt">Sei sicuro di resettare la chiave autenticatore? Renderà non validi tutti gli autenticatori attualmente configurati e sarà necessario configurarli nuovamente.</string>
-    <string name="smscommunicator_otp_reset_successful">La nuova chiave autenticatore è stata generata! Utilizza il QRCode aggiornato per fornire gli autenticatori.</string>
+    <string name="smscommunicator_otp_reset_successful">La nuova chiave autenticatore è stata generata! Usa il QRCode aggiornato per fornire gli autenticatori.</string>
     <string name="smscommunicator_otp_export_title">Esportazione OTP secret</string>
     <string name="smscommunicator_otp_export_prompt">Sei sicuro di voler copiare l\'OTP secret negli appunti?\n\nPotresti averne bisogno solo se la tua app autenticatore ha problemi con la scansione del QRCode, vuoi inserirlo manualmente o vuoi configurare un token OTP hardware usando un\'app dedicata.</string>
     <string name="smscommunicator_otp_export_successful">OTP secret (in formato Base32) esportato e copiato negli appunti. Incollalo nell\'autenticatore o nel configuratore hardware di OTP!</string>
@@ -1125,7 +1130,7 @@
     <string name="overview_show_deviationslope">Pendenza deviazione</string>
     <string name="authorizationfailed">Autorizzazione fallita</string>
     <string name="overview_show_absinsulin">Insulina assoluta</string>
-    <string name="master_password_summary">La password master viene utilizzata per la crittografia del backup e per gestire la sicurezza nell\'applicazione. Ricordala o conservala in un luogo sicuro.</string>
+    <string name="master_password_summary">La password master viene usata per la crittografia del backup e per gestire la sicurezza nell\'applicazione. Ricordala o conservala in un luogo sicuro.</string>
     <string name="current_master_password">Password Master corrente</string>
     <string name="statuslights">Indicatori di stato</string>
     <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
@@ -1161,9 +1166,9 @@
     <string name="oh_logout_confirmation">Vuoi davvero fare il logout e smettere di donare dati alla scienza?</string>
     <string name="project_member_id">Project Member ID: %s</string>
     <string name="queue_size">Dimensione coda: %d</string>
-    <string name="terms_of_use">Termini di utilizzo</string>
+    <string name="terms_of_use">Termini d\'uso</string>
     <string name="not_logged_in">Accesso non effettuato</string>
-    <string name="you_need_to_accept_the_of_use_first">Devi prima accettare i termini di utilizzo.</string>
+    <string name="you_need_to_accept_the_of_use_first">Devi prima accettare i termini d\'uso.</string>
     <string name="successfully_logged_in">Accesso riuscito</string>
     <string name="setup_will_continue_in_background">La configurazione verrà ora completata in background. Grazie per il caricamento dei tuoi dati.\n\nPer completare la configurazione, mantieni questo plugin attivo e il telefono acceso per un po\' di tempo.</string>
     <string name="completing_login">Completamento accesso…</string>
@@ -1180,4 +1185,15 @@
     <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">Impossibile creare il profilo locale. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
+    <string name="alarm">Allarme</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
+    <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
+    <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
+    <string name="alarminxmin">Esegui allarme in %1$d min</string>
+    <string name="bolusadvisor">Consiglio bolo</string>
+    <string name="bolusadvisormessage">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
+    <string name="enablebolusadvisor">Abilita consiglio bolo</string>
+    <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del calcolatore durante la glicemia alta</string>
+    <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
+    <string name="timetoeat">Tempo di mangiare</string>
 </resources>

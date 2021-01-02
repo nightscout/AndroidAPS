@@ -123,7 +123,7 @@ class ImportExportPrefs @Inject constructor(
     }
 
     private fun prefsEncryptionIsDisabled() =
-        buildHelper.isEngineeringMode() && !sp.getBoolean(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs), true)
+        buildHelper.isEngineeringMode() && !sp.getBoolean(R.string.key_maintenance_encrypt_exported_prefs, true)
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { password ->

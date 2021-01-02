@@ -77,7 +77,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             aapsLogger.debug(LTag.CORE, "KeepAlive scheduled")
             SystemClock.sleep(5000) // wait for app initialization
             localAlertUtils.shortenSnoozeInterval()
-            localAlertUtils.presnoozeAlarms()
+            localAlertUtils.preSnoozeAlarms()
             val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val i = Intent(context, KeepAliveReceiver::class.java)
             val pi = PendingIntent.getBroadcast(context, 0, i, 0)

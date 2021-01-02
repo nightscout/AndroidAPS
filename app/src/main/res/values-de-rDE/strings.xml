@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
+    <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
     <string name="nav_preferences">Einstellungen</string>
     <string name="nav_refreshtreatments">Behandlungen von NS aktualisieren</string>
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Pausiere Loop für 3 h</string>
     <string name="suspendloopfor10h">Pausiere Loop für 10 h</string>
     <string name="suspendloopforXmin">Loop für %1$d min pausieren</string>
+    <string name="disconnectpump">Pumpe trennen</string>
     <string name="disconnectpumpfor15m">Trenne Pumpe für 15 min</string>
     <string name="disconnectpumpfor30m">Trenne Pumpe für 30 min</string>
     <string name="disconnectpumpfor1h">Trenne Pumpe für 1 h</string>
     <string name="disconnectpumpfor2h">Trenne Pumpe für 2 h</string>
     <string name="disconnectpumpfor3h">Trenne Pumpe für 3 h</string>
+    <string name="duration15m">15 Min.</string>
+    <string name="duration30m">30 Min.</string>
+    <string name="duration1h">1 Std.</string>
+    <string name="duration2h">2 Std.</string>
+    <string name="duration3h">3 Std.</string>
+    <string name="duration10h">10 Std.</string>
     <string name="resume">Fortsetzen</string>
     <string name="reconnect">Pumpe erneut verbinden</string>
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basal-IOB Berechnung</string>
     <string name="overview_editquickwizard_usetrend">Trend Berechnung</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus Berechnung</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nein</string>
     <string name="positiveonly">Nur positive</string>
     <string name="negativeonly">Nur negative</string>
     <string name="overview_editquickwizard_usecob">COB Berechnung</string>
@@ -612,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nicht mehr genug Insulin im Reservoir für den Bolus</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
-    <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
     <string name="enablesmbalways">SMB immer aktivieren</string>
     <string name="enablesmbalways_summary">Aktiviere SMB immer, unabhängig von Boli. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enablesmbaftercarbs">Aktiviere SMB nach Mahlzeiten.</string>
@@ -762,7 +766,7 @@
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="setupwizard_profile_description">Wähle eine Profilquelle aus. Verwende für ein Kind das NS-Profil. Wenn Dir niemand auf Nightscout folgt, wirst Du wahrscheinlich das lokale Profil bevorzugen. Beachte, dass hier nur die Profilquelle festgelegt wird. Damit das Profil verwendet werden kann, muss es mit einem \"Profil-Wechsel\" aktiviert werden.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Warte auf Verbindung mit RileyLink…\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
     <string name="permission">Berechtigung</string>
@@ -790,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
     <string name="combo_invalid_setup">Ungültige Pumpen-Einstellungen. Lies das Wiki und stelle mit der 360° Konfigurations-Software sicher, dass das Quick-Info-Menü \"QUICK INFO\" heißt.</string>
-    <string name="custom">Benutzerdefiniert</string>
     <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
@@ -979,7 +982,9 @@ Unerwartetes Verhalten.</string>
     <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
     <string name="notification">Benachrichtigung</string>
     <string name="notification_message">Benachrichtigung: %1$s</string>
+    <string name="alarm_message">Alarm: %1$s</string>
     <string name="message_short">Nachricht:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Prozentsatz des Profils</string>
     <string name="percent_u">Prozent [%]:</string>
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
@@ -1181,4 +1186,15 @@ Unerwartetes Verhalten.</string>
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Lokales Profil kann nicht erstellt werden. Profil ist ungültig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
+    <string name="smscommunicator_pump_ureachable">Bericht Pumpe nicht erreichbar</string>
+    <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
+    <string name="alarminxmin">Alarm in %1$d Min.</string>
+    <string name="bolusadvisor">Bolus-Berater</string>
+    <string name="bolusadvisormessage">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
+    <string name="enablebolusadvisor">Bolus-Berater aktivieren</string>
+    <string name="enablebolusadvisor_summary">Bei hohen BZ-Werten Essenserinnerung statt Bolus-Wizard verwenden</string>
+    <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
+    <string name="timetoeat">Zeit zum Essen</string>
 </resources>

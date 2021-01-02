@@ -112,7 +112,6 @@ public class RFSpy {
         reader.newDataIsAvailable();
     }
 
-
     public Integer getBatteryLevel() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {

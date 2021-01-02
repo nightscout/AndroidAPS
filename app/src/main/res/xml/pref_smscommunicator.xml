@@ -49,6 +49,12 @@
             <intent android:action="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
         </Preference>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_smscommunicator_report_pump_ureachable"
+            android:summary="@string/smscommunicator_report_pump_ureachable_summary"
+            android:title="@string/smscommunicator_pump_ureachable" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

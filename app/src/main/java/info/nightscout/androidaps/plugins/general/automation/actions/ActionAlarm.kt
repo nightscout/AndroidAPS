@@ -33,6 +33,9 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     var text = InputString(injector)
 
+    constructor(injector: HasAndroidInjector, text: String) : this(injector) {
+        this.text = InputString(injector, text)
+    }
     override fun friendlyName(): Int = R.string.alarm
     override fun shortDescription(): String = resourceHelper.gs(R.string.alarm_message, text.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_access_alarm_24dp

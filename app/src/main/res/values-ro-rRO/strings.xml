@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Setări siguranță tratament</string>
     <string name="treatmentssafety_maxbolus_title">Bolus maxim admis [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Carbohidrați admiși maxim [g]</string>
+    <string name="nav_preferences_plugin">%1$s Preferințe</string>
     <string name="nav_preferences">Preferințe</string>
     <string name="nav_refreshtreatments">Reîncarcă tratamentele din NS</string>
     <string name="nav_resetdb">Resetează bazele de date</string>
@@ -245,6 +246,7 @@
     <string name="valueoutofrange">Valoarea %1$s este mai mare decât limita stabilită</string>
     <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1$d minute, răspundeți cu: %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
@@ -384,10 +386,13 @@
     <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
     <string name="notavailable">indisponibil</string>
+    <string name="patientage">Tip de pacient</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
     <string name="resistantadult">Adult rezistent la insulină</string>
+    <string name="pregnant">Sarcină</string>
+    <string name="patientage_summary">Te rog confirmă tipul de pacient pentru a stabilii limitele de siguranță</string>
     <string name="patient_name">Numele pacientului</string>
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
@@ -401,11 +406,18 @@
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
     <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
     <string name="suspendloopforXmin">Pune pauză buclei pentru %1$d min</string>
+    <string name="disconnectpump">Deconectează pompa</string>
     <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
     <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
     <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
     <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 oră</string>
+    <string name="duration2h">2 ore</string>
+    <string name="duration3h">3 ore</string>
+    <string name="duration10h">10 ore</string>
     <string name="resume">Restabilește</string>
     <string name="reconnect">Reconectaţi pompa</string>
     <string name="smscommunicator_wrongduration">Durată greșită</string>
@@ -429,6 +441,8 @@
     <string name="statuslights_iage_critical">Prag critic vechime insulină [h]</string>
     <string name="statuslights_sage_warning">Prag de avertizare vechime senzor [h]</string>
     <string name="statuslights_sage_critical">Prag critic vechime senzor [h]</string>
+    <string name="statuslights_sbat_warning">Prag de avertizare nivel baterie senzor [%]</string>
+    <string name="statuslights_sbat_critical">Prag nivel critic baterie senzor [%]</string>
     <string name="statuslights_bage_warning">Prag de avertizare nivel baterie [h]</string>
     <string name="statuslights_bage_critical">Prag critic nivel baterie [h]</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
@@ -455,6 +469,12 @@
     <string name="ns_noupload_summary">Toate trimiterile de date către NS sunt oprite. AAPS este conectat la NS dar nu se fac schimbări în NS</string>
     <string name="overview_extendedbolus_cancel_button">Renunță la bolusul extins</string>
     <string name="doprofileswitch">Schimbă profilul</string>
+    <string name="careportal_sensor_label">Senzor</string>
+    <string name="careportal_canula_label">Canulă</string>
+    <string name="careportal_insulin_label">Insulină</string>
+    <string name="careportal_pb_label">Baterie pompă</string>
+    <string name="careportal_age_label">vârstă:</string>
+    <string name="careportal_level_label">nivel:</string>
     <string name="ns_alarmoptions">Opțiuni alarmare</string>
     <string name="ns_alarms">Creare notificări din alarmele NS</string>
     <string name="ns_announcements">Creare notificări din anunţurile NS</string>
@@ -552,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Calcul IOB bazală</string>
     <string name="overview_editquickwizard_usetrend">Calcul pantă</string>
     <string name="overview_editquickwizard_usesuperbolus">Calcul superbolus</string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
     <string name="positiveonly">Doar pozitiv</string>
     <string name="negativeonly">Doar negativ</string>
     <string name="overview_editquickwizard_usecob">Calcul COB</string>
@@ -600,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
     <string name="insightpump_shortname">Obiectiv</string>
-    <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
-    <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
     <string name="enablesmbalways">Activează SMB întotdeauna</string>
     <string name="enablesmbalways_summary">Activează SMB întotdeauna independent de bolusuri. Este posibil doar în cazul unei surse de glicemii filtrate, cum ar fi G5</string>
     <string name="enablesmbaftercarbs">Activează SMB după carbohidrați</string>
@@ -667,6 +683,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Rata bazală schimbată în pompă, dar nu s-a putut actualiza</string>
     <string name="combo_activity_checking_for_history_changes">Se verifică schimbările în istoric</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Mai multe bolusuri de aceeași valoare au fost importate. Doar o singură înregistrare va fi adăugată în tratamente. Verifcați manual în pompă și adăugați înregistrările folosind Careportal. Asigurați-vă că veți crea un bolus care nu se suprapune peste altul în timp.</string>
+    <string name="about_link_urls">\n\ndocumentație:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Ultimul bolus este mai vechi de 24 ore sau este în viitor. Verificați ca data să fie configurată corect în pompă.</string>
     <string name="combo_suspious_bolus_time">Ora/data bolusului livrat de pompă pare eronat, IOB este probabil incorect. Verificați ora/data pompei.</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
@@ -749,7 +766,7 @@
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="setupwizard_profile_description">Selectați sursa sau profilul. Dacă pacientul este copil, ar fi bine să alegeți un profil NS. Dacă nu aveți profil NS, puteți alege profil local. De aici alegeți doar sursa profilului; pentru a utiliza acest profil, trebuie să îl activați prin executarea unei \"Schimbări de profil\"</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Se așteaptă conexiunea la RileyLink…\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configuraţi RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuaţi setarea odată ce starea RieyLink este \"Connected\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
     <string name="permission">Permisiune</string>
@@ -777,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Sensibilitatea la insulină crește targetul</string>
     <string name="sensitivity_raises_target_summary">Când este detectată sensibilitate la insulină, crește targetul</string>
     <string name="combo_invalid_setup">Setare pompă invalidă, verificați documentația și asigurați-vă că meniul Quick Info este denumit QUICK INFO, folosind aplicația 360 Configuration Software.</string>
-    <string name="custom">Personalizat</string>
     <string name="careportal_removestartedevents">AndroidAPS pornit curat</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AndroidAPS va copia setările bazalelor din profilurile din aplicație în pompă, suprascriindu-le pe cele existente deja în pompă. Asigurați-vă că aveți setările corecte ale bazalelor în AndroidAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
@@ -965,7 +981,9 @@
     <string name="description_source_dexcom">Primește valori glicemie de la aplicația Dexcom modificată.</string>
     <string name="notification">Notificare</string>
     <string name="notification_message">Notificare: %1$s</string>
+    <string name="alarm_message">Alarmă: %1$s</string>
     <string name="message_short">Msj:</string>
+    <string name="alarm_short">Alarmă:</string>
     <string name="profilepercentage">Procentajul profilului</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
@@ -1097,6 +1115,9 @@
     <string name="smscommunicator_otp_reset_title">Resetați cheia pentru Authenticator</string>
     <string name="smscommunicator_otp_reset_prompt">Sunteți sigur că vreți sa resetați cheia pentru Authenticator? Acest lucru va invalida toți Authenticatorii configurați și va trebui să ii setați din nou.</string>
     <string name="smscommunicator_otp_reset_successful">S-a generat o nouă cheie pentru Authenticator! Vă rugăm să utilizați QRCode actualizat pentru a configura autentificatori.</string>
+    <string name="smscommunicator_otp_export_title">Se exporta secretul OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Sunteţi sigur că doriţi să copiaţi secretul OTP în clipboard?\n\nS-ar putea să aveţi nevoie doar dacă aplicaţia dumneavoastră de autentificare are probleme de scanare a QRCode, doriţi să o introduceţi manual sau doriţi să configuraţi token-ul hardware OTP folosind aplicaţia dedicată.</string>
+    <string name="smscommunicator_otp_export_successful">Secret OTP (în formatul Base32) exportat şi copiat în clipboard. Lipiţi-l în autentificator sau in hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanați codul pentru a seta codurile unice pentru AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testați o parolă unică</string>
@@ -1115,6 +1136,7 @@
     <string name="statuslights_copy_ns">Copiați setările din NS</string>
     <string name="copyexistingvalues">Copiaţi setările NS (dacă există)?</string>
     <string name="classic_description">Tema originală</string>
+    <string name="lowres_description">Skin de rezoluție redusă</string>
     <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
     <string name="largedisplay_description">Display mare</string>
     <string name="skin">Tema</string>
@@ -1159,4 +1181,19 @@
     <string name="worker_state">Stare prelucrare: %s</string>
     <string name="uploaded_data">Date încărcate</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Următoarele date vor fi încărcate în contul Open Humans: glicemii, evenimente careportal (cu excepția notelor), bolusuri extinse, schimbări de profil, doze zilnice totale, bazale temporare, ținte temporare, preferințe, versiunea aplicației, model dispozitiv și dimensiunile ecranului. Informațiile secrete sau private, cum ar fi URL-ul Nightscout sau secretul API, nu vor fi încărcate.</string>
+    <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
+    <string name="filter">Filtru</string>
+    <string name="copytolocalprofile_invalid">Nu se poate crea profilul local. Profilul este invalid.</string>
+    <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
+    <string name="alarm">Alarmă</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
+    <string name="smscommunicator_pump_ureachable">Raportează eroare conexiune pompa</string>
+    <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
+    <string name="alarminxmin">Rulează alarma în %1$d min</string>
+    <string name="bolusadvisor">Consilier bolus</string>
+    <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
+    <string name="enablebolusadvisor">Activare consilier bolus</string>
+    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci în loc de calculatorul de bolus în timpul hiperglicemiei</string>
+    <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
+    <string name="timetoeat">Timpul sa mănânci</string>
 </resources>

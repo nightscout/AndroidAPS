@@ -37,7 +37,6 @@
     <string name="codeaccepted">Κωδικός αποδεκτός</string>
     <string name="codeinvalid">Μη έγκυρος κωδικός</string>
     <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
-    <string name="objectives_exam_gate">Διαβάστε και απαντήστε τις ερωτήσεις σωστά</string>
     <string name="answerdisabledto">Οι απαντήσεις εμφανίζονται στο: %1$s</string>
     <string name="wronganswer">Λάθος απάντηση!</string>
     <string name="unfinshed_button">Επόμενο ημιτελές</string>
