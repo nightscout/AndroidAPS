@@ -42,7 +42,7 @@
     <string name="date">Datum</string>
     <string name="units_label">Eenheden</string>
     <string name="dia_label">DIA</string>
-    <string name="ic_label">KH ratio</string>
+    <string name="ic_label">KH-ratio</string>
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basaal</string>
     <string name="target_label">Streefdoel</string>

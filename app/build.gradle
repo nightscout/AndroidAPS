@@ -116,11 +116,11 @@ android {
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.7.3-dev"
+        version "2.8.0.1-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.actions
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -11,7 +12,6 @@ import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
@@ -45,11 +45,12 @@ import java.util.*
 import javax.inject.Inject
 
 class ActionsFragment : DaggerFragment() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -94,12 +95,12 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_extendedbolus.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable {
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
                         Runnable {
                             ExtendedBolusDialog().show(childFragmentManager, "Actions")
                         }, null)
-                }))
+                })
             }
         }
         actions_extendedbolus_cancel.setOnClickListener {
@@ -108,12 +109,12 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.extendedbolusdeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            mainApp.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })
@@ -128,12 +129,12 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            mainApp.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })
@@ -141,7 +142,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_fill.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { FillDialog().show(childFragmentManager, "FillDialog") }))
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { FillDialog().show(childFragmentManager, "FillDialog") })
             }
         }
         actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }

@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Bezpieczeństwo leczenia</string>
     <string name="treatmentssafety_maxbolus_title">Maks. dopuszczalny bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks. dopuszczalne węglowodany [g]</string>
+    <string name="nav_preferences_plugin">%1$s Ustawienia</string>
     <string name="nav_preferences">Ustawienia</string>
     <string name="nav_refreshtreatments">Odśwież/pobierz zdarzenia z NS</string>
     <string name="nav_resetdb">Zresetuj bazy danych</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Wstrzymaj pętlę na 3h</string>
     <string name="suspendloopfor10h">Wstrzymaj pętlę na 10 h</string>
     <string name="suspendloopforXmin">Wstrzymaj pętlę na %1$d min</string>
+    <string name="disconnectpump">Odłącz pompę</string>
     <string name="disconnectpumpfor15m">Wyłącz pompę na 15 min</string>
     <string name="disconnectpumpfor30m">Wyłącz pompę na 30 min</string>
     <string name="disconnectpumpfor1h">Wyłącz pompę na 1 h</string>
     <string name="disconnectpumpfor2h">Wyłącz pompę na 2 h</string>
     <string name="disconnectpumpfor3h">Wyłącz pompę na 3 h</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 godzina</string>
+    <string name="duration2h">2 godziny</string>
+    <string name="duration3h">3 godziny</string>
+    <string name="duration10h">10 godzin</string>
     <string name="resume">Wznów</string>
     <string name="reconnect">Połącz ponownie pompę</string>
     <string name="smscommunicator_wrongduration">Zły czas trwania</string>
@@ -759,6 +767,8 @@
     <string name="diawarning">Pamiętaj: nowe profile insuliny wymagają ustawienia DIA (czas działania insuliny) powyżej 5h. DIA między 5-6h na nowym profilu odpowiada 3h DIA na starych profilach insuliny.</string>
     <string name="setupwizard_profile_description">Proszę wybrać źródło profilu. Jeśli pacjent jest dzieckiem, należy skorzystać z profilu Nightscout. Jeśli nikt nie obserwuje twojej terapii przez Nightscout, prawdopodobnie wolisz profil Lokalny. Przypomnienie - wybierasz tylko źródło profilu. Musisz go później aktywować za pomocą \"Przełącznika profilu\"</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
     <string name="startobjective">Rozpocznij swoje pierwsze Zadanie</string>
     <string name="permission">Uprawnienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
@@ -1177,4 +1187,14 @@
     <string name="copytolocalprofile_invalid">Nie można utworzyć profilu lokalnego. Profil jest niepoprawny.</string>
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
+    <string name="smscommunicator_pump_ureachable">Zgłoś pompę nieosiągalną</string>
+    <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
+    <string name="alarminxmin">Uruchom alarm za %1$d min</string>
+    <string name="bolusadvisor">Doradca bolusa</string>
+    <string name="bolusadvisormessage">Masz wysoki poziom. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz teraz wykonać korekcyjny bolus i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kreatora, gdy zostanie otrzymane przypomnienie.</string>
+    <string name="enablebolusadvisor">Włącz doradcę bolusa</string>
+    <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie zamiast kreatora podczas wysokiej glikemii</string>
+    <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
+    <string name="timetoeat">Czas na jedzenie</string>
 </resources>

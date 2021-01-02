@@ -332,7 +332,7 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="overview_shortname">HOME</string>
+    <string name="overview_shortname">OVZ</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="profileviewer_shortname">NSPROFIEL</string>
     <string name="treatments_shortname">BEHAND</string>
@@ -347,7 +347,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft. Dit is een veiligheidsmaatregel om te voorkomen dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
     <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor voor autosense (en binnenkort autotune) die zorgt dat de autosens ratio maximaal 20%% kan zijn. Dit maximum bepaalt in hoeverre je basaal kan worden verhoogd, en hoeveel je ISF en BG doel verlaagd kunnen worden.</string>
     <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens past ook de streefwaardes aan</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens past ook het streefdoel aan</string>
     <string name="openapsama_autosens_adjusttargets_summary">Staat standaard aan\n Wanneer dit aan staat, kan Autosens het BG streefdoel hoger/lager zetten wanneer hij een veranderde insulinegevoeligheid detecteert.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standaard waarde: 2\nBolus snooze is actief nadat je een maaltijd bolus toegediend hebt, zodat de loop geen tegenvoorstel met een verlaagd tijdelijk basaal doet nadat je gegeten hebt. Het voorbeeld hier van van standaard 2; dus een 3 u DIA betekent dat de bolus snooze gemiddeld 1.5u actief is (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaard koolhydraten absorptie-impact per 5 minuten. De standaard is een verwachte 3mg / dl / 5min. Dit is van invloed op hoe snel COB zijn opgenomen en hoeveel koolhydraten absorptie wordt verwacht, bij het voorspellen van toekomstige BG, wanneer BG meer dan verwacht daalt of niet zoveel stijgt als verwacht.</string>
@@ -740,8 +740,8 @@
     <string name="connectionsettings_title">Verbindings instellingen</string>
     <string name="ns_wifi_allowedssids">Toegelaten SSIDs (gescheiden door puntkomma)</string>
     <string name="ns_allowroaming">Sta verbinding tijdens roaming toe</string>
-    <string name="openapsama_autosens_max">Max autosens factor</string>
-    <string name="openapsama_autosens_min">Min autosens factor</string>
+    <string name="openapsama_autosens_max">Max autosens ratio</string>
+    <string name="openapsama_autosens_min">Min autosens ratio</string>
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsama_max_daily_safety_multiplier">Maximale dagelijkse veiligheids vermeningvuldigings factor</string>
     <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
@@ -1043,8 +1043,8 @@
     <string name="increasingmaxbasal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
     <string name="smscommunicator_messagebody">Ongeldige inhoud van het bericht</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg KH ratio: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg KH ratio: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg KH-ratio: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg KH-ratio: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
@@ -1058,7 +1058,7 @@
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
     <string name="ns_ploadlocalprofile">Upload lokale profielwijzigingen naar NS</string>
     <string name="dia_short">DIA</string>
-    <string name="ic_short">KH ratio</string>
+    <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">DOEL</string>
     <string name="clone_label">Dupliceren</string>
@@ -1193,7 +1193,7 @@
     <string name="bolusadvisor">Bolusadviseur</string>
     <string name="bolusadvisormessage">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je herinneren wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je eraan herinneren.</string>
     <string name="enablebolusadvisor">Bolusadviseur inschakelen</string>
-    <string name="enablebolusadvisor_summary">Gebruik herinnering om te beginnen eten in plaats van wizard tijdens hoge bloedglucose</string>
+    <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet de wizard maar een herinnering om met eten te beginnen</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="timetoeat">Tijd om te eten</string>
 </resources>
