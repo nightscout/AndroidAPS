@@ -1425,7 +1425,7 @@
     <string name="bolusadvisormessage">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
     <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="enablebolusadvisor">Enable bolus advisor</string>
-    <string name="enablebolusadvisor_summary">Use reminder to start eating instead of wizard during high glycemia</string>
+    <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
 
