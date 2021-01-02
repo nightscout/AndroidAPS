@@ -288,7 +288,7 @@
     <string name="ns_upload_only">העלאה ל-nightscout בלבד (סנכרון מבוטל)</string>
     <string name="ns_upload_only_summary">העלאה ל- NS בלבד. ללא השפעה על SGV אלא אם נבחר מקור מקומי כגון Xdrip. ללא השפעה על הפרופילים כל עוד פרופיל NS בשימוש.</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
-    <string name="primefill">תיחול\מילוי</string>
+    <string name="primefill">תיחול ומילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
     <string name="fillbolus_title">מילוי\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
