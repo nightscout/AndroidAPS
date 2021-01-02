@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -16,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneU
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin.SingleProfile
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -28,7 +28,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.autotune_fragment.*
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -56,16 +55,22 @@ class AutotuneFragment : DaggerFragment() {
     private var lastRunTxt: String? = null
     private var tempResult = ""
     private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
+    private var _binding: AutotuneFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.autotune_fragment, container, false)
+        _binding = AutotuneFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        autotune_run.setOnClickListener {
-            val daysBack = tune_days.text.toString().toInt()
+        binding.autotuneRun.setOnClickListener {
+            val daysBack = binding.tuneDays.text.toString().toInt()
             if (daysBack > 0) {
                 tempResult = ""
                 AutotunePlugin.calculationRunning = true
@@ -75,10 +80,10 @@ class AutotuneFragment : DaggerFragment() {
                 lastRunTxt = if (AutotunePlugin.lastRun != null) "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) else ""
                 lastRun = if (AutotunePlugin.lastRun != null) AutotunePlugin.lastRun else Date(0)
                 updateGui()
-            } else tune_result.text = resourceHelper.gs(R.string.autotune_min_days)
+            } else binding.tuneResult.text = resourceHelper.gs(R.string.autotune_min_days)
         }
 
-        autotune_copylocal.setOnClickListener {
+        binding.autotuneCopylocal.setOnClickListener {
             val localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(AutotunePlugin.lastRun)
             showConfirmation(requireContext(), resourceHelper.gs(R.string.autotune_copy_localprofile_button), resourceHelper.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(lastRun),
                 Runnable {
@@ -89,7 +94,7 @@ class AutotuneFragment : DaggerFragment() {
             })
         }
 
-        autotune_compare.setOnClickListener {
+        binding.autotuneCompare.setOnClickListener {
             val currentprofile = AutotunePlugin.currentprofile
             //log("profile : " + currentprofile?.profilename + "\n" + currentprofile?.data.toString())
             val tunedprofile = AutotunePlugin.tunedProfile
@@ -106,7 +111,7 @@ class AutotuneFragment : DaggerFragment() {
             }.show(childFragmentManager, "ProfileViewDialog")
         }
 
-        autotune_profileswitch.setOnClickListener{
+        binding.autotuneProfileswitch.setOnClickListener{
             val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
             val profileStore = AutotunePlugin.tunedProfile!!.profileStore
             log("ProfileSwitch pressed")
@@ -122,16 +127,16 @@ class AutotuneFragment : DaggerFragment() {
 
         lastRun = if (AutotunePlugin.lastRun != null) AutotunePlugin.lastRun else Date(0)
         if (lastRun!!.time > MidnightTime.calc(System.currentTimeMillis() - AutotunePlugin.autotuneStartHour * 3600 * 1000L) + AutotunePlugin.autotuneStartHour * 3600 * 1000L && AutotunePlugin.result !== "") {
-            tune_warning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
-            tune_days.setText(AutotunePlugin.lastNbDays)
+            binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
+            binding.tuneDays.setText(AutotunePlugin.lastNbDays)
         } else { //if new day reinit result, default days, warning and button's visibility
-            tune_warning.text = addWarnings()
-            tune_days.setText(sp!!.getString(R.string.key_autotune_default_tune_days, "5"))
+            binding.tuneWarning.text = addWarnings()
+            binding.tuneDays.setText(sp!!.getString(R.string.key_autotune_default_tune_days, "5"))
             AutotunePlugin.result = ""
             AutotunePlugin.tunedProfile = null
             AutotunePlugin.profileSwitchButtonVisibility = View.GONE
             AutotunePlugin.copyButtonVisibility = View.GONE
-            autotune_compare.visibility = View.GONE
+            binding.autotuneCompare.visibility = View.GONE
         }
         lastRunTxt = if (AutotunePlugin.lastRun != null) dateUtil.dateAndTimeString(AutotunePlugin.lastRun) else ""
         updateGui()
@@ -165,24 +170,24 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         if (AutotunePlugin.calculationRunning) {
-            autotune_run.visibility = View.GONE
-            autotune_compare.visibility = View.GONE
-            tune_warning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
-            tune_result.text = AutotunePlugin.result
+            binding.autotuneRun.visibility = View.GONE
+            binding.autotuneCompare.visibility = View.GONE
+            binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
+            binding.tuneResult.text = AutotunePlugin.result
         } else if (AutotunePlugin.lastRunSuccess) {
-            autotune_run.visibility = View.VISIBLE
-            tune_warning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
-            tune_result.text = AutotunePlugin.result
-            autotune_compare.visibility = View.VISIBLE
+            binding.autotuneRun.visibility = View.VISIBLE
+            binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
+            binding.tuneResult.text = AutotunePlugin.result
+            binding.autotuneCompare.visibility = View.VISIBLE
         } else {
-            tune_result.text = AutotunePlugin.result
-            autotune_run.visibility = View.VISIBLE
+            binding.tuneResult.text = AutotunePlugin.result
+            binding.autotuneRun.visibility = View.VISIBLE
         }
         if (AutotunePlugin.tunedProfile == null || AutotunePlugin.currentprofile == null)
-            autotune_compare.visibility = View.GONE
-        autotune_copylocal.visibility = AutotunePlugin.copyButtonVisibility
-        autotune_profileswitch.visibility = AutotunePlugin.profileSwitchButtonVisibility
-        tune_lastrun.text = lastRunTxt
+            binding.autotuneCompare.visibility = View.GONE
+        binding.autotuneCopylocal.visibility = AutotunePlugin.copyButtonVisibility
+        binding.autotuneProfileswitch.visibility = AutotunePlugin.profileSwitchButtonVisibility
+        binding.tuneLastrun.text = lastRunTxt
     }
 
     private fun addWarnings(): String {

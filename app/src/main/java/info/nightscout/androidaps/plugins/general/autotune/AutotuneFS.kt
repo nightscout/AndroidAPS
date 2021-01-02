@@ -29,17 +29,17 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     val AUTOTUNEFOLDER = "autotune"
     val SETTINGSFOLDER = "settings"
     val RECOMMENDATIONS = "autotune_recommendations.log"
-    val ENTRIES_PREF = "aaps-entries."
-    val TREATMENTS_PREF = "aaps-treatments."
-    val PREPPED_PREF = "aaps-autotune."
+    val ENTRIESPREF = "aaps-entries."
+    val TREATMENTSPREF = "aaps-treatments."
+    val PREPPEDPREF = "aaps-autotune."
     val SETTINGS = "settings.json"
     val PROFIL = "profil"
     val PUMPPROFILE = "pumpprofile.json"
     val TUNEDPROFILE = "newaapsprofile."
-    val LOG_PREF = "autotune."
-    val ZIP_PREF = "autotune_"
-    var autotune_path: File? = null
-    var autotune_settings: File? = null
+    val LOGPREF = "autotune."
+    val ZIPPREF = "autotune_"
+    var autotunePath: File? = null
+    var autotuneSettings: File? = null
 
 
     /*****************************************************************************
@@ -47,14 +47,14 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      */
     fun createAutotuneFolder() {
         //create autotune subfolder for autotune files if not exists
-        autotune_path = File(logDirectory, AUTOTUNEFOLDER)
-        if (!(autotune_path!!.exists() && autotune_path!!.isDirectory)) {
-            autotune_path!!.mkdir()
+        autotunePath = File(logDirectory, AUTOTUNEFOLDER)
+        if (!(autotunePath!!.exists() && autotunePath!!.isDirectory)) {
+            autotunePath!!.mkdir()
             log("Create $AUTOTUNEFOLDER subfolder in $logDirectory")
         }
-        autotune_settings = File(logDirectory, SETTINGSFOLDER)
-        if (!(autotune_settings!!.exists() && autotune_settings!!.isDirectory)) {
-            autotune_settings!!.mkdir()
+        autotuneSettings = File(logDirectory, SETTINGSFOLDER)
+        if (!(autotuneSettings!!.exists() && autotuneSettings!!.isDirectory)) {
+            autotuneSettings!!.mkdir()
             log("Create $SETTINGSFOLDER subfolder in $logDirectory")
         }
     }
@@ -63,10 +63,10 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      * between each run of autotune, clean autotune folder content
      */
     fun deleteAutotuneFiles() {
-        for (file in autotune_path!!.listFiles()) {
+        for (file in autotunePath!!.listFiles()) {
             if (file.isFile) file.delete()
         }
-        for (file in autotune_settings!!.listFiles()) {
+        for (file in autotuneSettings!!.listFiles()) {
             if (file.isFile) file.delete()
         }
         log("Delete previous Autotune files")
@@ -94,20 +94,20 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     fun exportEntries(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(ENTRIES_PREF + formatDate(Date(autotuneIob.startBG)) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"))
+            createAutotunefile(ENTRIESPREF + formatDate(Date(autotuneIob.startBG)) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"))
         } catch (e: JSONException) {
         }
     }
 
     fun exportTreatments(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(TREATMENTS_PREF + formatDate(Date(autotuneIob.startBG)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"))
+            createAutotunefile(TREATMENTSPREF + formatDate(Date(autotuneIob.startBG)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"))
         } catch (e: JSONException) {
         }
     }
 
     fun exportPreppedGlucose(preppedGlucose: PreppedGlucose) {
-        createAutotunefile(PREPPED_PREF + formatDate(Date(preppedGlucose.from)) + ".json", preppedGlucose.toString(2))
+        createAutotunefile(PREPPEDPREF + formatDate(Date(preppedGlucose.from)) + ".json", preppedGlucose.toString(2))
     }
 
     fun exportResult(result: String) {
@@ -115,8 +115,8 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     }
 
     fun exportLogAndZip(lastRun: Date?, logString: String) {
-        log("Create " + LOG_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
-        createAutotunefile(LOG_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log", logString)
+        log("Create " + LOGPREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
+        createAutotunefile(LOGPREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log", logString)
         zipAutotune(lastRun)
     }
 
@@ -124,7 +124,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         var stringFile = stringFile
         if (fileName != null && !fileName.isEmpty()) {
             if (stringFile.isEmpty()) stringFile = ""
-            val autotuneFile = File(if (isSettingFile) autotune_settings!!.absolutePath else autotune_path!!.absolutePath, fileName)
+            val autotuneFile = File(if (isSettingFile) autotuneSettings!!.absolutePath else autotunePath!!.absolutePath, fileName)
             try {
                 val fw = FileWriter(autotuneFile)
                 val pw = PrintWriter(fw)
@@ -156,11 +156,11 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun zipAutotune(lastRun: Date?) {
         if (lastRun != null) {
             try {
-                val zipFileName = ZIP_PREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip"
+                val zipFileName = ZIPPREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip"
                 val zipFile = File(logDirectory, zipFileName)
                 val out = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile)))
-                if (autotune_path != null) zipDirectory(autotune_path!!, autotune_path!!.name, out)
-                if (autotune_settings != null) zipDirectory(autotune_settings!!, autotune_settings!!.name, out)
+                if (autotunePath != null) zipDirectory(autotunePath!!, autotunePath!!.name, out)
+                if (autotuneSettings != null) zipDirectory(autotuneSettings!!, autotuneSettings!!.name, out)
                 out.flush()
                 out.close()
                 log("Create $zipFileName file in $logDirectory folder")

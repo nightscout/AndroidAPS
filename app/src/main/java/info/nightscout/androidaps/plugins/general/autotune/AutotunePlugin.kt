@@ -53,8 +53,7 @@ class AutotunePlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePluginProvider,
-    aapsLogger: AAPSLogger,
-    private val dateUtil: DateUtil
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutotuneFragment::class.qualifiedName)
