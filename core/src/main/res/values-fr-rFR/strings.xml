@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Coupe le Bluetooth du téléphone une seconde si la connexion pompe n’est pas possible. Cela peut aider pour les téléphones dont la connexion Bluetooth se bloque.</string>
     <string name="pairing">Appairage</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -128,8 +130,8 @@
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑ : <b>%2$.2f U</b> Bol : <b>%3$.2f U</b> Bas : <b>%4$.2f U (%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑ : <b>%2$.2f U</b> Bol : <b>%3$.2f U</b> Bas : <b>%4$.2f U (%5$.0f%%)</b> Gluc : <b>%6$.0f g</b>]]></string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU (%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU (%5$.0f%%)</b> Gluc: <b>%6$.0fg</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
@@ -170,7 +172,7 @@
     <string name="waitingforpumpresult">Attente de résultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%d g de glucides supplémentaires requis d\'ici %d minutes</string>
+    <string name="carbsreq">%1$dg de glucides requis dans %2$d min.</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
     <string name="cumulative_tdd">DTI cumulé</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Amorcer</string>
     <string name="history_group_alarm">Alarmes</string>
     <string name="history_group_glucose">Glucose</string>
+    <string name="mute5min">Muet pendant 5 minutes</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

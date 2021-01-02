@@ -18,5 +18,5 @@ public class WallpaperDarkComplication extends WallpaperComplication {
     @Override
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.NONE;
-    };
+    }
 }

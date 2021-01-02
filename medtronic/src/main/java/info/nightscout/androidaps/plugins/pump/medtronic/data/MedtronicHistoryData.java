@@ -82,7 +82,7 @@ public class MedtronicHistoryData {
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     private final DatabaseHelperInterface databaseHelper;
 
-    private List<PumpHistoryEntry> allHistory;
+    private final List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
 
     private boolean isInit = false;
@@ -440,6 +440,20 @@ public class MedtronicHistoryData {
             }
         }
 
+        // Rewind (for marking insulin change)
+        List<PumpHistoryEntry> rewindRecords = getFilteredItems(PumpHistoryEntryType.Rewind);
+
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Rewind [count={}, items={}]", rewindRecords.size(), gson().toJson(rewindRecords));
+
+        if (isCollectionNotEmpty(rewindRecords)) {
+            try {
+                processRewind(rewindRecords);
+            } catch (Exception ex) {
+                aapsLogger.error("ProcessHistoryData: Error processing Rewind entries: " + ex.getMessage(), ex);
+                throw ex;
+            }
+        }
+
         // TDD
         List<PumpHistoryEntry> tdds = getFilteredItems(PumpHistoryEntryType.EndResultTotals, getTDDType());
 
@@ -515,6 +529,14 @@ public class MedtronicHistoryData {
         long lastPrimeRecord = 0L;
 
         for (PumpHistoryEntry primeRecord : primeRecords) {
+            Object fixedAmount = primeRecord.getDecodedDataEntry("FixedAmount");
+
+            if (fixedAmount != null && ((float) fixedAmount) == 0.0f) {
+                // non-fixed primes are used to prime the tubing
+                // fixed primes are used to prime the cannula
+                // so skip the prime entry if it was not a fixed prime
+                continue;
+            }
 
             if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
                 if (lastPrimeRecord < primeRecord.atechDateTime) {
@@ -530,6 +552,29 @@ public class MedtronicHistoryData {
                 uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), CareportalEvent.SITECHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
+            }
+        }
+    }
+
+    private void processRewind(List<PumpHistoryEntry> rewindRecords) {
+        long maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(new GregorianCalendar(), -30);
+        long lastRewindRecord = 0L;
+
+        for (PumpHistoryEntry rewindRecord : rewindRecords) {
+            if (rewindRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastRewindRecord < rewindRecord.atechDateTime) {
+                    lastRewindRecord = rewindRecord.atechDateTime;
+                }
+            }
+        }
+
+        if (lastRewindRecord != 0L) {
+            long lastRewindFromAAPS = sp.getLong(MedtronicConst.Statistics.LastRewind, 0L);
+
+            if (lastRewindRecord != lastRewindFromAAPS) {
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), CareportalEvent.INSULINCHANGE);
+
+                sp.putLong(MedtronicConst.Statistics.LastRewind, lastRewindRecord);
             }
         }
     }
@@ -600,7 +645,7 @@ public class MedtronicHistoryData {
         TBR("TBR"),
         Suspend("Suspend");
 
-        private String description;
+        private final String description;
 
         ProcessHistoryRecord(String desc) {
             this.description = desc;

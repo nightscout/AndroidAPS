@@ -19,10 +19,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by emmablack on 12/26/14.
  */
 class SendToDataLayerThread extends AsyncTask<DataMap,Void,Void> {
-    private GoogleApiClient googleApiClient;
+    private final GoogleApiClient googleApiClient;
     private static final String TAG = "SendToDataLayerThread";
-    private String path;
-    private String logPrefix = ""; // "WR: ";
+    private final String path;
+    private final String logPrefix = ""; // "WR: ";
     private static int concurrency = 0;
     private static int state = 0;
     private static final ReentrantLock lock = new ReentrantLock();

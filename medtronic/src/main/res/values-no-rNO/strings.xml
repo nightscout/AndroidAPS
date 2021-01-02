@@ -81,4 +81,6 @@
     <string name="common_on">På</string>
     <string name="common_off">Av</string>
     <string name="pump_time_updated">Pumpens tid ble oppdatert</string>
+    <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
+    <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
 </resources>

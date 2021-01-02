@@ -10,6 +10,7 @@ import io.reactivex.subjects.SingleSubject
 import javax.inject.Inject
 
 class DeactivatePodActionViewModel @Inject constructor(private val aapsOmnipodManager: AapsOmnipodManager, private val commandQueueProvider: CommandQueueProvider) : ActionViewModelBase() {
+
     override fun doExecuteAction(): PumpEnactResult {
         val singleSubject = SingleSubject.create<PumpEnactResult>()
         commandQueueProvider.customCommand(CommandDeactivatePod(), object : Callback() {

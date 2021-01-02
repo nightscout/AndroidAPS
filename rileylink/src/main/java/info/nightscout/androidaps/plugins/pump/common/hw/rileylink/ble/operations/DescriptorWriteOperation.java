@@ -18,7 +18,7 @@ public class DescriptorWriteOperation extends BLECommOperation {
 
     private final AAPSLogger aapsLogger;
 
-    private BluetoothGattDescriptor descr;
+    private final BluetoothGattDescriptor descr;
 
 
     public DescriptorWriteOperation(AAPSLogger aapsLogger, BluetoothGatt gatt, BluetoothGattDescriptor descr, byte[] value) {

@@ -21,6 +21,10 @@
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
+    <string name="ic_label_exam">Съотношение на инсулин към въглехидрати (I:C)</string>
+    <string name="ic_increasingvalue">По-високите стойности на I:C водят до по-малко инсулин доставени за дадено количество въглехидрати.</string>
+    <string name="ic_decreasingvalue">По-ниските стойности на I:C водят до повече инсулин доставен за дадено количество въглехидрати.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
+    <string name="profileswitch_unchanged">ISF и I:C ще останат непроменени.</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
 </resources>

@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.general.actions
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -42,11 +45,12 @@ import java.util.*
 import javax.inject.Inject
 
 class ActionsFragment : DaggerFragment() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -54,16 +58,30 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val pumpCustomActions = HashMap<String, CustomAction>()
     private val pumpCustomButtons = ArrayList<SingleClickButton>()
+    private var smallWidth = false
+    private var smallHeight = false
+    private lateinit var dm: DisplayMetrics
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.actions_fragment, container, false)
+        //check screen width
+        dm = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+
+        val screenWidth = dm.widthPixels
+        val screenHeight = dm.heightPixels
+        smallWidth = screenWidth <= Constants.SMALL_WIDTH
+        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
+        val landscape = screenHeight < screenWidth
+
+        return inflater.inflate(skinProvider.activeSkin().actionsLayout(landscape, smallWidth), container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,12 +95,12 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_extendedbolus.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable {
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
                         Runnable {
                             ExtendedBolusDialog().show(childFragmentManager, "Actions")
                         }, null)
-                }))
+                })
             }
         }
         actions_extendedbolus_cancel.setOnClickListener {
@@ -91,12 +109,12 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.extendedbolusdeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            mainApp.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })
@@ -111,12 +129,12 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            mainApp.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })
@@ -124,7 +142,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_fill.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { FillDialog().show(childFragmentManager, "FillDialog") }))
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { FillDialog().show(childFragmentManager, "FillDialog") })
             }
         }
         actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
@@ -233,26 +251,36 @@ class ActionsFragment : DaggerFragment() {
                 actions_canceltempbasal?.visibility = View.GONE
             }
         }
-
+        val activeBgSource = activePlugin.activeBgSource
         actions_historybrowser.visibility = (profile != null).toVisibility()
         actions_fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized && !pump.isSuspended).toVisibility()
         actions_pumpbatterychange?.visibility = pump.pumpDescription.isBatteryReplaceable.toVisibility()
         actions_temptarget?.visibility = (profile != null && config.APS).toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
+        if (!config.NSCLIENT) {
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
+            careportal_senslevellabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
+        } else {
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
+            careportal_senslevellabel?.text = ""
+            careportal_inslevellabel?.text = ""
+            careportal_pblevellabel?.text = ""
+        }
         checkPumpCustomActions()
+
     }
 
     private fun checkPumpCustomActions() {
         val activePump = activePlugin.activePump
         val customActions = activePump.customActions ?: return
+        val currentContext = context ?: return
         removePumpCustomActions()
 
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(context, null, android.R.attr.buttonStyle)
+            val btn = SingleClickButton(currentContext, null, android.R.attr.buttonStyle)
             btn.text = resourceHelper.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(

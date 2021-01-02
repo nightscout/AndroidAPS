@@ -46,7 +46,7 @@ class AndroidPermission @Inject constructor(
     private var permission_battery_optimization_failed = false
 
     @SuppressLint("BatteryLife")
-    private fun askForPermission(activity: FragmentActivity, permission: Array<String>, requestCode: Int) {
+    fun askForPermission(activity: FragmentActivity, permission: Array<String>, requestCode: Int) {
         var test = false
         var testBattery = false
         for (s in permission) {

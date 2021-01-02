@@ -17,7 +17,7 @@ public class RadioPacket {
 
     @Inject RileyLinkUtil rileyLinkUtil;
 
-    private byte[] pkt;
+    private final byte[] pkt;
 
 
     public RadioPacket(HasAndroidInjector injector, byte[] pkt) {

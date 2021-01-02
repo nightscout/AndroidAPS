@@ -81,4 +81,6 @@
     <string name="common_on">Įjungti</string>
     <string name="common_off">Išjungta</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
+    <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
+    <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
 </resources>

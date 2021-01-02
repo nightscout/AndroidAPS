@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Oprește bluetooth-ul telefonului pentru o secundă dacă nu se poate conecta la pompă. Aceasta poate ajuta în cazul telefoanelor cu bluetooth incompatitibil.</string>
     <string name="pairing">Împerechere</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -171,7 +173,7 @@
     <string name="waitingforpumpresult">Se așteaptă rezultatul</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%d g carbohidrați suplimentari necesari în %d minute</string>
+    <string name="carbsreq">%1$d g carbohidrați suplimentari necesari în %2$d minute</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistici</string>
     <string name="cumulative_tdd">TDD cumulat</string>
@@ -213,6 +215,7 @@
     <string name="history_group_prime">Amorsare</string>
     <string name="history_group_alarm">Alarme</string>
     <string name="history_group_glucose">Glicemie</string>
+    <string name="mute5min">Dezactivează pentru 5 minute</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

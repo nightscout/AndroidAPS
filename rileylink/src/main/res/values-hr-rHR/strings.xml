@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
     <!-- RL Status Page -->
     <!-- RL State -->
     <!-- RL Errors -->
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
 </resources>

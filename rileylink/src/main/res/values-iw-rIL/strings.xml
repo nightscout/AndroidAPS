@@ -1,8 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">סרוק</string>
+    <string name="riley_link_ble_config_scan_stop">עצור</string>
+    <string name="riley_link_ble_config_scan_selected">נבחר</string>
+    <string name="riley_link_ble_config_scan_title">סריקת ריילילינק</string>
+    <string name="riley_link_ble_config_scan_scanning">סורק</string>
+    <string name="riley_link_ble_config_scan_finished">הסריקה הושלמה</string>
+    <string name="riley_link_ble_config_scan_error">שגיאת סריקה: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">אף פעם</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">ריילילינק נבחר</string>
+    <string name="riley_link_ble_config_remove_riley_link">הסרה</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">האם אתם בטוחים כי ברצונכם להסיר את הריילילינק?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">הסרת ריילילינק</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">לא נבחר ריילילינק</string>
     <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">הגדרות</string>
+    <string name="rileylink_settings_tab2">היסטוריה</string>
+    <string name="rileylink_status">מצב ריילילינק</string>
+    <string name="medtronic_pump_status">סטטוס המשאבה</string>
+    <string name="title_activity_rileylink_settings">הגדרות ריילילינק</string>
+    <string name="rileylink_title">ריילילינק</string>
+    <string name="rileylink_configured_riley_link_address">כתובת הריילילינק המוגדרת:</string>
+    <string name="rileylink_configured_riley_link_name">שם הריילילינק המחובר:</string>
+    <string name="rileylink_connected_device">המכשיר המחובר:</string>
+    <string name="rileylink_connection_status">מצב החיבור:</string>
+    <string name="rileylink_connection_error">שגיאת חיבור:</string>
+    <string name="rileylink_device">מכשיר</string>
+    <string name="rileylink_device_type">סוג מכשיר:</string>
+    <string name="rileylink_device_model">דגם המכשיר:</string>
+    <string name="rileylink_last_used_frequency">תדירות השימוש לאחרונה:</string>
+    <string name="rileylink_last_device_contact">קשר אחרון עם המכשיר:</string>
+    <string name="rileylink_firmware_version">גרסת קושחה:</string>
+    <string name="rileylink_pump_serial_number">מספר סידורי של המשאבה:</string>
+    <string name="rileylink_pump_frequency">תדר המשאבה:</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">מאתחל בלוטות\'…</string>
+    <string name="rileylink_state_bt_error">שגיאת בלוטות\'</string>
+    <string name="rileylink_state_bt_ready">בלוטות\' מוכן</string>
+    <string name="rileylink_state_not_started">לא התחיל</string>
+    <string name="rileylink_state_rl_init">מאתחל ריילילינק…</string>
+    <string name="rileylink_state_rl_error">שגיאת ריילילינק</string>
+    <string name="rileylink_state_pc_tune_up">כוונון הריילילינק והמשאבה</string>
+    <string name="rileylink_state_pc_error">בעיה בהיקשרות למשאבה</string>
+    <string name="rileylink_state_connected">מחובר</string>
+    <string name="rileylink_state_rl_ready">ריילילינק מוכן</string>
     <!-- RL Errors -->
-    <!-- RL Target Device -->
+    <string name="rileylink_error_not_rl">ההתקן אינו ריילילינק</string>
+    <string name="rileylink_error_unreachable">ריילילינק לא נגיש</string>
+    <string name="rileylink_error_bt_disabled">בלוטות\' כבוי</string>
+    <string name="rileylink_error_no_bt_adapter">אין מתאם בלוטות\'</string>
+    <string name="rileylink_error_tuneup_failed">כוונון נכשל</string>
+    <string name="rileylink_error_pump_unreachable">המשאבה לא זמינה</string>
+    <string name="rileylink_error_pod_unreachable">הפוד לא זמין</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">משאבת Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">כן</string>
+    <string name="riley_link_common_no">לא</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d יום</item>
+        <item quantity="two">%1$d ימים</item>
+        <item quantity="many">%1$d ימים</item>
+        <item quantity="other">%1$d ימים</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d שעה</item>
+        <item quantity="two">%1$d שעות</item>
+        <item quantity="many">%1$d שעות</item>
+        <item quantity="other">%1$d שעות</item>
+    </plurals>
 </resources>

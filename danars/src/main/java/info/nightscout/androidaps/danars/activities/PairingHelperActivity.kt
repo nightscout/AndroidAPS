@@ -16,7 +16,7 @@ class PairingHelperActivity : NoSplashAppCompatActivity() {
         dialog = PairingProgressDialog()
             .setHelperActivity(this)
         dialog?.show(supportFragmentManager, "PairingProgress")
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     override fun onDestroy() {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Zpět</string>
     <string name="objectives_button_start">Začátek</string>
     <string name="objectives_button_verify">Kontrola</string>
     <string name="nth_objective">%1$d. cíl</string>
@@ -41,7 +40,7 @@
     <string name="codeaccepted">Kód přijat</string>
     <string name="codeinvalid">Neplatný kód</string>
     <string name="objectives_exam_objective">Prokažte své znalosti</string>
-    <string name="objectives_exam_gate">Studujte a správně zodpovězte otázky</string>
+    <string name="objectives_exam_gate">Prostudujte otázky. Na každou otázku jste dostali čtyři možné odpovědi. Může existovat více než jedna správná odpověď. Zatrhněte prosím všechny odpovědi, které jsou správné, a potvrďte volbou ZKONTROLOVAT.</string>
     <string name="answerdisabledto">Odpovídání zakázáno do: %1$s</string>
     <string name="wronganswer">Špatná odpověď!</string>
     <string name="unfinshed_button">Další nedokončená</string>

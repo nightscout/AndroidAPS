@@ -24,6 +24,7 @@ class GlimpPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_glimp)
     .pluginName(R.string.Glimp)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_glimp),

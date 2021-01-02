@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -37,13 +38,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_historybrowse.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
 class HistoryBrowseActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
@@ -144,7 +145,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         historybrowse_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
         overviewMenus.setupChartMenu(overview_chartMenuButton)
-        prepareGraphs()
+        prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
             start = bundle.getLong("start", 0)
@@ -168,7 +169,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = false)
                 }
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventAutosensBgLoaded::class.java)
@@ -178,22 +179,21 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = true)
                 }
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_iobcalculationprogess?.text = it.progress }) { fabricPrivacy::logException }
+            .subscribe({ overview_iobcalculationprogess?.text = it.progress }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (it.now) {
-                    prepareGraphs()
                     updateGUI("EventRefreshOverview", bgOnly = false)
                 }
-            }) { fabricPrivacy::logException }
+            }, fabricPrivacy::logException)
         )
         if (start == 0L) {
             // set start of current day
@@ -217,8 +217,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     }
 
-    private fun prepareGraphs() {
-        val numOfGraphs = overviewMenus.setting.size
+    private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
 
         if (numOfGraphs != secondaryGraphs.size - 1) {
             //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
@@ -256,7 +255,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun runCalculation(from: String) {
-        GlobalScope.launch(Dispatchers.Default) {
+        lifecycleScope.launch(Dispatchers.Default) {
             treatmentsPluginHistory.initializeData(start - T.hours(8).msecs())
             val end = start + T.hours(rangeToDisplay.toLong()).msecs()
             iobCobCalculatorPluginHistory.stopCalculation(from)
@@ -266,6 +265,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     fun updateGUI(from: String, bgOnly: Boolean) {
+        val menuChartSettings = overviewMenus.setting
+        prepareGraphsIfNeeded(menuChartSettings.size)
         aapsLogger.debug(LTag.UI, "updateGUI from: $from")
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
@@ -273,7 +274,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
 
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             historybrowse_noprofile?.visibility = (profile == null).toVisibility()
             profile ?: return@launch
 
@@ -308,11 +309,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 if (!bgOnly) {
                     // Treatments
                     graphData.addTreatments(fromTime, toTime)
-                    if (overviewMenus.setting[0][OverviewMenus.CharType.ACT.ordinal])
+                    if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
                         graphData.addActivity(fromTime, toTime, false, 0.8)
 
                     // add basal data
-                    if (pump.pumpDescription.isTempBasalCapable && overviewMenus.setting[0][OverviewMenus.CharType.BAS.ordinal]) {
+                    if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal]) {
                         graphData.addBasals(fromTime, toTime, lowLine / graphData.maxY / 1.2)
                     }
                     // ------------------ 2nd graph
@@ -326,22 +327,22 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                         var useIAForScale = false
                         var useABSForScale = false
                         when {
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                         }
 
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, toTime, useIAForScale, 0.8)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0)
-                        if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, toTime, useIAForScale, 0.8)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0)
 
                         // set manual x bounds to have nice steps
                         secondGraphData.formatAxis(fromTime, toTime)
@@ -356,13 +357,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 for (g in 0 until secondaryGraphs.size) {
                     secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                     secondaryGraphs[g].visibility = (!bgOnly && (
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                        menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                         )).toVisibility()
                     secondaryGraphsData[g].performUpdate()
                 }

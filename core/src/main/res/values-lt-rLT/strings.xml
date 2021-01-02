@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Vienai sekundei išjungia telefono bluetooth, jei ryšys su pompa nutrūksta. Gali būti veiksminga kai kuriems telefonų modeliams, turintiems BT problemų.</string>
     <string name="pairing">Sujungiama</string>
+    <string name="yes">Taip</string>
+    <string name="no">Ne</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -170,7 +172,7 @@
     <string name="waitingforpumpresult">Laukiama rezultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Būtina suvartoti %d g papildomų AV per %d min</string>
+    <string name="carbsreq">Būtina suvartoti %1$d g papildomų AV per %2$d min</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistika</string>
     <string name="cumulative_tdd">BPD viso</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Užpildyti sistemą</string>
     <string name="history_group_alarm">Aliarmai</string>
     <string name="history_group_glucose">Gliukozė</string>
+    <string name="mute5min">Nutildyti 5 minutėms</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

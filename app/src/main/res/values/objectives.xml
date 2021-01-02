@@ -12,7 +12,6 @@
     <string name="key_ObjectivespumpStatusIsAvailableInNS" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
     <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
 
-    <string name="objectives_button_back">Back</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nth_objective">%1$d. Objective</string>
@@ -34,7 +33,7 @@
     <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
     <string name="objectives_auto_objective">Enabling automation</string>
     <string name="objectives_smb_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
-    <string name="objectives_auto_gate">Read the docs how automation works. Setup your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Read the docs on how automation works. Set up your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG available in NS</string>
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
@@ -49,11 +48,11 @@
     <string name="objectives_useloop">Display content of Loop plugin</string>
     <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
     <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">If you have at least 3 month of closed loop experience with other systems you might qualify for a code to skip objectives. See https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details.</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">If you have at least 3 months of closed loop experience with other systems you might qualify for a code to skip objectives. See https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details.</string>
     <string name="codeaccepted">Code accepted</string>
     <string name="codeinvalid">Code invalid</string>
     <string name="objectives_exam_objective">Prove your knowledge</string>
-    <string name="objectives_exam_gate">Study and answer questions correctly</string>
+    <string name="objectives_exam_gate">Study the questions.  You are given four possible answers for each question. There may be more than one correct answer. Please check all those that are correct and select VERIFY.</string>
     <string name="answerdisabledto">Answering disabled until: %1$s</string>
     <string name="wronganswer">Wrong answer!</string>
     <string name="unfinshed_button">Next unfinished</string>

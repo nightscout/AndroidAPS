@@ -6,7 +6,7 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions;
 
 public class Scale {
     private double multiplier;
-    private double shift;
+    private final double shift;
 
     public Scale() {
         shift = 0;

@@ -248,7 +248,8 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                 PodHistoryEntryType entryType = PodHistoryEntryType.getByCode(historyEntry.getPodEntryTypeCode());
                 switch (entryType) {
 
-                    case SET_TEMPORARY_BASAL: {
+                    case SET_TEMPORARY_BASAL:
+                    case SPLIT_TEMPORARY_BASAL: {
                         TempBasalPair tempBasalPair = aapsOmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
                         valueView.setText(resourceHelper.gs(R.string.omnipod_history_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
@@ -272,6 +273,12 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     }
                     break;
 
+                    case PLAY_TEST_BEEP: {
+                        if (historyEntry.getData() != null) {
+                            valueView.setText(historyEntry.getData());
+                        }
+                    }
+                    break;
                     case GET_POD_STATUS:
                     case GET_POD_INFO:
                     case SET_TIME:

@@ -66,7 +66,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject OpenHumansUploader openHumansUploader;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTreatmentEventPost = null;

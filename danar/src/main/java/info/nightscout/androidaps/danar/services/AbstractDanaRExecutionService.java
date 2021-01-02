@@ -67,7 +67,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject DateUtil dateUtil;
     @Inject DatabaseHelperInterface databaseHelper;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected String mDevName;
 
@@ -184,7 +184,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     protected void getBTSocketForSelectedPump() {
-        mDevName = sp.getString(resourceHelper.gs(R.string.key_danar_bt_name), "");
+        mDevName = sp.getString(R.string.key_danar_bt_name, "");
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter != null) {

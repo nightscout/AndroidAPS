@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Tillbaka</string>
     <string name="objectives_button_start">Starta</string>
     <string name="objectives_button_verify">Kontrollera</string>
     <string name="nth_objective">%1$d. Målet</string>
@@ -22,7 +21,7 @@
     <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
     <string name="objectives_auto_objective">Aktivera automatisering</string>
     <string name="objectives_smb_gate">Du måste läsa på wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>
-    <string name="objectives_auto_gate">Läs dokumentationen hur automatisering fungerar. Konfigurera dina första enkla regler. I stället för att ange en åtgärd, låt bara AAPS visa en avisering. När du är säker på att automatisering utlöses vid rätt tidpunkt ersätt aviseringen med verklig åtgärd. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Läs dokumentationen hur automatisering fungerar. Konfigurera dina första enkla regler. I stället för att ange en åtgärd, låt bara AAPS visa en avisering. När du är säker på att automatisering utlöses vid rätt tidpunkt kan du ersätta aviseringen med verklig åtgärd. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG är tillängligt i Nightscout</string>
     <string name="objectives_pumpstatusavailableinns">Pumpstatus tillgängligt i Nightscout</string>
     <string name="objectives_manualenacts">Manuella justeringar</string>
@@ -41,12 +40,12 @@
     <string name="codeaccepted">Koden godkänd</string>
     <string name="codeinvalid">Koden är felaktig</string>
     <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
-    <string name="objectives_exam_gate">Studera och besvara frågor på rätt sätt</string>
+    <string name="objectives_exam_gate">Studera frågorna.  Ni får fyra möjliga svar på varje fråga. Det kan finnas mer än ett korrekt svar. Kontrollera alla de som är korrekta och välj Kontrollera.</string>
     <string name="answerdisabledto">Svarsfunktionen inaktiverad till: %1$s</string>
     <string name="wronganswer">Fel svar</string>
     <string name="unfinshed_button">Nästa icke slutförda</string>
     <string name="requestcode">Begärd kod: %1$s</string>
-    <string name="objectives_hint">(kontrollera alla korrekta svar)</string>
+    <string name="objectives_hint">(markera ett eller flera alternativ)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>

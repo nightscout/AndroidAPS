@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.omnipod_wizard_action_page_fragment.*
 import javax.inject.Inject
 
 class DeactivatePodActionFragment : ActionFragmentBase() {
+
     @Inject
     @OmnipodPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory

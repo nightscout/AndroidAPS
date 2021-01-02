@@ -40,10 +40,10 @@ public class TempTargetActivity extends ViewSelectorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
         final Resources res = getResources();
-        final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
+        final GridViewPager pager = findViewById(R.id.pager);
 
         pager.setAdapter(new MyGridViewPagerAdapter());
-        DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
+        DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -75,7 +75,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
              if(col == 0){
                 final View view = getInflatedPlusMinusView(container);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
+                final TextView textView = view.findViewById(R.id.label);
                 textView.setText("duration");
                 if (time == null) {
                     time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24 * 60d, 5d, new DecimalFormat("0"), false);
@@ -130,7 +130,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
              }else {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = (ImageView) view.findViewById(R.id.confirmbutton);
+                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

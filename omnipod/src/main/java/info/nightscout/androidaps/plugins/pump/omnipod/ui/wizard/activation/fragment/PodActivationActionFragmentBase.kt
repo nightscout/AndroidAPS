@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.omnipod_wizard_action_page_fragment.*
 import javax.inject.Inject
 
 abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
+
     @Inject
     protected lateinit var podStateManager: PodStateManager
 
@@ -26,7 +27,7 @@ abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
     }
 
     override fun onActionFailure() {
-        if (podStateManager.isPodActivationTimeExceeded && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
+        if ((podStateManager.isPodActivationTimeExceeded && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) || podStateManager.isPodFaulted) {
             omnipod_wizard_button_retry.visibility = View.GONE
             omnipod_wizard_button_deactivate_pod.visibility = View.VISIBLE
         }

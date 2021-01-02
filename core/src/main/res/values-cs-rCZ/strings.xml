@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Hlídač BT</string>
     <string name="btwatchdog_summary">Vypne na 1 sek bluetooth v telefonu, pokud se nedaří připojit k pumpě. Může to pomoci u telefonů, které mají problémy s BT</string>
     <string name="pairing">Párování</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -170,7 +172,7 @@
     <string name="waitingforpumpresult">Čekání na výsledek</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Požadováno dalších %d g sacharidů během %d minut</string>
+    <string name="carbsreq">Požadováno dalších %1$d g sacharidů během %2$d minut</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiky</string>
     <string name="cumulative_tdd">Kumulativní CDD</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Doplňování</string>
     <string name="history_group_alarm">Alarmy</string>
     <string name="history_group_glucose">Glykémie</string>
+    <string name="mute5min">Ztlumit na 5 minut</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

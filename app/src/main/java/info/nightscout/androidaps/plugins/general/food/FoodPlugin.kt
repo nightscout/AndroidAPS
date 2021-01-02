@@ -18,6 +18,7 @@ class FoodPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(FoodFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_food)
     .pluginName(R.string.food)
     .shortName(R.string.food_short)
     .description(R.string.description_food),
