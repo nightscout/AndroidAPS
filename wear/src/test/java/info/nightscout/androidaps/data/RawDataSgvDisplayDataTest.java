@@ -75,7 +75,7 @@ def generateDate = { ->
 }
 
 def isMaster = { ->
-    return !version.contains('-')
+    return !version.contains('-dev')
 }
 
 def gitAvailable = { ->
