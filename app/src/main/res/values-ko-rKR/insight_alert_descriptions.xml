@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="alert_r7_description"><![CDATA[총량: <b>%1$d%%</b>\n기간: <b>%2$s h</b>]]></string>
     <string name="alert_w31_description"><![CDATA[카트리지 내용: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">베터리 교체.</string>
     <string name="alert_w33_description">시간/날짜 설정</string>
     <string name="alert_w34_description">아큐-첵 지원 문의</string>
+    <string name="alert_w36_description"><![CDATA[총량: <b>%1$d%%</b><br/>기간: <b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[설정: <b>%1$s U</b><br/>주입: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">카트리지를 삽입.</string>
     <string name="alert_m21_description">카트리지를 교체.</string>
