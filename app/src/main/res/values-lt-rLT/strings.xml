@@ -1193,7 +1193,6 @@
     <string name="bolusadvisor">Boluso patarėjas</string>
     <string name="bolusadvisormessage">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
     <string name="enablebolusadvisor">Įgalinti boluso patarėją</string>
-    <string name="enablebolusadvisor_summary">Jei jūsų glikemija yra aukšta, naudokite priminimą apie laiką valgyti, o ne Boluso patarėją</string>
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="timetoeat">Laikas valgyti</string>
 </resources>
