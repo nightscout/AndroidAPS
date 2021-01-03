@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description"><![CDATA[Quantité :<b>%1$d%%</b>\nDurée :<b>%2$s h</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Volume dans le réservoir : <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Changer la batterie.</string>
     <string name="alert_w33_description">Régler heure/date.</string>
     <string name="alert_w34_description">Contacter l\'assistance Accu-Check.</string>
-    <string name="alert_w36_description"><![CDATA[Quantité : <b>%1$d%%</b><br/>Durée : <b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Programmé : <b>%1$s U</b><br/>Délivré : <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">Insérer le réservoir.</string>
     <string name="alert_m21_description">Changer le réservoir.</string>
