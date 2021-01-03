@@ -76,7 +76,7 @@
     <string name="result">Rezultat</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nu există date despre glicemie</string>
-    <string name="openapsma_request_label">Solicită</string>
+    <string name="openapsma_request_label">Solicitare</string>
     <string name="glucose">Glicemie</string>
     <string name="delta">Diferență</string>
     <string name="sms_delta">Diferență:</string>
@@ -114,7 +114,7 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Limitare aplicată!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazală</string>
+    <string name="basal">Rate bazale</string>
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
