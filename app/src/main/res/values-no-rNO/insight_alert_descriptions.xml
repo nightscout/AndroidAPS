@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description"><![CDATA[Mengde: <b>%1$d%%</b>\nVarighet: <b>%2$s t</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Ampullens innhold: <b>%1$s E</b>]]></string>
     <string name="alert_w32_description">Bytt batteri.</string>
     <string name="alert_w33_description">Angi tidspunkt/dato.</string>
     <string name="alert_w34_description">Kontakt Accu-Chek kundestøtte.</string>
-    <string name="alert_w36_description"><![CDATA[Mengde: <b>%1$d%%</b><br/>\nVarighet: <b>%2$s t</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Angitt: <b>%1$s E</b><br/>Levert: <b>%2$s E</b>]]></string>
     <string name="alert_m20_description">Sett inn ampulle.</string>
     <string name="alert_m21_description">Bytt ampulle.</string>
