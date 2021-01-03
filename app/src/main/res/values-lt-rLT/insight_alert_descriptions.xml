@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description"><![CDATA[Kiekis: <b>%1$d%%</b>\nTrukmė: <b>%2$s h</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Rezervuaro tūris: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Pakeiskite bateriją.</string>
     <string name="alert_w33_description">Nustatykite laiką/datą.</string>
     <string name="alert_w34_description">Kreipkitės į Accu-Chek palaikymo tarnybą.</string>
-    <string name="alert_w36_description"><![CDATA[Kiekis: <b>%1$d%%</b><br/>Trukmė: <b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Suprogramuota: <b>%1$s U</b><br/>Suleista: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">Įdėkite rezervuarą.</string>
     <string name="alert_m21_description">Pakeiskite rezervuarą.</string>
