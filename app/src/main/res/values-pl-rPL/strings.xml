@@ -1194,7 +1194,6 @@
     <string name="bolusadvisor">Doradca bolusa</string>
     <string name="bolusadvisormessage">Masz wysoki poziom. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz teraz wykonać korekcyjny bolus i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kreatora, gdy zostanie otrzymane przypomnienie.</string>
     <string name="enablebolusadvisor">Włącz doradcę bolusa</string>
-    <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie zamiast kreatora podczas wysokiej glikemii</string>
     <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
     <string name="timetoeat">Czas na jedzenie</string>
 </resources>
