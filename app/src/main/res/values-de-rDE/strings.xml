@@ -1194,7 +1194,7 @@ Unerwartetes Verhalten.</string>
     <string name="bolusadvisor">Bolus-Berater</string>
     <string name="bolusadvisormessage">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
     <string name="enablebolusadvisor">Bolus-Berater aktivieren</string>
-    <string name="enablebolusadvisor_summary">Bei hohen BZ-Werten Essenserinnerung statt Bolus-Wizard verwenden</string>
+    <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Wizard (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
 </resources>
