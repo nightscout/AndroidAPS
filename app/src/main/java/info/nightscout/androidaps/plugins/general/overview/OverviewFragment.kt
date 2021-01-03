@@ -290,14 +290,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_temptarget        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_activeprofile     -> {
-                    val args = Bundle()
-                    args.putLong("time", DateUtil.now())
-                    args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
-                    val pvd = ProfileViewerDialog()
-                    pvd.arguments = args
-                    pvd.show(childFragmentManager, "ProfileViewDialog")
+                R.id.overview_temptarget -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
+
+                R.id.overview_activeprofile -> {
+                    ProfileViewerDialog().also { pvd ->
+                        pvd.arguments = Bundle().also {
+                            it.putLong("time", DateUtil.now())
+                            it.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                        }
+                    }.show(childFragmentManager, "ProfileViewDialog")
                 }
 
                 R.id.overview_accepttempbutton -> {
@@ -306,24 +307,26 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         val lastRun = loopPlugin.lastRun
                         loopPlugin.invoke("Accept temp button", false)
                         if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                ?: "".toSpanned(), {
-                                aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
-                                overview_accepttempbutton?.visibility = View.GONE
-                                (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                actionStringHandler.handleInitiate("cancelChangeRequest")
-                                loopPlugin.acceptChangeRequest()
+                            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                    ?: "".toSpanned(), {
+                                    aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
+                                    overview_accepttempbutton?.visibility = View.GONE
+                                    (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+                                    actionStringHandler.handleInitiate("cancelChangeRequest")
+                                    loopPlugin.acceptChangeRequest()
+                                })
                             })
                         }
                     }
                 }
 
                 R.id.overview_apsmode -> {
-                    val args = Bundle()
-                    args.putInt("showOkCancel", 1)                  // 1-> true
-                    val pvd = LoopDialog()
-                    pvd.arguments = args
-                    pvd.show(childFragmentManager, "Overview")
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                        LoopDialog().also { dialog ->
+                            dialog.arguments = Bundle().also { it.putInt("showOkCancel", 1) }
+                        }.show(childFragmentManager, "Overview")
+                    })
                 }
             }
         }

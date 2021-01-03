@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
@@ -28,13 +27,14 @@ import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -73,10 +73,6 @@ public class DetermineBasalAdapterSMBJS {
     private String storedGlucoseStatus = null;
     private String storedProfile = null;
     private String storedMeal_data = null;
-    private String storedAutosens_data = null;
-    private String storedMicroBolusAllowed = null;
-    private String storedSMBAlwaysAllowed = null;
-    private String storedCurrentTime = null;
 
     private String scriptDebug = "";
 
@@ -102,13 +98,13 @@ public class DetermineBasalAdapterSMBJS {
         aapsLogger.debug(LTag.APS, "Profile:        " + (storedProfile = mProfile.toString()));
         aapsLogger.debug(LTag.APS, "Meal data:      " + (storedMeal_data = mMealData.toString()));
         if (mAutosensData != null)
-            aapsLogger.debug(LTag.APS, "Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
+            aapsLogger.debug(LTag.APS, "Autosens data:  " + mAutosensData.toString());
         else
-            aapsLogger.debug(LTag.APS, "Autosens data:  " + (storedAutosens_data = "undefined"));
+            aapsLogger.debug(LTag.APS, "Autosens data:  " + "undefined");
         aapsLogger.debug(LTag.APS, "Reservoir data: " + "undefined");
-        aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
-        aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
-        aapsLogger.debug(LTag.APS, "CurrentTime: " + (storedCurrentTime = "" + mCurrentTime));
+        aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  " + mMicrobolusAllowed);
+        aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  " + mSMBAlwaysAllowed);
+        aapsLogger.debug(LTag.APS, "CurrentTime: " + mCurrentTime);
         aapsLogger.debug(LTag.APS, "isSaveCgmSource: " + mIsSaveCgmSource);
 
 
@@ -151,9 +147,10 @@ public class DetermineBasalAdapterSMBJS {
                         makeParam(mAutosensData, rhino, scope),
                         makeParam(mMealData, rhino, scope),
                         setTempBasalFunctionsObj,
-                        new Boolean(mMicrobolusAllowed),
+                        Boolean.valueOf(mMicrobolusAllowed),
                         makeParam(null, rhino, scope), // reservoir data as undefined
-                        new Long(mCurrentTime)
+                        Long.valueOf(mCurrentTime),
+                        Boolean.valueOf(mIsSaveCgmSource)
                 };
 
 
@@ -213,14 +210,6 @@ public class DetermineBasalAdapterSMBJS {
         return storedMeal_data;
     }
 
-    String getAutosensDataParam() {
-        return storedAutosens_data;
-    }
-
-    String getMicroBolusAllowedParam() {
-        return storedMicroBolusAllowed;
-    }
-
     String getScriptDebug() {
         return scriptDebug;
     }
@@ -243,7 +232,6 @@ public class DetermineBasalAdapterSMBJS {
                         boolean isSaveCgmSource
     ) throws JSONException {
 
-        String units = profile.getUnits();
         PumpInterface pump = activePluginProvider.getActivePump();
         Double pumpbolusstep = pump.getPumpDescription().bolusStep;
         mProfile = new JSONObject();
@@ -267,8 +255,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("low_temptarget_lowers_sensitivity", false);
 
 
-        mProfile.put("sensitivity_raises_target", sp.getBoolean(R.string.key_sensitivity_raises_target,SMBDefaults.sensitivity_raises_target));
-        mProfile.put("resistance_lowers_target", sp.getBoolean(R.string.key_resistance_lowers_target,SMBDefaults.resistance_lowers_target));
+        mProfile.put("sensitivity_raises_target", sp.getBoolean(R.string.key_sensitivity_raises_target, SMBDefaults.sensitivity_raises_target));
+        mProfile.put("resistance_lowers_target", sp.getBoolean(R.string.key_resistance_lowers_target, SMBDefaults.resistance_lowers_target));
         mProfile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments);
         mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
@@ -364,14 +352,12 @@ public class DetermineBasalAdapterSMBJS {
 
         if (jsonObject == null) return Undefined.instance;
 
-        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
-        return param;
+        return NativeJSON.parse(rhino, scope, jsonObject.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
     }
 
     private Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
         //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
-        Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
-        return param;
+        return NativeJSON.parse(rhino, scope, jsonArray.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
     }
 
     private String readFile(String filename) throws IOException {
