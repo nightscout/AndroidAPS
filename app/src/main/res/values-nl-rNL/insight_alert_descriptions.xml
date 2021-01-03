@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="alert_r7x_description"><![CDATA[Hoeveelheid: <b>%1$d%%</b>\nDuur: <b>%2$s uur</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Inhoud ampul: <b>%1$s E</b>]]></string>
     <string name="alert_w32_description">Wissel batterij.</string>
     <string name="alert_w33_description">Stel tijd/datum in.</string>
     <string name="alert_w34_description">Contacteer Accu-Chek klantenservice.</string>
+    <string name="alert_w36x_description"><![CDATA[Hoeveelheid: <b>%1$d%%</b><br/>Duur: <b>%2$s uur</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Ingesteld: <b>%1$s E</b><br/>Toegediend: <b>%2$s E</b>]]></string>
     <string name="alert_m20_description">Plaats ampul.</string>
     <string name="alert_m21_description">Vervang ampul.</string>
