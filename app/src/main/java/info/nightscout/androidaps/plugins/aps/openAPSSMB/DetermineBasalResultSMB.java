@@ -8,7 +8,10 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -46,6 +49,27 @@ public class DetermineBasalResultSMB extends APSResult {
                 tempBasalRequested = true;
                 rate = result.getDouble("rate");
                 if (rate < 0d) rate = 0d;
+                
+                // Ketocidosis Protection
+                // Calculate IOB
+                treatmentsPlugin.updateTotalIOBTreatments();
+                treatmentsPlugin.updateTotalIOBTempBasals();
+                final IobTotal bolusIob = treatmentsPlugin.getLastCalculationTreatments();
+                final IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals();
+                // Get active BaseBasalRate
+                double baseBasalRate = activePlugin.getActivePump().getBaseBasalRate();
+                // Activate a small TBR
+                if ( sp.getBoolean(R.string.key_keto_protect, false) && sp.getBoolean(R.string.key_variable_keto_protect_strategy, true) && (bolusIob.iob + basalIob.basaliob) < (0 - baseBasalRate) && -(bolusIob.activity + basalIob.activity) > 0) {
+                    // Variable strategy
+                    double cutoff = baseBasalRate * (sp.getDouble(R.string.keto_protect_basal, 20d) * 0.01);
+                    if (rate < cutoff) rate = cutoff;
+                } else if ( sp.getBoolean(R.string.key_keto_protect, false) && !sp.getBoolean(R.string.key_variable_keto_protect_strategy, true) ) {
+                    // Continuous strategy
+                    double cutoff = baseBasalRate * ( sp.getDouble(R.string.keto_protect_basal, 20d) * 0.01 );
+                    if (rate < cutoff) rate = cutoff;
+                }
+                // End Ketoacidosis Protetion
+                
                 duration = result.getInt("duration");
             } else {
                 rate = -1;
