@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description"><![CDATA[Cantitate: <b>%1$d%%</b>\nDurata: <b>%2$s h</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Conţinut rezervor: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Schimbați bateria.</string>
     <string name="alert_w33_description">Setați ora/data.</string>
     <string name="alert_w34_description">Contactați departamentul de suport Accu-Chek.</string>
-    <string name="alert_w36_description"><![CDATA[Cantitate: <b>%1$d%%</b><br/>Durată: <b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Stabilit: <b>%1$s U</b><br/>Livrat: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">Introduceți cartușul.</string>
     <string name="alert_m21_description">Schimbați cartușul.</string>
