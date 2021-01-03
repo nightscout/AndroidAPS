@@ -1193,7 +1193,6 @@
     <string name="bolusadvisor">Poradce pro bolus</string>
     <string name="bolusadvisormessage">Máte vysokou glykémii. Namísto jídla doporučujeme vyčkat na lepší glykémii a připomenout, až bude čas na jídlo. Přejete si poslat korekční bolus a připomenout, až bude čas k jídlu? V tomto případě nebudou zapsané žádné sacharidy, a později opět musíte spustit kalkulátor, jakmile vám to připomeneme.</string>
     <string name="enablebolusadvisor">Povolit poradce s bolusem</string>
-    <string name="enablebolusadvisor_summary">Během vysoké glykémie spusťte připomenutí namísto průvodce</string>
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="timetoeat">Čas k jídlu</string>
 </resources>
