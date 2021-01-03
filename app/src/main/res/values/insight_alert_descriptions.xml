@@ -21,5 +21,4 @@
     <string name="alert_e6_description">Change battery and cartridge.</string>
     <string name="alert_e10_description">Change cartridge.</string>
     <string name="alert_e13_description">Change language.</string>
-    <string name="fake_string">Change language.</string>
 </resources>
