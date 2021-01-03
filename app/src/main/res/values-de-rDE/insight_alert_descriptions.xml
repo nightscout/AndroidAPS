@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description"><![CDATA[Menge: <b>%1$d%%</b>\nDauer: <b>%2$s h</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Ampullenfüllmenge: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Batterie wechseln.</string>
     <string name="alert_w33_description">Datum/Uhrzeit einstellen.</string>
     <string name="alert_w34_description">Kontaktiere den Accu-Chek-Kundendienst.</string>
-    <string name="alert_w36_description"><![CDATA[Menge: <b>%1$d%%</b><br/>Dauer: <b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Eingestellt: <b>%1$s U</b><br/>Abgegeben: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">Ampulle einsetzen.</string>
     <string name="alert_m21_description">Ampulle wechseln.</string>
