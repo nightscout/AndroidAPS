@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="alert_r7_description"><![CDATA[Ποσότητα:<b>%1$d%%</b>\nΔιάρκεια:<b>%2$sh</b>]]></string>
     <string name="alert_w31_description"><![CDATA[Η αμπούλα περιεχει:<b>%1$s U</b>]]></string>
     <string name="alert_w32_description">Αλλαγή μπαταρίας.</string>
     <string name="alert_w33_description">Ορίστε ώρα/ημερομηνία.</string>
     <string name="alert_w34_description">Επικοινωνήστε με υποστήριξη Accu-Check.</string>
+    <string name="alert_w36_description"><![CDATA[Ποσότητα:<b>%1$d%%</b><br/>Διάρκεια:<b>%2$s h</b>]]></string>
     <string name="alert_w38_description"><![CDATA[Προγραμματισμένο: <b>%1$s U</b><br/>Παραδόθηκε: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">Εισαγωγή αμπούλας.</string>
     <string name="alert_m21_description">Αλλαγή αμπούλας.</string>
