@@ -65,6 +65,11 @@ public class InitializePumpManagerTask extends ServiceTask {
             lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
 
+        /* FIXME this can apparently crash:
+            Fatal Exception: java.lang.ClassCastException
+            info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
+            cannot be cast to info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+         */
         RileyLinkCommunicationManager<?> rileyLinkCommunicationManager = ((RileyLinkPumpDevice) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
 
         if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Medtronic) {

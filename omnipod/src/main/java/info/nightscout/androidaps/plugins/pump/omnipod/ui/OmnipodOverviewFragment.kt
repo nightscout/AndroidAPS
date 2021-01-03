@@ -102,10 +102,12 @@ class OmnipodOverviewFragment : DaggerFragment() {
         omnipod_overview_button_pod_management.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 activity?.let { activity ->
-                    protectionCheck.queryProtection(
-                        activity, ProtectionCheck.Protection.PREFERENCES,
-                        UIRunnable(Runnable { startActivity(Intent(context, PodManagementActivity::class.java)) })
-                    )
+                    context?.let { context ->
+                        protectionCheck.queryProtection(
+                            activity, ProtectionCheck.Protection.PREFERENCES,
+                            UIRunnable { startActivity(Intent(context, PodManagementActivity::class.java)) }
+                        )
+                    }
                 }
             } else {
                 displayNotConfiguredDialog()
@@ -514,10 +516,10 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            UIRunnable(Runnable {
+            UIRunnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
                     resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
-            }).run()
+            }.run()
         }
     }
 
@@ -534,9 +536,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
-            UIRunnable(Runnable {
+            UIRunnable {
                 OKDialog.show(it, title, message, null)
-            }).run()
+            }.run()
         }
     }
 
