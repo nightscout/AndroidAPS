@@ -1193,7 +1193,6 @@
     <string name="bolusadvisor">Consilier bolus</string>
     <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
     <string name="enablebolusadvisor">Activare consilier bolus</string>
-    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci în loc de calculatorul de bolus în timpul hiperglicemiei</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
 </resources>
