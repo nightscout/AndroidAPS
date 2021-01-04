@@ -1193,6 +1193,7 @@
     <string name="bolusadvisor">Bolusguide</string>
     <string name="bolusadvisormessage">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korrigerings bolus nå og få en påminnelse om når den er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
     <string name="enablebolusadvisor">Aktiver boluskalkulator</string>
+    <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="timetoeat">Nå må du spise</string>
 </resources>
