@@ -88,8 +88,9 @@
                     <TextView
                         android:id="@+id/profilehelper_age_label"
                         android:layout_width="150dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
                         android:labelFor="@+id/profilehelper_age"
                         android:text="@string/age"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -109,8 +110,9 @@
                     <TextView
                         android:id="@+id/profilehelper_tdd_label"
                         android:layout_width="150dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
                         android:labelFor="@+id/profilehelper_weight"
                         android:text="@string/tdd_total"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -130,8 +132,9 @@
                     <TextView
                         android:id="@+id/profilehelper_weigth_label"
                         android:layout_width="150dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
                         android:labelFor="@+id/profilehelper_weight"
                         android:text="@string/weight_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -151,8 +154,9 @@
                     <TextView
                         android:id="@+id/profilehelper_basalpctfromtdd_label"
                         android:layout_width="150dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
+                        android:gravity="center_vertical"
                         android:labelFor="@+id/profilehelper_basalpctfromtdd"
                         android:text="@string/basalpctfromtdd_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
