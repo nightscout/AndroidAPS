@@ -1194,6 +1194,7 @@ Eversense-appen.</string>
     <string name="bolusadvisor">Bolusguide</string>
     <string name="bolusadvisormessage">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrektionsbolus nu och påminna dig när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
     <string name="enablebolusadvisor">Aktivera bolusguiden</string>
+    <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="timetoeat">Dags att äta</string>
 </resources>
