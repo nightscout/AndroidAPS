@@ -468,7 +468,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
             resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
-            overview_activeprofile.setTypeface(null, Typeface.BOLD)
+            overview_temptarget.setTypeface(null, Typeface.BOLD)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
@@ -481,7 +481,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
                 drawable.setColorFilter(resources.getColor(R.color.tempTargetBackground, requireContext().theme), PorterDuff.Mode.SRC_IN)
                 resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
-                overview_activeprofile.setTypeface(null, Typeface.BOLD)
+                overview_temptarget.setTypeface(null, Typeface.BOLD)
             } else {
                 val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
                 val theme = requireContext().theme
