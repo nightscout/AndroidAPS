@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/profilehelper_compareprofile"
-            style="@style/ButtonMediumFontStyle"
+            style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_compare_profiles"
@@ -50,8 +50,8 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:id="@+id/profilehelper_profiletype_title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profiletype"
@@ -173,11 +173,11 @@
                 android:layout_marginStart="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <Button
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/profilehelper_copytolocalprofile"
-                style="@style/ButtonMediumFontStyle"
+                style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_clone_48"
                 android:text="@string/clone_label" />
 

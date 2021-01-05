@@ -7,9 +7,8 @@
         <Preference
             android:enabled="true"
             android:key="@string/key_rileylink_mac_address"
-            android:summary=""
-            android:title="RileyLink Configuration">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+            android:title="@string/omnipod_config_riley_link_configuration">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
 
     </PreferenceCategory>

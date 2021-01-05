@@ -7,6 +7,9 @@
     <string name="label_xdrip_big_chart">AAPS(GrafGrande)</string>
     <string name="label_xdrip_no_chart">AAPS(SemGraf)</string>
     <string name="label_xdrip_circle">AAPS(Círculo)</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
+    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_warning_sync">Sem dados!</string>
     <string name="label_warning_old">Dados antigos!</string>
     <string name="label_warning_since">Desde %1$s</string>

@@ -40,7 +40,7 @@
     <string name="codeaccepted">קוד אושר</string>
     <string name="codeinvalid">קוד בלתי חוקי</string>
     <string name="objectives_exam_objective">הוכח את הידע שלך</string>
-    <string name="objectives_exam_gate">למדו וענו נכונה על שאלות</string>
+    <string name="objectives_exam_gate">למדו את השאלות.  ניתנות לכם ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
     <string name="answerdisabledto">השבת תשובה מושבתת עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
     <string name="unfinshed_button">הבא שלא נעשה</string>

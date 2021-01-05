@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">ESCANEAR</string>
-    <string name="rileylink_scanner_scan_stop">DETENER</string>
-    <string name="rileylink_scanner_selected_device">Seleccionado</string>
-    <string name="rileylink_scanner_title">Escaneo de RileyLink</string>
-    <string name="location_yes">Habilitar</string>
-    <string name="location_no">No</string>
-    <string name="rileylink_scanner_scanning">Buscando</string>
-    <string name="rileylink_scanner_scanning_finished">Búsqueda Finalizada</string>
-    <string name="rileylink_scanner_scanning_error">Error de escaneo: %1$d</string>
-    <string name="common_never">Nunca</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Escanear</string>
+    <string name="riley_link_ble_config_scan_stop">Detener</string>
+    <string name="riley_link_ble_config_scan_selected">Seleccionado</string>
+    <string name="riley_link_ble_config_scan_title">Escaneo de RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">Buscando</string>
+    <string name="riley_link_ble_config_scan_finished">Búsqueda Finalizada</string>
+    <string name="riley_link_ble_config_scan_error">Error de escaneo: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Nunca</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink seleccionado</string>
+    <string name="riley_link_ble_config_remove_riley_link">Eliminar</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">¿Está seguro de que desea eliminar RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Eliminar RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">No se ha seleccionado RileyLink</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Configuración</string>
     <string name="rileylink_settings_tab2">Historico</string>
@@ -18,16 +22,19 @@
     <string name="medtronic_pump_status">Estado de Infusora</string>
     <string name="title_activity_rileylink_settings">Ajustes de RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Dirección configurada</string>
-    <string name="rileylink_connected_device">Dispositivo conectado</string>
-    <string name="rileylink_connection_status">Estado de la conexión</string>
-    <string name="rileylink_connection_error">Error de conexión</string>
+    <string name="rileylink_configured_riley_link_address">Dirección RileyLink configurada:</string>
+    <string name="rileylink_configured_riley_link_name">Nombre de RileyLink configurado:</string>
+    <string name="rileylink_connected_device">Dispositivo conectado:</string>
+    <string name="rileylink_connection_status">Estado de conexión:</string>
+    <string name="rileylink_connection_error">Error de conexión:</string>
     <string name="rileylink_device">Dispositivo</string>
-    <string name="rileylink_device_type">Tipo de dispositivo</string>
-    <string name="rileylink_device_model">Modelo del dispositivo</string>
-    <string name="rileylink_last_used_frequency">Última frecuencia usada</string>
-    <string name="rileylink_last_device_contact">Último contacto del dispositivo</string>
-    <string name="rileylink_firmware_version">Firmware RL</string>
+    <string name="rileylink_device_type">Tipo de dispositivo:</string>
+    <string name="rileylink_device_model">Modelo del dispositivo:</string>
+    <string name="rileylink_last_used_frequency">Última frecuencia usada:</string>
+    <string name="rileylink_last_device_contact">Último contacto del dispositivo:</string>
+    <string name="rileylink_firmware_version">Versión de Firmware:</string>
+    <string name="rileylink_pump_serial_number">Número de serie de la Infusora:</string>
+    <string name="rileylink_pump_frequency">Frecuencia de la infusora:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inicializando Bluetooth…</string>
     <string name="rileylink_state_bt_error">Error Bluetooth</string>
@@ -47,9 +54,11 @@
     <string name="rileylink_error_tuneup_failed">Error al configurar</string>
     <string name="rileylink_error_pump_unreachable">Bomba no alcanzable</string>
     <string name="rileylink_error_pod_unreachable">Infusora no alcanzable</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Infusora Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Sí</string>
+    <string name="riley_link_common_no">No</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

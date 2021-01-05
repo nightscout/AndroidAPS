@@ -102,10 +102,12 @@ class OmnipodOverviewFragment : DaggerFragment() {
         omnipod_overview_button_pod_management.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 activity?.let { activity ->
-                    protectionCheck.queryProtection(
-                        activity, ProtectionCheck.Protection.PREFERENCES,
-                        UIRunnable(Runnable { startActivity(Intent(context, PodManagementActivity::class.java)) })
-                    )
+                    context?.let { context ->
+                        protectionCheck.queryProtection(
+                            activity, ProtectionCheck.Protection.PREFERENCES,
+                            UIRunnable { startActivity(Intent(context, PodManagementActivity::class.java)) }
+                        )
+                    }
                 }
             } else {
                 displayNotConfiguredDialog()
@@ -514,10 +516,10 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            UIRunnable(Runnable {
+            UIRunnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
                     resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
-            }).run()
+            }.run()
         }
     }
 
@@ -534,9 +536,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
-            UIRunnable(Runnable {
+            UIRunnable {
                 OKDialog.show(it, title, message, null)
-            }).run()
+            }.run()
         }
     }
 
@@ -596,7 +598,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     // FIXME ideally we should just have access to LocalAlertUtils here
     private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.standardMinutes(sp.getInt(resourceHelper.gs(R.string.key_pump_unreachable_threshold_minutes), Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
+        return Duration.standardMinutes(sp.getInt(R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
     }
 
     inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {

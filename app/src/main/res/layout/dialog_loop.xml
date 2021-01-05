@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    tools:context=".dialogs.LoopDialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/dialog_title_background"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/loop_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/boluswizard"
+                app:srcCompat="@drawable/ic_loop_closed" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/loop"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/overview_loop_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/loop"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:id="@+id/overview_loop_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_closeloop"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:drawableTop="@drawable/ic_loop_closed"
+                    android:text="@string/closedloop"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_lgsloop"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:drawableTop="@drawable/ic_loop_lgs"
+                    android:text="@string/lowglucosesuspend"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_openloop"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:drawableTop="@drawable/ic_loop_open"
+                    android:text="@string/openloop"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_enable"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:drawableTop="@drawable/ic_loop_resume"
+                    android:text="@string/enableloop"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_disable"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:drawableTop="@drawable/ic_loop_disabled"
+                    android:text="@string/disableloop"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/listdelimiter" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_suspend"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/overview_suspend_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/suspendloop"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_resume"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_marginEnd="-4dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_loop_resume"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/resumeloop"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/overview_suspend_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_suspend_1h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_paused"
+                    android:text="@string/duration1h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_suspend_2h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_paused"
+                    android:text="@string/duration2h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_suspend_3h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_paused"
+                    android:text="@string/duration3h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_suspend_10h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_paused"
+                    android:text="@string/duration10h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/listdelimiter" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/overview_pump_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/disconnectpump"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_reconnect"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="-4dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_loop_reconnect"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/reconnect"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/overview_disconnect_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_disconnect_15m"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
+                    android:text="@string/duration15m"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_disconnect_30m"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
+                    android:text="@string/duration30m"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_disconnect_1h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
+                    android:text="@string/duration1h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_disconnect_2h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
+                    android:text="@string/duration2h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    android:id="@+id/overview_disconnect_3h"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
+                    android:text="@string/duration3h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/listdelimiter" />
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/mdtp_ActionButton.Text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/mdtp_cancel"
+            android:padding="10dp"
+            android:textAlignment="textEnd" />
+
+    </LinearLayout>
+</ScrollView>

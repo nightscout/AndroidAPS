@@ -2,7 +2,7 @@
 <resources>
     <string name="connection_failed">החיבור נכשל</string>
     <string name="connection_lost">החיבור נותק</string>
-    <string name="pairing_rejected">התחברות נדחתה</string>
+    <string name="pairing_rejected">הצימוד נדחה</string>
     <string name="socket_creation_failed">יצירת סוקט נכשלה</string>
     <string name="timeout">פג הזמן</string>
     <string name="maximum_number_of_bolus_type_already_running">מספר מרבי של סוגי בולוס מופעל</string>
