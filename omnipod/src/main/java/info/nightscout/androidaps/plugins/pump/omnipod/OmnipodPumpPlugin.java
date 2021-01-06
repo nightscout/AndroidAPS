@@ -509,11 +509,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     @Override public RileyLinkPumpInfo getPumpInfo() {
-        String pumpDescription = "Eros";
         String frequency = resourceHelper.gs(R.string.omnipod_frequency);
-        String connectedModel = podStateManager.isPodInitialized() ? "Eros Pod" : "-";
+        String connectedModel = "Eros";
         String serialNumber = podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
-        return new RileyLinkPumpInfo(pumpDescription, frequency, connectedModel, serialNumber);
+        return new RileyLinkPumpInfo(frequency, connectedModel, serialNumber);
     }
 
     // Required by RileyLinkPumpDevice interface.
@@ -615,8 +614,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     @Override
     public int getBatteryLevel() {
         if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
-            Integer batteryLevel = omnipodRileyLinkCommunicationManager.getBatteryLevel();
-            return batteryLevel == null ? 0 : batteryLevel;
+            return Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0);
         }
 
         return 0;
