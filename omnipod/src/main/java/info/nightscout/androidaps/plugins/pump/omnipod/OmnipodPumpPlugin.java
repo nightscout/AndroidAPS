@@ -116,8 +116,8 @@ import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.
  */
 @Singleton
 public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
-    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
-    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
+    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
+    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
@@ -155,7 +155,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
-    private boolean isCancelTempBasalRunning;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -238,25 +237,29 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         statusChecker = new Runnable() {
             @Override public void run() {
-                if (podStateManager.isPodRunning() && !podStateManager.isSuspended()) {
-                    aapsOmnipodManager.cancelSuspendedFakeTbrIfExists();
+                if (commandQueue.size() == 0) {
+                    if (podStateManager.isPodRunning() && !podStateManager.isSuspended()) {
+                        aapsOmnipodManager.cancelSuspendedFakeTbrIfExists();
+                    } else {
+                        aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
+                    }
+
+                    if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
+                        getCommandQueue().customCommand(new CommandHandleTimeChange(false), null);
+                    }
+                    if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
+                        getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
+                    }
+
+                    if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead() &&
+                            podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                        queueAcknowledgeAlertsCommand();
+                    }
+
+                    doPodCheck();
                 } else {
-                    aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
+                    aapsLogger.debug(LTag.PUMPCOMM, "Skipping Pod status check because command queue is not empty");
                 }
-
-                if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
-                    getCommandQueue().customCommand(new CommandHandleTimeChange(false), null);
-                }
-                if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
-                    getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
-                }
-
-                if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead() &&
-                        podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
-                    queueAcknowledgeAlertsCommand();
-                }
-
-                doPodCheck();
 
                 loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
             }
@@ -360,10 +363,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void handleCancelledTbr() {
-        // Only report TBR cancellations if they haven't been explicitly requested
-        if (isCancelTempBasalRunning) {
-            return;
-        }
         if (!podStateManager.isTempBasalRunning() && activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
             aapsOmnipodManager.reportCancelledTbr();
         }
@@ -695,12 +694,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        isCancelTempBasalRunning = true;
-        try {
-            return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
-        } finally {
-            isCancelTempBasalRunning = false;
-        }
+        return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
     }
 
     // TODO improve (i8n and more)
