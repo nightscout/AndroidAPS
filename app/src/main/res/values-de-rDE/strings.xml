@@ -432,8 +432,8 @@
     <string name="fastactinginsulincomment">NovoRapid, NovoLog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="enablesuperbolus">Aktiviere Superbolus im Wizard</string>
-    <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Wizard. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
+    <string name="enablesuperbolus">Aktiviere Superbolus im Bolus-Rechner</string>
+    <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Bolus-Rechner. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
     <string name="statuslights_cage_warning">Warnschwelle Kanülenalter [h]</string>
     <string name="statuslights_cage_critical">Warnschwelle kritisches Kanülenalter [h]</string>
@@ -1034,8 +1034,8 @@ Unerwartetes Verhalten.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus Einschränkung angewandt: %2$.2f U statt %1$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
-    <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolusrechners</string>
-    <string name="deliverpartofboluswizard">Der Bolus-Assistent führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
+    <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
+    <string name="deliverpartofboluswizard">Der Bolus-Rechner führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
     <string name="loading">Lädt ...</string>
     <string name="snooze">Schlummern</string>
     <string name="time_range">Zeitraum</string>
@@ -1194,7 +1194,7 @@ Unerwartetes Verhalten.</string>
     <string name="bolusadvisor">Bolus-Berater</string>
     <string name="bolusadvisormessage">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
     <string name="enablebolusadvisor">Bolus-Berater aktivieren</string>
-    <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Wizard (\"Spritz-Ess-Abstand\")</string>
+    <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
 </resources>
