@@ -35,6 +35,12 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         else InputDelta(injector, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
     }
 
+    constructor(injector: HasAndroidInjector, inputDelta: InputDelta, units: String, comparator: Comparator.Compare) : this(injector) {
+        this.units = units
+        this.delta = inputDelta
+        this.comparator.value = comparator
+    }
+
     private constructor(injector: HasAndroidInjector, triggerDelta: TriggerDelta) : this(injector) {
         units = triggerDelta.units
         delta = InputDelta(injector, triggerDelta.delta)

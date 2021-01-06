@@ -3,6 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">RileyLink konfigurasjon</string>
     <string name="omnipod_config_bolus_beeps_enabled">Bolus pip aktivert</string>
     <string name="omnipod_config_basal_beeps_enabled">Bolus pip aktivert</string>
     <string name="omnipod_config_smb_beeps_enabled">SMB pip aktivert</string>
@@ -10,6 +11,8 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Vis Pause insulintilførsel knapp i Omnipod meny</string>
     <string name="omnipod_config_pulse_log_button_enabled">Vis Puls logg knappen i Pod menyen</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
+    <string name="omnipod_config_use_riley_link_battery_level">Bruk batterinivå rapportert av EmaLink/OrangeLink</string>
+    <string name="omnipod_config_use_riley_link_battery_level_summary">Virker IKKE med RileyLink. Kan hende den ikke fungerer med andre RileyLink-alternativer.</string>
     <string name="omnipod_config_time_change_enabled">DST/Tidssone deteksjon aktivert</string>
     <string name="omnipod_config_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
@@ -22,7 +25,7 @@
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Annen</string>
     <string name="omnipod_preference_category_alerts">Varsler</string>
-    <string name="omnipod_preference_category_confirmation_beeps">Bekreftelse pip</string>
+    <string name="omnipod_preference_category_confirmation_beeps">Bekreftelse pipetone</string>
     <string name="omnipod_preference_category_notifications">Varsler</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_pod_status_no_active_pod">Ingen aktiv Pod</string>
@@ -51,6 +54,14 @@
     <string name="omnipod_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
     <string name="omnipod_history_tbr_value">Dose: %1$.2f E, varighet: %2$d min</string>
+    <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_no_active_pod">Ingen aktiv Pod</string>
+    <string name="omnipod_short_status_last_connection">Siste tilkobling: %1$d min siden</string>
+    <string name="omnipod_short_status_last_bolus">Siste bolus: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Temp: %1$s</string>
+    <string name="omnipod_short_status_extended_bolus">Forlenget: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Reservoar: %1$s E</string>
+    <string name="omnipod_short_status_rl_battery">RL batteri: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Advarsel</string>
     <string name="omnipod_error_rileylink_address_invalid">RileyLink adressen er ugyldig.</string>
@@ -78,7 +89,7 @@
     <string name="omnipod_error_set_basal_failed">Feilet i å lagre basalprofilen.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere temp basal. Vennligst oppdater Pod status manuelt fra Omnipod menyen.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Endring av midlertidig basal var mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Endring av midlertidig basal kan ha vært mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting av temp basal kan ha feilet. Hvis en temp basal allerede var aktiv så er den nå avbrutt. Vennligst oppdater Pod status manuelt fra Omnipod menyen.</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">TBR varighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være kansellert! Oppdater statusen manuelt fra fanen Omnipod og gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er sperret! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
@@ -92,7 +103,7 @@
     <string name="omnipod_error_failed_to_suspend_delivery">Feilet i å stoppe leveranser</string>
     <string name="omnipod_error_failed_to_set_time">Feilet i å angi tid</string>
     <string name="omnipod_error_failed_to_resume_delivery">Feilet i å gjenoppta leveransen</string>
-    <string name="omnipod_error_automatic_time_or_timezone_change_failed">Feilet i å automatisk endre tid på Pod. Vennligst synkroniser tid manuelt ved å bruke Omnipod menyen.</string>
+    <string name="omnipod_error_automatic_time_or_timezone_change_failed">Feilet i forsøket på å endre tid på Pod. Du må gå inn i Omnipod menyen og manuelt synkronisere tiden.</string>
     <string name="omnipod_error_bolus_failed_uncertain">Klarte ikke å kontrollere om bolusdosen ble gitt. Kontroller manuelt at Pod leverer bolus ved å lytte etter klikk. <b>Dersom du er sikker på at bolusen ikke var vellykket, bør du manuelt slette bolusoppføring fra Behandlinger, selv om du trykker på \'Avbryt bolus\' nå!</b></string>
     <string name="omnipod_error_bolus_failed_uncertain_smb">Klarte ikke å bekrefte om SMB bolus (%1$.2f E) ble gitt. <b>Hvis du er helt sikker på at Bolus ikke ble levert, da bør du manuelt slette SMB-oppføringen fra Behandlinger.</b></string>
     <string name="omnipod_error_bolus_did_not_succeed">Bolus var mislykket.</string>
@@ -114,28 +125,28 @@
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Deaktiviser Pod</string>
     <string name="omnipod_cmd_discard_pod">Forkast Pod</string>
-    <string name="omnipod_cmd_set_bolus">Sett bolus</string>
+    <string name="omnipod_cmd_set_bolus">Angi Bolus</string>
     <string name="omnipod_cmd_cancel_bolus">Avbryt bolus</string>
-    <string name="omnipod_cmd_set_tbr">Sett midlertidig basal</string>
-    <string name="omnipod_cmd_cancel_tbr_by_driver">Avbryt midlertidig basal (internt av driver)</string>
-    <string name="omnipod_cmd_cancel_tbr">Avbryt midlertidig basal</string>
-    <string name="omnipod_cmd_set_basal_schedule">Sett basal program</string>
+    <string name="omnipod_cmd_set_tbr">Angi Temp Basal</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Avbryt temp basal (internt av driver)</string>
+    <string name="omnipod_cmd_cancel_tbr">Avbryt temp basal</string>
+    <string name="omnipod_cmd_set_basal_schedule">Angi basal program</string>
     <string name="omnipod_cmd_get_pod_status">Hent Pod status</string>
     <string name="omnipod_cmd_get_pod_info">Hent Pod info</string>
     <string name="omnipod_cmd_set_time">Angi tid</string>
     <string name="omnipod_cmd_configure_alerts">Konfigurer varsler</string>
     <string name="omnipod_cmd_acknowledge_alerts">Bekreft varsel</string>
-    <string name="omnipod_cmd_suspend_delivery">Stopp levering</string>
+    <string name="omnipod_cmd_suspend_delivery">Utsett levering</string>
     <string name="omnipod_cmd_resume_delivery">Gjenoppta levering</string>
-    <string name="omnipod_cmd_unknown_entry">Ukjent valg</string>
+    <string name="omnipod_cmd_unknown_entry">Ukjent inntasting</string>
     <string name="omnipod_cmd_initialize_pod">Initialiser Pod</string>
     <string name="omnipod_cmd_insert_cannula">Sett inn kanyle</string>
-    <string name="omnipod_cmd_read_pulse_log">Les pulslogg</string>
+    <string name="omnipod_cmd_read_pulse_log">Les Puls logg</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Angi vilkårlig midlertidig basal fordi Pod er suspendert</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Avbryt vilkårlig midlertidig basal som er opprettet fordi Pod var suspendert</string>
     <string name="omnipod_cmd_split_tbr">Del midlertidig basal fordi en uavklart feil ble oppdaget ved kanselleringen</string>
     <string name="omnipod_cmd_beep_config">Oppsett lyd</string>
-    <string name="omnipod_cmd_play_test_beep">Avspill test lyd</string>
+    <string name="omnipod_cmd_play_test_beep">Avspill test pip</string>
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_title">Pod administrasjon</string>
     <string name="omnipod_pod_management_heading_actions">Aksjoner</string>
@@ -145,12 +156,12 @@
     <string name="omnipod_pod_management_button_deactivate_pod">Deaktiver Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Forkast Pod</string>
     <string name="omnipod_pod_management_button_pod_history">Pod historikk</string>
-    <string name="omnipod_pod_management_button_riley_link_stats">RileyLink statistikk</string>
+    <string name="omnipod_pod_management_button_riley_link_stats">RileyLink Status</string>
     <string name="omnipod_pod_management_button_reset_riley_link_config">Tilbakestill RileyLink oppsett</string>
     <string name="omnipod_pod_management_button_read_pulse_log">Les Puls logg</string>
     <string name="omnipod_pod_management_button_reading_pulse_log">Leser puls logg…</string>
     <string name="omnipod_pod_management_discard_pod_confirmation">Hvis du forkaster Pod vil du ikke være i stand til å gjenopprette kommunikasjonen med den. Du skal bare gjøre dette hvis alle andre forsøk på å gjenopprette kommunikasjonen med Pod har feilet. Hvis du fortsatt kan kommunisere med Pod, vennligst bruk <b>Deaktiver Pod</b> valget.\n\nHvis du ønsker å fortsette, husk på å fjerne Pod fra kroppen din!</string>
-    <string name="omnipod_pod_management_button_play_test_beep">Avspill test lyd</string>
+    <string name="omnipod_pod_management_button_play_test_beep">Avspill test pip</string>
     <string name="omnipod_pod_management_button_playing_test_beep">Avspiller test lyd…</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Avbryt</string>
@@ -188,8 +199,8 @@
     <string name="omnipod_overview_button_set_time">Angi tid</string>
     <string name="omnipod_overview_button_suspend_delivery">Pause</string>
     <string name="omnipod_overview_button_refresh">Oppdater</string>
-    <string name="omnipod_overview_button_resume_delivery">Fortsett levering</string>
-    <string name="omnipod_overview_button_pod_management">Pod håndtering</string>
+    <string name="omnipod_overview_button_resume_delivery">Gjenoppta levering</string>
+    <string name="omnipod_overview_button_pod_management">Pod administrasjon</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Godkjenn varsler</string>
     <string name="omnipod_overview_pod_status">Pod status</string>
     <string name="omnipod_overview_total_delivered">Totalt levert</string>

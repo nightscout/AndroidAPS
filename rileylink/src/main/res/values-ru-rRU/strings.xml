@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- RL BLE Scanning -->
-    <string name="rileylink_scanner_scan_scan">СКАН</string>
-    <string name="rileylink_scanner_scan_stop">СТОП</string>
-    <string name="rileylink_scanner_selected_device">Выбрано</string>
-    <string name="rileylink_scanner_title">Сканирование RileyLink</string>
-    <string name="location_yes">Включить</string>
-    <string name="location_no">Нет</string>
-    <string name="rileylink_scanner_scanning">Сканирование</string>
-    <string name="rileylink_scanner_scanning_finished">Сканирование завершено</string>
-    <string name="rileylink_scanner_scanning_error">Ошибка сканирования: %1$d</string>
-    <string name="common_never">Никогда</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Сканировать</string>
+    <string name="riley_link_ble_config_scan_stop">Прервать</string>
+    <string name="riley_link_ble_config_scan_selected">Выбрано</string>
+    <string name="riley_link_ble_config_scan_title">Сканирование RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">Сканирование</string>
+    <string name="riley_link_ble_config_scan_finished">Сканирование завершено</string>
+    <string name="riley_link_ble_config_scan_error">Ошибка сканирования: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Никогда</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Выбранный RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Удалить</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Подтверждаете удаление RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Удалить RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">RileyLink не выбран</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
@@ -18,16 +22,19 @@
     <string name="medtronic_pump_status">Статус помпы</string>
     <string name="title_activity_rileylink_settings">Настройки RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_address">Настроенный адрес</string>
-    <string name="rileylink_connected_device">Подключенное устройство</string>
-    <string name="rileylink_connection_status">Статус подключения</string>
-    <string name="rileylink_connection_error">Ошибка подключения</string>
+    <string name="rileylink_configured_riley_link_address">Адрес RileyLink настроен:</string>
+    <string name="rileylink_configured_riley_link_name">Имя подключенного RileyLink:</string>
+    <string name="rileylink_connected_device">Подключенное устройство:</string>
+    <string name="rileylink_connection_status">Статус подключения:</string>
+    <string name="rileylink_connection_error">Ошибка подключения:</string>
     <string name="rileylink_device">Устройство</string>
-    <string name="rileylink_device_type">Тип устройства</string>
-    <string name="rileylink_device_model">Модель устройства</string>
-    <string name="rileylink_last_used_frequency">Последняя использованная частота</string>
-    <string name="rileylink_last_device_contact">Контакт последнего устройства</string>
-    <string name="rileylink_firmware_version">Прошивка RileyLink</string>
+    <string name="rileylink_device_type">Тип устройства:</string>
+    <string name="rileylink_device_model">Модель устройства:</string>
+    <string name="rileylink_last_used_frequency">Последняя использованная частота:</string>
+    <string name="rileylink_last_device_contact">Контакт последнего устройства:</string>
+    <string name="rileylink_firmware_version">Версия прошивки:</string>
+    <string name="rileylink_pump_serial_number">Серийный номер помы:</string>
+    <string name="rileylink_pump_frequency">Частота помпы:</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Инициализация Bluetooth…</string>
     <string name="rileylink_state_bt_error">Ошибка Bluetooth</string>
@@ -47,9 +54,11 @@
     <string name="rileylink_error_tuneup_failed">Ошибка TuneUp</string>
     <string name="rileylink_error_pump_unreachable">Помпа недоступна</string>
     <string name="rileylink_error_pod_unreachable">POD недоступен</string>
-    <!-- RL Target Device -->
+    <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Помпа Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="riley_link_common_yes">Да</string>
+    <string name="riley_link_common_no">Нет</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

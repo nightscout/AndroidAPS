@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální počet sacharidů [g]</string>
+    <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
     <string name="nav_preferences">Nastavení</string>
     <string name="nav_refreshtreatments">Obnovit ošetření z NS</string>
     <string name="nav_resetdb">Inicializovat databáze</string>
@@ -405,11 +406,18 @@
     <string name="suspendloopfor3h">Pozastavit smyčku na 3 h</string>
     <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
     <string name="suspendloopforXmin">Pozastavit smyčku na %1$d min</string>
+    <string name="disconnectpump">Odpojit pumpu</string>
     <string name="disconnectpumpfor15m">Odpojit pumpu na 15 min</string>
     <string name="disconnectpumpfor30m">Odpojit pumpu na 30 min</string>
     <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
     <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
     <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
+    <string name="duration15m">15 minut</string>
+    <string name="duration30m">30 minut</string>
+    <string name="duration1h">1 hodina</string>
+    <string name="duration2h">2 hodiny</string>
+    <string name="duration3h">3 hodiny</string>
+    <string name="duration10h">10 hodin</string>
     <string name="resume">Uvolnit</string>
     <string name="reconnect">Znovu připojit pumpu</string>
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
@@ -564,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Kalkulace bazálního IOB</string>
     <string name="overview_editquickwizard_usetrend">Kalkulace trendu</string>
     <string name="overview_editquickwizard_usesuperbolus">Kalkulace superbolusu</string>
-    <string name="yes">Ano</string>
-    <string name="no">Ne</string>
     <string name="positiveonly">Pouze kladné</string>
     <string name="negativeonly">Pouze záporné</string>
     <string name="overview_editquickwizard_usecob">Kalkulace COB</string>
@@ -612,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="set_neutral_temps_title">Nastavit neutrální dočasný bazál</string>
-    <string name="set_neutral_temps_summary">Je-li povoleno, zastaví dočasný bazál před koncem každé hodiny. To může u některých pump pomoci zastavit pípání/vibrace v celou hodinu.</string>
     <string name="enablesmbalways">Vždy povolit SMB</string>
     <string name="enablesmbalways_summary">Povolit SMB nezávisle na bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
     <string name="enablesmbaftercarbs">Povolit SMB po jídle</string>
@@ -762,8 +766,8 @@
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilů. Pokud jde o dítě, využijte nejspíše NS profil. Pokud Vás nikdo přes NS nesleduje, budete patrně preferovat Místní profil. Uvědomte si, že nastavujete pouze zdroj profilů. Na to aby se opravdu profil začal používat, je třeba provést aktivaci profilu použitím \"Přepnutí profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Čekám na připojení RileyLink.... \n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po inicializaci pumpy můžete pokračovat v nastavení.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svůj RileyLink níže. Po výběru RileyLinku bude možné pokračovat v nastavení, jakmile stav RileyLinku je \"Připojeno\". Tato akce může chvilku trvat.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy můžete pokračovat v nastavení.\n</string>
     <string name="startobjective">Spusťte první cíl</string>
     <string name="permission">Povolení</string>
     <string name="askforpermission">Získat povolení</string>
@@ -790,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
     <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší nastavenou cílovou glykémii</string>
     <string name="combo_invalid_setup">Chybné nastavení pumpy. Projděte si dokumentaci a přesvědčete se, že menu Quick Info se jmenuje QUICK INFO, za použití 360 configuration software.</string>
-    <string name="custom">Volitelný</string>
     <string name="careportal_removestartedevents">Vyčistit události \"AndroidAPS restartován\"</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
@@ -978,7 +981,9 @@
     <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom.</string>
     <string name="notification">Oznámení</string>
     <string name="notification_message">Oznámení: %1$s</string>
+    <string name="alarm_message">Poplach: %1$s</string>
     <string name="message_short">Zpráva:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Procento profilu</string>
     <string name="percent_u">Procent [%]:</string>
     <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
@@ -1180,4 +1185,15 @@
     <string name="filter">Filtr</string>
     <string name="copytolocalprofile_invalid">Nelze vytvořit lokální profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
+    <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Odeslat SMS, pokud je detekována nedostupná pumpa</string>
+    <string name="smscommunicator_pump_ureachable">Nahlásit nedostupnou pumpu</string>
+    <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
+    <string name="alarminxmin">Spustit alarm za %1$d min</string>
+    <string name="bolusadvisor">Poradce pro bolus</string>
+    <string name="bolusadvisormessage">Máte vysokou glykémii. Namísto jídla doporučujeme vyčkat na lepší glykémii a připomenout, až bude čas na jídlo. Přejete si poslat korekční bolus a připomenout, až bude čas k jídlu? V tomto případě nebudou zapsané žádné sacharidy, a později opět musíte spustit kalkulátor, jakmile vám to připomeneme.</string>
+    <string name="enablebolusadvisor">Povolit poradce s bolusem</string>
+    <string name="enablebolusadvisor_summary">Během vysoké glykémie spusťte připomenutí namísto průvodce</string>
+    <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
+    <string name="timetoeat">Čas k jídlu</string>
 </resources>

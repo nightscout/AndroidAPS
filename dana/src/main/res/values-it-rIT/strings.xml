@@ -34,7 +34,7 @@
     <string name="dailymax">Max giornaliero</string>
     <string name="bloodsugarmeasurementalert">Avviso misurazione glicemia</string>
     <string name="remaininsulinalert">Livello insulina rimanente</string>
-    <string name="missedbolus">Bolo perso</string>
+    <string name="missedbolus">Bolo mancante</string>
     <string name="invalidpairing">Informazioni associazione non valide. Richiesta nuova associazione</string>
     <string name="gettingpumpstatus">Ricezione stato micro</string>
     <string name="gettingextendedbolusstatus">Ricezione stato bolo esteso</string>

@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT ограничения</string>
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="pairing">Сдвояване</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Пълнене</string>
     <string name="history_group_alarm">Аларми</string>
     <string name="history_group_glucose">Кръвна захар</string>
+    <string name="mute5min">Изключи за 5 минути</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

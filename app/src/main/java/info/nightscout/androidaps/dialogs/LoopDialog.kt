@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +11,13 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.databinding.DialogLoopBinding
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -27,16 +26,15 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class LoopDialog : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -49,10 +47,10 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
-
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
+    private var loopHandler = Handler()
+    private var refreshDialog: Runnable? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -68,7 +66,7 @@ class LoopDialog : DaggerDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             showOkCancel = bundle.getInt("showOkCancel", 1) == 1
@@ -85,75 +83,97 @@ class LoopDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         updateGUI("LoopDialogOnViewCreated")
 
-        binding.overviewCloseloop.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewLgsloop.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewOpenloop.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewDisable.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewEnable.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewResume.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewReconnect.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewSuspend1h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewSuspend2h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewSuspend3h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewSuspend10h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewDisconnect15m.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewDisconnect30m.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewDisconnect1h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewDisconnect2h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
-        binding.overviewDisconnect3h.setOnClickListener { if(showOkCancel) onClick_OkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewCloseloop.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewLgsloop.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewOpenloop.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisable.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewEnable.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewResume.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewReconnect.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend1h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend2h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend3h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewSuspend10h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect15m.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect30m.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect1h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect2h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
+        binding.overviewDisconnect3h.setOnClickListener { if (showOkCancel) onClickOkCancelEnabled(it) else onClick(it); dismiss() }
 
         // cancel button
         binding.cancel.setOnClickListener { dismiss() }
 
-        // bus
-        disposable.add(rxBus
-            .toObservable(EventNewOpenLoopNotification::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                activity?.runOnUiThread { updateGUI("EventNewOpenLoopNotification") }
-            }, { fabricPrivacy.logException(it) })
-        )
+        refreshDialog = Runnable {
+            scheduleUpdateGUI("refreshDialog")
+            loopHandler.postDelayed(refreshDialog, 15 * 1000L)
+        }
+        loopHandler.postDelayed(refreshDialog, 15 * 1000L)
     }
 
+    @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        disposable.clear()
+        _binding = null
+        loopHandler.removeCallbacksAndMessages(null)
     }
 
+    var task: Runnable? = null
+
+    private fun scheduleUpdateGUI(from: String) {
+        class UpdateRunnable : Runnable {
+
+            override fun run() {
+                updateGUI(from)
+                task = null
+            }
+        }
+        view?.removeCallbacks(task)
+        task = UpdateRunnable()
+        view?.postDelayed(task, 500)
+    }
+
+    @Synchronized
     fun updateGUI(from: String) {
+        if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
         val closedLoopAllowed = objectivesPlugin.isClosedLoopAllowed(Constraint(true))
         val lgsEnabled = objectivesPlugin.isLgsAllowed(Constraint(true))
-        var APSmode = sp.getString(R.string.key_aps_mode, "open")
+        val apsMode = sp.getString(R.string.key_aps_mode, "open")
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                if (closedLoopAllowed.value()) {
-                    binding.overviewCloseloop.visibility = if (APSmode == "closed") View.GONE else View.VISIBLE
-                    binding.overviewLgsloop.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
-                    binding.overviewOpenloop.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
-                } else if (lgsEnabled.value() ) {
-                    binding.overviewCloseloop.visibility = View.GONE
-                    binding.overviewLgsloop.visibility = if (APSmode == "lgs") View.GONE else View.VISIBLE
-                    binding.overviewOpenloop.visibility = if (APSmode == "open") View.GONE else View.VISIBLE
-                } else {
-                    binding.overviewCloseloop.visibility = View.GONE
-                    binding.overviewLgsloop.visibility = View.GONE
-                    binding.overviewOpenloop.visibility = View.GONE
+                when {
+                    closedLoopAllowed.value() -> {
+                        binding.overviewCloseloop.visibility = (apsMode != "closed").toVisibility()
+                        binding.overviewLgsloop.visibility = (apsMode != "lgs").toVisibility()
+                        binding.overviewOpenloop.visibility = (apsMode != "open").toVisibility()
+                    }
+
+                    lgsEnabled.value()        -> {
+                        binding.overviewCloseloop.visibility = View.GONE
+                        binding.overviewLgsloop.visibility = (apsMode != "lgs").toVisibility()
+                        binding.overviewOpenloop.visibility = (apsMode != "open").toVisibility()
+                    }
+
+                    else                      -> {
+                        binding.overviewCloseloop.visibility = View.GONE
+                        binding.overviewLgsloop.visibility = View.GONE
+                        binding.overviewOpenloop.visibility = View.GONE
+                    }
                 }
-                binding.overviewEnable.visibility = View.GONE          //sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+                binding.overviewEnable.visibility = View.GONE
                 binding.overviewDisable.visibility = View.VISIBLE
-               if (!loopPlugin.isSuspended) {
-                    binding.overviewSuspendHeader.text=resourceHelper.gs(R.string.suspendloop)
+                if (!loopPlugin.isSuspended) {
+                    binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.suspendloop)
                     binding.overviewResume.visibility = View.GONE
-                    binding.overviewSuspendButtons.visibility=View.VISIBLE
-                    binding.overviewSuspend.visibility=View.VISIBLE
+                    binding.overviewSuspendButtons.visibility = View.VISIBLE
+                    binding.overviewSuspend.visibility = View.VISIBLE
                 } else {
                     if (!loopPlugin.isDisconnected) {
                         binding.overviewSuspendHeader.text = resourceHelper.gs(R.string.resumeloop)
                         binding.overviewResume.visibility = View.VISIBLE
-                        binding.overviewSuspendButtons.visibility=View.GONE
-                        binding.overviewSuspend.visibility=View.VISIBLE
+                        binding.overviewSuspendButtons.visibility = View.GONE
+                        binding.overviewSuspend.visibility = View.VISIBLE
                     } else
                         binding.overviewSuspend.visibility = View.GONE
                 }
@@ -164,8 +184,8 @@ class LoopDialog : DaggerDialogFragment() {
             }
             if (!loopPlugin.isDisconnected) {
                 binding.overviewPumpHeader.text = resourceHelper.gs(R.string.disconnectpump)
-                binding.overviewDisconnect15m.visibility = if (pumpDescription.tempDurationStep15mAllowed) View.VISIBLE else View.GONE
-                binding.overviewDisconnect30m.visibility = if (pumpDescription.tempDurationStep30mAllowed) View.VISIBLE else View.GONE
+                binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
+                binding.overviewDisconnect30m.visibility = pumpDescription.tempDurationStep30mAllowed.toVisibility()
                 binding.overviewDisconnectButtons.visibility = View.VISIBLE
                 binding.overviewReconnect.visibility = View.GONE
             } else {
@@ -178,32 +198,32 @@ class LoopDialog : DaggerDialogFragment() {
         val profileStore = activePlugin.activeProfileInterface.profile
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
             dismiss()
             return
         }
 
     }
 
-    fun onClick_OkCancelEnabled(v: View): Boolean {
+    private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
-        when(v.id) {
-            R.id.overview_closeloop         -> description = resourceHelper.gs(R.string.closedloop)
-            R.id.overview_lgsloop           -> description = resourceHelper.gs(R.string.lowglucosesuspend)
-            R.id.overview_openloop          -> description = resourceHelper.gs(R.string.openloop)
-            R.id.overview_disable           -> description = resourceHelper.gs(R.string.disableloop)
-            R.id.overview_enable            -> description = resourceHelper.gs(R.string.enableloop)
-            R.id.overview_resume            -> description = resourceHelper.gs(R.string.resume)
-            R.id.overview_reconnect         -> description = resourceHelper.gs(R.string.reconnect)
-            R.id.overview_suspend_1h        -> description = resourceHelper.gs(R.string.suspendloopfor1h)
-            R.id.overview_suspend_2h        -> description = resourceHelper.gs(R.string.suspendloopfor2h)
-            R.id.overview_suspend_3h        -> description = resourceHelper.gs(R.string.suspendloopfor3h)
-            R.id.overview_suspend_10h       -> description = resourceHelper.gs(R.string.suspendloopfor10h)
-            R.id.overview_disconnect_15m    -> description = resourceHelper.gs(R.string.disconnectpumpfor15m)
-            R.id.overview_disconnect_30m    -> description = resourceHelper.gs(R.string.disconnectpumpfor30m)
-            R.id.overview_disconnect_1h     -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
-            R.id.overview_disconnect_2h     -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
-            R.id.overview_disconnect_3h     -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
+        when (v.id) {
+            R.id.overview_closeloop -> description = resourceHelper.gs(R.string.closedloop)
+            R.id.overview_lgsloop -> description = resourceHelper.gs(R.string.lowglucosesuspend)
+            R.id.overview_openloop -> description = resourceHelper.gs(R.string.openloop)
+            R.id.overview_disable -> description = resourceHelper.gs(R.string.disableloop)
+            R.id.overview_enable -> description = resourceHelper.gs(R.string.enableloop)
+            R.id.overview_resume -> description = resourceHelper.gs(R.string.resume)
+            R.id.overview_reconnect -> description = resourceHelper.gs(R.string.reconnect)
+            R.id.overview_suspend_1h -> description = resourceHelper.gs(R.string.suspendloopfor1h)
+            R.id.overview_suspend_2h -> description = resourceHelper.gs(R.string.suspendloopfor2h)
+            R.id.overview_suspend_3h -> description = resourceHelper.gs(R.string.suspendloopfor3h)
+            R.id.overview_suspend_10h -> description = resourceHelper.gs(R.string.suspendloopfor10h)
+            R.id.overview_disconnect_15m -> description = resourceHelper.gs(R.string.disconnectpumpfor15m)
+            R.id.overview_disconnect_30m -> description = resourceHelper.gs(R.string.disconnectpumpfor30m)
+            R.id.overview_disconnect_1h -> description = resourceHelper.gs(R.string.disconnectpumpfor1h)
+            R.id.overview_disconnect_2h -> description = resourceHelper.gs(R.string.disconnectpumpfor2h)
+            R.id.overview_disconnect_3h -> description = resourceHelper.gs(R.string.disconnectpumpfor3h)
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirm), description, Runnable {
@@ -217,17 +237,26 @@ class LoopDialog : DaggerDialogFragment() {
         val profile = profileFunction.getProfile() ?: return true
         when (v.id) {
             R.id.overview_closeloop -> {
+                aapsLogger.debug("USER ENTRY: CLOSED LOOP MODE")
                 sp.putString(R.string.key_aps_mode, "closed")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
+                return true
             }
+
             R.id.overview_lgsloop -> {
+                aapsLogger.debug("USER ENTRY: LGS LOOP MODE")
                 sp.putString(R.string.key_aps_mode, "lgs")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
+                return true
             }
+
             R.id.overview_openloop -> {
+                aapsLogger.debug("USER ENTRY: OPEN LOOP MODE")
                 sp.putString(R.string.key_aps_mode, "open")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
+                return true
             }
+
             R.id.overview_disable -> {
                 aapsLogger.debug("USER ENTRY: LOOP DISABLED")
                 loopPlugin.setPluginEnabled(PluginType.LOOP, false)
@@ -237,7 +266,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.tempbasaldeliveryerror))
                         }
                     }
                 })
@@ -262,12 +291,12 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(context, ErrorHelperActivity::class.java)
+                            val i = Intent(ctx, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context?.startActivity(i)
+                            ctx.startActivity(i)
                         }
                     }
                 })

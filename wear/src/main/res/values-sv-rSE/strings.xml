@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Åtgärd för komplikation \"tryck\"</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">fler watchface-inställningar</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Kontrollera watchface-konfigurationen, tack.</string>
     <string name="menu_tempt">Tempmål</string>
     <string name="menu_wizard">Guide</string>
     <string name="menu_bolus">Bolus</string>

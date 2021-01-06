@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Terapijos saugumas</string>
     <string name="treatmentssafety_maxbolus_title">Maksimalus leistinas bolusas [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks. leistini angliavandeniai [g]</string>
+    <string name="nav_preferences_plugin">%1$s Nustatymai</string>
     <string name="nav_preferences">Nustatymai</string>
     <string name="nav_refreshtreatments">Atnaujinti terapiją iš NS</string>
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
@@ -245,6 +246,7 @@
     <string name="valueoutofrange">Vertė %1$s viršija griežtą limitą</string>
     <string name="smscommunicator_pumpconnectwithcode">Pompos prijungimui atsakykite su kodu %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Nepavyko prisijungti prie pompos</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Norėdami atjungti pompą %1$d min., atsakykite kodu %2$s</string>
     <string name="smscommunicator_pumpdisconnected">Pompa atjungta</string>
     <string name="smscommunicator_reconnect">Pompa prijungta</string>
     <string name="smscommunicator_remotecommandnotallowed">Nuotolinis valdymas negalimas</string>
@@ -384,10 +386,13 @@
     <string name="wear_detailedIOB_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="nosuccess">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
     <string name="notavailable">n/a</string>
+    <string name="patientage">Paciento tipas</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
     <string name="adult">Suaugęs</string>
     <string name="resistantadult">Insulinui rezistentiškas suaugęs</string>
+    <string name="pregnant">Nėštumas</string>
+    <string name="patientage_summary">Pasirinkite paciento tipą saugumo riboms nustatyti</string>
     <string name="patient_name">Paciento vardas</string>
     <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
@@ -401,11 +406,18 @@
     <string name="suspendloopfor3h">Sustabdyti ciklą 3 val</string>
     <string name="suspendloopfor10h">Sustabdyti ciklą 10 val</string>
     <string name="suspendloopforXmin">Sustabdyti ciklą %1$d min</string>
+    <string name="disconnectpump">Atjungti pompą</string>
     <string name="disconnectpumpfor15m">Atjungti pompą 15 min</string>
     <string name="disconnectpumpfor30m">Atjungti pompą 30 min</string>
     <string name="disconnectpumpfor1h">Atjungti pompą 1 val</string>
     <string name="disconnectpumpfor2h">Atjungti pompą 2 val</string>
     <string name="disconnectpumpfor3h">Atjungti pompą 3 val</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 val.</string>
+    <string name="duration2h">2 val.</string>
+    <string name="duration3h">3 val.</string>
+    <string name="duration10h">10 val.</string>
     <string name="resume">Atnaujinti</string>
     <string name="reconnect">Prijungti pompą</string>
     <string name="smscommunicator_wrongduration">Neteisinga trukmė</string>
@@ -429,6 +441,8 @@
     <string name="statuslights_iage_critical">Insulino kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_sage_warning">Jutiklio ribinio laiko įspėjimas [h]</string>
     <string name="statuslights_sage_critical">Jutiklio kritinio laiko įspėjimas [h]</string>
+    <string name="statuslights_sbat_warning">Įspėjimo apie žemą sensoriaus baterijos lygį riba [%]</string>
+    <string name="statuslights_sbat_critical">Įspėjimo apie kritiškai žemą sensoriaus baterijos lygį riba [%]</string>
     <string name="statuslights_bage_warning">Baterijos ribinio laiko įspėjimas [h]</string>
     <string name="statuslights_bage_critical">Baterijos kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
@@ -455,6 +469,12 @@
     <string name="ns_noupload_summary">Visi duomenys, kurie gali būti siunčiami į NS, paliekami. AAPS yra susieta su NS, bet jokie pokyčiai NS nedaromi</string>
     <string name="overview_extendedbolus_cancel_button">Atšaukti ištęstą bolusą</string>
     <string name="doprofileswitch">Profilio keitimas</string>
+    <string name="careportal_sensor_label">Sensorius</string>
+    <string name="careportal_canula_label">Kaniulė</string>
+    <string name="careportal_insulin_label">Insulinas</string>
+    <string name="careportal_pb_label">Pompos baterija</string>
+    <string name="careportal_age_label">amžius:</string>
+    <string name="careportal_level_label">lygis:</string>
     <string name="ns_alarmoptions">Aliarmų nustatymai</string>
     <string name="ns_alarms">Sukurti pranešimus iš NS aliarmų</string>
     <string name="ns_announcements">Sukurkite pranešimus iš NS perspėjimų</string>
@@ -552,8 +572,6 @@
     <string name="overview_editquickwizard_usebasaliob">Bazės AIO apskaičiavimas</string>
     <string name="overview_editquickwizard_usetrend">Tendencijos apskaičiavimas</string>
     <string name="overview_editquickwizard_usesuperbolus">Superboluso apskaičiavimas</string>
-    <string name="yes">Taip</string>
-    <string name="no">Ne</string>
     <string name="positiveonly">Tik teigiamas</string>
     <string name="negativeonly">Tik neigiamas</string>
     <string name="overview_editquickwizard_usecob">AAO apskaičiavimas</string>
@@ -600,8 +618,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuare nepakanka insulino bolusui</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
-    <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="enablesmbalways">Leisti SMB visada</string>
     <string name="enablesmbalways_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
     <string name="enablesmbaftercarbs">Leisti SMB po angliavandenių įvedimo</string>
@@ -667,6 +683,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Valandinė bazė pompoje pasikeitė, bet nuskaityti nepavyko</string>
     <string name="combo_activity_checking_for_history_changes">Tikrinami istorijos pokyčiai</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Keletas bolusų su tuo pačiu kiekiu buvo importuoti per tą pačią minutę. Tik vienas įrašas gali būti pridėtas. Prašome patikrinti pompą ir rankiniu būdu įveskite bolusą, naudojant Priežiūra skiltį. Įsitikinkite, kad boluso įrašo laikas nesutampa su kitais įrašais.</string>
+    <string name="about_link_urls">\n\ndokumentacija:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Paskutinis bolusas įrašytas anksčiau nei prieš 24 val. arba yra ateityje. Prašome patikrinti, ar data pompoje nustatyta teisingai.</string>
     <string name="combo_suspious_bolus_time">Suleisto boluso laikas/data pompoje yra neteisingas, AIO panašu yra nekorektiškas. Prašome patikrinti pompos laiką/datą.</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
@@ -749,8 +766,8 @@
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
     <string name="setupwizard_profile_description">Prašome pasirinkti profilį. Jei pacientas yra vaikas, turite naudoti NS profilį. Jei niekas neseka jūsų Nightscout platformoje, tada geriau pasirinkti Vietinį profilį. Atminkite, kad čia Jūs tik pasirenkate profilio šaltinį. Norėdami jį aktyvuoti, turite atlikti Profilio keitimą</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Laukiama RileyLink ryšio...\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b> Pastaba:</b> sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
     <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
     <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
@@ -777,7 +794,6 @@
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
     <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinis gliukozės lygis padidinamas</string>
     <string name="combo_invalid_setup">Netinkami pompos nustatymai, patikrinkite dokumentaciją ir įsitikinkite, kad Quick info meniu yra pavadintas QUICK INFO, naudojant 360 configuration software.</string>
-    <string name="custom">Pasirinktinis</string>
     <string name="careportal_removestartedevents">Ištrinti \"AndroidAPS paleista\" įrašus</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite prie aparatinės pompos, AndroidAPS nukopijuos bazės nustatymus iš profilio į pompą, pakeisdamas esančius nustatymus pompoje. Įsitikinkite, kad turimi bazės nustatymai AndroidAPS yra teisingi. Jei nesate tikri arba nenorite iš naujo keisti bazės nustatymų jūsų pompoje, paspauskite atšaukti ir pakartokite prijungimą prie pompos kitą kartą.</string>
@@ -965,7 +981,9 @@
     <string name="description_source_dexcom">Gauti kraujo gliukozės reikšmes iš modifikuotos Dexcom programėlės.</string>
     <string name="notification">Pranešimas</string>
     <string name="notification_message">Įspėjimas: %1$s</string>
+    <string name="alarm_message">Aliarmas: %1$s</string>
     <string name="message_short">Pranešimas:</string>
+    <string name="alarm_short">Aliarmas:</string>
     <string name="profilepercentage">Profilio procentas</string>
     <string name="percent_u">Procentais [%]:</string>
     <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
@@ -1118,6 +1136,7 @@
     <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
     <string name="copyexistingvalues">Kopijuoti NS nustatymus (jei yra)?</string>
     <string name="classic_description">Originali išvaizda</string>
+    <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
@@ -1163,4 +1182,18 @@
     <string name="uploaded_data">Įkelti duomenis</string>
     <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Į jūsų Open Humans paskyrą bus įkelti šie duomenys: glikemijos reikšmės, bolusai, angliavandeniai, priežiūros portalo įvykiai (išskyrus pastabas), ištęstiniai bolusai, profilio pakeitimai, visos paros dozės, laikinos valandinės bazės, laikini tikslai, nustatymai, programos versija, įrenginio modelis ir ekrano matmenys. Konfidenciali ar privati ​​informacija, pvz., Jūsų Nightscout URL arba API slaptažodis, nebus įkelta.</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
+    <string name="filter">Filtruoti</string>
+    <string name="copytolocalprofile_invalid">Nepavyksta sukurti vietinio profilio. Profilis neteisingas.</string>
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="alarm">Aliarmas</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
+    <string name="smscommunicator_pump_ureachable">Pranešti apie nepasiekiamą pompą</string>
+    <string name="advisoralarm">Pranešti apie laiką valgyti</string>
+    <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="bolusadvisor">Boluso patarėjas</string>
+    <string name="bolusadvisormessage">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
+    <string name="enablebolusadvisor">Įgalinti boluso patarėją</string>
+    <string name="enablebolusadvisor_summary">Jei jūsų glikemija yra aukšta, naudokite priminimą apie laiką valgyti, o ne Boluso patarėją</string>
+    <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
+    <string name="timetoeat">Laikas valgyti</string>
 </resources>

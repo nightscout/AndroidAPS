@@ -82,9 +82,9 @@ dependencies {
     api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     api 'net.danlew:android.joda:2.10.6'
 
-    api "androidx.fragment:fragment-ktx:${fragmentktx_version}"
+    api "androidx.fragment:fragment-ktx:$fragmentktx_version"
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-    api 'androidx.navigation:navigation-runtime-ktx:2.3.1'
+    api "androidx.navigation:navigation-runtime-ktx:$nav_version"
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"
     api "androidx.navigation:navigation-ui-ktx:$nav_version"
 

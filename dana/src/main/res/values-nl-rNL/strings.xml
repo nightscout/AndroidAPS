@@ -110,9 +110,9 @@
     <string name="bolusspeed">Bolus snelheid</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="rs_loginsulinchange_title">Reservoir wissel noteren</string>
-    <string name="rs_loginsulinchange_summary">Voeg \"Reservoir wissel\" gebeurtenis toe aan de careportal als deze in pompgeschiedenis wordt uitgelezen</string>
+    <string name="rs_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="rs_logcanulachange_title">Infuus wissel noteren</string>
-    <string name="rs_logcanulachange_summary">Voeg \"Infuuswissel\" gebeurtenis toe aan de careportal als deze in pompgeschiedenis wordt uitgelezen</string>
+    <string name="rs_logcanulachange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="pin1">PIN1</string>
     <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Druk op OK op de pomp\nen voer 2 weergegeven nummers in.\nHoud het scherm vd pomp actief door de min-knop op de pomp ingedrukt te houden totdat je klaar bent met het invoeren van de codes.</string>
