@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command;
 
-import java.nio.ByteBuffer;
-
 import org.apache.commons.lang3.NotImplementedException;
+
+import java.nio.ByteBuffer;
 
 import javax.inject.Inject;
 
