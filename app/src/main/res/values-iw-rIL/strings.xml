@@ -225,7 +225,7 @@
     <string name="smscommunicator_stoppedsms">שירות השליטה מרחוק באמצעות SMS מופסק. על מנת להפעילו, השתמשו בAAPS במכשיר הראשי.</string>
     <string name="smscommunicator_calibrationreplywithcode">כדי לשלוח ערך כיול %1$.2f יש להשיב עם הקוד %2$s</string>
     <string name="smscommunicator_bolusfailed">הבולוס נכשל</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">מספר הדקות המזערי שחייב לחלוף בין בולוס מרוחק אחד למשנהו</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">מספר המינימלי (בדקות) שחייב לחלוף בין בולוס מרוחק אחד למשנהו</string>
     <string name="smscommunicator_remotebolusmindistance">מספר הדקות המינימלי שצריכות לחלוף, בין בולוס אחד למשנהו</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">למען בטחונכם, על מנת לערוך את העדפה זו, עליכם להוסיף לפחות שני מספרי טלפון.</string>
     <string name="bolusdelivered">בולוס %1$.2fU ניתן בהצלחה</string>
