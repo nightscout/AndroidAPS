@@ -155,7 +155,7 @@
     <string name="filenotfound">הקובץ לא נמצא</string>
     <string name="nav_export">ייצא הגדרות</string>
     <string name="nav_import">יבא הגדרות</string>
-    <string name="openapsma_maxbasal_title">מינון בזאלי זמני מקסימלי (יח\' לשעה)</string>
+    <string name="openapsma_maxbasal_title">מינון בזאלי זמני מקסימלי (יח\'\\שעה)</string>
     <string name="openapsma_maxbasal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
     <string name="openapsma_maxiob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק [U]</string>
     <string name="openapsma_maxiob_summary">ערך זה נקרא אינסולין פעיל מקסימלי (Max IOB) ב-OpenAPS. זהו מקסימום האינסולין הפעיל ב-[U] ש-APS מאפשר.</string>
@@ -288,9 +288,9 @@
     <string name="ns_upload_only">העלאה ל-nightscout בלבד (סנכרון מבוטל)</string>
     <string name="ns_upload_only_summary">העלאה ל- NS בלבד. ללא השפעה על SGV אלא אם נבחר מקור מקומי כגון Xdrip. ללא השפעה על הפרופילים כל עוד פרופיל NS בשימוש.</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
-    <string name="primefill">תיחול ומילוי</string>
+    <string name="primefill">תיחול\\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
-    <string name="fillbolus_title">מילוי ותיחול כמויות סטנדרטיות של אינסולין</string>
+    <string name="fillbolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
@@ -340,7 +340,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
-    <string name="always_use_shortavg">התבסס על הפרש ממוצע קצר במקום הפרש פשוט/רגיל</string>
+    <string name="always_use_shortavg">התבסס על הפרש ממוצע קצר במקום הפרש פשוט\\רגיל</string>
     <string name="always_use_shortavg_summary">לשימוש כאשר נתונים ממקור לא מפוקח כמו Xdrip אינם יציבים.</string>
     <string name="profile">פרופיל</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
@@ -386,13 +386,13 @@
     <string name="wear_detailedIOB_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
     <string name="notavailable">לא זמין</string>
-    <string name="patientage">סוג המטופל/ת</string>
+    <string name="patientage">סוג המטופל\\ת</string>
     <string name="child">ילד/ה</string>
-    <string name="teenage">מתבגר/ת</string>
-    <string name="adult">מבוגר/ת</string>
-    <string name="resistantadult">מבוגר/ת עם תנגודת אינסולין גבוהה</string>
+    <string name="teenage">מתבגר\\ת</string>
+    <string name="adult">מבוגר\\ת</string>
+    <string name="resistantadult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
-    <string name="patientage_summary">נא לבחור את גיל המטופל/ת להתאמת מגבלות בטיחות</string>
+    <string name="patientage_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
     <string name="patient_name">שם מטופל</string>
     <string name="patient_name_summary">נא לציין שם המטופל או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
@@ -681,7 +681,7 @@
     <string name="combo_error_multiple_boluses_with_identical_timestamp">בולוסים מרובים באותו הגודל בתוך הובאו באותה דקה. ניתן להוסיף רק רשומה אחת לטיפולים. בדקו את המשאבה והוסיפו באופן ידני רשומת בולוס בלשונית פורטל הטיפולים. יש ליצור רשומות בולוס עם זמנים שונים מבולוסים אחרים.</string>
     <string name="about_link_urls">\n\nתיעוד:\nhttps://androidaps.readthedocs.io\n\nפייסבוק:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">הבולוס האחרון נרשם לפני 24 שעות או בשעה עתידית, נא לבדוק את כיוון השעון ותאריך במשאבה.</string>
-    <string name="combo_suspious_bolus_time">זמן/תאריך הבולוס שהוזרק מהמשאבה נראה לא נכון, IOB כנראה שגוי, בדקו את השעון ואת התאריך במשאבה.</string>
+    <string name="combo_suspious_bolus_time">זמן\\תאריך הבולוס שהוזרק מהמשאבה נראה לא נכון, IOB כנראה שגוי, בדקו את השעון ואת התאריך במשאבה.</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="combo_bolus_count">ספירת בולוסים</string>
     <string name="combo_tbr_count">ספירת TBR</string>
@@ -755,7 +755,7 @@
     <string name="readstatus">קרא סטטוס</string>
     <string name="adjustprofileinns">יש לבצע שינויים ב-Nightscout</string>
     <string name="exitwizard">דלג על אשף ההתקנה</string>
-    <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע/לבצע שינויים במינון הבזאלי</string>
+    <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע\\לבצע שינויים במינון הבזאלי</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient מטפל בחיבור ל-Nightscout. אפשר לדלג על החלק הזה עכשיו, אך לא תוכלו לעבור את המשימות מבלי להגדיר אותו.</string>
