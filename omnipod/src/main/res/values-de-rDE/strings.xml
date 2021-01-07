@@ -67,6 +67,7 @@
     <string name="omnipod_error_rileylink_address_invalid">RileyLink Adresse ungültig.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Aktion ist nicht möglich.\n\n Du musst zuerst den Omnipod konfigurieren, bevor Du diese Operation verwenden kannst.</string>
     <string name="omnipod_error_pod_not_attached">Kein aktiver Pod</string>
+    <string name="omnipod_error_time_out_of_sync">Zeit auf dem Pod ist nicht synchron. Aktualisiere die Zeit auf der Registerkarte \"Omnipod\".</string>
     <string name="omnipod_error_unexpected_exception">Es ist ein unerwarteter Fehler aufgetreten. Bitte melden! (%1$s: %2$s)</string>
     <string name="omnipod_error_crc_mismatch">Kommunikation fehlgeschlagen: Die Überprüfung der Nachrichtenintegrität ist fehlgeschlagen</string>
     <string name="omnipod_error_invalid_packet_type">Kommunikation fehlgeschlagen: Es wurde ein ungültiges Paket vom Pod empfangen.</string>
