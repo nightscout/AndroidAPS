@@ -67,6 +67,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Chybná adresa RileyLinku.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operace není možná.\n\nNejdříve je nutné nakonfigurovat Omnipod, než bude možné tuto funkci použít.</string>
     <string name="omnipod_error_pod_not_attached">Žádný aktivní Pod</string>
+    <string name="omnipod_error_time_out_of_sync">Čas na Podu není synchronizován. Aktualizujte prosím čas na kartě Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Došlo k neočekávané chybě. Prosíme o její nahlášeníní! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Komunikace selhala: nezdařilo se ověření integrity zprávy</string>
     <string name="omnipod_error_invalid_packet_type">Komunikace selhala: z podu byly přijaty neplatné pakety</string>
