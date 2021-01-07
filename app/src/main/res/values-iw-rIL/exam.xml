@@ -202,7 +202,7 @@
     <string name="profileswitch4_rates">על המינונים בזאליים, יחס התיקון, יחס הפחמימות וכו\' להיות מוגדרים בפרופילים.</string>
     <string name="profileswitch4_internet">הפעלת שינויים בפרופיל הנייטסקאוט שלכם דורשת שהמכשיר עליו AndroidAPS מותקן יהיה מחובר לאינטרנט.</string>
     <string name="profileswitch4_sufficient">עריכת פרופילים לשינוי ערכים מספיקה כדי להחיל שינויים כלשהם שבוצעו.</string>
-    <string name="profileswitch4_multi">ניתן להגדיר פרופילים מרובים כדי להתאים לנסיבות משתנות (לדוגמה שינויים הורמונליים, עבודת משמרת, ימי חול/אורח חיים של סופ\"ש).</string>
+    <string name="profileswitch4_multi">ניתן להגדיר פרופילים מרובים כדי להתאים לנסיבות משתנות (לדוגמה שינויים הורמונליים, עבודת משמרת, ימי חול\\אורח חיים של סופ\"ש).</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">נושא: עזרה עם מינונים בזאליים</string>
     <string name="basalhelp_where">היכן ניתן לקבל עזרה בנושא מינון בזאלי וכו\'.</string>
