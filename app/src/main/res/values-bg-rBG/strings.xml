@@ -443,12 +443,8 @@
     <string name="statuslights_sage_critical">Праг за критична възраст на сензор [часа]</string>
     <string name="statuslights_sbat_warning">Аларма при заряд на батерия под [%]</string>
     <string name="statuslights_sbat_critical">Критично ниво на сензорната батерия под [%]</string>
-    <string name="statuslights_bage_warning">Аларма при възраст на батерия над [часа]</string>
-    <string name="statuslights_bage_critical">Праг за критична възраст на батерията над [часа]</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Предупреждение за критично ниво на останал инсулин в резервоар [Е]</string>
-    <string name="statuslights_bat_warning">Аларма при заряд на батерия под [%]</string>
-    <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
     <string name="prediction_shortname">Предв</string>
     <string name="iob">IOB</string>
     <string name="cob">СОВ</string>
