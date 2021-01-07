@@ -443,12 +443,12 @@
     <string name="statuslights_sage_critical">Warnschwelle kritisches Sensoralter [h]</string>
     <string name="statuslights_sbat_warning">Warnschwelle Sensor-Batteriestand [%]</string>
     <string name="statuslights_sbat_critical">Warnschwelle kritischer Sensor-Batteriestand [%]</string>
-    <string name="statuslights_bage_warning">Warnschwelle Batteriealter [h]</string>
-    <string name="statuslights_bage_critical">Warnschwelle kritisches Batteriealter [h]</string>
+    <string name="statuslights_bage_warning">Warnschwelle Pumpenbatterie-Alter [h]</string>
+    <string name="statuslights_bage_critical">Warnschwelle kritisches Pumpenbatterie-Alter [h]</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
-    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
-    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Pumpenbatterie-Stand [%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Pumpenbatterie-Stand [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
