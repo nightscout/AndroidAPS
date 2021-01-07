@@ -331,8 +331,6 @@
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="nav_about">Σχετικά με</string>
