@@ -436,12 +436,8 @@
     <string name="statuslights_sage_critical">Критический порог предупреждения о времени, отработанном сенсором [h]</string>
     <string name="statuslights_sbat_warning">Порог предупреждения о разрядке батареи [%]</string>
     <string name="statuslights_sbat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
-    <string name="statuslights_bage_warning">Порог предупреждения о разрядке батареи [h]</string>
-    <string name="statuslights_bage_critical">Порог предупреждения о критическом уровне разрядки батареи [h]</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
     <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
-    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
-    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="prediction_shortname">ОЖИД</string>
     <string name="iob">IOB акт инс</string>
     <string name="cob">акт углев</string>
