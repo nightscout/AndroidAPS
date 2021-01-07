@@ -121,7 +121,8 @@ public class AapsOmnipodManager {
     private boolean notificationUncertainBolusSoundEnabled;
     private boolean automaticallyAcknowledgeAlertsEnabled;
     private boolean rileylinkStatsButtonEnabled;
-    private boolean useRileyLinkBatteryLevel;
+    private boolean showRileyLinkBatteryLevel;
+    private boolean batteryChangeLoggingEnabled;
 
     @Inject
     public AapsOmnipodManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -166,7 +167,8 @@ public class AapsOmnipodManager {
         suspendDeliveryButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED, false);
         pulseLogButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED, false);
         rileylinkStatsButtonEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED, false);
-        useRileyLinkBatteryLevel = sp.getBoolean(OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL, false);
+        showRileyLinkBatteryLevel = sp.getBoolean(OmnipodStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL, false);
+        batteryChangeLoggingEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED, false);
         timeChangeEventEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED, true);
         notificationUncertainTbrSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED, false);
         notificationUncertainSmbSoundEnabled = sp.getBoolean(OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED, true);
@@ -669,8 +671,12 @@ public class AapsOmnipodManager {
         return rileylinkStatsButtonEnabled;
     }
 
-    public boolean isUseRileyLinkBatteryLevel() {
-        return useRileyLinkBatteryLevel;
+    public boolean isShowRileyLinkBatteryLevel() {
+        return showRileyLinkBatteryLevel;
+    }
+
+    public boolean isBatteryChangeLoggingEnabled() {
+        return batteryChangeLoggingEnabled;
     }
 
     public boolean isTimeChangeEventEnabled() {

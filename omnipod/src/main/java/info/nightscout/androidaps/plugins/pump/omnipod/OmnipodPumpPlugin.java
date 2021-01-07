@@ -318,7 +318,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
-                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
@@ -624,7 +625,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public int getBatteryLevel() {
-        if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
+        if (aapsOmnipodManager.isShowRileyLinkBatteryLevel()) {
             return Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0);
         }
 
@@ -1058,7 +1059,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public boolean isUseRileyLinkBatteryLevel() {
-        return aapsOmnipodManager.isUseRileyLinkBatteryLevel();
+        return aapsOmnipodManager.isShowRileyLinkBatteryLevel();
+    }
+
+    public boolean isBatteryChangeLoggingEnabled() {
+        return aapsOmnipodManager.isBatteryChangeLoggingEnabled();
     }
 
     private void initializeAfterRileyLinkConnection() {

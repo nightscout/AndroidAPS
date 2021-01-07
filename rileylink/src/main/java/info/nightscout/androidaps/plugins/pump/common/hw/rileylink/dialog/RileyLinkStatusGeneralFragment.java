@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 5/19/18.
@@ -39,10 +40,12 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject DateUtil dateUtil;
+    @Inject SP sp;
 
     private TextView connectionStatus;
     private TextView configuredRileyLinkAddress;
     private TextView configuredRileyLinkName;
+    private View batteryLevelRow;
     private TextView batteryLevel;
     private TextView connectionError;
     private View connectedDeviceDetails;
@@ -67,6 +70,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.connectionStatus = getActivity().findViewById(R.id.rls_t1_connection_status);
         this.configuredRileyLinkAddress = getActivity().findViewById(R.id.rls_t1_configured_riley_link_address);
         this.configuredRileyLinkName = getActivity().findViewById(R.id.rls_t1_configured_riley_link_name);
+        this.batteryLevelRow = getActivity().findViewById(R.id.rls_t1_battery_level_row);
         this.batteryLevel = getActivity().findViewById(R.id.rls_t1_battery_level);
         this.connectionError = getActivity().findViewById(R.id.rls_t1_connection_error);
         this.connectedDeviceDetails = getActivity().findViewById(R.id.rls_t1_connected_device_details);
@@ -92,8 +96,13 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
             this.configuredRileyLinkAddress.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkAddress).orElse(PLACEHOLDER));
             this.configuredRileyLinkName.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkName).orElse(PLACEHOLDER));
 
-            Integer batteryLevel = rileyLinkServiceData.batteryLevel;
-            this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : resourceHelper.gs(R.string.rileylink_battery_level_value, batteryLevel));
+            if (sp.getBoolean(resourceHelper.gs(R.string.key_riley_link_show_battery_level), false)) {
+                batteryLevelRow.setVisibility(View.VISIBLE);
+                Integer batteryLevel = rileyLinkServiceData.batteryLevel;
+                this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : resourceHelper.gs(R.string.rileylink_battery_level_value, batteryLevel));
+            } else {
+                batteryLevelRow.setVisibility(View.GONE);
+            }
 
             RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
             this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
