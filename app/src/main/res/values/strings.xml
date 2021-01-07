@@ -520,17 +520,17 @@
     <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
     <string name="statuslights_sbat_critical">Threshold critical sensor battery level [%]</string>
     <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
-    <string name="statuslights_bage_warning">Threshold warning battery age [h]</string>
+    <string name="statuslights_bage_warning">Threshold warning pump battery age [h]</string>
     <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
-    <string name="statuslights_bage_critical">Threshold critical battery age [h]</string>
+    <string name="statuslights_bage_critical">Threshold critical pump battery age [h]</string>
     <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
     <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
     <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
     <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
-    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
+    <string name="statuslights_bat_warning">Threshold warning pump battery level [%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
-    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
+    <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
