@@ -443,8 +443,12 @@
     <string name="statuslights_sage_critical">סף התראה קריטית של תוקף החיישן [h]</string>
     <string name="statuslights_sbat_warning">סף התראה של רמת סוללת החיישן [%]</string>
     <string name="statuslights_sbat_critical">סף התראה קריטית של רמת סוללת החיישן [%]</string>
+    <string name="statuslights_bage_warning">סף התראה של גיל הסוללה [h]</string>
+    <string name="statuslights_bage_critical">סף התראה קריטית של גיל הסוללה [h]</string>
     <string name="statuslights_res_warning">אזהרת סף של מיכל ריק [U]</string>
     <string name="statuslights_res_critical">אזהרת סף קריטית של מיכל ריק [U]</string>
+    <string name="statuslights_bat_warning">סף התראה של רמת הסוללה [%]</string>
+    <string name="statuslights_bat_critical">סף התראה קריטית של רמת הסוללה [%]</string>
     <string name="prediction_shortname">חיזוי</string>
     <string name="iob">אינ\' פעיל</string>
     <string name="cob">פחמ\' פעילות</string>
