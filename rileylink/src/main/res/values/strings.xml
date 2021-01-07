@@ -38,7 +38,8 @@
     <string name="rileylink_connection_error">Connection Error:</string>
     <string name="rileylink_device">Device</string>
     <string name="rileylink_device_type">Device Type:</string>
-    <string name="rileylink_device_model">Device Model:</string>
+    <string name="rileylink_configured_device_model">Configured Device Model:</string>
+    <string name="rileylink_connected_device_model">Connected Device Model:</string>
     <string name="rileylink_last_used_frequency">Last Used Frequency:</string>
     <string name="rileylink_last_device_contact">Last Device Contact:</string>
     <string name="rileylink_firmware_version">Firmware Version:</string>
@@ -70,7 +71,7 @@
 
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <string name="riley_link_common_yes">Yes</string>
     <string name="riley_link_common_no">No</string>
 
