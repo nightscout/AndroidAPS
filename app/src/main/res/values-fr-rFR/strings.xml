@@ -444,12 +444,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
     <string name="statuslights_sbat_warning">Seuil d’alerte niveau pile capteur [%]</string>
     <string name="statuslights_sbat_critical">Seuil critique niveau pile capteur [%]</string>
-    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
-    <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
     <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique niveau pile [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
