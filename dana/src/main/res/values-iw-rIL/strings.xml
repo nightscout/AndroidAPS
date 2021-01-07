@@ -14,7 +14,7 @@
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
     <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
     <string name="danar_valuenotsetproperly">ערך לא מוגדר כראוי</string>
-    <string name="danar_setbasalstep001">הגדר מינון באזלי ל-0.01 יח\' לשעה</string>
+    <string name="danar_setbasalstep001">הגדר מינון באזלי ל-0.01 יח\'\\שעה</string>
     <string name="resetpairing">לאפס את נתוני הצימוד?</string>
     <string name="dana_model">%1$s\nדגם: %2$02X\nפרוטוקול: %3$02X\nקוד: %4$02X</string>
     <string name="processinghistory">מעבד אירוע</string>
