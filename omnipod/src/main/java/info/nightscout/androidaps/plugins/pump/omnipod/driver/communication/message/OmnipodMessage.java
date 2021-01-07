@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -31,7 +32,7 @@ public class OmnipodMessage {
 
     public OmnipodMessage(int address, List<MessageBlock> messageBlocks, int sequenceNumber) {
         this.address = address;
-        this.messageBlocks = messageBlocks;
+        this.messageBlocks = new ArrayList<>(messageBlocks);
         this.sequenceNumber = sequenceNumber;
     }
 
@@ -54,7 +55,7 @@ public class OmnipodMessage {
             throw new CrcMismatchException(calculatedCrc, crc);
         }
         List<MessageBlock> blocks = decodeBlocks(ByteUtil.substring(data, 6, data.length - 6 - 2));
-        if (blocks == null || blocks.size() == 0) {
+        if (blocks.size() == 0) {
             throw new MessageDecodingException("No blocks decoded");
         }
 
@@ -110,7 +111,7 @@ public class OmnipodMessage {
     }
 
     public List<MessageBlock> getMessageBlocks() {
-        return messageBlocks;
+        return new ArrayList<>(messageBlocks);
     }
 
     public int getSequenceNumber() {
@@ -147,12 +148,16 @@ public class OmnipodMessage {
         return false;
     }
 
-    public boolean isSetTempBasalMessage() {
-        return messageBlocks.size() >= 2 && messageBlocks.get(0).getType() == MessageBlockType.SET_INSULIN_SCHEDULE && messageBlocks.get(1).getType() == MessageBlockType.TEMP_BASAL_EXTRA;
+    public boolean isGetStatusMessage() {
+        return messageBlocks.size() == 1 && messageBlocks.get(0).getType() == MessageBlockType.GET_STATUS;
     }
 
-    public boolean isCancelTempBasalMessage() {
-        return messageBlocks.size() >= 1 && messageBlocks.get(0).getType() == MessageBlockType.CANCEL_DELIVERY && ((CancelDeliveryCommand) messageBlocks.get(0)).getDeliveryTypes().contains(DeliveryType.TEMP_BASAL);
+    public boolean isSuspendDeliveryMessage() {
+        return isCancelDeliveryMessage() && EnumSet.allOf(DeliveryType.class).equals(((CancelDeliveryCommand) messageBlocks.get(0)).getDeliveryTypes());
+    }
+
+    private boolean isCancelDeliveryMessage() {
+        return messageBlocks.size() >= 1 && messageBlocks.get(0).getType() == MessageBlockType.CANCEL_DELIVERY;
     }
 
     @Override

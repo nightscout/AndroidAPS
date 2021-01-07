@@ -277,6 +277,15 @@ public class OmnipodManager {
     private synchronized StatusResponse cancelDelivery(EnumSet<DeliveryType> deliveryTypes, boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
+        if (!podStateManager.isTempBasalCertain() || !podStateManager.isBasalCertain()) {
+            try {
+                getPodStatus();
+            } catch (OmnipodException ex) {
+                ex.setCertainFailure(true);
+                throw ex;
+            }
+        }
+
         if (deliveryTypes.contains(DeliveryType.BASAL)) {
             podStateManager.setBasalCertain(false);
         }

@@ -251,7 +251,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_firmware_version.text = resourceHelper.gs(R.string.omnipod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
 
             omnipod_overview_time_on_pod.text = readableZonedTime(podStateManager.time)
-            omnipod_overview_time_on_pod.setTextColor(if (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5))) {
+            omnipod_overview_time_on_pod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
                 Color.RED
             } else {
                 Color.WHITE
