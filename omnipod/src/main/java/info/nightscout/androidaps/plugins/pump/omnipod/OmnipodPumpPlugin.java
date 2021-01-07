@@ -150,7 +150,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
     private int timeChangeRetries;
-    private long nextPodCheck;
+    private long nextPodWarningCheck;
     private long lastConnectionTimeMillis;
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
@@ -255,11 +255,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
                         queueAcknowledgeAlertsCommand();
                     }
-
-                    doPodCheck();
                 } else {
                     aapsLogger.debug(LTag.PUMPCOMM, "Skipping Pod status check because command queue is not empty");
                 }
+
+                updatePodWarningNotifications();
 
                 loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
             }
@@ -444,19 +444,23 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         });
     }
 
-    private void doPodCheck() {
-        if (System.currentTimeMillis() > this.nextPodCheck) {
+    private void updatePodWarningNotifications() {
+        if (System.currentTimeMillis() > this.nextPodWarningCheck) {
             if (!podStateManager.isPodRunning()) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, resourceHelper.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 rxBus.send(new EventNewNotification(notification));
             } else {
+                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+
                 if (podStateManager.isSuspended()) {
                     Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_error_pod_suspended), Notification.NORMAL);
                     rxBus.send(new EventNewNotification(notification));
+                } else {
+                    rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
                 }
             }
 
-            this.nextPodCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
+            this.nextPodWarningCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
         }
     }
 
