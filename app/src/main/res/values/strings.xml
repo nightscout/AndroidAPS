@@ -520,7 +520,7 @@
     <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
     <string name="statuslights_sbat_critical">Threshold critical sensor battery level [%]</string>
     <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
-    <string name="statuslights_bage_warning">Threshold warning pump  battery age [h]</string>
+    <string name="statuslights_bage_warning">Threshold warning pump battery age [h]</string>
     <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
     <string name="statuslights_bage_critical">Threshold critical pump battery age [h]</string>
     <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
