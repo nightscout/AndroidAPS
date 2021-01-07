@@ -67,6 +67,7 @@
     <string name="omnipod_error_rileylink_address_invalid">RileyLink adres ongeldig.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Bewerking is niet mogelijk.\n\nJe moet eerst Omnipod ingesteld hebben, voordat je deze bewerking kunt gebruiken.</string>
     <string name="omnipod_error_pod_not_attached">Geen actieve Pod</string>
+    <string name="omnipod_error_time_out_of_sync">De tijd op de Pod wijkt af. Werk de tijd bij op het Omnipod-tabblad.</string>
     <string name="omnipod_error_unexpected_exception">Er is een onverwachte fout opgetreden. A.u.b rapporteren! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd</string>
     <string name="omnipod_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod</string>
