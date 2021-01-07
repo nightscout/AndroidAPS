@@ -422,14 +422,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public void getPumpStatus(String reason) {
+        boolean needRefresh = true;
 
         if (firstRun) {
-            initializePump(!isRefresh);
+            needRefresh = initializePump(!isRefresh);
         } else {
             refreshAnyStatusThatNeedsToBeRefreshed();
         }
 
-        rxBus.send(new EventMedtronicPumpValuesChanged());
+        if (needRefresh)
+            rxBus.send(new EventMedtronicPumpValuesChanged());
     }
 
 
@@ -556,7 +558,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    private void initializePump(boolean realInit) {
+    private boolean initializePump(boolean realInit) {
+
+        if (rileyLinkMedtronicService==null)
+            return false;
 
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
@@ -571,7 +576,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 setRefreshButtonEnabled(true);
 
-                return;
+                return true;
             }
 
             medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
@@ -614,7 +619,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             aapsLogger.error("Number of error counts was 5 or more. Starting tunning.");
             setRefreshButtonEnabled(true);
             serviceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
-            return;
+            return true;
         }
 
         medtronicPumpStatus.setLastCommunicationToNow();
@@ -628,6 +633,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // this.pumpState = PumpDriverState.Initialized;
 
         this.firstRun = false;
+
+        return true;
     }
 
     private void getBasalProfiles() {

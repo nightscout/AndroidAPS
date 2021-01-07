@@ -29,7 +29,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class InitializePumpManagerTask extends ServiceTask {
 
     @Inject AAPSLogger aapsLogger;
-    @Inject ActivePluginProvider activePlugin;
+    //@Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
@@ -48,6 +48,10 @@ public class InitializePumpManagerTask extends ServiceTask {
 
     @Override
     public void run() {
+
+        if (!isRileyLinkDevice()) {
+            return;
+        }
 
         double lastGoodFrequency;
 
