@@ -216,7 +216,7 @@
     <string name="omnipod_overview_pod_active_alerts">התראות פוד פעילות</string>
     <string name="omnipod_overview_firmware_version">גרסת קושחה</string>
     <string name="omnipod_overview_time_on_pod">זמן פעילות הפוד</string>
-    <string name="omnipod_overview_temp_basal_value">%1$.2f יח\' לש\' @ %2$s (%3$d\%4$d דק\')</string>
+    <string name="omnipod_overview_temp_basal_value">%1$.2f יח\'\\ש\' @ %2$s (%3$d\%4$d דק\')</string>
     <string name="omnipod_overview_reservoir_value">%1$.2f יח\' נותרו</string>
     <string name="omnipod_overview_reservoir_value_over50">נותרו יותר מ-50 יח\'</string>
     <string name="omnipod_overview_errors">שגיאות</string>
