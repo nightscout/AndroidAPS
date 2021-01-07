@@ -443,12 +443,8 @@
     <string name="statuslights_sage_critical">Umbral crítico de la edad del sensor [h]</string>
     <string name="statuslights_sbat_warning">Umbral de advertencia de nivel de batería del sensor [%]</string>
     <string name="statuslights_sbat_critical">Umbral crítico de nivel de batería del sensor [%]</string>
-    <string name="statuslights_bage_warning">Umbral de advertencia de nivel de pila [h]</string>
-    <string name="statuslights_bage_critical">Umbral crítico de nivel de batería [h]</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
