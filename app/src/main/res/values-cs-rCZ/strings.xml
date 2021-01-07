@@ -443,12 +443,12 @@
     <string name="statuslights_sage_critical">Úroveň kritického stáří senzoru [h]</string>
     <string name="statuslights_sbat_warning">Úroveň varování stavu baterie senzoru [%]</string>
     <string name="statuslights_sbat_critical">Úroveň kritického varování stavu baterie senzoru [%]</string>
-    <string name="statuslights_bage_warning">Úroveň varování stáří baterie [h]</string>
-    <string name="statuslights_bage_critical">Úroveň kritického varování stáří baterie [h]</string>
+    <string name="statuslights_bage_warning">Úroveň varování stáří baterie pumpy [h]</string>
+    <string name="statuslights_bage_critical">Úroveň kritického varování stáří baterie pumpy [h]</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
-    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
-    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
+    <string name="statuslights_bat_warning">Úroveň varování stavu baterie pumpy [%]</string>
+    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie pumpy [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
