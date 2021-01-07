@@ -256,7 +256,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                         queueAcknowledgeAlertsCommand();
                     }
                 } else {
-                    aapsLogger.debug(LTag.PUMPCOMM, "Skipping Pod status check because command queue is not empty");
+                    aapsLogger.debug(LTag.PUMP, "Skipping Pod status check because command queue is not empty");
                 }
 
                 updatePodWarningNotifications();
@@ -457,6 +457,13 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                     rxBus.send(new EventNewNotification(notification));
                 } else {
                     rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+
+                    if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
+                        Notification notification = new Notification(Notification.OMNIPOD_TIME_OUT_OF_SYNC, resourceHelper.gs(R.string.omnipod_error_time_out_of_sync), Notification.NORMAL);
+                        rxBus.send(new EventNewNotification(notification));
+                    } else {
+                        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC));
+                    }
                 }
             }
 
@@ -953,12 +960,18 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
-        aapsLogger.warn(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
+        aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
 
-        if (podStateManager.isPodRunning()) {
-            aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed event received and will be consumed by driver.");
-            hasTimeDateOrTimeZoneChanged = true;
+        if (timeChangeType == TimeChangeType.TimeChanged) {
+            aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change");
+            return;
+        } else if (!podStateManager.isPodRunning()) {
+            aapsLogger.info(LTag.PUMP, "Ignoring time change because no Pod is active");
+            return;
         }
+
+        aapsLogger.info(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
+        hasTimeDateOrTimeZoneChanged = true;
     }
 
     @Override
