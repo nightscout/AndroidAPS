@@ -106,6 +106,7 @@
     <string name="omnipod_error_rileylink_address_invalid">RileyLink address invalid.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\nYou need to configure Omnipod first, before you can use this operation.</string>
     <string name="omnipod_error_pod_not_attached">No active Pod</string>
+    <string name="omnipod_error_time_out_of_sync">The time on the Pod is out of sync. Please update the time in the Omnipod tab.</string>
     <string name="omnipod_error_unexpected_exception">An unexpected error occurred. Please report! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Communication failed: message integrity verification failed</string>
     <string name="omnipod_error_invalid_packet_type">Communication failed: received an invalid packet from the Pod</string>

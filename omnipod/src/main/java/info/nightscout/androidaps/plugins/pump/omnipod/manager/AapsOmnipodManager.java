@@ -347,6 +347,7 @@ public class AapsOmnipodManager {
 
         dismissNotification(Notification.FAILED_UDPATE_PROFILE);
         dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
+        dismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -584,6 +585,9 @@ public class AapsOmnipodManager {
         addSuccessToHistory(PodHistoryEntryType.SUSPEND_DELIVERY, null);
         createSuspendedFakeTbrIfNotExists();
 
+        dismissNotification(Notification.FAILED_UDPATE_PROFILE);
+        dismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC);
+
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
@@ -619,6 +623,7 @@ public class AapsOmnipodManager {
 
         dismissNotification(Notification.FAILED_UDPATE_PROFILE);
         dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
+        dismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC);
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
