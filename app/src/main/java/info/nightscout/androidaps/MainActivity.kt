@@ -275,8 +275,10 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setPluginPreferenceMenuName() {
-        val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
+        if (main_pager.currentItem > 0) {
+            val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
