@@ -349,8 +349,6 @@
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
-    <string name="statuslights_bat_warning">배터리 잔량 경고값 [%]</string>
-    <string name="statuslights_bat_critical">배터리 잔량 위험값 [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="nav_about">버전정보</string>
