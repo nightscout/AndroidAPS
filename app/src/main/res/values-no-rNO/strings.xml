@@ -286,7 +286,6 @@
     <string name="correctionbous">Korreksjon</string>
     <string name="actions">Handlinger</string>
     <string name="ns_upload_only">Kun NS opplasting (deaktivert sync)</string>
-    <string name="ns_upload_only_summary">Kun opplast til NS. Påvirker ikke SGV (BS) med mindre en lokal kilde som xDrip er valgt. Påvirker ikke profiler hvis NS profiler benyttes.</string>
     <string name="pumpNotInitialized">Pumpen ikke initialisert!</string>
     <string name="primefill">Prime/fylling</string>
     <string name="fillwarning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
@@ -443,12 +442,8 @@
     <string name="statuslights_sage_critical">Advarsel: alder CGM [h]</string>
     <string name="statuslights_sbat_warning">Nivå for når batterivarsel skal gis [%]</string>
     <string name="statuslights_sbat_critical">Nivå for når kritisk batteriadvarsel skal gis [%]</string>
-    <string name="statuslights_bage_warning">OBS: alder batteri [h]</string>
-    <string name="statuslights_bage_critical">Advarsel: alder batteri [h]</string>
     <string name="statuslights_res_warning">OBS: nivå insulinreservoar [U]</string>
     <string name="statuslights_res_critical">Advarsel: nivå insulinreservoar [U]</string>
-    <string name="statuslights_bat_warning">OBS: batterivarsel [%]</string>
-    <string name="statuslights_bat_critical">Advarsel: lavt batterinivå [%]</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -1193,7 +1188,7 @@
     <string name="bolusadvisor">Bolusguide</string>
     <string name="bolusadvisormessage">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korrigerings bolus nå og få en påminnelse om når den er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
     <string name="enablebolusadvisor">Aktiver boluskalkulator</string>
-    <string name="enablebolusadvisor_summary">Få påminnelse om å spise i stedet for å bruke wizard når du har høyt blodsukker</string>
+    <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="timetoeat">Nå må du spise</string>
 </resources>
