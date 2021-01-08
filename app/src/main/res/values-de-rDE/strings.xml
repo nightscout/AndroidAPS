@@ -286,6 +286,7 @@
     <string name="correctionbous">Korr</string>
     <string name="actions">Aktionen</string>
     <string name="ns_upload_only">Zu Nightscout nur hochladen (keine Synchronisation)</string>
+    <string name="ns_upload_only_summary">Zu Nightscout nur hochladen (keine Synchronisation). Gilt nicht für CGM-Werte falls nicht eine lokale Quelle wie xDrip+ ausgewählt wurde. Gilt ebenfalls nicht für Profildaten, wenn ein NS-Profil genutzt wird. \n!!! WARNUNG !!! Deaktivieren dieser Option kann zu Fehlfunktionen und Insulin-Überdosierung führen, wenn eine der Komponenten (AAPS, NS, xDrip+) falsch konfiguriert ist. Achte sorgfältig darauf, ob die in AAPS angezeigten Daten mit denen der Pumpe übereinstimmen!</string>
     <string name="pumpNotInitialized">Pumpe nicht initialisiert!</string>
     <string name="primefill">Katheterwechsel</string>
     <string name="fillwarning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
