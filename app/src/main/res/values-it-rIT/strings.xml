@@ -442,9 +442,12 @@
     <string name="statuslights_sage_critical">Soglia età sensore critica [h]</string>
     <string name="statuslights_sbat_warning">Soglia di avviso livello batteria sensore [%]</string>
     <string name="statuslights_sbat_critical">Soglia livello batteria sensore critico [%]</string>
+    <string name="statuslights_bage_warning">Età batteria micro: soglia di avviso [h]</string>
+    <string name="statuslights_bage_critical">Età batteria micro: soglia critica [h]</string>
     <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
     <string name="statuslights_res_critical">Soglia livello serbatoio critico [U]</string>
-    <string name="statuslights_bat_critical">Soglia critica livello batteria critico [%]</string>
+    <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
+    <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
