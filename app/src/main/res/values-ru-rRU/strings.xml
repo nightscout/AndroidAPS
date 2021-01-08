@@ -286,7 +286,6 @@
     <string name="correctionbous">коррекция</string>
     <string name="actions">действия</string>
     <string name="ns_upload_only">только передача в NS (синхронизация отсутствует)</string>
-    <string name="ns_upload_only_summary">только передача в NS. Не работает в SGV пока не выбран местный источник вроде xdrip. Не работает в Профилях при действующем профиле NS.</string>
     <string name="pumpNotInitialized">помпа не инициализирована</string>
     <string name="primefill">прайм/заполнение</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
@@ -436,12 +435,8 @@
     <string name="statuslights_sage_critical">Критический порог предупреждения о времени, отработанном сенсором [h]</string>
     <string name="statuslights_sbat_warning">Порог предупреждения о разрядке батареи [%]</string>
     <string name="statuslights_sbat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
-    <string name="statuslights_bage_warning">Порог предупреждения о разрядке батареи [h]</string>
-    <string name="statuslights_bage_critical">Порог предупреждения о критическом уровне разрядки батареи [h]</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
     <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
-    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
-    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="prediction_shortname">ОЖИД</string>
     <string name="iob">IOB акт инс</string>
     <string name="cob">акт углев</string>
