@@ -318,7 +318,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
-                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
@@ -520,11 +521,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     @Override public RileyLinkPumpInfo getPumpInfo() {
-        String pumpDescription = "Eros";
         String frequency = resourceHelper.gs(R.string.omnipod_frequency);
-        String connectedModel = podStateManager.isPodInitialized() ? "Eros Pod" : "-";
+        String connectedModel = "Eros";
         String serialNumber = podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
-        return new RileyLinkPumpInfo(pumpDescription, frequency, connectedModel, serialNumber);
+        return new RileyLinkPumpInfo(frequency, connectedModel, serialNumber);
     }
 
     // Required by RileyLinkPumpDevice interface.
@@ -625,9 +625,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public int getBatteryLevel() {
-        if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
-            Integer batteryLevel = omnipodRileyLinkCommunicationManager.getBatteryLevel();
-            return batteryLevel == null ? 0 : batteryLevel;
+        if (aapsOmnipodManager.isShowRileyLinkBatteryLevel()) {
+            return Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0);
         }
 
         return 0;
@@ -1060,7 +1059,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public boolean isUseRileyLinkBatteryLevel() {
-        return aapsOmnipodManager.isUseRileyLinkBatteryLevel();
+        return aapsOmnipodManager.isShowRileyLinkBatteryLevel();
+    }
+
+    public boolean isBatteryChangeLoggingEnabled() {
+        return aapsOmnipodManager.isBatteryChangeLoggingEnabled();
     }
 
     private void initializeAfterRileyLinkConnection() {
