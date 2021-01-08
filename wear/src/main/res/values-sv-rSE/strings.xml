@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Inställningar</string>
     <string name="menu_status">Status</string>
+    <string name="menu_resync">Synkronisera om</string>
     <string name="menu_prime_fill">Förfyllning</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standardinställning</string>
