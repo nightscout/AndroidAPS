@@ -198,7 +198,6 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Aksies</string>
     <string name="ns_upload_only">NS laai net op (opgeskorte sinkro)</string>
-    <string name="ns_upload_only_summary">NS oplaai net. Nie effektief op SGV tensy \'n plaaslike bron soos xDrip gekies is. Nie effektief op profiele terwyl NS-profiele gebruik word.</string>
     <string name="pumpNotInitialized">Pomp nie geïnisialiseer nie!</string>
     <string name="primefill">Prima/vul</string>
     <string name="fillwarning">Maak asseblief seker dat die hoeveelheid ooreenstem met die spesifikasies van jou infusie stel!</string>
