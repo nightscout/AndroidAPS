@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Pumpe Status</string>
     <string name="title_activity_rileylink_settings">RileyLink Innstillinger</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Konfigurert RileyLink adresse:</string>
-    <string name="rileylink_configured_riley_link_name">Konfigurert RileyLink navn:</string>
-    <string name="rileylink_connected_device">Tilkoblet enhet:</string>
     <string name="rileylink_connection_status">Tilkoblingsstatus:</string>
     <string name="rileylink_connection_error">Tilkoblings feil:</string>
     <string name="rileylink_device">Enhet</string>
     <string name="rileylink_device_type">Enhets type:</string>
-    <string name="rileylink_device_model">Enhets modell:</string>
     <string name="rileylink_last_used_frequency">Sist brukte frekvens:</string>
     <string name="rileylink_last_device_contact">Siste tilkobling:</string>
     <string name="rileylink_firmware_version">Firmware versjon:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Pod utilgjengelig</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic pumpe</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <string name="riley_link_common_yes">Ja</string>
     <string name="riley_link_common_no">Nei</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
