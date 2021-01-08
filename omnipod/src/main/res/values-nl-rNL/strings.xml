@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Knop voor het onderbreken van insulinetoediening weergeven in het Omnipod-tabblad</string>
     <string name="omnipod_config_pulse_log_button_enabled">Knop voor het uitlezen van het Pulslog weergeven in het Podbeheer menu</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Knop voor RileyLink statistieken weergeven in het Omnipod-tabblad</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Gebruik batterijniveau van OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">Werkt NIET met de originele RileyLink. Werkt mogelijk niet met andere RileyLink alternatieven.</string>
     <string name="omnipod_config_time_change_enabled">Zomertijd-/tijdzonedetectie ingeschakeld</string>
     <string name="omnipod_config_expiration_reminder_enabled">Pieptonen voor uiterste gebruiksdatum ingeschakeld</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Aantal uur voordat de Pod stopt</string>
