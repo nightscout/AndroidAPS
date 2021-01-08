@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Stan pompy</string>
     <string name="title_activity_rileylink_settings">Ustawienia RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Skonfigurowany adres RileyLink:</string>
-    <string name="rileylink_configured_riley_link_name">Skonfigurowana nazwa RileyLink:</string>
-    <string name="rileylink_connected_device">Połączone urządzenie:</string>
     <string name="rileylink_connection_status">Status połączenia:</string>
     <string name="rileylink_connection_error">Błąd połączenia:</string>
     <string name="rileylink_device">Urządzenie</string>
     <string name="rileylink_device_type">Typ urządzenia:</string>
-    <string name="rileylink_device_model">Model urządzenia:</string>
     <string name="rileylink_last_used_frequency">Ostatnio używana częstotliwość:</string>
     <string name="rileylink_last_device_contact">Ostatnie połączenie z urządzeniem:</string>
     <string name="rileylink_firmware_version">Wersja oprogramowania:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Pod nieosiągalny</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <string name="riley_link_common_yes">Tak</string>
     <string name="riley_link_common_no">Nie</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>
