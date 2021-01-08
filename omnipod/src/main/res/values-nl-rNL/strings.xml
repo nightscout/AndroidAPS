@@ -144,7 +144,7 @@
     <string name="omnipod_cmd_insert_cannula">Canule inbrengen</string>
     <string name="omnipod_cmd_read_pulse_log">Pulslog uitlezen</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Neppe tijdelijk basaal omdat insulinetoediening onderbroken is</string>
-    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Annuleren van vals tijdelijk basaal wat ontstaan is omdat de insulinetoediening onderbroken was</string>
+    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Annuleren van neppe tijdelijk basaal die is aangemaakt omdat de insulinetoediening onderbroken was</string>
     <string name="omnipod_cmd_split_tbr">Tijdelijke basaal gesplitst als gevolg van een onzekere fout bij annulering</string>
     <string name="omnipod_cmd_beep_config">Pieptoonconfiguratie</string>
     <string name="omnipod_cmd_play_test_beep">Testpieptoon afspelen</string>
