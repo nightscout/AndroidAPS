@@ -200,7 +200,6 @@
     <string name="correctionbous">Διορθ</string>
     <string name="actions">Ενέργειες</string>
     <string name="ns_upload_only">NS φορτώνεται μόνο (απενεργοποίηση συγχρ)</string>
-    <string name="ns_upload_only_summary">NS φορτώνεται μόνο. Δεν είναι αποτελεσματικό στο SGV εκτός εάν έχει επιλεγεί μία τοπική πηγή όπως το xDrip. Δεν είναι αποτελεσματικό στα Προφίλ ενώ χρησιμοποιείται το NS-Profiles.</string>
     <string name="pumpNotInitialized">Η αντλία δεν έχει ρυθμιστεί!</string>
     <string name="primefill">Πλήρωση/Γέμισμα</string>
     <string name="fillwarning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
@@ -331,8 +330,6 @@
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="nav_about">Σχετικά με</string>
