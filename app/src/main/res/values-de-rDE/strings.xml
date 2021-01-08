@@ -1197,4 +1197,5 @@ Unerwartetes Verhalten.</string>
     <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
+    <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
 </resources>
