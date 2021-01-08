@@ -76,7 +76,7 @@
     <string name="result">Rezultat</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nu există date despre glicemie</string>
-    <string name="openapsma_request_label">Solicită</string>
+    <string name="openapsma_request_label">Solicitare</string>
     <string name="glucose">Glicemie</string>
     <string name="delta">Diferență</string>
     <string name="sms_delta">Diferență:</string>
@@ -114,7 +114,7 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Limitare aplicată!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazală</string>
+    <string name="basal">Rate bazale</string>
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
@@ -286,7 +286,6 @@
     <string name="correctionbous">Corecție</string>
     <string name="actions">Acțiuni</string>
     <string name="ns_upload_only">Doar încărcare în NS (sincronizare dezactivată)</string>
-    <string name="ns_upload_only_summary">Doar încărcare în NS. Nu are efect asupra SGV decât în cazul selectării unei surse locale, precum xDrip. Nu acționează asupra Profilurilor cât timp se folosesc profilurile din Nightscout.</string>
     <string name="pumpNotInitialized">Pompa nu este inițializată!</string>
     <string name="primefill">Pregătire/umplere</string>
     <string name="fillwarning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
@@ -443,12 +442,8 @@
     <string name="statuslights_sage_critical">Prag critic vechime senzor [h]</string>
     <string name="statuslights_sbat_warning">Prag de avertizare nivel baterie senzor [%]</string>
     <string name="statuslights_sbat_critical">Prag nivel critic baterie senzor [%]</string>
-    <string name="statuslights_bage_warning">Prag de avertizare nivel baterie [h]</string>
-    <string name="statuslights_bage_critical">Prag critic nivel baterie [h]</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
-    <string name="statuslights_bat_warning">Pragul de avertizare nivel baterie [%]</string>
-    <string name="statuslights_bat_critical">Pragul critic al nivelului baterie [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -1193,7 +1188,6 @@
     <string name="bolusadvisor">Consilier bolus</string>
     <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
     <string name="enablebolusadvisor">Activare consilier bolus</string>
-    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci în loc de calculatorul de bolus în timpul hiperglicemiei</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
 </resources>
