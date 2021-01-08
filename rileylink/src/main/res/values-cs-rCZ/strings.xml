@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Stav pumpy</string>
     <string name="title_activity_rileylink_settings">Nastavení RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Adresa nakonfigurovaného RileyLinku:</string>
-    <string name="rileylink_configured_riley_link_name">Název nakonfigurovaného RileyLinku:</string>
-    <string name="rileylink_connected_device">Připojené zařízení:</string>
     <string name="rileylink_connection_status">Stav připojení:</string>
     <string name="rileylink_connection_error">Chyba spojení:</string>
     <string name="rileylink_device">Zařízení</string>
     <string name="rileylink_device_type">Typ zařízení:</string>
-    <string name="rileylink_device_model">Model zařízení:</string>
     <string name="rileylink_last_used_frequency">Poslední použitá frekvence:</string>
     <string name="rileylink_last_device_contact">Poslední spojení se zařízením:</string>
     <string name="rileylink_firmware_version">Verze firmwaru:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Pod nedostupný</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omipod</string>
     <string name="riley_link_common_yes">Ano</string>
     <string name="riley_link_common_no">Ne</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
