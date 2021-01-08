@@ -67,6 +67,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Adresse RileyLink invalide.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation impossible.\n\nVous devez d\'abord configurer l\'Omnipod pour pouvoir faire cette operation.</string>
     <string name="omnipod_error_pod_not_attached">Pas de Pod actif</string>
+    <string name="omnipod_error_time_out_of_sync">L\'heure du Pod est désynchronisée. Veuillez la mettre à jour dans l\'onglet Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Erreur inconnue. Veuillez signaler ! (%1$s : %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Échec de communication : vérification de l\'intégrité du message échouée</string>
     <string name="omnipod_error_invalid_packet_type">Échec de communication : paquet reçu du Pod invalide</string>
