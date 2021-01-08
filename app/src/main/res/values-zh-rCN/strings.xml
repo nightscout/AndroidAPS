@@ -197,7 +197,6 @@
     <string name="correctionbous">矫正</string>
     <string name="actions">手动操作</string>
     <string name="ns_upload_only">只上传到NS服务器 (禁用同步)</string>
-    <string name="ns_upload_only_summary">只上传给NS服务器，对SGV没有影响除非选择了本地血糖来源，例如 xDrip. 对配置文件没有影响当选择NS-配置文件时.</string>
     <string name="pumpNotInitialized">泵未初始化!</string>
     <string name="primefill">充盈</string>
     <string name="fillwarning">请确保数量和输液器里的药量匹配</string>
