@@ -285,7 +285,7 @@
     <string name="mealbolus">ארוחה</string>
     <string name="correctionbous">תיקון</string>
     <string name="actions">פעולות</string>
-    <string name="ns_upload_only">העלאה ל-nightscout בלבד (סנכרון מבוטל)</string>
+    <string name="ns_upload_only">העלאה בלבד לנייטסקאוט (סנכרון מבוטל)</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
     <string name="primefill">תיחול\\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
@@ -1195,4 +1195,5 @@
     <string name="enablebolusadvisor_summary">מציג תזכורת לאכול אחר כך במקום להזריק את המינון שהומלץ ע\"י האשף בעת היפרגליקמיה (\"בולוס מקדים\")</string>
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="timetoeat">זמן לאכול</string>
+    <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
 </resources>
