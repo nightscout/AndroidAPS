@@ -286,7 +286,6 @@
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
     <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
-    <string name="ns_upload_only_summary">NS solo subida. No efectivo con SGV salvo que este seleccionada una fuente local como xDrip. No efectivo en perfiles usando perfiles NS.</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
@@ -443,12 +442,8 @@
     <string name="statuslights_sage_critical">Umbral crítico de la edad del sensor [h]</string>
     <string name="statuslights_sbat_warning">Umbral de advertencia de nivel de batería del sensor [%]</string>
     <string name="statuslights_sbat_critical">Umbral crítico de nivel de batería del sensor [%]</string>
-    <string name="statuslights_bage_warning">Umbral de advertencia de nivel de pila [h]</string>
-    <string name="statuslights_bage_critical">Umbral crítico de nivel de batería [h]</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -1193,7 +1188,6 @@
     <string name="bolusadvisor">Asistente de bolo</string>
     <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
-    <string name="enablebolusadvisor_summary">Usar un recordatorio para empezar a comer en lugar del asistente durante la glucemia alta</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y cálcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
 </resources>
