@@ -214,7 +214,6 @@
     <string name="correctionbous">교정주입</string>
     <string name="actions">실행</string>
     <string name="ns_upload_only">NS에 업로드만 하기(동기화 안됨)</string>
-    <string name="ns_upload_only_summary">NS에 업로드만 하기. xDrip같은 로컬 혈당 출처가 선택되지 않다면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
     <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
     <string name="primefill">교체/채움</string>
     <string name="fillwarning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
@@ -349,8 +348,6 @@
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
-    <string name="statuslights_bat_warning">배터리 잔량 경고값 [%]</string>
-    <string name="statuslights_bat_critical">배터리 잔량 위험값 [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="nav_about">버전정보</string>
