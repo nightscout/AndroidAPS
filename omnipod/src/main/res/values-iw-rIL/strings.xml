@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">הצג לחצן \"השהיית מתן אינסולין\" בלשונית אומניפוד</string>
     <string name="omnipod_config_pulse_log_button_enabled">הצג לחצן \"יומן פעימות\" בתפריט ניהול פוד</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">הצג לחצן \"סטטיסטיקת ריילילינק\" בתפריט ניהול פוד</string>
-    <string name="omnipod_config_use_riley_link_battery_level">השתמש ברמת סוללה המדווחת מ-EmaLink/OrangeLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">לא עובד עם ריילילינק המקורי. עלול שלא לעבוד עם חלופות ריילילינק אחרות.</string>
     <string name="omnipod_config_time_change_enabled">זיהוי אזור זמן ושעון קיץ מופעל</string>
     <string name="omnipod_config_expiration_reminder_enabled">תזכורת לתפוגה מופעלת</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">שעות לפני כיבוי</string>
