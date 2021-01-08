@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Omnipod skirtuke rodyti mygtuką Sustabdyti tiekimą</string>
     <string name="omnipod_config_pulse_log_button_enabled">Pod valdymo meniu rodyti mygtuką Pulse log</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Pod valdymo meniu rodyti mygtuką RileyLink Stats</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Naudoti baterijos įkrovimo lygį, gautą iš EmaLink/OrangeLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">NEVEIKIA su originaliu RileyLink. Gali neveikti su kitomis RileyLink alternatyvomis.</string>
     <string name="omnipod_config_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įgalintas</string>
     <string name="omnipod_config_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Valandos prieš išsijungimą</string>
