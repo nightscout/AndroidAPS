@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eGlucides</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_status">États</string>
+    <string name="menu_resync">Re-sync</string>
     <string name="menu_prime_fill">Amorcer/Remplir</string>
     <string name="menu_none">Aucun</string>
     <string name="menu_default">Défaut</string>

@@ -286,7 +286,7 @@
     <string name="correctionbous">Correctie</string>
     <string name="actions">Acties</string>
     <string name="ns_upload_only">Alleen NS upload (sync. gedeactiveerd)</string>
-    <string name="ns_upload_only_summary">Alleen NS upload. Heeft geen effect op de SGV behalve als een lokale bron zoals xDipp geselecteerd is. Heeft geen effect op de profielen wanneer het NS profiel is gekozen.</string>
+    <string name="ns_upload_only_summary">Alleen NS-upload. Heeft geen effect op de SGV, behalve als een lokale bron als xDrip geselecteerd is. Heeft geen effect op profielen wanneer NS-Profielen gebruikt worden.\n!!! WAARSCHUWING !!! Het uitschakelen van deze optie kan fouten veroorzaken en mogelijk resulteren in een overdosis insuline als een van de onderdelen (AAPS, NS, xDrip) onjuist is geconfigureerd. Let goed op of de gegevens van AAPS overeenkomen met de pompstatus!</string>
     <string name="pumpNotInitialized">Pomp niet geïnitialiseerd!</string>
     <string name="primefill">Ontlucht/vul</string>
     <string name="fillwarning">Verzeker u dat de vulhoeveelheid overeenkomt met de infusieset!</string>
@@ -443,12 +443,12 @@
     <string name="statuslights_sage_critical">Drempel alarm sensor leeftijd [h]</string>
     <string name="statuslights_sbat_warning">Drempel waarschuwing batterij niveau [%]</string>
     <string name="statuslights_sbat_critical">Drempel alarm batterij niveau [%]</string>
-    <string name="statuslights_bage_warning">Drempel waarschuwing batterij leeftijd [h]</string>
-    <string name="statuslights_bage_critical">Drempel alarm batterij niveau [h]</string>
+    <string name="statuslights_bage_warning">Drempelwaarde waarschuwing pompbatterijleeftijd [h]</string>
+    <string name="statuslights_bage_critical">Drempelwaarde kritieke pompbatterijleeftijd [h]</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
-    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
-    <string name="statuslights_bat_critical">Drempel alarm batterij niveau [%]</string>
+    <string name="statuslights_bat_warning">Drempelwaarde waarschuwing pompbatterijniveau [%]</string>
+    <string name="statuslights_bat_critical">Drempelwaarde kritiek pompbatterijniveau [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -1193,7 +1193,8 @@
     <string name="bolusadvisor">Bolusadviseur</string>
     <string name="bolusadvisormessage">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je herinneren wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je eraan herinneren.</string>
     <string name="enablebolusadvisor">Bolusadviseur inschakelen</string>
-    <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet de wizard maar een herinnering om met eten te beginnen</string>
+    <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="timetoeat">Tijd om te eten</string>
+    <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
 </resources>

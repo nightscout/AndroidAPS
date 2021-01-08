@@ -287,7 +287,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="correctionbous">Corr</string>
     <string name="actions">Actions</string>
     <string name="ns_upload_only">Remonter uniquement vers NS (sync désactivée)</string>
-    <string name="ns_upload_only_summary">Uniquement téléchargement NS. Ceci n’est pas opérationnel pour les SGV à moins qu’une source locale comme xDrip ne soit sélectionnée. Ceci n’est pas opérationnel sur les profils lorsque les profils NS sont utilisés.</string>
+    <string name="ns_upload_only_summary">Envoi NS uniquement. Inactif sur les Gly capteurs sauf si une source locale comme xDrip est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
     <string name="pumpNotInitialized">Pompe non initialisée !</string>
     <string name="primefill">Amorcer/Remplir</string>
     <string name="fillwarning">Veuillez à ce que la quantité corresponde aux caractéristiques de votre cathéter !</string>
@@ -380,7 +380,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="queue">File d\'attente :</string>
     <string name="status">État :</string>
     <string name="paused">En pause</string>
-    <string name="clearlog">Effacer l\'histo</string>
+    <string name="clearlog">Effacer logs</string>
     <string name="nowritepermission">NSCLIENT ne possède pas la permission d\'écriture. Mauvais API secret?</string>
     <string name="wear_settings">Paramètres Wear</string>
     <string name="wear_detailedIOB_title">Afficher l\'IA détaillée</string>
@@ -444,12 +444,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
     <string name="statuslights_sbat_warning">Seuil d’alerte niveau pile capteur [%]</string>
     <string name="statuslights_sbat_critical">Seuil critique niveau pile capteur [%]</string>
-    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
-    <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
+    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile pompe [h]</string>
+    <string name="statuslights_bage_critical">Seuil critique âge pile pompe [h]</string>
     <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique niveau pile [%]</string>
+    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile pompe [%]</string>
+    <string name="statuslights_bat_critical">Seuil critique niveau pile pompe [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
@@ -806,8 +806,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
-    <string name="send_all_logs">Envoyer le journal par e-mail</string>
-    <string name="delete_logs">Supprimer le journal</string>
+    <string name="send_all_logs">Envoyer les logs par mail</string>
+    <string name="delete_logs">Supprimer les logs</string>
     <string name="error_adding_treatment_message">Le traitement (insuline : %1$.2f, glucides : %2$d, à : %3$s) n\'a pas pu être ajouté aux traitements. Vérifiez et ajoutez SVP manuellement ce traitement.</string>
     <string name="generated_ecarbs_note">eCarbs : %1$d g (%2$d h), retard : %3$d m</string>
     <string name="openaps_noasdata">Pas de données d\'Autosens disponibles</string>
@@ -819,7 +819,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
-    <string name="sendlogfiles">Envoi des fichiers des journaux aux développeurs. Cas imprévu.</string>
+    <string name="sendlogfiles">Envoi des fichiers logs d\'aujourd\'hui aux développeurs avec l\'heure. Cas imprévu.</string>
     <string name="loop_openmode_min_change">Changement minimum [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <string name="searching_for_devices">Recherche d\'appareils en cours…</string>
@@ -1194,7 +1194,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="bolusadvisor">Assistant bolus</string>
     <string name="bolusadvisormessage">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
     <string name="enablebolusadvisor">Activer l\'assistant bolus</string>
-    <string name="enablebolusadvisor_summary">Utiliser le rappel pour commencer à manger au lieu de l\'assistant quand la glycémie est élevée</string>
+    <string name="enablebolusadvisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="timetoeat">Il est temps de manger</string>
+    <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
 </resources>

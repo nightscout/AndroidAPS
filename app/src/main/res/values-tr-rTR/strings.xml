@@ -184,7 +184,6 @@
     <string name="correctionbous">Düzeltme</string>
     <string name="actions">Eylemler</string>
     <string name="ns_upload_only">Sadece Nightscout\'a yükle (devre dışı senkronizasyon)</string>
-    <string name="ns_upload_only_summary">Sadece NS yükle. Etkili değil SGV üzerinde xDrip gibi bir yerel kaynağı seçili olmadıkça. NS-profilleri kullanılır iken profilleri üzerinde etkili değil.</string>
     <string name="pumpNotInitialized">Pompa başlatılmamış!</string>
     <string name="primefill">Hazırla/doldur</string>
     <string name="fillwarning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>

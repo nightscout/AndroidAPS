@@ -287,7 +287,6 @@ Eversense-appen.</string>
     <string name="correctionbous">Korrektion</string>
     <string name="actions">Åtgärder</string>
     <string name="ns_upload_only">Endast uppladdning till Nightscout</string>
-    <string name="ns_upload_only_summary">Endast uppladdning till Nightscout. Kommer inte få BG-data om inte lokal källa som xDrip används. Kommer heller inte att kunna hämta basalprofiler från Nightscout.</string>
     <string name="pumpNotInitialized">Pump inte initierad</string>
     <string name="primefill">Förfyllning</string>
     <string name="fillwarning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
@@ -444,8 +443,8 @@ Eversense-appen.</string>
     <string name="statuslights_sage_critical">Sensorålder - akut varning: [h]</string>
     <string name="statuslights_sbat_warning">Varningsnivå sensorbatteri [%]</string>
     <string name="statuslights_sbat_critical">Kritisk nivå sensorbatteri [%]</string>
-    <string name="statuslights_bage_warning">Batteriålder - varning: [h]</string>
-    <string name="statuslights_bage_critical">Batteriålder - akut varning: [h]</string>
+    <string name="statuslights_bage_warning">Batteriålder - varning: [tim]</string>
+    <string name="statuslights_bage_critical">Batteriålder - akut varning: [tim]</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
     <string name="statuslights_bat_warning">Varningsnivå för batteri [%]</string>
@@ -1194,7 +1193,7 @@ Eversense-appen.</string>
     <string name="bolusadvisor">Bolusguide</string>
     <string name="bolusadvisormessage">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrektionsbolus nu och påminna dig när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
     <string name="enablebolusadvisor">Aktivera bolusguiden</string>
-    <string name="enablebolusadvisor_summary">Använd påminnelse om att börja äta istället för kalkylatorn under hög glykemi</string>
+    <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="timetoeat">Dags att äta</string>
 </resources>
