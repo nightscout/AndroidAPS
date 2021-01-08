@@ -25,6 +25,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
@@ -318,6 +319,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.nightscoutVersionName}"
                 if (buildHelper.isEngineeringMode()) message += "\n${resourceHelper.gs(R.string.engineering_mode_enabled)}"
+                if (!fabricPrivacy.fabricEnabled()) message += "\n${resourceHelper.gs(R.string.fabric_upload_disabled)}"
                 message += resourceHelper.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
@@ -398,6 +400,12 @@ class MainActivity : NoSplashAppCompatActivity() {
         fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
         activePlugin.activeSensitivity.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
         activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
+        // Add to crash log too
+        FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
+        FirebaseCrashlytics.getInstance().setCustomKey("Version", BuildConfig.VERSION)
+        FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
+        FirebaseCrashlytics.getInstance().setCustomKey("Commited", BuildConfig.COMMITED)
+        FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
     }
 
 }

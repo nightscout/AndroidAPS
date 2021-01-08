@@ -1428,5 +1428,6 @@
     <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
+    <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
 
 </resources>
