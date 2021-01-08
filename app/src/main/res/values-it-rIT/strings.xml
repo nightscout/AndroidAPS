@@ -286,6 +286,7 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
     <string name="ns_upload_only">NS: solo upload (sincron. disabilitata)</string>
+    <string name="ns_upload_only_summary">Solo upload su NS. Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="pumpNotInitialized">Micro non inizializzato!</string>
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
