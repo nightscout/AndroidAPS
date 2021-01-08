@@ -287,7 +287,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="correctionbous">Corr</string>
     <string name="actions">Actions</string>
     <string name="ns_upload_only">Remonter uniquement vers NS (sync désactivée)</string>
-    <string name="ns_upload_only_summary">Uniquement téléchargement NS. Ceci n’est pas opérationnel pour les SGV à moins qu’une source locale comme xDrip ne soit sélectionnée. Ceci n’est pas opérationnel sur les profils lorsque les profils NS sont utilisés.</string>
     <string name="pumpNotInitialized">Pompe non initialisée !</string>
     <string name="primefill">Amorcer/Remplir</string>
     <string name="fillwarning">Veuillez à ce que la quantité corresponde aux caractéristiques de votre cathéter !</string>
@@ -444,12 +443,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
     <string name="statuslights_sbat_warning">Seuil d’alerte niveau pile capteur [%]</string>
     <string name="statuslights_sbat_critical">Seuil critique niveau pile capteur [%]</string>
-    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile [h]</string>
-    <string name="statuslights_bage_critical">Seuil critique âge pile [h]</string>
+    <string name="statuslights_bage_warning">Seuil d\'alerte âge pile pompe [h]</string>
+    <string name="statuslights_bage_critical">Seuil critique âge pile pompe [h]</string>
     <string name="statuslights_res_warning">Seuil d\'alerte niveau réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique niveau pile [%]</string>
+    <string name="statuslights_bat_warning">Seuil d’alerte niveau pile pompe [%]</string>
+    <string name="statuslights_bat_critical">Seuil critique niveau pile pompe [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
@@ -1194,7 +1193,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="bolusadvisor">Assistant bolus</string>
     <string name="bolusadvisormessage">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
     <string name="enablebolusadvisor">Activer l\'assistant bolus</string>
-    <string name="enablebolusadvisor_summary">Utiliser le rappel pour commencer à manger au lieu de l\'assistant quand la glycémie est élevée</string>
+    <string name="enablebolusadvisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="timetoeat">Il est temps de manger</string>
 </resources>
