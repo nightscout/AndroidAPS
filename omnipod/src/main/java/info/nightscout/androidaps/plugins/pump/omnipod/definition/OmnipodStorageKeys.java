@@ -22,7 +22,8 @@ public class OmnipodStorageKeys {
         public static final int NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED = R.string.key_omnipod_notification_uncertain_bolus_sound_enabled;
         public static final int AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED = R.string.key_omnipod_automatically_acknowledge_alerts_enabled;
         public static final int RILEY_LINK_STATS_BUTTON_ENABLED = R.string.key_omnipod_riley_link_stats_button_enabled;
-        public static final int USE_RILEY_LINK_BATTERY_LEVEL = R.string.key_omnipod_use_riley_link_battery_level;
+        public static final int SHOW_RILEY_LINK_BATTERY_LEVEL = R.string.key_riley_link_show_battery_level;
+        public static final int BATTERY_CHANGE_LOGGING_ENABLED = R.string.key_omnipod_battery_change_logging_enabled;
     }
 
     public static class Statistics {
