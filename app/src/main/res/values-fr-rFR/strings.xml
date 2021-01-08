@@ -61,7 +61,7 @@
     <string name="treatments_wizard_bg_label">Gly</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="treatments_wizard_correction_label">Correction</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IA</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
@@ -284,7 +284,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_quickwizard_item_edit_button">Éditer</string>
     <string name="overview_quickwizard_item_remove_button">Supprimer</string>
     <string name="mealbolus">Repas</string>
-    <string name="correctionbous">Corr</string>
+    <string name="correctionbous">Correction</string>
     <string name="actions">Actions</string>
     <string name="ns_upload_only">Remonter uniquement vers NS (sync désactivée)</string>
     <string name="ns_upload_only_summary">Envoi NS uniquement. Inactif sur les Gly capteurs sauf si une source locale comme xDrip est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
@@ -375,12 +375,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="nsclientinternal_secret_dialogtitle">NS API Secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Entrez NS API secret (12 carac. min)</string>
     <string name="deliver_now">Transmettre maintenant</string>
-    <string name="clear_queue">Vider la file d\'attente</string>
-    <string name="show_queue">Afficher la file d\'attente</string>
-    <string name="queue">File d\'attente :</string>
+    <string name="clear_queue">Vider queue</string>
+    <string name="show_queue">Afficher queue</string>
+    <string name="queue">Queue :</string>
     <string name="status">État :</string>
     <string name="paused">En pause</string>
-    <string name="clearlog">Effacer logs</string>
+    <string name="clearlog">Effacer histo</string>
     <string name="nowritepermission">NSCLIENT ne possède pas la permission d\'écriture. Mauvais API secret?</string>
     <string name="wear_settings">Paramètres Wear</string>
     <string name="wear_detailedIOB_title">Afficher l\'IA détaillée</string>
@@ -751,7 +751,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="virtualpump_definition">Définition de pompe</string>
     <string name="virtualpump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
     <string name="ns_autobackfill_title">Remplissage automatique G</string>
-    <string name="wear_wizard_settings">Paramètres de l’Assistant</string>
+    <string name="wear_wizard_settings">Paramètres assistant</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_display_settings">Parametres d\'affichage</string>
     <string name="wear_general_settings">Paramètres généraux</string>
@@ -1092,7 +1092,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_calculation">Afficher le calcul</string>
     <string name="automation_event">Evénement auto.</string>
     <string name="alreadyset">Déjà configuré</string>
-    <string name="clearqueueconfirm">Effacer la file d\'attente ? Toutes les données en file d\'attente seront perdues !</string>
+    <string name="clearqueueconfirm">Effacer la queue ? Toutes les données en attente seront perdues !</string>
     <string name="ebstopsloop">L\'utilisation du bolus étendu arrètera la boucle fermée pour la durée d\'exécution du bolus étendu. Voulez-vous vraiment le faire ?</string>
     <string name="closed_loop_disabled_with_eb">Boucle fermée désactivée à cause du bolus étendu</string>
     <string name="phonechecker">\"Vérif. du téléphone\"</string>
