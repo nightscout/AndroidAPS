@@ -31,7 +31,7 @@ import lecho.lib.hellocharts.model.Viewport;
  */
 public class BgGraphBuilder {
     public static final double MAX_PREDICTION__TIME_RATIO = (3d / 5);
-    public static final double UPPER_CUTOFF_SGV = 300;
+    public static final double UPPER_CUTOFF_SGV = 400;
     private final long predictionEndTime;
     private final List<BgWatchData> predictionsList;
     private final ArrayList<BolusWatchData> bolusWatchDataList;
