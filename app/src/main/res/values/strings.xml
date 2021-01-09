@@ -1405,7 +1405,7 @@
     <string name="donate_your_data_to_science">Donate your data to science</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn\'t on purpose.</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn't on purpose.</string>
     <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
     <string name="only_upload_if_charging">Only upload if charging</string>
     <string name="worker_state">Worker State: %s</string>
