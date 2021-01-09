@@ -65,7 +65,7 @@
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
-    <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>a
+    <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
     <string name="description_source_xdrip">Receive BG values from xDrip.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
