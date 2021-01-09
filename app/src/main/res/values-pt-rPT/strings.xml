@@ -35,7 +35,7 @@
     <string name="description_pump_combo">Integração para bombas Accu-Chek Combo, requer ter o ruffy instalado</string>
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
-    <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
+    <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando qualquer um que é mais sensível). Hidratos são cortados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
@@ -181,7 +181,7 @@
     <string name="metadata_warning_outdated_format">Está a usar formato ultrapassado herdado a partir de versões antigas do AAPS, o que não é seguro! Use-o apenas como um último recurso, se não tiver uma exportação no actual no formato JSON.</string>
     <string name="metadata_warning_old_export">Preferências importadas já são %1$s dias antigas! Talvez tenha preferências mais actualizadas ou escolheu o ficheiro errado? Lembre-se de exportar preferências regularmente!</string>
     <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
-    <string name="metadata_warning_different_version">Preferências de uma versão menor diferente de aplicação. Está OK se você está importando após o upgrade, mas verifique após a importação se as preferências ainda estão corretas!</string>
+    <string name="metadata_warning_different_version">Preferências de uma versão menor diferente de aplicação. Está OK se está a importar após o upgrade, mas verifique após a importação se as preferências ainda estão correctas!</string>
     <string name="metadata_urgent_different_version">Preferências de uma versão principal diferente de aplicação. As principais versões diferem significativamente e podem ter preferências incompatíveis! Certifique-se depois de importar que as preferências ainda estão corretas!</string>
     <string name="metadata_label_format">Formato do ficheiro</string>
     <string name="metadata_label_created_at">Criado em</string>
@@ -210,7 +210,7 @@
     <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
     <string name="in_directory" comment="placeholder is for exported file path">no diretório: %1$s</string>
     <string name="end_user_license_agreement">Condições de Utilização</string>
-    <string name="end_user_license_agreement_text">NÃO DEVE SER USADO PARA FAZER DECISÕES MÉDICAS. NÃO HÁ NENHUMA GARANTIA PARA O PROGRAMA, NA EXTENSÃO PERMITIDA PELA LEGISLAÇÃO APLICÁVEL. EXCETO QUANDO DE OUTRA FORMA, POR ESCRITO, OS TITULARES DOS DIREITOS DE AUTOR E / OU OUTRAS PARTES FORNECEM O PROGRAMA “TAL COMO ESTÁ”, SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO, ÀS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. TODO O RISCO QUANTO À QUALIDADE E DESEMPENHO DO PROGRAMA É COM VOCÊ. CASO O PROGRAMA SEJA DEFEITUOSO, VOCÊ ASSUME O CUSTO DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIOS.</string>
+    <string name="end_user_license_agreement_text">NÃO DEVE SER USADO PARA FAZER DECISÕES MÉDICAS. NÃO HÁ NENHUMA GARANTIA PARA O PROGRAMA, NA EXTENSÃO PERMITIDA PELA LEGISLAÇÃO APLICÁVEL. EXCEPTO QUANDO DE OUTRA FORMA, POR ESCRITO, OS TITULARES DOS DIREITOS DE AUTOR E / OU OUTRAS PARTES FORNECEM O PROGRAMA “TAL COMO ESTÁ”, SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO, ÀS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. TODO O RISCO QUANTO À QUALIDADE E DESEMPENHO DO PROGRAMA É CONSIGO. CASO O PROGRAMA SEJA DEFEITUOSO, ASSUME O CUSTO DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIOS.</string>
     <string name="end_user_license_agreement_i_understand">EU ENTENDO E CONCORDO</string>
     <string name="save">Guardar</string>
     <string name="reloadprofile">Recarregar perfil</string>
@@ -227,7 +227,7 @@
     <string name="smscommunicator_bolusfailed">Bólus falhado</string>
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência você precisa adicionar pelo menos 2 números de telefone.</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência precisa adicionar pelo menos 2 números de telefone.</string>
     <string name="bolusdelivered">Bólus %1$.2f U administrador com sucesso</string>
     <string name="bolusrequested">A ser administrado %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bólus %1$.2f U administrador com sucesso</string>
@@ -286,6 +286,7 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Acções</string>
     <string name="ns_upload_only">Envio NS apenas (sincronização desactivada)</string>
+    <string name="ns_upload_only_summary">Envio NS apenas. Não efectivo no SGV a menos que uma fonte local como o xDrip seja selecionada. Não efectivo em Perfis enquanto NS-Perfis é usado.\n!!! AVISO !!! A desactivação desta opção pode causar malfuncionamento e overdose de insulina se qualquer um de seu componente (AAPS, NS, xDrip) estiver mal configurado. Assista cuidadosamente se dados exibidos pela AAPS combinam com o estado da bomba!</string>
     <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
@@ -391,6 +392,7 @@
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente insulina</string>
     <string name="pregnant">Gravidez</string>
+    <string name="patientage_summary">Por favor seleccione o tipo de paciente para configurar limites de segurança</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou alcunha para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
@@ -763,7 +765,9 @@
     <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
-    <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
+    <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar confguração uma vez que a bomba foi configurada.\n</string>
     <string name="startobjective">Iniciar primeiro objectivo</string>
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
@@ -950,6 +954,7 @@
     <string name="storage">restrição de armazenamento interno</string>
     <string name="diskfull">Liberte pelo menos %1$d MB do armazenamento interno! Loop desativado!</string>
     <string name="wrongformat">Formato incorrecto</string>
+    <string name="wrongTbrDuration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
     <string name="sms_wrongcode">Código errado. Comando cancelado.</string>
     <string name="notconfigured">Não configurado</string>
     <string name="profileswitchcreated">Troca de perfil criada</string>
@@ -966,7 +971,7 @@
     <string name="addnew">Adicionar novo</string>
     <string name="versionChecker">Verificador de Versão</string>
     <string name="signature_verifier">Verificador de assinatura</string>
-    <string name="running_invalid_version">Detectamos que está  a correr uma versão inválida. Loop desactivado!</string>
+    <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
@@ -1069,7 +1074,7 @@
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil mais comum:</string>
-    <string name="survey_comment">Nota: Apenas os dados visíveis neste ecrã serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Você pode enviar dados novamente se o perfil principal for alterado, mas deixá-lo rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
+    <string name="survey_comment">Nota: Apenas os dados visíveis neste ecrã serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Pode enviar dados novamente se o perfil principal for alterado, mas deixá-lo rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -1097,6 +1102,7 @@
     <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
     <string name="smscommunicator_otp_enabled">Activar Autenticador</string>
     <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Senha-Única (OTP) que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
     <string name="smscommunicator_otp_pin">PIN obrigatório adicional no token final</string>
@@ -1104,6 +1110,7 @@
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_code_verify_label">Código para verificar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pela app Authenticator (conhecido como OTP) seguido de 3 ou mais dígitos de PIN obrigatório.</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
     <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados actualmente como inválidos, e precisará de os configurar novamente.</string>
@@ -1146,26 +1153,37 @@
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
     <string name="open_humans">Open Humans</string>
     <string name="finishing_open_humans_setup">A terminar configuração Open Humans...</string>
+    <string name="this_may_take_a_while">Pode demorar um pouco. Não desligue o telefone ou este plugin.</string>
     <string name="setup_finished">Configuração terminada</string>
+    <string name="your_phone_will_upload_data">Seu telefone fará o envio de dados para Open Humans em breve.</string>
+    <string name="your_phone_is_upload_data">Seu telefone está enviar dados para Open Humans agora.</string>
     <string name="setup_failed">Falha na configuração</string>
+    <string name="there_was_an_error">Houve um erro. Tente efetuar o login novamente a fim de prosseguir. Desculpe &amp; Obrigado!</string>
+    <string name="open_humans_terms">Esta é uma ferramenta de código aberto que vai copiar seus dados para Open Humans. Nós não retemos direitos de compartilhar seus dados com terceiros sem a sua autorização explícita. Os dados que o projecto e a app recebem são identificados através de um ID de usuário aleatório e só serão transmitidos de forma segura para uma conta Open Humans com a sua autorização desse processo. Pode parar de fazer o envio e excluir seus dados enviados a qualquer momento via www.openhumans.org.</string>
     <string name="i_understand_and_agree">Compreendo e concordo.</string>
     <string name="login">Login</string>
     <string name="logout">Terminar Sessão</string>
+    <string name="oh_logout_confirmation">Deseja realmente encerrar sessão e parar de doar dados para a ciência?</string>
     <string name="project_member_id">ID Membro do Projecto: %s</string>
     <string name="queue_size">Tamanho da Fila: %d</string>
     <string name="terms_of_use">Termos de Utilização</string>
     <string name="not_logged_in">Não tem sessão iniciada</string>
     <string name="you_need_to_accept_the_of_use_first">Tem de aceitar os Termos de Utilização.</string>
     <string name="successfully_logged_in">Login bem sucedido</string>
+    <string name="setup_will_continue_in_background">A configuração será concluída em segundo plano agora. Obrigado por fazer o envio dos seus dados.\n\nPor favor, mantenha este plugin e o telefone ligado por um curto tempo para que a configuração seja concluída.</string>
     <string name="completing_login">A completar o login…</string>
     <string name="donate_your_data_to_science">Doar seus dados para a ciência</string>
     <string name="open_humans_short">OH</string>
+    <string name="you_have_been_signed_out_of_open_humans">Sessão do Open Humans foi encerrada</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Clique aqui para entrar novamente se isso não era de propósito.</string>
     <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
     <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
     <string name="worker_state">Estado Trabalhador: %s</string>
     <string name="uploaded_data">Dados Enviados</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Os seguintes dados serão enviados para sua conta Open Humans: valores de Gliccose, bólus, hidratos, eventos do careportal (excepto notas), bólus estendidos, mudanças de perfil, doses diárias totais, basais temporárias, alvos temp, preferências, versão da aplicação, modelo de dispositivo e dimensões da tela. Informações secretas ou privadas como sua URL de Nightscout ou senha de API não serão enviadas.</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
     <string name="filter">Filtro</string>
+    <string name="copytolocalprofile_invalid">Não é possível criar perfil local. Perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="alarm">Alarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for accionado</string>
