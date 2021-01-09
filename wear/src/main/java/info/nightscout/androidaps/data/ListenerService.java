@@ -635,7 +635,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         // TODO: proper channel. Does cancel work?
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID_OPENLOOP)
+                new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS)
                         .setSmallIcon(R.drawable.ic_icon)
                         .setContentTitle("Bolus Progress")
                         .setContentText(progresspercent + "% - " + progresstatus)
