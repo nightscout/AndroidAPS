@@ -407,6 +407,10 @@
     <string name="disconnectpumpfor1h">Desligar bomba por 1 h</string>
     <string name="disconnectpumpfor2h">Desligar bomba por 2 h</string>
     <string name="disconnectpumpfor3h">Desligar bomba por 3 h</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 horas</string>
+    <string name="duration3h">3 horas</string>
+    <string name="duration10h">10 horas</string>
     <string name="resume">Retomar</string>
     <string name="reconnect">Re-ligar a Bomba</string>
     <string name="smscommunicator_wrongduration">Duração errada</string>
