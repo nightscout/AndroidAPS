@@ -65,7 +65,7 @@
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
-    <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
+    <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>a
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
     <string name="description_source_xdrip">Receive BG values from xDrip.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
@@ -1405,7 +1405,7 @@
     <string name="donate_your_data_to_science">Donate your data to science</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in a again if this wasn\'t on purpose.</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn\'t on purpose.</string>
     <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
     <string name="only_upload_if_charging">Only upload if charging</string>
     <string name="worker_state">Worker State: %s</string>
