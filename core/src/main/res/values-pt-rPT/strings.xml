@@ -15,8 +15,8 @@
     <string name="handshaking">Cumprimento</string>
     <string name="connecting">A ligar</string>
     <string name="connected">Ligado</string>
-    <string name="disconnected">Desligado</string>
-    <string name="disconnecting">A desligar</string>
+    <string name="disconnected">Desconectada</string>
+    <string name="disconnecting">A desconectar</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
