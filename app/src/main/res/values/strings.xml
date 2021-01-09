@@ -1418,7 +1418,7 @@
     <string name="alarm">Alarm</string>
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
-    <string name="smscommunicator_pump_ureachable">Report  pump ureachable</string>
+    <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
     <string name="bolusadvisor">Bolus advisor</string>
