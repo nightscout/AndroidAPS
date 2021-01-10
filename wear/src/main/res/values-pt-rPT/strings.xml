@@ -61,6 +61,8 @@
     <string name="pref_complication_tap_action">Complicação de Toque</string>
     <string name="pref_unicode_in_complications">Unicode em Complicações</string>
     <string name="pref_version">Versão:</string>
+    <string name="pref_moreWatchfaceSettings">mais definições do Mostrador</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Verifique a configuração do mostrador, por favor.</string>
     <string name="menu_tempt">AlvoT</string>
     <string name="menu_wizard">Assistente</string>
     <string name="menu_bolus">Bólus</string>
