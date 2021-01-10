@@ -372,12 +372,11 @@ public class TimeListEdit {
     }
 
     private void addItem(int index, int timeAsSeconds, double value1, double value2) {
-        synchronized (this) {
-            if (itemsCount() > inflatedUntil) {
-                layout.removeView(finalAdd);
-                inflateRow(++inflatedUntil);
-                layout.addView(finalAdd);
-            }
+        if (itemsCount() >= 24) return;
+        if (itemsCount() > inflatedUntil) {
+            layout.removeView(finalAdd);
+            inflateRow(++inflatedUntil);
+            layout.addView(finalAdd);
         }
         try {
             // shift data
