@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">Настройки %1$s</string>
     <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
-    <string name="nav_resetdb">обнулить базы</string>
+    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
     <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
@@ -405,11 +405,18 @@
     <string name="suspendloopfor3h">приостановить цикл на 3 часа</string>
     <string name="suspendloopfor10h">приостановить цикл на 10 часов</string>
     <string name="suspendloopforXmin">Приостановить цикл на %1$d мин</string>
+    <string name="disconnectpump">Отключить помпу</string>
     <string name="disconnectpumpfor15m">отсоединить помпу на 15 мин</string>
     <string name="disconnectpumpfor30m">отсоединить помпу на 30 мин</string>
     <string name="disconnectpumpfor1h">отсоединить помпу на 1 час</string>
     <string name="disconnectpumpfor2h">отсоединить помпу на 2 часа</string>
     <string name="disconnectpumpfor3h">отсоединить помпу на 3 часа</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часов</string>
     <string name="resume">возобновить</string>
     <string name="reconnect">Возобновить соединение с помпой</string>
     <string name="smscommunicator_wrongduration">неверное значение длительности</string>
@@ -435,8 +442,12 @@
     <string name="statuslights_sage_critical">Критический порог предупреждения о времени, отработанном сенсором [h]</string>
     <string name="statuslights_sbat_warning">Порог предупреждения о разрядке батареи [%]</string>
     <string name="statuslights_sbat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
+    <string name="statuslights_bage_warning">Порог предупреждения о разрядке батареи [h]</string>
+    <string name="statuslights_bage_critical">Порог предупреждения о критическом уровне разрядки батареи [h]</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
     <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
+    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
+    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="prediction_shortname">ОЖИД</string>
     <string name="iob">IOB акт инс</string>
     <string name="cob">акт углев</string>
@@ -1165,6 +1176,7 @@ Context | Edit Context</string>
     <string name="donate_your_data_to_science">Передайте свои данные исследователям</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
     <string name="only_upload_if_connected_to_wifi">Загружать только при подключении к WiFi</string>
     <string name="only_upload_if_charging">Загружать только при зарядке</string>
     <string name="worker_state">Рабочее состояние: %s</string>
@@ -1176,4 +1188,11 @@ Context | Edit Context</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
     <string name="alarm">Сигнал</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
+    <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
+    <string name="advisoralarm">Напомнить о еде</string>
+    <string name="alarminxmin">Напомнить через %1$d мин</string>
+    <string name="bolusadvisor">Помощник болюса</string>
+    <string name="bolusadvisormessage">У вас высокая глюкоза крови. Лучше подождать, чем есть сейчас. Хотите сделать болюс на коррекцию и установить напоминание, когда будет пора есть? В этом случае углеводы не будут записаны и после напоминания надо будет снова воспользоваться помощником.</string>
+    <string name="enablebolusadvisor">Вкл помощник болюса</string>
+    <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
 </resources>
