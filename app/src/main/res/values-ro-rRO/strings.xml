@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">%1$s Preferințe</string>
     <string name="nav_preferences">Preferințe</string>
     <string name="nav_refreshtreatments">Reîncarcă tratamentele din NS</string>
-    <string name="nav_resetdb">Resetează bazele de date</string>
+    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">Resetează bazele de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
     <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
@@ -58,7 +58,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_bg_label">Glicemie</string>
+    <string name="treatments_wizard_bg_label">Gl</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbohidrați</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
@@ -322,7 +322,7 @@
     <string name="openapsama_useautosens">Folosește opțiunea de autosensibilitate</string>
     <string name="refresheventsfromnightscout">Sincronizează cu NS</string>
     <string name="deletefuturetreatments">Ștergerea tratamentelor înregistrate în viitor</string>
-    <string name="eatingsoon">Masă în curând</string>
+    <string name="eatingsoon">Mănânc în curând</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Activitate</string>
     <string name="removerecord">Șterge înregistrarea</string>
@@ -519,8 +519,8 @@
     <string name="careportal_newnstreatment_percentage_label">Procentaj</string>
     <string name="careportal_newnstreatment_timeshift_label">Decalare</string>
     <string name="default_temptargets">Ținte-Temporare implicite</string>
-    <string name="eatingsoon_duration">durată se-mănâncă-în-curând</string>
-    <string name="eatingsoon_target">țintă se-mănâncă-în-curând</string>
+    <string name="eatingsoon_duration">durată mănânc-în-curând</string>
+    <string name="eatingsoon_target">țintă mănânc-în-curând</string>
     <string name="activity_duration">durată activitate</string>
     <string name="activity_target">țintă activitate</string>
     <string name="hypo_duration">durată țintă</string>
@@ -624,7 +624,6 @@
     <string name="enablesmbwithhightemptarget">Activează SMB cu ținte temporare mari</string>
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
-    <string name="overview_carbs_label">Carbohidrați</string>
     <string name="overview_buttons_selection">Butoane</string>
     <string name="show_calibration_button_summary">Trimite calibrarea către xDrip+ sau deschide calibrarea pentru G5</string>
     <string name="show_cgm_button_summary">Deschide xDrip+, butonul de înapoi returnează la AAPS</string>
@@ -809,7 +808,6 @@
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
-    <string name="time_offset">Diferență de fus orar</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -1081,7 +1079,7 @@
     <string name="statistics">Statistici</string>
     <string name="randombg">Glicemie aleatoare</string>
     <string name="description_source_randombg">Generare glicemie aleator (doar mod Demo)</string>
-    <string name="randombg_short">Glicemie</string>
+    <string name="randombg_short">Gl</string>
     <string name="tools">Instrumente</string>
     <string name="show_calculation">Arată calculul</string>
     <string name="automation_event">Eveniment automatizare</string>
