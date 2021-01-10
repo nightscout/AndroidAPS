@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description"><![CDATA[כמות: <b>%1$d%%</b>\nמשך: <b>%2$s h</b>]]></string>
+    <string name="alert_r7_description"><![CDATA[כמות: <b>%1$d%%</b>\nמשך: <b>%2$s ש\'</b>]]></string>
     <string name="alert_w31_description"><![CDATA[תכולת מיכל: <b>%1$s U</b>]]></string>
     <string name="alert_w32_description">החלף סוללה.</string>
     <string name="alert_w33_description">קבע זמן/תאריך.</string>
     <string name="alert_w34_description">צור קשר עם תמיכת Accu-Chek.</string>
-    <string name="alert_w36_description"><![CDATA[כמות: <b>%1$d%%</b>\nמשך: <b>%2$s h</b>]]></string>
+    <string name="alert_w36_description"><![CDATA[<b>%1$d%%</b><br/>משך: <b>%2$s שעות</b>]]></string>
     <string name="alert_w38_description"><![CDATA[כמות מתוכננת: <b>%1$s U</b><br/>כמות שניתנה: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">הכנס מיכל.</string>
     <string name="alert_m21_description">החלף מיכל.</string>
