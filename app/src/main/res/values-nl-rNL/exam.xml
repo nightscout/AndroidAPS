@@ -175,8 +175,8 @@
     <string name="ic_increasingvalue">Hogere KH-ratio\'s leiden tot minder insulinetoediening voor dezelfde hoeveelheid koolhydraten.</string>
     <string name="ic_decreasingvalue">Lagere KH-ratio\'s leiden tot minder insulinetoediening voor dezelfde hoeveelheid koolhydraten.</string>
     <string name="ic_noeffect">Als je 0 COB hebt zal het veranderen van KH-ratio leiden tot een andere hoeveelheid insuline om jouw BG te corrigeren.</string>
-    <string name="ic_different">KH-ratio is anders als je een brood-eenheid telt als10g of als 12g koolhydraten.</string>
-    <string name="ic_meaning">KH-ratio betekent: hoeveel brood-eenheden gebruik je voor 1U insuline.</string>
+    <string name="ic_different">De KH-ratio is anders als je een brood-eenheid telt als 10g of als 12g koolhydraten.</string>
+    <string name="ic_meaning">KH-ratio betekent: hoeveel brood-eenheden gebruik je voor 1E insuline.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/FAQ.html#Koolhydraat-ratio-KH-g-E</string>
     <string name="profileswitch_label">Profielwissels</string>
     <string name="profileswitch_pctwillchange"> Welke antwoorden zijn correct bij het opgeven van een 90% profielwissel?</string>
