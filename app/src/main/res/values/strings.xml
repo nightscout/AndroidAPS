@@ -331,8 +331,8 @@
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Actions</string>
-    <string name="ns_upload_only">NS upload only (disabled sync)</string>
-    <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
+    <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
+    <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
@@ -549,7 +549,7 @@
     <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="ns_noupload">No upload to NS</string>
     <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
-    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
+    <string name="key_ns_upload_only" translatable="false">ns_upload_only2</string>
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
