@@ -197,7 +197,7 @@
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Supprimer Pod</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Définir l\'heure</string>
-    <string name="omnipod_overview_button_suspend_delivery">Arrêter</string>
+    <string name="omnipod_overview_button_suspend_delivery">Suspendre</string>
     <string name="omnipod_overview_button_refresh">Actualiser</string>
     <string name="omnipod_overview_button_resume_delivery">Reprendre l\'injection</string>
     <string name="omnipod_overview_button_pod_management">Gest. Pod</string>
