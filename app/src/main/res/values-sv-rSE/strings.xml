@@ -1175,7 +1175,6 @@ Eversense-appen.</string>
     <string name="donate_your_data_to_science">Donera dina data till vetenskapen</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen om det inte var meningen.</string>
     <string name="only_upload_if_connected_to_wifi">Ladda bara upp om ansluten till WiFi</string>
     <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
     <string name="worker_state">Jobbstatus: %s</string>
@@ -1187,7 +1186,6 @@ Eversense-appen.</string>
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="alarm">Larm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
-    <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="bolusadvisor">Bolusguide</string>
