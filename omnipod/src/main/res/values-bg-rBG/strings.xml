@@ -3,6 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">Конфигурация на rileyLink</string>
     <string name="omnipod_config_bolus_beeps_enabled">Звук при болус активен</string>
     <string name="omnipod_config_basal_beeps_enabled">Звук при базал активен</string>
     <string name="omnipod_config_smb_beeps_enabled">Звук при SMB активен</string>
@@ -10,7 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показвай спряна доставката в раздела Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показване на PULSE LOG в менюто на Pod Management</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Бутон Показване RileyLink Stats в меню Управление на Pod</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">НЕ работи с оригиналната RileyLink. Може да не работи с други RileyLink алтернативи.</string>
     <string name="omnipod_config_time_change_enabled">Разрешено е Лятно часово време</string>
     <string name="omnipod_config_expiration_reminder_enabled">Напомняне за срок</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часове преди изключване</string>
@@ -65,6 +65,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Забранено действие.\n\n Първо трябва да конфигурурате Omnipod , преди да използвате тази операция,.</string>
     <string name="omnipod_error_pod_not_attached">Няма активен под</string>
+    <string name="omnipod_error_time_out_of_sync">Времето на пода не е синхронизирано. Моля, актуализирайте времето в раздел Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Непредвидена грешка. Моля, докладвайте! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Неуспешна комуникация: проверката на цялостта на съобщението е неуспешна</string>
     <string name="omnipod_error_invalid_packet_type">Неуспешна комуникация: получиен невалиден пакет от под</string>
