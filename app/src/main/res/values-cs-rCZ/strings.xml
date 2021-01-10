@@ -1175,7 +1175,6 @@
     <string name="donate_your_data_to_science">Darujte svá data vědě</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Byl jste odhlášen z Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Chcete-li se znovu přihlásit, klepněte zde, pokud to nebylo schválně.</string>
     <string name="only_upload_if_connected_to_wifi">Odeslat pouze při připojení k Wi-Fi</string>
     <string name="only_upload_if_charging">Odeslat pouze při nabíjení</string>
     <string name="worker_state">Stav procesu: %s</string>
@@ -1187,7 +1186,6 @@
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Odeslat SMS, pokud je detekována nedostupná pumpa</string>
-    <string name="smscommunicator_pump_ureachable">Nahlásit nedostupnou pumpu</string>
     <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
     <string name="alarminxmin">Spustit alarm za %1$d min</string>
     <string name="bolusadvisor">Poradce pro bolus</string>
