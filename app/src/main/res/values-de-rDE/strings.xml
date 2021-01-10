@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
     <string name="description_source_mm640g">Empfange Blutzuckerwerte vom 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
-    <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
     <string name="description_treatments">Speichert alle eingegebenen Behandlungen</string>
     <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
-    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS-Modus</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">Essensbolus</string>
     <string name="correctionbous">Korr</string>
     <string name="actions">Aktionen</string>
-    <string name="ns_upload_only">Zu Nightscout nur hochladen (keine Synchronisation)</string>
-    <string name="ns_upload_only_summary">Zu Nightscout nur hochladen (keine Synchronisation). Gilt nicht für CGM-Werte falls nicht eine lokale Quelle wie xDrip+ ausgewählt wurde. Gilt ebenfalls nicht für Profildaten, wenn ein NS-Profil genutzt wird. \n!!! WARNUNG !!! Deaktivieren dieser Option kann zu Fehlfunktionen und Insulin-Überdosierung führen, wenn eine der Komponenten (AAPS, NS, xDrip+) falsch konfiguriert ist. Achte sorgfältig darauf, ob die in AAPS angezeigten Daten mit denen der Pumpe übereinstimmen!</string>
     <string name="pumpNotInitialized">Pumpe nicht initialisiert!</string>
     <string name="primefill">Katheterwechsel</string>
     <string name="fillwarning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Kurze Tab-Überschriften</string>
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
-    <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle wie xDrip+ Signalrauschen haben.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Falsche/ungültige Telefonnummer</string>
     <string name="overview_calibration">Kalibrierung</string>
     <string name="xdripnotinstalled">xDrip+ nicht installiert</string>
-    <string name="calibrationsent">Kalibrierung an xDrip+ gesendet</string>
-    <string name="smscommunicator_calibrationsent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ hat die Kalbrierung nicht erhalten</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="executing">Wird ausgeführt</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
@@ -460,8 +452,6 @@
     <string name="nav_about">Über</string>
     <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
     <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
-    <string name="xdripstatus_settings">xDrip+ Status (Uhr)</string>
-    <string name="xdripstatus">xDrip+ Statuszeile (Uhr)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Zeige BGI</string>
     <string name="wear_showbgi_summary">Füge BGI zur Statuszeile hinzu.</string>
@@ -504,7 +494,6 @@
     <string name="mdtp_cancel">Abbrechen</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
-    <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="careportal_newnstreatment_duration_min_label">Dauer [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
