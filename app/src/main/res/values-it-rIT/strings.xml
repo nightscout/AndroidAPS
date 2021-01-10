@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
-    <string name="nav_resetdb">Resetta database</string>
+    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">Resetta database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="nav_exit">Esci</string>
     <string name="ns_sync_use_absolute_title">Usa sempre valori basali assoluti</string>
@@ -1175,6 +1175,7 @@
     <string name="donate_your_data_to_science">Dona i tuoi dati alla scienza</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Sei stato disconnesso da Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Fare click qui per accedere di nuovo.</string>
     <string name="only_upload_if_connected_to_wifi">Upload solo se connesso a WiFi</string>
     <string name="only_upload_if_charging">Upload solo se in carica</string>
     <string name="worker_state">Worker State: %s</string>
@@ -1186,6 +1187,7 @@
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="alarm">Allarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
+    <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="alarminxmin">Esegui allarme in %1$d min</string>
     <string name="bolusadvisor">Consiglio bolo</string>
