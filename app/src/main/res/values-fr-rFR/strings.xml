@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">Préférences de %1$s</string>
     <string name="nav_preferences">Préférences</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
-    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">Réinitialiser les Bases de Données </string>
+    <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
     <string name="ns_sync_use_absolute_title">Utiliser toujours les valeurs absolues du basal</string>
