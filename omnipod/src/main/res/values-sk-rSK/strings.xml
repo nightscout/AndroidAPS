@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Zobraziť tlačítko \"Pozastaviť podávanie\" na záložke Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Zobraziť tlačítko Pulzný Log v menu Správa Podu</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Zobraziť tlačítko Štatistika RileyLink v menu Správa Podu</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Použiť úroveň batérie nahlásenú OrangeLinkom/Rileylinkom</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">NEPRACUJE s pôvodným RileyLinkom. Nemusí pracovať s inými alternatívami RileyLinku.</string>
     <string name="omnipod_config_time_change_enabled">Letný čas / Detekcia časového pásma povolená</string>
     <string name="omnipod_config_expiration_reminder_enabled">Pripomenutie vypršania platnosti povolené</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hodiny pred vypnutím</string>
