@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">%1$s העדפות</string>
     <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
-    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">איפוס מסדי נתונים</string>
+    <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
     <string name="ns_sync_use_absolute_title">השתמש תמיד בערכים בזאלים מוחלטים</string>
