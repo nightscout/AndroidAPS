@@ -40,12 +40,12 @@
     <string name="codeaccepted">Kod został zaakceptowany</string>
     <string name="codeinvalid">Niepoprawny kod</string>
     <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>
-    <string name="objectives_exam_gate">Przestudiuj pytania.  Na każde pytanie masz cztery możliwe odpowiedzi. Może być więcej niż jedna poprawna odpowiedź. Sprawdź wszystkie poprawne i wybierz WERYFIKUJ.</string>
+    <string name="objectives_exam_gate">Przestudiuj pytania.  Na każde pytanie masz cztery możliwe odpowiedzi. Może być więcej niż jedna poprawna odpowiedź. Zaznacz wszystkie poprawne i wybierz WERYFIKUJ.</string>
     <string name="answerdisabledto">Odpowiadanie wyłączone na: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
-    <string name="objectives_hint">(sprawdź wszystkie poprawne odpowiedzi)</string>
+    <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
