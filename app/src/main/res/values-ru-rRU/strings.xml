@@ -1165,7 +1165,6 @@ Context | Edit Context</string>
     <string name="donate_your_data_to_science">Передайте свои данные исследователям</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
     <string name="only_upload_if_connected_to_wifi">Загружать только при подключении к WiFi</string>
     <string name="only_upload_if_charging">Загружать только при зарядке</string>
     <string name="worker_state">Рабочее состояние: %s</string>
@@ -1177,5 +1176,4 @@ Context | Edit Context</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
     <string name="alarm">Сигнал</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
-    <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
 </resources>
