@@ -123,7 +123,9 @@ Context | Edit Context</string>
     <string name="sensitivity_adjust">Модули чувствительности позволяют AndroidAPS подстраиваться под временные или кратковременные изменения в чувствительности к инсулину (например, гормональные изменения или проблемы с поглощением в месте установки катетера).</string>
     <string name="sensitivity_edit">Модули чувствительности предлагают пользователю изменения скорости базала, коэффициентов I:C и ISF, которые можно внести в профиль.</string>
     <string name="sensitivity_cannula">Внесение записи о замене катетера вернет коэффициент Autosens к 100%.</string>
+    <string name="sensitivity_time">У некоторых опций модуля есть настраиваемые диапазоны времени, которые может задать пользователь.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="wrongcarbs_label">Ошибки записи углеводов</string>
     <string name="wrongcarbs_whattodo">Что нужно делать, если сделан неправильный ввод углеводов?</string>
     <string name="iob_negiob">Отрицательное значение IOB в течеие продолжительного периода времени при отсутствии физ. нагрузки означает, что ваш профиль слишком сильный и вам нужно убавить подачу инсулина в настройках.</string>
     <string name="breadgrams_grams">Для оценки и записи потребляемых углеводов следует использовать только граммы.</string>
