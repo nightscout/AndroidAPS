@@ -1176,7 +1176,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="donate_your_data_to_science">Donner vos données à la science</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Vous avez été déconnecté d\'Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Cliquez ici pour vous connecter à nouveau si ce n\'était pas volontaire.</string>
     <string name="only_upload_if_connected_to_wifi">Ne télécharger que si connecté au WiFi</string>
     <string name="only_upload_if_charging">Ne télécharger que si en charge</string>
     <string name="worker_state">État du travail : %s</string>
@@ -1188,7 +1187,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
     <string name="alarm">Alarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
-    <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
     <string name="alarminxmin">Alerter dans %1$d min</string>
     <string name="bolusadvisor">Assistant bolus</string>
