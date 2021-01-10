@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">%1$s Preferințe</string>
     <string name="nav_preferences">Preferințe</string>
     <string name="nav_refreshtreatments">Reîncarcă tratamentele din NS</string>
-    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">Resetează bazele de date</string>
+    <string name="nav_resetdb">Resetează bazele de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
     <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
