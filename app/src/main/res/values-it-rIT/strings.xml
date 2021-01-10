@@ -286,7 +286,7 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
     <string name="ns_upload_only">NS: solo upload (sincron. disabilitata)</string>
-    <string name="ns_upload_only_summary">NS: solo upload. Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip. Non ha effetto sui profili durante l\'uso dei profili NS.</string>
+    <string name="ns_upload_only_summary">Solo upload su NS. Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="pumpNotInitialized">Micro non inizializzato!</string>
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
@@ -443,12 +443,12 @@
     <string name="statuslights_sage_critical">Soglia età sensore critica [h]</string>
     <string name="statuslights_sbat_warning">Soglia di avviso livello batteria sensore [%]</string>
     <string name="statuslights_sbat_critical">Soglia livello batteria sensore critico [%]</string>
-    <string name="statuslights_bage_warning">Soglia di avviso età batteria [h]</string>
-    <string name="statuslights_bage_critical">Soglia età batteria critica [h]</string>
+    <string name="statuslights_bage_warning">Età batteria micro: soglia di avviso [h]</string>
+    <string name="statuslights_bage_critical">Età batteria micro: soglia critica [h]</string>
     <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
     <string name="statuslights_res_critical">Soglia livello serbatoio critico [U]</string>
-    <string name="statuslights_bat_warning">Soglia di avviso livello batteria [%]</string>
-    <string name="statuslights_bat_critical">Soglia livello batteria critico [%]</string>
+    <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
+    <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -1193,7 +1193,7 @@
     <string name="bolusadvisor">Consiglio bolo</string>
     <string name="bolusadvisormessage">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="enablebolusadvisor">Abilita consiglio bolo</string>
-    <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del calcolatore durante la glicemia alta</string>
+    <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="timetoeat">Tempo di mangiare</string>
 </resources>

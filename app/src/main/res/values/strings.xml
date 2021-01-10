@@ -331,8 +331,8 @@
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Actions</string>
-    <string name="ns_upload_only">NS upload only (disabled sync)</string>
-    <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
+    <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
+    <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
@@ -549,7 +549,7 @@
     <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="ns_noupload">No upload to NS</string>
     <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
-    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
+    <string name="key_ns_upload_only" translatable="false">ns_upload_only2</string>
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
@@ -1405,7 +1405,7 @@
     <string name="donate_your_data_to_science">Donate your data to science</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in a again if this wasn\'t on purpose.</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn\'t on purpose.</string>
     <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
     <string name="only_upload_if_charging">Only upload if charging</string>
     <string name="worker_state">Worker State: %s</string>
@@ -1418,7 +1418,7 @@
     <string name="alarm">Alarm</string>
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
-    <string name="smscommunicator_pump_ureachable">Report  pump ureachable</string>
+    <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
     <string name="bolusadvisor">Bolus advisor</string>
@@ -1428,5 +1428,7 @@
     <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
+    <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
+    <string name="graph_menu_divider_header">Graph</string>
 
 </resources>

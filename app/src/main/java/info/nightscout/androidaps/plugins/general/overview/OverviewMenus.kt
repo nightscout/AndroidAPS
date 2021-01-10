@@ -88,7 +88,8 @@ class OverviewMenus @Inject constructor(
 
     fun setupChartMenu(chartButton: ImageButton) {
         loadGraphConfig()
-        val numOfGraphs = _setting.size // 1 main + x secondary
+        val settingsCopy = setting
+        val numOfGraphs = settingsCopy.size // 1 main + x secondary
 
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
@@ -100,7 +101,7 @@ class OverviewMenus @Inject constructor(
 
             for (g in 0 until numOfGraphs) {
                 if (g != 0 && g < numOfGraphs) {
-                    val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- " + "Graph" + " " + g + " -------")
+                    val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- ${resourceHelper.gs(R.string.graph_menu_divider_header)} $g -------")
                     dividerItem.isCheckable = true
                     dividerItem.isChecked = true
                 }
@@ -117,12 +118,12 @@ class OverviewMenus @Inject constructor(
                         s.setSpan(ForegroundColorSpan(resourceHelper.gc(m.colorId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
-                        item.isChecked = _setting[g][m.ordinal]
+                        item.isChecked = settingsCopy[g][m.ordinal]
                     }
                 }
             }
             if (numOfGraphs < MAX_GRAPHS) {
-                val dividerItem = popup.menu.add(Menu.NONE, numOfGraphs, Menu.NONE, "------- " + "Graph" + " " + numOfGraphs + " -------")
+                val dividerItem = popup.menu.add(Menu.NONE, numOfGraphs, Menu.NONE, "------- ${resourceHelper.gs(R.string.graph_menu_divider_header)} $numOfGraphs -------")
                 dividerItem.isCheckable = true
                 dividerItem.isChecked = false
             }

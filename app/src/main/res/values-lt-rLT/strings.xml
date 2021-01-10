@@ -286,7 +286,6 @@
     <string name="correctionbous">Korekcija</string>
     <string name="actions">Veiksmai</string>
     <string name="ns_upload_only">Tik įkelti duomenis į NS (ne sinchronizuoti)</string>
-    <string name="ns_upload_only_summary">Duomenys tik perkeliami į Nightscout. Gliukozės duomenys perkeliami tik tada, kai naudojama lokali programa, pvz.: xDrip. Naudojant NS-profilį, kiti profiliai neaktyvūs.</string>
     <string name="pumpNotInitialized">Pompa neprijungta!</string>
     <string name="primefill">Užpildymas</string>
     <string name="fillwarning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
@@ -443,12 +442,8 @@
     <string name="statuslights_sage_critical">Jutiklio kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_sbat_warning">Įspėjimo apie žemą sensoriaus baterijos lygį riba [%]</string>
     <string name="statuslights_sbat_critical">Įspėjimo apie kritiškai žemą sensoriaus baterijos lygį riba [%]</string>
-    <string name="statuslights_bage_warning">Baterijos ribinio laiko įspėjimas [h]</string>
-    <string name="statuslights_bage_critical">Baterijos kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
-    <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%]</string>
-    <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%]</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="iob">AIO</string>
     <string name="cob">AAO</string>
@@ -1193,7 +1188,7 @@
     <string name="bolusadvisor">Boluso patarėjas</string>
     <string name="bolusadvisormessage">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
     <string name="enablebolusadvisor">Įgalinti boluso patarėją</string>
-    <string name="enablebolusadvisor_summary">Jei jūsų glikemija yra aukšta, naudokite priminimą apie laiką valgyti, o ne Boluso patarėją</string>
+    <string name="enablebolusadvisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="timetoeat">Laikas valgyti</string>
 </resources>

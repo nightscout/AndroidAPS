@@ -125,6 +125,7 @@ android {
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
+        buildConfigField "String", "COMMITED", '"' + allCommited() + '"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 

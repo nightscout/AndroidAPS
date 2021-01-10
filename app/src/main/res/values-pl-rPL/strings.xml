@@ -286,7 +286,6 @@
     <string name="correctionbous">Korekta</string>
     <string name="actions">Akcje</string>
     <string name="ns_upload_only">NS tylko przesył. (wyłączona synch.)</string>
-    <string name="ns_upload_only_summary">NS tylko przesył. Nie skuteczne na SGV o ile ni jest wykorzystywane lokalne źródło danych jak xDrip. Nie skuteczne na Profilach gdy profil z NS jest wykorzystywany.</string>
     <string name="pumpNotInitialized">Pompa nie zainicjowana!</string>
     <string name="primefill">Rozpocznij/Wypełnij</string>
     <string name="fillwarning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
@@ -443,12 +442,8 @@
     <string name="statuslights_sage_critical">Krytyczny czas sensora CGM [h]</string>
     <string name="statuslights_sbat_warning">Próg ostrzeżenia o poziomie baterii sensora [%]</string>
     <string name="statuslights_sbat_critical">Próg ostrzeżenia o krytycznym poziomie baterii sensora [%]</string>
-    <string name="statuslights_bage_warning">Ostrzeżenie o czasie baterii [h]</string>
-    <string name="statuslights_bage_critical">Krytyczny czas baterii [h]</string>
     <string name="statuslights_res_warning">Próg ostrzeżenia o poziomie zbiornika [U]</string>
     <string name="statuslights_res_critical">Próg ostrzeżenia o krytycznym poziomie zbiornika [U]</string>
-    <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii [%]</string>
-    <string name="statuslights_bat_critical">Próg ostrzeżenia o krytycznym poziomie baterii [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -474,7 +469,7 @@
     <string name="careportal_canula_label">Kaniula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Bateria pompy</string>
-    <string name="careportal_age_label">wiek:</string>
+    <string name="careportal_age_label">czas:</string>
     <string name="careportal_level_label">poziom:</string>
     <string name="ns_alarmoptions">Opcje alarmu</string>
     <string name="ns_alarms">Utwórz powiadomienia z alarmów NS</string>
@@ -1070,7 +1065,7 @@
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="reorder_label">Zmień kolejność</string>
-    <string name="age">Wiek:</string>
+    <string name="age">Czas:</string>
     <string name="weight_label">Waga:</string>
     <string name="id">ID:</string>
     <string name="submit">Wyślij</string>
@@ -1147,7 +1142,7 @@
     <string name="currentprofile">Bieżący profil</string>
     <string name="availableprofile">Dostępny profil</string>
     <string name="profiletype">Typ profilu</string>
-    <string name="formatwithtdd">Wiek: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwithtdd">Czas: %1$.0f TDD: %2$.0f U</string>
     <string name="formatwittddandpct">Wiek: %1$.0f TDD: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Wiek: %1$.0f Waga: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% bazy</string>
@@ -1194,7 +1189,7 @@
     <string name="bolusadvisor">Doradca bolusa</string>
     <string name="bolusadvisormessage">Masz wysoki poziom. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz teraz wykonać korekcyjny bolus i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kreatora, gdy zostanie otrzymane przypomnienie.</string>
     <string name="enablebolusadvisor">Włącz doradcę bolusa</string>
-    <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie zamiast kreatora podczas wysokiej glikemii</string>
+    <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie później podczas wysokiej glikemii (\"pre-bolus\")</string>
     <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
     <string name="timetoeat">Czas na jedzenie</string>
 </resources>

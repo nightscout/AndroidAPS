@@ -284,7 +284,6 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Acções</string>
     <string name="ns_upload_only">Envio NS apenas (sincronização desactivada)</string>
-    <string name="ns_upload_only_summary">Apenas upload para NS. Não é eficaz em SGV a menos que uma fonte local como xDrip esteja selecionada. Não é eficaz em perfis enquanto NS-Profiles é usado.</string>
     <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
@@ -431,12 +430,8 @@
     <string name="statuslights_iage_critical">Limite crítico idade insulina [h]</string>
     <string name="statuslights_sage_warning">Limite aviso idade sensor [h]</string>
     <string name="statuslights_sage_critical">Limite crítico idade sensor [h]</string>
-    <string name="statuslights_bage_warning">Limite de aviso de nível de bateria [h]</string>
-    <string name="statuslights_bage_critical">Limite crítico de nível de bateria [h]</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
-    <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
     <string name="prediction_shortname">PREV</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
