@@ -1170,7 +1170,6 @@
     <string name="donate_your_data_to_science">Paaukokite savo duomenis mokslui</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Jūs buvote atjungtas iš Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
     <string name="only_upload_if_connected_to_wifi">Tik įkelti, jei prijungta prie WiFi</string>
     <string name="only_upload_if_charging">Įkelti tik akumuliatoriaus įkrovimo metu</string>
     <string name="worker_state">Darbinė Būklė: %s</string>
@@ -1182,7 +1181,6 @@
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Aliarmas</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
-    <string name="smscommunicator_pump_ureachable">Pranešti apie nepasiekiamą pompą</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
     <string name="bolusadvisor">Boluso patarėjas</string>
