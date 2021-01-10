@@ -1174,7 +1174,6 @@
     <string name="donate_your_data_to_science">תרמו את נתוניכם למדע</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">התנתקתם מ-Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">לחצו כאן כדי להתחבר מחדש אם זה לא היה בכוונה.</string>
     <string name="only_upload_if_connected_to_wifi">אפשר העלאה רק אם מחובר ל-WiFi</string>
     <string name="only_upload_if_charging">אפשר העלאה רק בזמן טעינת הסוללה</string>
     <string name="worker_state">מצב עובד: %s</string>
@@ -1186,7 +1185,6 @@
     <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
     <string name="alarm">התראה</string>
     <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
-    <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
     <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
     <string name="bolusadvisor">יועץ הבולוסים</string>
