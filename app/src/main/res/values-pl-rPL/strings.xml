@@ -1171,7 +1171,6 @@
     <string name="donate_your_data_to_science">Przekaż swoje dane na rzecz nauki</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
     <string name="only_upload_if_connected_to_wifi">Prześlij tylko jeśli połączono poprzez WiFi</string>
     <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
     <string name="worker_state">Stan procesu: %s</string>
@@ -1183,7 +1182,6 @@
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
-    <string name="smscommunicator_pump_ureachable">Zgłoś pompę nieosiągalną</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
     <string name="bolusadvisor">Doradca bolusa</string>
