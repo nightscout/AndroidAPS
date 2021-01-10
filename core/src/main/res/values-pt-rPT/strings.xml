@@ -15,8 +15,8 @@
     <string name="handshaking">Cumprimento</string>
     <string name="connecting">A ligar</string>
     <string name="connected">Ligado</string>
-    <string name="disconnected">Desligado</string>
-    <string name="disconnecting">A desligar</string>
+    <string name="disconnected">Desconectada</string>
+    <string name="disconnecting">A desconectar</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
@@ -172,6 +172,7 @@
     <string name="waitingforpumpresult">À espera de resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
     <string name="cumulative_tdd">Dose diária acumulativa</string>

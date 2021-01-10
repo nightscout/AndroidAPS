@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показывать кнопку Приостановить подачу на вкладке Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показывать кнопку Pulse Log в меню управления Pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Показывать кнопку статистики RileyLink в меню управления подом</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Использовать уровень батареи, который передает OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">Не работает с оригинальной RileyLink. Может не работать с другими альтернативами RileyLink.</string>
     <string name="omnipod_config_time_change_enabled">Включено обнаружение часового пояса</string>
     <string name="omnipod_config_expiration_reminder_enabled">Включено напоминание об истечении срока действия</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часов до выключения</string>

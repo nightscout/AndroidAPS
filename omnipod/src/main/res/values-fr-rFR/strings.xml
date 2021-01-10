@@ -197,11 +197,11 @@
     <string name="omnipod_pod_deactivation_wizard_discard_pod">Supprimer Pod</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Définir l\'heure</string>
-    <string name="omnipod_overview_button_suspend_delivery">Arrêter</string>
+    <string name="omnipod_overview_button_suspend_delivery">Suspendre</string>
     <string name="omnipod_overview_button_refresh">Actualiser</string>
     <string name="omnipod_overview_button_resume_delivery">Reprendre l\'injection</string>
     <string name="omnipod_overview_button_pod_management">Gest. Pod</string>
-    <string name="omnipod_overview_button_acknowledge_active_alerts">Accepter les alertes</string>
+    <string name="omnipod_overview_button_acknowledge_active_alerts">Accepter alertes</string>
     <string name="omnipod_overview_pod_status">État du Pod</string>
     <string name="omnipod_overview_total_delivered">Total injecté</string>
     <string name="omnipod_overview_total_delivered_value">%1$.2f U</string>
@@ -212,7 +212,7 @@
     <string name="omnipod_overview_temp_basal_rate">Débit de Basal Temp.</string>
     <string name="omnipod_overview_base_basal_rate">Débit de Basal</string>
     <string name="omnipod_overview_reservoir">Réservoir</string>
-    <string name="omnipod_overview_pod_active_alerts">Activer alertes Pod</string>
+    <string name="omnipod_overview_pod_active_alerts">Alertes Pod actives</string>
     <string name="omnipod_overview_firmware_version">Version du firmware</string>
     <string name="omnipod_overview_time_on_pod">Heure du Pod</string>
     <string name="omnipod_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>

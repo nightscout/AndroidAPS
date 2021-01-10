@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Nastavení</string>
     <string name="menu_status">Stav</string>
+    <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Plnění/doplňování</string>
     <string name="menu_none">Nic</string>
     <string name="menu_default">Výchozí</string>

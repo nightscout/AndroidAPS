@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
     <string name="description_source_mm640g">Pobieraj wartości BG z uploadera pomp serii 600.</string>
     <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
-    <string name="description_source_xdrip">Pobieraj wartości BG z xDrip.</string>
     <string name="description_treatments">Zapisuje wszystkie wykonane czynności leczenia</string>
     <string name="description_wear">Monitoruj i kontroluj AndroidAPS, korzystając z SmartWatch WearOS.</string>
     <string name="description_xdrip_status_line">Pokaż informacje o swojej pętli na watchface xDrip+.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
     <string name="configbuilder_bgsource_description">Skąd AndroidAPS powinien czerpać dane?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Tryb APS</string>
     <string name="closedloop">Zamknięta pętla</string>
     <string name="openloop">Otwarta pętla</string>
@@ -285,7 +283,6 @@
     <string name="mealbolus">Posiłek</string>
     <string name="correctionbous">Korekta</string>
     <string name="actions">Akcje</string>
-    <string name="ns_upload_only">NS tylko przesył. (wyłączona synch.)</string>
     <string name="pumpNotInitialized">Pompa nie zainicjowana!</string>
     <string name="primefill">Rozpocznij/Wypełnij</string>
     <string name="fillwarning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
@@ -340,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Skrócone tytuły kart</string>
     <string name="always_use_shortavg">Zawsze używaj krótkiej średniej delty zamiast prostej delta</string>
-    <string name="always_use_shortavg_summary">Użyteczne, jeżeli dane z niefiltrowanego źródła jak xDrip mają rozrzut.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Wartość domyślna: 3 To jest kluczowy współczynnik bezpieczeństwa OpenAPS. Ogranicza dawki bazowe do 3x twojej największej dawki bazowej. Prawdopodobnie nie będziesz musiał tego zmieniać, ale powinieneś być świadomy tego, co się rozumie przez “3x max dzienna; 4x aktualna” dla współczynników bezpieczeństwa.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Wartość domyślna: 4 To jest drugi kluczowy współczynnik bezpieczeństwa OpenAPS, i druga wartość z “3x max dzienna; 4x aktualna”. To oznacza, że Twoja dawka bazowa niezależnie od maksymalnej bazy ustawionej na pompie nie może być większa niż ta ustawiona wartość razy twoja aktualna dawka bazowa. To ma na celu przestrzec ludzi przed ustawieniem zbyt wysokiej dawki maksymalnej przed zrozumieniem jak działa algorytm. Ponownie, wartość domyślna to 4x; większość ludzi nie będzie potrzebowała tego zmienić i raczej będą potrzebować dostosować inne ustawienia, jeśli czują, że zbliżają się do współczynnika bezpieczeństwa.</string>
@@ -354,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Nieprawidłowy numer telefonu SMS</string>
     <string name="overview_calibration">Kalibracja</string>
     <string name="xdripnotinstalled">xDrip+ nie zainstalowany</string>
-    <string name="calibrationsent">Kalibracja przesłana do xDrip</string>
-    <string name="smscommunicator_calibrationsent">Kalibracja wysłana. Odbiór musi być dozwolony w xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip nie odbiera kalibracji</string>
     <string name="pumpsuspended">Pompa wstrzymana</string>
     <string name="executing">Wykonywanie</string>
     <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
@@ -455,8 +448,6 @@
     <string name="nav_about">O programie</string>
     <string name="smscommunicator_missingsmspermission">Brak uprawnień SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Brak uprawnień do wykrywania stanu telefonu</string>
-    <string name="xdripstatus_settings">xDrip Status (watch)</string>
-    <string name="xdripstatus">Linia Statusu xDrip (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Pokaż BGI</string>
     <string name="wear_showbgi_summary">Dodaj BGI do Linii Statusu</string>
@@ -500,7 +491,6 @@
     <string name="mdtp_cancel">Anuluj</string>
     <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
     <string name="valuesnotstored">Wartości nie są przechowywane!</string>
-    <string name="ns_localbroadcasts">Włącz rozgłaszanie do innych aplikacji (takich jak xDrip). Nie należy włączać, jeśli zainstalowana jest więcej niż jedna instancja AAPS lub NSClient!</string>
     <string name="ns_localbroadcasts_title">Włącz transmisję lokalnie.</string>
     <string name="careportal_newnstreatment_duration_min_label">Czas trwania [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1171,7 +1161,6 @@
     <string name="donate_your_data_to_science">Przekaż swoje dane na rzecz nauki</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
     <string name="only_upload_if_connected_to_wifi">Prześlij tylko jeśli połączono poprzez WiFi</string>
     <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
     <string name="worker_state">Stan procesu: %s</string>
@@ -1183,7 +1172,6 @@
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
-    <string name="smscommunicator_pump_ureachable">Zgłoś pompę nieosiągalną</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
     <string name="bolusadvisor">Doradca bolusa</string>

@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Estado de Infusora</string>
     <string name="title_activity_rileylink_settings">Ajustes de RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Dirección RileyLink configurada:</string>
-    <string name="rileylink_configured_riley_link_name">Nombre de RileyLink configurado:</string>
-    <string name="rileylink_connected_device">Dispositivo conectado:</string>
     <string name="rileylink_connection_status">Estado de conexión:</string>
     <string name="rileylink_connection_error">Error de conexión:</string>
     <string name="rileylink_device">Dispositivo</string>
     <string name="rileylink_device_type">Tipo de dispositivo:</string>
-    <string name="rileylink_device_model">Modelo del dispositivo:</string>
     <string name="rileylink_last_used_frequency">Última frecuencia usada:</string>
     <string name="rileylink_last_device_contact">Último contacto del dispositivo:</string>
     <string name="rileylink_firmware_version">Versión de Firmware:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Infusora no alcanzable</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Infusora Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <string name="riley_link_common_yes">Sí</string>
     <string name="riley_link_common_no">No</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

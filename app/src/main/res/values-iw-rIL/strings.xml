@@ -42,7 +42,6 @@
     <string name="description_source_glimp">קבלת ערכי סוכר בדם מ-Glimp.</string>
     <string name="description_source_mm640g">קבלת ערכי סוכר בדם מ-600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
-    <string name="description_source_xdrip">קבלת ערכי סוכר בדם מ-xDrip.</string>
     <string name="description_treatments">שמירת כל הטיפולים שנעשו</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך Xdrip בשעון החכם.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">מצב APS</string>
     <string name="closedloop">לולאה סגורה</string>
     <string name="openloop">לולאה פתוחה</string>
@@ -285,7 +283,6 @@
     <string name="mealbolus">ארוחה</string>
     <string name="correctionbous">תיקון</string>
     <string name="actions">פעולות</string>
-    <string name="ns_upload_only">העלאה בלבד לנייטסקאוט (סנכרון מבוטל)</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
     <string name="primefill">תיחול\\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
@@ -340,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
     <string name="always_use_shortavg">התבסס על הפרש ממוצע קצר במקום הפרש פשוט\\רגיל</string>
-    <string name="always_use_shortavg_summary">לשימוש כאשר נתונים ממקור לא מפוקח כמו Xdrip אינם יציבים.</string>
     <string name="profile">פרופיל</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
@@ -354,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">מספר טלפון ל SMS לא תקין</string>
     <string name="overview_calibration">כיול</string>
     <string name="xdripnotinstalled">xDrip+ אינו מותקן</string>
-    <string name="calibrationsent">כיול נשלח xDrip</string>
-    <string name="smscommunicator_calibrationsent">הכיול נשלח. יש לאשר את הקבלה ב-xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip אינו מקבל כיולים</string>
     <string name="pumpsuspended">משאבה מושהית</string>
     <string name="executing">מבצע</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
@@ -459,8 +452,6 @@
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
-    <string name="xdripstatus_settings">מצב xDrip (שעון)</string>
-    <string name="xdripstatus">שורת מצב xDrip (שעון)</string>
     <string name="xdripstatus_shortname">xDS</string>
     <string name="wear_showbgi_title">הצג השפעת רמת הסוכר</string>
     <string name="wear_showbgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
@@ -503,7 +494,6 @@
     <string name="mdtp_cancel">ביטול</string>
     <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
     <string name="valuesnotstored">הערכים לא נשמרו</string>
-    <string name="ns_localbroadcasts">אפשר שידורים לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="careportal_newnstreatment_duration_min_label">משך [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1174,7 +1164,6 @@
     <string name="donate_your_data_to_science">תרמו את נתוניכם למדע</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">התנתקתם מ-Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">לחצו כאן כדי להתחבר מחדש אם זה לא היה בכוונה.</string>
     <string name="only_upload_if_connected_to_wifi">אפשר העלאה רק אם מחובר ל-WiFi</string>
     <string name="only_upload_if_charging">אפשר העלאה רק בזמן טעינת הסוללה</string>
     <string name="worker_state">מצב עובד: %s</string>

@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
     <string name="description_source_mm640g">Ricevi valori glicemia da 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
-    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip.</string>
     <string name="description_treatments">Salva tutti i trattamenti che sono stati fatti</string>
     <string name="description_wear">Monitora e controlla AndroidAPS usando il tuo smartwatch WearOS.</string>
     <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">Cambia il tuo input!</string>
     <string name="configbuilder_bgsource">Origine BG</string>
     <string name="configbuilder_bgsource_description">Da dove AndroidAPS dovrebbe ottenere i suoi dati?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Modalità APS</string>
     <string name="closedloop">Loop chiuso</string>
     <string name="openloop">Loop aperto</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">Pasto</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
-    <string name="ns_upload_only">NS: solo upload (sincron. disabilitata)</string>
-    <string name="ns_upload_only_summary">Solo upload su NS. Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="pumpNotInitialized">Micro non inizializzato!</string>
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Accorcia titoli schede</string>
     <string name="always_use_shortavg">Usa sempre il delta medio ridotto</string>
-    <string name="always_use_shortavg_summary">Utile quando i dati provenienti da sorgenti non filtrate come xDrip diventano \"rumorosi\" (instabili).</string>
     <string name="profile">Profilo</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">[Valore predefinito: 3] Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare le tue basali a essere 3 volte, al più, la tua velocità basale massima. Probabilmente non avrai bisogno di cambiare questo valore, ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">[Valore predefinito: 4] Questo è un ulteriore parametro di sicurezza chiave in OpenAPS. La tua basale temporanea, indipendentemente dalla basale massima impostata sul micro, non può mai essere più alta di questo valore moltiplicato per la tua basale corrente in ogni specifico momento. Questo serve a impedire alle persone di addentrarsi in \"territori pericolosi\" impostando basali massime eccessivamente alte prima di aver capito come funziona l\'algoritmo. Ancora una volta, il valore predefinito è 4x; la maggior parte delle persone non avrà bisogno di modificare questo valore e avrà, invece, maggiori probabilità di dover regolare altre impostazioni se ha la sensazione di \"scontrarsi\" con questo limite di sicurezza.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Numero di telefono SMS non valido</string>
     <string name="overview_calibration">Calibrazione</string>
     <string name="xdripnotinstalled">xDrip+ non installato</string>
-    <string name="calibrationsent">Calibrazione inviata a xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibrazione inviata. La ricezione deve essere abilitata in xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip non sta ricevendo calibrazioni</string>
     <string name="pumpsuspended">Micro sospeso</string>
     <string name="executing">Esecuzione</string>
     <string name="virtualpump_settings">Impostazioni micro virtuale</string>
@@ -460,8 +452,6 @@
     <string name="nav_about">Informazioni su</string>
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
-    <string name="xdripstatus_settings">Stato xDrip (smartwatch)</string>
-    <string name="xdripstatus">xDrip Statusline (smartwatch)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostra BGI</string>
     <string name="wear_showbgi_summary">Aggiungi BGI alla statusline</string>
@@ -504,7 +494,6 @@
     <string name="mdtp_cancel">Annulla</string>
     <string name="notloadedplugins">Non tutti i profili caricati!</string>
     <string name="valuesnotstored">Valori non memorizzati!</string>
-    <string name="ns_localbroadcasts">Abilita le trasmissioni ad altre app (come xDrip). Non abilitare se hai installato più di un\'istanza di AAPS o NSClient!</string>
     <string name="ns_localbroadcasts_title">Abilita le trasmissioni locali.</string>
     <string name="careportal_newnstreatment_duration_min_label">Durata [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1196,4 +1185,5 @@
     <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="timetoeat">Tempo di mangiare</string>
+    <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
 </resources>
