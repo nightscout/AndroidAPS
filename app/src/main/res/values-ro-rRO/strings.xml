@@ -1170,7 +1170,6 @@
     <string name="donate_your_data_to_science">Donează datele în scopuri științifice</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou dacă nu a fost intenționat.</string>
     <string name="only_upload_if_connected_to_wifi">Încarcă numai pe conexiune WiFi</string>
     <string name="only_upload_if_charging">Încărca numai dacă telefonul este la încărcat</string>
     <string name="worker_state">Stare prelucrare: %s</string>
@@ -1182,7 +1181,6 @@
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="alarm">Alarmă</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
-    <string name="smscommunicator_pump_ureachable">Raportează eroare conexiune pompa</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
     <string name="bolusadvisor">Consilier bolus</string>
