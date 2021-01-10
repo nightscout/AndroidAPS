@@ -1174,7 +1174,6 @@
     <string name="donate_your_data_to_science">Дарете данните си на науката.</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Излязохте от \"Open Humans\".</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Натиснете тук за да влезете отново, ако това не е било нарочно.</string>
     <string name="only_upload_if_connected_to_wifi">Качване, само при свързано WiFi</string>
     <string name="only_upload_if_charging">Качване само при зареждане</string>
     <string name="worker_state">Статус: %s</string>
@@ -1186,7 +1185,6 @@
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
     <string name="alarm">Аларма</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
-    <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
     <string name="advisoralarm">Алармата, когато е време за хранене.</string>
     <string name="alarminxmin">Сларма след %1$d мин</string>
     <string name="bolusadvisor">Съветник на болус</string>
