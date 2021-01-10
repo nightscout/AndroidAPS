@@ -14,7 +14,7 @@
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="nav_exit">Sair</string>
     <string name="ns_sync_use_absolute_title">Usar sempre valores absolutos de basal</string>
-    <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie o AndroidAPS a partir das Configurações do Sistema \ncaso contrário, o AndroidAPS não terá registo (importante para controlar e verificar se os algoritmos estão a funcionar correctamente)!</string>
+    <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie o AndroidAPS a partir das Definições do Sistema \ncaso contrário, o AndroidAPS não terá registo (importante para controlar e verificar se os algoritmos estão a funcionar correctamente)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -42,10 +42,9 @@
     <string name="description_source_glimp">Receber valores Glucose do Glimp.</string>
     <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Descarrega dados de Glucose do Nightscout</string>
-    <string name="description_source_xdrip">Receber valores de Glucose do xDrip.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
-    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
+    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
     <string name="description_sms_communicator">Controlar remotamente o AndroidAPS usando comandos SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Hidratos:</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">Altere o seu input!</string>
     <string name="configbuilder_bgsource">Origem dos valores de Glucose</string>
     <string name="configbuilder_bgsource_description">De onde deve o AndroidAPS obter os dados?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -149,12 +147,12 @@
     <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
     <string name="missing_carbs">A faltar %1$d g</string>
     <string name="exported">Preferências exportadas</string>
-    <string name="export_to">Exportar configurações para</string>
-    <string name="import_from">Importar configurações de</string>
-    <string name="setting_imported">Configurações importadas</string>
+    <string name="export_to">Exportar definições para</string>
+    <string name="import_from">Importar definições de</string>
+    <string name="setting_imported">Definições importadas</string>
     <string name="filenotfound">Ficheiro não encontrado</string>
-    <string name="nav_export">Exportar configurações</string>
-    <string name="nav_import">Importar configurações</string>
+    <string name="nav_export">Exportar definições</string>
+    <string name="nav_import">Importar definições</string>
     <string name="openapsma_maxbasal_title">Max U/h em que uma Temp Basal pode ser definida</string>
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode administrar [U]</string>
@@ -176,7 +174,7 @@
     <string name="check_preferences_details_title">Detalhes de problemas de importação</string>
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar mesmo assim (PERIGOSO!)</string>
-    <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas configurações podem estar ausentes ou inválidas - após a importação, por favor verifique e actualize suas preferências.</string>
+    <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas definições podem estar ausentes ou inválidas - após a importação, por favor verifique e actualize suas preferências.</string>
     <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
     <string name="metadata_warning_outdated_format">Está a usar formato ultrapassado herdado a partir de versões antigas do AAPS, o que não é seguro! Use-o apenas como um último recurso, se não tiver uma exportação no actual no formato JSON.</string>
     <string name="metadata_warning_old_export">Preferências importadas já são %1$s dias antigas! Talvez tenha preferências mais actualizadas ou escolheu o ficheiro errado? Lembre-se de exportar preferências regularmente!</string>
@@ -194,16 +192,16 @@
     <string name="metadata_format_new">Novo formato de encriptação</string>
     <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>
-    <string name="prefdecrypt_settings_tampered">Ficheiro de configurações adulterado</string>
-    <string name="prefdecrypt_settings_secure">Ficheiro de configurações é seguro</string>
-    <string name="prefdecrypt_settings_unencrypted">A usar um formato de configurações não seguro e não encriptado</string>
+    <string name="prefdecrypt_settings_tampered">Ficheiro de definições adulterado</string>
+    <string name="prefdecrypt_settings_secure">Ficheiro de definições é seguro</string>
+    <string name="prefdecrypt_settings_unencrypted">A usar um formato de definições não seguro e não encriptado</string>
     <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
     <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o ficheiro</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade das definições!</string>
     <string name="prefdecrypt_issue_modified">Ficheiro foi modificado após exportação!</string>
     <string name="prefdecrypt_issue_parsing">Erro Desencriptação, a análise de preferências falhou!</string>
     <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestra diferente.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
+    <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de definições é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado há %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado às %1$s</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">Refeição</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Acções</string>
-    <string name="ns_upload_only">Envio NS apenas (sincronização desactivada)</string>
-    <string name="ns_upload_only_summary">Envio NS apenas. Não efectivo no SGV a menos que uma fonte local como o xDrip seja selecionada. Não efectivo em Perfis enquanto NS-Perfis é usado.\n!!! AVISO !!! A desactivação desta opção pode causar malfuncionamento e overdose de insulina se qualquer um de seu componente (AAPS, NS, xDrip) estiver mal configurado. Assista cuidadosamente se dados exibidos pela AAPS combinam com o estado da bomba!</string>
     <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
-    <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como o xDrip.</string>
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor actual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
-    <string name="calibrationsent">Calibração enviada para o xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada no xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">O xDrip não esta a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="executing">A Executar</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
@@ -383,7 +375,7 @@
     <string name="nowritepermission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="wear_settings">Definições Wear</string>
     <string name="wear_detailedIOB_title">Mostrar IOB detalhada</string>
-    <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal na face do relógio</string>
+    <string name="wear_detailedIOB_summary">Dividir IOB entre IOB de bolus e de basal mostrador</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
     <string name="notavailable">n/d</string>
     <string name="patientage">Tipo de Paciente</string>
@@ -427,7 +419,7 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbólus</string>
     <string name="ns_logappstartedevent">Registar inicio da app no NS</string>
-    <string name="restartingapp">A sair da aplicação para aplicar as configurações.</string>
+    <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
     <string name="configbuilder_insulin_description">Qual o tipo de insulina que está a utilizar?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
@@ -460,8 +452,6 @@
     <string name="nav_about">Acerca</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="xdripstatus_settings">Estado xDrip (relógio)</string>
-    <string name="xdripstatus">Linha estado xDrip (relógio)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
@@ -490,7 +480,7 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref1">Sensibilidade Oref1</string>
     <string name="sensitivityaaps">Sensibilidade AAPS</string>
-    <string name="absorptionsettings_title">Configurações de absorção</string>
+    <string name="absorptionsettings_title">Definições de absorção</string>
     <string name="absorption_maxtime_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_maxtime_summary">Tempo em horas, espectável para que todos os hidratos de carbono da refeição sejam absorvidos</string>
     <string name="openaps_short">OAPS</string>
@@ -504,7 +494,6 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
-    <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip). Não habilite se tiver mais de uma instância de AAPS ou ClienteNS instalado!</string>
     <string name="ns_localbroadcasts_title">Activar partilha local.</string>
     <string name="careportal_newnstreatment_duration_min_label">Duração [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -555,7 +544,7 @@
     <string name="info">INFO</string>
     <string name="eversense">Aplicação Eversense (com patch)</string>
     <string name="dexcomg5_nsupload_title">Enviar dados Glic. para NS</string>
-    <string name="bgsource_upload">Configurações de upload de Glic</string>
+    <string name="bgsource_upload">Definições de envio da Glic</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="smbinterval_summary">Com que frequência em min os SMBs serão dados</string>
@@ -648,7 +637,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir dos alertas de hidratos necessários</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios Nightscout para alertas de hidratos necessários</string>
-    <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>
+    <string name="wear_predictions_summary">Mostrar a predições mostrador.</string>
     <string name="wear_predictions_title">Previsão</string>
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
@@ -752,8 +741,8 @@
     <string name="ns_autobackfill_title">Preenchimentoauto Glicemia</string>
     <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
-    <string name="wear_display_settings">Configurações Ecrã</string>
-    <string name="wear_general_settings">Configurações Gerais</string>
+    <string name="wear_display_settings">Definições Ecrã</string>
+    <string name="wear_general_settings">Definições Gerais</string>
     <string name="enable_nsclient">Activar ClienteNS</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="readstatus">Ler estado</string>
@@ -773,7 +762,7 @@
     <string name="askforpermission">Pedir permissão</string>
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
     <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
-    <string name="needstoragepermission">Aplicação precisa da permissão de armazenamento para poder armazenar ficheiros de registo e exportar configurações</string>
+    <string name="needstoragepermission">Aplicação precisa da permissão de armazenamento para poder armazenar ficheiros de registo e exportar definições</string>
     <string name="request">Pedido</string>
     <string name="exit">Sair</string>
     <string name="open_navigation">Abrir a navegação</string>
@@ -795,12 +784,12 @@
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
     <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
-    <string name="storedsettingsfound">Configurações encontradas</string>
+    <string name="storedsettingsfound">Definições armazenadas encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e activar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil da app tem os mesmos valores que estão na bomba. Em caso contrario pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
-    <string name="maintenance_settings">Configurações de manutenção</string>
+    <string name="maintenance_settings">Definições de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
-    <string name="maintenance_encrypt_exported_prefs">Encriptar configurações exportadas</string>
+    <string name="maintenance_encrypt_exported_prefs">Encriptar definições exportadas</string>
     <string name="maintenance_amount">Nr. de registos a enviar</string>
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
@@ -1175,6 +1164,7 @@
     <string name="donate_your_data_to_science">Doar seus dados para a ciência</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Sessão do Open Humans foi encerrada</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Clique aqui para entrar novamente, se não era de propósito.</string>
     <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
     <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
     <string name="worker_state">Estado Trabalhador: %s</string>
@@ -1186,6 +1176,7 @@
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="alarm">Alarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for accionado</string>
+    <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="bolusadvisor">Guia de Bólus</string>
@@ -1195,4 +1186,5 @@
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
     <string name="timetoeat">Hora de comer</string>
     <string name="fabric_upload_disabled">Envio de logs de erro desabilitado!</string>
+    <string name="graph_menu_divider_header">Gráfico</string>
 </resources>
