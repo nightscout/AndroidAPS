@@ -1170,7 +1170,6 @@
     <string name="donate_your_data_to_science">Dona tus datos a la ciencia</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Has cerrado la sesión de Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Haga clic aquí para iniciar sesión de nuevo si no tenía esa intención.</string>
     <string name="only_upload_if_connected_to_wifi">Subir datos solo si está conectado a WiFi</string>
     <string name="only_upload_if_charging">Sólo subir datos si se está cargando</string>
     <string name="worker_state">Worker State: %s</string>
@@ -1182,7 +1181,6 @@
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="alarm">Alarma</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
-    <string name="smscommunicator_pump_ureachable">Reportar bomba no alcanzable</string>
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="bolusadvisor">Asistente de bolo</string>
