@@ -42,6 +42,7 @@
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
     <string name="description_source_mm640g">Recevoir les glycémies depuis le 600SeriesAndroidUploder.</string>
     <string name="description_source_ns_client">Télécharge les glycémies depuis Nightscout</string>
+    <string name="description_source_xdrip">Recevoir les glycémies depuis xDrip+.</string>
     <string name="description_treatments">Enregistre tous les traitements qui ont été effectués</string>
     <string name="description_wear">Surveillez et contrôlez AndroidAPS en utilisant votre montre WearOS.</string>
     <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
@@ -118,6 +119,7 @@
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AndroidAPS ?</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="closedloop">Boucle Fermée</string>
     <string name="openloop">Boucle Ouverte</string>
@@ -284,6 +286,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="mealbolus">Repas</string>
     <string name="correctionbous">Correction</string>
     <string name="actions">Actions</string>
+    <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
+    <string name="ns_upload_only_summary">Envoi NS uniquement (sync désactivée). Inactif sur les Glycémie des capteurs sauf si une source locale comme xDrip+ est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip+) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
     <string name="pumpNotInitialized">Pompe non initialisée !</string>
     <string name="primefill">Amorcer/Remplir</string>
     <string name="fillwarning">Veuillez à ce que la quantité corresponde aux caractéristiques de votre cathéter !</string>
@@ -338,6 +342,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Raccourcir les titres des onglets</string>
     <string name="always_use_shortavg">Utiliser delta basé sur moyenne courte</string>
+    <string name="always_use_shortavg_summary">Utile lorsque les données provenant de sources non filtrées comme xDrip+ deviennent incohérentes.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
@@ -351,6 +356,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_invalidphonennumber">Num tél du SMS est invalide</string>
     <string name="overview_calibration">Étalonnage</string>
     <string name="xdripnotinstalled">xDrip+ n\'est pas installé</string>
+    <string name="calibrationsent">Étalonnage envoyé à xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Étalonnage envoyé. La réception doit être activée dans xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ ne reçoit pas les étalonnages</string>
     <string name="pumpsuspended">Pompe arrêtée</string>
     <string name="executing">Exécution en cours</string>
     <string name="virtualpump_settings">Paramètres pompe virtuelle</string>
@@ -453,6 +461,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
+    <string name="xdripstatus_settings">état Xdrip+ (montre)</string>
+    <string name="xdripstatus">Barre d\'état pour xDrip+ (Montre)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Afficher l’Impact Glycémie</string>
     <string name="wear_showbgi_summary">Ajouter l’IGly sur la vue générale</string>
@@ -495,6 +505,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="mdtp_cancel">Annuler</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
+    <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de NSClient sont installées !</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="careportal_newnstreatment_duration_min_label">Durée [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1187,4 +1198,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="timetoeat">Il est temps de manger</string>
     <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
+    <string name="graph_menu_divider_header">Graph</string>
 </resources>
