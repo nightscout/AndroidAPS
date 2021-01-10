@@ -1175,7 +1175,6 @@
     <string name="donate_your_data_to_science">Doar seus dados para a ciência</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Sessão do Open Humans foi encerrada</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Clique aqui para entrar novamente se isso não era de propósito.</string>
     <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
     <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
     <string name="worker_state">Estado Trabalhador: %s</string>
@@ -1187,7 +1186,6 @@
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="alarm">Alarme</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for accionado</string>
-    <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="bolusadvisor">Guia de Bólus</string>
