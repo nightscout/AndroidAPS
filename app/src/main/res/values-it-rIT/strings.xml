@@ -10,7 +10,7 @@
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
-    <string name="nav_resetdb" comment="nav_resetdb&#10;Clear database">Resetta database</string>
+    <string name="nav_resetdb">Resetta database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="nav_exit">Esci</string>
     <string name="ns_sync_use_absolute_title">Usa sempre valori basali assoluti</string>
