@@ -440,8 +440,12 @@
     <string name="statuslights_sage_critical">Prag critic vechime senzor [h]</string>
     <string name="statuslights_sbat_warning">Prag de avertizare nivel baterie senzor [%]</string>
     <string name="statuslights_sbat_critical">Prag nivel critic baterie senzor [%]</string>
+    <string name="statuslights_bage_warning">Prag de avertizare vârstă baterie [h]</string>
+    <string name="statuslights_bage_critical">Prag critic vârstă baterie [h]</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
+    <string name="statuslights_bat_warning">Prag de avertizare nivel baterie [%]</string>
+    <string name="statuslights_bat_critical">Prag critic nivel baterie [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -497,6 +501,7 @@
     <string name="mdtp_cancel">Renunță</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
+    <string name="ns_localbroadcasts">Activați transmisiunile către alte aplicații (cum ar fi xDrip+). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalat!</string>
     <string name="ns_localbroadcasts_title">Permite anunțuri locale.</string>
     <string name="careportal_newnstreatment_duration_min_label">Durată [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
