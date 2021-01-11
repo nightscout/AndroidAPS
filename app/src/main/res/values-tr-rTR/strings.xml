@@ -36,7 +36,6 @@
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alın.</string>
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
-    <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydet</string>
     <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
     <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ watchface\'inizde gösterin.</string>
@@ -112,7 +111,6 @@
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AndroidAPS verilerini nereden alsın?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS modu</string>
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
@@ -183,8 +181,6 @@
     <string name="mealbolus">Ögün</string>
     <string name="correctionbous">Düzeltme</string>
     <string name="actions">Eylemler</string>
-    <string name="ns_upload_only">Sadece Nightscout\'a yükle (devre dışı senkronizasyon)</string>
-    <string name="ns_upload_only_summary">Sadece NS yükle. Etkili değil SGV üzerinde xDrip gibi bir yerel kaynağı seçili olmadıkça. NS-profilleri kullanılır iken profilleri üzerinde etkili değil.</string>
     <string name="pumpNotInitialized">Pompa başlatılmamış!</string>
     <string name="primefill">Hazırla/doldur</string>
     <string name="fillwarning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
@@ -233,7 +229,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Kısa tab başlıkları</string>
     <string name="always_use_shortavg">Her zaman basit delta yerine kısa ortalama delta kullan</string>
-    <string name="always_use_shortavg_summary">xDrip gibi filtre uygulanmamış kaynaklardan gelen veriler gürültülü olduğunda kullanışlıdır.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3 Bu OpenAPS için önemli bir güvenlik ayarıdır. Maksimum bazal Iob\'u, en büyük bazal oranınızın üç katı (varsayılan olarak) ile sınırlar. Genel olarak, bu değeri değiştirmemelisiniz. Ama \"3x max günlük, 4x şuan\" ın bir güvenlik ayarı olarak ne anlama geldiğini bilmelisiniz.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
@@ -246,9 +241,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_invalidphonennumber">Geçersiz SMS telefon numarası</string>
     <string name="overview_calibration">Kalibrasyon</string>
     <string name="xdripnotinstalled">xDrip+ uygulaması yüklenmemiş</string>
-    <string name="calibrationsent">Kalibrasyon xDrip+ a gönderildi</string>
-    <string name="smscommunicator_calibrationsent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ kalibrasyonları almıyor</string>
     <string name="pumpsuspended">Pompa durduldu</string>
     <string name="executing">Yürütülüyor</string>
     <string name="virtualpump_settings">Sanal pompa ayarları</string>
@@ -314,8 +306,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="nav_about">Hakkında</string>
     <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
     <string name="smscommunicator_missingphonestatepermission">Kayıp telefon durum yetkilendirmesi</string>
-    <string name="xdripstatus_settings">xDrip durumu (izle)</string>
-    <string name="xdripstatus">xDrip durumu çizgisi (izle)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">BGI göster</string>
     <string name="wear_showbgi_summary">BGI\'yı durum satırına ekle</string>

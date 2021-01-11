@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
     <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
-    <string name="description_source_xdrip">Получава данни за КЗ от xDrip.</string>
     <string name="description_treatments">Записва всички процедури, които са били направени</string>
     <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
     <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="configbuilder_bgsource_description">От къде трябва да AndroidAPS да си взима данни?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS режим</string>
     <string name="closedloop">Затворен кръг</string>
     <string name="openloop">Отворен кръг</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">Хранене</string>
     <string name="correctionbous">Корекция</string>
     <string name="actions">Действия</string>
-    <string name="ns_upload_only">Само качва данни в NS (изключва синхронизацията)</string>
-    <string name="ns_upload_only_summary">Само качване на данните в NS. Няма ефект върху данните за КЗ ако локален източник като xDrip е избран. Няма ефект върху профила освен ако не е избран  NS-профил.</string>
     <string name="pumpNotInitialized">Помпата не е инициализирана!</string>
     <string name="primefill">Пълнене на сет</string>
     <string name="fillwarning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Използвай къси имена</string>
     <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
-    <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум</string>
     <string name="profile">Профил</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от \"3x от най-високия дневен; 4x от текущия\". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
     <string name="overview_calibration">Калибрация</string>
     <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
-    <string name="calibrationsent">Калибрацията е изпратена към xDrip</string>
-    <string name="smscommunicator_calibrationsent">Неуспешно. Получаването трябва да е разрешено в xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip не получава калибрации</string>
     <string name="pumpsuspended">Помпата е спряна</string>
     <string name="executing">Изпълнява</string>
     <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
@@ -443,11 +435,11 @@
     <string name="statuslights_sage_critical">Праг за критична възраст на сензор [часа]</string>
     <string name="statuslights_sbat_warning">Аларма при заряд на батерия под [%]</string>
     <string name="statuslights_sbat_critical">Критично ниво на сензорната батерия под [%]</string>
-    <string name="statuslights_bage_warning">Аларма при възраст на батерия над [часа]</string>
-    <string name="statuslights_bage_critical">Праг за критична възраст на батерията над [часа]</string>
+    <string name="statuslights_bage_warning">Висока възраст на батерия над [часа]</string>
+    <string name="statuslights_bage_critical">Критична възраст на батерията над [часа]</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Предупреждение за критично ниво на останал инсулин в резервоар [Е]</string>
-    <string name="statuslights_bat_warning">Аларма при заряд на батерия под [%]</string>
+    <string name="statuslights_bat_warning">Нисък заряд на батерия под [%]</string>
     <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
     <string name="prediction_shortname">Предв</string>
     <string name="iob">IOB</string>
@@ -460,8 +452,6 @@
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <string name="smscommunicator_missingphonestatepermission">Липсва разрешение до данни от телефона</string>
-    <string name="xdripstatus_settings">xDrip статус (часовник)</string>
-    <string name="xdripstatus">xDrip статус (часовник)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Показвай BGI</string>
     <string name="wear_showbgi_summary">Добави BGI към статуса</string>
@@ -504,7 +494,6 @@
     <string name="mdtp_cancel">Откажи</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
-    <string name="ns_localbroadcasts">Активирайте предаване на данни към други приложения (като xDrip). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1175,7 +1164,6 @@
     <string name="donate_your_data_to_science">Дарете данните си на науката.</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Излязохте от \"Open Humans\".</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Натиснете тук за да влезете отново, ако това не е било нарочно.</string>
     <string name="only_upload_if_connected_to_wifi">Качване, само при свързано WiFi</string>
     <string name="only_upload_if_charging">Качване само при зареждане</string>
     <string name="worker_state">Статус: %s</string>
@@ -1187,13 +1175,12 @@
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
     <string name="alarm">Аларма</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
-    <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
     <string name="advisoralarm">Алармата, когато е време за хранене.</string>
     <string name="alarminxmin">Сларма след %1$d мин</string>
     <string name="bolusadvisor">Съветник на болус</string>
     <string name="bolusadvisormessage">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
     <string name="enablebolusadvisor">Активиране на болус съветник</string>
-    <string name="enablebolusadvisor_summary">Използвайте напомняне за да начало на хранене вместо съветника по време на висока гликемия</string>
+    <string name="enablebolusadvisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
     <string name="time_to_eat">Време за ядене!\nИзпълнете болус съветника и направете изчисления отново.</string>
     <string name="timetoeat">Време е за ядене</string>
 </resources>

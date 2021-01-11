@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 

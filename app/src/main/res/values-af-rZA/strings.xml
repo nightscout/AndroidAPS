@@ -38,7 +38,6 @@
     <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
-    <string name="description_source_xdrip">Ontvang BG waardes vana xDrip.</string>
     <string name="description_treatments">Stoor alle behandelings wat gedoen was</string>
     <string name="description_wear">Monitor en beheer AndroidAPS met jou WearOS horlosie.</string>
     <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
@@ -114,7 +113,6 @@
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_bgsource_description">Waarvandaan  moet AndroidAPS data kry?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Geslote lus</string>
     <string name="openloop">Oop lus</string>
@@ -197,8 +195,6 @@
     <string name="mealbolus">Maaltyd</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Aksies</string>
-    <string name="ns_upload_only">NS laai net op (opgeskorte sinkro)</string>
-    <string name="ns_upload_only_summary">NS oplaai net. Nie effektief op SGV tensy \'n plaaslike bron soos xDrip gekies is. Nie effektief op profiele terwyl NS-profiele gebruik word.</string>
     <string name="pumpNotInitialized">Pomp nie geïnisialiseer nie!</string>
     <string name="primefill">Prima/vul</string>
     <string name="fillwarning">Maak asseblief seker dat die hoeveelheid ooreenstem met die spesifikasies van jou infusie stel!</string>
@@ -248,7 +244,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Verkort oortjie titels</string>
     <string name="always_use_shortavg">Gebruik altyd kort gemiddelde delta in plaas van eenvoudige delta</string>
-    <string name="always_use_shortavg_summary">Nuttig wanneer data van ongefiltreerde bronne soos xDrip baie raas.</string>
     <string name="profile">Profiel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Verstek waarde: 3 dit is \'n sleutel OpenAPS veiligheidsdrumpels. Wat dit doen is om jou basale te berk tot 3 x (in hierdie mense) jou grootste basale koers. Jy sal waarskynlik nooit dit hoef te verander, maar jy moet bewus wees wat bespreek is oor \"3 x max daaglikse; 4 x huidige\"vir veiligheidsdrumpels.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Verstek waarde: 4 dit is die helfte van die sleutel OpenAPS veiligheid limiete, en die ander helfte van \"3 x maks daaglikse; 4 x huidige\"van die veiligheid limiet. Dit beteken jou basale, ongeag max basale stel op jou pomp, kan enige hoër wees as hierdie nommer tye die huidige vlak van jou basale. Dit is om te verhoed dat mense in gevaarlike gebied deur instelling buitensporig hoë max basals voor om te verstaan hoe die algoritme werk. Weer, die verstek is 4 x; die meeste mense sal nooit moet dit aanpas en is eerder meer geneig om te moet aanpas ander instellings as hulle voel hulle \"loop in\" hierdie veiligheid limiet.</string>
@@ -261,9 +256,6 @@
     <string name="smscommunicator_invalidphonennumber">Ongeldige SMS selfoon nommer</string>
     <string name="overview_calibration">Kalibrasie</string>
     <string name="xdripnotinstalled">xDrip + nie geïnstalleerd nie</string>
-    <string name="calibrationsent">Kalibrasie gestuur na xDrip</string>
-    <string name="smscommunicator_calibrationsent">Kalibrasie gestuur. Ontvang moet geaktiveer word in xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip ontvang nie kalibrasies</string>
     <string name="pumpsuspended">Pomp opgeskort</string>
     <string name="executing">Besig met uitvoering</string>
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
@@ -334,8 +326,6 @@
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingsmspermission">Vermiste SMS toestemming</string>
     <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
-    <string name="xdripstatus_settings">xDrip Status (horlosie)</string>
-    <string name="xdripstatus">xDrip Statusline (horlosie)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Wys BGI</string>
     <string name="wear_showbgi_summary">Voeg BGI by status lyn</string>

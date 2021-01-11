@@ -4,7 +4,7 @@
     <!--    General-->
     <string name="error">Chyba</string>
     <string name="not_set_short">Nenastaveno</string>
-    <string name="failedupdatebasalprofile">Chyba při nastavení bazálního pprofilu</string>
+    <string name="failedupdatebasalprofile">Chyba při nastavení bazálního profilu</string>
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="invalidinput">Chybná vstupní data</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>

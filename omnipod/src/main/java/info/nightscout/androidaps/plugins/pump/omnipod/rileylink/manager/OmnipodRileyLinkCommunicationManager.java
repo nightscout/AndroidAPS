@@ -8,7 +8,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
@@ -16,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
@@ -52,7 +50,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateMa
  */
 @Singleton
 public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunicationManager<OmnipodPacket> {
-    private Integer batteryLevel;
 
     // This empty constructor must be kept, otherwise dagger injection might break!
     @Inject
@@ -86,18 +83,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
     }
 
     @Override protected OmnipodPacket sendAndListen(OmnipodPacket msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms) throws RileyLinkCommunicationException {
-        OmnipodPacket response = super.sendAndListen(msg, timeout_ms, repeatCount, retryCount, extendPreamble_ms);
-
-        PumpInterface activePump = activePluginProvider.getActivePump();
-        if (activePump instanceof OmnipodPumpPlugin && ((OmnipodPumpPlugin) activePump).isUseRileyLinkBatteryLevel()) {
-            updateBatteryLevel();
-        }
-
-        return response;
-    }
-
-    public Integer getBatteryLevel() {
-        return batteryLevel;
+        return super.sendAndListen(msg, timeout_ms, repeatCount, retryCount, extendPreamble_ms);
     }
 
     public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodStateManager podStateManager, MessageBlock command) {
@@ -401,9 +387,5 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         }
 
         throw new RileyLinkUnreachableException();
-    }
-
-    private void updateBatteryLevel() {
-        batteryLevel = rfspy.getBatteryLevel();
     }
 }

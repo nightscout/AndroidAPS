@@ -28,5 +28,5 @@
     <string name="rileylink_error_pod_unreachable">포드에 연결할 수 없습니다.</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">메드트로닉 펌프</string>
-    <string name="rileylink_target_device_omnipod">옴니포드</string>
+    <!-- RileyLink - Preferences -->
 </resources>

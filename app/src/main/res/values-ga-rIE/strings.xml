@@ -10,7 +10,6 @@
     <string name="alert_dialog_storage_permission_text">Le do thoil atosaigh do ghuthán nó atosaigh AndroidAPS ó Socruithe an Chórais \nmura dhéanann tú é seo, ní bheidh logáil ag na appana AndroidAPS (tá sé tábhachtach na halgartaim a rianú agus a fhíorú go bhfuil siad ag obair i gceart)!</string>
     <string name="description_source_mm640g">Luachanna BG a fháil ón 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Sonraí a íoslódáil ó Nightscout</string>
-    <string name="description_source_xdrip">Luachanna BG a fháil ó xDrip.</string>
     <string name="MM640g">MM640g</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>

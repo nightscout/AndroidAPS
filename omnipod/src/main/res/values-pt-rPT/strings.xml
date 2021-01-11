@@ -3,22 +3,30 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_config_riley_link_configuration">Configuração RileyLink</string>
+    <string name="omnipod_config_time_change_enabled">Detecção de DST/Fuso Horário Activado</string>
     <string name="omnipod_config_low_reservoir_alert_units">No. Unidades</string>
     <string name="omnipod_preference_category_rileylink">RileyLink</string>
     <string name="omnipod_preference_category_other">Outro</string>
     <string name="omnipod_preference_category_alerts">Alertas</string>
     <string name="omnipod_preference_category_notifications">Notificações</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_no_active_pod">Nenhum Pod Activo</string>
     <string name="omnipod_pod_status_running">A correr</string>
     <string name="omnipod_pod_status_suspended">Suspenso</string>
+    <string name="omnipod_pod_status_pod_fault">Falha no Pod</string>
     <string name="omnipod_pod_status_inactive">Inactivo</string>
+    <string name="omnipod_pod_status_pod_fault_description">Falha no Pod: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
     <string name="omnipod_alert_finish_setup_reminder_reminder">Lembrete Terminar Configuração</string>
     <string name="omnipod_alert_expiration">Pod vai expirar em breve</string>
     <string name="omnipod_alert_expiration_advisory">Pod vai expirar em breve</string>
     <string name="omnipod_alert_shutdown_imminent">Encerramento iminente</string>
+    <string name="omnipod_alert_low_reservoir">Reservatório Baixo</string>
+    <string name="omnipod_alert_unknown_alert">Alerta Desconhecido</string>
     <!-- Omnipod - History -->
+    <string name="omnipod_history_title">Histórico do Pod</string>
     <string name="omnipod_history_item_description">Descrição</string>
     <string name="omnipod_history_item_source">Fonte</string>
     <string name="omnipod_history_item_date">Data</string>
@@ -27,12 +35,27 @@
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, HC=%2$.1f g</string>
     <string name="omnipod_history_tbr_value">Rácio: %1$.2f U, duração: %2$d minutes</string>
     <!-- Omnipod - Short status -->
+    <string name="omnipod_short_status_extended_bolus">Estendido: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Reserv: %1$sU</string>
+    <string name="omnipod_short_status_rl_battery">RLBat: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Aviso</string>
     <string name="omnipod_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
     <string name="omnipod_error_pod_not_attached">Nenhum Pod Activo</string>
+    <string name="omnipod_error_crc_mismatch">Falha na comunicação: mensagem de falha de verificação de integridade</string>
+    <string name="omnipod_error_invalid_packet_type">Falha na comunicação: recebeu um pacote inválido do Pod</string>
+    <string name="omnipod_error_invalid_progress_state">Falha na comunicação: o Pod está em um estado errado</string>
+    <string name="omnipod_error_invalid_response">Falha na comunicação: recebeu uma resposta inválida do Pod</string>
+    <string name="omnipod_error_invalid_message_sequence_number">Falha na comunicação: recebeu uma mensagem com número de sequência inválido do Pod</string>
+    <string name="omnipod_error_invalid_message_address">Falha na comunicação: recebeu uma mensagem com um endereço inválido do Pod</string>
+    <string name="omnipod_error_message_decoding_failed">Falha na comunicação: falha ao descodificar a mensagem do Pod</string>
+    <string name="omnipod_error_nonce_resync_failed">Falha na comunicação: nonce resync falhou</string>
+    <string name="omnipod_error_nonce_out_of_sync">Falha na comunicação: nonce fora de sincronização</string>
+    <string name="omnipod_error_not_enough_data">Falha na comunicação: não há dados suficientes recebidos do Pod</string>
+    <string name="omnipod_error_pod_returned_error_response">Falha na comunicação: o Pod devolveu uma resposta de erro</string>
     <string name="omnipod_error_communication_failed_no_response_from_riley_link">Sem resposta do RileyLink</string>
+    <string name="omnipod_error_communication_failed_riley_link_interrupted">RileyLink interrompido</string>
     <string name="omnipod_error_communication_failed_no_response_from_pod">Sem resposta do Pod</string>
     <string name="omnipod_error_set_basal_failed">A configuração do perfil basal falhou.</string>
     <string name="omnipod_error_unknown_custom_command">Comando personalizado desconhecido: %1$s</string>
@@ -47,7 +70,9 @@
     <!-- Omnipod - Commands -->
     <string name="omnipod_cmd_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_cmd_discard_pod">Descartar Pod</string>
+    <string name="omnipod_cmd_set_bolus">Definir Bólus</string>
     <string name="omnipod_cmd_cancel_bolus">Cancelar Bólus</string>
+    <string name="omnipod_cmd_set_tbr">Definir Basal Temporária</string>
     <string name="omnipod_cmd_set_basal_schedule">Definir Programação Basal</string>
     <string name="omnipod_cmd_get_pod_status">Obter Status do Pod</string>
     <string name="omnipod_cmd_get_pod_info">Obter Pod Info</string>
@@ -59,11 +84,13 @@
     <string name="omnipod_cmd_unknown_entry">Entrada Desconhecida</string>
     <string name="omnipod_cmd_initialize_pod">Inicializar Pod</string>
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_pod_management_title">Gestão Pod</string>
     <string name="omnipod_pod_management_heading_actions">Acções</string>
     <string name="omnipod_pod_management_heading_tools">Ferramentas</string>
     <string name="omnipod_pod_management_button_activate_pod">Activar Pod</string>
     <string name="omnipod_pod_management_button_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_pod_management_button_discard_pod">Descartar Pod</string>
+    <string name="omnipod_pod_management_button_pod_history">Histórico do Pod</string>
     <string name="omnipod_pod_management_button_reset_riley_link_config">Redefinir configuração RileyLink</string>
     <!-- Omnipod - Wizard common -->
     <string name="omnipod_wizard_button_cancel">Cancelar</string>
@@ -84,8 +111,15 @@
     <string name="omnipod_overview_button_set_time">Definir hora</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspender</string>
     <string name="omnipod_overview_button_refresh">Actualizar</string>
+    <string name="omnipod_overview_button_resume_delivery">Retomar Administração</string>
+    <string name="omnipod_overview_button_pod_management">Gestão Pod</string>
+    <string name="omnipod_overview_button_acknowledge_active_alerts">Reco Alertas</string>
+    <string name="omnipod_overview_pod_status">Estado do Pod</string>
     <string name="omnipod_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_overview_pod_address">Endereço do Pod</string>
+    <string name="omnipod_overview_pod_expiry_date">Pod Expira</string>
     <string name="omnipod_overview_reservoir">Reservatório</string>
+    <string name="omnipod_overview_pod_active_alerts">Alertas Pod Activos</string>
     <string name="omnipod_overview_time_on_pod">Hora no Pod</string>
     <string name="omnipod_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutos)</string>
     <string name="omnipod_overview_reservoir_value">%1$.2f U restante</string>
@@ -116,5 +150,9 @@
     <plurals name="omnipod_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
+    </plurals>
+    <plurals name="omnipod_pod_alerts">
+        <item quantity="one">Alerta Pod: %1$s</item>
+        <item quantity="other">Alertas Pod: %1$s</item>
     </plurals>
 </resources>

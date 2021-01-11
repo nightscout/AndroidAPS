@@ -43,7 +43,6 @@ Eversense-appen.</string>
     <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
     <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
-    <string name="description_source_xdrip">Ta emot BG-data från xDrip</string>
     <string name="description_treatments">Spara alla behandlingar som gjorts</string>
     <string name="description_wear">Följ och kontrollera AndroidAPS med din Wear OS-klocka</string>
     <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip-urtavla</string>
@@ -120,7 +119,6 @@ Eversense-appen.</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="configbuilder_bgsource_description">Var ska AndroidAPS få sitt data ifrån?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS-läge</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -286,8 +284,6 @@ Eversense-appen.</string>
     <string name="mealbolus">Måltid</string>
     <string name="correctionbous">Korrektion</string>
     <string name="actions">Åtgärder</string>
-    <string name="ns_upload_only">Endast uppladdning till Nightscout</string>
-    <string name="ns_upload_only_summary">Endast uppladdning till Nightscout. Kommer inte få BG-data om inte lokal källa som xDrip används. Kommer heller inte att kunna hämta basalprofiler från Nightscout.</string>
     <string name="pumpNotInitialized">Pump inte initierad</string>
     <string name="primefill">Förfyllning</string>
     <string name="fillwarning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
@@ -342,7 +338,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Förkorta namnen på flikarna</string>
     <string name="always_use_shortavg">Använd alltid kort medeldelta istället för enkel delta</string>
-    <string name="always_use_shortavg_summary">Användbart när ofiltrerade källor som xDrip ger brusvärden</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardvärde: 3 Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina temp basaler till maximalt 3x din största basaldos. Du behöver oftast inte ändra detta värde. Läs på och förstå skillnaden mellan 3x nuvarande och 3x daglig max som säkerhetsinställningar.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardvärde: 4 Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina tempbasaler till maximalt 4 gånger din nuvarande basaldos, oberoende av din maximala basaldos. Detta för att undvika att man av misstag gör farliga inställningar. Om man når taket i denna inställning så kanske ändringar i andra inställningar behövs. De flesta behöver inte ändra denna inställning.</string>
@@ -356,9 +351,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_invalidphonennumber">Ogiltigt telefonnummer för SMS</string>
     <string name="overview_calibration">Kalibrering</string>
     <string name="xdripnotinstalled">xDrip+ inte installerat</string>
-    <string name="calibrationsent">Kalibrering skickad till xDrip</string>
-    <string name="smscommunicator_calibrationsent">Kalibrering skickad. Observera att xDrip måste vara inställd att ta emot kalibreringar.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip tar inte emot kalibreringar</string>
     <string name="pumpsuspended">Pump pausad</string>
     <string name="executing">Utför</string>
     <string name="virtualpump_settings">Inställningar för Virtuell pump</string>
@@ -444,8 +436,8 @@ Eversense-appen.</string>
     <string name="statuslights_sage_critical">Sensorålder - akut varning: [h]</string>
     <string name="statuslights_sbat_warning">Varningsnivå sensorbatteri [%]</string>
     <string name="statuslights_sbat_critical">Kritisk nivå sensorbatteri [%]</string>
-    <string name="statuslights_bage_warning">Batteriålder - varning: [h]</string>
-    <string name="statuslights_bage_critical">Batteriålder - akut varning: [h]</string>
+    <string name="statuslights_bage_warning">Batteriålder - varning: [tim]</string>
+    <string name="statuslights_bage_critical">Batteriålder - akut varning: [tim]</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
     <string name="statuslights_bat_warning">Varningsnivå för batteri [%]</string>
@@ -461,8 +453,6 @@ Eversense-appen.</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
-    <string name="xdripstatus_settings">xDrip Status (klocka)</string>
-    <string name="xdripstatus">xDrip Statusrad (klocka)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Visa BGI</string>
     <string name="wear_showbgi_summary">Visa BGI i statusraden</string>
@@ -505,7 +495,6 @@ Eversense-appen.</string>
     <string name="mdtp_cancel">Avbryt</string>
     <string name="notloadedplugins">Alla profiler laddades inte!</string>
     <string name="valuesnotstored">Alla värden sparades inte!</string>
-    <string name="ns_localbroadcasts">Aktivera sändning till andra appar (som xDrip). Aktivera inte detta om du har fler än en förekomst av AAPS eller NSClient installerad.</string>
     <string name="ns_localbroadcasts_title">Aktivera lokala broadcasts</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1176,7 +1165,6 @@ Eversense-appen.</string>
     <string name="donate_your_data_to_science">Donera dina data till vetenskapen</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen om det inte var meningen.</string>
     <string name="only_upload_if_connected_to_wifi">Ladda bara upp om ansluten till WiFi</string>
     <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
     <string name="worker_state">Jobbstatus: %s</string>
@@ -1188,13 +1176,12 @@ Eversense-appen.</string>
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="alarm">Larm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
-    <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="bolusadvisor">Bolusguide</string>
     <string name="bolusadvisormessage">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrektionsbolus nu och påminna dig när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
     <string name="enablebolusadvisor">Aktivera bolusguiden</string>
-    <string name="enablebolusadvisor_summary">Använd påminnelse om att börja äta istället för kalkylatorn under hög glykemi</string>
+    <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="timetoeat">Dags att äta</string>
 </resources>

@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Recibir valores de glucosa de Glimp.</string>
     <string name="description_source_mm640g">Recibir valores de glucosa del 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Descarga los datos de glucosa de Nightscout</string>
-    <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip.</string>
     <string name="description_treatments">Guarda todos los tratamientos que se realizaron</string>
     <string name="description_wear">Usar tu reloj WearOS para observar y controlar AndroidAPS.</string>
     <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen BG</string>
     <string name="configbuilder_bgsource_description">¿De donde debe AndroidAPS obtener sus datos?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">Bolo Comida</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
-    <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
-    <string name="ns_upload_only_summary">NS solo subida. No efectivo con SGV salvo que este seleccionada una fuente local como xDrip. No efectivo en perfiles usando perfiles NS.</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Título corto en pestaña</string>
     <string name="always_use_shortavg">Usa siempre delta media corto en vez de delta simple</string>
-    <string name="always_use_shortavg_summary">Útil cuando los datos de fuentes sin filtrar como los de xDrip son inestables.</string>
     <string name="profile">Perfiles</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3 Esta es una protección de seguridad en OpenAPS. Lo que esto hace es limitar tus basales a 3x (en este caso) tu mayor índice basal. Probablemente no necesites cambiar esto, pero debes tener en cuenta las discusiones sobre \"3x max diaria; 4x actual\" para protecciones de seguridad.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Ajuste pro defecto: 4 Esto es la otra mitad de los ajustes de seguridad de OpenAPS y la otra mitad de la protección de seguridad de \"3x max diaria, 4x actual\". Esto significa, que tu basal, independientemente de tu máxima basal ajustada en la bomba, no puede ser mas alta que este número de veces el actual nivel de basal. Esto es para evitar que las personas se encuentren en situaciones peligrosas por aumentar mucho la basal sin entender como trabaja el algoritmo. El ajuste por defecto es 4x; la mayoría de las personas nunca tendrá que cambiar estos ajustes, sino que debe modificar otros ajustes en la terapia si se encuentran cerca de este límite de seguridad.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Número de teléfono incorrecto para SMS</string>
     <string name="overview_calibration">Calibración</string>
     <string name="xdripnotinstalled">xDrip+ no instalado</string>
-    <string name="calibrationsent">Calibración mandada a xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibración enviada. La recepción debe estar habilitada en xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip no recibe calibraciones</string>
     <string name="pumpsuspended">Bomba parada</string>
     <string name="executing">Ejecutando</string>
     <string name="virtualpump_settings">Ajustes bomba virtual</string>
@@ -443,12 +435,8 @@
     <string name="statuslights_sage_critical">Umbral crítico de la edad del sensor [h]</string>
     <string name="statuslights_sbat_warning">Umbral de advertencia de nivel de batería del sensor [%]</string>
     <string name="statuslights_sbat_critical">Umbral crítico de nivel de batería del sensor [%]</string>
-    <string name="statuslights_bage_warning">Umbral de advertencia de nivel de pila [h]</string>
-    <string name="statuslights_bage_critical">Umbral crítico de nivel de batería [h]</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -460,8 +448,6 @@
     <string name="nav_about">Acerca de</string>
     <string name="smscommunicator_missingsmspermission">Falta permiso SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permiso de estado del teléfono</string>
-    <string name="xdripstatus_settings">xDrip Status (reloj)</string>
-    <string name="xdripstatus">Linea de estado xDrip (reloj)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">Agregar BGI a línea de estado</string>
@@ -504,7 +490,6 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>
-    <string name="ns_localbroadcasts">Habilite las transmisiones a otras aplicaciones (como xDrip). ¡ No habilite si tiene más de una instancia de AAPS o NSClient instalada!</string>
     <string name="ns_localbroadcasts_title">Permitir emisión de mensajes localmente.</string>
     <string name="careportal_newnstreatment_duration_min_label">Duración [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1175,7 +1160,6 @@
     <string name="donate_your_data_to_science">Dona tus datos a la ciencia</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Has cerrado la sesión de Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Haga clic aquí para iniciar sesión de nuevo si no tenía esa intención.</string>
     <string name="only_upload_if_connected_to_wifi">Subir datos solo si está conectado a WiFi</string>
     <string name="only_upload_if_charging">Sólo subir datos si se está cargando</string>
     <string name="worker_state">Worker State: %s</string>
@@ -1187,13 +1171,11 @@
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="alarm">Alarma</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
-    <string name="smscommunicator_pump_ureachable">Reportar bomba no alcanzable</string>
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="bolusadvisor">Asistente de bolo</string>
     <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
-    <string name="enablebolusadvisor_summary">Usar un recordatorio para empezar a comer en lugar del asistente durante la glucemia alta</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y cálcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
 </resources>
