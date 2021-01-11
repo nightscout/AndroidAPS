@@ -1176,4 +1176,5 @@
     <string name="enablebolusadvisor">Activare consilier bolus</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
+    <string name="graph_menu_divider_header">Grafic</string>
 </resources>
